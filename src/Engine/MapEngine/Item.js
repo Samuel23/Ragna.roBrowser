@@ -163,12 +163,17 @@ define(function( require )
 				}
 			}
 
-			if (pkt.wearLocation & EquipLocation.HEAD_TOP)    Session.Entity.accessory2 = 0;
-			if (pkt.wearLocation & EquipLocation.HEAD_MID)    Session.Entity.accessory3 = 0;
-			if (pkt.wearLocation & EquipLocation.HEAD_BOTTOM) Session.Entity.accessory  = 0;
+			if (pkt.wearLocation & EquipLocation.HEAD_TOP)    Session.Entity.accessory2 = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_TOP);
+			if (pkt.wearLocation & EquipLocation.HEAD_MID)    Session.Entity.accessory3 = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_MID);
+			if (pkt.wearLocation & EquipLocation.HEAD_BOTTOM) Session.Entity.accessory  = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_BOTTOM);
 			if (pkt.wearLocation & EquipLocation.WEAPON)      Session.Entity.weapon     = 0;
 			if (pkt.wearLocation & EquipLocation.SHIELD)      Session.Entity.shield     = 0;
 			if (pkt.wearLocation & EquipLocation.GARMENT)     Session.Entity.robe       = 0;
+
+			// Costumes
+			if (pkt.wearLocation & EquipLocation.COSTUME_HEAD_TOP)    Session.Entity.accessory2 = Equipment.checkEquipLoc(EquipLocation.HEAD_TOP);
+			if (pkt.wearLocation & EquipLocation.COSTUME_HEAD_MID)    Session.Entity.accessory3 = Equipment.checkEquipLoc(EquipLocation.HEAD_MID);
+			if (pkt.wearLocation & EquipLocation.COSTUME_HEAD_BOTTOM) Session.Entity.accessory  = Equipment.checkEquipLoc(EquipLocation.HEAD_BOTTOM);
 		}
 	}
 
@@ -189,10 +194,44 @@ define(function( require )
 				ChatBox.FILTER.ITEM
 			);
 
+			// Variables for Headgear Checks
+			var CostumeCheckTop = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_TOP);
+			var CostumeCheckMid = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_MID);
+			var CostumeCheckBot = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_BOTTOM);
+			var CheckTop        = Equipment.checkEquipLoc(EquipLocation.HEAD_TOP);
+			var CheckMid        = Equipment.checkEquipLoc(EquipLocation.HEAD_MID);
+			var CheckBot        = Equipment.checkEquipLoc(EquipLocation.HEAD_BOTTOM);
+
+			// Costumes
+			if (pkt.wearLocation & EquipLocation.COSTUME_HEAD_TOP ||
+				pkt.wearLocation & EquipLocation.COSTUME_HEAD_MID ||
+				pkt.wearLocation & EquipLocation.COSTUME_HEAD_BOTTOM
+			) {
+			/**
+			 * Clear slots first if equipping a costume
+			 * Not doing so retains sprites or viewid from 3 and 2 slots headgears
+			 * 
+			 */
+				Session.Entity.accessory2 = 0;
+				Session.Entity.accessory3 = 0;
+				Session.Entity.accessory = 0;
+
+			/** 
+			 *  Here we check Costume Slot first then normal headgear slots
+			 *  Prioritize Upper headgear viewid
+			 *  The check of 3 slots headgears (upper, mid and lower)
+			 *  and 2 slots headgears (upper and mid) or (lower and mid)
+			 *  were added in mid and lower headgear check
+			 */
+			Session.Entity.accessory2 = (CostumeCheckTop) ? CostumeCheckTop : (CheckTop) ? CheckTop : 0;
+			Session.Entity.accessory3 = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop && CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckTop)) ) ? CheckMid : 0;
+			Session.Entity.accessory  = (CostumeCheckBot) ? CostumeCheckBot : ( (CheckBot && (CheckBot !== CheckTop)) && (CheckBot && (CheckBot !== CheckMid)) ) ? CheckBot : 0;
+		  	}
+
 			// Display
-			if (pkt.wearLocation & EquipLocation.HEAD_TOP)    Session.Entity.accessory2 = pkt.viewid;
-			if (pkt.wearLocation & EquipLocation.HEAD_MID)    Session.Entity.accessory3 = pkt.viewid;
-			if (pkt.wearLocation & EquipLocation.HEAD_BOTTOM) Session.Entity.accessory  = pkt.viewid;
+			if (pkt.wearLocation & EquipLocation.HEAD_TOP)    Session.Entity.accessory2 = (CostumeCheckTop) ? CostumeCheckTop : (CheckTop) ? pkt.viewid : 0;
+			if (pkt.wearLocation & EquipLocation.HEAD_MID)    Session.Entity.accessory3 = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop && CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckTop)) ) ? pkt.viewid : 0;
+			if (pkt.wearLocation & EquipLocation.HEAD_BOTTOM) Session.Entity.accessory  = (CostumeCheckBot) ? CostumeCheckBot : ( (CheckBot && (CheckBot !== CheckTop)) && (CheckBot && (CheckBot !== CheckMid)) ) ? pkt.viewid : 0;
 			if (pkt.wearLocation & EquipLocation.WEAPON)      Session.Entity.weapon     = pkt.viewid;
 			if (pkt.wearLocation & EquipLocation.SHIELD)      Session.Entity.shield     = pkt.viewid;
 			if (pkt.wearLocation & EquipLocation.GARMENT)     Session.Entity.robe       = pkt.viewid;
