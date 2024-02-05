@@ -11,8 +11,43 @@
 #Equipment .titlebar .right { float:right; margin-right:3px;}
 #Equipment .titlebar .clear { clear:both; }
 
-#Equipment .panel { background-color:white; }
+#Equipment .tab-manager { position: relative; width:inherit; background-color: white; height:15px; display: flex; }
+.tab a {
+  width: 60px;
+  height: 100%;
+  color: #42454a;
+  border: 1px solid #c9c3ba;
+  border-bottom: none;
+  text-decoration: none;
+  display: inline-block;
+  vertical-align: bottom;
+  border-radius: 3px 3px 0 0;
+  text-align: center;
+}
+
+.tab a.selected {
+  color: #000;
+  font-weight: bold;
+  border-bottom: 1px solid white;
+  position: relative;
+  z-index: 100;
+  background-color: white;
+}
+
+.tab a.selected:after {
+  content: "";
+  display: block;
+  height: 1px;
+  width: 1px;
+  position: absolute;
+  bottom: -1px;
+  left: -1px;
+}
+
+#Equipment .panel { background-color:white; border-top: 1px solid gray; }
 #Equipment.equipmentV0 .panel { background-color:inherit; }
+#Equipment table.content { width:280px; height:130px; border-spacing:0; }
+#Equipment table.content.hide { display: none; }
 #Equipment .content { display:inline-block; width:280px; height:130px; border-spacing:0; }
 #Equipment .col1, #Equipment .col3  { width:115px; height:24px; background-color:transparent; background-repeat:no-repeat; }
 #Equipment .col1 { background-position:5% 50%; min-width: 110px; }

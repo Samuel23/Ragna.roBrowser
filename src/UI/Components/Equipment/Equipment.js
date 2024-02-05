@@ -65,7 +65,7 @@ define(function(require)
 	/**
 	 * @var {CanvasRenderingContext2D} canvas context
 	 */
-	var _ctx;
+	var _ctx = [];
 
 
 	/**
@@ -79,13 +79,52 @@ define(function(require)
 	 */
 	var _btnLevelUp;
 
+	var tabLinks = new Array();
+    var contentDivs = new Array();
+	var currentTabId = 'general'; // Variable to store the current tab's ID
 
 	/**
 	 * Initialize UI
 	 */
 	Equipment.init = function init()
 	{
-		_ctx = this.ui.find('canvas')[0].getContext('2d');
+		_ctx.push(this.ui.find('canvas')[0].getContext('2d'));
+		_ctx.push(this.ui.find('canvas')[1].getContext('2d'));
+
+		// Grab the tab links and content divs from the page
+		var tabListItems = document.getElementById('tabs').childNodes;
+		for ( var i = 0; i < tabListItems.length; i++ ) {
+		  if ( tabListItems[i].nodeName == "DIV" ) {
+			var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
+			var id = getHash( tabLink.getAttribute('href') );
+			tabLinks[id] = tabLink;
+			contentDivs[id] = document.getElementById( id );
+		  }
+		}
+  
+		// Assign onclick events to the tab links, and
+		// highlight the first tab
+		var i = 0;
+  
+		for ( var id in tabLinks ) {
+		  tabLinks[id].onclick = showTab;
+		  tabLinks[id].onfocus = function() { this.blur() };
+		  if ( i == 0 ) tabLinks[id].className = 'tab selected';
+		  i++;
+		}
+  
+		// Hide all content divs except the first
+		var i = 0;
+  
+		for ( var id in contentDivs ) {
+			if (contentDivs[id]) {
+				if (i != 0) {
+				  contentDivs[id].classList.add('content', 'hide');
+				}
+				i++;
+			}
+		}
+
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			// Get button to open skill when level up
 			_btnLevelUp = jQuery('#lvlup_base')
@@ -140,6 +179,40 @@ define(function(require)
 		DB.UpdateOwnerName.Equipment = onUpdateOwnerName;
 	};
 
+	function showTab() {
+		var selectedId = getHash( this.getAttribute('href') );
+  
+		// Highlight the selected tab, and dim all others.
+		// Also show the selected content div, and hide all others.
+		for ( var id in contentDivs ) {
+		  if ( id == selectedId ) {
+			tabLinks[id].className = 'tab selected';
+			contentDivs[id].className = 'content';
+		  } else {
+			tabLinks[id].className = 'tab';
+			contentDivs[id].classList.add('content', 'hide');
+		  }
+		}
+  
+		// Update the current tab ID
+		currentTabId = selectedId;
+
+		// Stop the browser following the link
+		return false;
+	}
+
+	function getFirstChildWithTagName( element, tagName ) {
+		for ( var i = 0; i < element.childNodes.length; i++ ) {
+	 		if ( element.childNodes[i].nodeName == tagName.toUpperCase() ) {
+				return element.childNodes[i];
+			}
+		}
+	}
+
+	function getHash( url ) {
+		var hashPos = url.lastIndexOf ( '#' );
+		return url.substring( hashPos + 1 );
+	}
 
 	function onCartItems()
 	{
@@ -341,6 +414,30 @@ define(function(require)
 		}
 	};
 
+	/**
+	 * Check equipment location for item
+	 * @param {number} location - The equipment location to check
+	 * @returns {item.wItemSpriteNumber} Object with { item }
+	 */
+	Equipment.checkEquipLoc = function checkEquipLoc( location )
+	{
+		var selector = getSelectorFromLocation(location);
+		var itemElement = document.querySelector(selector);
+
+		if (itemElement) {
+			// Traverse to find the div with the data-index attribute
+			var divWithDataIndex = itemElement.querySelector('.item[data-index]');
+			if (divWithDataIndex) {
+			  	var dataIndex = parseInt(divWithDataIndex.getAttribute('data-index'));
+				var item = _list[dataIndex];
+				if (!item)
+					return 0;
+				return item.wItemSpriteNumber;
+			}
+		}
+
+		return 0;
+	};
 
 	/**
 	 * Stop an event to propagate
@@ -431,6 +528,18 @@ define(function(require)
 			var action    = character.action;
 			var animation = character.animation;
 
+			// Variables for Headgear Checks
+			var CostumeCheckTop = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_TOP);
+			var CostumeCheckMid = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_MID);
+			var CostumeCheckBot = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_BOTTOM);
+			var CheckTop        = Equipment.checkEquipLoc(EquipLocation.HEAD_TOP);
+			var CheckMid        = Equipment.checkEquipLoc(EquipLocation.HEAD_MID);
+			var CheckBot        = Equipment.checkEquipLoc(EquipLocation.HEAD_BOTTOM);
+
+			var headtop   = (CostumeCheckTop) ? CostumeCheckTop : (CheckTop) ? CheckTop : 0;
+			var headmid   = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop && CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckTop)) ) ? CheckMid : 0;
+			var headbot   = (CostumeCheckBot) ? CostumeCheckBot : ( (CheckBot && (CheckBot !== CheckTop)) && (CheckBot && (CheckBot !== CheckMid)) ) ? CheckBot : 0;
+
 			// If state change, we have to check if the new option is removable.
 			if (character.effectState !== _lastState || _hasCart !== character.hasCart) {
 				_lastState = character.effectState;
@@ -458,13 +567,29 @@ define(function(require)
 			character.action    = character.ACTION.IDLE;
 			character.animation = _animation;
 
+			// General Tab only shows normal headgears
+			if (currentTabId === 'general') {
+				character.accessory  = Equipment.checkEquipLoc(EquipLocation.HEAD_BOTTOM);
+				character.accessory2 = Equipment.checkEquipLoc(EquipLocation.HEAD_TOP);
+				character.accessory3 = Equipment.checkEquipLoc(EquipLocation.HEAD_MID);
+			}
+			// Costume Tab only shows costume headgears
+			else if (currentTabId === 'costume') {
+				character.accessory  = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_BOTTOM);
+				character.accessory2 = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_TOP);
+				character.accessory3 = Equipment.checkEquipLoc(EquipLocation.COSTUME_HEAD_MID);
+			}
+
 			_savedColor.set(character.effectColor);
 			character.effectColor.set(_cleanColor);
 
 			// Rendering
-			SpriteRenderer.bind2DContext( _ctx, 30, 130 );
-			_ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height );
-			character.renderEntity();
+			for (var i = 0; i < _ctx.length; i++) {
+				var ctx = _ctx[i];
+				SpriteRenderer.bind2DContext( ctx, 30, 130 );
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height );
+				character.renderEntity(ctx);
+			}
 
 			// Revert changes
 			character.direction = direction;
@@ -472,6 +597,9 @@ define(function(require)
 			character.action    = action;
 			character.animation = animation;
 			character.effectColor.set(_savedColor);
+			character.accessory = headbot;
+			character.accessory2 = headtop;
+			character.accessory3 = headmid;
 		};
 	}();
 
@@ -497,6 +625,18 @@ define(function(require)
 		if (location & EquipLocation.ACCESSORY1)  selector.push('.accessory1');
 		if (location & EquipLocation.ACCESSORY2)  selector.push('.accessory2');
 		if (location & EquipLocation.AMMO)        selector.push('.ammo');
+
+		// Costume Tab
+		if (location & EquipLocation.COSTUME_HEAD_TOP)    selector.push('.costume_head_top');
+		if (location & EquipLocation.COSTUME_HEAD_MID)    selector.push('.costume_head_mid');
+		if (location & EquipLocation.COSTUME_HEAD_BOTTOM) selector.push('.costume_head_bottom');
+		if (location & EquipLocation.SHADOW_ARMOR)        selector.push('.shadow_armor');
+		if (location & EquipLocation.SHADOW_WEAPON)       selector.push('.shadow_weapon');
+		if (location & EquipLocation.SHADOW_SHIELD)       selector.push('.shadow_shield');
+		if (location & EquipLocation.COSTUME_ROBE)     	  selector.push('.shadow_garment');
+		if (location & EquipLocation.SHADOW_SHOES)        selector.push('.shadow_shoes');
+		if (location & EquipLocation.SHADOW_ACCESSORY1)   selector.push('.shadow_accessory1');
+		if (location & EquipLocation.SHADOW_ACCESSORY2)   selector.push('.shadow_accessory2');
 
 		return selector.join(', ');
 	}
