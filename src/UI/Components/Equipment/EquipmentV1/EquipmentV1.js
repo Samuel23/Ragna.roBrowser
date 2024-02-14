@@ -536,7 +536,7 @@ define(function(require)
 			var CheckGarment    = EquipmentV1.checkEquipLoc(EquipLocation.GARMENT);
 
 			var headtop   = (CostumeCheckTop) ? CostumeCheckTop : (CheckTop) ? CheckTop : 0;
-			var headmid   = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop && CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckTop)) ) ? CheckMid : 0;
+			var headmid   = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop)) ) ? CheckMid : 0;
 			var headbot   = (CostumeCheckBot) ? CostumeCheckBot : ( (CheckBot && (CheckBot !== CheckTop)) && (CheckBot && (CheckBot !== CheckMid)) ) ? CheckBot : 0;
 			var garment   = (CostumeCheckRobe) ? CostumeCheckRobe : CheckGarment ? CheckGarment : 0;
 
