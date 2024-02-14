@@ -229,14 +229,14 @@ define(function( require )
 				 *  were added in mid and lower headgear check
 				 */
 				Session.Entity.accessory2 = (CostumeCheckTop) ? CostumeCheckTop : (CheckTop) ? CheckTop : 0;
-				Session.Entity.accessory3 = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop && CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckTop)) ) ? CheckMid : 0;
+				Session.Entity.accessory3 = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop)) ) ? CheckMid : 0;
 				Session.Entity.accessory  = (CostumeCheckBot) ? CostumeCheckBot : ( (CheckBot && (CheckBot !== CheckTop)) && (CheckBot && (CheckBot !== CheckMid)) ) ? CheckBot : 0;
 				Session.Entity.robe  =  (CostumeCheckRobe) ? CostumeCheckRobe : CheckGarment ? CheckGarment : 0;
 			}
 
 			// Display
 			if (pkt.wearLocation & EquipLocation.HEAD_TOP)    Session.Entity.accessory2 = (CostumeCheckTop) ? CostumeCheckTop : (CheckTop) ? pkt.viewid : 0;
-			if (pkt.wearLocation & EquipLocation.HEAD_MID)    Session.Entity.accessory3 = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop && CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckBot)) && (CheckMid && (CheckMid !== CheckTop)) ) ? pkt.viewid : 0;
+			if (pkt.wearLocation & EquipLocation.HEAD_MID)    Session.Entity.accessory3 = (CostumeCheckMid) ? CostumeCheckMid : ( (CheckMid && (CheckMid !== CheckTop)) ) ? pkt.viewid : 0;
 			if (pkt.wearLocation & EquipLocation.HEAD_BOTTOM) Session.Entity.accessory  = (CostumeCheckBot) ? CostumeCheckBot : ( (CheckBot && (CheckBot !== CheckTop)) && (CheckBot && (CheckBot !== CheckMid)) ) ? pkt.viewid : 0;
 			if (pkt.wearLocation & EquipLocation.GARMENT)     Session.Entity.robe  =  (CostumeCheckRobe) ? CostumeCheckRobe : CheckGarment ? CheckGarment : 0;
 			if (pkt.wearLocation & EquipLocation.WEAPON)      Session.Entity.weapon     = pkt.viewid;
