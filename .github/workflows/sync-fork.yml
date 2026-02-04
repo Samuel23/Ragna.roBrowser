@@ -1,0 +1,34 @@
+name: Sync Fork with Upstream
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    - cron: '0 * * * *' # hourly, minute 0 (UTC)
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Sync fork from upstream
+        env:
+          GH_TOKEN: ${{ secrets.SYNC_IMMER }} # classic PAT: repo + workflow
+        run: |
+          gh repo sync Samuel23/Ragna.roBrowser \
+            --source MrAntares/roBrowserLegacy \
+            --branch master \
+            --force
