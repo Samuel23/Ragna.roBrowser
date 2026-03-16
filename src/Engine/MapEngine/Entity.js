@@ -9,7 +9,6 @@
 define(function (require) {
 	'use strict';
 
-
 	/**
 	 * Load dependencies
 	 */
@@ -97,12 +96,12 @@ define(function (require) {
 		SkillId.TK_TURNKICK,
 		SkillId.TK_COUNTER,
 		SkillId.TK_JUMPKICK,
-		SkillId.SR_RAMPAGEBLASTER,
+		SkillId.SR_RAMPAGEBLASTER
 	];
 
 	const C_MULTIHIT_DELAY = 200; // PLUSATTACKED_MOTIONTIME
 	const AVG_ATTACK_SPEED = 432;
-	const AVG_ATTACKED_SPEED = 288;
+	//const AVG_ATTACKED_SPEED = 288; // UNUSED
 	const MAX_ATTACKMT = AVG_ATTACK_SPEED * 2;
 
 	/**
@@ -119,8 +118,7 @@ define(function (require) {
 
 		if (entity) {
 			entity.set(pkt);
-		}
-		else {
+		} else {
 			entity = new Entity();
 			entity.set(pkt);
 			if (pkt.job == 45) {
@@ -140,9 +138,13 @@ define(function (require) {
 			EntityManager.add(entity);
 		}
 
-		if (pkt.effectState & StatusState.EffectState.FALCON && ([11, 4012, 4034, 4056, 4062, 4098, 4257, 4270, 4278].includes(pkt.job))) {
-			if (!entity.falcon)
+		if (
+			pkt.effectState & StatusState.EffectState.FALCON &&
+			[11, 4012, 4034, 4056, 4062, 4098, 4257, 4270, 4278].includes(pkt.job)
+		) {
+			if (!entity.falcon) {
 				entity.falcon = new Entity();
+			}
 
 			entity.falcon.set({
 				objecttype: entity.falcon.constructor.TYPE_FALCON,
@@ -150,16 +152,17 @@ define(function (require) {
 				PosDir: [entity.position[0], entity.position[1], 0],
 				job: entity.job + '_FALCON',
 				speed: 200,
-				name: "",
+				name: '',
 				hp: -1,
 				maxhp: -1,
-				hideShadow: true,
+				hideShadow: true
 			});
 			EntityManager.add(entity.falcon);
 		}
 		if (pkt.effectState & StatusState.EffectState.WUG) {
-			if (!entity.wug)
+			if (!entity.wug) {
 				entity.wug = new Entity();
+			}
 
 			entity.wug.set({
 				objecttype: entity.wug.constructor.TYPE_WUG,
@@ -167,19 +170,21 @@ define(function (require) {
 				PosDir: [entity.position[0], entity.position[1], 0],
 				job: entity.job + '_WUG',
 				speed: entity.walk.speed,
-				name: "",
+				name: '',
 				hp: -1,
-				maxhp: -1,
+				maxhp: -1
 			});
 			EntityManager.add(entity.wug);
 		}
 
-		if (entity.GUID && entity !== Session.Entity) {
+		if (entity.GUID) {
 			Guild.requestGuildEmblem(entity.GUID, entity.GEmblemVer, function (image) {
-				entity.display.emblem = image;
 				entity.emblem.emblem = image;
 				entity.emblem.update();
-
+				if (PACKETVER.value < 20170315) {
+					entity.display.emblem = image;
+					entity.display.refresh(entity);
+				}
 				if (Session.mapState.isSiege && entity.GUID !== Session.Entity.GUID) {
 					entity.emblem.display = true;
 				}
@@ -207,18 +212,25 @@ define(function (require) {
 				entity.weapon = viewId;
 				entity.shield = pkt.shield;
 			}
-			if(PACKETVER.value > 20150513){
-				if(entity.body !== pkt.body)
+			if (PACKETVER.value > 20150513) {
+				if (entity.body !== pkt.body) {
 					entity.body = pkt.body;
+				}
 			}
-
 		}
 
-		if (entity.objecttype === Entity.TYPE_PC &&
+		if (
+			entity.objecttype === Entity.TYPE_PC &&
 			!(entity._effectState & StatusState.EffectState.INVISIBLE) &&
-			(pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY || pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY2 || pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY3  
-				|| pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY4 || pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY5 || pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY6  
-				|| pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY7 || pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY10 || pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY11)
+			(pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY2 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY3 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY4 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY5 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY6 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY7 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY10 ||
+				pkt instanceof PACKET.ZC.NOTIFY_NEWENTRY11)
 		) {
 			var EF_Init_Par = {
 				ownerAID: entity.GID,
@@ -247,22 +259,29 @@ define(function (require) {
 		}
 
 		// if it is listed in clanEmblems set emblem
-		if(entity.GID in clanEmblems) {
+		if (entity.GID in clanEmblems) {
 			let clanId = clanEmblems[entity.GID];
 			console.log('>> entity spam', entity.display.name);
 			DB.loadClanEmblem(clanId, function (image) {
 				entity.clanId = clanId;
 				entity.display.emblem = image;
 				entity.display.update(
-					entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-						entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-										entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-											(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-												entity.display.STYLE.DEFAULT
-					)
+					entity.objecttype === Entity.TYPE_MOB
+						? entity.display.STYLE.MOB
+						: entity.objecttype === Entity.TYPE_NPC_ABR
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_BIONIC
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_DISGUISED
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_NPC
+										? entity.display.STYLE.NPC
+										: entity.objecttype === Entity.TYPE_NPC2
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+												? entity.display.STYLE.ADMIN
+												: entity.display.STYLE.DEFAULT
+				);
 				entity.emblem.emblem = image;
 				entity.emblem.update();
 			});
@@ -275,7 +294,6 @@ define(function (require) {
 		entity.aura.load(EffectManager);
 	}
 
-
 	/**
 	 * Remove an entity from the map
 	 *
@@ -284,8 +302,8 @@ define(function (require) {
 	function onEntityVanish(pkt) {
 		var entity = EntityManager.get(pkt.GID);
 		if (entity) {
-
-			if (entity.objecttype === Entity.TYPE_PC && pkt.GID === Session.Entity.GID) {  //death animation only for myself
+			if (entity.objecttype === Entity.TYPE_PC && pkt.GID === Session.Entity.GID) {
+				//death animation only for myself
 				var EF_Init_Par = {
 					effectId: EffectConst.EF_DEVIL,
 					ownerAID: entity.GID
@@ -302,14 +320,24 @@ define(function (require) {
 				MercenaryInformations.stopAI();
 			}
 
-			EffectManager.remove(null, pkt.GID, [EffectConst.EF_CHOOKGI, EffectConst.EF_CHOOKGI2, EffectConst.EF_CHOOKGI3, EffectConst.EF_CHOOKGI_N]); // Spirit spheres
-			EffectManager.remove(null, pkt.GID, [EffectConst.EF_CHOOKGI_FIRE, EffectConst.EF_CHOOKGI_WIND, EffectConst.EF_CHOOKGI_WATER, EffectConst.EF_CHOOKGI_GROUND, 'temporary_warlock_sphere']); // Elemental spheres (Warlock)
+			EffectManager.remove(null, pkt.GID, [
+				EffectConst.EF_CHOOKGI,
+				EffectConst.EF_CHOOKGI2,
+				EffectConst.EF_CHOOKGI3,
+				EffectConst.EF_CHOOKGI_N
+			]); // Spirit spheres
+			EffectManager.remove(null, pkt.GID, [
+				EffectConst.EF_CHOOKGI_FIRE,
+				EffectConst.EF_CHOOKGI_WIND,
+				EffectConst.EF_CHOOKGI_WATER,
+				EffectConst.EF_CHOOKGI_GROUND,
+				'temporary_warlock_sphere'
+			]); // Elemental spheres (Warlock)
 
 			switch (pkt.type) {
 				case Entity.VT.EXIT:
 				case Entity.VT.TELEPORT:
 					if (!(entity._effectState & StatusState.EffectState.INVISIBLE)) {
-
 						var EF_Init_Par = { position: entity.position };
 
 						if (PACKETVER.value < 20030715) {
@@ -360,7 +388,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * An entity start walking
 	 *
@@ -368,14 +395,20 @@ define(function (require) {
 	 */
 	function onEntityMove(pkt) {
 		var entity = EntityManager.get(pkt.GID);
-			if (entity) {
-				//entity.position[0] = pkt.MoveData[0];
-				//entity.position[1] = pkt.MoveData[1];
-				//entity.position[2] = Altitude.getCellHeight(  pkt.MoveData[0],  pkt.MoveData[1] );
-				entity.walkTo(pkt.MoveData[0], pkt.MoveData[1], pkt.MoveData[2], pkt.MoveData[3], undefined, pkt.moveStartTime);
-			}
+		if (entity) {
+			//entity.position[0] = pkt.MoveData[0];
+			//entity.position[1] = pkt.MoveData[1];
+			//entity.position[2] = Altitude.getCellHeight(  pkt.MoveData[0],  pkt.MoveData[1] );
+			entity.walkTo(
+				pkt.MoveData[0],
+				pkt.MoveData[1],
+				pkt.MoveData[2],
+				pkt.MoveData[3],
+				undefined,
+				pkt.moveStartTime
+			);
 		}
-
+	}
 
 	/**
 	 * Entity stop walking
@@ -393,7 +426,7 @@ define(function (require) {
 					play: true
 				});
 			}
-			
+
 			entity.resetRoute();
 			entity.position[0] = pkt.xPos;
 			entity.position[1] = pkt.yPos;
@@ -415,7 +448,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Body relocation packet support
 	 *
@@ -436,7 +468,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Display entity's emotion
 	 *
@@ -444,7 +475,7 @@ define(function (require) {
 	 */
 	function onEntityEmotion(pkt) {
 		var entity = EntityManager.get(pkt.GID);
-		if (entity && (pkt.type in Emotions.indexes)) {
+		if (entity && pkt.type in Emotions.indexes) {
 			entity.attachments.add({
 				frame: Emotions.indexes[pkt.type],
 				file: 'emotion',
@@ -454,7 +485,6 @@ define(function (require) {
 			});
 		}
 	}
-
 
 	/**
 	 * Resurect an entity
@@ -495,7 +525,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Perform Entity Action
 	 *
@@ -512,23 +541,21 @@ define(function (require) {
 		var srcWeapon = srcEntity.weapon ? srcEntity.weapon : 0;
 		var srcWeaponLeft = srcEntity.shield ? srcEntity.shield : 0;
 
-
 		srcEntity.targetGID = pkt.targetGID;
 
 		switch (pkt.action) {
-
 			// Damage
-			case 0:  // regular [DMG_NORMAL]
+			case 0: // regular [DMG_NORMAL]
 			//case 1: // [DMG_PICKUP_ITEM]
 			//case 2: // [DMG_SIT_DOWN]
 			//case 3: // [DMG_STAND_UP]
-			case 4:  // absorbed [DMG_ENDURE]
+			case 4: // absorbed [DMG_ENDURE]
 			//case 5: [DMG_SPLASH]
 			//case 5: [DMG_SKILL]
 			//case 7: [DMG_REPEAT]
 			//case 11: [DMG_TOUCH] probably something new.
-			case 8:  // double attack [DMG_MULTI_HIT]
-			case 9:  // endure [DMG_MULTI_HIT_ENDURE]
+			case 8: // double attack [DMG_MULTI_HIT]
+			case 9: // endure [DMG_MULTI_HIT_ENDURE]
 			case 10: // critital [DMG_CRITICAL]
 			case 11: // lucky
 			case 13: // multi-hit critical
@@ -542,19 +569,23 @@ define(function (require) {
 				let delayTime = pkt.attackMT;
 
 				var WSnd = DB.getWeaponSound(srcWeapon);
-				var weaponSound = WSnd ? WSnd[0] : false;
-				var weaponSoundRelease = WSnd ? WSnd[1] : false;
+				/*var weaponSound = WSnd ? WSnd[0] : false;
+				var weaponSoundRelease = WSnd ? WSnd[1] : false;*/ // UNUSED
 
 				var WSndL = DB.getWeaponSound(srcWeaponLeft);
-				var weaponSoundLeft = WSndL ? WSndL[0] : false;
-				var weaponSoundReleaseLeft = WSndL ? WSndL[1] : false;
+				/*var weaponSoundLeft = WSndL ? WSndL[0] : false;
+				var weaponSoundReleaseLeft = WSndL ? WSndL[1] : false;*/ // UNUSED
 
 				if (srcEntity.objecttype === Entity.TYPE_PC) {
 					const factorOfmotionSpeed = pkt.attackMT / AVG_ATTACK_SPEED;
 					const isDualWeapon = DB.isDualWeapon(srcEntity._job, srcEntity._sex, srcEntity.weapon);
-					let m_attackMotion = DB.getPCAttackMotion(srcEntity._job, srcEntity._sex, srcEntity.weapon, isDualWeapon);
+					let m_attackMotion = DB.getPCAttackMotion(
+						srcEntity._job,
+						srcEntity._sex,
+						srcEntity.weapon,
+						isDualWeapon
+					);
 					let m_motionSpeed = 1; // need to find out where is it come from? maybe from act delay with some calculate //actRes->GetDelay(action); [MrUnzO]
-					if (m_motionSpeed < 1) m_motionSpeed = 1;
 					m_motionSpeed *= factorOfmotionSpeed;
 
 					soundTime = delayTime = m_attackMotion * m_motionSpeed * 24.0;
@@ -562,7 +593,7 @@ define(function (require) {
 
 					// Display throw arrow effect when using bows, not an elegant conditional but it works.. [Waken]
 					if (DB.isBow(DB.getWeaponType(srcEntity.weapon, true))) {
-						delayTime = (m_attackMotion + (8 / m_motionSpeed)) * m_motionSpeed * 24.0;
+						delayTime = (m_attackMotion + 8 / m_motionSpeed) * m_motionSpeed * 24.0;
 						pkt.attackMT += delayTime;
 						var EF_Init_Par = {
 							effectId: 'ef_arrow_projectile',
@@ -573,8 +604,8 @@ define(function (require) {
 						};
 						EffectManager.spam(EF_Init_Par);
 					}
-
-				} else if (srcEntity.job in AttackEffect.PROJECTILE){ // Non player projectiles
+				} else if (srcEntity.job in AttackEffect.PROJECTILE) {
+					// Non player projectiles
 					var EF_Init_Par = {
 						effectId: AttackEffect.PROJECTILE[srcEntity.job],
 						ownerAID: dstEntity.GID,
@@ -583,8 +614,8 @@ define(function (require) {
 						otherPosition: srcEntity.position
 					};
 					EffectManager.spam(EF_Init_Par);
-					
-				} else if (srcEntity.job in AttackEffect.SPAWN){ // Non player special ranged attack
+				} else if (srcEntity.job in AttackEffect.SPAWN) {
+					// Non player special ranged attack
 					var EF_Init_Par = {
 						effectId: AttackEffect.SPAWN[srcEntity.job],
 						ownerAID: dstEntity.GID,
@@ -607,18 +638,21 @@ define(function (require) {
 
 					// damage blocking status effect display
 					if (pkt.action == 0 && pkt.damage == 0 && pkt.leftDamage == 0) {
-
 					}
 
 					target = pkt.damage ? dstEntity : srcEntity;
 
 					// damage or miss display
-					if (dstEntity.objecttype === Entity.TYPE_MOB || dstEntity.objecttype === Entity.TYPE_NPC_ABR || dstEntity.objecttype === Entity.TYPE_NPC_BIONIC) {
+					if (
+						dstEntity.objecttype === Entity.TYPE_MOB ||
+						dstEntity.objecttype === Entity.TYPE_NPC_ABR ||
+						dstEntity.objecttype === Entity.TYPE_NPC_BIONIC
+					) {
 						if (pkt.damage > 0) {
 							var EF_Init_Par = {
 								effectId: EffectConst.EF_HIT1,
 								ownerAID: pkt.targetGID,
-								startTick: Renderer.tick + pkt.attackMT,
+								startTick: Renderer.tick + pkt.attackMT
 							};
 							EffectManager.spam(EF_Init_Par);
 						}
@@ -626,71 +660,126 @@ define(function (require) {
 
 					var type = null;
 					switch (pkt.action) {
+						// Single damage
+						case 10: // critical
+							type = Damage.TYPE.CRIT;
+						case 0: // regular damage
+						case 4: // regular damage (endure)
+							Damage.add(pkt.damage, target, Renderer.tick + pkt.attackMT, srcWeapon, type);
+							if (pkt.leftDamage) {
+								Damage.add(
+									pkt.leftDamage,
+									target,
+									Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY * 1.75,
+									srcWeapon,
+									type
+								);
+							}
+							break;
 
-							// Single damage
-							case 10: // critical
-								type = Damage.TYPE.CRIT;
-							case 0: // regular damage
-							case 4: // regular damage (endure)
-								Damage.add(pkt.damage, target, Renderer.tick + pkt.attackMT, srcWeapon, type);
+						// Combo
+						case 13: //multi-hit critical
+							type = Damage.TYPE.CRIT;
+						case 8: // multi-hit damage
+						case 9: // multi-hit damage (endure)
+							// Display combo only if entity is mob and the attack don't miss
+							if (
+								(dstEntity.objecttype === Entity.TYPE_MOB ||
+									dstEntity.objecttype === Entity.TYPE_NPC_ABR ||
+									dstEntity.objecttype === Entity.TYPE_NPC_BIONIC) &&
+								pkt.damage > 0
+							) {
+								if (pkt.damage > 1) {
+									// Can't divide 1 damage
+									Damage.add(
+										pkt.damage / 2,
+										dstEntity,
+										Renderer.tick + pkt.attackMT,
+										srcWeapon,
+										Damage.TYPE.COMBO
+									);
+								}
 								if (pkt.leftDamage) {
-									Damage.add(pkt.leftDamage, target, Renderer.tick + pkt.attackMT + (C_MULTIHIT_DELAY * 1.75), srcWeapon, type);
-								}
-								break;
-
-							// Combo
-							case 13: //multi-hit critical
-								type = Damage.TYPE.CRIT;
-							case 8: // multi-hit damage
-							case 9: // multi-hit damage (endure)
-
-								// Display combo only if entity is mob and the attack don't miss
-								if ((dstEntity.objecttype === Entity.TYPE_MOB || dstEntity.objecttype === Entity.TYPE_NPC_ABR || dstEntity.objecttype === Entity.TYPE_NPC_BIONIC) && pkt.damage > 0) {
-									if (pkt.damage > 1) { // Can't divide 1 damage
-										Damage.add(pkt.damage / 2, dstEntity, Renderer.tick + pkt.attackMT, srcWeapon, Damage.TYPE.COMBO);
-									}
-									if (pkt.leftDamage) {
-										Damage.add(pkt.damage, dstEntity, Renderer.tick + pkt.attackMT + (C_MULTIHIT_DELAY / 2), srcWeapon, Damage.TYPE.COMBO);
-										Damage.add(pkt.damage + pkt.leftDamage, dstEntity, Renderer.tick + pkt.attackMT + (C_MULTIHIT_DELAY * 1.75), srcWeapon, Damage.TYPE.COMBO | Damage.TYPE.COMBO_FINAL);
-									} else {
-										Damage.add(pkt.damage, dstEntity, Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY, srcWeapon, Damage.TYPE.COMBO | Damage.TYPE.COMBO_FINAL);
-									}
-								}
-
-								var div = 1;
-								if (pkt.damage > 1) { // Can't divide 1 damage
-									div = 2;
-									Damage.add(pkt.damage / div, target, Renderer.tick + pkt.attackMT, srcWeapon, type);
-								}
-								if (pkt.leftDamage) {
-									Damage.add(pkt.damage / div, target, Renderer.tick + pkt.attackMT + (C_MULTIHIT_DELAY / 2), srcWeapon, type);
-									Damage.add(pkt.leftDamage, target, Renderer.tick + pkt.attackMT + (C_MULTIHIT_DELAY * 1.75), srcWeapon, type);
+									Damage.add(
+										pkt.damage,
+										dstEntity,
+										Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY / 2,
+										srcWeapon,
+										Damage.TYPE.COMBO
+									);
+									Damage.add(
+										pkt.damage + pkt.leftDamage,
+										dstEntity,
+										Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY * 1.75,
+										srcWeapon,
+										Damage.TYPE.COMBO | Damage.TYPE.COMBO_FINAL
+									);
 								} else {
-									Damage.add(pkt.damage / div, target, Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY, srcWeapon, type);
+									Damage.add(
+										pkt.damage,
+										dstEntity,
+										Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY,
+										srcWeapon,
+										Damage.TYPE.COMBO | Damage.TYPE.COMBO_FINAL
+									);
 								}
-								break;
+							}
 
-							// TODO: lucky miss
-							case 11:
-								dstEntity.attachments.add({
-									frame: 3,
-									file: 'msg',
-									uid: 'lucky',
-									play: true,
-									head: true,
-									repeat: false,
-								});
-								break;
+							var div = 1;
+							if (pkt.damage > 1) {
+								// Can't divide 1 damage
+								div = 2;
+								Damage.add(pkt.damage / div, target, Renderer.tick + pkt.attackMT, srcWeapon, type);
+							}
+							if (pkt.leftDamage) {
+								Damage.add(
+									pkt.damage / div,
+									target,
+									Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY / 2,
+									srcWeapon,
+									type
+								);
+								Damage.add(
+									pkt.leftDamage,
+									target,
+									Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY * 1.75,
+									srcWeapon,
+									type
+								);
+							} else {
+								Damage.add(
+									pkt.damage / div,
+									target,
+									Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY,
+									srcWeapon,
+									type
+								);
+							}
+							break;
 
+						// TODO: lucky miss
+						case 11:
+							dstEntity.attachments.add({
+								frame: 3,
+								file: 'msg',
+								uid: 'lucky',
+								play: true,
+								head: true,
+								repeat: false
+							});
+							break;
 					}
 				}
 
 				srcEntity.attack_speed = pkt.attackMT;
 
-
 				if (pkt.leftDamage) {
 					// KAGEROU, OBORO does not use ATTCK3 for left
-					const useATTACK = (srcEntity.job == JobId.KAGEROU || srcEntity.job == JobId.KAGEROU_B || srcEntity.job == JobId.OBORO || srcEntity.job == JobId.OBORO_B);
+					const useATTACK =
+						srcEntity.job == JobId.KAGEROU ||
+						srcEntity.job == JobId.KAGEROU_B ||
+						srcEntity.job == JobId.OBORO ||
+						srcEntity.job == JobId.OBORO_B;
 					srcEntity.setAction({
 						action: useATTACK ? srcEntity.ACTION.ATTACK : srcEntity.ACTION.ATTACK3,
 						frame: 0,
@@ -724,8 +813,12 @@ define(function (require) {
 				}
 
 				// Talk sometime
-				if (srcEntity.GID === Session.Entity.GID && (Session.pet.friendly > 900 && (Session.pet.lastTalk || 0) + 10000 < Date.now())) {
-					const talkRate = parseInt((Math.random() * 10));
+				if (
+					srcEntity.GID === Session.Entity.GID &&
+					Session.pet.friendly > 900 &&
+					(Session.pet.lastTalk || 0) + 10000 < Date.now()
+				) {
+					const talkRate = parseInt(Math.random() * 10);
 					if (talkRate < 3) {
 						const hunger = DB.getPetHungryState(Session.pet.oldHungry);
 						const talk = DB.getPetTalkNumber(Session.pet.job, PetMessageConst.PM_HUNTING, hunger);
@@ -783,32 +876,71 @@ define(function (require) {
 		if (pkt?.damage > 0) {
 			if (srcEntity.GID === Session.Character.GID) {
 				// I deal damage
-				ChatBox.addText((DB.getMessage(1607)).replace('%s', dstEntity.display.name).replace('%d', pkt.damage),
-					ChatBox.TYPE.INFO, ChatBox.FILTER.BATTLE)
+				ChatBox.addText(
+					DB.getMessage(1607).replace('%s', dstEntity.display.name).replace('%d', pkt.damage),
+					ChatBox.TYPE.INFO,
+					ChatBox.FILTER.BATTLE
+				);
 			} else if (dstEntity.GID === Session.Character.GID) {
 				// I receive damage
-				ChatBox.addText(DB.getMessage(1605).replace('%s', srcEntity.display.name).replace('%d', pkt.damage),
-					ChatBox.TYPE.INFO, ChatBox.FILTER.BATTLE)
-			} else if (srcEntity.GID === Session.homunId || srcEntity.GID === Session.merId || srcEntity.GID === Session.petId || srcEntity.GID === Session.elemId) {
+				ChatBox.addText(
+					DB.getMessage(1605).replace('%s', srcEntity.display.name).replace('%d', pkt.damage),
+					ChatBox.TYPE.INFO,
+					ChatBox.FILTER.BATTLE
+				);
+			} else if (
+				srcEntity.GID === Session.homunId ||
+				srcEntity.GID === Session.merId ||
+				srcEntity.GID === Session.petId ||
+				srcEntity.GID === Session.elemId
+			) {
 				// My buddy deals damage
-				ChatBox.addText(DB.getMessage(1608).replace('%s', srcEntity.display.name).replace('%s', dstEntity.display.name).replace('%d', pkt.damage),
-					ChatBox.TYPE.INFO, ChatBox.FILTER.BATTLE)
-			} else if (dstEntity.GID === Session.homunId || dstEntity.GID === Session.merId || dstEntity.GID === Session.petId || dstEntity.GID === Session.elemId) {
+				ChatBox.addText(
+					DB.getMessage(1608)
+						.replace('%s', srcEntity.display.name)
+						.replace('%s', dstEntity.display.name)
+						.replace('%d', pkt.damage),
+					ChatBox.TYPE.INFO,
+					ChatBox.FILTER.BATTLE
+				);
+			} else if (
+				dstEntity.GID === Session.homunId ||
+				dstEntity.GID === Session.merId ||
+				dstEntity.GID === Session.petId ||
+				dstEntity.GID === Session.elemId
+			) {
 				// My buddy receives damage
-				ChatBox.addText(DB.getMessage(1606).replace('%s', dstEntity.display.name).replace('%s', srcEntity.display.name).replace('%d', pkt.damage),
-					ChatBox.TYPE.INFO, ChatBox.FILTER.BATTLE)
+				ChatBox.addText(
+					DB.getMessage(1606)
+						.replace('%s', dstEntity.display.name)
+						.replace('%s', srcEntity.display.name)
+						.replace('%d', pkt.damage),
+					ChatBox.TYPE.INFO,
+					ChatBox.FILTER.BATTLE
+				);
 			} else if (getModule('UI/Components/PartyFriends/PartyFriends').isGroupMember(srcEntity.display.name)) {
 				// Party member deals damage
-				ChatBox.addText(DB.getMessage(1608).replace('%s', srcEntity.display.name).replace('%s', dstEntity.display.name).replace('%d', pkt.damage),
-					ChatBox.TYPE.INFO, ChatBox.FILTER.PARTY_BATTLE)
+				ChatBox.addText(
+					DB.getMessage(1608)
+						.replace('%s', srcEntity.display.name)
+						.replace('%s', dstEntity.display.name)
+						.replace('%d', pkt.damage),
+					ChatBox.TYPE.INFO,
+					ChatBox.FILTER.PARTY_BATTLE
+				);
 			} else if (getModule('UI/Components/PartyFriends/PartyFriends').isGroupMember(dstEntity.display.name)) {
 				// Party member receives damage
-				ChatBox.addText(DB.getMessage(1606).replace('%s', dstEntity.display.name).replace('%s', srcEntity.display.name).replace('%d', pkt.damage),
-					ChatBox.TYPE.INFO, ChatBox.FILTER.PARTY_BATTLE)
+				ChatBox.addText(
+					DB.getMessage(1606)
+						.replace('%s', dstEntity.display.name)
+						.replace('%s', srcEntity.display.name)
+						.replace('%d', pkt.damage),
+					ChatBox.TYPE.INFO,
+					ChatBox.FILTER.PARTY_BATTLE
+				);
 			}
 		}
 	}
-
 
 	/**
 	 * Entity say something
@@ -832,23 +964,23 @@ define(function (require) {
 		ChatBox.addText(pkt.msg, type, ChatBox.FILTER.PUBLIC_CHAT, null, false);
 
 		if (entity) {
-			pkt.msg = pkt.msg.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, function(match) {
-				return '<' + DB.getItemNameFromLink(match) + '>';
-			});
+			pkt.msg = pkt.msg.replace(
+				/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi,
+				function (match) {
+					return '<' + DB.getItemNameFromLink(match) + '>';
+				}
+			);
 
 			entity.dialog.set(pkt.msg);
 
 			// Should not happen
 			if (entity === Session.Entity) {
 				type |= ChatBox.TYPE.SELF;
-			}
-			else if (entity.isAdmin) {
+			} else if (entity.isAdmin) {
 				type |= ChatBox.TYPE.ADMIN;
 			}
 		}
-
 	}
-
 
 	/**
 	 * Entity say something in color (channel system)
@@ -857,11 +989,10 @@ define(function (require) {
 	 */
 	function onEntityTalkColor(pkt) {
 		var entity;
-		var color = 'rgb(' + ([
-			(pkt.color & 0x000000ff),
-			(pkt.color & 0x0000ff00) >> 8,
-			(pkt.color & 0x00ff0000) >> 16
-		]).join(',') + ')'; // bgr to rgb.
+		var color =
+			'rgb(' +
+			[pkt.color & 0x000000ff, (pkt.color & 0x0000ff00) >> 8, (pkt.color & 0x00ff0000) >> 16].join(',') +
+			')'; // bgr to rgb.
 
 		// Remove "pseudo : |00Dialogue"
 		pkt.msg = pkt.msg.replace(/\: \|\d{2}/, ': ');
@@ -872,7 +1003,6 @@ define(function (require) {
 		}
 		ChatBox.addText(pkt.msg, ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_CHAT, color);
 	}
-
 
 	/**
 	 * Display entity's name
@@ -888,12 +1018,12 @@ define(function (require) {
 				entity.display.name = pkt.CName;
 			}
 
-			if (PACKETVER.value >= 20170208 && pkt.TitleID > 0) {  
-				var titleText = DB.getTitleString(pkt.TitleID);  
+			if (PACKETVER.value >= 20170208 && pkt.TitleID > 0) {
+				var titleText = DB.getTitleString(pkt.TitleID);
 				entity.display.title_name = titleText;
-			}
-			else
+			} else {
 				entity.display.title_name = '';
+			}
 
 			entity.display.party_name = pkt.PName || '';
 			entity.display.guild_name = pkt.GName || '';
@@ -901,22 +1031,30 @@ define(function (require) {
 
 			entity.display.load = entity.display.TYPE.COMPLETE;
 
-			if (entity.GUID && entity !== Session.Entity) {
+			if (entity.GUID) {
 				Guild.requestGuildEmblem(entity.GUID, entity.GEmblemVer, function (image) {
-					entity.display.emblem = image;
+					if (PACKETVER.value < 20170315) {
+						entity.display.emblem = image;
+					}
 					entity.display.update(
-						entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-										entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-											entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-												(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-													entity.display.STYLE.DEFAULT
-					)
+						entity.objecttype === Entity.TYPE_MOB
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_ABR
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC_BIONIC
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_DISGUISED
+										? entity.display.STYLE.MOB
+										: entity.objecttype === Entity.TYPE_NPC
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_NPC2
+												? entity.display.STYLE.NPC
+												: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+													? entity.display.STYLE.ADMIN
+													: entity.display.STYLE.DEFAULT
+					);
 					entity.emblem.emblem = image;
 					entity.emblem.update();
-
 					if (Session.mapState.isSiege && entity.GUID !== Session.Entity.GUID) {
 						entity.emblem.display = true;
 					}
@@ -925,15 +1063,22 @@ define(function (require) {
 				DB.loadGroupEmblem(pkt.GID, function (image) {
 					entity.display.emblem = image;
 					entity.display.update(
-						entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-										entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-											entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-												(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-													entity.display.STYLE.DEFAULT
-					)
+						entity.objecttype === Entity.TYPE_MOB
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_ABR
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC_BIONIC
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_DISGUISED
+										? entity.display.STYLE.MOB
+										: entity.objecttype === Entity.TYPE_NPC
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_NPC2
+												? entity.display.STYLE.NPC
+												: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+													? entity.display.STYLE.ADMIN
+													: entity.display.STYLE.DEFAULT
+					);
 					entity.emblem.emblem = image;
 					entity.emblem.update();
 				});
@@ -941,15 +1086,22 @@ define(function (require) {
 				DB.loadMobEmblem(entity.mobtype, function (image) {
 					entity.display.emblem = image;
 					entity.display.update(
-						entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-										entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-											entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-												(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-													entity.display.STYLE.DEFAULT
-					)
+						entity.objecttype === Entity.TYPE_MOB
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_ABR
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC_BIONIC
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_DISGUISED
+										? entity.display.STYLE.MOB
+										: entity.objecttype === Entity.TYPE_NPC
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_NPC2
+												? entity.display.STYLE.NPC
+												: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+													? entity.display.STYLE.ADMIN
+													: entity.display.STYLE.DEFAULT
+					);
 					entity.emblem.emblem = image;
 					entity.emblem.update();
 				});
@@ -957,15 +1109,22 @@ define(function (require) {
 				DB.loadClanEmblem(entity.clanId, function (image) {
 					entity.display.emblem = image;
 					entity.display.update(
-						entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-										entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-											entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-												(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-													entity.display.STYLE.DEFAULT
-						)
+						entity.objecttype === Entity.TYPE_MOB
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_ABR
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC_BIONIC
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_DISGUISED
+										? entity.display.STYLE.MOB
+										: entity.objecttype === Entity.TYPE_NPC
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_NPC2
+												? entity.display.STYLE.NPC
+												: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+													? entity.display.STYLE.ADMIN
+													: entity.display.STYLE.DEFAULT
+					);
 					entity.emblem.emblem = image;
 					entity.emblem.update();
 				});
@@ -973,14 +1132,21 @@ define(function (require) {
 				entity.display.emblem = null;
 			}
 			entity.display.update(
-				entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-					entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-						entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-									entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-										(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-											entity.display.STYLE.DEFAULT
+				entity.objecttype === Entity.TYPE_MOB
+					? entity.display.STYLE.MOB
+					: entity.objecttype === Entity.TYPE_NPC_ABR
+						? entity.display.STYLE.MOB
+						: entity.objecttype === Entity.TYPE_NPC_BIONIC
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_DISGUISED
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC
+									? entity.display.STYLE.NPC
+									: entity.objecttype === Entity.TYPE_NPC2
+										? entity.display.STYLE.NPC
+										: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+											? entity.display.STYLE.ADMIN
+											: entity.display.STYLE.DEFAULT
 			);
 
 			if (EntityManager.getOverEntity() === entity) {
@@ -990,8 +1156,11 @@ define(function (require) {
 	}
 
 	function onTitleChangeAck(pkt) {
-		if(pkt.result === 0){
-			var Equipment = PACKETVER.value >= 20220831 ? require('UI/Components/Equipment/EquipmentV4/EquipmentV4') : require('UI/Components/Equipment/EquipmentV3/EquipmentV3');
+		if (pkt.result === 0) {
+			var Equipment =
+				PACKETVER.value >= 20220831
+					? require('UI/Components/Equipment/EquipmentV4/EquipmentV4')
+					: require('UI/Components/Equipment/EquipmentV3/EquipmentV3');
 			Equipment.setTitle(pkt.title_id);
 		}
 	}
@@ -1010,12 +1179,11 @@ define(function (require) {
 		}
 	}
 
-
 	/**
-	* Shows notification effect for quests and events
-	*
-	* @param {object} pkt - PACKET.ZC.QUEST_NOTIFY_EFFECT
-	*/
+	 * Shows notification effect for quests and events
+	 *
+	 * @param {object} pkt - PACKET.ZC.QUEST_NOTIFY_EFFECT
+	 */
 	function onEntityQuestNotifyEffect(pkt) {
 		var Entity = EntityManager.get(pkt.npcID);
 		var color = 0;
@@ -1023,7 +1191,7 @@ define(function (require) {
 		if (pkt.effect !== 9999) {
 			var emotionId = pkt.effect + 81;
 
-			if (Entity && (pkt.effect in Emotions.indexes)) {
+			if (Entity && pkt.effect in Emotions.indexes) {
 				Entity.attachments.add({
 					frame: Emotions.indexes[emotionId],
 					file: 'emotion',
@@ -1033,7 +1201,6 @@ define(function (require) {
 					depth: 5.0
 				});
 			}
-
 		}
 
 		switch (pkt.color + 1) {
@@ -1061,8 +1228,6 @@ define(function (require) {
 		MiniMap.getUI().addNpcMark(pkt.npcID, pkt.xPos, pkt.yPos, color, Infinity);
 	}
 
-
-
 	/**
 	 * Updating entity direction
 	 *
@@ -1071,11 +1236,10 @@ define(function (require) {
 	function onEntityDirectionChange(pkt) {
 		var entity = EntityManager.get(pkt.AID);
 		if (entity) {
-			entity.direction = ([4, 3, 2, 1, 0, 7, 6, 5])[pkt.dir];
+			entity.direction = [4, 3, 2, 1, 0, 7, 6, 5][pkt.dir];
 			entity.headDir = pkt.headDir;
 		}
 	}
-
 
 	/**
 	 * Update Entity's visual look
@@ -1091,10 +1255,25 @@ define(function (require) {
 
 		switch (pkt.type) {
 			case 0:
-				if (entity.objecttype === Entity.TYPE_EFFECT || entity.objecttype === Entity.TYPE_UNIT || entity.objecttype === Entity.TYPE_TRAP) {
-					EffectManager.spamSkillZone(pkt.value, entity.position[0], entity.position[1], pkt.GID, entity.creatorGID);
+				if (
+					entity.objecttype === Entity.TYPE_EFFECT ||
+					entity.objecttype === Entity.TYPE_UNIT ||
+					entity.objecttype === Entity.TYPE_TRAP
+				) {
+					EffectManager.spamSkillZone(
+						pkt.value,
+						entity.position[0],
+						entity.position[1],
+						pkt.GID,
+						entity.creatorGID
+					);
 				} else {
-					entity.job = pkt.value;
+					// Don't override job visuals if transformation is active
+					if (entity._job_transform || entity._monster_transform || entity._active_monster_transform) {
+						entity._job = pkt.value;
+					} else {
+						entity.job = pkt.value;
+					}
 					if (entity === Session.Entity) {
 						// Apply the job change first
 						Session.Character.job = pkt.value;
@@ -1126,27 +1305,27 @@ define(function (require) {
 				// stored in a long value (uint16 and uint16 in uint32)
 				// source: https://github.com/rathena/rathena/blob/master/src/map/clif.c#L3162
 				if (pkt instanceof PACKET.ZC.SPRITE_CHANGE2) {
-						// don't know why switch from katar to sword, knife server put it on the left hand instead of right hand first.
-						// so we have to swap it. maybe have a better solution.
-						if (pkt.value === 0 && pkt.value2 !== 0 && !DB.isShield(pkt.value2)) {
-							pkt.value = pkt.value2;
-							pkt.value2 = 0;
-						}
+					// don't know why switch from katar to sword, knife server put it on the left hand instead of right hand first.
+					// so we have to swap it. maybe have a better solution.
+					if (pkt.value === 0 && pkt.value2 !== 0 && !DB.isShield(pkt.value2)) {
+						pkt.value = pkt.value2;
+						pkt.value2 = 0;
+					}
 
-						let weaponType = DB.getWeaponType(pkt.value, true);
-						let viewId = DB.getWeaponViewID(pkt.value);
+					let weaponType = DB.getWeaponType(pkt.value, true);
+					let viewId = DB.getWeaponViewID(pkt.value);
 
-						if (DB.isAssassin(entity.job) && pkt.value2 !== 0 && !DB.isShield(pkt.value2)) {
-							let secondaryWeaponType = DB.getWeaponType(pkt.value2, true);
-							entity.weapon = DB.mountWeapon(weaponType, secondaryWeaponType);
-							entity.shield = 0;
-						} else if (DB.isKatar(weaponType)) {
-							entity.weapon = viewId;
-							entity.shield = viewId;
-						} else {
-							entity.weapon = viewId;
-							entity.shield = pkt.value2;
-						}
+					if (DB.isAssassin(entity.job) && pkt.value2 !== 0 && !DB.isShield(pkt.value2)) {
+						let secondaryWeaponType = DB.getWeaponType(pkt.value2, true);
+						entity.weapon = DB.mountWeapon(weaponType, secondaryWeaponType);
+						entity.shield = 0;
+					} else if (DB.isKatar(weaponType)) {
+						entity.weapon = viewId;
+						entity.shield = viewId;
+					} else {
+						entity.weapon = viewId;
+						entity.shield = pkt.value2;
+					}
 				} else {
 					entity.weapon = pkt.value;
 					entity.shield = pkt.value2;
@@ -1158,29 +1337,49 @@ define(function (require) {
 				if (entity.falcon) {
 					entity.falcon.set({
 						PosDir: [entity.position[0], entity.position[1], 0],
-						job: entity.job + '_FALCON',
+						job: entity.job + '_FALCON'
 					});
 				}
 				if (entity.wug) {
 					entity.wug.set({
 						PosDir: [entity.position[0], entity.position[1], 0],
-						job: entity.job + '_WUG',
+						job: entity.job + '_WUG'
 					});
 				}
 				break;
 
-			case 3: entity.accessory = pkt.value; break;
-			case 4: entity.accessory2 = pkt.value; break;
-			case 5: entity.accessory3 = pkt.value; break;
-			case 6: entity.headpalette = pkt.value; break;
-			case 7: entity.bodypalette = pkt.value; break;
-			case 8: entity.shield = pkt.value; break;
-			case 9: break; // LOOK_SHOES ??
-			case 10: break; // LOOK_BODY ??
-			case 11: break; // LOOK_RESET_COSTUMES (Makes all headgear sprites on player vanish when activated.)
-			case 12: entity.robe = pkt.value; break;
-			case 13: entity.body = pkt.value; break; // LOOK_BODY2
-			case 14: break;  // LOOK_FLOOR ??
+			case 3:
+				entity.accessory = pkt.value;
+				break;
+			case 4:
+				entity.accessory2 = pkt.value;
+				break;
+			case 5:
+				entity.accessory3 = pkt.value;
+				break;
+			case 6:
+				entity.headpalette = pkt.value;
+				break;
+			case 7:
+				entity.bodypalette = pkt.value;
+				break;
+			case 8:
+				entity.shield = pkt.value;
+				break;
+			case 9:
+				break; // LOOK_SHOES ??
+			case 10:
+				break; // LOOK_BODY ??
+			case 11:
+				break; // LOOK_RESET_COSTUMES (Makes all headgear sprites on player vanish when activated.)
+			case 12:
+				entity.robe = pkt.value;
+				break;
+			case 13:
+				entity.body = pkt.value;
+				break; // LOOK_BODY2
+			case 14:
+				break; // LOOK_FLOOR ??
 		}
 	}
 
@@ -1198,7 +1397,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Entity use skill on another entity (no damage : heal, boost, etc.)
 	 *
@@ -1209,9 +1407,14 @@ define(function (require) {
 		var dstEntity = EntityManager.get(pkt.targetAID);
 
 		// Don't display skill names for mobs and hiding skills
-		if (srcEntity && (srcEntity.objecttype === Entity.TYPE_PC || srcEntity.objecttype === Entity.TYPE_DISGUISED ||
-			srcEntity.objecttype === Entity.TYPE_PET || srcEntity.objecttype === Entity.TYPE_HOM ||
-			srcEntity.objecttype === Entity.TYPE_MERC || srcEntity.objecttype === Entity.TYPE_ELEM)
+		if (
+			srcEntity &&
+			(srcEntity.objecttype === Entity.TYPE_PC ||
+				srcEntity.objecttype === Entity.TYPE_DISGUISED ||
+				srcEntity.objecttype === Entity.TYPE_PET ||
+				srcEntity.objecttype === Entity.TYPE_HOM ||
+				srcEntity.objecttype === Entity.TYPE_MERC ||
+				srcEntity.objecttype === Entity.TYPE_ELEM)
 		) {
 			if (!SkillNameDisplayExclude.includes(pkt.SKID)) {
 				srcEntity.dialog.set(
@@ -1230,7 +1433,7 @@ define(function (require) {
 						srcEntity.setAction(action(srcEntity, Renderer.tick));
 					}
 				} else {
-					if(DB.isDoram(srcEntity.job)){
+					if (DB.isDoram(srcEntity.job)) {
 						srcEntity.setAction(SkillActionTable['DEFAULT_DORAM'](srcEntity, Renderer.tick));
 					} else {
 						srcEntity.setAction(SkillActionTable['DEFAULT'](srcEntity, Renderer.tick));
@@ -1245,9 +1448,7 @@ define(function (require) {
 			}
 
 			// In healing skill, the level parameter stored the healed value
-			if (pkt.SKID === SkillId.AL_HEAL ||
-				pkt.SKID === SkillId.AB_HIGHNESSHEAL ||
-				pkt.SKID === SkillId.AB_CHEAL) {
+			if (pkt.SKID === SkillId.AL_HEAL || pkt.SKID === SkillId.AB_HIGHNESSHEAL || pkt.SKID === SkillId.AB_CHEAL) {
 				Damage.add(pkt.level, dstEntity, Renderer.tick, null, Damage.TYPE.HEAL);
 				Sound.playPosition('_heal_effect.wav', dstEntity.position); // healing on neutral targets got another effect than undeads
 			}
@@ -1287,7 +1488,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Entity just finish casting a skill to position
 	 *
@@ -1296,7 +1496,6 @@ define(function (require) {
 	function onSkillAppear(pkt) {
 		EffectManager.spamSkillZone(pkt.job, pkt.xPos, pkt.yPos, pkt.AID, pkt.creatorAID);
 	}
-
 
 	/**
 	 * Remove a skill from screen
@@ -1311,29 +1510,27 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Entity use skill on another entity with damage
 	 *
 	 * @param {object} pkt - PACKET.ZC.NOTIFY_SKILL
 	 */
 	function onEntityUseSkillToAttack(pkt) {
-		var SkillAction = {};	//Corresponds to e_damage_type in clif.hpp
-		SkillAction.NORMAL = 0;	/// damage [ damage: total damage, div: amount of hits, damage2: assassin dual-wield damage ]
-		SkillAction.PICKUP_ITEM = 1;	/// pick up item
-		SkillAction.SIT_DOWN = 2;	/// sit down
-		SkillAction.STAND_UP = 3;	/// stand up
-		SkillAction.ENDURE = 4;	/// damage (endure)
-		SkillAction.SPLASH = 5;	/// (splash?)
-		SkillAction.SKILL = 6;	/// (skill?)
-		SkillAction.REPEAT = 7;	/// (repeat damage?)
-		SkillAction.MULTI_HIT = 8;	/// multi-hit damage
-		SkillAction.MULTI_HIT_ENDURE = 9;	/// multi-hit damage (endure)
-		SkillAction.CRITICAL = 10;	/// critical hit
-		SkillAction.LUCY_DODGE = 11;	/// lucky dodge
-		SkillAction.TOUCH = 12;	/// (touch skill?)
-		SkillAction.MULTI_HIT_CRITICAL = 13;	/// multi-hit critical
-
+		var SkillAction = {}; //Corresponds to e_damage_type in clif.hpp
+		SkillAction.NORMAL = 0; /// damage [ damage: total damage, div: amount of hits, damage2: assassin dual-wield damage ]
+		SkillAction.PICKUP_ITEM = 1; /// pick up item
+		SkillAction.SIT_DOWN = 2; /// sit down
+		SkillAction.STAND_UP = 3; /// stand up
+		SkillAction.ENDURE = 4; /// damage (endure)
+		SkillAction.SPLASH = 5; /// (splash?)
+		SkillAction.SKILL = 6; /// (skill?)
+		SkillAction.REPEAT = 7; /// (repeat damage?)
+		SkillAction.MULTI_HIT = 8; /// multi-hit damage
+		SkillAction.MULTI_HIT_ENDURE = 9; /// multi-hit damage (endure)
+		SkillAction.CRITICAL = 10; /// critical hit
+		SkillAction.LUCY_DODGE = 11; /// lucky dodge
+		SkillAction.TOUCH = 12; /// (touch skill?)
+		SkillAction.MULTI_HIT_CRITICAL = 13; /// multi-hit critical
 
 		var srcEntity = EntityManager.get(pkt.AID);
 		var dstEntity = EntityManager.get(pkt.targetID);
@@ -1356,17 +1553,20 @@ define(function (require) {
 			//  - non-player or player owned entity
 			//  - skill level < 0
 			//  - skill ID < 0
-			if (!SkillNameDisplayExclude.includes(pkt.SKID)
-				&&
-				(srcEntity.objecttype === Entity.TYPE_PC || srcEntity.objecttype === Entity.TYPE_DISGUISED ||
-					srcEntity.objecttype === Entity.TYPE_PET || srcEntity.objecttype === Entity.TYPE_HOM ||
-					srcEntity.objecttype === Entity.TYPE_MERC || srcEntity.objecttype === Entity.TYPE_ELEM)
-				&&
-				!(pkt.level < 0)
-				&&
+			if (
+				!SkillNameDisplayExclude.includes(pkt.SKID) &&
+				(srcEntity.objecttype === Entity.TYPE_PC ||
+					srcEntity.objecttype === Entity.TYPE_DISGUISED ||
+					srcEntity.objecttype === Entity.TYPE_PET ||
+					srcEntity.objecttype === Entity.TYPE_HOM ||
+					srcEntity.objecttype === Entity.TYPE_MERC ||
+					srcEntity.objecttype === Entity.TYPE_ELEM) &&
+				!(pkt.level < 0) &&
 				!(pkt.SKID < 0)
 			) {
-				srcEntity.dialog.set(((SkillInfo[pkt.SKID] && SkillInfo[pkt.SKID].SkillName) || 'Unknown Skill') + ' !!');
+				srcEntity.dialog.set(
+					((SkillInfo[pkt.SKID] && SkillInfo[pkt.SKID].SkillName) || 'Unknown Skill') + ' !!'
+				);
 			}
 
 			//Action handling
@@ -1381,8 +1581,12 @@ define(function (require) {
 				}
 
 				//Pet Talk
-				if (srcEntity.GID === Session.Entity.GID && (Session.pet.friendly > 900 && (Session.pet.lastTalk || 0) + 10000 < Date.now())) {
-					var talkRate = parseInt((Math.random() * 10));
+				if (
+					srcEntity.GID === Session.Entity.GID &&
+					Session.pet.friendly > 900 &&
+					(Session.pet.lastTalk || 0) + 10000 < Date.now()
+				) {
+					var talkRate = parseInt(Math.random() * 10);
 					if (talkRate < 3) {
 						var hunger = DB.getPetHungryState(Session.pet.oldHungry);
 						var talk = DB.getPetTalkNumber(Session.pet.job, PetMessageConst.PM_HUNTING, hunger);
@@ -1407,7 +1611,7 @@ define(function (require) {
 						dstEntity.position[1],
 						0,
 						true,
-						true,
+						true
 					);
 				}
 			}
@@ -1424,7 +1628,7 @@ define(function (require) {
 						dstEntity.position[1],
 						1,
 						false,
-						true,
+						true
 					);
 				}
 			}
@@ -1434,7 +1638,6 @@ define(function (require) {
 			var target = pkt.damage ? dstEntity : srcEntity;
 
 			if (pkt.damage && target && !(srcEntity == dstEntity && pkt.action == SkillAction.SKILL)) {
-
 				// Will be hit actions
 				onEntityWillBeHitSub(pkt, dstEntity);
 
@@ -1442,13 +1645,20 @@ define(function (require) {
 				var isBlueCombo = SkillBlueCombo.includes(pkt.SKID);
 
 				var addDamage = function (i, startTick) {
-
-					if (pkt.damage) { // Only if hits
+					if (pkt.damage) {
+						// Only if hits
 						EffectManager.spamSkillHit(pkt.SKID, pkt.targetID, startTick, pkt.AID);
 					}
 
-					if (!isCombo && isBlueCombo) { // Blue 'crit' non-combo EG: Rampage Blaster that hits
-						Damage.add(pkt.damage / pkt.count, target, startTick, srcWeapon, Damage.TYPE.COMBO_B | ((i + 1) === pkt.count ? Damage.TYPE.COMBO_FINAL : 0));
+					if (!isCombo && isBlueCombo) {
+						// Blue 'crit' non-combo EG: Rampage Blaster that hits
+						Damage.add(
+							pkt.damage / pkt.count,
+							target,
+							startTick,
+							srcWeapon,
+							Damage.TYPE.COMBO_B | (i + 1 === pkt.count ? Damage.TYPE.COMBO_FINAL : 0)
+						);
 					} else {
 						Damage.add(pkt.damage / pkt.count, target, startTick, srcWeapon); // Normal
 					}
@@ -1457,27 +1667,33 @@ define(function (require) {
 					// there are multiple attacks and actually hits
 					if (isCombo) {
 						Damage.add(
-							pkt.damage / pkt.count * (i + 1),
+							(pkt.damage / pkt.count) * (i + 1),
 							target,
 							startTick,
 							srcWeapon,
-							(isBlueCombo ? Damage.TYPE.COMBO_B : Damage.TYPE.COMBO) | ((i + 1) === pkt.count ? Damage.TYPE.COMBO_FINAL : 0)
+							(isBlueCombo ? Damage.TYPE.COMBO_B : Damage.TYPE.COMBO) |
+								(i + 1 === pkt.count ? Damage.TYPE.COMBO_FINAL : 0)
 						);
 					}
 				};
 
 				for (var i = 0; i < pkt.count; ++i) {
-					EffectManager.spamSkillBeforeHit(pkt.SKID, pkt.targetID, Renderer.tick + (C_MULTIHIT_DELAY * i), pkt.AID);
-					addDamage(i, Renderer.tick + pkt.attackMT + (C_MULTIHIT_DELAY * i));
+					EffectManager.spamSkillBeforeHit(
+						pkt.SKID,
+						pkt.targetID,
+						Renderer.tick + C_MULTIHIT_DELAY * i,
+						pkt.AID
+					);
+					addDamage(i, Renderer.tick + pkt.attackMT + C_MULTIHIT_DELAY * i);
 				}
 			}
 		}
 
-		if (srcEntity && dstEntity && pkt.action != SkillAction.SPLASH) { // && pkt.action != SkillAction.MULTI_HIT
+		if (srcEntity && dstEntity && pkt.action != SkillAction.SPLASH) {
+			// && pkt.action != SkillAction.MULTI_HIT
 			EffectManager.spamSkill(pkt.SKID, pkt.targetID, null, Renderer.tick + pkt.attackMT, pkt.AID);
 		}
 	}
-
 
 	/**
 	 * Cast a skill to someone
@@ -1515,12 +1731,11 @@ define(function (require) {
 			repeat: true,
 			play: true,
 			next: false
-		}
+		};
 
 		if (pkt.delayTime) {
-
 			// Check if cast bar needs to be hidden
-			hideCastBar = (pkt.SKID in SkillEffect && SkillEffect[pkt.SKID].hideCastBar);
+			hideCastBar = pkt.SKID in SkillEffect && SkillEffect[pkt.SKID].hideCastBar;
 
 			if (!hideCastBar) {
 				srcEntity.cast.set(pkt.delayTime);
@@ -1529,7 +1744,8 @@ define(function (require) {
 			next = false;
 		}
 
-		if (srcEntity.objecttype === Entity.TYPE_PC) { //monsters don't use ACTION.SKILL animation
+		if (srcEntity.objecttype === Entity.TYPE_PC) {
+			//monsters don't use ACTION.SKILL animation
 
 			var action = (SkillInfo[pkt.SKID] && SkillInfo[pkt.SKID].ActionType) || 'SKILL';
 
@@ -1538,7 +1754,7 @@ define(function (require) {
 				frame: 0,
 				repeat: false,
 				play: isPlay,
-				next: next,
+				next: next
 			});
 		}
 
@@ -1565,14 +1781,18 @@ define(function (require) {
 				pkt.yPos,
 				0,
 				true,
-				true,
+				true
 			);
 		}
 
 		// Only mob to don't display skill name ?
-		if (srcEntity.objecttype === Entity.TYPE_PC || srcEntity.objecttype === Entity.TYPE_DISGUISED ||
-			srcEntity.objecttype === Entity.TYPE_PET || srcEntity.objecttype === Entity.TYPE_HOM ||
-			srcEntity.objecttype === Entity.TYPE_MERC || srcEntity.objecttype === Entity.TYPE_ELEM
+		if (
+			srcEntity.objecttype === Entity.TYPE_PC ||
+			srcEntity.objecttype === Entity.TYPE_DISGUISED ||
+			srcEntity.objecttype === Entity.TYPE_PET ||
+			srcEntity.objecttype === Entity.TYPE_HOM ||
+			srcEntity.objecttype === Entity.TYPE_MERC ||
+			srcEntity.objecttype === Entity.TYPE_ELEM
 		) {
 			if (!SkillNameDisplayExclude.includes(pkt.SKID)) {
 				srcEntity.dialog.set(
@@ -1613,7 +1833,7 @@ define(function (require) {
 		}
 
 		// Check if cast aura needs to be hidden
-		hideCastAura = (pkt.SKID in SkillEffect && SkillEffect[pkt.SKID].hideCastAura);
+		hideCastAura = pkt.SKID in SkillEffect && SkillEffect[pkt.SKID].hideCastAura;
 
 		// Cast aura
 		if (pkt.delayTime && !hideCastAura) {
@@ -1661,7 +1881,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * A cast from an entity just canceled
 	 *
@@ -1678,13 +1897,15 @@ define(function (require) {
 			EffectManager.remove(MagicTarget, entity.GID);
 			EffectManager.remove(MagicRing, entity.GID);
 
-			if (entity === Session.Entity) { // Autocounter hardcoded animation (any better place to put this?)
+			if (entity === Session.Entity) {
+				// Autocounter hardcoded animation (any better place to put this?)
 				if (Session.underAutoCounter) {
-					if (Session.Entity.life.hp > 0)
+					if (Session.Entity.life.hp > 0) {
 						var EF_Init_Par = {
 							effectId: EffectConst.EF_AUTOCOUNTER,
 							ownerAID: pkt.AID
 						};
+					}
 
 					EffectManager.spam(EF_Init_Par);
 					Session.underAutoCounter = false;
@@ -1692,7 +1913,6 @@ define(function (require) {
 			}
 		}
 	}
-
 
 	/**
 	 * Update Player status
@@ -1702,21 +1922,45 @@ define(function (require) {
 	function onEntityStatusChange(pkt) {
 		var entity = EntityManager.get(pkt.AID);
 
+		// Monster/Active monster transformations - special handling
+		if (pkt.index === StatusConst.MONSTER_TRANSFORM || pkt.index === StatusConst.ACTIVE_MONSTER_TRANSFORM) {
+			if (!entity) {
+				var isActive = pkt.state == 1 || (pkt.val && pkt.val[0] == 1);
+				var key =
+					pkt.index === StatusConst.MONSTER_TRANSFORM ? 'monster_transform' : 'active_monster_transform';
+				EntityManager.storePendingTransform(pkt.AID, key, isActive ? (pkt.val ? pkt.val[0] : 0) : null);
+				return;
+			}
+		}
+		// Job form transformations (WEREWOLF, WERERAPTOR)
+		else if (pkt.index === StatusConst.WEREWOLF || pkt.index === StatusConst.WERERAPTOR) {
+			if (!entity) {
+				var isActive = pkt.state == 1 || (pkt.val && pkt.val[0] == 1);
+				EntityManager.storePendingTransform(
+					pkt.AID,
+					'job_transform',
+					isActive ? (pkt.index === StatusConst.WEREWOLF ? JobId.WEREWOLF : JobId.WERERAPTOR) : null
+				);
+				return;
+			}
+		}
+
 		if (!entity) {
-			if(pkt.index >= StatusConst.SWORDCLAN && pkt.index <= StatusConst.CROSSBOWCLAN) { // EFST CLAN - save it to when actor spawn, why server sometimes send this packet before entity spawn?
-				clanEmblems[pkt.AID] = (pkt.index - StatusConst.SWORDCLAN) + 1;
+			if (pkt.index >= StatusConst.SWORDCLAN && pkt.index <= StatusConst.CROSSBOWCLAN) {
+				// EFST CLAN - save it to when actor spawn, why server sometimes send this packet before entity spawn?
+				clanEmblems[pkt.AID] = pkt.index - StatusConst.SWORDCLAN + 1;
 			}
 			return;
 		}
 
 		// TODO: add other status
 		switch (pkt.index) {
-
 			// Maya purple card
 			case StatusConst.CLAIRVOYANCE:
 				if (entity === Session.Entity) {
 					Session.Character.intravision = pkt.state;
 					EntityManager.forEach(function (entity) {
+						/** @type {*} Intentional self-assignment to trigger effectState updates. */
 						entity.effectState = entity.effectState;
 					});
 				}
@@ -1724,8 +1968,8 @@ define(function (require) {
 
 			// Show cart
 			case StatusConst.ON_PUSH_CART:
-				entity.hasCart = pkt.state || (!pkt.hasOwnProperty('state'));
-				if (pkt.val && (pkt.state || (!pkt.hasOwnProperty('state')))) {
+				entity.hasCart = pkt.state || !pkt.hasOwnProperty('state');
+				if (pkt.val && (pkt.state || !pkt.hasOwnProperty('state'))) {
 					entity.CartNum = pkt.val[0];
 				}
 				break;
@@ -1744,9 +1988,10 @@ define(function (require) {
 				break;
 
 			case StatusConst.FALCON:
-				if (pkt.state || (!pkt.hasOwnProperty('state'))) {
-					if (!entity.falcon)
+				if (pkt.state || !pkt.hasOwnProperty('state')) {
+					if (!entity.falcon) {
 						entity.falcon = new Entity();
+					}
 
 					entity.falcon.set({
 						objecttype: entity.falcon.constructor.TYPE_FALCON,
@@ -1754,10 +1999,10 @@ define(function (require) {
 						PosDir: [entity.position[0], entity.position[1], 0],
 						job: entity.job + '_FALCON',
 						speed: 200,
-						name: "",
+						name: '',
 						hp: -1,
 						maxhp: -1,
-						hideShadow: true,
+						hideShadow: true
 					});
 					EntityManager.add(entity.falcon);
 				}
@@ -1796,7 +2041,7 @@ define(function (require) {
 				//SC_INCATKRATE
 				entity.toggleOpt3(pkt.index, pkt.state);
 				if (entity === Session.Entity && [StatusConst.SOULLINK, StatusConst.SKE].includes(pkt.index)) {
-					getModule("Renderer/ScreenEffectManager").setNight(pkt.state === 1);
+					getModule('Renderer/ScreenEffectManager').setNight(pkt.state === 1);
 				}
 				break;
 
@@ -1988,6 +2233,47 @@ define(function (require) {
 				}
 				break;
 
+			// Monster transformations (generic)
+			case StatusConst.MONSTER_TRANSFORM:
+				if (pkt.state == 1 || (pkt.val && pkt.val[0] == 1)) {
+					// Transform into monster
+					var monsterId = pkt.val ? pkt.val[0] : 0;
+					entity.monster_transform = monsterId;
+				} else {
+					// Remove monster transformation
+					entity.monster_transform = null;
+				}
+				break;
+
+			// Active monster transformations (higher priority)
+			case StatusConst.ACTIVE_MONSTER_TRANSFORM:
+				if (pkt.state == 1 || (pkt.val && pkt.val[0] == 1)) {
+					// Active transform into monster
+					var monsterId = pkt.val ? pkt.val[0] : 0;
+					entity.active_monster_transform = monsterId;
+				} else {
+					// Remove active monster transformation
+					entity.active_monster_transform = null;
+				}
+				break;
+
+			// Job form transformations (WEREWOLF, WERERAPTOR)
+			case StatusConst.WEREWOLF: // Werewolf transformation
+				if (pkt.state == 1 || (pkt.val && pkt.val[0] == 1)) {
+					entity.job_transform = JobId.WEREWOLF;
+				} else {
+					entity.job_transform = null;
+				}
+				break;
+
+			case StatusConst.WERERAPTOR: // Wereraptor transformation
+				if (pkt.state == 1 || (pkt.val && pkt.val[0] == 1)) {
+					entity.job_transform = JobId.WERERAPTOR;
+				} else {
+					entity.job_transform = null;
+				}
+				break;
+
 			case StatusConst.ILLUSION:
 				if (pkt.state == 1) {
 					entity.isHallucinating = true;
@@ -2018,7 +2304,7 @@ define(function (require) {
 					EffectManager.spam(EF_Init_Par);
 				}
 				break;
-				
+
 			case StatusConst.SUHIDE:
 				if (pkt.state == 1) {
 					entity.setAction({
@@ -2038,7 +2324,7 @@ define(function (require) {
 					});
 				}
 				break;
-				
+
 			case StatusConst.SU_STOOP:
 				if (pkt.state == 1) {
 					entity.setAction({
@@ -2060,7 +2346,6 @@ define(function (require) {
 				}
 				break;
 
-
 			// Cast a skill, TODO: add progressbar in shortcut
 			case StatusConst.GROUNDMAGIC:
 			case StatusConst.POSTDELAY:
@@ -2070,8 +2355,8 @@ define(function (require) {
 				break;
 
 			case StatusConst.ALL_RIDING:
-				entity.allRidingState = pkt.state || (!pkt.hasOwnProperty('state'));
-				if (pkt.val && (pkt.state || (!pkt.hasOwnProperty('state')))) {
+				entity.allRidingState = pkt.state || !pkt.hasOwnProperty('state');
+				if (pkt.val && (pkt.state || !pkt.hasOwnProperty('state'))) {
 					entity.allRidingState = pkt.val[0];
 				}
 				break;
@@ -2084,20 +2369,27 @@ define(function (require) {
 			case StatusConst.ARCWANDCLAN:
 			case StatusConst.GOLDENMACECLAN:
 			case StatusConst.CROSSBOWCLAN:
-				let clanId = (pkt.index - StatusConst.SWORDCLAN) + 1;
+				let clanId = pkt.index - StatusConst.SWORDCLAN + 1;
 				DB.loadClanEmblem(clanId, function (image) {
 					entity.clanId = clanId;
 					entity.display.emblem = image;
 					entity.display.update(
-						entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-										entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-											entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-												(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-													entity.display.STYLE.DEFAULT
-					)
+						entity.objecttype === Entity.TYPE_MOB
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_ABR
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC_BIONIC
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_DISGUISED
+										? entity.display.STYLE.MOB
+										: entity.objecttype === Entity.TYPE_NPC
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_NPC2
+												? entity.display.STYLE.NPC
+												: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+													? entity.display.STYLE.ADMIN
+													: entity.display.STYLE.DEFAULT
+					);
 					entity.emblem.emblem = image;
 					entity.emblem.update();
 				});
@@ -2108,15 +2400,22 @@ define(function (require) {
 					entity.clanId = pkt.val[1];
 					entity.display.emblem = image;
 					entity.display.update(
-						entity.objecttype === Entity.TYPE_MOB ? entity.display.STYLE.MOB :
-							entity.objecttype === Entity.TYPE_NPC_ABR ? entity.display.STYLE.MOB :
-								entity.objecttype === Entity.TYPE_NPC_BIONIC ? entity.display.STYLE.MOB :
-									entity.objecttype === Entity.TYPE_DISGUISED ? entity.display.STYLE.MOB :
-										entity.objecttype === Entity.TYPE_NPC ? entity.display.STYLE.NPC :
-											entity.objecttype === Entity.TYPE_NPC2 ? entity.display.STYLE.NPC :
-												(entity.objecttype === Entity.TYPE_PC && entity.isAdmin) ? entity.display.STYLE.ADMIN :
-													entity.display.STYLE.DEFAULT
-					)
+						entity.objecttype === Entity.TYPE_MOB
+							? entity.display.STYLE.MOB
+							: entity.objecttype === Entity.TYPE_NPC_ABR
+								? entity.display.STYLE.MOB
+								: entity.objecttype === Entity.TYPE_NPC_BIONIC
+									? entity.display.STYLE.MOB
+									: entity.objecttype === Entity.TYPE_DISGUISED
+										? entity.display.STYLE.MOB
+										: entity.objecttype === Entity.TYPE_NPC
+											? entity.display.STYLE.NPC
+											: entity.objecttype === Entity.TYPE_NPC2
+												? entity.display.STYLE.NPC
+												: entity.objecttype === Entity.TYPE_PC && entity.isAdmin
+													? entity.display.STYLE.ADMIN
+													: entity.display.STYLE.DEFAULT
+					);
 					entity.emblem.emblem = image;
 					entity.emblem.update();
 				});
@@ -2128,7 +2427,6 @@ define(function (require) {
 			StatusIcons.update(pkt.index, pkt.state, pkt.RemainMS);
 		}
 	}
-
 
 	//Warlock sphere summons update
 	function updateWarlockSpheres(entity) {
@@ -2148,7 +2446,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * Update player option
 	 *
@@ -2161,9 +2458,20 @@ define(function (require) {
 		}
 
 		//display/remove special effects on state change
-		addStateEffect(pkt.AID, entity._effectState, pkt.effectState, StatusState.EffectState.SIGHT, EffectConst.EF_SIGHT);
-		addStateEffect(pkt.AID, entity._effectState, pkt.effectState, StatusState.EffectState.RUWACH, EffectConst.EF_RUWACH);
-
+		addStateEffect(
+			pkt.AID,
+			entity._effectState,
+			pkt.effectState,
+			StatusState.EffectState.SIGHT,
+			EffectConst.EF_SIGHT
+		);
+		addStateEffect(
+			pkt.AID,
+			entity._effectState,
+			pkt.effectState,
+			StatusState.EffectState.RUWACH,
+			EffectConst.EF_RUWACH
+		);
 
 		entity.bodyState = pkt.bodyState;
 		entity.healthState = pkt.healthState;
@@ -2181,10 +2489,10 @@ define(function (require) {
 				PosDir: [entity.position[0], entity.position[1], 0],
 				job: entity.job + '_FALCON',
 				speed: 200,
-				name: "",
+				name: '',
 				hp: -1,
 				maxhp: -1,
-				hideShadow: true,
+				hideShadow: true
 			});
 			EntityManager.add(entity.falcon);
 		} else if (entity.falcon && !(entity.effectState & StatusState.EffectState.FALCON)) {
@@ -2200,9 +2508,9 @@ define(function (require) {
 				PosDir: [entity.position[0], entity.position[1], 0],
 				job: entity.job + '_WUG',
 				speed: entity.walk.speed,
-				name: "",
+				name: '',
 				hp: -1,
-				maxhp: -1,
+				maxhp: -1
 			});
 			EntityManager.add(entity.wug);
 		} else if (entity.wug && !(entity.effectState & StatusState.EffectState.WUG)) {
@@ -2210,7 +2518,6 @@ define(function (require) {
 			entity.wug = null;
 		}
 	}
-
 
 	/**
 	 * Display a shop above entity's head
@@ -2223,12 +2530,7 @@ define(function (require) {
 		if (pkt instanceof PACKET.ZC.STORE_ENTRY) {
 			entity = EntityManager.get(pkt.makerAID);
 			if (entity) {
-				entity.room.create(
-					pkt.storeName,
-					pkt.makerAID,
-					entity.room.constructor.Type.BUY_SHOP,
-					true
-				);
+				entity.room.create(pkt.storeName, pkt.makerAID, entity.room.constructor.Type.BUY_SHOP, true);
 			}
 			return;
 		}
@@ -2236,12 +2538,7 @@ define(function (require) {
 		if (pkt instanceof PACKET.ZC.BUYING_STORE_ENTRY) {
 			entity = EntityManager.get(pkt.makerAID);
 			if (entity) {
-				entity.room.create(
-					pkt.storeName,
-					pkt.makerAID,
-					entity.room.constructor.Type.SELL_SHOP,
-					true
-				);
+				entity.room.create(pkt.storeName, pkt.makerAID, entity.room.constructor.Type.SELL_SHOP, true);
 			}
 			return;
 		}
@@ -2249,7 +2546,6 @@ define(function (require) {
 		if (pkt instanceof PACKET.ZC.ROOM_NEWENTRY) {
 			entity = EntityManager.get(pkt.AID);
 			if (entity) {
-
 				var type = entity.room.constructor.Type.PUBLIC_CHAT;
 				var title = pkt.title + ' (' + pkt.curcount + '/' + pkt.maxcount + ')';
 
@@ -2258,8 +2554,10 @@ define(function (require) {
 						type = entity.room.constructor.Type.PRIVATE_CHAT;
 						break;
 
-					case 1: break; // public
-					case 2: break; // arena (npc waiting room)
+					case 1:
+						break; // public
+					case 2:
+						break; // arena (npc waiting room)
 
 					case 3: // PK zone - non clickable ???
 						title = pkt.title; // no user limit
@@ -2270,16 +2568,10 @@ define(function (require) {
 				entity.room.limit = pkt.maxcount;
 				entity.room.count = pkt.curcount;
 
-				entity.room.create(
-					title,
-					pkt.roomID,
-					type,
-					true
-				);
-			};
+				entity.room.create(title, pkt.roomID, type, true);
+			}
 		}
 	}
-
 
 	/**
 	 * Remove entity room
@@ -2304,7 +2596,6 @@ define(function (require) {
 		}
 	}
 
-
 	/**
 	 * "Blade Stop" / "Root" visual
 	 */
@@ -2312,7 +2603,7 @@ define(function (require) {
 	function onBladeStopVisual(srcEntity, dstEntity, state) {
 		srcEntity.lookTo(dstEntity.position[0], dstEntity.position[1]);
 		srcEntity.toggleOpt3(StatusConst.BLADESTOP, state);
-		if (state == 1)
+		if (state == 1) {
 			srcEntity.setAction({
 				action: srcEntity.ACTION.READYFIGHT,
 				frame: 0,
@@ -2320,7 +2611,8 @@ define(function (require) {
 				play: true,
 				next: false
 			});
-		if (state == 0)
+		}
+		if (state == 0) {
 			srcEntity.setAction({
 				action: srcEntity.ACTION.IDLE,
 				frame: 0,
@@ -2328,13 +2620,14 @@ define(function (require) {
 				play: true,
 				next: false
 			});
+		}
 	}
 
 	/**
-	* "Blade Stop" / "Root" skill status
-	*
-	* @param {object} pkt - PACKET.ZC.BLADESTOP
-	*/
+	 * "Blade Stop" / "Root" skill status
+	 *
+	 * @param {object} pkt - PACKET.ZC.BLADESTOP
+	 */
 	function onBladeStopPacket(pkt) {
 		var srcEntity = EntityManager.get(pkt.srcAID);
 		var dstEntity = EntityManager.get(pkt.destAID);
@@ -2354,16 +2647,34 @@ define(function (require) {
 		switch (pkt.expType) {
 			case 0:
 				if (pkt.varID === 1) {
-					ChatBox.addText(DB.getMessage(1613).replace('%d', pkt.amount), ChatBox.TYPE.INFO, ChatBox.FILTER.EXP);
+					ChatBox.addText(
+						DB.getMessage(1613).replace('%d', pkt.amount),
+						ChatBox.TYPE.INFO,
+						ChatBox.FILTER.EXP
+					);
 				} else if (pkt.varID === 2) {
-					ChatBox.addText(DB.getMessage(1614).replace('%d', pkt.amount), ChatBox.TYPE.INFO, ChatBox.FILTER.EXP);
+					ChatBox.addText(
+						DB.getMessage(1614).replace('%d', pkt.amount),
+						ChatBox.TYPE.INFO,
+						ChatBox.FILTER.EXP
+					);
 				}
 				break;
 			case 1:
 				if (pkt.varID === 1) {
-					ChatBox.addText('Experience gained from Quest, Base:' + pkt.amount, null, ChatBox.FILTER.EXP, '#A442DC');
+					ChatBox.addText(
+						'Experience gained from Quest, Base:' + pkt.amount,
+						null,
+						ChatBox.FILTER.EXP,
+						'#A442DC'
+					);
 				} else if (pkt.varID === 2) {
-					ChatBox.addText('Experience gained from Quest, Job:' + pkt.amount, null, ChatBox.FILTER.EXP, '#A442DC');
+					ChatBox.addText(
+						'Experience gained from Quest, Job:' + pkt.amount,
+						null,
+						ChatBox.FILTER.EXP,
+						'#A442DC'
+					);
 				}
 				break;
 		}
@@ -2391,7 +2702,7 @@ define(function (require) {
 	}
 
 	/**
-	* Show MvP reward Effect
+	 * Show MvP reward Effect
 	 *
 	 * @param {object} pkt - PACKET.ZC.MVP
 	 */
@@ -2402,7 +2713,6 @@ define(function (require) {
 		};
 		EffectManager.spam(EF_Init_Par);
 	}
-
 
 	/**
 	 * Show MvP item message
@@ -2415,7 +2725,6 @@ define(function (require) {
 		ChatBox.addText(item.identifiedDisplayName, ChatBox.TYPE.BLUE, ChatBox.FILTER.ITEM);
 	}
 
-
 	/**
 	 * Entity will be hit, handle getting hit and after actions
 	 *
@@ -2425,10 +2734,10 @@ define(function (require) {
 	function onEntityWillBeHitSub(pkt, dstEntity) {
 		// only if has damage > 0 and type is not endure and not lucky
 		if ((pkt.damage > 0 || pkt.leftDamage > 0) && pkt.action !== 4 && pkt.action !== 9 && pkt.action !== 11) {
-
 			var count = pkt.count || 1;
 
-			function impendingAttack() { // Get hurt when attack happens
+			function impendingAttack() {
+				// Get hurt when attack happens
 				if (dstEntity.action !== dstEntity.ACTION.DIE) {
 					dstEntity.setAction({
 						action: dstEntity.ACTION.HURT,
@@ -2440,7 +2749,7 @@ define(function (require) {
 							delay: pkt.attackedMT + 0,
 							frame: 0,
 							repeat: true,
-							play: true,
+							play: true
 						}
 					});
 				}
@@ -2448,7 +2757,11 @@ define(function (require) {
 
 			function resumeWalk() {
 				// Try resuming walk when targeting something.
-				if (dstEntity.action !== dstEntity.ACTION.DIE && EntityManager.getFocusEntity() && dstEntity.walk.index < dstEntity.walk.total) {
+				if (
+					dstEntity.action !== dstEntity.ACTION.DIE &&
+					EntityManager.getFocusEntity() &&
+					dstEntity.walk.index < dstEntity.walk.total
+				) {
 					dstEntity.setAction({
 						action: dstEntity.ACTION.WALK,
 						frame: 0,
@@ -2460,14 +2773,17 @@ define(function (require) {
 
 			for (var i = 0; i < count; i++) {
 				if (pkt.damage) {
-					Events.setTimeout(impendingAttack, pkt.attackMT + (C_MULTIHIT_DELAY * i));
+					Events.setTimeout(impendingAttack, pkt.attackMT + C_MULTIHIT_DELAY * i);
 				}
 				if (pkt.leftDamage) {
-					Events.setTimeout(impendingAttack, pkt.attackMT + ((C_MULTIHIT_DELAY * 1.75) * i));
+					Events.setTimeout(impendingAttack, pkt.attackMT + C_MULTIHIT_DELAY * 1.75 * i);
 				}
 			}
 
-			Events.setTimeout(resumeWalk, pkt.attackMT + (C_MULTIHIT_DELAY * (pkt.leftDamage ? 1.75 : 1) * (count - 1)) + pkt.attackedMT);
+			Events.setTimeout(
+				resumeWalk,
+				pkt.attackMT + C_MULTIHIT_DELAY * (pkt.leftDamage ? 1.75 : 1) * (count - 1) + pkt.attackedMT
+			);
 		}
 	}
 
@@ -2477,14 +2793,14 @@ define(function (require) {
 	function haveSiegfriedItem() {
 		var itemInfo = Inventory.getUI().getItemById(7621);
 
-		if (Session.IsPKZone || Session.IsSiegeMode || Session.IsEventPVPMode)
+		if (Session.IsPKZone || Session.IsSiegeMode || Session.IsEventPVPMode) {
 			return false;
-		else if (itemInfo && itemInfo.count > 0)
+		} else if (itemInfo && itemInfo.count > 0) {
 			return true;
-		else
+		} else {
 			return false;
+		}
 	}
-
 
 	/**
 	 * Add/remove effect when state changes
@@ -2493,17 +2809,79 @@ define(function (require) {
 		// Kinda weird logic, but it is what it is... always remove if present in OldState, and add/re-add if present in NewState
 
 		// Remove
-		if ((OldState & Status)) {
+		if (OldState & Status) {
 			EffectManager.remove(null, AID, EffectId);
 		}
 
 		// Apply
-		if ((NewState & Status)) {
+		if (NewState & Status) {
 			var EF_Init_Par = {
 				effectId: EffectId,
 				ownerAID: AID
 			};
 			EffectManager.spam(EF_Init_Par);
+		}
+	}
+
+	/**
+	 * Handle hat effect packet - add or remove hat effects on entity
+	 */
+	function onHatEffects(pkt) {
+		var entity = EntityManager.get(pkt.GID);
+		if (!entity) {
+			return;
+		}
+
+		var i, count, hatEffectID, hatEffect;
+
+		// Remove effects when disabled
+		if (pkt.enabled !== 1) {
+			if (pkt.hatEffectIDs && pkt.hatEffectIDs.length) {
+				for (i = 0, count = pkt.hatEffectIDs.length; i < count; ++i) {
+					EffectManager.removeHatEffect(pkt.GID, Number(pkt.hatEffectIDs[i]));
+					if (entity._hatEffects) {
+						delete entity._hatEffects[pkt.hatEffectIDs[i]];
+					}
+				}
+			}
+			return;
+		}
+
+		// Initialize tracking object
+		if (!entity._hatEffects) {
+			entity._hatEffects = {};
+		}
+
+		// Add new effects from packet
+		var effectIds = pkt.hatEffectIDs || [];
+		for (i = 0, count = effectIds.length; i < count; ++i) {
+			hatEffectID = effectIds[i];
+
+			// Skip if already present
+			if (entity._hatEffects[hatEffectID]) {
+				continue;
+			}
+
+			hatEffect = DB.getHatResource(hatEffectID);
+			if (!hatEffect) {
+				continue;
+			}
+
+			EffectManager.spamHatEffect({
+				Init: { ownerAID: pkt.GID, ownerEntity: entity, startTick: Renderer.tick },
+				effect: {
+					effectID: hatEffectID,
+					hatEffectID: hatEffect.hatEffectID,
+					file: hatEffect.resourceFileName,
+					xOffset: hatEffect.hatEffectPosX,
+					yOffset: hatEffect.hatEffectPos,
+					isAttachedHead: hatEffect.isAttachedHead,
+					isRenderBeforeCharacter: hatEffect.isRenderBeforeCharacter,
+					head: hatEffect.isAttachedHead,
+					isAdjustPositionWhenShrinkState: hatEffect.isAdjustPositionWhenShrinkState,
+					isAdjustSizeWhenShrinkState: hatEffect.isAdjustSizeWhenShrinkState
+				}
+			});
 		}
 	}
 
@@ -2598,5 +2976,6 @@ define(function (require) {
 		Network.hookPacket(PACKET.ZC.MVP, onEntityMvpReward);
 		Network.hookPacket(PACKET.ZC.MVP_GETTING_ITEM, onEntityMvpRewardItemMessage);
 		Network.hookPacket(PACKET.ZC.ACK_CHANGE_TITLE, onTitleChangeAck);
+		Network.hookPacket(PACKET.ZC.HAT_EFFECT, onHatEffects);
 	};
 });

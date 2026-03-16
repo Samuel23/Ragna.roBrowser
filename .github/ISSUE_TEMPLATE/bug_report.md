@@ -1,24 +1,76 @@
 ---
 name: Bug report
-about: Create a report to help us improve
-title: ''
+about: Help us improve roBrowserLegacy by reporting a bug
+title: '[BUG] <brief description>'
 labels: Bug
 assignees: ''
-
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+## Bug description
 
-**Screenshots (if applicable)**
-Add screenshots to help explain your problem.
+-
 
-**Packet/Client version**
-Packet/Client version you use.
+## Steps to reproduce
 
-**Browser/device info**
- - Browser: [e.g. stock browser, safari]
- - Device: [e.g. iPhone6]
+1.
 
-**Additional context**
-Add any other context about the problem here.
+## Expected behavior
+
+-
+
+## Logs and screenshots
+
+- **Browser console errors (F12)**
+    - [____]
+- **Network tab errors (F12)**
+    - [____]
+- **Screenshots**
+    - [____]
+
+<details>
+  <summary>Environment</summary>
+  
+- **Execution mode**
+  - [ ] Development \(development: true\)
+  - [ ] Production \(development: false\)
+- **Application type**
+  - [ ] ONLINE
+  - [ ] MAPVIEWER
+  - [ ] GRFVIEWER
+  - [ ] MODELVIEWER
+  - [ ] STRVIEWER
+  - [ ] Other: [________]
+- **Packet/Client version**
+  - [________]
+- **Assets**:
+  - [ ] Local (drag GRF)
+  - [ ] Remote Client - URL: [_________]
+- **WebSocket Proxy**:
+  - [ ] wsProxy - URL: [________]
+  - [ ] Other: [________]
+- **Browser** (e.g., Chrome 120, Firefox 119)
+  - [________]
+- **Device** (e.g., Windows 11, iPhone 14, Xbox One)
+  - [________]
+- **Emulator**:
+  - [ ] rAthena
+  - [ ] Hercules
+  - [ ] Other: [________]
+</details>
+<details>
+  <summary>Additional context</summary>
+  
+- **Enabled plugins**
+  - [list_plugins_here]
+- **Custom ROConfig settings**
+  - [list_custom_settings_here]
+- **Extra information that helps reproduce the issue**
+</details>
+<details>
+  <summary>Debugging</summary>
+  
+- Have you tried running in development mode? (`development: true`)
+  - [ ] Yes, I have.
+- Have you checked the console (F12) and the Network tab?
+  - [ ] Yes, I have.
+</details>

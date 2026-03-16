@@ -7,25 +7,28 @@
  *
  * @author Vincent Thibault
  */
-define( ['Core/Preferences'], function( Preferences )
-{
+define(['Core/Preferences'], function (Preferences) {
 	'use strict';
-
 
 	/**
 	 * Export
 	 */
-	return Preferences.get( 'Controls', {
-		noctrl:  true,
-		noshift: false,
-        	snap: false,
-        	itemsnap: false,
-		/* Joystick */
-		attackTargetMode: 0,
-		joyQuick:         0,
-		joyDeadline:   0.10,
-		joySense:      25.0
-
-	}, 1.0 );
-
+	return Preferences.get(
+		'Controls',
+		{
+			noctrl: true,
+			noshift: false,
+			snap: false,
+			itemsnap: false,
+			/* Joystick */
+			attackTargetMode: 0,
+			joyQuick: 0,
+			joyDeadline: 0.1,
+			joyDisableVirtualMouse: false,
+			joyAutoHide: false,
+			joyReverseStick: false,
+			joySense: 25.0
+		},
+		1.0
+	);
 });

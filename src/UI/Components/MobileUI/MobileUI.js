@@ -17,7 +17,6 @@ define(function (require) {
 	var Session = require('Engine/SessionStorage');
 	var Renderer = require('Renderer/Renderer');
 	var PACKETVER = require('Network/PacketVerManager');
-	var PACKETVER = require('Network/PacketVerManager');
 	var PACKET = require('Network/PacketStructure');
 	var EntityManager = require('Renderer/EntityManager');
 	var Network = require('Network/NetworkManager');
@@ -37,20 +36,20 @@ define(function (require) {
 	var rotate = mat2.create();
 
 	//Configure keys here
-	var MOVE = {
+	/*var MOVE = {
 		RIGHT: KEYS.RIGHT,
 		LEFT: KEYS.LEFT,
 		UP: KEYS.UP,
 		DOWN: KEYS.DOWN
-	};
+	};*/ // UNUSED
 
 	//Multiple keys held
-	var KeyEvent = {};
+	//var KeyEvent = {}; // UNUSED
 
 	//Memory
 	var targetPos = [0, 0];
 
-	var keysDownTimeout = null;
+	//var keysDownTimeout = null; // UNUSED
 	var movementTimer = null; // Timer for continuous joystick movement
 
 	/**
@@ -61,14 +60,18 @@ define(function (require) {
 	/**
 	 * @var {Preferences} window preferences
 	 */
-	var _preferences = Preferences.get('MobileUI', {
-		x: 0,
-		y: 0,
-		zIndex: 1000,
-		width: Renderer.width,
-		height: Renderer.height,
-		show: false,
-	}, 1.0);
+	var _preferences = Preferences.get(
+		'MobileUI',
+		{
+			x: 0,
+			y: 0,
+			zIndex: 1000,
+			width: Renderer.width,
+			height: Renderer.height,
+			show: false
+		},
+		1.0
+	);
 
 	var showButtons = false;
 	var autoTargetTimer;
@@ -76,7 +79,7 @@ define(function (require) {
 
 	var centerX, centerY;
 	var maxDistance = 0;
-	var lastSentMove = Date.now();
+	// var lastSentMove = Date.now(); // UNUSED
 	var normalizedX = 0; // Current normalized x-axis input
 	var normalizedY = 0; // Current normalized y-axis input
 
@@ -84,85 +87,243 @@ define(function (require) {
 	 * Initialize UI
 	 */
 	MobileUI.init = function init() {
-		this.ui.find('#toggleUIButton').click(function (e) { toggleButtons(); stopPropagation(e); });
-		this.ui.find('#fullscreenButton').click(function (e) { toggleFullScreen(); stopPropagation(e); });
+		this.ui.find('#toggleUIButton').click(function (e) {
+			toggleButtons();
+			stopPropagation(e);
+		});
+		this.ui.find('#fullscreenButton').click(function (e) {
+			toggleFullScreen();
+			stopPropagation(e);
+		});
 
-		this.ui.find('#f1Button').click(function (e) { logKeyPress(112); stopPropagation(e); });
-		this.ui.find('#f2Button').click(function (e) { logKeyPress(113); stopPropagation(e); });
-		this.ui.find('#f3Button').click(function (e) { logKeyPress(114); stopPropagation(e); });
-		this.ui.find('#f4Button').click(function (e) { logKeyPress(115); stopPropagation(e); });
-		this.ui.find('#f5Button').click(function (e) { logKeyPress(116); stopPropagation(e); });
-		this.ui.find('#f6Button').click(function (e) { logKeyPress(117); stopPropagation(e); });
-		this.ui.find('#f7Button').click(function (e) { logKeyPress(118); stopPropagation(e); });
-		this.ui.find('#f8Button').click(function (e) { logKeyPress(119); stopPropagation(e); });
-		this.ui.find('#f9Button').click(function (e) { logKeyPress(120); stopPropagation(e); });
+		this.ui.find('#f1Button').click(function (e) {
+			logKeyPress(112);
+			stopPropagation(e);
+		});
+		this.ui.find('#f2Button').click(function (e) {
+			logKeyPress(113);
+			stopPropagation(e);
+		});
+		this.ui.find('#f3Button').click(function (e) {
+			logKeyPress(114);
+			stopPropagation(e);
+		});
+		this.ui.find('#f4Button').click(function (e) {
+			logKeyPress(115);
+			stopPropagation(e);
+		});
+		this.ui.find('#f5Button').click(function (e) {
+			logKeyPress(116);
+			stopPropagation(e);
+		});
+		this.ui.find('#f6Button').click(function (e) {
+			logKeyPress(117);
+			stopPropagation(e);
+		});
+		this.ui.find('#f7Button').click(function (e) {
+			logKeyPress(118);
+			stopPropagation(e);
+		});
+		this.ui.find('#f8Button').click(function (e) {
+			logKeyPress(119);
+			stopPropagation(e);
+		});
+		this.ui.find('#f9Button').click(function (e) {
+			logKeyPress(120);
+			stopPropagation(e);
+		});
 
-		this.ui.find('#n1Button').click(function (e) { logKeyPress(49); stopPropagation(e); });
-		this.ui.find('#n2Button').click(function (e) { logKeyPress(50); stopPropagation(e); });
-		this.ui.find('#n3Button').click(function (e) { logKeyPress(51); stopPropagation(e); });
-		this.ui.find('#n4Button').click(function (e) { logKeyPress(52); stopPropagation(e); });
-		this.ui.find('#n5Button').click(function (e) { logKeyPress(53); stopPropagation(e); });
-		this.ui.find('#n6Button').click(function (e) { logKeyPress(54); stopPropagation(e); });
-		this.ui.find('#n7Button').click(function (e) { logKeyPress(55); stopPropagation(e); });
-		this.ui.find('#n8Button').click(function (e) { logKeyPress(56); stopPropagation(e); });
-		this.ui.find('#n9Button').click(function (e) { logKeyPress(57); stopPropagation(e); });
+		this.ui.find('#n1Button').click(function (e) {
+			logKeyPress(49);
+			stopPropagation(e);
+		});
+		this.ui.find('#n2Button').click(function (e) {
+			logKeyPress(50);
+			stopPropagation(e);
+		});
+		this.ui.find('#n3Button').click(function (e) {
+			logKeyPress(51);
+			stopPropagation(e);
+		});
+		this.ui.find('#n4Button').click(function (e) {
+			logKeyPress(52);
+			stopPropagation(e);
+		});
+		this.ui.find('#n5Button').click(function (e) {
+			logKeyPress(53);
+			stopPropagation(e);
+		});
+		this.ui.find('#n6Button').click(function (e) {
+			logKeyPress(54);
+			stopPropagation(e);
+		});
+		this.ui.find('#n7Button').click(function (e) {
+			logKeyPress(55);
+			stopPropagation(e);
+		});
+		this.ui.find('#n8Button').click(function (e) {
+			logKeyPress(56);
+			stopPropagation(e);
+		});
+		this.ui.find('#n9Button').click(function (e) {
+			logKeyPress(57);
+			stopPropagation(e);
+		});
 
-		this.ui.find('#qButton').click(function (e) { logKeyPress(81); stopPropagation(e); });
-		this.ui.find('#wButton').click(function (e) { logKeyPress(87); stopPropagation(e); });
-		this.ui.find('#eButton').click(function (e) { logKeyPress(69); stopPropagation(e); });
-		this.ui.find('#rButton').click(function (e) { logKeyPress(82); stopPropagation(e); });
-		this.ui.find('#tButton').click(function (e) { logKeyPress(84); stopPropagation(e); });
-		this.ui.find('#yButton').click(function (e) { logKeyPress(89); stopPropagation(e); });
-		this.ui.find('#uButton').click(function (e) { logKeyPress(85); stopPropagation(e); });
-		this.ui.find('#iButton').click(function (e) { logKeyPress(73); stopPropagation(e); });
-		this.ui.find('#oButton').click(function (e) { logKeyPress(89); stopPropagation(e); });
+		this.ui.find('#qButton').click(function (e) {
+			logKeyPress(81);
+			stopPropagation(e);
+		});
+		this.ui.find('#wButton').click(function (e) {
+			logKeyPress(87);
+			stopPropagation(e);
+		});
+		this.ui.find('#eButton').click(function (e) {
+			logKeyPress(69);
+			stopPropagation(e);
+		});
+		this.ui.find('#rButton').click(function (e) {
+			logKeyPress(82);
+			stopPropagation(e);
+		});
+		this.ui.find('#tButton').click(function (e) {
+			logKeyPress(84);
+			stopPropagation(e);
+		});
+		this.ui.find('#yButton').click(function (e) {
+			logKeyPress(89);
+			stopPropagation(e);
+		});
+		this.ui.find('#uButton').click(function (e) {
+			logKeyPress(85);
+			stopPropagation(e);
+		});
+		this.ui.find('#iButton').click(function (e) {
+			logKeyPress(73);
+			stopPropagation(e);
+		});
+		this.ui.find('#oButton').click(function (e) {
+			logKeyPress(89);
+			stopPropagation(e);
+		});
 
-		this.ui.find('#aButton').click(function (e) { logKeyPress(65); stopPropagation(e); });
-		this.ui.find('#sButton').click(function (e) { logKeyPress(83); stopPropagation(e); });
-		this.ui.find('#dButton').click(function (e) { logKeyPress(68); stopPropagation(e); });
-		this.ui.find('#fButton').click(function (e) { logKeyPress(70); stopPropagation(e); });
-		this.ui.find('#gButton').click(function (e) { logKeyPress(71); stopPropagation(e); });
-		this.ui.find('#hButton').click(function (e) { logKeyPress(72); stopPropagation(e); });
-		this.ui.find('#jButton').click(function (e) { logKeyPress(74); stopPropagation(e); });
-		this.ui.find('#kButton').click(function (e) { logKeyPress(75); stopPropagation(e); });
-		this.ui.find('#lButton').click(function (e) { logKeyPress(76); stopPropagation(e); });
+		this.ui.find('#aButton').click(function (e) {
+			logKeyPress(65);
+			stopPropagation(e);
+		});
+		this.ui.find('#sButton').click(function (e) {
+			logKeyPress(83);
+			stopPropagation(e);
+		});
+		this.ui.find('#dButton').click(function (e) {
+			logKeyPress(68);
+			stopPropagation(e);
+		});
+		this.ui.find('#fButton').click(function (e) {
+			logKeyPress(70);
+			stopPropagation(e);
+		});
+		this.ui.find('#gButton').click(function (e) {
+			logKeyPress(71);
+			stopPropagation(e);
+		});
+		this.ui.find('#hButton').click(function (e) {
+			logKeyPress(72);
+			stopPropagation(e);
+		});
+		this.ui.find('#jButton').click(function (e) {
+			logKeyPress(74);
+			stopPropagation(e);
+		});
+		this.ui.find('#kButton').click(function (e) {
+			logKeyPress(75);
+			stopPropagation(e);
+		});
+		this.ui.find('#lButton').click(function (e) {
+			logKeyPress(76);
+			stopPropagation(e);
+		});
 
-		this.ui.find('#f10Button').click(function (e) { logKeyPress(121); stopPropagation(e); });
-		this.ui.find('#f12Button').click(function (e) { logKeyPress(123); stopPropagation(e); });
-		this.ui.find('#insButton').click(function (e) { logKeyPress(45); stopPropagation(e); });
+		this.ui.find('#f10Button').click(function (e) {
+			logKeyPress(121);
+			stopPropagation(e);
+		});
+		this.ui.find('#f12Button').click(function (e) {
+			logKeyPress(123);
+			stopPropagation(e);
+		});
+		this.ui.find('#insButton').click(function (e) {
+			logKeyPress(45);
+			stopPropagation(e);
+		});
 
-		this.ui.find('#toggleStatusButton').click(function (e) { toggleStatus(); stopPropagation(e); });
-		this.ui.find('#toggleTargetingButton').click(function (e) { toggleTouchTargeting(); stopPropagation(e); });
-		this.ui.find('#toggleAutoFollowButton').click(function (e) { toggleAutoFollow(); stopPropagation(e); });
-		this.ui.find('#toggleAutoTargetButton').click(function (e) { toggleAutoTargeting(); stopPropagation(e); });
+		this.ui.find('#toggleStatusButton').click(function (e) {
+			toggleStatus();
+			stopPropagation(e);
+		});
+		this.ui.find('#toggleTargetingButton').click(function (e) {
+			toggleTouchTargeting();
+			stopPropagation(e);
+		});
+		this.ui.find('#toggleAutoFollowButton').click(function (e) {
+			toggleAutoFollow();
+			stopPropagation(e);
+		});
+		this.ui.find('#toggleAutoTargetButton').click(function (e) {
+			toggleAutoTargeting();
+			stopPropagation(e);
+		});
 
-		this.ui.find('#attackButton').click(function (e) { attackTargeted(); stopPropagation(e); });
+		this.ui.find('#attackButton').click(function (e) {
+			attackTargeted();
+			stopPropagation(e);
+		});
 
-		this.ui.find('#pickupButton').click(function (e) { pickUpItem(); stopPropagation(e); }); // Button for Picks up the nearest item - MicromeX
+		this.ui.find('#pickupButton').click(function (e) {
+			pickUpItem();
+			stopPropagation(e);
+		}); // Button for Picks up the nearest item - MicromeX
 
 		this.ui.find('#switchshorcutButton').click(function (e) {
 			switchSkillButtons();
 			stopPropagation(e);
 		});
 
-		this.ui.find('.buttons')
-			.on('mousedown', function (e) { jQuery(e.target).addClass('pressed'); })
-			.on('touchstart', function (e) { jQuery(e.target).addClass('pressed'); })
-			.on('mouseup', function (e) { jQuery(e.target).removeClass('pressed'); })
-			.on('touchend', function (e) { jQuery(e.target).removeClass('pressed'); });
+		this.ui
+			.find('.buttons')
+			.on('mousedown', function (e) {
+				jQuery(e.target).addClass('pressed');
+			})
+			.on('touchstart', function (e) {
+				jQuery(e.target).addClass('pressed');
+			})
+			.on('mouseup', function (e) {
+				jQuery(e.target).removeClass('pressed');
+			})
+			.on('touchend', function (e) {
+				jQuery(e.target).removeClass('pressed');
+			});
 
-		this.ui.find('.FButton')
-			.on('mousedown', function (e) { jQuery(e.target).addClass('pressed'); })
-			.on('touchstart', function (e) { jQuery(e.target).addClass('pressed'); })
-			.on('mouseup', function (e) { jQuery(e.target).removeClass('pressed'); })
-			.on('touchend', function (e) { jQuery(e.target).removeClass('pressed'); });
+		this.ui
+			.find('.FButton')
+			.on('mousedown', function (e) {
+				jQuery(e.target).addClass('pressed');
+			})
+			.on('touchstart', function (e) {
+				jQuery(e.target).addClass('pressed');
+			})
+			.on('mouseup', function (e) {
+				jQuery(e.target).removeClass('pressed');
+			})
+			.on('touchend', function (e) {
+				jQuery(e.target).removeClass('pressed');
+			});
 
 		// Initialize the joystick - MicromeX
 		setupJoystick();
 		// Initialize the NPC Talk Button - MicromeX
 		setupTalkToNpcButton();
-
-	}
+	};
 
 	/**
 	 * Logs the key press to the console and performs the key press action.
@@ -171,8 +332,6 @@ define(function (require) {
 	function logKeyPress(keyCode) {
 		keyPress(keyCode);
 	}
-
-
 
 	/**
 	 * Toggles full screen display
@@ -193,10 +352,12 @@ define(function (require) {
 	function keyPress(k) {
 		var roWindow = window;
 		roWindow.document.getElementsByTagName('body')[0].focus();
-		roWindow.dispatchEvent(new KeyboardEvent('keydown', {
-			keyCode: k,
-			which: k
-		}));
+		roWindow.dispatchEvent(
+			new KeyboardEvent('keydown', {
+				keyCode: k,
+				which: k
+			})
+		);
 	}
 
 	/**
@@ -204,7 +365,6 @@ define(function (require) {
 	 */
 	function toggleButtons() {
 		if (showButtons) {
-
 			MobileUI.ui.find('#topBar').addClass('disabled');
 			MobileUI.ui.find('#leftBar').addClass('disabled');
 			MobileUI.ui.find('#rightBar').addClass('disabled');
@@ -257,7 +417,6 @@ define(function (require) {
 
 			showButtons = false;
 		} else {
-
 			MobileUI.ui.find('#topBar').removeClass('disabled');
 			MobileUI.ui.find('#leftBar').removeClass('disabled');
 			MobileUI.ui.find('#rightBar').removeClass('disabled');
@@ -277,7 +436,6 @@ define(function (require) {
 			MobileUI.ui.find('#f8Button').removeClass('disabled');
 			MobileUI.ui.find('#f9Button').removeClass('disabled');
 
-
 			showButtons = true;
 		}
 	}
@@ -287,14 +445,44 @@ define(function (require) {
 	 */
 	function switchSkillButtons() {
 		let skillSets = [
-			['#f1Button', '#f2Button', '#f3Button', '#f4Button', '#f5Button', '#f6Button', '#f7Button', '#f8Button', '#f9Button'],  // First skill set
-			['#n1Button', '#n2Button', '#n3Button', '#n4Button', '#n5Button', '#n6Button', '#n7Button', '#n8Button', '#n9Button'],  // Second skill set
-			['#qButton', '#wButton', '#eButton', '#rButton', '#tButton', '#yButton', '#uButton', '#iButton', '#oButton'],  			// Third skill set
-			['#aButton', '#sButton', '#dButton', '#fButton', '#gButton', '#hButton', '#jButton', '#kButton', '#lButton']  			// Fourth skill set
+			[
+				'#f1Button',
+				'#f2Button',
+				'#f3Button',
+				'#f4Button',
+				'#f5Button',
+				'#f6Button',
+				'#f7Button',
+				'#f8Button',
+				'#f9Button'
+			], // First skill set
+			[
+				'#n1Button',
+				'#n2Button',
+				'#n3Button',
+				'#n4Button',
+				'#n5Button',
+				'#n6Button',
+				'#n7Button',
+				'#n8Button',
+				'#n9Button'
+			], // Second skill set
+			[
+				'#qButton',
+				'#wButton',
+				'#eButton',
+				'#rButton',
+				'#tButton',
+				'#yButton',
+				'#uButton',
+				'#iButton',
+				'#oButton'
+			], // Third skill set
+			['#aButton', '#sButton', '#dButton', '#fButton', '#gButton', '#hButton', '#jButton', '#kButton', '#lButton'] // Fourth skill set
 		];
 
 		let currentSetIndex = switchSkillButtons.currentSetIndex || 0; // Track current skill set
-		let nextSetIndex = (currentSetIndex + 1) % skillSets.length;   // Cycle through skill sets
+		let nextSetIndex = (currentSetIndex + 1) % skillSets.length; // Cycle through skill sets
 
 		//  Hide all skill sets
 		skillSets.flat().forEach(button => {
@@ -323,7 +511,6 @@ define(function (require) {
 	 */
 	function toggleTouchTargeting() {
 		if (Session.TouchTargeting) {
-
 			MobileUI.ui.find('#toggleTargetingButton').removeClass('active');
 
 			MobileUI.ui.find('#toggleAutoFollowButton').addClass('disabled');
@@ -335,7 +522,6 @@ define(function (require) {
 
 			Session.TouchTargeting = false;
 		} else {
-
 			MobileUI.ui.find('#toggleTargetingButton').addClass('active');
 
 			MobileUI.ui.find('#toggleAutoFollowButton').removeClass('disabled');
@@ -386,7 +572,8 @@ define(function (require) {
 
 		var entityFocus = EntityManager.getFocusEntity();
 
-		if (!entityFocus || entityFocus.action === entityFocus.ACTION.DIE) { //If no target, try picking one first
+		if (!entityFocus || entityFocus.action === entityFocus.ACTION.DIE) {
+			//If no target, try picking one first
 			autoTarget();
 			entityFocus = EntityManager.getFocusEntity();
 		}
@@ -394,8 +581,10 @@ define(function (require) {
 		if (entityFocus) {
 			var out = [];
 			var count = PathFinding.search(
-				main.position[0] | 0, main.position[1] | 0,
-				entityFocus.position[0] | 0, entityFocus.position[1] | 0,
+				main.position[0] | 0,
+				main.position[1] | 0,
+				entityFocus.position[0] | 0,
+				entityFocus.position[1] | 0,
 				main.attack_range + 1,
 				out
 			);
@@ -444,7 +633,6 @@ define(function (require) {
 		var closestEntity = EntityManager.getClosestEntity(Player, Session.Entity.constructor.TYPE_MOB);
 
 		if (closestEntity) {
-
 			if (entityFocus && closestEntity.GID !== entityFocus.GID) {
 				entityFocus.onFocusEnd();
 				EntityManager.setFocusEntity(null);
@@ -542,8 +730,12 @@ define(function (require) {
 		// if the distance between Session.Entity and closestItem is greater then 2 so walk to the item
 		var dx = Math.abs(player.position[0] - closestItem.position[0]);
 		var dy = Math.abs(player.position[1] - closestItem.position[1]);
-		if (dx < 0) dx = -dx;
-		if (dy < 0) dy = -dy;
+		if (dx < 0) {
+			dx = -dx;
+		}
+		if (dy < 0) {
+			dy = -dy;
+		}
 
 		if ((dx < dy ? dy : dx) > 2) {
 			var dest = [0, 0];
@@ -581,17 +773,18 @@ define(function (require) {
 	 * Joystick handling for both mouse and touch input - MicromeX
 	 */
 	function setupJoystick() {
-		const joystickBase = document.getElementById("joystickBase");
-		const joystickThumb = document.getElementById("joystickThumb");
+		const joystickBase = document.getElementById('joystickBase');
+		const joystickThumb = document.getElementById('joystickThumb');
 
 		maxDistance = joystickBase.offsetWidth / 2;
 
-		joystickThumb.addEventListener("mousedown", startDrag);
-		joystickThumb.addEventListener("touchstart", startDrag);
+		joystickThumb.addEventListener('mousedown', startDrag);
+		joystickThumb.addEventListener('touchstart', startDrag);
 	}
 
 	function startDrag(event) {
 		event.preventDefault();
+		const joystickBase = document.getElementById('joystickBase');
 
 		const touch = event.touches ? event.touches[0] : event;
 
@@ -600,16 +793,19 @@ define(function (require) {
 		centerX = rect.left + rect.width / 2;
 		centerY = rect.top + rect.height / 2;
 
-		document.addEventListener("mousemove", moveJoystick);
-		document.addEventListener("mouseup", stopDrag);
-		document.addEventListener("touchmove", moveJoystick);
-		document.addEventListener("touchend", stopDrag);
+		document.addEventListener('mousemove', moveJoystick);
+		document.addEventListener('mouseup', stopDrag);
+		document.addEventListener('touchmove', moveJoystick);
+		document.addEventListener('touchend', stopDrag);
 
 		moveJoystick(touch); // Trigger initial movement
 		startMovement(); // Start periodic movement updates
 	}
 
 	function moveJoystick(event) {
+		const joystickThumb = document.getElementById('joystickThumb');
+		const deadZone = 15;
+
 		const touch = event.touches ? event.touches[0] : event;
 
 		const deltaX = touch.clientX - centerX;
@@ -623,22 +819,31 @@ define(function (require) {
 
 		joystickThumb.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
 
+		// Check for dead zone
+		if (distance < deadZone) {
+			normalizedX = 0;
+			normalizedY = 0;
+			return;
+		}
+
 		// Normalize movement (-1 to 1)
 		normalizedX = offsetX / maxDistance;
 		normalizedY = -offsetY / maxDistance;
 	}
 
 	function stopDrag() {
-		joystickThumb.style.transform = "translate(0, 0)"; // Reset to center
+		const joystickThumb = document.getElementById('joystickThumb');
+
+		joystickThumb.style.transform = 'translate(0, 0)'; // Reset to center
 		normalizedX = 0; // Reset normalized values
 		normalizedY = 0;
 
 		stopMovement(); // Stop periodic movement updates
 
-		document.removeEventListener("mousemove", moveJoystick);
-		document.removeEventListener("mouseup", stopDrag);
-		document.removeEventListener("touchmove", moveJoystick);
-		document.removeEventListener("touchend", stopDrag);
+		document.removeEventListener('mousemove', moveJoystick);
+		document.removeEventListener('mouseup', stopDrag);
+		document.removeEventListener('touchmove', moveJoystick);
+		document.removeEventListener('touchend', stopDrag);
 	}
 
 	function startMovement() {
@@ -690,14 +895,14 @@ define(function (require) {
 
 		// Reverse the angle of rotation for proper alignment
 		mat2.identity(rotate);
-		mat2.rotate(rotate, rotate, -Camera.direction * 45 / 180 * Math.PI);
+		mat2.rotate(rotate, rotate, ((-Camera.direction * 45) / 180) * Math.PI);
 
 		vec2.transformMat2(direction, direction, rotate);
 
 		// Calculate the new position
 		const newPos = [
 			Math.round(player.position[0] + direction[0] * tileSize),
-			Math.round(player.position[1] + direction[1] * tileSize),
+			Math.round(player.position[1] + direction[1] * tileSize)
 		];
 
 		const dest = [0, 0];
@@ -732,7 +937,7 @@ define(function (require) {
 	 */
 
 	function setupTalkToNpcButton() {
-		const talkButton = document.getElementById("talktonpcButton");
+		const talkButton = document.getElementById('talktonpcButton');
 
 		// Function to find the nearest NPC within 2 tiles
 		function findNearestNpc() {
@@ -746,7 +951,7 @@ define(function (require) {
 			let minDistance = 3; // Minimum distance in tiles (3 tiles)
 
 			// Iterate through all entities to find the nearest NPC
-			EntityManager.forEach((entity) => {
+			EntityManager.forEach(entity => {
 				if (entity.objecttype === entity.constructor.TYPE_NPC) {
 					const dx = entity.position[0] - player.position[0];
 					const dy = entity.position[1] - player.position[1];
@@ -779,7 +984,7 @@ define(function (require) {
 		}
 
 		// Add event listener to the button
-		talkButton.addEventListener("click", talkToNearestNpc);
+		talkButton.addEventListener('click', talkToNearestNpc);
 	}
 
 	/**
@@ -826,11 +1031,13 @@ define(function (require) {
 		var free = true;
 
 		EntityManager.forEach(function (entity) {
-			if (entity.objecttype != entity.constructor.TYPE_EFFECT &&
+			if (
+				entity.objecttype != entity.constructor.TYPE_EFFECT &&
 				entity.objecttype != entity.constructor.TYPE_UNIT &&
 				entity.objecttype != entity.constructor.TYPE_TRAP &&
 				Math.round(entity.position[0]) === x &&
-				Math.round(entity.position[1]) === y) {
+				Math.round(entity.position[1]) === y
+			) {
 				free = false;
 				return false;
 			}
@@ -884,7 +1091,6 @@ define(function (require) {
 			case 'ATK':
 				attackTargeted();
 				break;
-
 		}
 	};
 

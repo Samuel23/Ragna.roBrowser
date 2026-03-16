@@ -3,8 +3,16 @@
  *
  * Rendering Rsm,Rsm2 File object with animation support
  */
-define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Renderer/Renderer'], function (WebGL, glMatrix, Client, Model, Renderer) {
-	"use strict";
+define([
+	'text!./RsmEffect.vs',
+	'text!./RsmEffect.fs',
+	'Utils/WebGL',
+	'Utils/gl-matrix',
+	'Core/Client',
+	'Loaders/Model',
+	'Renderer/Renderer'
+], function (_vertexShader, _fragmentShader, WebGL, glMatrix, Client, Model, Renderer) {
+	'use strict';
 
 	var _program = null;
 	var _normalMat = new Float32Array(3 * 3);
@@ -13,103 +21,12 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 	var quat = glMatrix.quat;
 	var vec3 = glMatrix.vec3;
 
-	/**
-	 * @var {string} vertex shader
-	 */
-	var _vertexShader = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : vert
-		precision highp float;
-
-		in vec3 aPosition;
-		in vec3 aVertexNormal;
-		in vec2 aTextureCoord;
-		in float aAlpha;
-
-		out vec2 vTextureCoord;
-		out float vLightWeighting;
-		out float vAlpha;
-
-		uniform mat4 uModelViewMat;
-		uniform mat4 uProjectionMat;
-
-		uniform vec3 uLightDirection;
-		uniform mat3 uNormalMat;
-
-		uniform vec3 uPosition;
-		uniform float uSize;
-
-		void main(void) {
-
-			vec4 position  = vec4(uPosition.x + 0.5, -uPosition.z, uPosition.y + 0.5, 1.0);
-			position += vec4(aPosition.x * uSize, aPosition.y * -uSize, aPosition.z * uSize, 0.0);
-
-			gl_Position	 = uProjectionMat * uModelViewMat * position;
-
-			vTextureCoord   = aTextureCoord;
-			vAlpha		  = aAlpha;
-
-			vec4 lDirection  = uModelViewMat * vec4( uLightDirection, 0.0);
-			vec3 dirVector   = normalize(lDirection.xyz);
-			float dotProduct = dot( uNormalMat * aVertexNormal, dirVector );
-			vLightWeighting  = max( dotProduct, 0.5 );
-		}
-	`;
-
-
-	/**
-	 * @var {string} fragment shader
-	 */
-	var _fragmentShader = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : frag
-		precision highp float;
-
-		in vec2 vTextureCoord;
-		in float vLightWeighting;
-		in float vAlpha;
-		out vec4 fragColor;
-
-		uniform sampler2D uDiffuse;
-
-		uniform bool  uFogUse;
-		uniform float uFogNear;
-		uniform float uFogFar;
-		uniform vec3  uFogColor;
-
-		uniform vec3  uLightAmbient;
-		uniform vec3  uLightDiffuse;
-		uniform float uLightOpacity;
-
-		void main(void) {
-			vec4 textureSample  = texture( uDiffuse,  vTextureCoord.st );
-
-			if (textureSample.a == 0.0) {
-				discard;
-			}
-
-			vec3 Ambient	= uLightAmbient * uLightOpacity;
-			vec3 Diffuse	= uLightDiffuse * vLightWeighting;
-			vec4 LightColor = vec4( Ambient + Diffuse, 1.0);
-
-			fragColor	= textureSample * clamp(LightColor, 0.0, 1.0);
-			fragColor.a *= vAlpha;
-
-			if (uFogUse) {
-				float depth	 = gl_FragCoord.z / gl_FragCoord.w;
-				float fogFactor = smoothstep( uFogNear, uFogFar, depth );
-				fragColor	= mix( fragColor, vec4( uFogColor, fragColor.w ), fogFactor );
-			}
-		}
-	`;
-
 	var _light = {
 		opacity: 1.0,
 		ambient: new Float32Array([1, 1, 1]),
 		diffuse: new Float32Array([0, 0, 0]),
-		direction: new Float32Array([0, 1, 0]),
+		direction: new Float32Array([0, 1, 0])
 	};
-
 
 	function RsmEffect(params) {
 		this.position = params.Inst.position;
@@ -194,7 +111,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 			frame += animLen;
 		}
 
-		var t = (nextFrame - prevFrame) > 0 ? (frame - prevFrame) / (nextFrame - prevFrame) : 0;
+		var t = nextFrame - prevFrame > 0 ? (frame - prevFrame) / (nextFrame - prevFrame) : 0;
 		t = Math.max(0, Math.min(1, t));
 
 		return slerpQuat(rotKeyframes[prevIdx].q, rotKeyframes[nextIdx].q, t);
@@ -245,7 +162,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 			frame += animLen;
 		}
 
-		var t = (nextFrame - prevFrame) > 0 ? (frame - prevFrame) / (nextFrame - prevFrame) : 0;
+		var t = nextFrame - prevFrame > 0 ? (frame - prevFrame) / (nextFrame - prevFrame) : 0;
 		t = Math.max(0, Math.min(1, t));
 
 		var p1 = posKeyframes[prevIdx];
@@ -298,7 +215,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 			frame += animLen;
 		}
 
-		var t = (nextFrame - prevFrame) > 0 ? (frame - prevFrame) / (nextFrame - prevFrame) : 0;
+		var t = nextFrame - prevFrame > 0 ? (frame - prevFrame) / (nextFrame - prevFrame) : 0;
 		t = Math.max(0, Math.min(1, t));
 
 		return lerpVec3(scaleKeyFrames[prevIdx].Scale, scaleKeyFrames[nextIdx].Scale, t);
@@ -326,16 +243,14 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 		for (i = 0, j = 0, count = faces.length; i < count; ++i, j += 3) {
 			face = faces[i];
 
-			vec3.calcNormal(
-				vertices[face.vertidx[0]],
-				vertices[face.vertidx[1]],
-				vertices[face.vertidx[2]],
-				temp_vec
-			);
+			vec3.calcNormal(vertices[face.vertidx[0]], vertices[face.vertidx[1]], vertices[face.vertidx[2]], temp_vec);
 
-			out[j] = normalMat[0] * temp_vec[0] + normalMat[4] * temp_vec[1] + normalMat[8] * temp_vec[2] + normalMat[12];
-			out[j + 1] = normalMat[1] * temp_vec[0] + normalMat[5] * temp_vec[1] + normalMat[9] * temp_vec[2] + normalMat[13];
-			out[j + 2] = normalMat[2] * temp_vec[0] + normalMat[6] * temp_vec[1] + normalMat[10] * temp_vec[2] + normalMat[14];
+			out[j] =
+				normalMat[0] * temp_vec[0] + normalMat[4] * temp_vec[1] + normalMat[8] * temp_vec[2] + normalMat[12];
+			out[j + 1] =
+				normalMat[1] * temp_vec[0] + normalMat[5] * temp_vec[1] + normalMat[9] * temp_vec[2] + normalMat[13];
+			out[j + 2] =
+				normalMat[2] * temp_vec[0] + normalMat[6] * temp_vec[1] + normalMat[10] * temp_vec[2] + normalMat[14];
 
 			if (face.smoothGroup !== undefined) {
 				groupUsed[face.smoothGroup] = true;
@@ -368,7 +283,10 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 
 				for (i = 0, k = 0; i < count; ++i, k += 3) {
 					face = faces[i];
-					if (face.smoothGroup === j && (face.vertidx[0] === v || face.vertidx[1] === v || face.vertidx[2] === v)) {
+					if (
+						face.smoothGroup === j &&
+						(face.vertidx[0] === v || face.vertidx[1] === v || face.vertidx[2] === v)
+					) {
 						x += normal[k];
 						y += normal[k + 1];
 						z += normal[k + 2];
@@ -376,7 +294,9 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 				}
 
 				len = 1 / Math.sqrt(x * x + y * y + z * z);
-				if (!isFinite(len)) len = 1;
+				if (!isFinite(len)) {
+					len = 1;
+				}
 				norm[l] = x * len;
 				norm[l + 1] = y * len;
 				norm[l + 2] = z * len;
@@ -623,8 +543,8 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 		// Create buffer
 		var buffer = new Float32Array(total);
 		var offset = 0;
-
-		for (var i = 0; i < objects.length; i++) {
+		var i;
+		for (i = 0; i < objects.length; i++) {
 			var obj = objects[i];
 			var length = obj.mesh.length;
 
@@ -644,18 +564,25 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 		}
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, self.buffer);
-		gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.DYNAMIC_DRAW);
+
+		// If buffer size is the same, just update data. Otherwise, reallocate buffer storage
+		if (self._bufferSize === buffer.byteLength) {
+			gl.bufferSubData(gl.ARRAY_BUFFER, 0, buffer);
+		} else {
+			gl.bufferData(gl.ARRAY_BUFFER, buffer, gl.DYNAMIC_DRAW);
+			self._bufferSize = buffer.byteLength;
+		}
 
 		// Update objects info
 		if (self.objects.length !== infos.length) {
 			// Need to reload textures
-			for (var i = 0; i < self.objects.length; i++) {
+			for (i = 0; i < self.objects.length; i++) {
 				if (self.objects[i] && self.objects[i].texture) {
 					gl.deleteTexture(self.objects[i].texture);
 				}
 			}
 			self.objects = new Array(infos.length);
-			for (var i = 0; i < infos.length; i++) {
+			for (i = 0; i < infos.length; i++) {
 				self.objects[i] = {
 					vertCount: infos[i].vertCount,
 					vertOffset: infos[i].vertOffset,
@@ -664,20 +591,24 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 				};
 
 				(function (idx, texturePath) {
-					Client.loadFile(texturePath, function (data) {
-						WebGL.texture(gl, data, function (texture) {
-							self.objects[idx].texture = texture;
+					Client.loadFile(
+						texturePath,
+						function (data) {
+							WebGL.texture(gl, data, function (texture) {
+								self.objects[idx].texture = texture;
+								self.objects[idx].complete = true;
+							});
+						},
+						function () {
+							// Texture load failed, mark as complete anyway
 							self.objects[idx].complete = true;
-						});
-					}, function () {
-						// Texture load failed, mark as complete anyway
-						self.objects[idx].complete = true;
-					});
+						}
+					);
 				})(i, infos[i].texture);
 			}
 		} else {
 			// Just update vertex offsets and counts
-			for (var i = 0; i < infos.length; i++) {
+			for (i = 0; i < infos.length; i++) {
 				self.objects[i].vertCount = infos[i].vertCount;
 				self.objects[i].vertOffset = infos[i].vertOffset;
 			}
@@ -695,7 +626,9 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 		}
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-		gl.bufferData(gl.ARRAY_BUFFER, data.buffer, gl.STATIC_DRAW);
+
+		gl.bufferData(gl.ARRAY_BUFFER, data.buffer, this.isAnimated ? gl.DYNAMIC_DRAW : gl.STATIC_DRAW);
+		this._bufferSize = data.buffer.byteLength;
 
 		function onTextureLoaded(texture, i) {
 			self.objects[i].texture = texture;
@@ -724,6 +657,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 
 	RsmEffect.prototype.init = function render(gl, tick) {
 		var self = this;
+		var i, count, j, size, total, offset, length /*, pos -UNUSED*/;
 
 		Client.getFile(this.filename, function (buf) {
 			self.model = new Model(buf);
@@ -735,17 +669,22 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 
 			for (var n = 0; n < self.model.nodes.length; n++) {
 				var node = self.model.nodes[n];
-				if ((node.rotKeyframes && node.rotKeyframes.length > 0) ||
+				if (
+					(node.rotKeyframes && node.rotKeyframes.length > 0) ||
 					(node.posKeyframes && node.posKeyframes.length > 0) ||
-					(node.scaleKeyFrames && node.scaleKeyFrames.length > 0)) {
+					(node.scaleKeyFrames && node.scaleKeyFrames.length > 0)
+				) {
 					self.isAnimated = true;
 					break;
 				}
 			}
 
 			var data;
-			var i, count, j, size, total, offset, length, pos;
-			var objects = [], infos = [], meshes, index, object;
+			var objects = [],
+				infos = [],
+				meshes,
+				index,
+				object;
 			var buffer;
 
 			// Create model in world
@@ -775,7 +714,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 
 			buffer = new Float32Array(total);
 			count = objects.length;
-			pos = 0;
+			//pos = 0; // UNUSED
 			offset = 0;
 
 			// Merge meshes to buffer
@@ -798,9 +737,8 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 			i = -1;
 
 			function loadNextTexture() {
-
 				// Loading complete, rendering...
-				if ((++i) === count) {
+				if (++i === count) {
 					// Initialize renderer
 					initModel.call(self, gl, {
 						buffer: buffer,
@@ -810,10 +748,14 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 					return;
 				}
 
-				Client.loadFile(infos[i].texture, function (data) {
-					infos[i].texture = data;
-					loadNextTexture();
-				}, loadNextTexture);
+				Client.loadFile(
+					infos[i].texture,
+					function (data) {
+						infos[i].texture = data;
+						loadNextTexture();
+					},
+					loadNextTexture
+				);
 			}
 
 			// Start loading textures
@@ -821,7 +763,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 		});
 
 		this.needInit = false;
-	}
+	};
 
 	RsmEffect.prototype.free = function free(gl) {
 		for (var i = 0, count = this.objects.length; i < count; ++i) {
@@ -849,11 +791,9 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 	};
 
 	RsmEffect.beforeRender = function beforeRender(gl, modelView, projection, fog, tick) {
-
 		// Calculate normal mat
 		mat4.toInverseMat3(modelView, _normalMat);
 		mat3.transpose(_normalMat, _normalMat);
-
 
 		// -- render
 		var uniform = _program.uniform;
@@ -895,7 +835,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 		// Handle animation
 		if (this.isAnimated && this.model && this.animLen > 0) {
 			var elapsed = tick - this.startTick;
-			var frame = Math.floor((elapsed * this.fps / 1000) % this.animLen);
+			var frame = Math.floor(((elapsed * this.fps) / 1000) % this.animLen);
 
 			if (frame !== this.lastFrame) {
 				rebuildMeshAtFrame(this, gl, frame);
@@ -922,7 +862,7 @@ define(['Utils/WebGL', 'Utils/gl-matrix', 'Core/Client', 'Loaders/Model', 'Rende
 				gl.drawArrays(gl.TRIANGLES, this.objects[i].vertOffset, this.objects[i].vertCount);
 			}
 		}
-	}
+	};
 
 	RsmEffect.afterRender = function afterRender(gl) {
 		var attribute = _program.attribute;

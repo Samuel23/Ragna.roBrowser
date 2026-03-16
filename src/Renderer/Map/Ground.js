@@ -7,179 +7,63 @@
  *
  * @author Vincent Thibault
  */
-define(['Utils/WebGL', 'Utils/Texture', 'Preferences/Map', 'Core/Configs'],
-function(      WebGL,         Texture,   Preferences,            Configs )
-{
+define([
+	'Utils/WebGL',
+	'Utils/Texture',
+	'Preferences/Map',
+	'Core/Configs',
+	'text!./Ground.vs',
+	'text!./Ground.fs'
+], function (WebGL, Texture, Preferences, Configs, _vertexShader, _fragmentShader) {
 	'use strict';
 
 	var procCanvas = document.createElement('canvas');
-	var procCtx    = procCanvas.getContext('2d', { willReadFrequently: true });
-
+	var procCtx = procCanvas.getContext('2d', { willReadFrequently: true });
 
 	/**
 	 * @var {WebGLProgram}
 	 */
-	var _program       = null;
-
+	var _program = null;
 
 	/**
 	 * @var {WebGBLuffer}
 	 */
 	var _buffer = null;
 
-
 	/**
 	 * @var {WebGLTexture}
 	 */
 	var _lightmap = null;
-
 
 	/**
 	 * @var {WebGLTexture}
 	 */
 	var _tileColor = null;
 
-
 	/**
 	 * @var {WebGLTexture}
 	 */
 	var _textureAtlas = null;
-
 
 	/**
 	 * @var {WebGLTexture}
 	 */
 	var _shadowMap = null;
 
-
 	/**
 	 * @var {number} total vertices count
 	 */
 	var _vertCount = 0;
-
 
 	/**
 	 * @var {number} Ground width
 	 */
 	var _width = 0;
 
-
 	/**
 	 * @var {number} Ground height
 	 */
 	var _height = 0;
-
-
-	/**
-	 * @var {string} Vertex Shader
-	 */
-	var _vertexShader   = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : vert
-		precision highp float;
-
-		in vec3 aPosition;
-		in vec3 aVertexNormal;
-		in vec2 aTextureCoord;
-		in vec2 aLightmapCoord;
-		in vec2 aTileColorCoord;
-
-		out vec2 vTextureCoord;
-		out vec2 vLightmapCoord;
-		out vec2 vTileColorCoord;
-		out float vLightWeighting;
-
-		uniform mat4 uModelViewMat;
-		uniform mat4 uProjectionMat;
-
-		uniform vec3 uLightDirection;
-		uniform vec3 uLightEnv;
-
-		void main(void) {
-			gl_Position     = uProjectionMat * uModelViewMat * vec4( aPosition, 1.0);
-
-			vTextureCoord   = aTextureCoord;
-			vLightmapCoord  = aLightmapCoord;
-			vTileColorCoord = aTileColorCoord;
-
-			float dotProduct = dot(aVertexNormal, uLightDirection );
-			vLightWeighting = max(dotProduct, 0.0);
-		}
-	`;
-
-	/**
-	 * @var {string} Fragment Shader
-	 */
-	var _fragmentShader = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : frag
-		precision highp float;
-
-		in vec2 vTextureCoord;
-		in vec2 vLightmapCoord;
-		in vec2 vTileColorCoord;
-		in float vLightWeighting;
-		out vec4 fragColor;
-
-		uniform sampler2D uDiffuse;
-		uniform sampler2D uLightmap;
-		uniform sampler2D uTileColor;
-		uniform bool uLightMapUse;
-		uniform bool uPosterize;
-		uniform bool uGammaCorrection;
-
-		uniform bool  uFogUse;
-		uniform float uFogNear;
-		uniform float uFogFar;
-		uniform vec3  uFogColor;
-
-		uniform vec3  uLightAmbient;
-		uniform vec3  uLightDiffuse;
-		uniform float uLightOpacity;
-		uniform vec3  uLightDirection;
-		uniform vec3 uLightEnv;
-
-		vec3 posterize(vec3 c) {
-		    c *= 255.0;
-		    c = floor(c / 16.0) * 16.0;
-		    c /= 255.0;
-		    return c;
-		}
-
-		void main(void) {
-			vec4 textureSample = texture(uDiffuse, vTextureCoord.st);
-			if (textureSample.a < 0.1)
-				discard;
-
-			if (vTileColorCoord.st != vec2(0.0,0.0)) {
-				textureSample    *= texture( uTileColor, vTileColorCoord.st);
-			}
-
-			vec3 color = (vLightWeighting * uLightDiffuse + uLightAmbient);
-			textureSample.rgb *= clamp(color, 0.0, 1.0);
-			textureSample.rgb *= clamp(uLightEnv, 0.0, 1.0);
-
-			if (uLightMapUse) {
-				vec4 lightmap = texture( uLightmap, vLightmapCoord.st);
-				if(uPosterize) {
-					lightmap.rgb = posterize(lightmap.rgb);
-				} else if(uGammaCorrection){
-					lightmap.rgb = pow(lightmap.rgb, vec3(1.1));
-				}
-				textureSample.rgb *= lightmap.a;
-				textureSample.rgb += clamp(lightmap.rgb, 0.0, 1.0);
-			}
-
-			fragColor = textureSample;
-
-			if (uFogUse) {
-				float depth     = gl_FragCoord.z / gl_FragCoord.w;
-				float fogFactor = smoothstep( uFogNear, uFogFar, depth );
-				fragColor    = mix( fragColor, vec4(uFogColor, fragColor.w), fogFactor );
-			}
-
-		}
-	`;
 
 	/**
 	 * Render ground
@@ -191,77 +75,75 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {object} fog structure
 	 * @param {object} light structure
 	 */
-	function render( gl, modelView, projection, normalMat, fog, light )
-	{
+	function render(gl, modelView, projection, normalMat, fog, light) {
 		var uniform = _program.uniform;
 		var attribute = _program.attribute;
 
-		gl.useProgram( _program );
+		gl.useProgram(_program);
 
 		// Bind matrix
-		gl.uniformMatrix4fv( uniform.uModelViewMat,  false, modelView );
-		gl.uniformMatrix4fv( uniform.uProjectionMat, false, projection );
+		gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
+		gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 
 		// Bind light
-		gl.uniform3fv( uniform.uLightDirection, light.direction );
-		gl.uniform1f(  uniform.uLightOpacity,   light.opacity );
-		gl.uniform3fv( uniform.uLightAmbient,   light.ambient );
-		gl.uniform3fv( uniform.uLightDiffuse,   light.diffuse );
-		gl.uniform3fv( uniform.uLightEnv,   light.env );
+		gl.uniform3fv(uniform.uLightDirection, light.direction);
+		gl.uniform1f(uniform.uLightOpacity, light.opacity);
+		gl.uniform3fv(uniform.uLightAmbient, light.ambient);
+		gl.uniform3fv(uniform.uLightDiffuse, light.diffuse);
+		gl.uniform3fv(uniform.uLightEnv, light.env);
 
 		// Render lightmap ?
-		gl.uniform1i(  uniform.uLightMapUse, Preferences.lightmap );
-		gl.uniform1i(  uniform.uPosterize, Preferences.smoothlight === 0 );  
-		gl.uniform1i(  uniform.uGammaCorrection, Preferences.smoothlight === 2 );
+		gl.uniform1i(uniform.uLightMapUse, Preferences.lightmap);
+		gl.uniform1i(uniform.uPosterize, Preferences.smoothlight === 0);
+		gl.uniform1i(uniform.uGammaCorrection, Preferences.smoothlight === 2);
 
 		// Fog settings
-		gl.uniform1i(  uniform.uFogUse,   fog.use && fog.exist );
-		gl.uniform1f(  uniform.uFogNear,  fog.near );
-		gl.uniform1f(  uniform.uFogFar,   fog.far  );
-		gl.uniform3fv( uniform.uFogColor, fog.color );
+		gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
+		gl.uniform1f(uniform.uFogNear, fog.near);
+		gl.uniform1f(uniform.uFogFar, fog.far);
+		gl.uniform3fv(uniform.uFogColor, fog.color);
 
 		// Enable all attributes
-		gl.enableVertexAttribArray( attribute.aPosition );
-		gl.enableVertexAttribArray( attribute.aVertexNormal );
-		gl.enableVertexAttribArray( attribute.aTextureCoord );
-		gl.enableVertexAttribArray( attribute.aLightmapCoord );
-		gl.enableVertexAttribArray( attribute.aTileColorCoord );
+		gl.enableVertexAttribArray(attribute.aPosition);
+		gl.enableVertexAttribArray(attribute.aVertexNormal);
+		gl.enableVertexAttribArray(attribute.aTextureCoord);
+		gl.enableVertexAttribArray(attribute.aLightmapCoord);
+		gl.enableVertexAttribArray(attribute.aTileColorCoord);
 
-		gl.bindBuffer( gl.ARRAY_BUFFER, _buffer );
+		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
 
 		// Link attribute
-		gl.vertexAttribPointer( attribute.aPosition,       3, gl.FLOAT, false, 12*4,  0   );
-		gl.vertexAttribPointer( attribute.aVertexNormal,   3, gl.FLOAT, false, 12*4,  3*4 );
-		gl.vertexAttribPointer( attribute.aTextureCoord,   2, gl.FLOAT, false, 12*4,  6*4 );
-		gl.vertexAttribPointer( attribute.aLightmapCoord,  2, gl.FLOAT, false, 12*4,  8*4 );
-		gl.vertexAttribPointer( attribute.aTileColorCoord, 2, gl.FLOAT, false, 12*4, 10*4 );
+		gl.vertexAttribPointer(attribute.aPosition, 3, gl.FLOAT, false, 12 * 4, 0);
+		gl.vertexAttribPointer(attribute.aVertexNormal, 3, gl.FLOAT, false, 12 * 4, 3 * 4);
+		gl.vertexAttribPointer(attribute.aTextureCoord, 2, gl.FLOAT, false, 12 * 4, 6 * 4);
+		gl.vertexAttribPointer(attribute.aLightmapCoord, 2, gl.FLOAT, false, 12 * 4, 8 * 4);
+		gl.vertexAttribPointer(attribute.aTileColorCoord, 2, gl.FLOAT, false, 12 * 4, 10 * 4);
 
 		// Texture Atlas
-		gl.activeTexture( gl.TEXTURE0 );
-		gl.bindTexture( gl.TEXTURE_2D, _textureAtlas );
-		gl.uniform1i( uniform.uDiffuse, 0 );
+		gl.activeTexture(gl.TEXTURE0);
+		gl.bindTexture(gl.TEXTURE_2D, _textureAtlas);
+		gl.uniform1i(uniform.uDiffuse, 0);
 
 		// LightMap
-		gl.activeTexture( gl.TEXTURE1 );
-		gl.bindTexture( gl.TEXTURE_2D, _lightmap );
-		gl.uniform1i( uniform.uLightmap, 1 );
+		gl.activeTexture(gl.TEXTURE1);
+		gl.bindTexture(gl.TEXTURE_2D, _lightmap);
+		gl.uniform1i(uniform.uLightmap, 1);
 
 		// Tile Color
-		gl.activeTexture( gl.TEXTURE2 );
-		gl.bindTexture( gl.TEXTURE_2D, _tileColor );
-		gl.uniform1i( uniform.uTileColor, 2 );
+		gl.activeTexture(gl.TEXTURE2);
+		gl.bindTexture(gl.TEXTURE_2D, _tileColor);
+		gl.uniform1i(uniform.uTileColor, 2);
 
 		// Send mesh
-		gl.drawArrays(  gl.TRIANGLES, 0, _vertCount );
+		gl.drawArrays(gl.TRIANGLES, 0, _vertCount);
 
 		// Is it needed ?
-		gl.disableVertexAttribArray( attribute.aPosition );
-		gl.disableVertexAttribArray( attribute.aVertexNormal );
-		gl.disableVertexAttribArray( attribute.aTextureCoord );
-		gl.disableVertexAttribArray( attribute.aLightmapCoord );
-		gl.disableVertexAttribArray( attribute.aTileColorCoord );
+		gl.disableVertexAttribArray(attribute.aPosition);
+		gl.disableVertexAttribArray(attribute.aVertexNormal);
+		gl.disableVertexAttribArray(attribute.aTextureCoord);
+		gl.disableVertexAttribArray(attribute.aLightmapCoord);
+		gl.disableVertexAttribArray(attribute.aTileColorCoord);
 	}
-
 
 	/**
 	 * Prepare lightmap and send it to GPU
@@ -271,29 +153,27 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {object} lightmap
 	 * @param {number} size
 	 */
-	function initLightmap( gl, lightmap, size )
-	{
+	function initLightmap(gl, lightmap, size) {
 		var width, height;
 		var enableMipmap = Configs.get('enableMipmap');
 
-		width  = WebGL.toPowerOfTwo( Math.round( Math.sqrt(size) ) * 8 );
-		height = WebGL.toPowerOfTwo( Math.ceil(  Math.sqrt(size) ) * 8 );
+		width = WebGL.toPowerOfTwo(Math.round(Math.sqrt(size)) * 8);
+		height = WebGL.toPowerOfTwo(Math.ceil(Math.sqrt(size)) * 8);
 
 		if (!_lightmap) {
 			_lightmap = gl.createTexture();
 		}
 
 		// Send texture to GPU
-		gl.bindTexture( gl.TEXTURE_2D, _lightmap );
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, lightmap );
+		gl.bindTexture(gl.TEXTURE_2D, _lightmap);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, lightmap);
 
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-		if(enableMipmap) {
-			gl.generateMipmap( gl.TEXTURE_2D );
+		if (enableMipmap) {
+			gl.generateMipmap(gl.TEXTURE_2D);
 		}
 	}
-
 
 	/**
 	 * Prepare Tile Color and send it to GPU
@@ -303,8 +183,7 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {number} width
 	 * @param {number} height
 	 */
-	function initTileColor( gl, tilescolor, width, height )
-	{
+	function initTileColor(gl, tilescolor, width, height) {
 		if (WebGL.isWebGL2(gl)) {
 			// WebGL2 can handle NPOT textures without performance hit (10x faster!)
 			initTileColor2(gl, tilescolor, width, height);
@@ -315,42 +194,42 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 		var enableMipmap = Configs.get('enableMipmap');
 
 		if (procCanvas.width !== width || procCanvas.height !== height) {
-			procCanvas.width  = width;
+			procCanvas.width = width;
 			procCanvas.height = height;
 		}
 
 		var imageData = procCtx.createImageData(width, height);
-		var data      = imageData.data;
-		count         = data.length;
+		var data = imageData.data;
+		count = data.length;
 
 		// Set Image pixel
 		for (i = 0; i < count; ++i) {
 			data[i] = tilescolor[i];
 		}
-		procCtx.putImageData( imageData, 0, 0 );
+		procCtx.putImageData(imageData, 0, 0);
 
 		// Build Image with power of two texture * 2 (to smooth)
-		_width        = WebGL.toPowerOfTwo( width );
-		_height       = WebGL.toPowerOfTwo( height );
-		var smooth    = document.createElement('canvas');
-		smooth.width  = _width;
+		_width = WebGL.toPowerOfTwo(width);
+		_height = WebGL.toPowerOfTwo(height);
+		var smooth = document.createElement('canvas');
+		smooth.width = _width;
 		smooth.height = _height;
-		var ctx       = smooth.getContext('2d');
+		var ctx = smooth.getContext('2d');
 
 		ctx.fillStyle = 'black';
-		ctx.fillRect( 0, 0, _width, _height);
-		ctx.drawImage( procCanvas, 0, 0, _width, _height );
+		ctx.fillRect(0, 0, _width, _height);
+		ctx.drawImage(procCanvas, 0, 0, _width, _height);
 		// Send texture to GPU
 		if (!_tileColor) {
 			_tileColor = gl.createTexture();
 		}
 
-		gl.bindTexture( gl.TEXTURE_2D, _tileColor );
-		gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, smooth );
+		gl.bindTexture(gl.TEXTURE_2D, _tileColor);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, smooth);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-		if(enableMipmap) {
-			gl.generateMipmap( gl.TEXTURE_2D );
+		if (enableMipmap) {
+			gl.generateMipmap(gl.TEXTURE_2D);
 		}
 	}
 
@@ -362,24 +241,13 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {number} width
 	 * @param {number} height
 	 */
-	function initTileColor2(gl, tilescolor, width, height)
-	{
+	function initTileColor2(gl, tilescolor, width, height) {
 		if (!_tileColor) {
 			_tileColor = gl.createTexture();
 		}
-		
+
 		gl.bindTexture(gl.TEXTURE_2D, _tileColor);
-		gl.texImage2D(
-			gl.TEXTURE_2D,
-			0,
-			gl.RGBA,
-			width,
-			height,
-			0,
-			gl.RGBA,
-			gl.UNSIGNED_BYTE,
-			tilescolor
-		);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, width, height, 0, gl.RGBA, gl.UNSIGNED_BYTE, tilescolor);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 	}
@@ -391,35 +259,32 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {Object} gl context
 	 * @param {Array} textures 's filename
 	 */
-	function initTextures( gl, textures )
-	{
+	function initTextures(gl, textures) {
 		var i, count, width, height, _width, loaded;
 
 		// Find texture size
-		count  = textures.length;
-		_width = Math.round( Math.sqrt(count) );
-		width  = WebGL.toPowerOfTwo( _width * 258 );
-		height = WebGL.toPowerOfTwo( Math.ceil(  Math.sqrt(count) ) * 258 );
+		count = textures.length;
+		_width = Math.round(Math.sqrt(count));
+		width = WebGL.toPowerOfTwo(_width * 258);
+		height = WebGL.toPowerOfTwo(Math.ceil(Math.sqrt(count)) * 258);
 
 		if (procCanvas.width !== width || procCanvas.height !== height) {
-			procCanvas.width  = width;
+			procCanvas.width = width;
 			procCanvas.height = height;
 		}
 
 		procCtx.clearRect(0, 0, width, height);
-		loaded        = 0;
+		loaded = 0;
 
-
-		function onTextureCompleteBuildAtlas( success, i )
-		{
+		function onTextureCompleteBuildAtlas(success, i) {
 			if (success) {
 				var x = (i % _width) * 258;
 				var y = Math.floor(i / _width) * 258;
-				procCtx.drawImage( this, x + 0, y + 0, 258, 258 ); // generate border
-				procCtx.drawImage( this, x + 1, y + 1, 256, 256 );
+				procCtx.drawImage(this, x + 0, y + 0, 258, 258); // generate border
+				procCtx.drawImage(this, x + 1, y + 1, 256, 256);
 			}
 
-			if ((++loaded) === count) {
+			if (++loaded === count) {
 				onTextureAtlasComplete(gl, procCanvas);
 			}
 		}
@@ -430,31 +295,28 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 		}
 	}
 
-
 	/**
 	 * Send the texture atlas to GPU
 	 *
 	 * @param {object} gl
 	 * @param {object} atlas - canvas texture
 	 */
-	function onTextureAtlasComplete( gl, atlas )
-	{
+	function onTextureAtlasComplete(gl, atlas) {
 		// Bind to GPU
 		if (!_textureAtlas) {
 			_textureAtlas = gl.createTexture();
 		}
 
-		gl.bindTexture( gl.TEXTURE_2D, _textureAtlas );
-		gl.texImage2D( gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas );
-		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-		gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.bindTexture(gl.TEXTURE_2D, _textureAtlas);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, atlas);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 
 		var enableMipmap = Configs.get('enableMipmap');
-		if(enableMipmap) {
-			gl.generateMipmap( gl.TEXTURE_2D );
+		if (enableMipmap) {
+			gl.generateMipmap(gl.TEXTURE_2D);
 		}
 	}
-
 
 	/**
 	 * Prepare ground data
@@ -462,11 +324,10 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {object} gl context
 	 * @param {object} data - ground
 	 */
-	function init( gl, data )
-	{
+	function init(gl, data) {
 		_vertCount = data.meshVertCount;
-		_width     = data.width;
-		_height    = data.height;
+		_width = data.width;
+		_height = data.height;
 		_shadowMap = data.shadowMap;
 
 		// Bind buffer, sending mesh to GPU
@@ -476,55 +337,51 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 
 		// Link program	if not loaded
 		if (!_program) {
-			_program = WebGL.createShaderProgram( gl, _vertexShader, _fragmentShader );
+			_program = WebGL.createShaderProgram(gl, _vertexShader, _fragmentShader);
 		}
 
-		gl.bindBuffer( gl.ARRAY_BUFFER, _buffer );
-		gl.bufferData( gl.ARRAY_BUFFER, data.mesh, gl.STATIC_DRAW );
+		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
+		gl.bufferData(gl.ARRAY_BUFFER, data.mesh, gl.STATIC_DRAW);
 
 		// Send lightmap to GPU
-		initLightmap( gl, data.lightmap, data.lightmapSize );
+		initLightmap(gl, data.lightmap, data.lightmapSize);
 
 		// Send Tile color to GPU
-		initTileColor( gl, data.tileColor, data.width, data.height );
+		initTileColor(gl, data.tileColor, data.width, data.height);
 
 		// Send textures to GPU
-		initTextures( gl, data.textures );
+		initTextures(gl, data.textures);
 	}
-
-
 
 	/**
 	 * Clean texture/buffer from memory
 	 *
 	 * @param {object} gl context
 	 */
-	function free( gl )
-	{
+	function free(gl) {
 		if (_lightmap) {
-			gl.deleteTexture( _lightmap );
+			gl.deleteTexture(_lightmap);
 			_lightmap = null;
 		}
 
 		if (_tileColor) {
-			gl.deleteTexture( _tileColor );
+			gl.deleteTexture(_tileColor);
 			_tileColor = null;
 		}
 
 		if (_textureAtlas) {
-			gl.deleteTexture( _textureAtlas );
+			gl.deleteTexture(_textureAtlas);
 			_textureAtlas = null;
 		}
 
 		if (_buffer) {
-			gl.deleteBuffer( _buffer );
+			gl.deleteBuffer(_buffer);
 			_buffer = null;
 		}
 
 		_shadowMap = null;
 		_vertCount = 0;
 	}
-
 
 	/**
 	 * Return shadow factor
@@ -533,46 +390,46 @@ function(      WebGL,         Texture,   Preferences,            Configs )
 	 * @param {number} y
 	 * @return {number} shadow factor
 	 */
-	function getShadowFactor( x, y )
-	{
+	function getShadowFactor(x, y) {
 		// Map not loadead yet
 		if (!_shadowMap) {
 			return 1.0;
 		}
 
-		var _x, _y, factor = 0;
+		var _x,
+			_y,
+			factor = 0;
 
 		// Player is at cell center
 		x += 0.5;
 		y += 0.5;
 
 		// Get index
-		_x = Math.floor( x / 2 ) * 8;
-		_y = Math.floor( y / 2 ) * 8;
+		_x = Math.floor(x / 2) * 8;
+		_y = Math.floor(y / 2) * 8;
 
 		// Add floor percent
-		_x += Math.min( ( x & 1 ? 4 : 0) + Math.floor( (x % 1) * 4 ), 6);
-		_y += Math.min( ( y & 1 ? 4 : 0) + Math.floor( (y % 1) * 4 ), 6);
+		_x += Math.min((x & 1 ? 4 : 0) + Math.floor((x % 1) * 4), 6);
+		_y += Math.min((y & 1 ? 4 : 0) + Math.floor((y % 1) * 4), 6);
 
 		// Smooth shadowmap
 		for (y = -3; y < 3; ++y) {
 			for (x = -3; x < 3; ++x) {
-				factor += _shadowMap[ (_x+x) + (_y+y) * _width * 8];
+				factor += _shadowMap[_x + x + (_y + y) * _width * 8];
 			}
 		}
 
 		// Get back value
-		return factor / (6*6) / 255;
+		return factor / (6 * 6) / 255;
 	}
-
 
 	/**
 	 * Export
 	 */
 	return {
-		init:            init,
-		free:            free,
-		render:          render,
+		init: init,
+		free: free,
+		render: render,
 		getShadowFactor: getShadowFactor
 	};
 });

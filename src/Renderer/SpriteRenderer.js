@@ -7,256 +7,64 @@
  *
  * @author Vincent Thibault
  */
-define(["Utils/WebGL", "Utils/gl-matrix", "./Camera"],
-function(      WebGL,         glMatrix,      Camera )
-{
-	"use strict";
-
+define([
+	'Utils/WebGL',
+	'Utils/gl-matrix',
+	'./Camera',
+	'text!./SpriteRenderer.vs',
+	'text!./SpriteRenderer.fs'
+], function (WebGL, glMatrix, Camera, _vertexShader, _fragmentShader) {
+	'use strict';
 
 	/**
 	 * Import
 	 */
 	var mat4 = glMatrix.mat4;
 
-
-	/**
-	 * Generic Vertex Shader
-	 * @var {string}
-	 */
-	var _vertexShader = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : vert
-		precision highp float;
-
-		in vec2 aPosition;
-		in vec2 aTextureCoord;
-
-		out vec2 vTextureCoord;
-
-		uniform mat4 uModelViewMat;
-		uniform mat4 uViewModelMat;
-		uniform mat4 uProjectionMat;
-
-		uniform float uCameraZoom;
-		uniform float uCameraLatitude;
-
-		uniform vec2 uSpriteRendererSize;
-		uniform vec2 uSpriteRendererOffset;
-		uniform mat4 uSpriteRendererAngle;
-		uniform vec3 uSpriteRendererPosition;
-		uniform float uSpriteRendererDepth;
-		uniform float uSpriteRendererZindex;
-		uniform bool  uDisableDepthCorrection;
-
-		mat4 Project( mat4 mat, vec3 pos) {
-
-			// xyz = x(-z)y + middle of cell (0.5)
-			float x =  pos.x + 0.5;
-			float y = -pos.z;
-			float z =  pos.y + 0.5;
-
-			// Matrix translation
-			mat[3].x += mat[0].x * x + mat[1].x * y + mat[2].x * z;
-			mat[3].y += mat[0].y * x + mat[1].y * y + mat[2].y * z;
-			mat[3].z += (mat[0].z * x + mat[1].z * y + mat[2].z * z);
-			mat[3].w += mat[0].w * x + mat[1].w * y + mat[2].w * z;
-
-			// Spherical billboard
-			mat[0].xyz = vec3( 1.0, 0.0, 0.0 );
-			mat[1].xyz = vec3( 0.0, 1.0, 0.0 );
-			mat[2].xyz = vec3( 0.0, 0.0, 1.0 );
-
-			return mat;
-		}
-
-		vec3 getCameraPosition() {
-			return (uViewModelMat * vec4(0.0, 0.0, 0.0, 1.0)).xyz;
-		}
-
-		vec3 getCameraForward() {
-			return normalize((uViewModelMat * vec4(0.0, 0.0, -1.0, 0.0)).xyz);
-		}
-
-		void main(void) {
-			// Calculate position base on angle and sprite offset/size
-			vec4 position = uSpriteRendererAngle * vec4( aPosition.x * uSpriteRendererSize.x, aPosition.y * uSpriteRendererSize.y, 0.0, 1.0 );
-			position.x   += uSpriteRendererOffset.x;
-			position.y   -= uSpriteRendererOffset.y + 0.5;
-
-			mat4 modelView = Project(uModelViewMat, uSpriteRendererPosition);
-			vec4 viewPosition = modelView * position;
-			vec4 viewCenter   = modelView * vec4( 0.0, 0.0, 0.0, 1.0 );
-
-			gl_Position = uProjectionMat * viewPosition;
-
-			vec3 cameraPos     = getCameraPosition();
-			vec3 cameraForward = getCameraForward();
-
-			if (!uDisableDepthCorrection) {
-				// Vertical billboard depth correction (per-vertex), plane anchored at sprite center.
-				// Plane normal uses camera forward (flattened Y) for stability.
-				vec3 planePoint = (uViewModelMat * viewCenter).xyz;
-				vec3 planeNormal = normalize(vec3(cameraForward.x, 0.0, cameraForward.z));
-				if (length(planeNormal) < 0.000001) {
-					planeNormal = cameraForward;
-				}
-
-				vec3 worldVertex = (uViewModelMat * viewPosition).xyz;
-				vec3 rayDir      = normalize(worldVertex - cameraPos);
-				float denom      = max(dot(planeNormal, rayDir), 0.000001);
-				float dist       = dot(planePoint - cameraPos, planeNormal) / denom;
-
-				vec4 planeClip       = uProjectionMat * (uModelViewMat * vec4(cameraPos + rayDir * dist, 1.0));
-				float correctedZBase = planeClip.z * (gl_Position.w / max(planeClip.w, 0.000001));
-
-				gl_Position.z = min(gl_Position.z, correctedZBase);
-			}
-			gl_Position.z -= (uSpriteRendererZindex * 0.01 + uSpriteRendererDepth) / max(uCameraZoom, 1.0);
-
-			vTextureCoord = aTextureCoord;
-		}
-	`;
-
-
-	/**
-	 * Generic Fragment Shader
-	 * @var {string}
-	 */
-	var _fragmentShader = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : frag
-		precision highp float;
-
-		in vec2 vTextureCoord;
-		out vec4 fragColor;
-
-		uniform sampler2D uDiffuse;
-		uniform sampler2D uPalette;
-
-		uniform bool uUsePal;
-		uniform vec4 uSpriteRendererColor;
-
-		uniform bool  uFogUse;
-		uniform float uFogNear;
-		uniform float uFogFar;
-		uniform vec3  uFogColor;
-
-		uniform float uShadow;
-		uniform vec2 uTextSize;
-		uniform bool uIsRGBA;
-
-		// With palette we don't have a good result because of the gl.NEAREST, so smooth it.
-		vec4 bilinearSample(vec2 uv, sampler2D indexT, sampler2D LUT) {
-			vec2 TextInterval = 1.0 / uTextSize;
-
-			float tlLUT = texture(indexT, uv ).x;
-			float trLUT = texture(indexT, uv + vec2(TextInterval.x, 0.0)).x;
-			float blLUT = texture(indexT, uv + vec2(0.0, TextInterval.y)).x;
-			float brLUT = texture(indexT, uv + TextInterval).x;
-
-			vec4 transparent = vec4( 0.0, 0.0, 0.0, 0.0);
-
-			vec4 tl = tlLUT == 0.0 ? transparent : vec4( texture(LUT, vec2(tlLUT,1.0)).rgb, 1.0);
-			vec4 tr = trLUT == 0.0 ? transparent : vec4( texture(LUT, vec2(trLUT,1.0)).rgb, 1.0);
-			vec4 bl = blLUT == 0.0 ? transparent : vec4( texture(LUT, vec2(blLUT,1.0)).rgb, 1.0);
-			vec4 br = brLUT == 0.0 ? transparent : vec4( texture(LUT, vec2(brLUT,1.0)).rgb, 1.0);
-
-			vec2 f  = fract( uv.xy * uTextSize );
-			vec4 tA = mix( tl, tr, f.x );
-			vec4 tB = mix( bl, br, f.x );
-
-			return mix( tA, tB, f.y );
-		}
-
-
-		void main(void) {
-
-			// Don't render if it's not shown.
-			if (uSpriteRendererColor.a == 0.0) {
-				discard;
-			}
-
-			// Calculate texture
-			vec4 textureSample;
-			if (uUsePal) {
-				textureSample = bilinearSample( vTextureCoord, uDiffuse, uPalette );
-			}
-			else {
-				textureSample = texture( uDiffuse, vTextureCoord.st );
-			}
-
-			// No alpha, skip.
-			if ( textureSample.a == 0.0 )
-				discard;
-
-			// Apply shadow, apply color
-			textureSample.rgb   *= uShadow;
-			fragColor   = textureSample * uSpriteRendererColor;
-
-			// Fog feature
-			if (uFogUse) {
-				float depth     = gl_FragCoord.z / gl_FragCoord.w;
-				float fogFactor = smoothstep( uFogNear, uFogFar, depth );
-				fragColor    = mix( fragColor, vec4( uFogColor, fragColor.w ), fogFactor );
-			}
-		}
-	`;
-
-
-
 	/**
 	 * Sprite Renderer NameSpace
 	 */
 	var SpriteRenderer = {};
-
 
 	/**
 	 * @var {function} functions to use to render
 	 */
 	SpriteRenderer.render = null;
 
-
 	/**
 	 * @var {number} sprite shadow (mult * color)
 	 */
 	SpriteRenderer.shadow = 1.0;
-
 
 	/**
 	 * @var {number} sprite angle rotation
 	 */
 	SpriteRenderer.angle = 0;
 
-
 	/**
 	 * @var {number} depth
 	 */
 	SpriteRenderer.depth = 0.0;
-
 
 	/**
 	 * @var {Float32Array[3]} sprite position in 3D world
 	 */
 	SpriteRenderer.position = new Float32Array(3);
 
-
 	/**
 	 * @var {Float32Array[4]} sprite color (color * color)
 	 */
 	SpriteRenderer.color = new Float32Array(4);
-
 
 	/**
 	 * @var {Float32Array[2]} sprite size
 	 */
 	SpriteRenderer.size = new Float32Array(2);
 
-
 	/**
 	 * @var {Float32Array[2]} sprite offset position
 	 */
 	SpriteRenderer.offset = new Float32Array(2);
-
 
 	/**
 	 * @var {object} sprite image information
@@ -264,21 +72,18 @@ function(      WebGL,         glMatrix,      Camera )
 	SpriteRenderer.image = {
 		texture: null,
 		palette: null,
-		size:    new Float32Array(2)
+		size: new Float32Array(2)
 	};
-
 
 	/**
 	 * @var {object} sprite imageData (for 2D context)
 	 */
 	SpriteRenderer.sprite = null;
 
-
 	/**
 	 * @var {object} sprite palette (for 2D context)
 	 */
 	SpriteRenderer.palette = null;
-
 
 	/**
 	 * @var {number} groupid used (avoid draw call)
@@ -290,42 +95,35 @@ function(      WebGL,         glMatrix,      Camera )
 	 */
 	SpriteRenderer.disableDepthCorrection = false;
 
-
 	/**
 	 * @var {number} width unity
 	 */
 	SpriteRenderer.xSize = 5;
-
 
 	/**
 	 * @var {number} height unity
 	 */
 	SpriteRenderer.ySize = 5;
 
-
 	/**
 	 * @var {WebGLProgram}
 	 */
 	var _program = null;
-
 
 	/**
 	 * @var {WebGLBuffer}
 	 */
 	var _buffer = null;
 
-
 	/**
 	 * @var {CanvasRenderingContext2D} canvas context
 	 */
 	var _ctx = null;
 
-
 	/**
 	 * @var {WebGLRenderingContext} 3d context
 	 */
 	var _gl = null;
-
 
 	/**
 	 * @var {number} group id
@@ -333,18 +131,15 @@ function(      WebGL,         glMatrix,      Camera )
 	 */
 	var _groupId = 0;
 
-
 	/**
 	 * @var {number} last group id
 	 */
 	var _lastGroupId = 0;
 
-
 	/**
 	 * @var {number} last shadow used
 	 */
 	var _shadow = null;
-
 
 	/**
 	 * @var {number} last rotation angle used
@@ -366,66 +161,63 @@ function(      WebGL,         glMatrix,      Camera )
 	 */
 	var _depthMask = true;
 
+	/**
+	 * @var {boolean} cached depth test state
+	 */
+	var _depthTest = true;
 
 	/**
 	 * @var {object} last texture used
 	 */
 	var _texture = null;
 
-
 	/**
 	 * @var {boolean} do we use palette ?
 	 */
 	var _usepal = null;
-
 
 	/**
 	 * @var {Uint16Array} position in 2D canvas
 	 */
 	var _pos = new Int16Array(2);
 
-
 	/**
 	 * @var {mat4} last generated matrix (used for rotation)
 	 */
-	var _matrix = new Float32Array(4*4);
-
+	var _matrix = new Float32Array(4 * 4);
 
 	/**
 	 * @var {Float32Array[2]} sprite size
 	 */
 	var _size = new Float32Array(2);
 
-
 	/**
 	 * @var {Float32Array[2]} sprite offset position
 	 */
 	var _offset = new Float32Array(2);
-
 
 	/**
 	 * Initialize SpriteRenderer Renderer
 	 *
 	 * @param {object} gl context
 	 */
-	SpriteRenderer.init = function init( gl )
-	{
+	SpriteRenderer.init = function init(gl) {
 		if (!_buffer) {
 			_buffer = gl.createBuffer();
-			gl.bindBuffer( gl.ARRAY_BUFFER, _buffer );
-			gl.bufferData( gl.ARRAY_BUFFER, new Float32Array([
-				-0.5, +0.5, 0.0, 0.0,
-				+0.5, +0.5, 1.0, 0.0,
-				-0.5, -0.5, 0.0, 1.0,
-				+0.5, -0.5, 1.0, 1.0
-			]), gl.STATIC_DRAW );
+			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
+			gl.bufferData(
+				gl.ARRAY_BUFFER,
+				new Float32Array([
+					-0.5, +0.5, 0.0, 0.0, +0.5, +0.5, 1.0, 0.0, -0.5, -0.5, 0.0, 1.0, +0.5, -0.5, 1.0, 1.0
+				]),
+				gl.STATIC_DRAW
+			);
 		}
 
 		if (!_program) {
-			_program = WebGL.createShaderProgram( gl, _vertexShader, _fragmentShader );
+			_program = WebGL.createShaderProgram(gl, _vertexShader, _fragmentShader);
 		}
 	};
-
 
 	/**
 	 * Initialize 3D Context
@@ -435,64 +227,60 @@ function(      WebGL,         glMatrix,      Camera )
 	 * @param {mat4} projection
 	 * @param {object} fog structure
 	 */
-	SpriteRenderer.bind3DContext = function Bind3dContext( gl, modelView, projection, fog )
-	{
+	SpriteRenderer.bind3DContext = function Bind3dContext(gl, modelView, projection, fog) {
 		var attribute = _program.attribute;
-		var uniform   = _program.uniform;
+		var uniform = _program.uniform;
 
-		gl.useProgram( _program );
-		gl.uniformMatrix4fv( uniform.uProjectionMat, false,  projection );
-		gl.uniformMatrix4fv( uniform.uModelViewMat,  false,  modelView );
-		gl.uniformMatrix4fv( uniform.uViewModelMat,  false,  mat4.invert(_matrix, modelView) );
+		gl.useProgram(_program);
+		gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
+		gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
+		gl.uniformMatrix4fv(uniform.uViewModelMat, false, mat4.invert(_matrix, modelView));
 
 		// Fog settings
-		gl.uniform1i(  uniform.uFogUse,   fog.use && fog.exist );
-		gl.uniform1f(  uniform.uFogNear,  fog.near );
-		gl.uniform1f(  uniform.uFogFar,   fog.far );
-		gl.uniform3fv( uniform.uFogColor, fog.color );
+		gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
+		gl.uniform1f(uniform.uFogNear, fog.near);
+		gl.uniform1f(uniform.uFogFar, fog.far);
+		gl.uniform3fv(uniform.uFogColor, fog.color);
 
 		// Textures
-		gl.uniform1i( uniform.uDiffuse, 0 );
-		gl.uniform1i( uniform.uPalette, 1 );
+		gl.uniform1i(uniform.uDiffuse, 0);
+		gl.uniform1i(uniform.uPalette, 1);
 
 		// Camera position for billboarding
-		gl.uniform1f( uniform.uCameraZoom, Camera.zoom );
-		gl.uniform1f( uniform.uCameraLatitude, Camera.getLatitude() );
-		gl.uniform1i( uniform.uDisableDepthCorrection, _disableDepthCorrection = false );
+		gl.uniform1f(uniform.uCameraZoom, Camera.zoom);
+		gl.uniform1f(uniform.uCameraLatitude, Camera.getLatitude());
+		gl.uniform1i(uniform.uDisableDepthCorrection, (_disableDepthCorrection = false));
 
 		// Enable all attributes
-		gl.enableVertexAttribArray( attribute.aPosition );
-		gl.enableVertexAttribArray( attribute.aTextureCoord );
-		gl.bindBuffer( gl.ARRAY_BUFFER, _buffer );
+		gl.enableVertexAttribArray(attribute.aPosition);
+		gl.enableVertexAttribArray(attribute.aTextureCoord);
+		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
 
 		// Link attribute
-		gl.vertexAttribPointer( attribute.aPosition,     2, gl.FLOAT, false,  4*4, 0   );
-		gl.vertexAttribPointer( attribute.aTextureCoord, 2, gl.FLOAT, false,  4*4, 2*4 );
+		gl.vertexAttribPointer(attribute.aPosition, 2, gl.FLOAT, false, 4 * 4, 0);
+		gl.vertexAttribPointer(attribute.aTextureCoord, 2, gl.FLOAT, false, 4 * 4, 2 * 4);
 
 		// Binding 3D context
 		this.render = RenderCanvas3D;
-		this.xSize  = 5;
-		this.ySize  = 5;
+		this.xSize = 5;
+		this.ySize = 5;
 
 		_gl = gl;
 		_depthMask = true;
 		_groupId++;
 	};
 
-
 	/**
 	 * Unbind 3D Context
 	 *
 	 * @param {object} gl context
 	 */
-	SpriteRenderer.unbind = function unBind( gl )
-	{
+	SpriteRenderer.unbind = function unBind(gl) {
 		var attribute = _program.attribute;
 
-		gl.disableVertexAttribArray( attribute.aPosition );
-		gl.disableVertexAttribArray( attribute.aTextureCoord );
+		gl.disableVertexAttribArray(attribute.aPosition);
+		gl.disableVertexAttribArray(attribute.aTextureCoord);
 	};
-
 
 	/**
 	 * Prepare to render on 2D context.
@@ -501,23 +289,20 @@ function(      WebGL,         glMatrix,      Camera )
 	 * @param {number} x position
 	 * @param {number} y position
 	 */
-	SpriteRenderer.bind2DContext = function Bind2DContext( ctx, x, y )
-	{
-		_ctx        = ctx;
-		_pos[0]     = x;
-		_pos[1]     = y;
+	SpriteRenderer.bind2DContext = function Bind2DContext(ctx, x, y) {
+		_ctx = ctx;
+		_pos[0] = x;
+		_pos[1] = y;
 
 		this.render = RenderCanvas2D;
-		this.xSize  = 5;
-		this.ySize  = 5;
+		this.xSize = 5;
+		this.ySize = 5;
 	};
-
 
 	/**
 	 * Render in 3D mode
 	 */
-	function RenderCanvas3D(isBlendModeOne)
-	{
+	function RenderCanvas3D(isBlendModeOne) {
 		// Nothing to render ?
 		if (!this.image.texture || !this.color[3]) {
 			return;
@@ -527,7 +312,7 @@ function(      WebGL,         glMatrix,      Camera )
 		// cache values to avoid flooding the GPU and reducing perf.
 
 		var uniform = _program.uniform;
-		var gl      = _gl;
+		var gl = _gl;
 		var use_pal = this.image.palette !== null;
 
 		if (isBlendModeOne) {
@@ -537,61 +322,61 @@ function(      WebGL,         glMatrix,      Camera )
 		}
 
 		if (this.shadow !== _shadow) {
-			gl.uniform1f( uniform.uShadow, _shadow = this.shadow);
+			gl.uniform1f(uniform.uShadow, (_shadow = this.shadow));
 		}
-		gl.uniform3fv( uniform.uSpriteRendererPosition, this.position );
+		gl.uniform3fv(uniform.uSpriteRendererPosition, this.position);
 
 		// Palette
 		if (use_pal) {
-			gl.activeTexture( gl.TEXTURE1 );
-			gl.bindTexture( gl.TEXTURE_2D,    this.image.palette );
-			gl.uniform2fv( uniform.uTextSize, this.image.size );
-			gl.activeTexture( gl.TEXTURE0 );
+			gl.activeTexture(gl.TEXTURE1);
+			gl.bindTexture(gl.TEXTURE_2D, this.image.palette);
+			gl.uniform2fv(uniform.uTextSize, this.image.size);
+			gl.activeTexture(gl.TEXTURE0);
 		}
 
 		if (_usepal !== use_pal) {
-			gl.uniform1i(  uniform.uUsePal, _usepal = use_pal );
+			gl.uniform1i(uniform.uUsePal, (_usepal = use_pal));
 		}
 
 		if (this.depth !== _depth) {
-			gl.uniform1f( uniform.uSpriteRendererDepth, _depth = this.depth);
+			gl.uniform1f(uniform.uSpriteRendererDepth, (_depth = this.depth));
 		}
 
 		var disableDepthCorrection = !!this.disableDepthCorrection;
 		if (_disableDepthCorrection !== disableDepthCorrection) {
 			_disableDepthCorrection = disableDepthCorrection;
-			gl.uniform1i( uniform.uDisableDepthCorrection, disableDepthCorrection );
+			gl.uniform1i(uniform.uDisableDepthCorrection, disableDepthCorrection);
 		}
 
-		gl.uniform1f( uniform.uSpriteRendererZindex, this.zIndex++ );
+		gl.uniform1f(uniform.uSpriteRendererZindex, this.zIndex++);
 		// Rotate
 		if (this.angle !== _angle) {
 			_angle = this.angle;
 
 			mat4.identity(_matrix);
 			if (_angle) {
-				mat4.rotateZ( _matrix, _matrix, - _angle / 180 * Math.PI );
+				mat4.rotateZ(_matrix, _matrix, (-_angle / 180) * Math.PI);
 			}
 
-			gl.uniformMatrix4fv( uniform.uSpriteRendererAngle, false, _matrix );
+			gl.uniformMatrix4fv(uniform.uSpriteRendererAngle, false, _matrix);
 		}
 
-		_offset[0] = this.offset[0] / 175.0 * this.xSize;
-		_offset[1] = this.offset[1] / 175.0 * this.ySize - 0.5;
-		_size[0]   = this.size[0]   / 175.0 * this.xSize;
-		_size[1]   = this.size[1]   / 175.0 * this.ySize;
+		_offset[0] = (this.offset[0] / 175.0) * this.xSize;
+		_offset[1] = (this.offset[1] / 175.0) * this.ySize - 0.5;
+		_size[0] = (this.size[0] / 175.0) * this.xSize;
+		_size[1] = (this.size[1] / 175.0) * this.ySize;
 
-		gl.uniform4fv( uniform.uSpriteRendererColor,  this.color );
-		gl.uniform2fv( uniform.uSpriteRendererSize,   _size );
-		gl.uniform2fv( uniform.uSpriteRendererOffset, _offset );
-		gl.uniform1i( uniform.uIsRGBA, this.sprite.type)
+		gl.uniform4fv(uniform.uSpriteRendererColor, this.color);
+		gl.uniform2fv(uniform.uSpriteRendererSize, _size);
+		gl.uniform2fv(uniform.uSpriteRendererOffset, _offset);
+		gl.uniform1i(uniform.uIsRGBA, this.sprite.type);
 
 		// Avoid binding the new texture 150 times if it's the same.
 		if (_groupId !== _lastGroupId || _texture !== this.image.texture) {
 			_lastGroupId = _groupId;
-			gl.bindTexture( gl.TEXTURE_2D, _texture = this.image.texture );
+			gl.bindTexture(gl.TEXTURE_2D, (_texture = this.image.texture));
 		}
-		gl.drawArrays( gl.TRIANGLE_STRIP, 0, 4 );
+		gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 	}
 
 	/**
@@ -608,53 +393,70 @@ function(      WebGL,         glMatrix,      Camera )
 	 * @param {boolean} use disableDepthCorrection enable.
 	 * @param {function} execute function with this parameters before restore gl state.
 	 */
-	SpriteRenderer.setDepth = function setDepth(depthTest, depthMask, depthCorrection, fn)
-	{
-		var prevDepthTest;
-		var prevDepthMask;
-		var prevDepthCorrection;
+	SpriteRenderer.runWithDepth = function runWithDepth(depthTest, depthMask, depthCorrection, fn) {
+		if (!_gl) {
+			fn();
+			return;
+		}
 
-		if (_gl) {
-			prevDepthTest = _gl.isEnabled(_gl.DEPTH_TEST);
-			prevDepthMask = _gl.getParameter(_gl.DEPTH_WRITEMASK);
-			prevDepthCorrection = SpriteRenderer.disableDepthCorrection;
+		var prevDepthTest = _depthTest;
+		var prevDepthMask = _depthMask;
+		var prevDepthCorrection = this.disableDepthCorrection;
 
-			if (depthTest) _gl.enable(_gl.DEPTH_TEST);
-			else _gl.disable(_gl.DEPTH_TEST);
+		if (_depthTest !== depthTest) {
+			_depthTest = depthTest;
 
-			_gl.depthMask(depthMask);
+			if (depthTest) {
+				_gl.enable(_gl.DEPTH_TEST);
+			} else {
+				_gl.disable(_gl.DEPTH_TEST);
+			}
+		}
+
+		if (_depthMask !== depthMask) {
 			_depthMask = depthMask;
-			SpriteRenderer.disableDepthCorrection = depthCorrection;
+			_gl.depthMask(depthMask);
+		}
+
+		if (this.disableDepthCorrection !== depthCorrection) {
+			this.disableDepthCorrection = depthCorrection;
 		}
 
 		fn();
 
-		if(_gl){
-			if (prevDepthTest) _gl.enable(_gl.DEPTH_TEST);
-			else _gl.disable(_gl.DEPTH_TEST);
+		if (_depthTest !== prevDepthTest) {
+			_depthTest = prevDepthTest;
 
-			_gl.depthMask(prevDepthMask);
+			if (prevDepthTest) {
+				_gl.enable(_gl.DEPTH_TEST);
+			} else {
+				_gl.disable(_gl.DEPTH_TEST);
+			}
+		}
+
+		if (_depthMask !== prevDepthMask) {
 			_depthMask = prevDepthMask;
-			SpriteRenderer.disableDepthCorrection = prevDepthCorrection;
+			_gl.depthMask(prevDepthMask);
+		}
+
+		if (this.disableDepthCorrection !== prevDepthCorrection) {
+			this.disableDepthCorrection = prevDepthCorrection;
 		}
 	};
-
 
 	/**
 	 * Render in 2D
 	 */
-	var RenderCanvas2D = function RenderCanvas2DClosure()
-	{
+	var RenderCanvas2D = (function RenderCanvas2DClosure() {
 		var canvas, ctx, imageData;
 
-		canvas         = document.createElement("canvas");
-		ctx            = canvas.getContext("2d");
-		canvas.width   = 20;
-		canvas.height  = 20;
-		imageData      = ctx.createImageData(canvas.width, canvas.height);
+		canvas = document.createElement('canvas');
+		ctx = canvas.getContext('2d');
+		canvas.width = 20;
+		canvas.height = 20;
+		imageData = ctx.createImageData(canvas.width, canvas.height);
 
-		return function RenderCanvas2D()
-		{
+		return function RenderCanvas2D() {
 			// Nothing to render
 			if (this.sprite.width <= 0 || this.sprite.height <= 0) {
 				return;
@@ -664,34 +466,35 @@ function(      WebGL,         glMatrix,      Camera )
 			var x, y, _x, _y, width, height, outputWidth;
 			var pal, frame, color;
 			var input, output32;
+			var r, g, b, a, inRow, outRow;
 
-			scale_x  = 1.0;
-			scale_y  = 1.0;
-			_x       = _pos[0] + this.offset[0];
-			_y       = _pos[1] + this.offset[1] - 0.5 * 35; // middle of cell
-			pal      = this.palette;
-			frame    = this.sprite;
-			width    = frame.width;
-			height   = frame.height;
+			scale_x = 1.0;
+			scale_y = 1.0;
+			_x = _pos[0] + this.offset[0];
+			_y = _pos[1] + this.offset[1] - 0.5 * 35; // middle of cell
+			pal = this.palette;
+			frame = this.sprite;
+			width = frame.width;
+			height = frame.height;
 
 			_size.set(this.size);
 
 			// Mirror feature
 			if (_size[0] < 0) {
-				scale_x  *= -1;
+				scale_x *= -1;
 				_size[0] *= -1;
 			}
 
 			if (_size[1] < 0) {
-				scale_y  *= -1;
+				scale_y *= -1;
 				_size[1] *= -1;
 			}
 
 			// Resize canvas from memory
 			if (width > canvas.width || height > canvas.height) {
-				canvas.width  = width;
+				canvas.width = width;
 				canvas.height = height;
-				imageData     = ctx.createImageData(width, height);
+				imageData = ctx.createImageData(width, height);
 			}
 
 			input = frame.data;
@@ -704,10 +507,13 @@ function(      WebGL,         glMatrix,      Camera )
 
 			// Pre-calculate color multipliers for 32-bit assembly
 			// Avoid repeated array lookups inside the inner loop.
-			var r_mul = color[0], g_mul = color[1], b_mul = color[2], a_mul = color[3];
+			var r_mul = color[0],
+				g_mul = color[1],
+				b_mul = color[2],
+				a_mul = color[3];
 
 			// Fast path: no color modulation (identity)
-			var isColorIdentity = (r_mul === 1 && g_mul === 1 && b_mul === 1 && a_mul === 1);
+			var isColorIdentity = r_mul === 1 && g_mul === 1 && b_mul === 1 && a_mul === 1;
 
 			// RGBA images
 			if (this.sprite.type === 1) {
@@ -722,12 +528,13 @@ function(      WebGL,         glMatrix,      Camera )
 				var input32 = new Uint32Array(input.buffer);
 
 				for (y = 0; y < height; ++y) {
-					var outRow = y * outputWidth;
-					var inRow = y * width;
+					outRow = y * outputWidth;
+					inRow = y * width;
 
 					for (x = 0; x < width; ++x) {
 						var pixel = input32[inRow + x];
-						if (pixel === 0) { // Transparent skip behavior due n*0 = 0
+						if (pixel === 0) {
+							// Transparent skip behavior due n*0 = 0
 							output32[outRow + x] = 0;
 							continue;
 						}
@@ -739,10 +546,10 @@ function(      WebGL,         glMatrix,      Camera )
 						} else {
 							// Extract RGBA components from packed 32-bit pixel.
 							// Note: In Little Endian, 0xAABBGGRR is stored as [R, G, B, A] in memory.
-							var r = (pixel & 0xFF) * r_mul;
-							var g = ((pixel >> 8) & 0xFF) * g_mul;
-							var b = ((pixel >> 16) & 0xFF) * b_mul;
-							var a = ((pixel >> 24) & 0xFF) * a_mul;
+							r = (pixel & 0xff) * r_mul;
+							g = ((pixel >> 8) & 0xff) * g_mul;
+							b = ((pixel >> 16) & 0xff) * b_mul;
+							a = ((pixel >> 24) & 0xff) * a_mul;
 							output32[outRow + x] = (a << 24) | (b << 16) | (g << 8) | r;
 						}
 					}
@@ -756,22 +563,23 @@ function(      WebGL,         glMatrix,      Camera )
 				// Cost: O(256) setup, O(pixels) usage.
 				var pal32 = new Uint32Array(256);
 				for (var i = 0; i < 256; i++) {
-					if (i === 0) { // Transparent skip behavior due n*0 = 0
+					if (i === 0) {
+						// Transparent skip behavior due n*0 = 0
 						pal32[i] = 0;
 						continue;
 					}
 					var pIdx = i * 4;
-					var r = (pal[pIdx + 0] * r_mul) | 0;
-					var g = (pal[pIdx + 1] * g_mul) | 0;
-					var b = (pal[pIdx + 2] * b_mul) | 0;
-					var a = (255 * a_mul) | 0;
+					r = (pal[pIdx + 0] * r_mul) | 0;
+					g = (pal[pIdx + 1] * g_mul) | 0;
+					b = (pal[pIdx + 2] * b_mul) | 0;
+					a = (255 * a_mul) | 0;
 					// Store in LE format [R, G, B, A] -> 0xAABBGGRR
 					pal32[i] = (a << 24) | (b << 16) | (g << 8) | r;
 				}
 
 				for (y = 0; y < height; ++y) {
-					var outRow = y * outputWidth;
-					var inRow = y * width;
+					outRow = y * outputWidth;
+					inRow = y * width;
 					for (x = 0; x < width; ++x) {
 						// Fast palette lookup: single array access and single 32-bit write.
 						// OLD: Per-channel palette reads and multiplications per pixel.
@@ -782,24 +590,17 @@ function(      WebGL,         glMatrix,      Camera )
 			}
 
 			// Insert into the canvas
-			ctx.putImageData( imageData, 0, 0, 0, 0, width, height);
+			ctx.putImageData(imageData, 0, 0, 0, 0, width, height);
 
 			// Render sprite in context
 			_ctx.save();
-			_ctx.translate( _x | 0, _y | 0 );
-			_ctx.rotate( this.angle / 180 * Math.PI );
-			_ctx.scale( scale_x, scale_y );
-			_ctx.drawImage(
-				 canvas,
-				 0,              0,
-				 width,          height,
-				-_size[0] >> 1, -_size[1] >> 1,
-				 _size[0] |  0,  _size[1] |  0
-			);
+			_ctx.translate(_x | 0, _y | 0);
+			_ctx.rotate((this.angle / 180) * Math.PI);
+			_ctx.scale(scale_x, scale_y);
+			_ctx.drawImage(canvas, 0, 0, width, height, -_size[0] >> 1, -_size[1] >> 1, _size[0] | 0, _size[1] | 0);
 			_ctx.restore();
 		};
-	}();
-
+	})();
 
 	/**
 	 * Export

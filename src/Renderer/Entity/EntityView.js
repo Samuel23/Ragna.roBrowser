@@ -7,19 +7,17 @@
  *
  * @author Vincent Thibault
  */
-define(function( require )
-{
+define(function (require) {
 	'use strict';
 
-
 	// Load dependencies
-	var Client        = require('Core/Client');
-	var DB            = require('DB/DBManager');
-	var ShadowTable   = require('DB/Monsters/ShadowTable');
-	var MountTable    = require('DB/Jobs/MountTable');
+	var Client = require('Core/Client');
+	var DB = require('DB/DBManager');
+	var ShadowTable = require('DB/Monsters/ShadowTable');
+	var MountTable = require('DB/Jobs/MountTable');
 	var AllMountTable = require('DB/Jobs/AllMountTable');
-	var EntityAction  = require('./EntityAction');
-	const PACKETVER    = require('Network/PacketVerManager');
+	var EntityAction = require('./EntityAction');
+	const PACKETVER = require('Network/PacketVerManager');
 
 	/**
 	 * Files to display a view
@@ -28,52 +26,48 @@ define(function( require )
 	 * @param {optional|string} action path
 	 * @param {optional|string} palette path
 	 */
-	function ViewFiles( spr, act, pal )
-	{
-		this.spr  = spr || null;
-		this.act  = act || null;
-		this.pal  = pal || null;
+	function ViewFiles(spr, act, pal) {
+		this.spr = spr || null;
+		this.act = act || null;
+		this.pal = pal || null;
 		this.size = 1.0;
 	}
-
 
 	/**
 	 * View structure
 	 */
-	function View()
-	{
-		this.body       = new ViewFiles();
-		this.head       = new ViewFiles();
-		this.weapon     = new ViewFiles();
-		this.weapon_trail     = new ViewFiles();
-		this.shield     = new ViewFiles();
-		this.accessory  = new ViewFiles();
+	function View() {
+		this.body = new ViewFiles();
+		this.head = new ViewFiles();
+		this.weapon = new ViewFiles();
+		this.weapon_trail = new ViewFiles();
+		this.shield = new ViewFiles();
+		this.accessory = new ViewFiles();
 		this.accessory2 = new ViewFiles();
 		this.accessory3 = new ViewFiles();
-		this.robe       = new ViewFiles();
-		this.shadow     = new ViewFiles('data/sprite/shadow.spr', 'data/sprite/shadow.act');
+		this.robe = new ViewFiles();
+		this.shadow = new ViewFiles('data/sprite/shadow.spr', 'data/sprite/shadow.act');
 
-		this.cart     = [];
+		this.cart = [];
 		//Super novice
-		this.cart[0] = 	new ViewFiles(DB.getCartPath(0)+'.spr', DB.getCartPath(0)+'.act');
+		this.cart[0] = new ViewFiles(DB.getCartPath(0) + '.spr', DB.getCartPath(0) + '.act');
 
-		this.cart[1] = new ViewFiles(DB.getCartPath(1)+'.spr', DB.getCartPath(1)+'.act');
-		this.cart[2] = 	new ViewFiles(DB.getCartPath(2)+'.spr', DB.getCartPath(2)+'.act');
-		this.cart[3] = 	new ViewFiles(DB.getCartPath(3)+'.spr', DB.getCartPath(3)+'.act');
-		this.cart[4] = 	new ViewFiles(DB.getCartPath(4)+'.spr', DB.getCartPath(4)+'.act');
-		this.cart[5] = 	new ViewFiles(DB.getCartPath(5)+'.spr', DB.getCartPath(5)+'.act');
-		this.cart[6] = 	new ViewFiles(DB.getCartPath(6)+'.spr', DB.getCartPath(6)+'.act');
-		this.cart[7] = 	new ViewFiles(DB.getCartPath(7)+'.spr', DB.getCartPath(7)+'.act');
-		this.cart[8] = 	new ViewFiles(DB.getCartPath(8)+'.spr', DB.getCartPath(8)+'.act');
-		this.cart[9] = 	new ViewFiles(DB.getCartPath(9)+'.spr', DB.getCartPath(9)+'.act');
-		this.cart[10] =	new ViewFiles(DB.getCartPath(10)+'.spr', DB.getCartPath(10)+'.act');
-		this.cart[11] =	new ViewFiles(DB.getCartPath(11)+'.spr', DB.getCartPath(11)+'.act');
-		this.cart[12] =	new ViewFiles(DB.getCartPath(12)+'.spr', DB.getCartPath(12)+'.act');
-		this.cart[13] =	new ViewFiles(DB.getCartPath(13)+'.spr', DB.getCartPath(13)+'.act');
+		this.cart[1] = new ViewFiles(DB.getCartPath(1) + '.spr', DB.getCartPath(1) + '.act');
+		this.cart[2] = new ViewFiles(DB.getCartPath(2) + '.spr', DB.getCartPath(2) + '.act');
+		this.cart[3] = new ViewFiles(DB.getCartPath(3) + '.spr', DB.getCartPath(3) + '.act');
+		this.cart[4] = new ViewFiles(DB.getCartPath(4) + '.spr', DB.getCartPath(4) + '.act');
+		this.cart[5] = new ViewFiles(DB.getCartPath(5) + '.spr', DB.getCartPath(5) + '.act');
+		this.cart[6] = new ViewFiles(DB.getCartPath(6) + '.spr', DB.getCartPath(6) + '.act');
+		this.cart[7] = new ViewFiles(DB.getCartPath(7) + '.spr', DB.getCartPath(7) + '.act');
+		this.cart[8] = new ViewFiles(DB.getCartPath(8) + '.spr', DB.getCartPath(8) + '.act');
+		this.cart[9] = new ViewFiles(DB.getCartPath(9) + '.spr', DB.getCartPath(9) + '.act');
+		this.cart[10] = new ViewFiles(DB.getCartPath(10) + '.spr', DB.getCartPath(10) + '.act');
+		this.cart[11] = new ViewFiles(DB.getCartPath(11) + '.spr', DB.getCartPath(11) + '.act');
+		this.cart[12] = new ViewFiles(DB.getCartPath(12) + '.spr', DB.getCartPath(12) + '.act');
+		this.cart[13] = new ViewFiles(DB.getCartPath(13) + '.spr', DB.getCartPath(13) + '.act');
 
-		this.cart_shadow     = new ViewFiles('data/sprite/shadow.spr', 'data/sprite/shadow.act');
+		this.cart_shadow = new ViewFiles('data/sprite/shadow.spr', 'data/sprite/shadow.act');
 	}
-
 
 	/**
 	 * If changing sex, all files have to be reload
@@ -81,8 +75,7 @@ define(function( require )
 	 *
 	 * @param {number} sex (mal/female)
 	 */
-	function UpdateSex( sex )
-	{
+	function UpdateSex(sex) {
 		// Not defined yet, no update others
 		if (this._sex === -1) {
 			this._sex = sex;
@@ -90,29 +83,112 @@ define(function( require )
 		}
 
 		// Update other elements
-		this._sex        = sex;
-		this.job         = this._job;  // will update body, body palette, weapon, shield
-		this.head        = this._head; // will update hair color
-		this.accessory   = this._accessory;
-		this.accessory2  = this._accessory2;
-		this.accessory3  = this._accessory3;
-		this.robe        = this._robe;
+		this._sex = sex;
+		this.job = this._job; // will update body, body palette, weapon, shield
+		this.head = this._head; // will update hair color
+		this.accessory = this._accessory;
+		this.accessory2 = this._accessory2;
+		this.accessory3 = this._accessory3;
+		this.robe = this._robe;
 	}
 
+	/**
+	 * Suppress head and accessory sprites (used for monster/transformation)
+	 */
+	function suppressHeadSprites() {
+		for (var i = 0, count = HeadParts.length; i < count; ++i) {
+			var part = HeadParts[i];
+			this.files[part].spr = null;
+			this.files[part].act = null;
+			if (part === 'head') {
+				this.files.head.pal = null;
+			}
+		}
+	}
+
+	/**
+	 * Restore head and accessories
+	 */
+	function restoreHeadSprites() {
+		if (this._head >= 0) {
+			UpdateHead.call(this, this._head);
+		}
+		if (this._headpalette > 0) {
+			UpdateHeadPalette.call(this, this._headpalette);
+		}
+		if (this._accessory > 0) {
+			this.accessory = this._accessory;
+		}
+		if (this._accessory2 > 0) {
+			this.accessory2 = this._accessory2;
+		}
+		if (this._accessory3 > 0) {
+			this.accessory3 = this._accessory3;
+		}
+	}
+
+	/**
+	 * Returns true if any transformation (monster or job form) is currently active
+	 */
+	function hasTransformation() {
+		return !!(this._active_monster_transform || this._monster_transform || this._job_transform);
+	}
+
+	/**
+	 * Returns the effective display job, considering all active transformations
+	 */
+	function getEffectiveJob() {
+		return (
+			this._active_monster_transform ||
+			this._monster_transform ||
+			this._job_transform ||
+			this.costume ||
+			this._job
+		);
+	}
+
+	/**
+	 * List of view parts that should be suppressed when transformed
+	 */
+	var HeadParts = ['head', 'accessory', 'accessory2', 'accessory3'];
+
+	/**
+	 * Returns true if head sprites should be suppressed for the current state
+	 */
+	function shouldSuppressHead() {
+		var job = getEffectiveJob.call(this);
+		return hasTransformation.call(this) || DB.isMonster(job) || job === 4356 || job === 4357;
+	}
+
+	/**
+	 * Refresh head state (suppress or restore based on current conditions)
+	 */
+	function refreshHeadState() {
+		if (shouldSuppressHead.call(this)) {
+			suppressHeadSprites.call(this);
+		} else if (!this.costume) {
+			restoreHeadSprites.call(this);
+		}
+	}
 
 	/**
 	 * Updating job
 	 *
 	 * @param {number} job id
 	 */
-	function UpdateBody( job )
-	{
+	function UpdateBody(job) {
 		var baseJob, path;
 		var Entity;
+		// Capture sequence number for stale callback detection
+		var transformationSeq = this._transformationSeq || 0;
 
 		if (job < 0) {
 			return;
 		}
+
+		// Check if this is a transformation job (monster or form)
+		// If so, don't update _job - it should preserve the original job
+		var isTransformation = hasTransformation.call(this);
 
 		// Avoid fuck*ng errors with mounts !
 		// Sometimes the server send us the job of the mount sprite instead
@@ -120,7 +196,7 @@ define(function( require )
 		for (baseJob in MountTable) {
 			if (MountTable[baseJob] === job) {
 				this.costume = job;
-				job          = baseJob;
+				job = baseJob;
 				break;
 			}
 		}
@@ -128,14 +204,21 @@ define(function( require )
 		for (baseJob in AllMountTable) {
 			if (AllMountTable[baseJob] === job) {
 				this.costume = job;
-				job          = baseJob;
+				job = baseJob;
 				break;
 			}
 		}
 
 		// Clothes keep the old job in memory
 		// and show the costum if used
-		this._job = job;
+		// BUT: if this is a transformation, we should NOT update _job
+		if (!isTransformation) {
+			this._job = job;
+		}
+
+		// Update effective job
+		this._effectiveJob = getEffectiveJob.call(this);
+
 		if (this.costume) {
 			job = this.costume;
 		}
@@ -145,22 +228,52 @@ define(function( require )
 
 		this.files.shadow.size = job in ShadowTable ? ShadowTable[job] : 1.0;
 		path = this.isAdmin ? DB.getAdminPath(this._sex) : DB.getBodyPath(job, this._sex);
-		Entity                 = this.constructor;
+		Entity = this.constructor;
 
 		// Define Object type based on its id
 		if (this.objecttype === Entity.TYPE_UNKNOWN) {
-			var objecttype = (
-				job < 45   ? Entity.TYPE_PC   :
-				job < 46   ? Entity.TYPE_WARP :
-				job < 1000 ? Entity.TYPE_NPC  :
-				job < 1000 ? Entity.TYPE_NPC2 :
-				job < 4000 ? Entity.TYPE_MOB  :
-				job < 4000 ? Entity.TYPE_NPC_ABR :
-				job < 4000 ? Entity.TYPE_NPC_BIONIC :
-				job < 6000 ? Entity.TYPE_PC   :
-				job < 7000 ? Entity.TYPE_HOM  :
-				             Entity.TYPE_MERC
-			);
+			var objecttype;
+			switch (true) {
+				case DB.isPlayer(job):
+					objecttype = Entity.TYPE_PC;
+					break;
+
+				case DB.isWarp(job):
+					objecttype = Entity.TYPE_WARP;
+					break;
+
+				case DB.isNPC(job):
+					objecttype = Entity.TYPE_NPC;
+					break;
+
+				case DB.isMonster(job):
+					objecttype = Entity.TYPE_MOB;
+					break;
+
+				case DB.isHomunculus(job):
+					objecttype = Entity.TYPE_HOM;
+					break;
+
+				case DB.isMercenary(job):
+					objecttype = Entity.TYPE_MER;
+					break;
+
+				case DB.isElem(job):
+					objecttype = Entity.TYPE_ELEM;
+					break;
+
+				case DB.isAbr(job):
+					objecttype = Entity.TYPE_NPC_ABR;
+					break;
+
+				case DB.isBionic(job):
+					objecttype = Entity.TYPE_NPC_BIONIC;
+					break;
+
+				default:
+					objecttype = Entity.TYPE_UNKNOWN;
+					break;
+			}
 
 			// Clean up action frames
 			if (objecttype !== this.objecttype) {
@@ -179,42 +292,62 @@ define(function( require )
 		// granny model not supported yet :(
 		// Display a poring instead
 		if (path === null || path.match(/\.gr2$/i)) {
-
-			if(path.match(/aguardian90_8\.gr2$/i)){
-				path = DB.getBodyPath( 1276, this._sex );
-			} else if(path.match(/empelium90_0\.gr2$/i)){
-				path = DB.getBodyPath( 2080, this._sex );
-			} else if(path.match(/guildflag90_1\.gr2$/i)){
-				path = DB.getBodyPath( 1911, this._sex );
-			} else if(path.match(/kguardian90_7\.gr2$/i)){
-				path = DB.getBodyPath( 2691, this._sex );
-			} else if(path.match(/sguardian90_9\.gr2$/i)){
-				path = DB.getBodyPath( 1163, this._sex );
-			} else if(path.match(/treasurebox_2\.gr2$/i)){
-				path = DB.getBodyPath( 1191, this._sex );
+			if (path.match(/aguardian90_8\.gr2$/i)) {
+				path = DB.getBodyPath(1276, this._sex);
+			} else if (path.match(/empelium90_0\.gr2$/i)) {
+				path = DB.getBodyPath(2080, this._sex);
+			} else if (path.match(/guildflag90_1\.gr2$/i)) {
+				path = DB.getBodyPath(1911, this._sex);
+			} else if (path.match(/kguardian90_7\.gr2$/i)) {
+				path = DB.getBodyPath(2691, this._sex);
+			} else if (path.match(/sguardian90_9\.gr2$/i)) {
+				path = DB.getBodyPath(1163, this._sex);
+			} else if (path.match(/treasurebox_2\.gr2$/i)) {
+				path = DB.getBodyPath(1191, this._sex);
 			} else {
-				path = DB.getBodyPath( 1002, this._sex );
+				path = DB.getBodyPath(1002, this._sex);
 			}
 		}
 
+		// Determine if we should suppress head NOW (before async operations)
+		var suppress = shouldSuppressHead.call(this);
+
 		// Loading
 		Client.loadFile(path + '.act');
-		Client.loadFile(path + '.spr', function(){
-			this.files.body.spr = path + '.spr';
-			this.files.body.act = path + '.act';
+		Client.loadFile(
+			path + '.spr',
+			function () {
+				// Check if callback is stale (transformation changed while callback was pending)
+				var isStaleCallback = this._transformationSeq && this._transformationSeq > transformationSeq;
 
-			// Update linked attachments
-			this.bodypalette = this._bodypalette;
-			this.weapon      = this._weapon;
-			this.shield      = this._shield;
+				// Get current job considering transformations
+				var currentJob = getEffectiveJob.call(this);
 
-		}.bind(this), null, {
-			to_rgba: this.objecttype !== Entity.TYPE_PC
-		});
+				// Only update if callback is valid
+				if (!isStaleCallback && job === currentJob) {
+					this.files.body.spr = path + '.spr';
+					this.files.body.act = path + '.act';
+
+					// Apply head suppression/restoration
+					// Apply head suppression/restoration
+					refreshHeadState.call(this);
+				}
+
+				// Update linked attachments (always update these)
+				this.bodypalette = this._bodypalette;
+				this.weapon = this._weapon;
+				this.shield = this._shield;
+			}.bind(this),
+			null,
+			{
+				to_rgba: this.objecttype !== Entity.TYPE_PC
+			}
+		);
 
 		// Refresh costume
-		if(PACKETVER.value > 20141022 && this._body > 0)
+		if (PACKETVER.value > 20141022 && this._body > 0) {
 			this.body = this._body;
+		}
 	}
 
 	/**
@@ -222,8 +355,7 @@ define(function( require )
 	 *
 	 * @param {number} Body2 id
 	 */
-	function UpdateBodyStyle( look )
-	{
+	function UpdateBodyStyle(look) {
 		var baseJob, path;
 		var Entity;
 
@@ -237,22 +369,26 @@ define(function( require )
 
 		this.files.shadow.size = this.job in ShadowTable ? ShadowTable[this.job] : 1.0;
 		path = this.isAdmin ? DB.getAdminPath(this._sex) : DB.getBodyPath(this.job, this._sex, this._body);
-		Entity                 = this.constructor;
+		Entity = this.constructor;
 
 		// Loading
 		Client.loadFile(path + '.act');
-		Client.loadFile(path + '.spr', function(){
-			this.files.body.spr = path + '.spr';
-			this.files.body.act = path + '.act';
+		Client.loadFile(
+			path + '.spr',
+			function () {
+				this.files.body.spr = path + '.spr';
+				this.files.body.act = path + '.act';
 
-			// Update linked attachments
-			this.bodypalette = this._bodypalette;
-			this.weapon      = this._weapon;
-			this.shield      = this._shield;
-
-		}.bind(this), null, {
-			to_rgba: this.objecttype !== Entity.TYPE_PC
-		});
+				// Update linked attachments
+				this.bodypalette = this._bodypalette;
+				this.weapon = this._weapon;
+				this.shield = this._shield;
+			}.bind(this),
+			null,
+			{
+				to_rgba: this.objecttype !== Entity.TYPE_PC
+			}
+		);
 	}
 
 	/**
@@ -260,8 +396,7 @@ define(function( require )
 	 *
 	 * @param {number} body palette number
 	 */
-	function UpdateBodyPalette( pal )
-	{
+	function UpdateBodyPalette(pal) {
 		this._bodypalette = pal;
 
 		// Internal palette
@@ -275,43 +410,45 @@ define(function( require )
 			return;
 		}
 
-		this.files.body.pal = DB.getBodyPalPath( this._job, this._bodypalette, this._sex);
+		this.files.body.pal = DB.getBodyPalPath(this._job, this._bodypalette, this._sex);
 	}
-
 
 	/**
 	 * Update head
 	 *
 	 * @param {number} head index
 	 */
-	function UpdateHead( head)
-	{
+	function UpdateHead(head) {
 		var path;
 
 		if (head < 0) {
 			return;
 		}
 
-		this._head  = head;
-		path        = DB.getHeadPath( head, this.job, this._sex, this.isOrcish);
+		this._head = head;
+		path = DB.getHeadPath(head, this.job, this._sex, this.isOrcish);
 
 		Client.loadFile(path + '.act');
-		Client.loadFile(path + '.spr', function(){
-			this.files.head.spr = path + '.spr';
-			this.files.head.act = path + '.act';
-			this.files.head.pal = null;
-			this.headpalette    = this._headpalette;
-		}.bind(this));
+		Client.loadFile(
+			path + '.spr',
+			function () {
+				// Don't apply the head sprite if it should be suppressed
+				if (!shouldSuppressHead.call(this)) {
+					this.files.head.spr = path + '.spr';
+					this.files.head.act = path + '.act';
+					this.files.head.pal = null;
+				}
+				this.headpalette = this._headpalette;
+			}.bind(this)
+		);
 	}
-
 
 	/**
 	 * Update head palette
 	 *
 	 * @param {number} palette id
 	 */
-	function UpdateHeadPalette( pal )
-	{
+	function UpdateHeadPalette(pal) {
 		this._headpalette = pal;
 
 		// Using internal palette stored in sprite
@@ -324,9 +461,8 @@ define(function( require )
 		if (this._head === -1) {
 			return;
 		}
-		this.files.head.pal = DB.getHeadPalPath( this._head, this._headpalette, this.job, this._sex);
+		this.files.head.pal = DB.getHeadPalPath(this._head, this._headpalette, this.job, this._sex);
 	}
-
 
 	/**
 	 * Update Generic function to load hats, weapons and shields
@@ -335,16 +471,15 @@ define(function( require )
 	 * @param {string} method from DB to get path
 	 * @param {function} callback if fail
 	 */
-	function UpdateGeneric( type, func, fallback )
-	{
+	function UpdateGeneric(type, func, fallback) {
 		return function (val) {
 			var path;
 			var _this = this;
-			var _val  = val;
+			var _val = val;
 
 			// Nothing to load
 			if (val <= 0) {
-				this['_'+type] = 0;
+				this['_' + type] = 0;
 				return;
 			}
 
@@ -353,11 +488,11 @@ define(function( require )
 				case 'weapon':
 				case 'shield':
 				case 'robe':
-					path  = DB[func]( val, this.job, this._sex );
+					path = DB[func](val, this.job, this._sex);
 					break;
 
 				default:
-					path  = DB[func]( val, this._sex );
+					path = DB[func](val, this._sex);
 					break;
 			}
 
@@ -369,48 +504,58 @@ define(function( require )
 
 				// Load weapon sound
 				if (type === 'weapon') {
-					this.sound.attackFile = DB.getWeaponSound( val );
+					this.sound.attackFile = DB.getWeaponSound(val);
 				}
 
 				return;
 			}
 
-			function LoadView( path, final ) {
+			function LoadView(path, final) {
 				Client.loadFile(path + '.act');
-				Client.loadFile(path + '.spr', function(){
-					_this['_'+type] = _val;
-					_this.files[type].spr = path + '.spr';
-					_this.files[type].act = path + '.act';
+				Client.loadFile(
+					path + '.spr',
+					function () {
+						_this['_' + type] = _val;
 
-					// Load weapon sound
-					if (type === 'weapon') {
-						_this.attackFile = DB.getWeaponSound( _val );
+						// Head accessories should not be applied if they should be suppressed
+						var isAccessory = type === 'accessory' || type === 'accessory2' || type === 'accessory3';
 
-						//Load weapon trail effect
-						const trail_file = DB.getWeaponTrail(_val, _this.job, _this._sex);
-						if(trail_file){
-							Client.loadFile(trail_file + '.act');
-							Client.loadFile(trail_file + '.spr', function(){
-								_this.files['weapon_trail'].spr = trail_file + '.spr';
-								_this.files['weapon_trail'].act = trail_file + '.act';
-							});
+						if (!isAccessory || !shouldSuppressHead.call(_this)) {
+							_this.files[type].spr = path + '.spr';
+							_this.files[type].act = path + '.act';
 						}
-					}
-				},
 
-				// if weapon isn't loaded, try to load the default sprite for the weapon type
-				function(){
-					if (fallback && !final) {
-						_val = DB[fallback](val);
-						path = DB[func]( _val, _this.job, _this._sex );
-						if (path) {
-							LoadView( path, true );
+						// Load weapon sound
+						if (type === 'weapon') {
+							_this.attackFile = DB.getWeaponSound(_val);
+
+							//Load weapon trail effect
+							const trail_file = DB.getWeaponTrail(_val, _this.job, _this._sex);
+							if (trail_file) {
+								Client.loadFile(trail_file + '.act');
+								Client.loadFile(trail_file + '.spr', function () {
+									_this.files['weapon_trail'].spr = trail_file + '.spr';
+									_this.files['weapon_trail'].act = trail_file + '.act';
+								});
+							}
 						}
-					}
+					},
 
-				// The generic just used : weapon, shield, accessory.
-				// This sprites don't use external palettes, so compile it now to rgba.
-				}, {to_rgba:true});
+					// if weapon isn't loaded, try to load the default sprite for the weapon type
+					function () {
+						if (fallback && !final) {
+							_val = DB[fallback](val);
+							path = DB[func](_val, _this.job, _this._sex);
+							if (path) {
+								LoadView(path, true);
+							}
+						}
+
+						// The generic just used : weapon, shield, accessory.
+						// This sprites don't use external palettes, so compile it now to rgba.
+					},
+					{ to_rgba: true }
+				);
 			}
 
 			// Start loading view
@@ -418,72 +563,143 @@ define(function( require )
 		};
 	}
 
+	/**
+	 * Unified transformation handler - Optimized (Shared across entities)
+	 */
+	function onTransformationChange() {
+		this._transformationSeq++;
+
+		// Cache effective job
+		var oldEffectiveJob = this._effectiveJob;
+		this._effectiveJob = getEffectiveJob.call(this);
+
+		// Only trigger UpdateBody if job actually changed
+		if (this._effectiveJob && (this._effectiveJob !== oldEffectiveJob || !this.files.body.spr)) {
+			UpdateBody.call(this, this._effectiveJob);
+		}
+
+		// Immediate suppression/restoration for UI responsiveness
+		refreshHeadState.call(this);
+	}
 
 	/**
 	 * Hooking, export
 	 */
-	return function Init()
-	{
+	return function Init() {
 		this.files = new View();
 
 		Object.defineProperty(this, 'sex', {
-			get: function(){ return this._sex; },
+			get: function () {
+				return this._sex;
+			},
 			set: UpdateSex
 		});
 
 		Object.defineProperty(this, 'job', {
-			get: function(){ return this.costume || this._job; },
+			get: function () {
+				return this._effectiveJob;
+			},
 			set: UpdateBody
 		});
+
 		this._body = this._job;
 		Object.defineProperty(this, 'body', {
-			get: function(){ return this._body; },
+			get: function () {
+				return this._body;
+			},
 			set: UpdateBodyStyle
 		});
 
 		Object.defineProperty(this, 'bodypalette', {
-			get: function(){ return this._bodypalette; },
+			get: function () {
+				return this._bodypalette;
+			},
 			set: UpdateBodyPalette
 		});
 
 		Object.defineProperty(this, 'head', {
-			get: function(){ return this._head; },
+			get: function () {
+				return this._head;
+			},
 			set: UpdateHead
 		});
 
 		Object.defineProperty(this, 'headpalette', {
-			get: function(){ return this._headpalette; },
+			get: function () {
+				return this._headpalette;
+			},
 			set: UpdateHeadPalette
 		});
 
 		Object.defineProperty(this, 'weapon', {
-			get: function(){ return this._weapon; },
+			get: function () {
+				return this._weapon;
+			},
 			set: UpdateGeneric('weapon', 'getWeaponPath', 'getWeaponViewID')
 		});
 
 		Object.defineProperty(this, 'shield', {
-			get: function(){ return this._shield; },
+			get: function () {
+				return this._shield;
+			},
 			set: UpdateGeneric('shield', 'getShieldPath')
 		});
 
 		Object.defineProperty(this, 'accessory', {
-			get: function(){ return this._accessory; },
+			get: function () {
+				return this._accessory;
+			},
 			set: UpdateGeneric('accessory', 'getHatPath')
 		});
 
 		Object.defineProperty(this, 'accessory2', {
-			get: function(){ return this._accessory2; },
+			get: function () {
+				return this._accessory2;
+			},
 			set: UpdateGeneric('accessory2', 'getHatPath')
 		});
 
 		Object.defineProperty(this, 'accessory3', {
-			get: function(){ return this._accessory3; },
+			get: function () {
+				return this._accessory3;
+			},
 			set: UpdateGeneric('accessory3', 'getHatPath')
 		});
 
 		Object.defineProperty(this, 'robe', {
-			get: function(){ return this._robe; },
+			get: function () {
+				return this._robe;
+			},
 			set: UpdateGeneric('robe', 'getRobePath')
 		});
+
+		// Initialize transformation properties
+		this._monster_transform = null;
+		this._active_monster_transform = null;
+		this._job_transform = null;
+		this._transformationSeq = 0;
+		this._effectiveJob = this._job;
+
+		var _this = this;
+
+		// Transformation properties - consolidated setter logic
+		function createTransformationProperty(name) {
+			Object.defineProperty(_this, name, {
+				get: function () {
+					return _this['_' + name] || null;
+				},
+				set: function (value) {
+					var oldValue = _this['_' + name];
+					if (value !== oldValue) {
+						_this['_' + name] = value;
+						onTransformationChange.call(_this);
+					}
+				}
+			});
+		}
+
+		createTransformationProperty('monster_transform');
+		createTransformationProperty('active_monster_transform');
+		createTransformationProperty('job_transform');
 	};
 });

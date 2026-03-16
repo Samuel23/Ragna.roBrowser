@@ -5,61 +5,22 @@
  * This file is part of ROBrowser, (http://www.robrowser.com/).
  *
  * @author AoShinHo
-*/
-define(function(require) {
+ */
+define(function (require) {
 	'use strict';
 
-	var GraphicsSettings = require('Preferences/Graphics');
-	var WebGL            = require('Utils/WebGL'); 
-	var PostProcess      = require('Renderer/Effects/PostProcess');
-	var Camera           = require('Renderer/Camera');  
+	var WebGL = require('Utils/WebGL');
+	var Camera = require('Renderer/Camera');
 
 	var _program, _buffer;
 	var _active = false;
 
-	var commonVS = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : vert
-		precision highp float;
-		in vec2 aPosition;
-		out vec2 vUv;
-
-		void main() {
-			vUv = aPosition * 0.5 + 0.5;
-			gl_Position = vec4(aPosition, 0.0, 1.0);
-		}
-	`;
+	var commonVS = require('text!./GLSL/Common.vs');
 
 	/**
 	 * Fragment Shader: Radial Blindness
 	 */
-	var blindFS = `
-		#version 300 es
-		#pragma vscode_glsllint_stage : frag
-		precision mediump float;
-
-		uniform sampler2D uTexture;
-		uniform float uFocusRadius;
-		uniform float uFocusFalloff;
-		uniform vec2 uAspectRatio;
-
-		in vec2 vUv;
-		out vec4 fragColor;
-
-		void main() {
-			vec2 uv = (vUv - 0.5) * uAspectRatio;  
-			float dist = length(uv); 
-			vec3 original = texture(uTexture, vUv).rgb;
-			float effectMask = smoothstep(uFocusRadius, uFocusRadius + uFocusFalloff, dist);
-
-			if (effectMask <= 0.01) {
-				fragColor = texture(uTexture, vUv);
-				return;
-			}
-			vec3 finalColor = mix(original, vec3(0.0), effectMask);  
-			fragColor = vec4(finalColor, 1.0);
-		}
-	`;
+	var blindFS = require('text!./GLSL/Blind.fs');
 
 	function Blind() {}
 
@@ -70,26 +31,28 @@ define(function(require) {
 	 * @param {WebGLFramebuffer} outputFramebuffer - Target buffer
 	 */
 	Blind.render = function render(gl, inputTexture, outputFramebuffer) {
-		if (!_buffer || !_program || !Blind.isActive()) return;
+		if (!_buffer || !_program || !Blind.isActive()) {
+			return;
+		}
 
 		gl.bindFramebuffer(gl.FRAMEBUFFER, outputFramebuffer);
-		
+
 		// Viewport handling
 		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 		gl.useProgram(_program);
 
-		var baseRadius = 0.20;  
-		var baseFalloff = 0.5;  
-		var zoom = Camera.zoomFinal;  
-      
-		var focusRadius = baseRadius + ((63 - zoom)/1000);
-		var focusFalloff = baseFalloff + ((63 - zoom)/1000);
+		var baseRadius = 0.2;
+		var baseFalloff = 0.5;
+		var zoom = Camera.zoomFinal;
+
+		var focusRadius = baseRadius + (63 - zoom) / 1000;
+		var focusFalloff = baseFalloff + (63 - zoom) / 1000;
 
 		gl.uniform1f(_program.uniform.uFocusRadius, focusRadius);
 		gl.uniform1f(_program.uniform.uFocusFalloff, focusFalloff);
-		gl.uniform2f(_program.uniform.uAspectRatio, gl.canvas.width / gl.canvas.height,1.0);
+		gl.uniform2f(_program.uniform.uAspectRatio, gl.canvas.width / gl.canvas.height, 1.0);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
 		var posLoc = _program.attribute.aPosition;
@@ -101,24 +64,28 @@ define(function(require) {
 		gl.uniform1i(_program.uniform.uTexture, 0);
 
 		gl.drawArrays(gl.TRIANGLES, 0, 6);
-		
+
 		Blind.afterRender(gl);
 	};
 
-	Blind.afterRender = function(gl) {
-		if (!_buffer || !_program) return;
-		gl.useProgram(null);  
-		gl.bindBuffer(gl.ARRAY_BUFFER, null);  
+	Blind.afterRender = function (gl) {
+		if (!_buffer || !_program) {
+			return;
+		}
+		gl.useProgram(null);
+		gl.bindBuffer(gl.ARRAY_BUFFER, null);
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 		gl.bindTexture(gl.TEXTURE_2D, null);
 	};
 
 	Blind.init = function init(gl) {
-		if (!gl) return;
+		if (!gl) {
+			return;
+		}
 		try {
 			_program = WebGL.createShaderProgram(gl, commonVS, blindFS);
 		} catch (e) {
-			console.error("Error compiling Blind shader.", e);
+			console.error('Error compiling Blind shader.', e);
 			return;
 		}
 		var quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
@@ -131,16 +98,20 @@ define(function(require) {
 		return _active;
 	};
 
-	Blind.setActive = function setActive( bool ) {
+	Blind.setActive = function setActive(bool) {
 		_active = bool;
 	};
 
-	Blind.program = function program() { return _program; };
-	
+	Blind.program = function program() {
+		return _program;
+	};
+
 	// No internal FBO needed for this effect in this architecture
-	Blind.clean = function clean( gl ) {
-		if (_buffer) gl.deleteBuffer(_buffer);
-		_program = _buffer = null; 
+	Blind.clean = function clean(gl) {
+		if (_buffer) {
+			gl.deleteBuffer(_buffer);
+		}
+		_program = _buffer = null;
 	};
 
 	return Blind;

@@ -8,56 +8,56 @@
  * @author Vincent Thibault
  */
 define(function (require) {
-	"use strict";
+	'use strict';
 
 	/**
 	 * Load dependencies
 	 */
 	const getModule = require;
-	var Thread = require("Core/Thread");
-	var SoundManager = require("Audio/SoundManager");
-	var BGM = require("Audio/BGM");
-	var DB = require("DB/DBManager");
-	var UIManager = require("UI/UIManager");
-	var Background = require("UI/Background");
-	var Cursor = require("UI/CursorManager");
-	var Session = require("Engine/SessionStorage");
-	var MemoryManager = require("Core/MemoryManager");
-	var Mouse = require("Controls/MouseEventHandler");
-	var Renderer = require("Renderer/Renderer");
-	var Camera = require("Renderer/Camera");
-	var EntityManager = require("Renderer/EntityManager");
-	var GridSelector = require("Renderer/Map/GridSelector");
-	var Ground = require("Renderer/Map/Ground");
-	var Altitude = require("Renderer/Map/Altitude");
-	var Water = require("Renderer/Map/Water");
-	var Models = require("Renderer/Map/Models");
-	var AnimatedModels = require("Renderer/Map/AnimatedModels");
-	var Sounds = require("Renderer/Map/Sounds");
-	var Effects = require("Renderer/Map/Effects");
-	var SpriteRenderer = require("Renderer/SpriteRenderer");
-	var EffectManager = require("Renderer/EffectManager");
-	var SignboardManager = require("Renderer/SignboardManager");
-	var ScreenEffectManager = require("Renderer/ScreenEffectManager");
-	var Sky = require("Renderer/Effects/Sky");
-	var Damage = require("Renderer/Effects/Damage");
-	var GraphicsSettings = require("Preferences/Graphics");
-	var MapPreferences = require("Preferences/Map");
-	const glMatrix = require("Utils/gl-matrix");
-	const PACKETVER = require("Network/PacketVerManager");
-	var JoystickUI = require("UI/Components/JoystickUI/JoystickUI");
+	var Thread = require('Core/Thread');
+	var SoundManager = require('Audio/SoundManager');
+	var BGM = require('Audio/BGM');
+	var DB = require('DB/DBManager');
+	var UIManager = require('UI/UIManager');
+	var Background = require('UI/Background');
+	var Cursor = require('UI/CursorManager');
+	var Session = require('Engine/SessionStorage');
+	var MemoryManager = require('Core/MemoryManager');
+	var Mouse = require('Controls/MouseEventHandler');
+	var Renderer = require('Renderer/Renderer');
+	var Camera = require('Renderer/Camera');
+	var EntityManager = require('Renderer/EntityManager');
+	var GridSelector = require('Renderer/Map/GridSelector');
+	var Ground = require('Renderer/Map/Ground');
+	var Altitude = require('Renderer/Map/Altitude');
+	var Water = require('Renderer/Map/Water');
+	var Models = require('Renderer/Map/Models');
+	var AnimatedModels = require('Renderer/Map/AnimatedModels');
+	var Sounds = require('Renderer/Map/Sounds');
+	var Effects = require('Renderer/Map/Effects');
+	var SpriteRenderer = require('Renderer/SpriteRenderer');
+	var EffectManager = require('Renderer/EffectManager');
+	var SignboardManager = require('Renderer/SignboardManager');
+	var ScreenEffectManager = require('Renderer/ScreenEffectManager');
+	var Sky = require('Renderer/Effects/Sky');
+	var Damage = require('Renderer/Effects/Damage');
+	var GraphicsSettings = require('Preferences/Graphics');
+	var MapPreferences = require('Preferences/Map');
+	const glMatrix = require('Utils/gl-matrix');
+	const PACKETVER = require('Network/PacketVerManager');
+	var JoystickUI = require('UI/Components/JoystickUI/JoystickUI');
 
-	var PostProcess = require("Renderer/Effects/PostProcess");
-	var Bloom = require("Renderer/Effects/Shaders/Bloom");
-	var VerticalFlip = require("Renderer/Effects/Shaders/VerticalFlip");
-	var GaussianBlur = require("Renderer/Effects/Shaders/GaussianBlur");
-	var CAS = require("Renderer/Effects/Shaders/CAS");
-	var FXAA = require("Renderer/Effects/Shaders/FXAA");
-	var Vibrance = require("Renderer/Effects/Shaders/Vibrance");
-	var Cartoon = require("Renderer/Effects/Shaders/Cartoon");
-	var Blind = require("Renderer/Effects/Shaders/Blind");
+	var PostProcess = require('Renderer/Effects/PostProcess');
+	var Bloom = require('Renderer/Effects/Shaders/Bloom');
+	var VerticalFlip = require('Renderer/Effects/Shaders/VerticalFlip');
+	var GaussianBlur = require('Renderer/Effects/Shaders/GaussianBlur');
+	var CAS = require('Renderer/Effects/Shaders/CAS');
+	var FXAA = require('Renderer/Effects/Shaders/FXAA');
+	var Vibrance = require('Renderer/Effects/Shaders/Vibrance');
+	var Cartoon = require('Renderer/Effects/Shaders/Cartoon');
+	var Blind = require('Renderer/Effects/Shaders/Blind');
 
-	var WebGL = require("Utils/WebGL");
+	var WebGL = require('Utils/WebGL');
 
 	const mat4 = glMatrix.mat4;
 
@@ -69,7 +69,7 @@ define(function (require) {
 	/**
 	 * @var {string} current map's name
 	 */
-	MapRenderer.currentMap = "";
+	MapRenderer.currentMap = '';
 
 	/**
 	 * @var {object} Global Light Structure
@@ -110,16 +110,15 @@ define(function (require) {
 		far: 30,
 		near: 180,
 		factor: 1.0,
-		color: new Float32Array([1, 1, 1]),
+		color: new Float32Array([1, 1, 1])
 	};
 
 	/**
 	 * Load a map
 	 *
 	 * @param {string} mapname to load
-	 * @param {bool} force reload map renderer
 	 */
-	MapRenderer.setMap = function loadMap(mapname, force = false) {
+	MapRenderer.setMap = function loadMap(mapname) {
 		// TODO: stop the map loading, and start to load the new map.
 		if (this.loading) {
 			return;
@@ -128,8 +127,8 @@ define(function (require) {
 		// Support for instance map
 		// Is it always 3 digits ?
 		mapname = mapname
-			.replace(/^(\d{3})(\d@)/, "$2") // 0061@tower   -> 1@tower
-			.replace(/^\d{3}#/, ""); // 003#prontera -> prontera
+			.replace(/^(\d{3})(\d@)/, '$2') // 0061@tower   -> 1@tower
+			.replace(/^\d{3}#/, ''); // 003#prontera -> prontera
 
 		// Clean objects
 		SoundManager.stop();
@@ -138,37 +137,27 @@ define(function (require) {
 		Cursor.setType(Cursor.ACTION.DEFAULT);
 
 		// Don't reload a map when it's just a local teleportation
-		if (this.currentMap !== mapname || force) {
+		if (this.currentMap !== mapname) {
 			this.loading = true;
 			BGM.stop();
 			this.currentMap = mapname;
 
 			// Parse the filename (ugly RO)
-			var filename = mapname.replace(/\.gat$/i, ".rsw");
+			var filename = mapname.replace(/\.gat$/i, '.rsw');
 
 			Background.setLoading(function () {
 				// Hooking Thread
-				Thread.hook("MAP_PROGRESS", onProgressUpdate.bind(MapRenderer));
-				Thread.hook("MAP_WORLD", onWorldComplete.bind(MapRenderer));
-				Thread.hook("MAP_GROUND", onGroundComplete.bind(MapRenderer));
-				Thread.hook(
-					"MAP_ALTITUDE",
-					onAltitudeComplete.bind(MapRenderer),
-				);
-				Thread.hook("MAP_MODELS", onModelsComplete.bind(MapRenderer));
-				Thread.hook(
-					"MAP_ANIMATED_MODEL",
-					onAnimatedModelComplete.bind(MapRenderer),
-				);
+				Thread.hook('MAP_PROGRESS', onProgressUpdate.bind(MapRenderer));
+				Thread.hook('MAP_WORLD', onWorldComplete.bind(MapRenderer));
+				Thread.hook('MAP_GROUND', onGroundComplete.bind(MapRenderer));
+				Thread.hook('MAP_ALTITUDE', onAltitudeComplete.bind(MapRenderer));
+				Thread.hook('MAP_MODELS', onModelsComplete.bind(MapRenderer));
+				Thread.hook('MAP_ANIMATED_MODEL', onAnimatedModelComplete.bind(MapRenderer));
 
 				// Start Loading
 				MapRenderer.free();
 				Renderer.remove();
-				Thread.send(
-					"LOAD_MAP",
-					filename,
-					onMapComplete.bind(MapRenderer),
-				);
+				Thread.send('LOAD_MAP', filename, onMapComplete.bind(MapRenderer));
 			});
 
 			return;
@@ -186,30 +175,6 @@ define(function (require) {
 
 			Renderer.render(MapRenderer.onRender);
 		});
-	};
-
-	/**
-	 * Trick to reload sprite renderer
-	 * Same behavior to @refresh
-	 */
-	MapRenderer.forceReloadMap = function forceReloadMap() {
-		var gl = Renderer.getContext();
-		var sprFiles = MemoryManager.search(/\.spr$/i);
-		for (
-			var i = 0;
-			i < sprFiles.length;
-			i++ // reloads spr memory cache
-		)
-			MemoryManager.remove(gl, sprFiles[i]);
-
-		getModule("Engine/MapEngine").onMapChange(
-			{
-				xPos: Session.Entity.position[0],
-				yPos: Session.Entity.position[1],
-				mapName: this.currentMap,
-			},
-			true,
-		);
 	};
 
 	/**
@@ -266,7 +231,7 @@ define(function (require) {
 		this.light.env = new Float32Array([
 			1 - (1 - this.light.diffuse[0]) * (1 - this.light.ambient[0]),
 			1 - (1 - this.light.diffuse[1]) * (1 - this.light.ambient[1]),
-			1 - (1 - this.light.diffuse[2]) * (1 - this.light.ambient[2]),
+			1 - (1 - this.light.diffuse[2]) * (1 - this.light.ambient[2])
 		]);
 
 		// Calculate light direction
@@ -309,9 +274,7 @@ define(function (require) {
 			this.sounds[i].pos[2] = tmp;
 			this.sounds[i].range *= 0.2;
 			this.sounds[i].tick = 0;
-			this.sounds[i].cycle = !this.sounds[i].cycle
-				? 7
-				: this.sounds[i].cycle;
+			this.sounds[i].cycle = !this.sounds[i].cycle ? 7 : this.sounds[i].cycle;
 			Sounds.add(this.sounds[i]);
 		}
 
@@ -361,8 +324,11 @@ define(function (require) {
 	 * Register PostProcessing Modules in pass order
 	 */
 	function registerPostProcessModules(gl) {
-		if (WebGL.detectBadWebGL(gl)) GraphicsSettings.bloom = false;
-		else PostProcess.register(Bloom, gl);
+		if (WebGL.detectBadWebGL(gl)) {
+			GraphicsSettings.bloom = false;
+		} else {
+			PostProcess.register(Bloom, gl);
+		}
 		PostProcess.register(GaussianBlur, gl);
 		PostProcess.register(FXAA, gl);
 		PostProcess.register(CAS, gl);
@@ -376,17 +342,17 @@ define(function (require) {
 	 * Once the map finished to load
 	 */
 	function onMapComplete(success, error) {
-		var worldResource = this.currentMap.replace(/\.gat$/i, ".rsw");
+		var worldResource = this.currentMap.replace(/\.gat$/i, '.rsw');
 		var mapInfo = DB.getMap(worldResource);
 
 		// Problem during loading ?
 		if (!success) {
-			UIManager.showErrorBox(error).ui.css("zIndex", 1000);
+			UIManager.showErrorBox(error).ui.css('zIndex', 1000);
 			return;
 		}
 
 		// Play BGM
-		BGM.play((mapInfo && mapInfo.mp3) || "01.mp3");
+		BGM.play((mapInfo && mapInfo.mp3) || '01.mp3');
 
 		// Apply fog to map
 		this.fog.exist = !!(mapInfo && mapInfo.fog);
@@ -458,27 +424,12 @@ define(function (require) {
 
 		Ground.render(gl, modelView, projection, normalMat, fog, light);
 		Models.render(gl, modelView, projection, normalMat, fog, light);
-		AnimatedModels.render(
-			gl,
-			modelView,
-			projection,
-			normalMat,
-			fog,
-			light,
-			tick,
-		);
+		AnimatedModels.render(gl, modelView, projection, normalMat, fog, light, tick);
 
-		// Rendering water (before sprites so it can't overdraw them)
-		Water.render(gl, modelView, projection, fog, light, tick);
-
-		if (
-			Mouse.intersect &&
-			Altitude.intersect(modelView, projection, _pos)
-		) {
+		if (Mouse.intersect && Altitude.intersect(modelView, projection, _pos)) {
 			x = _pos[0];
 			y = _pos[1];
-			const isWalkable =
-				Altitude.getCellType(x, y) & Altitude.TYPE.WALKABLE;
+			const isWalkable = Altitude.getCellType(x, y) & Altitude.TYPE.WALKABLE;
 
 			Mouse.world.x = x;
 			Mouse.world.y = y;
@@ -491,15 +442,8 @@ define(function (require) {
 
 					// render on range
 					let cells = Altitude.getCellsInSquareRange(x, y, range);
-					cells.forEach((cell) => {
-						GridSelector.render(
-							gl,
-							modelView,
-							projection,
-							fog,
-							cell.x,
-							cell.y,
-						);
+					cells.forEach(cell => {
+						GridSelector.render(gl, modelView, projection, fog, cell.x, cell.y);
 					});
 				}
 				GridSelector.render(gl, modelView, projection, fog, x, y);
@@ -508,16 +452,12 @@ define(function (require) {
 			// NO walk cursor
 			// TODO: Know the packet version for this feature
 			if (PACKETVER.value >= 20200101) {
-				if (
-					Cursor.getActualType() === Cursor.ACTION.NOWALK &&
-					isWalkable
-				)
+				if (Cursor.getActualType() === Cursor.ACTION.NOWALK && isWalkable) {
 					Cursor.setType(Cursor.ACTION.DEFAULT, false);
-				if (
-					Cursor.getActualType() === Cursor.ACTION.DEFAULT &&
-					!isWalkable
-				)
+				}
+				if (Cursor.getActualType() === Cursor.ACTION.DEFAULT && !isWalkable) {
 					Cursor.setType(Cursor.ACTION.NOWALK, false);
+				}
 			}
 		}
 
@@ -528,7 +468,7 @@ define(function (require) {
 		//Render Entities (no effects)
 		EntityManager.render(gl, modelView, projection, fog, false);
 
-		// Rendering water
+		// Rendering water (after sprites, billboard projection pushes it to back)
 		Water.render(gl, modelView, projection, fog, light, tick);
 
 		// Rendering effects

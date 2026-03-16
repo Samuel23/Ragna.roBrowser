@@ -5,26 +5,23 @@
  *
  * This file is part of ROBrowser, (http://www.robrowser.com/).
  */
-define(function(require)
-{
+define(function (require) {
 	'use strict';
-
 
 	/**
 	 * Dependencies
 	 */
-	var DB                 = require('DB/DBManager');
-	var EquipLocation      = require('DB/Items/EquipmentLocation');
-	var Renderer           = require('Renderer/Renderer');
-	var SpriteRenderer     = require('Renderer/SpriteRenderer');
-	var Camera             = require('Renderer/Camera');
-	var Session            = require('Engine/SessionStorage');
-	var UIManager          = require('UI/UIManager');
-	var UIComponent        = require('UI/UIComponent');
-	var htmlText           = require('text!./ItemPreview.html');
-	var cssText            = require('text!./ItemPreview.css');
-	var getModule          = require;
-
+	var DB = require('DB/DBManager');
+	var EquipLocation = require('DB/Items/EquipmentLocation');
+	var Renderer = require('Renderer/Renderer');
+	var SpriteRenderer = require('Renderer/SpriteRenderer');
+	var Camera = require('Renderer/Camera');
+	var Session = require('Engine/SessionStorage');
+	var UIManager = require('UI/UIManager');
+	var UIComponent = require('UI/UIComponent');
+	var htmlText = require('text!./ItemPreview.html');
+	var cssText = require('text!./ItemPreview.css');
+	var getModule = require;
 
 	/**
 	 * Create Component
@@ -61,30 +58,30 @@ define(function(require)
 	 */
 	ItemPreview.uid = -1;
 
+	var _remove = false;
 
 	/**
 	 * Initialize UI
 	 */
-	ItemPreview.init = function init()
-	{
+	ItemPreview.init = function init() {
 		this.ui.css({ top: 200, left: 520 });
 		_ctx = this.ui.find('canvas')[0].getContext('2d');
 
-		this.ui.find('.close').click(function(){
+		this.ui.find('.close').click(function () {
 			ItemPreview.remove();
 		});
 
-		this.ui.find('.rot_left').click(function(event){
+		this.ui.find('.rot_left').click(function (event) {
 			event.stopImmediatePropagation();
 			rotatePreview(1);
 		});
 
-		this.ui.find('.rot_right').click(function(event){
+		this.ui.find('.rot_right').click(function (event) {
 			event.stopImmediatePropagation();
 			rotatePreview(-1);
 		});
 
-		this.ui.find('.reset').click(function(event){
+		this.ui.find('.reset').click(function (event) {
 			event.stopImmediatePropagation();
 			resetPreview();
 		});
@@ -92,12 +89,10 @@ define(function(require)
 		this.draggable(this.ui.find('.titlebar'));
 	};
 
-
 	/**
 	 * Once append
 	 */
-	ItemPreview.onAppend = function onAppend()
-	{
+	ItemPreview.onAppend = function onAppend() {
 		var ItemInfo = getModule('UI/Components/ItemInfo/ItemInfo');
 
 		if (ItemInfo.ui) {
@@ -126,12 +121,10 @@ define(function(require)
 		}
 	};
 
-
 	/**
 	 * Once removed from html
 	 */
-	ItemPreview.onRemove = function onRemove()
-	{
+	ItemPreview.onRemove = function onRemove() {
 		this.uid = -1;
 		_previewLocation = 0;
 		_previewSpriteId = 0;
@@ -143,14 +136,12 @@ define(function(require)
 		}
 	};
 
-
 	/**
 	 * Bind component
 	 *
 	 * @param {object} item
 	 */
-	ItemPreview.setItem = function setItem(item)
-	{
+	ItemPreview.setItem = function setItem(item) {
 		var it = DB.getItemInfo(item.ITID);
 
 		this.item = item;
@@ -159,26 +150,22 @@ define(function(require)
 		_direction = 0;
 	};
 
-
 	/**
 	 * Rotate preview direction
 	 *
 	 * @param {number} delta
 	 */
-	function rotatePreview(delta)
-	{
+	function rotatePreview(delta) {
 		_direction = (_direction + delta + 8) % 8;
 	}
-
 
 	/**
 	 * Reset preview direction
 	 */
-	function resetPreview()
-	{
+	function resetPreview() {
+		_remove = !_remove;
 		_direction = 0;
 	}
-
 
 	/**
 	 * Get preview item location
@@ -186,8 +173,7 @@ define(function(require)
 	 * @param {object} item
 	 * @returns {number}
 	 */
-	function getItemLocation(item)
-	{
+	function getItemLocation(item) {
 		if (!item) {
 			return 0;
 		}
@@ -207,7 +193,6 @@ define(function(require)
 		return 0;
 	}
 
-
 	/**
 	 * Get preview sprite id
 	 *
@@ -215,8 +200,7 @@ define(function(require)
 	 * @param {object} it
 	 * @returns {number}
 	 */
-	function getPreviewSpriteId(item, it)
-	{
+	function getPreviewSpriteId(item, it) {
 		if (item && item.wItemSpriteNumber) {
 			return item.wItemSpriteNumber;
 		}
@@ -228,26 +212,23 @@ define(function(require)
 		return 0;
 	}
 
-
 	/**
 	 * Rendering character
 	 */
-	var renderPreview = function renderPreviewClosure()
-	{
+	var renderPreview = (function renderPreviewClosure() {
 		var _cleanColor = new Float32Array([1.0, 1.0, 1.0, 1.0]);
 		var _savedColor = new Float32Array(4);
-		var _animation  = {
-			tick:  0,
+		var _animation = {
+			tick: 0,
 			frame: 0,
-			repeat:true,
-			play:  true,
-			next:  false,
+			repeat: true,
+			play: true,
+			next: false,
 			delay: 0,
-			save:  false
+			save: false
 		};
 
-		return function renderPreview()
-		{
+		return function renderPreview() {
 			if (!_ctx) {
 				return;
 			}
@@ -267,12 +248,18 @@ define(function(require)
 				sex: Session.Entity.sex,
 				name: '',
 				hideShadow: true,
-				head:   Session.Entity.head,
+				head: Session.Entity.head,
 				headpalette: Session.Entity.headpalette,
 				bodypalette: Session.Entity.bodypalette,
+				accessory: Session.Entity.accessory,
+				accessory2: Session.Entity.accessory2,
+				accessory3: Session.Entity.accessory3,
+				robe: Session.Entity.robe
 			});
 
-			applyPreviewItem(previewCharacter);
+			if (!_remove) {
+				applyPreviewItem(previewCharacter);
+			}
 
 			_savedColor.set(previewCharacter.effectColor);
 			previewCharacter.effectColor.set(_cleanColor);
@@ -280,28 +267,22 @@ define(function(require)
 			// Set action
 			Camera.direction = 0;
 			previewCharacter.direction = _direction;
-			previewCharacter.headDir   = 0;
-			previewCharacter.action    = previewCharacter.ACTION.IDLE;
+			previewCharacter.headDir = 0;
+			previewCharacter.action = previewCharacter.ACTION.IDLE;
 			previewCharacter.animation = _animation;
 
-			SpriteRenderer.bind2DContext(
-				_ctx,
-				Math.floor(_ctx.canvas.width / 2),
-				_ctx.canvas.height
-			);
+			SpriteRenderer.bind2DContext(_ctx, Math.floor(_ctx.canvas.width / 2), _ctx.canvas.height);
 			previewCharacter.renderEntity(_ctx);
 			previewCharacter.effectColor.set(_savedColor);
 		};
-	}();
-
+	})();
 
 	/**
 	 * Apply preview item to entity
 	 *
 	 * @param {object} entity
 	 */
-	function applyPreviewItem(entity)
-	{
+	function applyPreviewItem(entity) {
 		if (_previewLocation & EquipLocation.HEAD_BOTTOM) {
 			entity.accessory = _previewSpriteId;
 		}
@@ -326,7 +307,6 @@ define(function(require)
 			entity.robe = _previewSpriteId;
 		}
 	}
-
 
 	/**
 	 * Create component and export it

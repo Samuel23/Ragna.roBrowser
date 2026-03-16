@@ -8,8 +8,8 @@
  * @author Vincent Thibault
  */
 
-define(["./PacketStructure"], function (PACKET) {
-	"use strict";
+define(['./PacketStructure'], function (PACKET) {
+	'use strict';
 
 	return {
 		0x69: PACKET.AC.ACCEPT_LOGIN, // ok
@@ -76,6 +76,8 @@ define(["./PacketStructure"], function (PACKET) {
 		0xbd: PACKET.ZC.STATUS, // ok
 		0xbe: PACKET.ZC.STATUS_CHANGE, // ok
 		0xc0: PACKET.ZC.EMOTION, // ok
+		0xbea: PACKET.ZC.EMOTION_SUCCESS, // ok
+		0xbeb: PACKET.ZC.EMOTION_FAIL, // ok
 		0xc2: PACKET.ZC.USER_COUNT, // ok
 		0xc3: PACKET.ZC.SPRITE_CHANGE, // ok
 		0xc4: PACKET.ZC.SELECT_DEALTYPE, // ok
@@ -834,7 +836,7 @@ define(["./PacketStructure"], function (PACKET) {
 		//0xb98: PACKET.CZ.RODEX_RETURN
 		//0xb99: PACKET.ZC.RODEX_RETURN_ACK
 		0xba4: PACKET.ZC.PROPERTY_HOMUN5, // ok
-
+		0xba5: PACKET.ZC.HO_PAR_CHANGE2,
 		// TITLE
 		0x0a2e: PACKET.CZ.REQ_CHANGE_TITLE,
 		0x0a2f: PACKET.ZC.ACK_CHANGE_TITLE,
@@ -864,6 +866,6 @@ define(["./PacketStructure"], function (PACKET) {
 		0xae2: PACKET.ZC.UI_OPEN,
 		0x9cd: PACKET.ZC.MSG_COLOR,
 
-		0xb1a: PACKET.ZC.USESKILL_ACK3, // USE SKILL 3
+		0xb1a: PACKET.ZC.USESKILL_ACK3 // USE SKILL 3
 	};
 });

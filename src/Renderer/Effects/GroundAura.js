@@ -6,9 +6,16 @@
  * to avoid camera-tilt clipping issues.
  *
  */
-define(['Utils/WebGL', 'Utils/Texture', 'Utils/gl-matrix', 'Core/Client', 'Renderer/Map/Altitude', 'Renderer/SpriteRenderer'],
-function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
-
+define([
+	'text!./GroundAura.vs',
+	'text!./GroundAura.fs',
+	'Utils/WebGL',
+	'Utils/Texture',
+	'Utils/gl-matrix',
+	'Core/Client',
+	'Renderer/Map/Altitude',
+	'Renderer/SpriteRenderer'
+], function (_vertexShader, _fragmentShader, WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 	'use strict';
 
 	var mat4 = glMatrix.mat4;
@@ -24,95 +31,15 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 	var _buffer;
 
 	/**
-	 * Vertex Shader - renders flat quads on the ground plane
-	 * Size is in SpriteRenderer units (divided by 175 * 5 = /35)
-	 */
-	var _vertexShader = `
-		#version 300 es
-		precision highp float;
-
-		in vec3 aPosition;
-		in vec2 aTextureCoord;
-
-		out vec2 vTextureCoord;
-
-		uniform mat4 uModelViewMat;
-		uniform mat4 uProjectionMat;
-		uniform vec3 uWorldPosition;
-		uniform vec2 uSize;          // Size in SpriteRenderer units
-		uniform float uAngle;        // Rotation angle in radians
-		uniform float uZIndex;
-
-		void main(void) {
-			// Convert size from SpriteRenderer units to world units
-			// SpriteRenderer does: size / 175.0 * 5.0 = size / 35.0
-			float sizeX = uSize.x / 35.0;
-			float sizeY = uSize.y / 35.0;
-
-			// Scale the quad by size
-			vec3 pos = vec3(aPosition.x * sizeX, aPosition.y, aPosition.z * sizeY);
-
-			// Rotate around Y axis by angle
-			float cosA = cos(uAngle);
-			float sinA = sin(uAngle);
-			vec3 rotatedPos = vec3(
-				pos.x * cosA - pos.z * sinA,
-				pos.y,
-				pos.x * sinA + pos.z * cosA
-			);
-
-			// World position following RO coordinate system: x, -z (height), y
-			vec3 worldPos = vec3(
-				uWorldPosition.x + 0.5 + rotatedPos.x,
-				-uWorldPosition.z + rotatedPos.y,
-				uWorldPosition.y + 0.5 + rotatedPos.z
-			);
-
-			gl_Position = uProjectionMat * uModelViewMat * vec4(worldPos, 1.0);
-			gl_Position.z -= uZIndex * 0.01;
-
-			vTextureCoord = aTextureCoord;
-		}
-	`;
-
-	/**
-	 * Fragment Shader
-	 */
-	var _fragmentShader = `
-		#version 300 es
-		precision highp float;
-
-		in vec2 vTextureCoord;
-		out vec4 fragColor;
-
-		uniform sampler2D uDiffuse;
-		uniform vec4 uColor;
-
-		void main(void) {
-			vec4 texColor = texture(uDiffuse, vTextureCoord);
-
-			if (texColor.a < 0.01) {
-				discard;
-			}
-
-			fragColor = texColor * uColor;
-		}
-	`;
-
-	/**
 	 * Generate a flat quad on the XZ plane (Y=0, horizontal)
 	 * Unit size (-0.5 to 0.5), will be scaled by shader
 	 */
 	function generateGroundQuad() {
 		return new Float32Array([
 			// Triangle 1
-			-0.5, 0.0, -0.5,   0.0, 0.0,
-			 0.5, 0.0, -0.5,   1.0, 0.0,
-			-0.5, 0.0,  0.5,   0.0, 1.0,
+			-0.5, 0.0, -0.5, 0.0, 0.0, 0.5, 0.0, -0.5, 1.0, 0.0, -0.5, 0.0, 0.5, 0.0, 1.0,
 			// Triangle 2
-			 0.5, 0.0, -0.5,   1.0, 0.0,
-			 0.5, 0.0,  0.5,   1.0, 1.0,
-			-0.5, 0.0,  0.5,   0.0, 1.0
+			0.5, 0.0, -0.5, 1.0, 0.0, 0.5, 0.0, 0.5, 1.0, 1.0, -0.5, 0.0, 0.5, 0.0, 1.0
 		]);
 	}
 
@@ -159,8 +86,8 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 	GroundAura.prototype.init = function init(gl) {
 		var self = this;
 
-		Client.loadFile('data/texture/effect/' + this.textureName, function(buffer) {
-			WebGL.texture(gl, buffer, function(texture) {
+		Client.loadFile('data/texture/effect/' + this.textureName, function (buffer) {
+			WebGL.texture(gl, buffer, function (texture) {
 				self.texture = texture;
 				self.ready = true;
 			});
@@ -174,28 +101,39 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 		this.ready = false;
 	};
 
-
 	function calculateSize(self, aura, auraAngle, i) {
-		var sinRiseAngle = self.sinCache[aura[i].riseAngle] ? self.sinCache[aura[i].riseAngle] : self.sinCache[aura[i].riseAngle] = Math.sin(aura[i].riseAngle);
+		var sinRiseAngle = self.sinCache[aura[i].riseAngle]
+			? self.sinCache[aura[i].riseAngle]
+			: (self.sinCache[aura[i].riseAngle] = Math.sin(aura[i].riseAngle));
 
 		var riseFactor = aura[i].distance * 0.1 * (sinRiseAngle + 1);
 
-		var cos = self.cosCache[auraAngle] ? self.cosCache[auraAngle] : self.cosCache[auraAngle] = Math.cos(auraAngle);
+		var cos = self.cosCache[auraAngle]
+			? self.cosCache[auraAngle]
+			: (self.cosCache[auraAngle] = Math.cos(auraAngle));
 		var startX = cos * (aura[i].distance * 0.8 + riseFactor);
 
 		auraAngle += 90;
-		if (auraAngle >= 360) auraAngle -= 360;
-		cos = self.cosCache[auraAngle] ? self.cosCache[auraAngle] : self.cosCache[auraAngle] = Math.cos(auraAngle);
+		if (auraAngle >= 360) {
+			auraAngle -= 360;
+		}
+		cos = self.cosCache[auraAngle] ? self.cosCache[auraAngle] : (self.cosCache[auraAngle] = Math.cos(auraAngle));
 		var endX = cos * (aura[i].distance * 0.8 + riseFactor);
 
 		auraAngle += 90;
-		if (auraAngle >= 360) auraAngle -= 360;
-		var sin = self.sinCache[auraAngle] ? self.sinCache[auraAngle] : self.sinCache[auraAngle] = Math.sin(auraAngle);
+		if (auraAngle >= 360) {
+			auraAngle -= 360;
+		}
+		var sin = self.sinCache[auraAngle]
+			? self.sinCache[auraAngle]
+			: (self.sinCache[auraAngle] = Math.sin(auraAngle));
 		var startY = sin * (aura[i].distance * 0.8 + riseFactor);
 
 		auraAngle += 90;
-		if (auraAngle >= 360) auraAngle -= 360;
-		sin = self.sinCache[auraAngle] ? self.sinCache[auraAngle] : self.sinCache[auraAngle] = Math.sin(auraAngle);
+		if (auraAngle >= 360) {
+			auraAngle -= 360;
+		}
+		sin = self.sinCache[auraAngle] ? self.sinCache[auraAngle] : (self.sinCache[auraAngle] = Math.sin(auraAngle));
 		var endY = sin * (aura[i].distance * 0.8 + riseFactor);
 
 		var width = Math.abs(endX - startX);
@@ -203,7 +141,6 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 
 		return [width, height];
 	}
-
 
 	GroundAura.prototype.render = function render(gl, tick) {
 		var uniform = _program.uniform;
@@ -216,8 +153,8 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 				this.aura[i].direction *= -1;
 				// Avoid aura getting bigger and bigger or smaller and smaller over time
 				if (
-					(this.aura[i].direction < 0 && this.aura[i].size[0] < this.aura[i].initialSize[0])
-					|| (this.aura[i].direction > 0 && this.aura[i].size[0] > this.aura[i].initialSize[0])
+					(this.aura[i].direction < 0 && this.aura[i].size[0] < this.aura[i].initialSize[0]) ||
+					(this.aura[i].direction > 0 && this.aura[i].size[0] > this.aura[i].initialSize[0])
 				) {
 					this.aura[i].size[0] = this.aura[i].initialSize[0];
 					this.aura[i].size[1] = this.aura[i].initialSize[1];
@@ -232,17 +169,15 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 		var groundZ = Altitude.getCellHeight(this.position[0], this.position[1]);
 
 		// World position with small lift to avoid z-fighting
-		var worldPos = [
-			this.position[0],
-			this.position[1],
-			groundZ + 0.05
-		];
+		var worldPos = [this.position[0], this.position[1], groundZ + 0.05];
 
 		gl.uniform3fv(uniform.uWorldPosition, worldPos);
 		var self = this;
-		SpriteRenderer.setDepth(true, false, false, function(){
+		SpriteRenderer.runWithDepth(true, false, false, function () {
 			for (var i = 0; i < self.aura.length; i++) {
-				if (!self.aura[i].life) continue;
+				if (!self.aura[i].life) {
+					continue;
+				}
 
 				var auraAngle = i * 23;
 
@@ -253,7 +188,7 @@ function(WebGL, Texture, glMatrix, Client, Altitude, SpriteRenderer) {
 
 				// Set uniforms - size in SpriteRenderer units (shader converts to world units)
 				gl.uniform2f(uniform.uSize, self.aura[i].size[0], self.aura[i].size[1]);
-				gl.uniform1f(uniform.uAngle, auraAngle * Math.PI / 180);
+				gl.uniform1f(uniform.uAngle, (auraAngle * Math.PI) / 180);
 				gl.uniform4f(uniform.uColor, 1.0, 1.0, 1.0, 0.8);
 				gl.uniform1f(uniform.uZIndex, 1 + i);
 

@@ -4,119 +4,108 @@
  * This config enforces ES5 syntax with AMD modules and Allman brace style
  */
 module.exports = {
-	'env': {
-		'browser': true,
-		'amd': true
+	env: {
+		browser: true,
+		es6: true,
+		amd: true
 	},
-	'extends': 'eslint:recommended',
-	'parserOptions': {
-		'ecmaVersion': 5,
-		'sourceType': 'script'
+	extends: ['eslint:recommended', 'prettier'],
+	plugins: ['requirejs'],
+	parserOptions: {
+		ecmaVersion: 2020, // Optional Chaining (?.) and Nullish Coalescing (??) support
+		sourceType: 'script'
 	},
-	'globals': {
-		'define': 'readonly',
-		'require': 'readonly',
-		'jQuery': 'readonly',
-		'$': 'readonly',
-		'console': 'readonly'
+	globals: {
+		define: 'readonly',
+		require: 'readonly',
+		requirejs: 'readonly',
+		jQuery: 'readonly',
+		$: 'readonly',
+		console: 'readonly',
+		FileReaderSync: 'readonly', // Lint flagged it as warning
+		importScripts: 'readonly', // Lint flagged it as warning
+		Buffer: 'readonly', // Node.js function
+
+		// Global RO config
+		ROConfig: 'readonly',
+
+		// BinaryReader global vars
+		SEEK_CUR: 'readonly',
+		SEEK_SET: 'readonly',
+		SEEK_END: 'readonly'
 	},
-	'rules': {
-		// Indentation: tabs with 4 spaces width
-		'indent': ['error', 'tab', {
-			'SwitchCase': 1
-		}],
-
-		// Quotes: single quotes
-		'quotes': ['error', 'single', {
-			'avoidEscape': true,
-			'allowTemplateLiterals': false
-		}],
-
-		// Semicolons: required
-		'semi': ['error', 'always'],
-		'semi-spacing': ['error', {
-			'before': false,
-			'after': true
-		}],
-
-		// Brace style: Allman (opening brace on new line)
-		'brace-style': ['error', 'allman', {
-			'allowSingleLine': true
-		}],
-
-		// Comma: no trailing commas
+	rules: {
+		// ======================
+		// STYLE (prettier resolve)
+		// ======================
+		quotes: ['error', 'single', { avoidEscape: true }],
+		semi: ['error', 'always'],
 		'comma-dangle': ['error', 'never'],
-		'comma-spacing': ['error', {
-			'before': false,
-			'after': true
-		}],
 
-		// Spacing
-		'space-before-function-paren': ['error', {
-			'anonymous': 'always',
-			'named': 'never',
-			'asyncArrow': 'always'
-		}],
-		'space-before-blocks': ['error', 'always'],
-		'space-in-parens': ['error', 'never'],
-		'space-infix-ops': 'error',
-		'keyword-spacing': ['error', {
-			'before': true,
-			'after': true
-		}],
-		'object-curly-spacing': ['error', 'always'],
-		'array-bracket-spacing': ['error', 'never'],
+		// ======================
+		// ENGINE FRIENDLY
+		// ======================
+		eqeqeq: 'off',
+		'no-implicit-coercion': 'off',
+		'no-plusplus': 'off',
+		'no-fallthrough': 'off',
 
-		// Line breaks
-		'linebreak-style': ['error', 'unix'],
-		'eol-last': ['error', 'always'],
-		'no-trailing-spaces': 'error',
-		'no-multiple-empty-lines': ['error', {
-			'max': 2,
-			'maxEOF': 1,
-			'maxBOF': 0
-		}],
-
-		// Variable declarations
-		'no-var': 'off',
-		'prefer-const': 'off',
-		'prefer-arrow-callback': 'off',
-		'no-unused-vars': ['warn', {
-			'vars': 'all',
-			'args': 'none',
-			'varsIgnorePattern': '^_'
-		}],
-
-		// Best practices
-		'no-console': 'off',
-		'no-debugger': 'warn',
-		'no-alert': 'warn',
-		'no-mixed-spaces-and-tabs': 'error',
-		'no-multi-spaces': ['error', {
-			'ignoreEOLComments': true,
-			'exceptions': {
-				'Property': true,
-				'VariableDeclarator': true
+		// ======================
+		// USELESS RULES
+		// ======================
+		'no-useless-escape': 'warn',
+		'no-empty': 'error',
+		'no-redeclare': 'error',
+		'no-constant-condition': 'error',
+		'no-unused-vars': [
+			'warn',
+			{
+				varsIgnorePattern: '^_',
+				args: 'none'
 			}
-		}],
+		],
 
-		// ES6 features - disable all
-		'no-arrow-functions': 'off',
-		'object-shorthand': 'off',
-		'prefer-template': 'off',
-		'prefer-spread': 'off',
-		'prefer-rest-params': 'off',
-		'prefer-destructuring': 'off',
-
-		// Code quality
-		'curly': ['error', 'all'],
-		'eqeqeq': ['error', 'allow-null'],
+		// ======================
+		// CODE QUALITY (REAL BUGS)
+		// ======================
+		curly: ['error', 'all'],
 		'no-eval': 'error',
 		'no-implied-eval': 'error',
-		'no-with': 'error',
 		'no-new-func': 'error',
+		'no-with': 'error',
+		'no-global-assign': 'warn',
+		'no-undef': 'error',
+		'no-unreachable': 'error',
+		'no-new': 'warn',
+		'no-unused-expressions': 'warn',
 
-		// Strict mode
-		'strict': ['error', 'function']
+		// ======================
+		// HARDCORE VARIABLE QUALITY (adjust if too many warnings)
+		// ======================
+		'no-shadow': 'warn',
+		'block-scoped-var': 'warn',
+
+		// We are not ready for theses yet..
+		//'prefer-const': 'warn',
+		//'vars-on-top': 'warn',
+		//'no-magic-numbers': ['warn', {} ], // Need to find the right ignores
+
+		// ======================
+		// LESS NOISE FOR LEGACY
+		// ======================
+		'no-prototype-builtins': 'off',
+		'no-inner-declarations': 'off',
+		'no-case-declarations': 'off',
+
+		// ======================
+		// DEBUG
+		// ======================
+		'no-console': 'off',
+		'no-debugger': 'warn',
+
+		// ======================
+		// STRICT MODE
+		// ======================
+		strict: ['error', 'function']
 	}
 };
