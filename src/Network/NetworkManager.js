@@ -82,7 +82,7 @@ define(function (require) {
 		this.name = name;
 		this.Struct = Struct;
 		this.size = size;
-		this.callback = null;
+		this.callbacks = [];
 	}
 
 	/**
@@ -189,12 +189,15 @@ define(function (require) {
 	}
 
 	/**
-	 * Hook a Packet
+	 * Hook a Packet - adds a callback descriptor to the packet's callback list.
+	 * Multiple callbacks can be registered for the same packet (e.g. from plugins).
+	 * Callbacks are called in priority order (default 0).
 	 *
 	 * @param {object} packet
-	 * @param {function} callback to use packet
+	 * @param {function} callback - handler function
+	 * @param {object} [meta] - optional metadata: { source: 'core'|'plugin', name: string, priority: number }
 	 */
-	function hookPacket(packet, callback) {
+	function hookPacket(packet, callback, meta) {
 		if (!packet) {
 			throw new Error('NetworkManager::HookPacket() - Invalid packet structure "' + JSON.stringify(packet) + '"');
 		}
@@ -203,7 +206,83 @@ define(function (require) {
 			throw new Error('NetworkManager::HookPacket() - Packet not yet register "' + packet.name + '"');
 		}
 
-		Packets.list[packet.id].callback = callback;
+		var source   = (meta && meta.source)   || 'core';
+		var name     = (meta && meta.name)     || 'core';
+		var priority = (meta && meta.priority) || 0;
+
+		// Automagically detect source if not provided
+		if (!meta) {
+			try {
+				var err = new Error();
+				var stack = err.stack || '';
+				var lines = stack.split('\n');
+				// Looking for the caller (usually lines[2] or lines[3] depending on browser/engine)
+				// We search for the first path that isn't NetworkManager.js
+				for (var i = 1; i < lines.length; i++) {
+					if (lines[i].indexOf('NetworkManager.js') === -1 && lines[i].indexOf('at ') !== -1) {
+						var match = lines[i].match(/([^\/\\]+)\.js/);
+						if (match) {
+							name = match[1];
+							source = lines[i].indexOf('Plugins/') !== -1 ? 'plugin' : 'core';
+							break;
+						}
+					}
+				}
+			} catch (e) {
+				// Fallback to core:core if stack parsing fails
+			}
+		}
+
+		var list = Packets.list[packet.id].callbacks;
+
+		// Avoid duplicate callbacks
+		for (var j = 0; j < list.length; j++) {
+			if (list[j].fn === callback) {
+				return;
+			}
+		}
+
+		list.push({
+			fn: callback,
+			source: source,
+			name: name,
+			priority: priority
+		});
+
+		// Sort by priority desc
+		list.sort(function (a, b) {
+			return b.priority - a.priority;
+		});
+	}
+
+	/**
+	 * Unhook a Packet - removes a previously registered callback by function reference.
+	 * Useful for plugins that need to clean up their handlers.
+	 *
+	 * @param {object} packet
+	 * @param {function} callback - the exact function reference originally passed to hookPacket
+	 */
+	function unhookPacket(packet, callback) {
+		if (!packet || !packet.id) {
+			return;
+		}
+
+		var list = Packets.list[packet.id];
+		if (!list) {
+			return;
+		}
+
+		var idx = -1;
+		for (var i = 0; i < list.callbacks.length; i++) {
+			if (list.callbacks[i].fn === callback) {
+				idx = i;
+				break;
+			}
+		}
+
+		if (idx !== -1) {
+			list.callbacks.splice(idx, 1);
+		}
 	}
 
 	/**
@@ -309,16 +388,27 @@ define(function (require) {
 				//	packet.Struct.call(packet.instance, fp, offset); //this causes packet conflicts where the same type of packets following eachother copy the previous packet's variables with the previous values
 				//}
 
+				var callbackNames = packet.callbacks.map(function (c) {
+					return c.source + ':' + c.name;
+				}).join(', ');
+
 				console.log(
 					'%c[Network] Recv:',
 					'color:#900090',
 					packet.instance,
-					packet.callback ? '' : '(no callback)'
+					packet.callbacks.length === 0 ? '(no callback)' : '[' + callbackNames + ']'
 				);
 
-				// Call controller
-				if (packet.callback) {
-					packet.callback(packet.instance);
+				// Call all registered controllers/plugins in priority order
+				for (var ci = 0; ci < packet.callbacks.length; ++ci) {
+					try {
+						// Return false to stop propagation to other callbacks
+						if (packet.callbacks[ci].fn(packet.instance) === false) {
+							break;
+						}
+					} catch (e) {
+						console.error('[Network] Error in callback for packet "%s" from source "%s:%s":', packet.name, packet.callbacks[ci].source, packet.callbacks[ci].name, e);
+					}
 				}
 			} else {
 				if (packetDump) {
@@ -484,6 +574,7 @@ define(function (require) {
 			setPing: setPing,
 			connect: connect,
 			hookPacket: hookPacket,
+			unhookPacket: unhookPacket,
 			close: close,
 			read: read,
 			setSocketFactory: setSocketFactory,
