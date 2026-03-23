@@ -7,28 +7,27 @@
  *
  * @author Vincent Thibault
  */
-define([
-	'text!Renderer/Effects/Shaders/GLSL/Models.vs',
-	'text!Renderer/Effects/Shaders/GLSL/Models.fs',
-	'Utils/WebGL',
-	'Preferences/Map'
-], function (_vertexShader, _fragmentShader, WebGL, Preferences) {
-	'use strict';
+'use strict';
+
+import _vertexShader from 'Renderer/Effects/Shaders/GLSL/Models.vs?raw';
+import _fragmentShader from 'Renderer/Effects/Shaders/GLSL/Models.fs?raw';
+import WebGL from 'Utils/WebGL';
+import Preferences from 'Preferences/Map';
 
 	/**
 	 * @var {WebGLProgram}
 	 */
-	var _program = null;
+	let _program = null;
 
 	/**
 	 * @var {WebGLBuffer}
 	 */
-	var _buffer = null;
+	let _buffer = null;
 
 	/**
 	 * @var {Array} list of meshes
 	 */
-	var _objects = [];
+	let _objects = [];
 
 	/**
 	 * Initialize models
@@ -37,8 +36,8 @@ define([
 	 * @param {object} data ( models )
 	 */
 	function init(gl, data) {
-		var i, count;
-		var objects;
+		let i, count;
+		let objects;
 
 		objects = data.infos;
 		count = objects.length;
@@ -86,9 +85,9 @@ define([
 	 * @param {object} light structure
 	 */
 	function render(gl, modelView, projection, normalMat, fog, light) {
-		var uniform = _program.uniform;
-		var attribute = _program.attribute;
-		var i, count;
+		let uniform = _program.uniform;
+		let attribute = _program.attribute;
+		let i, count;
 
 		gl.useProgram(_program);
 
@@ -150,7 +149,7 @@ define([
 	 * @param {object} gl context
 	 */
 	function free(gl) {
-		var i, count;
+		let i, count;
 
 		if (_buffer) {
 			gl.deleteBuffer(_buffer);
@@ -170,11 +169,10 @@ define([
 	}
 
 	/**
-	 * Export
+	 * Export 
 	 */
-	return {
+	export default {
 		init: init,
 		render: render,
 		free: free
 	};
-});

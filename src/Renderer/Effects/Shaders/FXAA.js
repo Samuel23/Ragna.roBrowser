@@ -7,20 +7,16 @@
  *
  * @author AoShinHo
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	var GraphicsSettings = require('Preferences/Graphics');
-	var WebGL = require('Utils/WebGL');
-	var PostProcess = require('Renderer/Effects/PostProcess');
+import GraphicsSettings from 'Preferences/Graphics';
+import WebGL from 'Utils/WebGL';
+import PostProcess from 'Renderer/Effects/PostProcess';
+import commonVS from './GLSL/Common.vs?raw';
+import fxaaFS from './GLSL/FXAA.fs?raw';
 
-	var _program, _buffer;
-	var _fxaaEdgeThresholdMin = 0.0;
-
-	var commonVS = require('text!./GLSL/Common.vs');
-
-	var fxaaFS = require('text!./GLSL/FXAA.fs');
-
+let _program, _buffer;
+	let _fxaaEdgeThresholdMin = 0.0;
 	function FXAA() {}
 
 	FXAA.render = function render(gl, inputTexture, outputFramebuffer) {
@@ -40,7 +36,7 @@ define(function (require) {
 		gl.uniform2f(_program.uniform.uTexelSize, 1.0 / gl.canvas.width, 1.0 / gl.canvas.height);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
-		var posLoc = _program.attribute.aPosition;
+		let posLoc = _program.attribute.aPosition;
 		gl.enableVertexAttribArray(posLoc);
 		gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
@@ -70,7 +66,7 @@ define(function (require) {
 			console.error('Error compiling FXAA shader.', e);
 			return;
 		}
-		var quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
+		let quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
 		_buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
 		gl.bufferData(gl.ARRAY_BUFFER, quadVertices, gl.STATIC_DRAW);
@@ -90,6 +86,4 @@ define(function (require) {
 		}
 		_program = _buffer = null;
 	};
-
-	return FXAA;
-});
+export default FXAA;

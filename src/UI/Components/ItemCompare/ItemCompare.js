@@ -7,53 +7,50 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var jQuery = require('Utils/jquery');
-	var DB = require('DB/DBManager');
-	var ItemType = require('DB/Items/ItemType');
-	var Client = require('Core/Client');
-	var CardIllustration = require('UI/Components/CardIllustration/CardIllustration');
-	var UIManager = require('UI/UIManager');
-	var Mouse = require('Controls/MouseEventHandler');
-	var UIComponent = require('UI/UIComponent');
-	var MakeReadBook = require('UI/Components/MakeReadBook/MakeReadBook');
-	var Renderer = require('Renderer/Renderer');
-	var SpriteRenderer = require('Renderer/SpriteRenderer');
-	var Sprite = require('Loaders/Sprite');
-	var Action = require('Loaders/Action');
-	var htmlText = require('text!./ItemCompare.html');
-	var cssText = require('text!./ItemCompare.css');
-	var getModule = require;
+import jQuery from 'Utils/jquery';
+import DB from 'DB/DBManager';
+import ItemType from 'DB/Items/ItemType';
+import Client from 'Core/Client';
+import CardIllustration from 'UI/Components/CardIllustration/CardIllustration';
+import UIManager from 'UI/UIManager';
+import Mouse from 'Controls/MouseEventHandler';
+import UIComponent from 'UI/UIComponent';
+import MakeReadBook from 'UI/Components/MakeReadBook/MakeReadBook';
+import Renderer from 'Renderer/Renderer';
+import SpriteRenderer from 'Renderer/SpriteRenderer';
+import Sprite from 'Loaders/Sprite';
+import Action from 'Loaders/Action';
+import htmlText from './ItemCompare.html?raw';
+import cssText from './ItemCompare.css?raw';
+import ItemInfo from 'UI/Components/ItemInfo/ItemInfo';
+import Entity from 'Renderer/Entity/Entity';
 
-	/**
+/**
 	 * Create Component
 	 */
-	var ItemCompare = new UIComponent('ItemCompare', htmlText, cssText);
+	let ItemCompare = new UIComponent('ItemCompare', htmlText, cssText);
 
 	/**
 	 * @var {Sprite,Action} objects
 	 */
-	var _sprite, _action;
+	let _sprite, _action;
 
 	/**
 	 * @var {CanvasRenderingContext2D}
 	 */
-	var _ctx;
+	let _ctx;
 
 	/**
 	 * @var {number} type
 	 */
-	var _type = 0;
+	let _type = 0;
 
 	/**
 	 * @var {number} start tick
 	 */
-	var _start = 0;
+	let _start = 0;
 
 	/**
 	 * @var {number} ItemCompare unique id
@@ -81,14 +78,12 @@ define(function (require) {
 	 */
 	ItemCompare.onAppend = function onAppend() {
 		// Seems like "EscapeWindow" is execute first, push it before.
-		var events = jQuery._data(window, 'events').keydown;
+		let events = jQuery._data(window, 'events').keydown;
 		events.unshift(events.pop());
 		resize(ItemCompare.ui.find('.description-inner').height() + 45);
-
-		var ItemInfo = require('UI/Components/ItemInfo/ItemInfo');
 		// Position ItemCompare next to ItemInfo
-		var itemInfoPosition = ItemInfo.ui.offset();
-		var itemInfoWidth = ItemInfo.ui.outerWidth();
+		let itemInfoPosition = ItemInfo.ui.offset();
+		let itemInfoWidth = ItemInfo.ui.outerWidth();
 		ItemCompare.ui.css({
 			position: 'absolute',
 			top: itemInfoPosition.top ? itemInfoPosition.top : 200,
@@ -117,8 +112,6 @@ define(function (require) {
 				CardIllustration.setCard(this.item);
 			}.bind(this)
 		);
-
-		var ItemInfo = require('UI/Components/ItemInfo/ItemInfo');
 		this.draggable(ItemInfo.ui.find('.title'));
 	};
 
@@ -128,10 +121,10 @@ define(function (require) {
 	 * @param {object} item
 	 */
 	ItemCompare.setItem = function setItem(item) {
-		var it = DB.getItemInfo(item.ITID);
-		var ui = this.ui;
-		var cardList = ui.find('.cardlist .border');
-		var optionContainer = ui.find('.option-container');
+		let it = DB.getItemInfo(item.ITID);
+		let ui = this.ui;
+		let cardList = ui.find('.cardlist .border');
+		let optionContainer = ui.find('.option-container');
 
 		this.item = it;
 		Client.loadFile(
@@ -144,8 +137,8 @@ define(function (require) {
 			}
 		);
 
-		var customname = '';
-		var hideslots = false;
+		let customname = '';
+		let hideslots = false;
 
 		if (item.type == ItemType.ARMOR && item.location == 0) {
 			//Pet Egg
@@ -153,9 +146,9 @@ define(function (require) {
 		}
 
 		if (item.slot) {
-			var very = '';
-			var name = '';
-			var elem = '';
+			let very = '';
+			let name = '';
+			let elem = '';
 
 			switch (item.slot['card1']) {
 				case 0x00ff: // FORGE
@@ -188,7 +181,7 @@ define(function (require) {
 				case 0xff00: // PET
 					hideslots = true;
 
-					var GID = (item.slot['card4'] << 16) + item.slot['card3'];
+					let GID = (item.slot['card4'] << 16) + item.slot['card3'];
 					name = '<font color="red" class="owner-' + GID + '">Unknown</font>';
 
 					if (DB.CNameTable[GID] && DB.CNameTable[GID] !== 'Unknown') {
@@ -267,8 +260,8 @@ define(function (require) {
 					cardList.parent().hide();
 					break;
 				}
-				var slotCount = it.slotCount || 0;
-				var i;
+				let slotCount = it.slotCount || 0;
+				let i;
 
 				cardList.parent().show();
 				cardList.empty();
@@ -297,9 +290,9 @@ define(function (require) {
 	 * @param {number} slot count
 	 */
 	function addCard(cardList, itemId, index, slotCount) {
-		var file,
+		let file,
 			name = '';
-		var card = DB.getItemInfo(itemId);
+		let card = DB.getItemInfo(itemId);
 
 		if (itemId && card) {
 			file = 'item/' + card.identifiedResourceName + '.bmp';
@@ -315,7 +308,7 @@ define(function (require) {
 		cardList.append('<div class="item" data-index="' + index + '">' + '<div class="icon"></div>' + name + '</div>');
 
 		Client.loadFile(DB.INTERFACE_PATH + file, function (data) {
-			var element = cardList.find('.item[data-index="' + index + '"] .icon');
+			let element = cardList.find('.item[data-index="' + index + '"] .icon');
 			element.css('backgroundImage', 'url(' + data + ')');
 
 			if (itemId && card) {
@@ -334,14 +327,14 @@ define(function (require) {
 	 * Extend ItemCompare window size
 	 */
 	function onResize() {
-		var ui = ItemCompare.ui;
-		var top = ui.position().top;
-		var left = ui.position().left;
-		var lastHeight = 0;
-		var _Interval;
+		let ui = ItemCompare.ui;
+		let top = ui.position().top;
+		let left = ui.position().left;
+		let lastHeight = 0;
+		let _Interval;
 
 		function resizing() {
-			var h = Math.floor(Mouse.screen.y - top);
+			let h = Math.floor(Mouse.screen.y - top);
 			if (h === lastHeight) {
 				return;
 			}
@@ -367,12 +360,12 @@ define(function (require) {
 	 * @param {number} height
 	 */
 	function resize(height) {
-		var container = ItemCompare.ui.find('.container');
-		var description = ItemCompare.ui.find('.description');
-		var descriptionInner = ItemCompare.ui.find('.description-inner');
-		var containerHeight = height;
-		var minHeight = 120;
-		var maxHeight = descriptionInner.height() + 45 > 120 ? Math.min(descriptionInner.height() + 45, 448) : 120;
+		let container = ItemCompare.ui.find('.container');
+		let description = ItemCompare.ui.find('.description');
+		let descriptionInner = ItemCompare.ui.find('.description-inner');
+		let containerHeight = height;
+		let minHeight = 120;
+		let maxHeight = descriptionInner.height() + 45 > 120 ? Math.min(descriptionInner.height() + 45, 448) : 120;
 
 		if (containerHeight <= minHeight) {
 			containerHeight = minHeight;
@@ -391,14 +384,14 @@ define(function (require) {
 	}
 
 	function onUpdateOwnerName(pkt) {
-		var str = ItemCompare.ui.find('.owner-' + pkt.GID).text();
+		let str = ItemCompare.ui.find('.owner-' + pkt.GID).text();
 		ItemCompare.ui.find('.owner-' + pkt.GID).text(pkt.CName);
 
 		delete DB.UpdateOwnerName[pkt.GID];
 	}
 
 	function addEvent(item) {
-		var event = ItemCompare.ui.find('.event_view');
+		let event = ItemCompare.ui.find('.event_view');
 		if (!validateFieldsExist(event)) {
 			addEvent(item);
 		}
@@ -427,7 +420,7 @@ define(function (require) {
 	}
 
 	function eventsBooks() {
-		var event = ItemCompare.ui.find('.event_view');
+		let event = ItemCompare.ui.find('.event_view');
 
 		Client.getFiles(
 			['data/sprite/book/\xc3\xa5\xc0\xd0\xb1\xe2.spr', 'data/sprite/book/\xc3\xa5\xc0\xd0\xb1\xe2.act'],
@@ -439,11 +432,11 @@ define(function (require) {
 					console.error('Book::init() - ' + e.message);
 					return;
 				}
-				var canvas;
+				let canvas;
 				canvas = _sprite.getCanvasFromFrame(0);
 				canvas.className = 'book_open event_add_cursor';
 				event.append(canvas);
-				var bookOpen = ItemCompare.ui.find('.book_open');
+				let bookOpen = ItemCompare.ui.find('.book_open');
 				bookOpen
 					.mouseover(function (e) {
 						e.stopImmediatePropagation();
@@ -466,7 +459,7 @@ define(function (require) {
 				canvas.height = 15;
 				_ctx = canvas[0].getContext('2d');
 
-				var bookRead = ItemCompare.ui.find('.book_read');
+				let bookRead = ItemCompare.ui.find('.book_read');
 				bookRead
 					.mouseover(function (e) {
 						e.stopImmediatePropagation();
@@ -490,15 +483,14 @@ define(function (require) {
 	/**
 	 * Rendering animation
 	 */
-	var rendering = (function renderingClosure() {
-		var position = new Uint16Array([0, 0]);
+	let rendering = (function renderingClosure() {
+		let position = new Uint16Array([0, 0]);
 
 		return function rendering() {
-			var i, count, max;
-			var action, animation, anim;
-			var Entity = getModule('Renderer/Entity/Entity');
+			let i, count, max;
+			let action, animation, anim;
 
-			var _entity = new Entity();
+			let _entity = new Entity();
 			action = _action.actions[_type];
 			max = action.animations.length;
 			anim = Renderer.tick - _start;
@@ -564,5 +556,4 @@ define(function (require) {
 	/**
 	 * Create component and export it
 	 */
-	return UIManager.addComponent(ItemCompare);
-});
+export default UIManager.addComponent(ItemCompare);

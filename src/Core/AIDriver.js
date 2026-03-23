@@ -1,24 +1,22 @@
-define(function (require) {
-	'use strict';
+'use strict';
 
-	var DB = require('DB/DBManager');
-	var Session = require('Engine/SessionStorage');
-	var Network = require('Network/NetworkManager');
-	var PACKET = require('Network/PacketStructure');
-	var PACKETVER = require('Network/PacketVerManager');
-	var SkillInfo = require('DB/Skills/SkillInfo');
-	var EntityManager = require('Renderer/EntityManager');
-	var Client = require('./Client');
-	var Configs = require('./Configs');
+import DB from 'DB/DBManager';
+import Session from 'Engine/SessionStorage';
+import Network from 'Network/NetworkManager';
+import PACKET from 'Network/PacketStructure';
+import PACKETVER from 'Network/PacketVerManager';
+import SkillInfo from 'DB/Skills/SkillInfo';
+import EntityManager from 'Renderer/EntityManager';
+import Client from './Client';
+import Configs from './Configs';
+import UIManager from 'UI/UIManager';
 
-	var getModule = require;
-
-	function AIDriver() {}
+function AIDriver() {}
 
 	AIDriver.init = async function init() {};
 
-	var msg = {};
-	var resMsg = {};
+	let msg = {};
+	let resMsg = {};
 
 	AIDriver.setmsg = function setmsg(homId, str) {
 		if (!msg[homId]) {
@@ -32,11 +30,11 @@ define(function (require) {
 		const scriptStartTime = Date.now();
 
 		// Prevents circular dependancy
-		var Homun = getModule('UI/Components/HomunInformations/HomunInformations');
-		var Mercenary = getModule('UI/Components/MercenaryInformations/MercenaryInformations');
+		let Homun = UIManager.getComponent('HomunInformations');
+		let Mercenary = UIManager.getComponent('MercenaryInformations');
 
 		function addCTX(lua, isHoAI = true) {
-			var ctx = lua.ctx;
+			let ctx = lua.ctx;
 
 			// Initialize AzzyAI timeouts variables and GetV adapter
 			lua.doStringSync(`
@@ -103,7 +101,7 @@ define(function (require) {
 			};
 
 			ctx.GetVJS = function (V_, id) {
-				var entity = EntityManager.get(Number(id));
+				let entity = EntityManager.get(Number(id));
 
 				switch (V_) {
 					case 0: // V_OWNER
@@ -111,7 +109,7 @@ define(function (require) {
 
 					case 1: // V_POSITION
 					case 13: // V_POSITION_APPLY_SKILLATTACKRANGE
-						var posX = -1,
+						let posX = -1,
 							posY = -1;
 						if (entity && entity.position) {
 							posX = parseInt(entity.position[0]);
@@ -214,16 +212,16 @@ define(function (require) {
 
 			ctx.GetActors = function () {
 				AIDriver.exec('status = MyState', isHoAI);
-				var res = [0];
+				let res = [0];
 				EntityManager.forEach(item => {
 					res.push(item.GID);
 				});
 				// aggressive logic
 				if (res.length > 3) {
 					if (localStorage.getItem('AGGRESSIVE') == 1) {
-						var closest = 0;
-						var lastDist = 1000;
-						var thisentity = EntityManager.get(isHoAI ? Session.homunId : Session.mercId);
+						let closest = 0;
+						let lastDist = 1000;
+						let thisentity = EntityManager.get(isHoAI ? Session.homunId : Session.mercId);
 						for (const item in res) {
 							if (
 								item !== 0 &&
@@ -231,7 +229,7 @@ define(function (require) {
 								item !== Session.homunId &&
 								item !== Session.mercId
 							) {
-								var entity = EntityManager.get(Number(item));
+								let entity = EntityManager.get(Number(item));
 								if (
 									entity &&
 									(entity.objecttype === Session.Entity.constructor.TYPE_MOB ||
@@ -241,7 +239,7 @@ define(function (require) {
 									entity.action !== entity.ACTION.DIE &&
 									entity.isVisible()
 								) {
-									var dist = distance(
+									let dist = distance(
 										thisentity.position[0],
 										thisentity.position[1],
 										entity.position[0],
@@ -386,7 +384,7 @@ define(function (require) {
 					}
 					return 0;
 				}
-				var entity = EntityManager.get(Number(id));
+				let entity = EntityManager.get(Number(id));
 
 				if (
 					entity &&
@@ -434,11 +432,11 @@ define(function (require) {
 	};
 
 	AIDriver.initAI = async function prepareAIFiles(onEnd) {
-		var loadedFiles = {};
-		var loadPromises = [];
+		let loadedFiles = {};
+		let loadPromises = [];
 		this.ready = false;
 		function preloadFiles(fileList, lua) {
-			var ctx = lua.ctx;
+			let ctx = lua.ctx;
 
 			function customRequire(modulePath, isJS = false) {
 				const promise = new Promise((resolve, reject) => {
@@ -482,12 +480,12 @@ define(function (require) {
 									console.log(`Loading file "${text}"...`);
 								}
 
-								var f = file instanceof ArrayBuffer ? new TextDecoder('iso-8859-1').decode(file) : file;
+								let f = file instanceof ArrayBuffer ? new TextDecoder('iso-8859-1').decode(file) : file;
 
 								const nestedPromises = [];
 								for (const line of f.split('\n')) {
 									if (line.includes('dofile')) {
-										var loadFile = line
+										let loadFile = line
 											.replace('dofile', '')
 											.replaceAll('(', '')
 											.replaceAll(')', '')
@@ -537,7 +535,7 @@ define(function (require) {
 									const nestedPromises = [];
 									for (const line of text.split('\n')) {
 										if (line.includes('dofile')) {
-											var loadFile = line
+											let loadFile = line
 												.replace('dofile', '')
 												.replaceAll('(', '')
 												.replaceAll(')', '')
@@ -584,7 +582,7 @@ define(function (require) {
 
 			console.log('Loading Default HOAI...');
 			let files = ['AI/Util.lua', 'AI/Const.lua', 'AI/AI.lua'];
-			var AI_M = 'AI/AI_M.lua';
+			let AI_M = 'AI/AI_M.lua';
 			preloadFiles(files, this.default_HO_AI);
 			await doFiles(files, this.default_HO_AI);
 
@@ -631,7 +629,7 @@ define(function (require) {
 				return;
 			}
 
-			var lua;
+			let lua;
 			if (homunculus) {
 				if (Session.homCustomAI) {
 					lua = this.HO_AI;
@@ -653,5 +651,4 @@ define(function (require) {
 
 	AIDriver.reset = function reset() {};
 
-	return AIDriver;
-});
+export default AIDriver;

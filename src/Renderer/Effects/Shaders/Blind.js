@@ -6,22 +6,18 @@
  *
  * @author AoShinHo
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	var WebGL = require('Utils/WebGL');
-	var Camera = require('Renderer/Camera');
+import WebGL from 'Utils/WebGL';
+import Camera from 'Renderer/Camera';
+import commonVS from './GLSL/Common.vs?raw';
+import blindFS from './GLSL/Blind.fs?raw';
 
-	var _program, _buffer;
-	var _active = false;
-
-	var commonVS = require('text!./GLSL/Common.vs');
-
+let _program, _buffer;
+	let _active = false;
 	/**
 	 * Fragment Shader: Radial Blindness
 	 */
-	var blindFS = require('text!./GLSL/Blind.fs');
-
 	function Blind() {}
 
 	/**
@@ -43,19 +39,19 @@ define(function (require) {
 
 		gl.useProgram(_program);
 
-		var baseRadius = 0.2;
-		var baseFalloff = 0.5;
-		var zoom = Camera.zoomFinal;
+		let baseRadius = 0.2;
+		let baseFalloff = 0.5;
+		let zoom = Camera.zoomFinal;
 
-		var focusRadius = baseRadius + (63 - zoom) / 1000;
-		var focusFalloff = baseFalloff + (63 - zoom) / 1000;
+		let focusRadius = baseRadius + (63 - zoom) / 1000;
+		let focusFalloff = baseFalloff + (63 - zoom) / 1000;
 
 		gl.uniform1f(_program.uniform.uFocusRadius, focusRadius);
 		gl.uniform1f(_program.uniform.uFocusFalloff, focusFalloff);
 		gl.uniform2f(_program.uniform.uAspectRatio, gl.canvas.width / gl.canvas.height, 1.0);
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
-		var posLoc = _program.attribute.aPosition;
+		let posLoc = _program.attribute.aPosition;
 		gl.enableVertexAttribArray(posLoc);
 		gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
 
@@ -88,7 +84,7 @@ define(function (require) {
 			console.error('Error compiling Blind shader.', e);
 			return;
 		}
-		var quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
+		let quadVertices = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
 		_buffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
 		gl.bufferData(gl.ARRAY_BUFFER, quadVertices, gl.STATIC_DRAW);
@@ -113,6 +109,4 @@ define(function (require) {
 		}
 		_program = _buffer = null;
 	};
-
-	return Blind;
-});
+export default Blind;

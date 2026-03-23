@@ -7,14 +7,16 @@
  *
  * @author Vincent Thibault
  */
-define(['Utils/gl-matrix', 'Audio/SoundManager'], function (glMatrix, SoundManager) {
-	'use strict';
+'use strict';
 
-	/**
+import glMatrix from 'Utils/gl-matrix';
+import SoundManager from 'Audio/SoundManager';
+
+/**
 	 * Sound renderer namespace
 	 */
-	var vec2 = glMatrix.vec2;
-	var _list = [];
+	let vec2 = glMatrix.vec2;
+	let _list = [];
 
 	/**
 	 * Add 3D sound to the list
@@ -36,13 +38,13 @@ define(['Utils/gl-matrix', 'Audio/SoundManager'], function (glMatrix, SoundManag
 	 * @param {vec2} position
 	 */
 	function render(position, tick) {
-		var sound;
-		var i,
+		let sound;
+		let i,
 			count = _list.length;
 
 		for (i = 0; i < count; ++i) {
 			sound = _list[i];
-			var dist = Math.floor(vec2.dist(sound.pos, position));
+			let dist = Math.floor(vec2.dist(sound.pos, position));
 			if (sound.tick < tick && dist <= sound.range) {
 				SoundManager.playPosition(sound.file, sound.pos);
 				sound.tick = tick + sound.cycle * 1000;
@@ -51,11 +53,10 @@ define(['Utils/gl-matrix', 'Audio/SoundManager'], function (glMatrix, SoundManag
 	}
 
 	/**
-	 * Export
+	 * Export 
 	 */
-	return {
+	export default {
 		add: add,
 		free: free,
 		render: render
 	};
-});

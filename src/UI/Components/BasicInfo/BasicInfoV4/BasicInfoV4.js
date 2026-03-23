@@ -7,45 +7,39 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var DB = require('DB/DBManager');
-	var Configs = require('Core/Configs');
-	var PACKETVER = require('Network/PacketVerManager');
-	var MonsterTable = require('DB/Monsters/MonsterTable');
-	var Client = require('Core/Client');
-	var Preferences = require('Core/Preferences');
-	var Renderer = require('Renderer/Renderer');
-	var Session = require('Engine/SessionStorage');
-	var UIManager = require('UI/UIManager');
-	var UIComponent = require('UI/UIComponent');
-	var Inventory = require('UI/Components/Inventory/Inventory');
-	var Equipment = require('UI/Components/Equipment/Equipment');
-	var PartyFriends = require('UI/Components/PartyFriends/PartyFriends');
-	var Guild = require('UI/Components/Guild/Guild');
-	var Bank = require('UI/Components/Bank/Bank');
-	var Escape = require('UI/Components/Escape/Escape');
-	var WorldMap = require('UI/Components/WorldMap/WorldMap');
-	var CheckAttendance = require('UI/Components/CheckAttendance/CheckAttendance');
-	var Rodex = require('UI/Components/Rodex/Rodex');
-	var WinStats = require('UI/Components/WinStats/WinStats');
-	var Navigation = require('UI/Components/Navigation/Navigation');
+import DB from 'DB/DBManager';
+import Configs from 'Core/Configs';
+import PACKETVER from 'Network/PacketVerManager';
+import MonsterTable from 'DB/Monsters/MonsterTable';
+import Client from 'Core/Client';
+import Preferences from 'Core/Preferences';
+import Renderer from 'Renderer/Renderer';
+import Session from 'Engine/SessionStorage';
+import UIManager from 'UI/UIManager';
+import UIComponent from 'UI/UIComponent';
+import Inventory from 'UI/Components/Inventory/Inventory';
+import Equipment from 'UI/Components/Equipment/Equipment';
+import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
+import Guild from 'UI/Components/Guild/Guild';
+import Bank from 'UI/Components/Bank/Bank';
+import Escape from 'UI/Components/Escape/Escape';
+import WorldMap from 'UI/Components/WorldMap/WorldMap';
+import CheckAttendance from 'UI/Components/CheckAttendance/CheckAttendance';
+import Rodex from 'UI/Components/Rodex/Rodex';
+import WinStats from 'UI/Components/WinStats/WinStats';
+import Navigation from 'UI/Components/Navigation/Navigation';
+import SkillList from 'UI/Components/SkillList/SkillList';
+import Quest from 'UI/Components/Quest/Quest';
+import htmlText from './BasicInfoV4.html?raw';
+import cssText from './BasicInfoV4.css?raw';
 
-	// Version Dependent UIs
-	var SkillList = require('UI/Components/SkillList/SkillList');
-	var Quest = require('UI/Components/Quest/Quest');
-
-	var htmlText = require('text!./BasicInfoV4.html');
-	var cssText = require('text!./BasicInfoV4.css');
-
+// Version Dependent UIs
 	/**
 	 * Create Basic Info component
 	 */
-	var BasicInfoV4 = new UIComponent('BasicInfoV4', htmlText, cssText);
+	let BasicInfoV4 = new UIComponent('BasicInfoV4', htmlText, cssText);
 
 	/**
 	 * Stored data
@@ -60,7 +54,7 @@ define(function (require) {
 	/**
 	 * @var {Preferences} structure
 	 */
-	var _preferences = Preferences.get(
+	let _preferences = Preferences.get(
 		'BasicInfoV4',
 		{
 			x: 0,
@@ -111,7 +105,7 @@ define(function (require) {
 					break;
 
 				case 'party':
-					PartyFriends.toggle();
+					PartyFriends.getUI().toggle();
 					break;
 
 				case 'guild':
@@ -221,7 +215,7 @@ define(function (require) {
 	 * Switch window size
 	 */
 	BasicInfoV4.toggleMode = function toggleMode() {
-		var type;
+		let type;
 
 		this.ui.toggleClass('small large');
 
@@ -240,8 +234,8 @@ define(function (require) {
 	 * Toggle the list of buttons
 	 */
 	BasicInfoV4.toggleButtons = function toggleButtons(event) {
-		var type;
-		var $buttons = this.ui.find('.buttons');
+		let type;
+		let $buttons = this.ui.find('.buttons');
 
 		_preferences.buttons = !$buttons.is(':visible');
 
@@ -276,10 +270,10 @@ define(function (require) {
 			case 'zeny':
 				Session.zeny = val1;
 
-				var list = val1.toString().split('');
-				var i,
+				let list = val1.toString().split('');
+				let i,
 					count = list.length;
-				var str = '';
+				let str = '';
 
 				for (i = 0; i < count; i++) {
 					str = list[count - i - 1] + (i && i % 3 === 0 ? ',' : '') + str;
@@ -318,8 +312,8 @@ define(function (require) {
 
 			case 'hp':
 			case 'sp':
-				var perc = Math.floor((val1 * 100) / val2);
-				var color = perc < 25 ? 'red' : 'blue';
+				let perc = Math.floor((val1 * 100) / val2);
+				let color = perc < 25 ? 'red' : 'blue';
 				this.ui.find('.' + type + '_value').text(val1);
 				this.ui.find('.' + type + '_max_value').text(val2);
 				this.ui.find('.' + type + '_perc').text(perc + '%');
@@ -362,5 +356,4 @@ define(function (require) {
 	/**
 	 * Create component and export it
 	 */
-	return UIManager.addComponent(BasicInfoV4);
-});
+export default UIManager.addComponent(BasicInfoV4);
