@@ -9,9 +9,8 @@
  * @author AoShinHo
  */
 
-'use strict';
-
 import WebGL from 'Utils/WebGL';
+import GraphicsSettings from 'Preferences/Graphics';
 
 var _effects = [];
 var _activeEffects = [];
@@ -50,12 +49,18 @@ PostProcess.prepare = function (gl) {
 	if (_activeEffects.length > 0) {
 		// Render the scene into the write buffer (which becomes read buffer in .render())
 		gl.bindFramebuffer(gl.FRAMEBUFFER, _writeFbo.framebuffer);
+
+		// Use render scale for viewport when rendering to FBO
+		var scale = Math.max(0.5, Math.min(1.0, GraphicsSettings.renderScale || 1.0));
+		var vpWidth = Math.floor(gl.canvas.width * scale);
+		var vpHeight = Math.floor(gl.canvas.height * scale);
+		gl.viewport(0, 0, vpWidth, vpHeight);
 	} else {
 		// No effects? Render directly to screen
 		gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+		gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 	}
 
-	gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 };
 
@@ -101,9 +106,13 @@ PostProcess.swapBuffers = function () {
  * Ensures Ping-Pong buffers are created and resized if necessary.
  */
 PostProcess.validateBuffers = function (gl) {
-	if (!_readFbo || _readFbo.width !== gl.canvas.width || _readFbo.height !== gl.canvas.height) {
-		_readFbo = this.createFbo(gl, gl.canvas.width, gl.canvas.height, _readFbo);
-		_writeFbo = this.createFbo(gl, gl.canvas.width, gl.canvas.height, _writeFbo);
+	var scale = Math.max(0.5, Math.min(1.0, GraphicsSettings.renderScale || 1.0));
+	var scaledWidth = Math.floor(gl.canvas.width * scale);
+	var scaledHeight = Math.floor(gl.canvas.height * scale);
+
+	if (!_readFbo || _readFbo.width !== scaledWidth || _readFbo.height !== scaledHeight) {
+		_readFbo = this.createFbo(gl, scaledWidth, scaledHeight, _readFbo);
+		_writeFbo = this.createFbo(gl, scaledWidth, scaledHeight, _writeFbo);
 	}
 };
 
@@ -151,15 +160,19 @@ PostProcess.restartModules = function restartModules(gl) {
  * Recreates the FBO when the window size changes
  */
 PostProcess.recreateFbo = function recreateFbo(gl, width, height) {
+	var scale = Math.max(0.5, Math.min(1.0, GraphicsSettings.renderScale || 1.0));
+	var scaledWidth = Math.floor(width * scale);
+	var scaledHeight = Math.floor(height * scale);
+
 	// Recreate global buffers
-	_readFbo = this.createFbo(gl, width, height, _readFbo);
-	_writeFbo = this.createFbo(gl, width, height, _writeFbo);
+	_readFbo = this.createFbo(gl, scaledWidth, scaledHeight, _readFbo);
+	_writeFbo = this.createFbo(gl, scaledWidth, scaledHeight, _writeFbo);
 
 	// Notify modules to recreate their internal buffers (if any)
 	for (var i = 0; i < _effects.length; i++) {
 		var module = _effects[i];
 		if (module.recreateFbo) {
-			module.recreateFbo(gl, width, height);
+			module.recreateFbo(gl, scaledWidth, scaledHeight);
 		}
 	}
 };

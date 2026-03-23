@@ -179,73 +179,7 @@ import Inventory from 'UI/Components/Inventory/Inventory';
 			}
 		);
 
-		let customname = '';
-		let hideslots = false;
-
-		if (item.slot) {
-			let very = '';
-			let name = '';
-			let elem = '';
-
-			switch (item.slot['card1']) {
-				case 0x00ff: // FORGE
-					if (item.slot['card2'] >= 3840) {
-						very = DB.getMessage(461); // Very Very Very Strong
-					} else if (item.slot['card2'] >= 2560) {
-						very = DB.getMessage(460); // Very Very Strong
-					} else if (item.slot['card2'] >= 1024) {
-						very = DB.getMessage(459); // Very Strong
-					}
-					switch (Math.abs(item.slot['card2'] % 10)) {
-						case 1:
-							elem = DB.getMessage(452);
-							break; // 's Ice
-						case 2:
-							elem = DB.getMessage(454);
-							break; // 's Earth
-						case 3:
-							elem = DB.getMessage(451);
-							break; // 's Fire
-						case 4:
-							elem = DB.getMessage(453);
-							break; // 's Wind
-						default:
-							elem = DB.getMessage(450);
-							break; // 's
-					}
-				case 0x00fe: // CREATE
-					elem = DB.getMessage(450);
-				case 0xff00: // PET
-					hideslots = true;
-
-					let GID = (item.slot['card4'] << 16) + item.slot['card3'];
-					name = '<font color="red" class="owner-' + GID + '">Unknown</font>';
-
-					if (DB.CNameTable[GID] && DB.CNameTable[GID] !== 'Unknown') {
-						name = '<font color="blue" class="owner-' + GID + '">' + DB.CNameTable[GID] + '</font>';
-					} else {
-						//Add to item owner name update queue
-						DB.UpdateOwnerName[GID] = onUpdateOwnerName;
-						DB.getNameByGID(GID);
-					}
-
-					if (item.IsDamaged) {
-						customname = very + ' ' + name + elem + ' ';
-					} else {
-						customname = !DB.CNameTable[GID]
-							? very + ' ' + ' ' + name + ' ' + elem + ' '
-							: very + ' ' + ' ' + name + ' ' + elem + ' ';
-					}
-
-					break;
-			}
-			switch (item.slot['card4']) {
-				case 0x1: //BELOVED PET
-					hideslots = true;
-					customname = DB.getMessage(756) + ' ' + customname;
-					break;
-			}
-		}
+		let itemName = DB.getItemName(item, { showItemOptions: false });
 
 		if (item.Options && item.IsIdentified) {
 			//Clear all option list
@@ -302,9 +236,7 @@ import Inventory from 'UI/Components/Inventory/Inventory';
 			refine = '+' + item.RefiningLevel + ' ';
 		}
 
-		ui.find('.title').text(
-			item.IsIdentified ? refine + gradeName + customname + it.identifiedDisplayName : it.unidentifiedDisplayName
-		);
+		ui.find('.title').text(itemName);
 		ui.find('.description-inner').text(
 			item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName
 		);

@@ -32,6 +32,8 @@ import FileManager from 'Core/FileManager';
 
 	/**
 	 * @var {number} How many files do you want to load at the same time ?
+	 * PHP servers: keep at 4-6 to avoid connection exhaustion.
+	 * Node.js (RemoteClient-JS): supports 12+ with HTTP/2 multiplexing.
 	 */
 	Loader.prototype.parallelDownload = 6;
 
