@@ -92,6 +92,11 @@ import cssText from './NpcStore.css?raw';
 	let _type;
 
 	/**
+	 * @var {boolean} whether the close packet was already sent to the server
+	 */
+	var _closePacketSent = false;
+
+	/**
 	 * Initialize component
 	 */
 	NpcStore.init = function init() {
@@ -101,13 +106,7 @@ import cssText from './NpcStore.css?raw';
 		let AvailableItemsWindow = ui.find('.AvailableItemsWindow');
 		let PurchaseResult = ui.find('.PurchaseResult');
 
-		if (PACKETVER.value >= 20131223) {
-			ui.find('.btn.cancel').click(function () {
-				NpcStore.closeStore();
-			});
-		} else {
-			ui.find('.btn.cancel').click(this.remove.bind(this));
-		}
+		ui.find('.btn.cancel').click(this.remove.bind(this));
 
 		// Client do not send packet
 		ui.find('.btn.buy, .btn.sell').click(this.submit.bind(this));
@@ -165,6 +164,8 @@ import cssText from './NpcStore.css?raw';
 	 * Player should not be able to move when the store is opened
 	 */
 	NpcStore.onAppend = function onAppend() {
+		_closePacketSent = false;
+
 		Client.loadFile(
 			DB.INTERFACE_PATH + 'checkbox_' + (_preferences.select_all ? 1 : 0) + '.bmp',
 			function (data) {
@@ -212,6 +213,11 @@ import cssText from './NpcStore.css?raw';
 		this.ui.find('.content').empty();
 		this.ui.find('.total .result').text(0);
 		this.ui.find('.totalP .resultP').text(0);
+
+		// Ensure the server knows the store is closed (prevents movement lock)
+		if (!_closePacketSent) {
+			NpcStore.StoreClosePacket(_type);
+		}
 	};
 
 	/**
@@ -222,10 +228,6 @@ import cssText from './NpcStore.css?raw';
 	NpcStore.onKeyDown = function onKeyDown(event) {
 		if ((event.which === KEYS.ESCAPE || event.key === 'Escape') && this.ui.is(':visible')) {
 			this.remove();
-
-			if (PACKETVER.value >= 20131223) {
-				NpcStore.StoreClosePacket(_type);
-			}
 		}
 	};
 
@@ -1184,22 +1186,34 @@ import cssText from './NpcStore.css?raw';
 		InputBox.remove();
 
 		let pkt;
-		switch (type) {
-			case NpcStore.Type.MARKETSHOP:
-				pkt = new PACKET.CZ.NPC_MARKET_CLOSE();
-				inputWindow.show();
-				outputWindow.show();
-				break;
-			case NpcStore.Type.BARTER_MARKET:
-				pkt = new PACKET.CZ.NPC_BARTER_MARKET_CLOSE();
-				break;
-			case NpcStore.Type.BARTER_MARKET_EXTENDED:
-				pkt = new PACKET.CZ.NPC_EXPANDED_BARTER_MARKET_CLOSE();
-				break;
-			default:
-				pkt = new PACKET.CZ.NPC_TRADE_QUIT();
-				break;
+
+		if (PACKETVER.value < 20131223) {
+			// Before 20131223, NPC_TRADE_QUIT didn't exist.
+			// Send an empty buy/sell list to end the NPC trade state.
+			if (type === NpcStore.Type.SELL) {
+				pkt = new PACKET.CZ.PC_SELL_ITEMLIST();
+			} else {
+				pkt = new PACKET.CZ.PC_PURCHASE_ITEMLIST();
+			}
+		} else {
+			switch (type) {
+				case NpcStore.Type.MARKETSHOP:
+					pkt = new PACKET.CZ.NPC_MARKET_CLOSE();
+					inputWindow.show();
+					outputWindow.show();
+					break;
+				case NpcStore.Type.BARTER_MARKET:
+					pkt = new PACKET.CZ.NPC_BARTER_MARKET_CLOSE();
+					break;
+				case NpcStore.Type.BARTER_MARKET_EXTENDED:
+					pkt = new PACKET.CZ.NPC_EXPANDED_BARTER_MARKET_CLOSE();
+					break;
+				default:
+					pkt = new PACKET.CZ.NPC_TRADE_QUIT();
+					break;
+			}
 		}
+		_closePacketSent = true;
 		Network.sendPacket(pkt);
 	};
 

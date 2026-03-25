@@ -6,7 +6,6 @@
  *
  * This file is part of ROBrowser, (http://www.robrowser.com/).
  */
-'use strict';
 
 import Client from 'Core/Client';
 import glMatrix from 'Utils/gl-matrix';
@@ -121,10 +120,10 @@ let mat3 = glMatrix.mat3;
 
 		// Deserialize instances
 		let instances = [];
-		for (var i = 0; i < modelData.instances.length; i++) {
+		for (let i = 0; i < modelData.instances.length; i++) {
 			let instArray = modelData.instances[i];
 			let matrix = mat4.create();
-			for (var j = 0; j < 16; j++) {
+			for (let j = 0; j < 16; j++) {
 				matrix[j] = instArray[j];
 			}
 			instances.push(matrix);
@@ -135,7 +134,7 @@ let mat3 = glMatrix.mat3;
 		let totalAnimationLength = 0;
 		let hasAnyAnimation = false;
 
-		for (var n = 0; n < modelData.nodes.length; n++) {
+		for (let n = 0; n < modelData.nodes.length; n++) {
 			let srcNode = modelData.nodes[n];
 			if (!isNodeStatic(srcNode)) {
 				hasAnyAnimation = true;
@@ -176,12 +175,12 @@ let mat3 = glMatrix.mat3;
 				node._staticLocalMatrix = local;
 			}
 			// Initialize instance cache
-			for (var k = 0; k < instances.length; k++) {
+			for (let k = 0; k < instances.length; k++) {
 				node._cache.instances[k] = mat4.create();
 			}
 
 			if (node.rotKeyframes) {
-				for (var rk = 0; rk < node.rotKeyframes.length; rk++) {
+				for (let rk = 0; rk < node.rotKeyframes.length; rk++) {
 					let kf = node.rotKeyframes[rk];
 					totalAnimationLength = Math.max(totalAnimationLength, kf.frame || 0);
 
@@ -192,7 +191,7 @@ let mat3 = glMatrix.mat3;
 			}
 
 			if (node.posKeyframes) {
-				for (var pk = 0; pk < node.posKeyframes.length; pk++) {
+				for (let pk = 0; pk < node.posKeyframes.length; pk++) {
 					let kf = node.posKeyframes[pk];
 					totalAnimationLength = Math.max(totalAnimationLength, kf.frame || 0);
 					kf._vec = vec3.fromValues(kf.px, kf.py, kf.pz);
@@ -200,7 +199,7 @@ let mat3 = glMatrix.mat3;
 			}
 
 			if (node.scaleKeyFrames) {
-				for (var sk = 0; sk < node.scaleKeyFrames.length; sk++) {
+				for (let sk = 0; sk < node.scaleKeyFrames.length; sk++) {
 					let kf = node.scaleKeyFrames[sk];
 
 					totalAnimationLength = Math.max(totalAnimationLength, kf.Frame || 0);
@@ -221,20 +220,20 @@ let mat3 = glMatrix.mat3;
 
 		if (animLen === 0) {
 			// Find max frame from keyframes
-			for (var n = 0; n < nodes.length; n++) {
+			for (let n = 0; n < nodes.length; n++) {
 				let node = nodes[n];
 				if (node.rotKeyframes) {
-					for (var rk = 0; rk < node.rotKeyframes.length; rk++) {
+					for (let rk = 0; rk < node.rotKeyframes.length; rk++) {
 						animLen = Math.max(animLen, node.rotKeyframes[rk].frame || 0);
 					}
 				}
 				if (node.posKeyframes) {
-					for (var pk = 0; pk < node.posKeyframes.length; pk++) {
+					for (let pk = 0; pk < node.posKeyframes.length; pk++) {
 						animLen = Math.max(animLen, node.posKeyframes[pk].frame || 0);
 					}
 				}
 				if (node.scaleKeyFrames) {
-					for (var sk = 0; sk < node.scaleKeyFrames.length; sk++) {
+					for (let sk = 0; sk < node.scaleKeyFrames.length; sk++) {
 						animLen = Math.max(animLen, node.scaleKeyFrames[sk].Frame || 0);
 					}
 				}
@@ -257,13 +256,13 @@ let mat3 = glMatrix.mat3;
 			}
 
 			// Add to global texture groups
-			for (var tid in facesPerTex) {
+			for (let tid in facesPerTex) {
 				if (!textureGroups[tid]) {
 					textureGroups[tid] = { count: 0, writePlan: [] };
 				}
 
 				// For every instance of this node
-				for (var inst = 0; inst < instances.length; inst++) {
+				for (let inst = 0; inst < instances.length; inst++) {
 					let vertCount = facesPerTex[tid] * 3; // 3 verts per face
 					let floatCount = vertCount * 9; // 9 floats per vert (3 pos, 3 norm, 2 uv, 1 alpha)
 
@@ -286,12 +285,12 @@ let mat3 = glMatrix.mat3;
 		let currentOffset = 0;
 		let meshInfos = [];
 
-		for (var tid in textureGroups) {
+		for (let tid in textureGroups) {
 			let group = textureGroups[tid];
 			let startOffset = currentOffset;
 
 			// Record where each sub-mesh writes
-			for (var wp = 0; wp < group.writePlan.length; wp++) {
+			for (let wp = 0; wp < group.writePlan.length; wp++) {
 				let plan = group.writePlan[wp];
 				plan.targetOffset = currentOffset;
 				currentOffset += plan.faceCount * 3 * 9;
@@ -338,7 +337,7 @@ let mat3 = glMatrix.mat3;
 		};
 
 		// Cache Node Map
-		for (var n = 0; n < nodes.length; n++) {
+		for (let n = 0; n < nodes.length; n++) {
 			animModel._nodeMap[nodes[n].name] = nodes[n];
 			animModel._globalMatrices[n] = mat4.create();
 		}
@@ -348,7 +347,7 @@ let mat3 = glMatrix.mat3;
 		gl.bufferData(gl.ARRAY_BUFFER, animModel._gpuBuffer.byteLength, gl.DYNAMIC_DRAW);
 
 		// Load textures
-		for (var t = 0; t < modelData.textures.length; t++) {
+		for (let t = 0; t < modelData.textures.length; t++) {
 			let texturePath = 'data\\texture\\' + modelData.textures[t];
 			loadTexture(gl, animModel, texturePath, t);
 		}
@@ -623,7 +622,7 @@ let mat3 = glMatrix.mat3;
 			let tnz = n2 * nx + n6 * ny + n10 * nz;
 
 			// Process 3 Vertices
-			for (var vi = 0; vi < 3; vi++) {
+			for (let vi = 0; vi < 3; vi++) {
 				let vIdx = face.vertidx[vi];
 				let tIdx = face.tvertidx[vi];
 
@@ -655,7 +654,7 @@ let mat3 = glMatrix.mat3;
 	 * Update model buffer at frame
 	 */
 	function updateModelBuffer(gl, model, frame, force) {
-		let frameDuration = 1000 / (model.fps / (GraphicsSettings.culling ? 2 : 1.14));
+		let frameDuration = 1000 / (model.fps / (GraphicsSettings.performanceMode ? 2 : 1.14));
 		let currentAnimFrame = Math.floor(frame / frameDuration);
 
 		if (!force && model.lastAnimFrame === currentAnimFrame && !model.staticModel) {
@@ -674,7 +673,7 @@ let mat3 = glMatrix.mat3;
 		let globalMatrices = model._globalMatrices;
 
 		// 1. Update Matrix Hierarchy
-		for (var n = 0; n < model.nodes.length; n++) {
+		for (let n = 0; n < model.nodes.length; n++) {
 			let node = model.nodes[n];
 			let globalMatrix = globalMatrices[n];
 
@@ -723,9 +722,9 @@ let mat3 = glMatrix.mat3;
 
 		// 2. Pre-calculate Instance Matrices
 		// We do this to avoid recalculating Node * Instance for every texture group
-		for (var n = 0; n < model.nodes.length; n++) {
+		for (let n = 0; n < model.nodes.length; n++) {
 			let node = model.nodes[n];
-			for (var i = 0; i < model.instances.length; i++) {
+			for (let i = 0; i < model.instances.length; i++) {
 				// Instance Final = InstanceWorld * NodeFinal
 				mat4.multiply(node._cache.instances[i], model.instances[i], node.finalMatrix);
 			}
@@ -736,12 +735,12 @@ let mat3 = glMatrix.mat3;
 		let buffer = model._gpuBuffer;
 		let writePlans = model.writePlans;
 
-		for (var tid in writePlans) {
+		for (let tid in writePlans) {
 			let group = writePlans[tid];
 			let plans = group.writePlan;
 			let textureId = parseInt(tid);
 
-			for (var p = 0; p < plans.length; p++) {
+			for (let p = 0; p < plans.length; p++) {
 				let plan = plans[p];
 				let node = model.nodes[plan.nodeIndex];
 				let finalInstanceMatrix = node._cache.instances[plan.instanceIndex];

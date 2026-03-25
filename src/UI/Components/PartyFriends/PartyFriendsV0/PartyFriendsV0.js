@@ -833,7 +833,14 @@ import cssText from './PartyFriendsV0.css?raw';
 			return;
 		}
 
-		if (_preferences.friend && PACKETVER.value >= 20090617) {
+		var type =
+			_preferences.friend && PACKETVER.value >= 20090617 ? PartyHelper.Type.FRIEND_SETUP : PartyHelper.Type.SETUP;
+		if (PartyHelper.__active && PartyHelper.getType() === type) {
+			PartyHelper.remove();
+			return;
+		}
+		PartyHelper.append();
+		if (type === PartyHelper.Type.FRIEND_SETUP) {
 			var whisperPrefs = WhisperBox.preferences;
 			PartyHelper.setType(PartyHelper.Type.FRIEND_SETUP);
 			PartyHelper.setFriendOptions(whisperPrefs);
@@ -841,8 +848,6 @@ import cssText from './PartyFriendsV0.css?raw';
 			PartyHelper.setType(PartyHelper.Type.SETUP);
 			PartyHelper.setOptions(_options, Session.isPartyLeader);
 		}
-
-		PartyHelper.append();
 	}
 
 	/**
@@ -852,8 +857,13 @@ import cssText from './PartyFriendsV0.css?raw';
 		if (_preferences.lock) {
 			return;
 		}
-		PartyHelper.setType(PartyHelper.Type.INVITE);
+		if (PartyHelper.__active && PartyHelper.getType() === PartyHelper.Type.INVITE) {
+			PartyHelper.remove();
+			return;
+		}
+
 		PartyHelper.append();
+		PartyHelper.setType(PartyHelper.Type.INVITE);
 	}
 
 	/**
@@ -863,8 +873,13 @@ import cssText from './PartyFriendsV0.css?raw';
 		if (_preferences.lock) {
 			return;
 		}
-		PartyHelper.setType(PartyHelper.Type.CREATE);
+		if (PartyHelper.__active && PartyHelper.getType() === PartyHelper.Type.CREATE) {
+			PartyHelper.remove();
+			return;
+		}
+
 		PartyHelper.append();
+		PartyHelper.setType(PartyHelper.Type.CREATE);
 	}
 
 	/**

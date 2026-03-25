@@ -691,19 +691,33 @@ import SkillTargetSelection from 'UI/Components/SkillTargetSelection/SkillTarget
 	 */
 	PartyFriendsV1.setParty = function setParty(name, members) {
 		this.ui.find('.partyname').text('(' + name + ')');
-		this.ui.find('.content .party').empty();
 		Session.isPartyLeader = false;
 
 		this.ui.find('.party.create').hide();
-		this.ui.find('.party.leave').show();
+		this.ui.find('.party.leave, .party.sort').show();
 
 		var i,
 			count = members.length;
-		_party.length = 0;
+		var newAIDs = {};
 
 		for (i = 0; i < count; i++) {
-			PartyFriendsV1.addPartyMember(members[i]);
+			var member = members[i];
+			newAIDs[member.AID] = true;
+			PartyFriendsV1.addPartyMember(member);
 		}
+
+		// Remove members who are no longer in the party
+		if (_party.length > 0 && count > 0) {
+			for (i = 0; i < _party.length; i++) {
+				if (!newAIDs[_party[i].AID]) {
+					var removed = _party.splice(i, 1)[0];
+					this.ui.find('.content .party .node[data-aid="' + removed.AID + '"]').remove();
+					i--;
+				}
+			}
+		}
+
+		this.ui.find('.count-box .inner-count').text(_party.length + '/12');
 
 		// Garbage Collection: Remove windows for members who left the party
 		var removedCount = 0;
@@ -796,7 +810,7 @@ import SkillTargetSelection from 'UI/Components/SkillTargetSelection/SkillTarget
 	 * @param {object} player information
 	 */
 	PartyFriendsV1.addPartyMember = function addPartyMember(player) {
-		var role = player.role || player.Role || 0;
+		var role = player.role || 0;
 		var i,
 			count = _party.length;
 
@@ -817,22 +831,31 @@ import SkillTargetSelection from 'UI/Components/SkillTargetSelection/SkillTarget
 			}
 		}
 
+		var hasChanged = false;
+
 		if (i < count) {
-			var prevLevel = _party[i].baseLevel || _party[i].level || _party[i].Level;
-			var prevClass = _party[i].class_ || _party[i].job || _party[i].Job;
+			var old = _party[i];
+
+			if (
+				old.baseLevel !== (player.baseLevel !== undefined ? player.baseLevel : old.baseLevel) ||
+				old.class_ !== (player.class_ !== undefined ? player.class_ : old.class_) ||
+				old.mapName !== (player.mapName !== undefined ? player.mapName : old.mapName) ||
+				old.role !== player.role ||
+				old.state !== (player.state !== undefined ? player.state : old.state)
+			) {
+				hasChanged = true;
+			}
+
 			_party[i] = jQuery.extend(_party[i], player);
-			// Preserve previously known level/class if the new packet doesn't carry them
-			// (e.g. GROUP_LIST 0xfb has no level or class fields — baseLevel would be 0/undefined)
-			if (!(_party[i].baseLevel || _party[i].level || _party[i].Level) && prevLevel) {
-				_party[i].baseLevel = prevLevel;
-			}
-			if (!(_party[i].class_ || _party[i].job || _party[i].Job) && prevClass) {
-				_party[i].class_ = prevClass;
-			}
 			player = _party[i];
 		} else {
 			player = jQuery.extend({}, player);
 			_party.push(player);
+			hasChanged = true;
+		}
+
+		if (!hasChanged) {
+			return;
 		}
 
 		// Update member count
@@ -1223,12 +1246,13 @@ import SkillTargetSelection from 'UI/Components/SkillTargetSelection/SkillTarget
 
 			if (Session.hasParty) {
 				ui.find('.party.create').hide();
+				ui.find('.party.sort').show();
 
 				if (!Session.isPartyLeader) {
 					ui.find('.party.add').hide();
 				}
 			} else {
-				ui.find('.party.add, .party.leave').hide();
+				ui.find('.party.add, .party.leave, .party.sort').hide();
 			}
 		}
 

@@ -7,7 +7,6 @@
  *
  * @author Vincent Thibault
  */
-'use strict';
 
 import Thread from 'Core/Thread';
 import SoundManager from 'Audio/SoundManager';
@@ -52,6 +51,7 @@ import Vibrance from 'Renderer/Effects/Shaders/Vibrance';
 import Cartoon from 'Renderer/Effects/Shaders/Cartoon';
 import Blind from 'Renderer/Effects/Shaders/Blind';
 
+import Upsampling from 'Renderer/Effects/Shaders/Upsampling';
 import WebGL from 'Utils/WebGL';
 
 	const mat4 = glMatrix.mat4;
@@ -331,6 +331,9 @@ import WebGL from 'Utils/WebGL';
 		PostProcess.register(Vibrance, gl);
 		PostProcess.register(VerticalFlip, gl);
 		PostProcess.register(Blind, gl);
+
+		// Final Pass GPU Upsampling for Performance Mode
+		PostProcess.register(Upsampling, gl);
 	}
 
 	/**

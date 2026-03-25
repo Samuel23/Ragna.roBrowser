@@ -8,7 +8,6 @@
  * @author Vincent Thibault
  */
 
-'use strict';
 
 // Load dependencies
 import Session from 'Engine/SessionStorage';
@@ -195,6 +194,13 @@ function removeEntity(gid) {
 		_renderSortDirty = true;
 		_pickSortDirty = true;
 	}
+}
+
+/**
+ * Remove a GID from the lookup map without removing from render list.
+ */
+function removeGID(gid) {
+	_gidMap.delete(gid);
 }
 
 /**
@@ -566,6 +572,7 @@ var EntityManager = {
 	free: free,
 	add: addEntity,
 	remove: removeEntity,
+	removeGID: removeGID,
 	get: getEntity,
 	getByCID: getEntityByCID,
 	forEach: forEach,

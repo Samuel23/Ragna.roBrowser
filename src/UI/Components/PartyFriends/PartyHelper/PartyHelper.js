@@ -192,6 +192,8 @@ import WhisperBox from 'UI/Components/WhisperBox/WhisperBox';
 				this.ui.find('.create').show();
 				this.ui.find('.titlebar .setup, .titlebar .invite, .titlebar .friend-setup').hide();
 				this.ui.find('.titlebar .create').show();
+				this.ui.find('.footer').css('height', '27px');
+				this.ui.find('.footer .btn').show();
 				break;
 
 			case PartyHelper.Type.INVITE:
@@ -202,6 +204,8 @@ import WhisperBox from 'UI/Components/WhisperBox/WhisperBox';
 				this.ui.find('.invite').show();
 				this.ui.find('.titlebar .setup, .titlebar .create, .titlebar .friend-setup').hide();
 				this.ui.find('.titlebar .invite').show();
+				this.ui.find('.footer').css('height', '27px');
+				this.ui.find('.footer .btn').show();
 				break;
 
 			case PartyHelper.Type.SETUP:
@@ -317,41 +321,41 @@ import WhisperBox from 'UI/Components/WhisperBox/WhisperBox';
 			case PartyHelper.Type.CREATE:
 				name = PartyHelper.ui.find('.content .name').val();
 				if (name.length) {
-					PartyFriends.getUI().onRequestPartyCreation(
+					PartyFriends.onRequestPartyCreation(
 						name,
-						+PartyHelper.ui.find('.item_share .on').data('value'),
-						+PartyHelper.ui.find('.item_sharing_type .on').data('value')
+						PartyHelper.ui.find('.item_share .on').data('value'),
+						PartyHelper.ui.find('.item_sharing_type .on').data('value')
 					);
+					PartyHelper.remove();
 				}
 				break;
 
 			case PartyHelper.Type.INVITE:
 				name = PartyHelper.ui.find('.content .name').val();
 				if (name.length) {
-					PartyFriends.getUI().onRequestAddingMember(0, name);
+					PartyFriends.onRequestAddingMember(0, name);
 				}
 				break;
 
 			case PartyHelper.Type.SETUP:
-				PartyFriends.getUI().onRequestSettingUpdate(
+				PartyFriends.onRequestSettingUpdate(
 					PartyHelper.ui.find('.exp_share .on').data('value'),
 					PartyHelper.ui.find('.item_share .on').data('value'),
 					PartyHelper.ui.find('.item_sharing_type .on').data('value')
 				);
+				PartyHelper.remove();
 				break;
 		}
-
-		PartyHelper.remove();
 	}
 
 	/**
-	 * Callbacks to use
+	 * Hooks
 	 */
 	PartyHelper.onCreate = function onCreate() {};
 	PartyHelper.onInvite = function onInvite() {};
 	PartyHelper.onSetupUpdate = function onSetUpUpdate() {};
 
 	/**
-	 * Export
+	 * Export component
 	 */
 	export default UIManager.addComponent(PartyHelper);

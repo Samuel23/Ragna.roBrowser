@@ -373,6 +373,7 @@ import ScreenEffectManager from 'Renderer/ScreenEffectManager';
 			}
 
 			entity.remove(pkt.type);
+			EntityManager.removeGID(pkt.GID);
 		}
 
 		// Show escape menu

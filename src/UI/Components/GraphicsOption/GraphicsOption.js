@@ -80,8 +80,8 @@ import ChatBox from 'UI/Components/ChatBox/ChatBox';
 		this.ui.find('.cartoonPower').change(oncartoonPower);
 		this.ui.find('.cartoonEdgeSlope').change(oncartoonEdgeSlope);
 
-		// Culling
-		this.ui.find('.culling').change(onToggleCulling);
+		// performanceMode
+		this.ui.find('.performanceMode').change(onTogglePerformanceMode);
 		this.ui.find('.view-area').change(onUpdateAreaView);
 
 		this.draggable(this.ui.find('.titlebar'));
@@ -121,8 +121,8 @@ import ChatBox from 'UI/Components/ChatBox/ChatBox';
 		this.ui.find('.cartoonEdgeSlope').val(GraphicsSettings.cartoonEdgeSlope);
 		this.ui.find('.cartoonPower').val(GraphicsSettings.cartoonPower);
 
-		// Culling
-		this.ui.find('.culling').attr('checked', GraphicsSettings.culling);
+		// Performance Mode
+		this.ui.find('.performanceMode').attr('checked', GraphicsSettings.performanceMode);
 		this.ui.find('.view-area').val(GraphicsSettings.viewArea);
 	};
 
@@ -295,10 +295,10 @@ import ChatBox from 'UI/Components/ChatBox/ChatBox';
 	}
 
 	/**
-	 * Culling
+	 * Performance Mode
 	 */
-	function onToggleCulling() {
-		GraphicsSettings.culling = !!this.checked;
+	function onTogglePerformanceMode() {
+		GraphicsSettings.performanceMode = !!this.checked;
 		GraphicsSettings.save();
 	}
 

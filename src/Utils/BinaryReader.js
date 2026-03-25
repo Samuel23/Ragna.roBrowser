@@ -10,7 +10,6 @@
  * @author Vincent Thibault
  */
 
-'use strict';
 
 import Struct from './Struct';
 import TextEncoding from 'Utils/CodepageManager';
@@ -39,8 +38,14 @@ export default function BinaryReader(mixed, start, end) {
 	var buffer;
 
 	if (typeof mixed === 'string') {
-		const buf = TextEncoding.encode(mixed, 'utf-8');
-		buffer = buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
+		const len = mixed.length;
+		const uint8 = new Uint8Array(len);
+
+		for (let i = 0; i < len; i++) {
+			uint8[i] = mixed.charCodeAt(i);
+		}
+
+		buffer = uint8.buffer;
 	} else if (mixed instanceof ArrayBuffer) {
 		buffer = mixed;
 	} else if (mixed instanceof Uint8Array) {
@@ -220,7 +225,7 @@ BinaryReader.prototype.getString = BinaryReader.prototype.readString = function 
 
 	this.offset += len;
 
-	return TextEncoding.decode(bytes.subarray(0, realLen), 'utf-8'); // default server charset
+	return String.fromCharCode.apply(null, bytes.subarray(0, realLen));
 };
 
 /**

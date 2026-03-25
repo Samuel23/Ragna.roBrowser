@@ -8,13 +8,11 @@
  *
  * @author AoShinHo
  */
-'use strict';
 
 import vs from './GLSL/VerticalFlip.vs?raw';
 import fs from './GLSL/VerticalFlip.fs?raw';
 import WebGL from 'Utils/WebGL';
 import PostProcess from 'Renderer/Effects/PostProcess';
-import Configs from 'Core/Configs';
 
 let _program, _buffer;
 let _active = false;
@@ -49,18 +47,14 @@ export default {
 		 * Executes the inverted drawing
 		 * @param {WebGLRenderingContext} gl
 		 * @param {WebGLTexture} inputTexture - Texture to be inverted
-		 * @param {WebGLFramebuffer} outputFramebuffer - Target
+		 * @param {WebGLFramebuffer} outputFbo - Target
 		 */
-		render: function (gl, inputTexture, outputFramebuffer) {
+		render: function (gl, inputTexture, outputFbo) {
 			if (!_buffer || !_program || !_active) {
 				return;
 			}
 
-			gl.bindFramebuffer(gl.FRAMEBUFFER, outputFramebuffer);
-
-			// Viewport
-			gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+			PostProcess.beforeRenderPass(gl, outputFbo);
 
 			gl.useProgram(_program);
 
@@ -81,19 +75,8 @@ export default {
 			gl.uniform1i(_program.uniform.uTexture, 0);
 
 			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-			this.afterRender(gl);
-		},
 
-		/** Cleans up WebGL states */
-		afterRender: function (gl) {
-			if (!_active || !_program || !_buffer) {
-				return;
-			}
-
-			gl.useProgram(null);
-			gl.bindBuffer(gl.ARRAY_BUFFER, null);
-			gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-			gl.bindTexture(gl.TEXTURE_2D, null);
+			PostProcess.afterRenderPass(gl);
 		},
 
 		/**

@@ -220,10 +220,12 @@ import PACKETVER from 'Network/PacketVerManager';
 	 * @var User charpage init
 	 */
 	var servers = Configs.get('servers', []);
-	var langType = servers[0] && servers[0].langtype ? parseInt(servers[0].langtype, 10) : 1;
+	var langType = servers[0] && servers[0].langtype ? parseInt(servers[0].langtype, 0) : 0;
 
 	// setup default encoding
-	TextEncoding.detectEncodingByLangtype(langType, Configs.get('disableKorean'));
+	var userCharpage = TextEncoding.detectEncodingByLangtype(langType, Configs.get('disableKorean'));
+	var grfCharpage = 'windows-1252';
+	TextEncoding.setCharset(grfCharpage);
 
 	// create decoders
 	let userStringDecoder = TextEncoding;
@@ -1483,7 +1485,7 @@ import PACKETVER from 'Network/PacketVerManager';
 				) => {
 					let decodedTableKey = userStringDecoder.decode(worldTableKey);
 					let decodedRsw = userStringDecoder.decode(rswName);
-					let decodedName = userStringDecoder.decode(nameDisplay);
+					let decodedName = userStringDecoder.decode(nameDisplay, userCharpage);
 					let decodedLevel = level ? userStringDecoder.decode(level) : '';
 
 					// Find the world this map belongs to
@@ -1612,7 +1614,7 @@ import PACKETVER from 'Network/PacketVerManager';
 					const ctx = lua.ctx;
 
 					ctx.AddTitle = function (titleID, titleName) {
-						TitleTable[titleID] = userStringDecoder.decode(titleName);
+						TitleTable[titleID] = userStringDecoder.decode(titleName, userCharpage);
 						return 1;
 					};
 
@@ -1731,8 +1733,8 @@ import PACKETVER from 'Network/PacketVerManager';
 						RewardJEXP
 					) => {
 						QuestInfo[QuestID] = {
-							Title: userStringDecoder.decode(Title),
-							Summary: userStringDecoder.decode(Summary),
+							Title: userStringDecoder.decode(Title, userCharpage),
+							Summary: userStringDecoder.decode(Summary, userCharpage),
 							IconName: userStringDecoder.decode(IconName),
 							Description: [],
 							NpcSpr: NpcSpr instanceof Uint8Array ? userStringDecoder.decode(NpcSpr) : null,
@@ -1749,7 +1751,7 @@ import PACKETVER from 'Network/PacketVerManager';
 
 					// add quest description
 					ctx.AddQuestDescription = (QuestID, QuestDescription) => {
-						QuestInfo[QuestID].Description.push(userStringDecoder.decode(QuestDescription));
+						QuestInfo[QuestID].Description.push(userStringDecoder.decode(QuestDescription, userCharpage));
 						return 1;
 					};
 
@@ -1929,9 +1931,9 @@ import PACKETVER from 'Network/PacketVerManager';
 					) => {
 						ItemTable[ItemID] = {
 							...(typeof ItemTable[ItemID] === 'object' && ItemTable[ItemID]),
-							unidentifiedDisplayName: userStringDecoder.decode(unidentifiedDisplayName),
+							unidentifiedDisplayName: userStringDecoder.decode(unidentifiedDisplayName, userCharpage),
 							unidentifiedResourceName: userStringDecoder.decode(unidentifiedResourceName),
-							identifiedDisplayName: userStringDecoder.decode(identifiedDisplayName),
+							identifiedDisplayName: userStringDecoder.decode(identifiedDisplayName, userCharpage),
 							identifiedResourceName: userStringDecoder.decode(identifiedResourceName),
 							unidentifiedDescriptionName: [],
 							identifiedDescriptionName: [],
@@ -1945,11 +1947,11 @@ import PACKETVER from 'Network/PacketVerManager';
 						return 1;
 					};
 					ctx.AddItemUnidentifiedDesc = (ItemID, v) => {
-						ItemTable[ItemID].unidentifiedDescriptionName.push(userStringDecoder.decode(v));
+						ItemTable[ItemID].unidentifiedDescriptionName.push(userStringDecoder.decode(v, userCharpage));
 						return 1;
 					};
 					ctx.AddItemIdentifiedDesc = (ItemID, v) => {
-						ItemTable[ItemID].identifiedDescriptionName.push(userStringDecoder.decode(v));
+						ItemTable[ItemID].identifiedDescriptionName.push(userStringDecoder.decode(v, userCharpage));
 						return 1;
 					};
 					ctx.AddItemEffectInfo = (ItemID, EffectID) => {
@@ -3282,7 +3284,7 @@ import PACKETVER from 'Network/PacketVerManager';
 						};
 						SkillInfo[skillId] = {
 							Name: userStringDecoder.decode(resName),
-							SkillName: userStringDecoder.decode(skillName),
+							SkillName: userStringDecoder.decode(skillName, userCharpage),
 							MaxLv: maxLv,
 							SpAmount: toArray(spAmount),
 							bSeperateLv: bSeperateLv,
@@ -3828,7 +3830,7 @@ import PACKETVER from 'Network/PacketVerManager';
 
 				// create context function
 				ctx.addKeyAndValueToTable = (key, value) => {
-					table[key] = userStringDecoder.decode(value);
+					table[key] = userStringDecoder.decode(value, userCharpage);
 					return 1;
 				};
 
@@ -3837,7 +3839,7 @@ import PACKETVER from 'Network/PacketVerManager';
 					if (!table[key]) {
 						table[key] = '';
 					}
-					table[key] += userStringDecoder.decode(value) + '\n';
+					table[key] += userStringDecoder.decode(value, userCharpage) + '\n';
 					return 1;
 				};
 
@@ -5500,15 +5502,13 @@ import PACKETVER from 'Network/PacketVerManager';
 
 			if (!item._decoded) {
 				item.identifiedDescriptionName =
-					item.identifiedDescriptionName && item.identifiedDescriptionName instanceof Array
-						? TextEncoding.decodeString(item.identifiedDescriptionName.join('\n'))
-						: '';
+					item.identifiedDescriptionName instanceof Array
+						? item.identifiedDescriptionName.join('\n')
+						: item.identifiedDescriptionName;
 				item.unidentifiedDescriptionName =
-					item.unidentifiedDescriptionName && item.unidentifiedDescriptionName instanceof Array
-						? TextEncoding.decodeString(item.unidentifiedDescriptionName.join('\n'))
-						: '';
-				item.identifiedDisplayName = TextEncoding.decodeString(item.identifiedDisplayName);
-				item.unidentifiedDisplayName = TextEncoding.decodeString(item.unidentifiedDisplayName);
+					item.unidentifiedDescriptionName instanceof Array
+						? item.unidentifiedDescriptionName.join('\n')
+						: item.unidentifiedDescriptionName;
 				item.prefixName = TextEncoding.decodeString(item.prefixName || '');
 				item.isPostfix = item.isPostfix || false;
 				item.processitemlist =

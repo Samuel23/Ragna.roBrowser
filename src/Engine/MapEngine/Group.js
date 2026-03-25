@@ -8,7 +8,6 @@
  * @author Vincent Thibault
  */
 
-'use strict';
 
 import DB from 'DB/DBManager';
 import Session from 'Engine/SessionStorage';
@@ -101,6 +100,7 @@ import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
 			return;
 		}
 
+		_partyName = name;
 		let pkt = new PACKET.CZ.MAKE_GROUP2();
 		pkt.groupName = name;
 		this.ItemPickupRule = pickupRule;
@@ -209,6 +209,13 @@ import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
 		switch (pkt.result) {
 			case 0: // Ok, process
 				ChatBox.addText(DB.getMessage(77), ChatBox.TYPE.BLUE, ChatBox.FILTER.PARTY_SETUP);
+
+				// Fallback: If party UI was already initialized by other packets (GROUP_LIST, ADD_MEMBER), skip this.
+				if (Session.hasParty) {
+					return;
+				}
+
+				// Otherwise, perform conditional initialization (e.g. on server versions where this arrives first)
 				Session.hasParty = true;
 
 				let entity = Session.Entity;
@@ -314,6 +321,10 @@ import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
 		}
 
 		let PartyUI = PartyFriends.getUI();
+
+		if (pkt.AID === Session.AID) {
+			Session.hasParty = true;
+		}
 		PartyUI.setOptions(pkt.expOption, pkt.ItemPickupRule, pkt.ItemDivisionRule);
 		PartyUI.addPartyMember(pkt);
 	}
@@ -440,8 +451,8 @@ import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
 	 *
 	 * @param {object} pkt - PACKET.ZC.PARTY_JOIN_REQ
 	 */
-	function onPartyInvitationRequest(pkt) {
-		let GRID = pkt.GRID;
+	function onPartyInvitationRequest(packet) {
+		let GRID = packet.GRID;
 
 		function onAnswer(accept) {
 			return function () {
@@ -452,7 +463,7 @@ import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
 			};
 		}
 
-		UIManager.showPromptBox(pkt.groupName + ' ' + DB.getMessage(94), 'ok', 'cancel', onAnswer(1), onAnswer(0));
+		UIManager.showPromptBox(packet.groupName + ' ' + DB.getMessage(94), 'ok', 'cancel', onAnswer(1), onAnswer(0));
 	}
 
 	/**
