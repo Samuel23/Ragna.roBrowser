@@ -8,65 +8,56 @@
  * @author Vincent Thibault
  */
 
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var Client = require('Core/Client');
-	var Configs = require('Core/Configs');
-	var TextEncoding = require('Utils/CodepageManager');
-	var CLua = require('Vendors/wasmoon-lua5.1');
-	var JobId = require('./Jobs/JobConst');
-	var ClassTable = require('./Jobs/JobNameTable');
-	var PaletteTable = require('./Jobs/PalNameTable');
-	var WeaponAction = require('./Jobs/WeaponAction');
-	var WeaponJobTable = require('./Jobs/WeaponJobTable');
-	var BabyTable = require('./Jobs/BabyTable');
-	var HairIndexTable = require('./Jobs/HairIndexTable');
-	var MonsterTable = require('./Monsters/MonsterTable');
-	var MonsterNameTable = require('./Monsters/MonsterNameTable');
-	var PetIllustration = require('./Pets/PetIllustration');
-	var PetAction = require('./Pets/PetAction');
-	var ItemTable = require('./Items/ItemTable');
-	var HatTable = require('./Items/HatTable');
-	var ShieldTable = require('./Items/ShieldTable');
-	var WeaponTable = require('./Items/WeaponTable');
-	var WeaponType = require('./Items/WeaponType');
-	var WeaponTypeExpansion = require('./Items/WeaponTypeExpansion');
-	var WeaponSoundTable = require('./Items/WeaponSoundTable');
-	var WeaponHitSoundTable = require('./Items/WeaponHitSoundTable');
-	var RobeTable = require('./Items/RobeTable');
-	var RandomOption = require('DB/Items/ItemRandomOptionTable');
-	var WorldMap = require('./Map/WorldMap');
-	var SKID = require('./Skills/SkillConst');
-	var SkillInfo = require('./Skills/SkillInfo');
-	var SkillTreeView = require('./Skills/SkillTreeView');
-	var JobHitSoundTable = require('./Jobs/JobHitSoundTable');
-	var WeaponTrailTable = require('./Items/WeaponTrailTable');
-	var TownInfo = require('./TownInfo');
-	var StatusInfo = require('./Status/StatusInfo');
-	var SC = require('./Status/StatusConst');
-	var XmlParse = require('Vendors/xmlparse');
-	var Base62 = require('Utils/Base62');
-	var BSON = require('Vendors/bson');
+import Client from 'Core/Client';
+import Configs from 'Core/Configs';
+import TextEncoding from 'Utils/CodepageManager';
+import CLua from 'Vendors/wasmoon-lua5.1';
+import JobId from './Jobs/JobConst';
+import ClassTable from './Jobs/JobNameTable';
+import PaletteTable from './Jobs/PalNameTable';
+import WeaponAction from './Jobs/WeaponAction';
+import WeaponJobTable from './Jobs/WeaponJobTable';
+import BabyTable from './Jobs/BabyTable';
+import HairIndexTable from './Jobs/HairIndexTable';
+import MonsterTable from './Monsters/MonsterTable';
+import MonsterNameTable from './Monsters/MonsterNameTable';
+import PetIllustration from './Pets/PetIllustration';
+import PetAction from './Pets/PetAction';
+import ItemTable from './Items/ItemTable';
+import HatTable from './Items/HatTable';
+import ShieldTable from './Items/ShieldTable';
+import WeaponTable from './Items/WeaponTable';
+import WeaponType from './Items/WeaponType';
+import WeaponTypeExpansion from './Items/WeaponTypeExpansion';
+import WeaponSoundTable from './Items/WeaponSoundTable';
+import WeaponHitSoundTable from './Items/WeaponHitSoundTable';
+import RobeTable from './Items/RobeTable';
+import RandomOption from 'DB/Items/ItemRandomOptionTable';
+import WorldMap from './Map/WorldMap';
+import SKID from './Skills/SkillConst';
+import SkillInfo from './Skills/SkillInfo';
+import SkillTreeView from './Skills/SkillTreeView';
+import JobHitSoundTable from './Jobs/JobHitSoundTable';
+import WeaponTrailTable from './Items/WeaponTrailTable';
+import TownInfo from './TownInfo';
+import StatusInfo from './Status/StatusInfo';
+import SC from './Status/StatusConst';
+import XmlParse from 'Vendors/xmlparse';
+import Base62 from 'Utils/Base62';
+import { BSON, ObjectId } from 'bson';
+import PetEmotionTable from './Pets/PetEmotionTable';
+import PetHungryState from './Pets/PetHungryState';
+import PetFriendlyState from './Pets/PetFriendlyState';
+import PetMessageConst from './Pets/PetMessageConst';
+import MapInfo from './Map/MapTable';
+import Network from 'Network/NetworkManager';
+import PACKET from 'Network/PacketStructure';
+import PACKETVER from 'Network/PacketVerManager';
 
-	//Pet
-	var PetEmotionTable = require('./Pets/PetEmotionTable');
-	var PetHungryState = require('./Pets/PetHungryState');
-	var PetFriendlyState = require('./Pets/PetFriendlyState');
-	var PetMessageConst = require('./Pets/PetMessageConst');
-
+//Pet
 	//MapName
-	var MapInfo = require('./Map/MapTable');
-
-	var Network = require('Network/NetworkManager');
-	var PACKET = require('Network/PacketStructure');
-	var PACKETVER = require('Network/PacketVerManager');
-
-	var getModule = require;
-
 	/**
 	 * DB NameSpace
 	 */
@@ -366,7 +357,7 @@ define(function (require) {
 				[DB.LUA_PATH + 'datainfo/accessoryid.lub', DB.LUA_PATH + 'datainfo/accname.lub'],
 				'AccNameTable',
 				function (json) {
-					HatTable = json;
+					Object.assign(HatTable, json);
 				},
 				onLoad()
 			);
@@ -374,7 +365,7 @@ define(function (require) {
 				[DB.LUA_PATH + 'datainfo/spriterobeid.lub', DB.LUA_PATH + 'datainfo/spriterobename.lub'],
 				'RobeNameTable',
 				function (json) {
-					RobeTable = json;
+					Object.assign(RobeTable, json);
 				},
 				onLoad()
 			);
@@ -384,7 +375,7 @@ define(function (require) {
 					[DB.LUA_PATH + 'datainfo/npcidentity.lub', DB.LUA_PATH + 'datainfo/jobname.lub'],
 					'JobNameTable',
 					function (json) {
-						MonsterTable = json;
+						Object.assign(MonsterTable, json);
 					},
 					onLoad(),
 					function () {
@@ -403,7 +394,7 @@ define(function (require) {
 					[DB.LUA_PATH + 'datainfo/npcidentity.lub', DB.LUA_PATH + 'datainfo/jobname.lub'],
 					'JobNameTable',
 					function (json) {
-						MonsterTable = json;
+						Object.assign(MonsterTable, json);
 					},
 					onLoad()
 				);
@@ -413,7 +404,7 @@ define(function (require) {
 				[DB.LUA_PATH + 'datainfo/enumvar.lub', DB.LUA_PATH + 'datainfo/addrandomoptionnametable.lub'],
 				'NameTable_VAR',
 				function (json) {
-					RandomOption = json;
+					Object.assign(RandomOption, json);
 				},
 				onLoad()
 			);
@@ -459,11 +450,11 @@ define(function (require) {
 										'data/contentdata/effectdata/ez2streffect.bson',
 										Ez2streffect,
 										function () {
-											require(['DB/Effects/EffectTable', 'DB/Skills/SkillEffect'], function (
-												EffectTable,
-												SkillEffect
-											) {
-												mergeEz2Effects(EffectTable, SkillEffect);
+											Promise.all([
+												import('DB/Effects/EffectTable'),
+												import('DB/Skills/SkillEffect')
+											]).then(([EffectTable, SkillEffect]) => {
+												mergeEz2Effects(EffectTable.default, SkillEffect.default);
 												bsonOnLoad();
 											});
 										}
@@ -485,7 +476,7 @@ define(function (require) {
 					DB.LUA_PATH + 'navigation/navi_map_krpri.lub',
 					'Navi_Map',
 					function (json) {
-						NaviMapTable = json;
+						Object.assign(NaviMapTable, json);
 					},
 					onLoad()
 				);
@@ -493,7 +484,7 @@ define(function (require) {
 					DB.LUA_PATH + 'navigation/navi_mob_krpri.lub',
 					'Navi_Mob',
 					function (json) {
-						NaviMobTable = json;
+						Object.assign(NaviMobTable, json);
 					},
 					onLoad()
 				);
@@ -501,7 +492,7 @@ define(function (require) {
 					DB.LUA_PATH + 'navigation/navi_npc_krpri.lub',
 					'Navi_Npc',
 					function (json) {
-						NaviNpcTable = json;
+						Object.assign(NaviNpcTable, json);
 					},
 					onLoad()
 				);
@@ -509,7 +500,7 @@ define(function (require) {
 					DB.LUA_PATH + 'navigation/navi_link_krpri.lub',
 					'Navi_Link',
 					function (json) {
-						NaviLinkTable = json;
+						Object.assign(NaviLinkTable, json);
 					},
 					onLoad()
 				);
@@ -517,7 +508,7 @@ define(function (require) {
 					DB.LUA_PATH + 'navigation/navi_linkdistance_krpri.lub',
 					'Navi_Distance',
 					function (json) {
-						NaviLinkDistanceTable = json;
+						Object.assign(NaviLinkDistanceTable, json);
 					},
 					onLoad()
 				);
@@ -525,7 +516,7 @@ define(function (require) {
 					DB.LUA_PATH + 'navigation/navi_npcdistance_krpri.lub',
 					'Navi_NpcDistance',
 					function (json) {
-						NaviNpcDistanceTable = json;
+						Object.assign(NaviNpcDistanceTable, json);
 					},
 					onLoad()
 				);
@@ -794,9 +785,9 @@ define(function (require) {
 		}
 
 		Network.hookPacket(PACKET.ZC.ACK_REQNAME_BYGID, onUpdateOwnerName);
-		Network.hookPacket(PACKET.ZC.ACK_REQNAME_BYGID2, onUpdateOwnerName);
-
-		getModule('Core/AIDriver').initAI(onLoad());
+		import('Core/AIDriver').then(module => {
+			module.default.initAI(onLoad());
+		});
 	};
 
 	DB.getHOAI_VM = function getHOAILua() {
@@ -7224,5 +7215,4 @@ define(function (require) {
 	/**
 	 * Export
 	 */
-	return DB;
-});
+	export default DB;

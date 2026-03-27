@@ -7,37 +7,32 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var DB = require('DB/DBManager');
-	var MonsterTable = require('DB/Monsters/MonsterTable');
-	var Client = require('Core/Client');
-	var Preferences = require('Core/Preferences');
-	var Renderer = require('Renderer/Renderer');
-	var Session = require('Engine/SessionStorage');
-	var UIManager = require('UI/UIManager');
-	var UIComponent = require('UI/UIComponent');
-	var Inventory = require('UI/Components/Inventory/Inventory');
-	var Equipment = require('UI/Components/Equipment/Equipment');
-	var PartyFriends = require('UI/Components/PartyFriends/PartyFriends');
-	var Guild = require('UI/Components/Guild/Guild');
-	var Escape = require('UI/Components/Escape/Escape');
-	var WorldMap = require('UI/Components/WorldMap/WorldMap');
+import DB from 'DB/DBManager';
+import MonsterTable from 'DB/Monsters/MonsterTable';
+import Client from 'Core/Client';
+import Preferences from 'Core/Preferences';
+import Renderer from 'Renderer/Renderer';
+import Session from 'Engine/SessionStorage';
+import UIManager from 'UI/UIManager';
+import UIComponent from 'UI/UIComponent';
+import Inventory from 'UI/Components/Inventory/Inventory';
+import Equipment from 'UI/Components/Equipment/Equipment';
+import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
+import Guild from 'UI/Components/Guild/Guild';
+import Escape from 'UI/Components/Escape/Escape';
+import WorldMap from 'UI/Components/WorldMap/WorldMap';
+import SkillList from 'UI/Components/SkillList/SkillList';
+import Quest from 'UI/Components/Quest/Quest';
+import htmlText from './BasicInfo.html?raw';
+import cssText from './BasicInfo.css?raw';
 
-	// Version Dependent UIs
-	var SkillList = require('UI/Components/SkillList/SkillList');
-	var Quest = require('UI/Components/Quest/Quest');
-
-	var htmlText = require('text!./BasicInfo.html');
-	var cssText = require('text!./BasicInfo.css');
+// Version Dependent UIs
 	/**
 	 * Create Basic Info component
 	 */
-	var BasicInfo = new UIComponent('BasicInfo', htmlText, cssText);
+	let BasicInfo = new UIComponent('BasicInfo', htmlText, cssText);
 
 	/**
 	 * Stored data
@@ -52,7 +47,7 @@ define(function (require) {
 	/**
 	 * @var {Preferences} structure
 	 */
-	var _preferences = Preferences.get(
+	let _preferences = Preferences.get(
 		'BasicInfo',
 		{
 			x: 0,
@@ -181,7 +176,7 @@ define(function (require) {
 	 * Switch window size
 	 */
 	BasicInfo.toggleMode = function toggleMode() {
-		var type;
+		let type;
 
 		this.ui.toggleClass('small large');
 
@@ -210,8 +205,8 @@ define(function (require) {
 	 * Toggle the list of buttons
 	 */
 	BasicInfo.toggleButtons = function toggleButtons(event) {
-		var type;
-		var $buttons = this.ui.find('.buttons');
+		let type;
+		let $buttons = this.ui.find('.buttons');
 
 		_preferences.buttons = !$buttons.is(':visible');
 
@@ -251,10 +246,10 @@ define(function (require) {
 			case 'zeny':
 				Session.zeny = val1;
 
-				var list = val1.toString().split('');
-				var i,
+				let list = val1.toString().split('');
+				let i,
 					count = list.length;
-				var str = '';
+				let str = '';
 
 				for (i = 0; i < count; i++) {
 					str = list[count - i - 1] + (i && i % 3 === 0 ? ',' : '') + str;
@@ -293,8 +288,8 @@ define(function (require) {
 
 			case 'hp':
 			case 'sp':
-				var perc = Math.floor((val1 * 100) / val2);
-				var color = perc < 25 ? 'red' : 'blue';
+				let perc = Math.floor((val1 * 100) / val2);
+				let color = perc < 25 ? 'red' : 'blue';
 				this.ui.find('.' + type + '_value').text(val1);
 				this.ui.find('.' + type + '_max_value').text(val2);
 				this.ui.find('.' + type + '_perc').text(perc + '%');
@@ -337,5 +332,4 @@ define(function (require) {
 	/**
 	 * Create component and export it
 	 */
-	return UIManager.addComponent(BasicInfo);
-});
+export default UIManager.addComponent(BasicInfo);

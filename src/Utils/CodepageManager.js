@@ -1,6 +1,5 @@
-define(function (require) {
-	'use strict';
-	var iconv = require('Vendors/iconv-lite');
+import iconv from 'Vendors/iconv-lite';
+
 	/**
 	 * Smart decode helper.
 	 *
@@ -223,5 +222,4 @@ define(function (require) {
 
 	CodepageManager.setCharset('windows-1252');
 
-	return CodepageManager;
-});
+export default CodepageManager;

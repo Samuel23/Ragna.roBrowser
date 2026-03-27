@@ -1,18 +1,20 @@
-define(function (require) {
 	'use strict';
 
-	var DB = require('DB/DBManager');
-	var Session = require('Engine/SessionStorage');
-	var Network = require('Network/NetworkManager');
-	var PACKET = require('Network/PacketStructure');
-	var PACKETVER = require('Network/PacketVerManager');
-	var SkillInfo = require('DB/Skills/SkillInfo');
-	var EntityManager = require('Renderer/EntityManager');
-	var Client = require('./Client');
-	var Configs = require('./Configs');
-	var TextEncoding = require('Utils/CodepageManager');
+	import  DB from 'DB/DBManager';
+	import  Session from 'Engine/SessionStorage';
+	import  Network from 'Network/NetworkManager';
+	import  PACKET from 'Network/PacketStructure';
+	import  PACKETVER from 'Network/PacketVerManager';
+	import  SkillInfo from 'DB/Skills/SkillInfo';
+	import  EntityManager from 'Renderer/EntityManager';
+	import  Client from './Client';
+	import  Configs from './Configs';
+	import  UIManager from 'UI/UIManager';
+  
+	import TextEncoding from 'Utils/CodepageManager';
+	import Homun from 'UI/Components/HomunInformations/HomunInformations';
+	import Mercenary from 'UI/Components/MercenaryInformations/MercenaryInformations';
 
-	var getModule = require;
 
 	function AIDriver() {}
 
@@ -31,10 +33,6 @@ define(function (require) {
 
 	AIDriver.addCTX = function addAIctx() {
 		const scriptStartTime = Date.now();
-
-		// Prevents circular dependancy
-		var Homun = getModule('UI/Components/HomunInformations/HomunInformations');
-		var Mercenary = getModule('UI/Components/MercenaryInformations/MercenaryInformations');
 
 		function addCTX(lua, isHoAI = true) {
 			var ctx = lua.ctx;
@@ -656,5 +654,4 @@ define(function (require) {
 
 	AIDriver.reset = function reset() {};
 
-	return AIDriver;
-});
+export default AIDriver;

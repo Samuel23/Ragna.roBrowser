@@ -7,19 +7,17 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
 
-	// Load dependencies
-	var Session = require('Engine/SessionStorage');
-	var Entity = require('./Entity/Entity');
-	var SpriteRenderer = require('./SpriteRenderer');
-	var Mouse = require('Controls/MouseEventHandler');
-	var KEYS = require('Controls/KeyEventHandler');
-	var PathFinding = require('Utils/PathFinding');
-	var GraphicsSettings = require('Preferences/Graphics');
-	var Altitude = require('Renderer/Map/Altitude');
-	var glMatrix = require('Utils/gl-matrix');
+// Load dependencies
+import Session from 'Engine/SessionStorage';
+import Entity from './Entity/Entity';
+import SpriteRenderer from './SpriteRenderer';
+import Mouse from 'Controls/MouseEventHandler';
+import KEYS from 'Controls/KeyEventHandler';
+import PathFinding from 'Utils/PathFinding';
+import GraphicsSettings from 'Preferences/Graphics';
+import Altitude from 'Renderer/Map/Altitude';
+import glMatrix from 'Utils/gl-matrix';
 
 	var vec3 = glMatrix.vec3;
 	var _list = [];
@@ -596,5 +594,4 @@ define(function (require) {
 	/**
 	 * Export
 	 */
-	return EntityManager;
-});
+	export default EntityManager;

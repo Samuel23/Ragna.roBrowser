@@ -8,25 +8,26 @@
  * @author Vincent Thibault
  */
 
-define(function (require) {
-	'use strict';
+'use strict';
+
+import GameFile from 'Loaders/GameFile';
+import World from 'Loaders/World';
+import Ground from 'Loaders/Ground';
+import Altitude from 'Loaders/Altitude';
+import Model from 'Loaders/Model';
+import Sprite from 'Loaders/Sprite';
+import Action from 'Loaders/Action';
+import Str from 'Loaders/Str';
+import FileSystem from 'Core/FileSystem';
+import TextEncoding from 'Utils/CodepageManager';
 
 	// Load dependencies
-	var GameFile = require('Loaders/GameFile');
-	var World = require('Loaders/World');
-	var Ground = require('Loaders/Ground');
-	var Altitude = require('Loaders/Altitude');
-	var Model = require('Loaders/Model');
-	var Sprite = require('Loaders/Sprite');
-	var Action = require('Loaders/Action');
-	var Str = require('Loaders/Str');
-	var FileSystem = require('Core/FileSystem');
-	var fs = self.requireNode && self.requireNode('fs');
+	let fs = self.requireNode && self.requireNode('fs');
 
 	/**
 	 * FileManager namespace
 	 */
-	var FileManager = {};
+	let FileManager = {};
 
 	/**
 	 * Where is the remote client located ?
@@ -52,11 +53,11 @@ define(function (require) {
 	 * @param {mixed} grf list
 	 */
 	FileManager.init = function Init(grfList) {
-		var content, files, result, regex;
-		var i,
+		let content, files, result, regex;
+		let i,
 			count,
 			sortBySize = true;
-		var list = [];
+		let list = [];
 
 		// load GRFs from a file (DATA.INI)
 		if (typeof grfList === 'string') {
@@ -131,7 +132,7 @@ define(function (require) {
 	 */
 	FileManager.addGameFile = function AddGameFile(file) {
 		try {
-			var grf = new GameFile();
+			let grf = new GameFile();
 			grf.load(file);
 
 			this.gameFiles.push(grf);
@@ -162,7 +163,7 @@ define(function (require) {
 	FileManager.search = function Search(regex) {
 		// Use hosted client (only one to be async ?)
 		if (!this.gameFiles.length && this.remoteClient) {
-			var req = new XMLHttpRequest();
+			let req = new XMLHttpRequest();
 			req.open('POST', this.remoteClient, false);
 			req.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 			req.overrideMimeType('text/plain; charset=ISO-8859-1');
@@ -194,7 +195,7 @@ define(function (require) {
 
 			// Found in file system, youhou !
 			function onFound(file) {
-				var reader = new FileReader();
+				let reader = new FileReader();
 				reader.onloadend = function onLoad(event) {
 					callback(event.target.result);
 				};
@@ -203,9 +204,9 @@ define(function (require) {
 
 			// Not found, fetching files
 			function onNotFound() {
-				var i, count;
-				var fileList;
-				var path;
+				let i, count;
+				let fileList;
+				let path;
 
 				path = filename.replace(/\//g, '\\');
 				fileList = FileManager.gameFiles;
@@ -232,7 +233,7 @@ define(function (require) {
 	 */
 	FileManager.getHTTP = function GetHTTP(filename, callback) {
 		filename = filename.replace(/\\/g, '/');
-		var url = filename.replace(/[^/]+/g, function (a) {
+		let url = filename.replace(/[^/]+/g, function (a) {
 			return encodeURIComponent(a);
 		});
 
@@ -376,12 +377,12 @@ define(function (require) {
 		filename = filename.replace(/^\s+|\s+$/g, '');
 
 		this.get(filename, function (buffer, error) {
-			var ext = filename
+			let ext = filename
 				.match(/.[^.]+$/)
 				.toString()
 				.substr(1)
 				.toLowerCase();
-			var result = null;
+			let result = null;
 
 			if (!buffer || buffer.byteLength === 0) {
 				callback(null, error);
@@ -428,7 +429,7 @@ define(function (require) {
 
 					// Sprite
 					case 'spr':
-						var spr = new Sprite(buffer);
+						let spr = new Sprite(buffer);
 						if (args && args.to_rgba) {
 							spr.switchToRGBA();
 						}
@@ -477,5 +478,4 @@ define(function (require) {
 	/**
 	 * Export
 	 */
-	return FileManager;
-});
+	export default FileManager;

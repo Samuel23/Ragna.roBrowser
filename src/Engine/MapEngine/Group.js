@@ -8,37 +8,33 @@
  * @author Vincent Thibault
  */
 
-define(function (require) {
-	'use strict';
 
-	/**
+import DB from 'DB/DBManager';
+import Session from 'Engine/SessionStorage';
+import Network from 'Network/NetworkManager';
+import PACKETVER from 'Network/PacketVerManager';
+import PACKET from 'Network/PacketStructure';
+import EntityManager from 'Renderer/EntityManager';
+import MapRenderer from 'Renderer/MapRenderer';
+import UIManager from 'UI/UIManager';
+import ChatBox from 'UI/Components/ChatBox/ChatBox';
+import WorldMap from 'UI/Components/WorldMap/WorldMap';
+import MiniMap from 'UI/Components/MiniMap/MiniMap';
+import PartyFriends from 'UI/Components/PartyFriends/PartyFriends';
+
+/**
 	 * Load dependencies
 	 */
-	var DB = require('DB/DBManager');
-	var Session = require('Engine/SessionStorage');
-	var Network = require('Network/NetworkManager');
-	var PACKETVER = require('Network/PacketVerManager');
-	var PACKET = require('Network/PacketStructure');
-	var EntityManager = require('Renderer/EntityManager');
-	var MapRenderer = require('Renderer/MapRenderer');
-	var UIManager = require('UI/UIManager');
-	var ChatBox = require('UI/Components/ChatBox/ChatBox');
-	var WorldMap = require('UI/Components/WorldMap/WorldMap');
-	var getModule = require;
-
 	// Version Dependent UIs
-	var MiniMap = require('UI/Components/MiniMap/MiniMap');
-	var PartyFriends = require('UI/Components/PartyFriends/PartyFriends');
-
 	/**
 	 * Party namespace
 	 */
-	var GroupEngine = {};
+	let GroupEngine = {};
 
 	/**
 	 * @var {string} temporary variable to store party name
 	 */
-	var _partyName = '';
+	let _partyName = '';
 
 	/**
 	 * Initialize engine
@@ -65,7 +61,7 @@ define(function (require) {
 		Network.hookPacket(PACKET.ZC.ACK_MAKE_GROUP, onPartyCreate);
 		Network.hookPacket(PACKET.ZC.GROUP_ISALIVE, onPartyIsAlive);
 
-		var PartyUI = PartyFriends.getUI();
+		let PartyUI = PartyFriends.getUI();
 
 		PartyUI.onExpelMember = GroupEngine.onRequestExpel;
 		PartyUI.onRequestChangeLeader = GroupEngine.onRequestChangeLeader;
@@ -87,7 +83,7 @@ define(function (require) {
 
 		_partyName = name;
 
-		var pkt = new PACKET.CZ.MAKE_GROUP();
+		let pkt = new PACKET.CZ.MAKE_GROUP();
 		pkt.groupName = name;
 		Network.sendPacket(pkt);
 	};
@@ -130,11 +126,11 @@ define(function (require) {
 		);
 
 		if (PACKETVER.value >= 20130529) {
-			var pkt = new PACKET.CZ.PARTY_JOIN_REQ();
+			let pkt = new PACKET.CZ.PARTY_JOIN_REQ();
 			pkt.characterName = pseudo;
 			Network.sendPacket(pkt);
 		} else {
-			var pkt = new PACKET.CZ.REQ_JOIN_GROUP();
+			let pkt = new PACKET.CZ.REQ_JOIN_GROUP();
 			pkt.AID = AID;
 			pkt.CharName = pseudo;
 			Network.sendPacket(pkt);
@@ -149,7 +145,7 @@ define(function (require) {
 			return;
 		}
 
-		var pkt = new PACKET.CZ.REQ_LEAVE_GROUP();
+		let pkt = new PACKET.CZ.REQ_LEAVE_GROUP();
 		Network.sendPacket(pkt);
 	};
 
@@ -164,7 +160,7 @@ define(function (require) {
 			return;
 		}
 
-		var pkt = new PACKET.CZ.REQ_EXPEL_GROUP_MEMBER();
+		let pkt = new PACKET.CZ.REQ_EXPEL_GROUP_MEMBER();
 		pkt.AID = AID;
 		pkt.characterName = pseudo;
 		Network.sendPacket(pkt);
@@ -182,7 +178,7 @@ define(function (require) {
 			return;
 		}
 
-		var pkt = new PACKET.CZ.GROUPINFO_CHANGE_V2();
+		let pkt = new PACKET.CZ.GROUPINFO_CHANGE_V2();
 		pkt.expOption = expOption;
 		pkt.ItemPickupRule = pickupRule;
 		pkt.ItemDivisionRule = divisionRule;
@@ -199,7 +195,7 @@ define(function (require) {
 			return;
 		}
 
-		var pkt = new PACKET.CZ.CHANGE_GROUP_MASTER();
+		let pkt = new PACKET.CZ.CHANGE_GROUP_MASTER();
 		pkt.AID = AID;
 		Network.sendPacket(pkt);
 	};
@@ -222,8 +218,8 @@ define(function (require) {
 				// Otherwise, perform conditional initialization (e.g. on server versions where this arrives first)
 				Session.hasParty = true;
 
-				var entity = Session.Entity;
-				var memberData = {
+				let entity = Session.Entity;
+				let memberData = {
 					AID: Session.AID,
 					characterName: entity.display.name,
 					role: 0, // leader
@@ -276,8 +272,8 @@ define(function (require) {
 	 * @param {object} pkt - PACKET.ZC.GROUP_LIST
 	 */
 	function onPartyList(pkt) {
-		var i, count;
-		var entity;
+		let i, count;
+		let entity;
 
 		Session.hasParty = true;
 		count = pkt.groupInfo.length;
@@ -309,7 +305,7 @@ define(function (require) {
 	 * @param {object} pkt - PACKET.ZC.ADD_MEMBER_TO_GROUP
 	 */
 	function onPartyMemberJoin(pkt) {
-		var entity = EntityManager.get(pkt.AID);
+		let entity = EntityManager.get(pkt.AID);
 
 		if (entity) {
 			if (entity.life.display) {
@@ -329,7 +325,6 @@ define(function (require) {
 		if (pkt.AID === Session.AID) {
 			Session.hasParty = true;
 		}
-
 		PartyUI.setOptions(pkt.expOption, pkt.ItemPickupRule, pkt.ItemDivisionRule);
 		PartyUI.addPartyMember(pkt);
 	}
@@ -369,7 +364,7 @@ define(function (require) {
 	 * @param {object} pkt - PACKET.ZC.NOTIFY_HP_TO_GROUPM
 	 */
 	function onMemberLifeUpdate(pkt) {
-		var entity = EntityManager.get(pkt.AID);
+		let entity = EntityManager.get(pkt.AID);
 
 		if (entity) {
 			entity.life.hp = pkt.hp;
@@ -388,7 +383,7 @@ define(function (require) {
 	 * @param {object} pkt - PACKET.ZC.NOTIFY_CHAT_PARTY
 	 */
 	function onMemberTalk(pkt) {
-		var entity = EntityManager.get(pkt.AID);
+		let entity = EntityManager.get(pkt.AID);
 
 		if (entity) {
 			entity.dialog.set(pkt.msg);
@@ -456,19 +451,19 @@ define(function (require) {
 	 *
 	 * @param {object} pkt - PACKET.ZC.PARTY_JOIN_REQ
 	 */
-	function onPartyInvitationRequest(pkt) {
-		var GRID = pkt.GRID;
+	function onPartyInvitationRequest(packet) {
+		let GRID = packet.GRID;
 
 		function onAnswer(accept) {
 			return function () {
-				var pkt = new PACKET.CZ.PARTY_JOIN_REQ_ACK();
+				let pkt = new PACKET.CZ.PARTY_JOIN_REQ_ACK();
 				pkt.GRID = GRID;
 				pkt.bAccept = accept;
 				Network.sendPacket(pkt);
 			};
 		}
 
-		UIManager.showPromptBox(pkt.groupName + ' ' + DB.getMessage(94), 'ok', 'cancel', onAnswer(1), onAnswer(0));
+		UIManager.showPromptBox(packet.groupName + ' ' + DB.getMessage(94), 'ok', 'cancel', onAnswer(1), onAnswer(0));
 	}
 
 	/**
@@ -477,7 +472,7 @@ define(function (require) {
 	 * @param {object} pkt - PACKET.ZC.PARTY_JOIN_REQ_ACK
 	 */
 	function onPartyInvitationAnswer(pkt) {
-		var id = 1,
+		let id = 1,
 			color = ChatBox.TYPE.ERROR;
 
 		switch (pkt.answer) {
@@ -518,7 +513,6 @@ define(function (require) {
 	}
 
 	/**
-	 * Exports
+	 * Export s
 	 */
-	return GroupEngine;
-});
+	export default GroupEngine;

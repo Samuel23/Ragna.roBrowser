@@ -8,11 +8,9 @@
  *
  * @author AoShinHo
  */
-define(function (require) {
-	'use strict';
 
-	var WebGL = require('Utils/WebGL');
-	var GraphicsSettings = require('Preferences/Graphics');
+import WebGL from 'Utils/WebGL';
+import GraphicsSettings from 'Preferences/Graphics';
 
 	var _effects = [];
 	var _activeEffects = [];
@@ -327,5 +325,5 @@ define(function (require) {
 		}
 	};
 
-	return PostProcess;
-});
+export default PostProcess;
+

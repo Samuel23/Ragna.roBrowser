@@ -7,37 +7,35 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var DB = require('DB/DBManager');
-	var jQuery = require('Utils/jquery');
-	var Preferences = require('Core/Preferences');
-	var MonsterTable = require('DB/Monsters/MonsterTable');
-	var Client = require('Core/Client');
-	var Renderer = require('Renderer/Renderer');
-	var Session = require('Engine/SessionStorage');
-	var Mouse = require('Controls/MouseEventHandler');
-	var KEYS = require('Controls/KeyEventHandler');
-	var UIManager = require('UI/UIManager');
-	var UIComponent = require('UI/UIComponent');
-	var PartyHelper = require('../PartyHelper/PartyHelper');
-	var ContextMenu = require('UI/Components/ContextMenu/ContextMenu');
-	var Rodex = require('UI/Components/Rodex/Rodex');
-	var ChatBox = require('UI/Components/ChatBox/ChatBox');
-	var WhisperBox = require('UI/Components/WhisperBox/WhisperBox');
-	var htmlText = require('text!./PartyFriendsV1.html');
-	var cssText = require('text!./PartyFriendsV1.css');
-	var getModule = require;
+import DB from 'DB/DBManager';
+import Camera from 'Renderer/Camera';
+import jQuery from 'Utils/jquery';
+import MiniMap from 'UI/Components/MiniMap/MiniMap';
+import Preferences from 'Core/Preferences';
+import MonsterTable from 'DB/Monsters/MonsterTable';
+import Client from 'Core/Client';
+import Renderer from 'Renderer/Renderer';
+import Session from 'Engine/SessionStorage';
+import Mouse from 'Controls/MouseEventHandler';
+import KEYS from 'Controls/KeyEventHandler';
+import UIManager from 'UI/UIManager';
+import UIComponent from 'UI/UIComponent';
+import PartyHelper from '../PartyHelper/PartyHelper';
+import ContextMenu from 'UI/Components/ContextMenu/ContextMenu';
+import Rodex from 'UI/Components/Rodex/Rodex';
+import ChatBox from 'UI/Components/ChatBox/ChatBox';
+import WhisperBox from 'UI/Components/WhisperBox/WhisperBox';
+import htmlText from './PartyFriendsV1.html?raw';
+import cssText from './PartyFriendsV1.css?raw';
+import PartyMemberExternal from '../PartyMemberExternal/PartyMemberExternal';
+import SkillTargetSelection from 'UI/Components/SkillTargetSelection/SkillTargetSelection';
 
 	/**
 	 * Create Component
 	 */
 	var PartyFriendsV1 = new UIComponent('PartyFriendsV1', htmlText, cssText);
-	var PartyMemberExternal = require('../PartyMemberExternal/PartyMemberExternal');
 	var _detachedMembers = {}; // Map of AID -> Component
 
 	/**
@@ -190,7 +188,6 @@ define(function (require) {
 		}
 
 		// Handle Skill Targeting (move this BEFORE detached check)
-		var SkillTargetSelection = getModule('UI/Components/SkillTargetSelection/SkillTargetSelection');
 		if (SkillTargetSelection && SkillTargetSelection.__active && !_preferences.friend) {
 			if (player.state === 0) {
 				SkillTargetSelection.intersectEntityId(player.AID);
@@ -229,7 +226,6 @@ define(function (require) {
 				if (Math.abs(moveEvent.pageX - startX) > threshold || Math.abs(moveEvent.pageY - startY) > threshold) {
 					isDragging = true;
 
-					var ContextMenu = getModule('UI/Components/ContextMenu/ContextMenu');
 					if (ContextMenu) {
 						ContextMenu.remove();
 					}
@@ -885,7 +881,6 @@ define(function (require) {
 		var mapDisplay = DB.getMapName(player.mapName);
 
 		// Get color from MiniMap
-		var MiniMap = getModule('UI/Components/MiniMap/MiniMap');
 		var color = MiniMap && MiniMap.getMemberColor ? MiniMap.getMemberColor(player.AID) : 'white';
 		player.color = color;
 
@@ -1314,7 +1309,6 @@ define(function (require) {
 		}
 
 		// Ensure camera stops rotation when opening a menu (fix for stuck right drag)
-		var Camera = getModule('Renderer/Camera');
 		if (Camera && Camera.rotate) {
 			Camera.rotate(false);
 		}
@@ -1614,5 +1608,4 @@ define(function (require) {
 	/**
 	 * Export
 	 */
-	return UIManager.addComponent(PartyFriendsV1);
-});
+	export default UIManager.addComponent(PartyFriendsV1);

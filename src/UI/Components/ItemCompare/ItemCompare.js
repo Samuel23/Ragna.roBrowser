@@ -7,33 +7,25 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var jQuery = require('Utils/jquery');
-	var DB = require('DB/DBManager');
-	var ItemType = require('DB/Items/ItemType');
-	var Client = require('Core/Client');
-	var CardIllustration = require('UI/Components/CardIllustration/CardIllustration');
-	var UIManager = require('UI/UIManager');
-	var Mouse = require('Controls/MouseEventHandler');
-	var UIComponent = require('UI/UIComponent');
-	var MakeReadBook = require('UI/Components/MakeReadBook/MakeReadBook');
-	var Renderer = require('Renderer/Renderer');
-	var SpriteRenderer = require('Renderer/SpriteRenderer');
-	var Sprite = require('Loaders/Sprite');
-	var Action = require('Loaders/Action');
-	var htmlText = require('text!./ItemCompare.html');
-	var cssText = require('text!./ItemCompare.css');
-	var getModule = require;
-
-	/**
-	 * Create Component
-	 */
-	var ItemCompare = new UIComponent('ItemCompare', htmlText, cssText);
+import jQuery from 'Utils/jquery';
+import DB from 'DB/DBManager';
+import ItemType from 'DB/Items/ItemType';
+import Client from 'Core/Client';
+import CardIllustration from 'UI/Components/CardIllustration/CardIllustration';
+import UIManager from 'UI/UIManager';
+import Mouse from 'Controls/MouseEventHandler';
+import UIComponent from 'UI/UIComponent';
+import MakeReadBook from 'UI/Components/MakeReadBook/MakeReadBook';
+import Renderer from 'Renderer/Renderer';
+import SpriteRenderer from 'Renderer/SpriteRenderer';
+import Sprite from 'Loaders/Sprite';
+import Action from 'Loaders/Action';
+import htmlText from './ItemCompare.html?raw';
+import cssText from './ItemCompare.css?raw';
+import ItemInfo from 'UI/Components/ItemInfo/ItemInfo';
+import Entity from 'Renderer/Entity/Entity';
 
 	/**
 	 * @var {Sprite,Action} objects
@@ -441,7 +433,6 @@ define(function (require) {
 		return function rendering() {
 			var i, count, max;
 			var action, animation, anim;
-			var Entity = getModule('Renderer/Entity/Entity');
 
 			var _entity = new Entity();
 			action = _action.actions[_type];
@@ -509,5 +500,4 @@ define(function (require) {
 	/**
 	 * Create component and export it
 	 */
-	return UIManager.addComponent(ItemCompare);
-});
+export default UIManager.addComponent(ItemCompare);

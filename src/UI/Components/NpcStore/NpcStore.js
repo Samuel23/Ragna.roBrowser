@@ -7,36 +7,32 @@
  *
  * @author Vincent Thibault
  */
-define(function (require) {
-	'use strict';
+'use strict';
 
-	/**
-	 * Dependencies
-	 */
-	var jQuery = require('Utils/jquery');
-	var DB = require('DB/DBManager');
-	var ItemType = require('DB/Items/ItemType');
-	var Client = require('Core/Client');
-	var Preferences = require('Core/Preferences');
-	var Session = require('Engine/SessionStorage');
-	var Mouse = require('Controls/MouseEventHandler');
-	var Network = require('Network/NetworkManager');
-	var PACKETVER = require('Network/PacketVerManager');
-	var PACKET = require('Network/PacketStructure');
-	var KEYS = require('Controls/KeyEventHandler');
-	var UIManager = require('UI/UIManager');
-	var UIComponent = require('UI/UIComponent');
-	var ItemInfo = require('UI/Components/ItemInfo/ItemInfo');
-	var InputBox = require('UI/Components/InputBox/InputBox');
-	var ChatBox = require('UI/Components/ChatBox/ChatBox');
-	var Inventory = require('UI/Components/Inventory/Inventory');
-	var htmlText = require('text!./NpcStore.html');
-	var cssText = require('text!./NpcStore.css');
+import jQuery from 'Utils/jquery';
+import DB from 'DB/DBManager';
+import ItemType from 'DB/Items/ItemType';
+import Client from 'Core/Client';
+import Preferences from 'Core/Preferences';
+import Session from 'Engine/SessionStorage';
+import Mouse from 'Controls/MouseEventHandler';
+import Network from 'Network/NetworkManager';
+import PACKETVER from 'Network/PacketVerManager';
+import PACKET from 'Network/PacketStructure';
+import KEYS from 'Controls/KeyEventHandler';
+import UIManager from 'UI/UIManager';
+import UIComponent from 'UI/UIComponent';
+import ItemInfo from 'UI/Components/ItemInfo/ItemInfo';
+import InputBox from 'UI/Components/InputBox/InputBox';
+import ChatBox from 'UI/Components/ChatBox/ChatBox';
+import Inventory from 'UI/Components/Inventory/Inventory';
+import htmlText from './NpcStore.html?raw';
+import cssText from './NpcStore.css?raw';
 
-	/**
+/**
 	 * Create NPC Menu component
 	 */
-	var NpcStore = new UIComponent('NpcStore', htmlText, cssText);
+	let NpcStore = new UIComponent('NpcStore', htmlText, cssText);
 
 	/**
 	 * @var {enum} Store type
@@ -78,22 +74,27 @@ define(function (require) {
 	/**
 	 * @var {Preferences}
 	 */
-	var _preferences = Preferences.get('NpcStore', {}, 1.0);
+	let _preferences = Preferences.get('NpcStore', {}, 1.0);
 
 	/**
 	 * @var {Array} item list
 	 */
-	var _input = [];
+	let _input = [];
 
 	/**
 	 * @var {Array} output list
 	 */
-	var _output = [];
+	let _output = [];
 
 	/**
 	 * @var {number} type (buy/sell)
 	 */
-	var _type;
+	let _type;
+
+	/**
+	 * @var {boolean} whether the close packet was already sent to the server
+	 */
+	var _closePacketSent = false;
 
 	/**
 	 * @var {boolean} whether the close packet was already sent to the server
@@ -104,11 +105,11 @@ define(function (require) {
 	 * Initialize component
 	 */
 	NpcStore.init = function init() {
-		var ui = this.ui;
-		var InputWindow = ui.find('.InputWindow');
-		var OutputWindow = ui.find('.OutputWindow');
-		var AvailableItemsWindow = ui.find('.AvailableItemsWindow');
-		var PurchaseResult = ui.find('.PurchaseResult');
+		let ui = this.ui;
+		let InputWindow = ui.find('.InputWindow');
+		let OutputWindow = ui.find('.OutputWindow');
+		let AvailableItemsWindow = ui.find('.AvailableItemsWindow');
+		let PurchaseResult = ui.find('.PurchaseResult');
 
 		ui.find('.btn.cancel').click(this.remove.bind(this));
 
@@ -178,7 +179,7 @@ define(function (require) {
 		);
 
 		// Seems like "EscapeWindow" is execute first, push it before.
-		var events = jQuery._data(window, 'events').keydown;
+		let events = jQuery._data(window, 'events').keydown;
 		events.unshift(events.pop());
 	};
 
@@ -186,15 +187,15 @@ define(function (require) {
 	 * Released movement and save preferences
 	 */
 	NpcStore.onRemove = function onRemove() {
-		var InputWindow = this.ui.find('.InputWindow');
-		var OutputWindow = this.ui.find('.OutputWindow');
-		var AvailableItemsWindow = this.ui.find('.AvailableItemsWindow');
-		var PurchaseResult = this.ui.find('.PurchaseResult');
+		let InputWindow = this.ui.find('.InputWindow');
+		let OutputWindow = this.ui.find('.OutputWindow');
+		let AvailableItemsWindow = this.ui.find('.AvailableItemsWindow');
+		let PurchaseResult = this.ui.find('.PurchaseResult');
 
 		_input.length = 0;
 		_output.length = 0;
 
-		var currentPref = getCurrentPref();
+		let currentPref = getCurrentPref();
 
 		currentPref.inputWindow.x = parseInt(InputWindow.css('left'), 10);
 		currentPref.inputWindow.y = parseInt(InputWindow.css('top'), 10);
@@ -296,12 +297,12 @@ define(function (require) {
 
 		_type = type;
 
-		var currentPref = getCurrentPref();
+		let currentPref = getCurrentPref();
 
-		var InputWindow = this.ui.find('.InputWindow');
-		var OutputWindow = this.ui.find('.OutputWindow');
-		var AvailableItemsWindow = this.ui.find('.AvailableItemsWindow');
-		var PurchaseResult = this.ui.find('.PurchaseResult');
+		let InputWindow = this.ui.find('.InputWindow');
+		let OutputWindow = this.ui.find('.OutputWindow');
+		let AvailableItemsWindow = this.ui.find('.AvailableItemsWindow');
+		let PurchaseResult = this.ui.find('.PurchaseResult');
 
 		// Apply saved positions
 		InputWindow.css({ top: currentPref.inputWindow.y, left: currentPref.inputWindow.x });
@@ -326,8 +327,8 @@ define(function (require) {
 	 * @param {Array} item list
 	 */
 	NpcStore.setList = function setList(items) {
-		var i, count;
-		var it, item, out, content, availableContent;
+		let i, count;
+		let it, item, out, content, availableContent;
 
 		this.ui.find('.content').empty();
 		this.ui.find('.total .result').text(0);
@@ -407,11 +408,11 @@ define(function (require) {
 				break;
 
 			case NpcStore.Type.SELL:
-				var InventoryVersion = UIManager.getComponent('Inventory').name;
+				let InventoryVersion = UIManager.getComponent('Inventory').name;
 				for (i = 0, count = items.length; i < count; ++i) {
 					it = Inventory.getUI().getItemByIndex(items[i].index);
 
-					var condition =
+					let condition =
 						InventoryVersion !== 'InventoryV0'
 							? it && (!Inventory.getUI().npcsalelock || it.PlaceETCTab < 1)
 							: it;
@@ -446,8 +447,8 @@ define(function (require) {
 	 * Submit data to send items
 	 */
 	NpcStore.submit = function submit() {
-		var output;
-		var i, count;
+		let output;
+		let i, count;
 
 		output = [];
 		count = _output.length;
@@ -477,7 +478,7 @@ define(function (require) {
 	 * @return {number}
 	 */
 	NpcStore.calculateCost = function calculateCost() {
-		var i, count, total;
+		let i, count, total;
 
 		total = 0;
 		count = _output.length;
@@ -524,17 +525,17 @@ define(function (require) {
 	 * @return {string}
 	 */
 	function prettyZeny(val, useStyle) {
-		var list = val.toString().split('');
-		var i,
+		let list = val.toString().split('');
+		let i,
 			count = list.length;
-		var str = '';
+		let str = '';
 
 		for (i = 0; i < count; i++) {
 			str = list[count - i - 1] + (i && i % 3 === 0 ? ',' : '') + str;
 		}
 
 		if (useStyle) {
-			var style = [
+			let style = [
 				'color:#000000; text-shadow:1px 0px #00ffff;', // 0 - 9
 				'color:#0000ff; text-shadow:1px 0px #ce00ce;', // 10 - 99
 				'color:#0000ff; text-shadow:1px 0px #00ffff;', // 100 - 999
@@ -559,10 +560,10 @@ define(function (require) {
 	 * @param {Item} item info
 	 */
 	function addItem(content, item) {
-		var it = DB.getItemInfo(item.ITID);
-		var currencyit = DB.getItemInfo(item.currencyITID);
-		var element = content.find('.item[data-index=' + item.index + ']:first');
-		var price;
+		let it = DB.getItemInfo(item.ITID);
+		let currencyit = DB.getItemInfo(item.currencyITID);
+		let element = content.find('.item[data-index=' + item.index + ']:first');
+		let price;
 		let amountText;
 
 		let currency_item;
@@ -800,14 +801,14 @@ define(function (require) {
 	 * @param {jQueryElement} ui element
 	 */
 	function onResize(ui) {
-		var top = ui.position().top;
-		var content = ui.find('.content:first');
-		var lastHeight = 0;
-		var interval;
+		let top = ui.position().top;
+		let content = ui.find('.content:first');
+		let lastHeight = 0;
+		let interval;
 
 		function resizing() {
-			var extraY = 31 + 19 - 30;
-			var h = Math.floor((Mouse.screen.y - top - extraY) / 32);
+			let extraY = 31 + 19 - 30;
+			let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
 
 			// Maximum and minimum window size
 			h = Math.min(Math.max(h, 2), 9);
@@ -964,8 +965,8 @@ define(function (require) {
 	 * @param {boolean} add the content to the output box ?
 	 */
 	function requestMoveItem(index, fromContent, toContent, isAdding) {
-		var item, count;
-		var isStackable;
+		let item, count;
+		let isStackable;
 
 		item = isAdding ? _input[index] : _output[index];
 		isStackable =
@@ -1010,7 +1011,7 @@ define(function (require) {
 	 * @param {jQueryEvent} event
 	 */
 	function onDrop(event) {
-		var data;
+		let data;
 
 		event.stopImmediatePropagation();
 
@@ -1039,8 +1040,8 @@ define(function (require) {
 	 * Get informations about an item
 	 */
 	function onItemInfo(event) {
-		var index = parseInt(this.parentNode.getAttribute('data-index'), 10);
-		var item = _input[index];
+		let index = parseInt(this.parentNode.getAttribute('data-index'), 10);
+		let item = _input[index];
 
 		event.stopImmediatePropagation();
 
@@ -1065,7 +1066,7 @@ define(function (require) {
 	 * Select an item, put it on the other box
 	 */
 	function onItemSelected() {
-		var input, from, to;
+		let input, from, to;
 
 		if ((_type === NpcStore.Type.BUY || _type === NpcStore.Type.VENDING_STORE) && !Session.isTouchDevice) {
 			return;
@@ -1101,7 +1102,7 @@ define(function (require) {
 	 * Update scroll by block (32px)
 	 */
 	function onScroll(event) {
-		var delta;
+		let delta;
 
 		if (event.originalEvent.wheelDelta) {
 			delta = event.originalEvent.wheelDelta / 120;
@@ -1120,8 +1121,8 @@ define(function (require) {
 	 * Start dragging an item
 	 */
 	function onDragStart(event) {
-		var container, img, url;
-		var InputWindow, OutputWindow, AvailableItemsWindow;
+		let container, img, url;
+		let InputWindow, OutputWindow, AvailableItemsWindow;
 
 		InputWindow = NpcStore.ui.find('.InputWindow:first').get(0);
 		OutputWindow = NpcStore.ui.find('.OutputWindow:first').get(0);
@@ -1283,5 +1284,4 @@ define(function (require) {
 	/**
 	 * Create componentand export it
 	 */
-	return UIManager.addComponent(NpcStore);
-});
+export default UIManager.addComponent(NpcStore);

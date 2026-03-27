@@ -6,25 +6,15 @@
  *
  * @author AoShinHo
  */
-define(function (require) {
-	'use strict';
 
-	var GraphicsSettings = require('Preferences/Graphics');
-	var WebGL = require('Utils/WebGL');
-	var PostProcess = require('Renderer/Effects/PostProcess');
+import GraphicsSettings from 'Preferences/Graphics';
+import WebGL from 'Utils/WebGL';
+import PostProcess from 'Renderer/Effects/PostProcess';
+import commonVS from './GLSL/Common.vs?raw';
+import compositeFS from './GLSL/CommonUpsampling.fs?raw';
 
-	var _program;
-	var _buffer;
-
-	/**
-	 * Vertex Shader: Common quad
-	 */
-	var commonVS = require('text!./GLSL/Common.vs');
-
-	/**
-	 * Fragment Shader: Upsample the scene.
-	 */
-	var compositeFS = require('text!./GLSL/CommonUpsampling.fs');
+var _program;
+var _buffer;
 
 	/**
 	 * @constructor Upsampling
@@ -103,5 +93,4 @@ define(function (require) {
 		_buffer = null;
 	};
 
-	return Upsampling;
-});
+export default Upsampling;

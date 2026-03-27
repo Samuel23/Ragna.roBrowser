@@ -6,22 +6,15 @@
  *
  * @author AoShinHo
  */
-define(function (require) {
-	'use strict';
 
-	var WebGL = require('Utils/WebGL');
-	var Camera = require('Renderer/Camera');
-	var PostProcess = require('Renderer/Effects/PostProcess');
+import WebGL from 'Utils/WebGL';
+import Camera from 'Renderer/Camera';
+import commonVS from './GLSL/Common.vs?raw';
+import blindFS from './GLSL/Blind.fs?raw';
+import PostProcess from 'Renderer/Effects/PostProcess';
 
 	var _program, _buffer;
 	var _active = false;
-
-	var commonVS = require('text!./GLSL/Common.vs');
-
-	/**
-	 * Fragment Shader: Radial Blindness
-	 */
-	var blindFS = require('text!./GLSL/Blind.fs');
 
 	function Blind() {}
 
@@ -101,5 +94,4 @@ define(function (require) {
 		_program = _buffer = null;
 	};
 
-	return Blind;
-});
+export default Blind;

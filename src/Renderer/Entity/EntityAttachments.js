@@ -7,18 +7,16 @@
  *
  * @author Vincent Thibault
  */
-define([
-	'Core/Client',
-	'Renderer/Renderer',
-	'Renderer/SpriteRenderer',
-	'Renderer/Camera',
-	'Renderer/Map/Ground',
-	'Renderer/Effects/StrEffect'
-], function (Client, Renderer, SpriteRenderer, Camera, Ground, StrEffect) {
-	'use strict';
+'use strict';
 
-	// Default fog for STR attachments
-	var _defaultFog = {
+import Client from 'Core/Client';
+import SpriteRenderer from 'Renderer/SpriteRenderer';
+import Camera from 'Renderer/Camera';
+import Ground from 'Renderer/Map/Ground';
+import StrEffect from 'Renderer/Effects/StrEffect';
+
+// Default fog for STR attachments
+	let _defaultFog = {
 		use: false,
 		exist: false,
 		near: 30,
@@ -47,7 +45,7 @@ define([
 			this.remove(attachment.uid);
 		}
 
-		attachment.startTick = Renderer.tick;
+		attachment.startTick = Date.now();
 		attachment.opacity = !isNaN(attachment.opacity) ? attachment.opacity : 1.0;
 		attachment.direction = attachment.hasOwnProperty('frame') ? false : true;
 		attachment.frame = attachment.frame || 0;
@@ -83,14 +81,14 @@ define([
 		// STR file attachment
 		if (attachment.strFile) {
 			attachment.isStr = true;
-			var strNormalized = attachment.strFile.replace(/\\/g, '/');
-			var lastSlash = strNormalized.lastIndexOf('/');
-			var strTexturePath = lastSlash >= 0 ? strNormalized.substring(0, lastSlash + 1) : '';
+			let strNormalized = attachment.strFile.replace(/\\/g, '/');
+			let lastSlash = strNormalized.lastIndexOf('/');
+			let strTexturePath = lastSlash >= 0 ? strNormalized.substring(0, lastSlash + 1) : '';
 
 			// FIXME: https://github.com/MrAntares/roBrowserLegacy/issues/856
 			strTexturePath = strTexturePath.replace(/^data\/texture\/effect\//, '');
 
-			var strEffect = new StrEffect(attachment.strFile, this.entity.position, Renderer.tick, strTexturePath);
+			let strEffect = new StrEffect(attachment.strFile, this.entity.position, Date.now(), strTexturePath);
 			strEffect.ownerEntity = this.entity;
 			strEffect.persistent = attachment.repeat !== false;
 			strEffect.xOffset = attachment.xOffset || 0;
@@ -118,7 +116,7 @@ define([
 	 * @param {mixed} unique id
 	 */
 	AttachmentManager.prototype.get = function get(uid) {
-		var i,
+		let i,
 			length = this.list.length;
 		for (i = 0; i < length; ++i) {
 			if (this.list[i].uid == uid) {
@@ -134,8 +132,8 @@ define([
 	 * @param {mixed} unique id
 	 */
 	AttachmentManager.prototype.remove = function remove(uid) {
-		var i, count;
-		var list;
+		let i, count;
+		let list;
 
 		list = this.list;
 		count = list.length;
@@ -167,7 +165,7 @@ define([
 	 * Render attachments filtered by renderBefore flag
 	 */
 	AttachmentManager.prototype._renderFiltered = (function renderFilteredClosure() {
-		var effectColor = new Float32Array(4);
+		let effectColor = new Float32Array(4);
 
 		return function _renderFiltered(tick, renderBeforeEntity) {
 			if (!this.list.some(item => item.renderBefore === renderBeforeEntity)) {
@@ -238,7 +236,7 @@ define([
 	 * @return {boolean} remove from the list
 	 */
 	AttachmentManager.prototype.renderAttachment = (function renderAttachmentClosure() {
-		var position = new Int16Array(2);
+		let position = new Int32Array(2);
 
 		return function renderAttachment(attachment, tick) {
 			// Nothing to render yet
@@ -248,28 +246,31 @@ define([
 
 			// Render STR attachment
 			if (attachment.isStr && attachment.strEffect) {
-				var strEffect = attachment.strEffect;
-				var gl = Renderer.gl;
+				let strEffect = attachment.strEffect;
+				// dynamic access to Renderer to avoid cycle
+				let gl = window.RO_RENDERER_GL || (window.Renderer && window.Renderer.gl);
 
 				try {
 					strEffect.position = this.entity.position;
 					strEffect.ownerDirection = this.entity.direction;
 
-					if (!StrEffect.ready) {
+					if (!StrEffect.ready && gl) {
 						StrEffect.init(gl);
 					}
 
-					// Pass true for disableDepthTest since this is an entity attachment
-					StrEffect.beforeRender(gl, Camera.modelView, Camera.projection, _defaultFog, tick, true);
-					strEffect.render(gl, tick);
-					StrEffect.afterRender(gl);
+					if (gl) {
+						// Pass true for disableDepthTest since this is an entity attachment
+						StrEffect.beforeRender(gl, Camera.modelView, Camera.projection, _defaultFog, tick, true);
+						strEffect.render(gl, tick);
+						StrEffect.afterRender(gl);
+					}
 				} catch (e) {
 					console.error('STR attachment error:', e);
 					// Ensure WebGL state is restored even on error
-					StrEffect.afterRender(gl);
+					if (gl) StrEffect.afterRender(gl);
 				}
 
-				SpriteRenderer.bind3DContext(gl, Camera.modelView, Camera.projection, _defaultFog);
+				if (gl) SpriteRenderer.bind3DContext(gl, Camera.modelView, Camera.projection, _defaultFog);
 
 				if (!strEffect.persistent && strEffect.needCleanUp) {
 					return true;
@@ -278,10 +279,10 @@ define([
 				return false;
 			}
 
-			var i, count;
-			var spr, act, delay, frame;
-			var animation, animations, layers;
-			var clean = false;
+			let i, count;
+			let spr, act, delay, frame;
+			let animation, animations, layers;
+			let clean = false;
 
 			spr = Client.loadFile(attachment.spr);
 			act = Client.loadFile(attachment.act);
@@ -315,7 +316,7 @@ define([
 
 			// repeat duplicate times
 			else if (attachment.duplicate > 0) {
-				var index = Math.floor((tick - attachment.startTick) / delay) % animations.length;
+				let index = Math.floor((tick - attachment.startTick) / delay) % animations.length;
 				layers = animations[index].layers;
 				if (index == animations.length - 1) {
 					attachment.duplicate--;
@@ -333,8 +334,8 @@ define([
 			}
 
 			// Render layers with depth ordering (renderBefore behind, normal in front)
-			var self = this;
-			var zIdx = attachment.renderBefore ? 1 : 500;
+			let self = this;
+			let zIdx = attachment.renderBefore ? 1 : 500;
 
 			SpriteRenderer.runWithDepth(true, false, false, function () {
 				SpriteRenderer.zIndex = zIdx;
@@ -348,9 +349,8 @@ define([
 	})();
 
 	/**
-	 * Export
+	 * Export 
 	 */
-	return function init() {
+	export default function init() {
 		this.attachments = new AttachmentManager(this);
 	};
-});

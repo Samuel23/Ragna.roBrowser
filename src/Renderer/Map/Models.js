@@ -7,28 +7,76 @@
  *
  * @author Vincent Thibault
  */
-define([
-	'text!Renderer/Effects/Shaders/GLSL/Models.vs',
-	'text!Renderer/Effects/Shaders/GLSL/Models.fs',
-	'Utils/WebGL',
-	'Preferences/Map'
-], function (_vertexShader, _fragmentShader, WebGL, Preferences) {
-	'use strict';
+'use strict';
+
+import _vertexShader from 'Renderer/Effects/Shaders/GLSL/Models.vs?raw';
+import _fragmentShader from 'Renderer/Effects/Shaders/GLSL/Models.fs?raw';
+import WebGL from 'Utils/WebGL';
+import Preferences from 'Preferences/Map';
 
 	/**
 	 * @var {WebGLProgram}
 	 */
-	var _program = null;
+	let _program = null;
 
 	/**
 	 * @var {WebGLBuffer}
 	 */
-	var _buffer = null;
+	let _buffer = null;
 
 	/**
 	 * @var {Array} list of meshes
 	 */
-	var _objects = [];
+	let _objects = [];
+
+	/**
+	 * @var {Array} batched draw calls (grouped by texture)
+	 */
+	var _batches = [];
+
+	/**
+	 * @var {boolean} whether all textures are loaded and batches are built
+	 */
+	var _batchesReady = false;
+
+	/**
+	 * @var {number} count of textures still loading
+	 */
+	var _pendingTextures = 0;
+
+	/**
+	 * Build batched draw calls by merging consecutive objects with the same texture.
+	 * Objects sharing the same texture with contiguous vertex ranges are merged
+	 * into a single draw call, reducing GPU state changes.
+	 */
+	function buildBatches() {
+		_batches.length = 0;
+		var current = null;
+
+		for (var i = 0, count = _objects.length; i < count; ++i) {
+			if (!_objects[i].complete) {
+				continue;
+			}
+
+			// Can merge if same texture and contiguous vertex range
+			if (
+				current &&
+				current.texture === _objects[i].texture &&
+				current.vertOffset + current.vertCount === _objects[i].vertOffset
+			) {
+				current.vertCount += _objects[i].vertCount;
+			} else {
+				current = {
+					texture: _objects[i].texture,
+					vertOffset: _objects[i].vertOffset,
+					vertCount: _objects[i].vertCount
+				};
+				_batches.push(current);
+			}
+		}
+
+		_batchesReady = true;
+	}
 
 	/**
 	 * @var {Array} batched draw calls (grouped by texture)
@@ -86,8 +134,8 @@ define([
 	 * @param {object} data ( models )
 	 */
 	function init(gl, data) {
-		var i, count;
-		var objects;
+		let i, count;
+		let objects;
 
 		objects = data.infos;
 		count = objects.length;
@@ -143,9 +191,9 @@ define([
 	 * @param {object} light structure
 	 */
 	function render(gl, modelView, projection, normalMat, fog, light) {
-		var uniform = _program.uniform;
-		var attribute = _program.attribute;
-		var i, count;
+		let uniform = _program.uniform;
+		let attribute = _program.attribute;
+		let i, count;
 
 		gl.useProgram(_program);
 
@@ -220,7 +268,7 @@ define([
 	 * @param {object} gl context
 	 */
 	function free(gl) {
-		var i, count;
+		let i, count;
 
 		if (_buffer) {
 			gl.deleteBuffer(_buffer);
@@ -242,11 +290,10 @@ define([
 	}
 
 	/**
-	 * Export
+	 * Export 
 	 */
-	return {
+	export default {
 		init: init,
 		render: render,
 		free: free
 	};
-});
