@@ -2044,12 +2044,10 @@ class DB {
 				item.unidentifiedDescriptionName instanceof Array
 					? item.unidentifiedDescriptionName.join('\n')
 					: item.unidentifiedDescriptionName;
-			item.prefixName = TextEncoding.decodeString(item.prefixName || '');
+			item.prefixName = item.prefixName || '';
 			item.isPostfix = item.isPostfix || false;
 			item.processitemlist =
-				item.processitemlist && item.processitemlist instanceof Array
-					? TextEncoding.decodeString(item.processitemlist.join('\n'))
-					: '';
+				item.processitemlist && item.processitemlist instanceof Array ? item.processitemlist.join('\n') : '';
 			item._decoded = true;
 		}
 
