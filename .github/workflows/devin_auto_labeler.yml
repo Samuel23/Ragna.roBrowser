@@ -6,6 +6,8 @@ on:
         types: [created]  
 permissions:  
     contents: read  
+env:  
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  
 jobs:  
     analyze_review:  
         if: >  
@@ -33,7 +35,6 @@ jobs:
   
                       let labelToAdd = null;  
   
-                      // Comentário de resolução (follow-up do Devin)  
                       if (comment.includes('✅ resolved') || comment.includes('✅resolved')) {  
                         const comments = await github.paginate(github.rest.issues.listComments, {  
                           owner: context.repo.owner,  
@@ -49,10 +50,9 @@ jobs:
   
                         const allTexts = [  
                           ...comments.filter(c => c.user.login.includes('devin')).map(c => c.body),  
-                          ...reviews.filter(r => r.user.login.includes('devin')).map(r => r.body)  
+                          ...reviews.filter(r => r.user.login.includes('devin')).map(r => r.body || '')  
                         ];  
   
-                        // Pegar totalIssues do review mais recente (iterar em reverso)  
                         let totalIssues = 0;  
                         for (let i = allTexts.length - 1; i >= 0; i--) {  
                           const match = allTexts[i].match(/found (\d+) new potential issue/i);  
@@ -62,7 +62,6 @@ jobs:
                           }  
                         }  
   
-                        // Contar ocorrências de "✅ resolved" em todos os textos  
                         let resolvedCount = 0;  
                         for (const text of allTexts) {  
                           const matches = text.toLowerCase().match(/✅\s*resolved/g);  
@@ -75,30 +74,25 @@ jobs:
                           labelToAdd = 'Devin Check Passed';  
                         }  
   
-                      // Review inicial - sem bugs  
                       } else if (comment.includes('no bugs found') || comment.includes('no issues found') || comment.includes('found 0 new potential issue')) {  
                         labelToAdd = 'Devin Check Passed';  
   
-                      // Review inicial - com issues  
                       } else if (comment.includes('new potential issue') && !comment.includes('found 0 new potential issue')) {  
                         labelToAdd = 'Devin Check Failed - TOFIX';  
   
-                      // Review com flag  
                       } else if (comment.includes('🚩')) {  
                         labelToAdd = 'Devin Check Failed - WONTFIX';  
                       }  
   
                       core.info('Label to add: ' + labelToAdd);  
-                      if (labelToAdd) {  
-                        const fs = require('fs');  
-                        fs.writeFileSync('label_data.json', JSON.stringify({ issue_number, labelToAdd }));  
-                      }  
+  
+                      // SEMPRE cria o arquivo, mesmo se labelToAdd for null  
+                      const fs = require('fs');  
+                      fs.writeFileSync('label_data.json', JSON.stringify({ issue_number, labelToAdd }));  
   
             - name: Upload label data  
-              if: success()  
               uses: actions/upload-artifact@v4  
               with:  
                   name: label-data  
                   path: label_data.json  
-                  retention-days: 1  
-                  if-no-files-found: ignore
+                  retention-days: 1
