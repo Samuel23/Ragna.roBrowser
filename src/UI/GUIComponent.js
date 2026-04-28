@@ -418,7 +418,8 @@ class GUIComponent {
 				event.preventDefault();
 			}
 		};
-		window.addEventListener('keydown', this._keyHandler);
+		const useCapture = !!this.captureKeyEvents;
+		window.addEventListener('keydown', this._keyHandler, useCapture);
 	}
 
 	_unbindKeyDown() {
@@ -1195,29 +1196,40 @@ class GUIComponent {
 			},
 
 			find(selector) {
-				// Delegate to shadow DOM content
 				const root = host.shadowRoot || host;
 				const results = root.querySelectorAll(selector);
-				// Return a minimal jQuery-like wrapper
-				return {
+				const wrapper = {
 					length: results.length,
 					0: results[0],
 					each(fn) {
 						results.forEach((el, i) => fn.call(el, i, el));
-						return this;
+						return wrapper;
 					},
 					click(fn) {
 						results.forEach(el => el.addEventListener('click', fn));
-						return this;
+						return wrapper;
 					},
 					text(val) {
 						if (val === undefined) return results[0]?.textContent || '';
 						results.forEach(el => {
 							el.textContent = val;
 						});
-						return this;
+						return wrapper;
+					},
+					show() {
+						results.forEach(el => {
+							el.style.display = '';
+						});
+						return wrapper;
+					},
+					hide() {
+						results.forEach(el => {
+							el.style.display = 'none';
+						});
+						return wrapper;
 					}
 				};
+				return wrapper;
 			}
 		};
 		this.ui = proxy;
