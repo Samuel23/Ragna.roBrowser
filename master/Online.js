@@ -106832,6 +106832,342 @@ var init_PacketStructure = __esmMin((() => {
 		})();
 	};
 	PACKET.ZC.EQUIPWIN_MICROSCOPE_V2.size = -1;
+	PACKET.ZC.REASSEMBLY_AUTH01 = function PACKET_ZC_REASSEMBLY_AUTH01(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH01.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH02 = function PACKET_ZC_REASSEMBLY_AUTH02(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH02.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH03 = function PACKET_ZC_REASSEMBLY_AUTH03(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH03.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH04 = function PACKET_ZC_REASSEMBLY_AUTH04(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH04.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH05 = function PACKET_ZC_REASSEMBLY_AUTH05(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH05.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH06 = function PACKET_ZC_REASSEMBLY_AUTH06(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH06.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH07 = function PACKET_ZC_REASSEMBLY_AUTH07(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH07.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH08 = function PACKET_ZC_REASSEMBLY_AUTH08(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH08.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH09 = function PACKET_ZC_REASSEMBLY_AUTH09(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH09.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH10 = function PACKET_ZC_REASSEMBLY_AUTH10(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH10.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH11 = function PACKET_ZC_REASSEMBLY_AUTH11(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH11.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH12 = function PACKET_ZC_REASSEMBLY_AUTH12(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH12.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH13 = function PACKET_ZC_REASSEMBLY_AUTH13(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH13.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH14 = function PACKET_ZC_REASSEMBLY_AUTH14(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH14.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH15 = function PACKET_ZC_REASSEMBLY_AUTH15(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH15.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH16 = function PACKET_ZC_REASSEMBLY_AUTH16(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH16.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH17 = function PACKET_ZC_REASSEMBLY_AUTH17(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH17.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH18 = function PACKET_ZC_REASSEMBLY_AUTH18(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH18.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH19 = function PACKET_ZC_REASSEMBLY_AUTH19(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH19.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH20 = function PACKET_ZC_REASSEMBLY_AUTH20(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH20.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH21 = function PACKET_ZC_REASSEMBLY_AUTH21(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH21.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH22 = function PACKET_ZC_REASSEMBLY_AUTH22(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH22.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH23 = function PACKET_ZC_REASSEMBLY_AUTH23(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH23.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH24 = function PACKET_ZC_REASSEMBLY_AUTH24(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH24.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH25 = function PACKET_ZC_REASSEMBLY_AUTH25(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH25.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH26 = function PACKET_ZC_REASSEMBLY_AUTH26(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH26.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH27 = function PACKET_ZC_REASSEMBLY_AUTH27(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH27.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH28 = function PACKET_ZC_REASSEMBLY_AUTH28(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH28.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH29 = function PACKET_ZC_REASSEMBLY_AUTH29(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH29.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH30 = function PACKET_ZC_REASSEMBLY_AUTH30(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH30.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH31 = function PACKET_ZC_REASSEMBLY_AUTH31(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH31.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH32 = function PACKET_ZC_REASSEMBLY_AUTH32(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH32.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH33 = function PACKET_ZC_REASSEMBLY_AUTH33(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH33.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH34 = function PACKET_ZC_REASSEMBLY_AUTH34(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH34.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH35 = function PACKET_ZC_REASSEMBLY_AUTH35(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH35.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH36 = function PACKET_ZC_REASSEMBLY_AUTH36(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH36.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH37 = function PACKET_ZC_REASSEMBLY_AUTH37(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH37.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH38 = function PACKET_ZC_REASSEMBLY_AUTH38(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH38.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH39 = function PACKET_ZC_REASSEMBLY_AUTH39(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH39.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH40 = function PACKET_ZC_REASSEMBLY_AUTH40(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH40.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH41 = function PACKET_ZC_REASSEMBLY_AUTH41(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH41.size = 2;
+	PACKET.ZC.REASSEMBLY_AUTH42 = function PACKET_ZC_REASSEMBLY_AUTH42(fp, end) {};
+	PACKET.ZC.REASSEMBLY_AUTH42.size = 2;
+	PACKET.CZ.REASSEMBLY_AUTH01 = function PACKET_CZ_REASSEMBLY_AUTH01() {};
+	PACKET.CZ.REASSEMBLY_AUTH01.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH02 = function PACKET_CZ_REASSEMBLY_AUTH02() {};
+	PACKET.CZ.REASSEMBLY_AUTH02.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH03 = function PACKET_CZ_REASSEMBLY_AUTH03() {};
+	PACKET.CZ.REASSEMBLY_AUTH03.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH04 = function PACKET_CZ_REASSEMBLY_AUTH04() {};
+	PACKET.CZ.REASSEMBLY_AUTH04.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH05 = function PACKET_CZ_REASSEMBLY_AUTH05() {};
+	PACKET.CZ.REASSEMBLY_AUTH05.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH06 = function PACKET_CZ_REASSEMBLY_AUTH06() {};
+	PACKET.CZ.REASSEMBLY_AUTH06.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH07 = function PACKET_CZ_REASSEMBLY_AUTH07() {};
+	PACKET.CZ.REASSEMBLY_AUTH07.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH08 = function PACKET_CZ_REASSEMBLY_AUTH08() {};
+	PACKET.CZ.REASSEMBLY_AUTH08.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH09 = function PACKET_CZ_REASSEMBLY_AUTH09() {};
+	PACKET.CZ.REASSEMBLY_AUTH09.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH10 = function PACKET_CZ_REASSEMBLY_AUTH10() {};
+	PACKET.CZ.REASSEMBLY_AUTH10.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH11 = function PACKET_CZ_REASSEMBLY_AUTH11() {};
+	PACKET.CZ.REASSEMBLY_AUTH11.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH12 = function PACKET_CZ_REASSEMBLY_AUTH12() {};
+	PACKET.CZ.REASSEMBLY_AUTH12.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH13 = function PACKET_CZ_REASSEMBLY_AUTH13() {};
+	PACKET.CZ.REASSEMBLY_AUTH13.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH14 = function PACKET_CZ_REASSEMBLY_AUTH14() {};
+	PACKET.CZ.REASSEMBLY_AUTH14.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH15 = function PACKET_CZ_REASSEMBLY_AUTH15() {};
+	PACKET.CZ.REASSEMBLY_AUTH15.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH16 = function PACKET_CZ_REASSEMBLY_AUTH16() {};
+	PACKET.CZ.REASSEMBLY_AUTH16.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH17 = function PACKET_CZ_REASSEMBLY_AUTH17() {};
+	PACKET.CZ.REASSEMBLY_AUTH17.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH18 = function PACKET_CZ_REASSEMBLY_AUTH18() {};
+	PACKET.CZ.REASSEMBLY_AUTH18.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH19 = function PACKET_CZ_REASSEMBLY_AUTH19() {};
+	PACKET.CZ.REASSEMBLY_AUTH19.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH20 = function PACKET_CZ_REASSEMBLY_AUTH20() {};
+	PACKET.CZ.REASSEMBLY_AUTH20.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH21 = function PACKET_CZ_REASSEMBLY_AUTH21() {};
+	PACKET.CZ.REASSEMBLY_AUTH21.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH22 = function PACKET_CZ_REASSEMBLY_AUTH22() {};
+	PACKET.CZ.REASSEMBLY_AUTH22.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH23 = function PACKET_CZ_REASSEMBLY_AUTH23() {};
+	PACKET.CZ.REASSEMBLY_AUTH23.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH24 = function PACKET_CZ_REASSEMBLY_AUTH24() {};
+	PACKET.CZ.REASSEMBLY_AUTH24.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH25 = function PACKET_CZ_REASSEMBLY_AUTH25() {};
+	PACKET.CZ.REASSEMBLY_AUTH25.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH26 = function PACKET_CZ_REASSEMBLY_AUTH26() {};
+	PACKET.CZ.REASSEMBLY_AUTH26.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH27 = function PACKET_CZ_REASSEMBLY_AUTH27() {};
+	PACKET.CZ.REASSEMBLY_AUTH27.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH28 = function PACKET_CZ_REASSEMBLY_AUTH28() {};
+	PACKET.CZ.REASSEMBLY_AUTH28.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH29 = function PACKET_CZ_REASSEMBLY_AUTH29() {};
+	PACKET.CZ.REASSEMBLY_AUTH29.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH30 = function PACKET_CZ_REASSEMBLY_AUTH30() {};
+	PACKET.CZ.REASSEMBLY_AUTH30.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH31 = function PACKET_CZ_REASSEMBLY_AUTH31() {};
+	PACKET.CZ.REASSEMBLY_AUTH31.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH32 = function PACKET_CZ_REASSEMBLY_AUTH32() {};
+	PACKET.CZ.REASSEMBLY_AUTH32.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH33 = function PACKET_CZ_REASSEMBLY_AUTH33() {};
+	PACKET.CZ.REASSEMBLY_AUTH33.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH34 = function PACKET_CZ_REASSEMBLY_AUTH34() {};
+	PACKET.CZ.REASSEMBLY_AUTH34.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH35 = function PACKET_CZ_REASSEMBLY_AUTH35() {};
+	PACKET.CZ.REASSEMBLY_AUTH35.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH36 = function PACKET_CZ_REASSEMBLY_AUTH36() {};
+	PACKET.CZ.REASSEMBLY_AUTH36.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH37 = function PACKET_CZ_REASSEMBLY_AUTH37() {};
+	PACKET.CZ.REASSEMBLY_AUTH37.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH38 = function PACKET_CZ_REASSEMBLY_AUTH38() {};
+	PACKET.CZ.REASSEMBLY_AUTH38.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH39 = function PACKET_CZ_REASSEMBLY_AUTH39() {};
+	PACKET.CZ.REASSEMBLY_AUTH39.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH40 = function PACKET_CZ_REASSEMBLY_AUTH40() {};
+	PACKET.CZ.REASSEMBLY_AUTH40.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH41 = function PACKET_CZ_REASSEMBLY_AUTH41() {};
+	PACKET.CZ.REASSEMBLY_AUTH41.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
+	PACKET.CZ.REASSEMBLY_AUTH42 = function PACKET_CZ_REASSEMBLY_AUTH42() {};
+	PACKET.CZ.REASSEMBLY_AUTH42.prototype.build = function() {
+		const pkt_buf = new BinaryWriter(2);
+		pkt_buf.writeShort(this.constructor.id);
+		return pkt_buf;
+	};
 	PACKET.ZC.SHOWSCRIPT = function PACKET_ZC_SHOWSCRIPT(fp, end) {
 		this.GID = fp.readULong();
 		this.msg = fp.readString(end - fp.tell());
@@ -144565,6 +144901,90 @@ var init_PacketRegister = __esmMin((() => {
 		2135: PACKET.ZC.NOTIFY_NEWENTRY6,
 		2136: PACKET.ZC.NOTIFY_STANDENTRY6,
 		2137: PACKET.ZC.EQUIPWIN_MICROSCOPE_V2,
+		2138: PACKET.ZC.REASSEMBLY_AUTH01,
+		2139: PACKET.ZC.REASSEMBLY_AUTH02,
+		2140: PACKET.ZC.REASSEMBLY_AUTH03,
+		2141: PACKET.ZC.REASSEMBLY_AUTH04,
+		2142: PACKET.ZC.REASSEMBLY_AUTH05,
+		2143: PACKET.ZC.REASSEMBLY_AUTH06,
+		2144: PACKET.ZC.REASSEMBLY_AUTH07,
+		2145: PACKET.ZC.REASSEMBLY_AUTH08,
+		2146: PACKET.ZC.REASSEMBLY_AUTH09,
+		2147: PACKET.ZC.REASSEMBLY_AUTH10,
+		2148: PACKET.ZC.REASSEMBLY_AUTH11,
+		2149: PACKET.ZC.REASSEMBLY_AUTH12,
+		2150: PACKET.ZC.REASSEMBLY_AUTH13,
+		2151: PACKET.ZC.REASSEMBLY_AUTH14,
+		2152: PACKET.ZC.REASSEMBLY_AUTH15,
+		2153: PACKET.ZC.REASSEMBLY_AUTH16,
+		2154: PACKET.ZC.REASSEMBLY_AUTH17,
+		2155: PACKET.ZC.REASSEMBLY_AUTH18,
+		2156: PACKET.ZC.REASSEMBLY_AUTH19,
+		2157: PACKET.ZC.REASSEMBLY_AUTH20,
+		2158: PACKET.ZC.REASSEMBLY_AUTH21,
+		2159: PACKET.ZC.REASSEMBLY_AUTH22,
+		2160: PACKET.ZC.REASSEMBLY_AUTH23,
+		2161: PACKET.ZC.REASSEMBLY_AUTH24,
+		2162: PACKET.ZC.REASSEMBLY_AUTH25,
+		2163: PACKET.ZC.REASSEMBLY_AUTH26,
+		2164: PACKET.ZC.REASSEMBLY_AUTH27,
+		2165: PACKET.ZC.REASSEMBLY_AUTH28,
+		2166: PACKET.ZC.REASSEMBLY_AUTH29,
+		2167: PACKET.ZC.REASSEMBLY_AUTH30,
+		2168: PACKET.ZC.REASSEMBLY_AUTH31,
+		2169: PACKET.ZC.REASSEMBLY_AUTH32,
+		2170: PACKET.ZC.REASSEMBLY_AUTH33,
+		2171: PACKET.ZC.REASSEMBLY_AUTH34,
+		2172: PACKET.ZC.REASSEMBLY_AUTH35,
+		2173: PACKET.ZC.REASSEMBLY_AUTH36,
+		2174: PACKET.ZC.REASSEMBLY_AUTH37,
+		2175: PACKET.ZC.REASSEMBLY_AUTH38,
+		2176: PACKET.ZC.REASSEMBLY_AUTH39,
+		2177: PACKET.ZC.REASSEMBLY_AUTH40,
+		2178: PACKET.ZC.REASSEMBLY_AUTH41,
+		2179: PACKET.ZC.REASSEMBLY_AUTH42,
+		2180: PACKET.CZ.REASSEMBLY_AUTH01,
+		2181: PACKET.CZ.REASSEMBLY_AUTH02,
+		2182: PACKET.CZ.REASSEMBLY_AUTH03,
+		2183: PACKET.CZ.REASSEMBLY_AUTH04,
+		2184: PACKET.CZ.REASSEMBLY_AUTH05,
+		2185: PACKET.CZ.REASSEMBLY_AUTH06,
+		2186: PACKET.CZ.REASSEMBLY_AUTH07,
+		2187: PACKET.CZ.REASSEMBLY_AUTH08,
+		2188: PACKET.CZ.REASSEMBLY_AUTH09,
+		2189: PACKET.CZ.REASSEMBLY_AUTH10,
+		2190: PACKET.CZ.REASSEMBLY_AUTH11,
+		2191: PACKET.CZ.REASSEMBLY_AUTH12,
+		2192: PACKET.CZ.REASSEMBLY_AUTH13,
+		2193: PACKET.CZ.REASSEMBLY_AUTH14,
+		2194: PACKET.CZ.REASSEMBLY_AUTH15,
+		2195: PACKET.CZ.REASSEMBLY_AUTH16,
+		2196: PACKET.CZ.REASSEMBLY_AUTH17,
+		2197: PACKET.CZ.REASSEMBLY_AUTH18,
+		2198: PACKET.CZ.REASSEMBLY_AUTH19,
+		2199: PACKET.CZ.REASSEMBLY_AUTH20,
+		2200: PACKET.CZ.REASSEMBLY_AUTH21,
+		2201: PACKET.CZ.REASSEMBLY_AUTH22,
+		2202: PACKET.CZ.REASSEMBLY_AUTH23,
+		2203: PACKET.CZ.REASSEMBLY_AUTH24,
+		2204: PACKET.CZ.REASSEMBLY_AUTH25,
+		2205: PACKET.CZ.REASSEMBLY_AUTH26,
+		2206: PACKET.CZ.REASSEMBLY_AUTH27,
+		2207: PACKET.CZ.REASSEMBLY_AUTH28,
+		2208: PACKET.CZ.REASSEMBLY_AUTH29,
+		2209: PACKET.CZ.REASSEMBLY_AUTH30,
+		2210: PACKET.CZ.REASSEMBLY_AUTH31,
+		2211: PACKET.CZ.REASSEMBLY_AUTH32,
+		2212: PACKET.CZ.REASSEMBLY_AUTH33,
+		2213: PACKET.CZ.REASSEMBLY_AUTH34,
+		2214: PACKET.CZ.REASSEMBLY_AUTH35,
+		2215: PACKET.CZ.REASSEMBLY_AUTH36,
+		2216: PACKET.CZ.REASSEMBLY_AUTH37,
+		2217: PACKET.CZ.REASSEMBLY_AUTH38,
+		2218: PACKET.CZ.REASSEMBLY_AUTH39,
+		2219: PACKET.CZ.REASSEMBLY_AUTH40,
+		2220: PACKET.CZ.REASSEMBLY_AUTH41,
+		2221: PACKET.CZ.REASSEMBLY_AUTH42,
 		2227: PACKET.ZC.SHOWSCRIPT,
 		2232: PACKET.CH.PINCODE_CHECK,
 		2233: PACKET.HC.SECOND_PASSWD_LOGIN,
@@ -332247,7 +332667,18 @@ function onConfigUpdate(type, val) {
 function onRestart() {
 	__vitePreload(() => Promise.resolve().then(() => (init_CharEngine(), CharEngine_exports)).then((m) => m.default.reload()), void 0, import.meta.url);
 }
-var _mapName, _isInitialised, snCounter, chatLines, MapEngine, _walkTimer, _walkLastTick;
+/**
+* Reply to reassembly auth packet
+* @param {object} pkt - packet
+*/
+function onReassemblyAuth(pkt) {
+	for (const [ZC, CZ] of packetMap.entries()) if (pkt instanceof ZC) {
+		console.warn(`Reassembly Auth ${ZC.id} => ${CZ.id}`);
+		Network.sendPacket(new CZ());
+		return;
+	}
+}
+var _mapName, _isInitialised, snCounter, chatLines, packetMap, MapEngine, _walkTimer, _walkLastTick;
 var init_MapEngine = __esmMin((() => {
 	init_jquery();
 	init_DBManager();
@@ -332364,6 +332795,7 @@ var init_MapEngine = __esmMin((() => {
 	_isInitialised = false;
 	snCounter = 0;
 	chatLines = 0;
+	packetMap = /* @__PURE__ */ new Map();
 	MapEngine = class MapEngine {
 		/**
 		* @type {boolean} do we need to update UI versions?
@@ -332452,6 +332884,13 @@ var init_MapEngine = __esmMin((() => {
 				Network.hookPacket(PACKET.ZC.CONFIG_NOTIFY3, onConfigNotify);
 				Network.hookPacket(PACKET.ZC.CONFIG_NOTIFY4, onConfigNotify);
 				Network.hookPacket(PACKET.ZC.CONFIG, onConfig);
+				for (let i = 1; i <= 42; i++) {
+					const id = String(i).padStart(2, "0");
+					const ZC = PACKET.ZC[`REASSEMBLY_AUTH${id}`];
+					const CZ = PACKET.CZ[`REASSEMBLY_AUTH${id}`];
+					packetMap.set(ZC, CZ);
+					Network.hookPacket(ZC, onReassemblyAuth);
+				}
 				MainEngine$11();
 				MapStateEngine();
 				NPCEngine$2();
