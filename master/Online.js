@@ -109389,6 +109389,48 @@ var init_PacketStructure = __esmMin((() => {
 		this.masterName = this.masterAID;
 	};
 	PACKET.ZC.GUILD_INFO3.size = 94;
+	PACKET.ZC.STORE_ASSISTANT_ENTRY = function PACKET_ZC_STORE_ASSISTANT_ENTRY(fp, end) {
+		this.GID = fp.readULong();
+		this.job = fp.readShort();
+		this.unknown = fp.readShort();
+		this.PosDir = [
+			fp.readShort(),
+			fp.readShort(),
+			6
+		];
+		this.sex = fp.readUChar();
+		this.head = fp.readShort();
+		this.weapon = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
+		this.shield = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
+		this.accessory = fp.readShort();
+		this.accessory2 = fp.readShort();
+		this.accessory3 = fp.readShort();
+		this.headpalette = fp.readShort();
+		this.bodypalette = fp.readShort();
+		this.Robe = fp.readShort();
+		this.name = fp.readBinaryString(NAME_LENGTH);
+		this.speed = 0;
+		this.objecttype = 0;
+		this.bodyState = 0;
+		this.healthState = 0;
+		this.effectState = 0;
+		this.headDir = 0;
+		this.GUID = 0;
+		this.GEmblemVer = 0;
+		this.honor = 0;
+		this.virtue = 0;
+		this.isPKModeON = 0;
+		this.xSize = 0;
+		this.ySize = 0;
+		this.state = 0;
+		this.clevel = 0;
+	};
+	PACKET.ZC.STORE_ASSISTANT_ENTRY.size = PacketVerManager_default.value >= 20181121 ? 61 : 57;
+	PACKET.ZC.STORE_ASSISTANT_DISAPPEAR = function PACKET_ZC_STORE_ASSISTANT_DISAPPEAR(fp, end) {
+		this.GID = fp.readULong();
+		this.type = 0;
+	};
+	PACKET.ZC.STORE_ASSISTANT_DISAPPEAR.size = 6;
 	PACKET.ZC.CONFIG_NOTIFY2 = function PACKET_ZC_CONFIG_NOTIFY2(fp, end) {
 		this.show_eq_flag = fp.readUChar();
 		this.call_flag = fp.readUChar();
@@ -109903,6 +109945,44 @@ var init_PacketStructure = __esmMin((() => {
 		})();
 	};
 	PACKET.ZC.EQUIPWIN_MICROSCOPE_V6.size = -1;
+	PACKET.ZC.STORE_ASSISTANT_ENTRY_V2 = function PACKET_ZC_STORE_ASSISTANT_ENTRY_V2(fp, end) {
+		this.GID = fp.readULong();
+		this.job = fp.readShort();
+		this.unknown = fp.readShort();
+		this.PosDir = [
+			fp.readShort(),
+			fp.readShort(),
+			6
+		];
+		this.sex = fp.readUChar();
+		this.head = fp.readShort();
+		this.weapon = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
+		this.shield = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
+		this.accessory = fp.readShort();
+		this.accessory2 = fp.readShort();
+		this.accessory3 = fp.readShort();
+		this.headpalette = fp.readShort();
+		this.bodypalette = fp.readShort();
+		this.Robe = fp.readShort();
+		this.name = fp.readBinaryString(NAME_LENGTH);
+		this.unknown2 = fp.readShort();
+		this.speed = 0;
+		this.objecttype = 0;
+		this.bodyState = 0;
+		this.healthState = 0;
+		this.effectState = 0;
+		this.headDir = 0;
+		this.GUID = 0;
+		this.GEmblemVer = 0;
+		this.honor = 0;
+		this.virtue = 0;
+		this.isPKModeON = 0;
+		this.xSize = 0;
+		this.ySize = 0;
+		this.state = 0;
+		this.clevel = 0;
+	};
+	PACKET.ZC.STORE_ASSISTANT_ENTRY_V2.size = PacketVerManager_default.value >= 20181121 ? 63 : 59;
 	PACKET.ZC.SPLIT_SEND_ITEMLIST_SET = function PACKET_SPLIT_SEND_ITEMLIST_SET(fp, end) {
 		this.invType = fp.readUChar();
 		this.name = fp.readBinaryString(end - fp.tell());
@@ -145144,6 +145224,8 @@ var init_PacketRegister = __esmMin((() => {
 		2672: PACKET.CZ.RANDOM_COMBINE_ITEM_UI_CLOSE,
 		2685: PACKET.ZC.ACK_RODEX_LIST2,
 		2692: PACKET.ZC.GUILD_INFO3,
+		2697: PACKET.ZC.STORE_ASSISTANT_ENTRY,
+		2698: PACKET.ZC.STORE_ASSISTANT_DISAPPEAR,
 		2709: PACKET.ZC.CONFIG_NOTIFY2,
 		2710: PACKET.ZC.ADD_EXCHANGE_ITEM4,
 		2711: PACKET.CZ.REQ_WEAR_SWITCHEQUIP_ADD,
@@ -145190,6 +145272,7 @@ var init_PacketRegister = __esmMin((() => {
 		2789: PACKET.ZC.GROUP_LIST3,
 		2818: PACKET.AC.REFUSE_LOGIN,
 		2819: PACKET.ZC.EQUIPWIN_MICROSCOPE_V6,
+		2821: PACKET.ZC.STORE_ASSISTANT_ENTRY_V2,
 		2824: PACKET.ZC.SPLIT_SEND_ITEMLIST_SET,
 		2825: PACKET.ZC.SPLIT_SEND_ITEMLIST_NORMAL,
 		2826: PACKET.ZC.SPLIT_SEND_ITEMLIST_EQUIP,
@@ -250264,7 +250347,7 @@ function UpdateBodyStyle(look) {
 		let job = this._job;
 		let cashMountCostume = false;
 		if (PacketVerManager_default.value <= 20231220) {
-			if (look > 0) look = getBodyVal();
+			if (look > 0) look = getBodyVal.call(this);
 		}
 		if (this.costume) {
 			const mountValue = this._allRidingState ? AllMountTable[look] : MountTable[look];
@@ -324254,7 +324337,10 @@ function EntityEngine() {
 	Network.hookPacket(PACKET.ZC.NOTIFY_NEWENTRY11, onEntitySpam);
 	Network.hookPacket(PACKET.ZC.NOTIFY_MOVEENTRY11, onEntitySpam);
 	Network.hookPacket(PACKET.ZC.NOTIFY_STANDENTRY11, onEntitySpam);
+	Network.hookPacket(PACKET.ZC.STORE_ASSISTANT_ENTRY, onEntitySpam);
+	Network.hookPacket(PACKET.ZC.STORE_ASSISTANT_ENTRY_V2, onEntitySpam);
 	Network.hookPacket(PACKET.ZC.NOTIFY_VANISH, onEntityVanish);
+	Network.hookPacket(PACKET.ZC.STORE_ASSISTANT_DISAPPEAR, onEntityVanish);
 	Network.hookPacket(PACKET.ZC.NOTIFY_MOVE, onEntityMove);
 	Network.hookPacket(PACKET.ZC.STOPMOVE, onEntityStopMove);
 	Network.hookPacket(PACKET.ZC.NOTIFY_ACT, onEntityAction);
@@ -334967,7 +335053,7 @@ var init_CharSelectV3 = __esmMin((() => {
 //#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.html?raw
 var CharSelectV4_default$2;
 var init_CharSelectV4$2 = __esmMin((() => {
-	CharSelectV4_default$2 = "<div id=\"CharSelectV4\">\r\n	<div class=\"char_select_container\">\r\n		<!--Cancel Button-->\r\n		<button\r\n			class=\"btn cancel\"\r\n			type=\"submit\"\r\n			data-background=\"select_character_ver3/bt_close2_normal.bmp\"\r\n			data-hover=\"select_character_ver3/bt_close2_over.bmp\"\r\n			data-down=\"select_character_ver3/bt_close2_press.bmp\"\r\n		></button>\r\n		<!-- BOX -->\r\n		<div class=\"char_list\">\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot0\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot0 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot1\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot1 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot2\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot2 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot3\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot3 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot4\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot4 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot5\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot5 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot6\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot6 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot7\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot7 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot8\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot8 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot9\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot9 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot10\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot10 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot11\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot11 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot12\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot12 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot13\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot13 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas id=\"slot14\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot14 hidden\"></div>\r\n			</div>\r\n		</div>\r\n\r\n		<!-- Characters infos -->\r\n		<div class=\"charinfo\" data-background=\"select_character_ver3/img_info.bmp\">\r\n			<div class=\"job\"></div>\r\n			<div class=\"lvl\"></div>\r\n			<div class=\"exp\"></div>\r\n			<div class=\"hp\"></div>\r\n			<div class=\"sp\"></div>\r\n			<div class=\"map\"></div>\r\n			<div class=\"str\"></div>\r\n			<div class=\"agi\"></div>\r\n			<div class=\"vit\"></div>\r\n			<div class=\"int\"></div>\r\n			<div class=\"dex\"></div>\r\n			<div class=\"luk\"></div>\r\n			<button\r\n				class=\"btn delete\"\r\n				data-background=\"select_character_ver3/bt_info_normal.bmp\"\r\n				data-hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_info_press.bmp\"\r\n				data-text=\"3339\"\r\n			></button>\r\n			<button\r\n				class=\"btn canceldelete\"\r\n				data-background=\"select_character_ver3/bt_info_normal.bmp\"\r\n				data-hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_info_press.bmp\"\r\n				data-text=\"3340\"\r\n			></button>\r\n			<button\r\n				class=\"btn finaldelete\"\r\n				data-background=\"select_character_ver3/bt_info_normal.bmp\"\r\n				data-hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_info_press.bmp\"\r\n				data-text=\"3342\"\r\n			></button>\r\n			<button\r\n				class=\"btn ok\"\r\n				data-background=\"select_character_ver3/bt_gamestart_off.bmp\"\r\n				data-hover=\"select_character_ver3/bt_gamestart_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_gamestart_press.bmp\"\r\n				data-text=\"3341\"\r\n			></button>\r\n			<!-- Pages infos -->\r\n			<div class=\"pageinfo\"><span class=\"current\">1</span> / <span class=\"count\">9</span></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	CharSelectV4_default$2 = "<div id=\"CharSelectV4\">\r\n	<div class=\"char_select_container\">\r\n		<!--Cancel Button-->\r\n		<button\r\n			class=\"btn cancel\"\r\n			type=\"submit\"\r\n			data-background=\"select_character_ver3/bt_close2_normal.bmp\"\r\n			data-hover=\"select_character_ver3/bt_close2_over.bmp\"\r\n			data-down=\"select_character_ver3/bt_close2_press.bmp\"\r\n		></button>\r\n		<!-- BOX -->\r\n		<div class=\"char_list\">\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot0\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot0 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot1\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot1 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot2\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot2 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot3\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot3 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot4\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot4 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot5\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot5 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot6\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot6 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot7\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot7 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot8\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot8 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot9\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot9 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot10\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot10 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot11\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot11 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot12\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot12 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot13\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot13 hidden\"></div>\r\n			</div>\r\n\r\n			<div\r\n				class=\"char_canvas\"\r\n				data-hover=\"select_character_ver3/img_slot_over.bmp\"\r\n				data-down=\"select_character_ver3/img_slot_press.bmp\"\r\n			>\r\n				<canvas\r\n					id=\"slot14\"\r\n					width=\"157\"\r\n					height=\"195\"\r\n					data-background=\"select_character_ver3/img_slot2_normal.bmp\"\r\n				></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot14 hidden\"></div>\r\n			</div>\r\n		</div>\r\n\r\n		<!-- Characters infos -->\r\n		<div class=\"charinfo\" data-background=\"select_character_ver3/img_info.bmp\">\r\n			<div class=\"job\"></div>\r\n			<div class=\"lvl\"></div>\r\n			<div class=\"exp\"></div>\r\n			<div class=\"hp\"></div>\r\n			<div class=\"sp\"></div>\r\n			<div class=\"map\"></div>\r\n			<div class=\"str\"></div>\r\n			<div class=\"agi\"></div>\r\n			<div class=\"vit\"></div>\r\n			<div class=\"int\"></div>\r\n			<div class=\"dex\"></div>\r\n			<div class=\"luk\"></div>\r\n			<button\r\n				class=\"btn delete\"\r\n				data-background=\"select_character_ver3/bt_info_normal.bmp\"\r\n				data-hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_info_press.bmp\"\r\n				data-text=\"3339\"\r\n			></button>\r\n			<button\r\n				class=\"btn canceldelete\"\r\n				data-background=\"select_character_ver3/bt_info_normal.bmp\"\r\n				data-hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_info_press.bmp\"\r\n				data-text=\"3340\"\r\n			></button>\r\n			<button\r\n				class=\"btn finaldelete\"\r\n				data-background=\"select_character_ver3/bt_info_normal.bmp\"\r\n				data-hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_info_press.bmp\"\r\n				data-text=\"3342\"\r\n			></button>\r\n			<button\r\n				class=\"btn ok\"\r\n				data-background=\"select_character_ver3/bt_gamestart_off.bmp\"\r\n				data-hover=\"select_character_ver3/bt_gamestart_over.bmp\"\r\n				data-down=\"select_character_ver3/bt_gamestart_press.bmp\"\r\n				data-text=\"3341\"\r\n			></button>\r\n			<!-- Pages infos -->\r\n			<div class=\"pageinfo\"><span class=\"current\">1</span> / <span class=\"count\">9</span></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.css?raw
@@ -335070,7 +335156,7 @@ function cancel$4() {
 	if (_disable_UI === false) {
 		UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", function() {
 			CharSelectV4.onExitRequest();
-			updateCharSlot();
+			CharSelectV4.clearAllSlots();
 		}, null);
 		stopCountdownInterval();
 	}
@@ -335191,41 +335277,6 @@ function changeBackgroundEverySecond() {
 		}
 	}
 }
-function updateCharSlot() {
-	for (let i = 0; i < _maxSlots; ++i) {
-		jquery_default(CharSelectV4.ui.find(".char_canvas")[i]).find(".name").html(_slots[i] !== void 0 ? _slots[i].name : "");
-		if (_slots[i] === void 0) {
-			const slotNum = i;
-			jquery_default(CharSelectV4.ui.find(".job_icon")[slotNum]).css("background-image", "");
-			if (CharSelectV4.ui.find("#slot" + slotNum)) Client.loadFile(DB.INTERFACE_PATH + "select_character_ver3/img_slot2_normal.bmp", function(dataURI) {
-				CharSelectV4.ui.find("#slot" + slotNum).css("backgroundImage", "url(" + dataURI + ")");
-			});
-			const countdown = document.querySelector(".timedelete.slot" + slotNum);
-			if (countdown) {
-				countdown.setAttribute("data-duration", 0);
-				countdown.classList.add("hidden");
-				countdown.style.display = "none";
-			}
-		} else {
-			Client.loadFile(DB.INTERFACE_PATH + "select_character_ver3/img_slot_normal.bmp", function(dataURI) {
-				CharSelectV4.ui.find("#slot" + i).css("backgroundImage", "url(" + dataURI + ")");
-			});
-			const slotJobIcon = jquery_default(CharSelectV4.ui.find(".job_icon")[i]);
-			Client.loadFile(DB.INTERFACE_PATH + "renewalparty/icon_jobs_" + _slots[i].job + ".bmp", function(dataURI) {
-				slotJobIcon.css("backgroundImage", "url(" + dataURI + ")");
-			});
-			if (_slots[i].DeleteDate) {
-				const slotNum = i;
-				const countdown = document.querySelector(".timedelete.slot" + slotNum);
-				if (countdown) {
-					countdown.setAttribute("data-duration", _slots[i].DeleteDate);
-					countdown.classList.remove("hidden");
-					countdown.style.display = "block";
-				}
-			}
-		}
-	}
-}
 /**
 * Render sprites to canvas
 */
@@ -335238,7 +335289,7 @@ function render$4() {
 		_ctx[i].clearRect(0, 0, _ctx[i].canvas.width, _ctx[i].canvas.height);
 		if (_entitySlots[idx + i]) {
 			SpriteRenderer.bind2DContext(_ctx[i], 78, 157);
-			if (_slots[i].DeleteDate) _entitySlots[idx + i].action = 2;
+			if (_slots[idx + i] && _slots[idx + i].DeleteDate) _entitySlots[idx + i].action = 2;
 			_entitySlots[idx + i].renderEntity();
 		}
 	}
@@ -335312,6 +335363,7 @@ var init_CharSelectV4 = __esmMin((() => {
 	*/
 	CharSelectV4.onAppend = function onAppend() {
 		if (Controller$3) Controller$3.getUI().append();
+		CharSelectV4.clearAllSlots();
 		if (CharSelectV4.ui) startCountdownInterval();
 		moveCursorTo(_index);
 		_bgInterval = setInterval(changeBackgroundEverySecond, 250);
@@ -335365,15 +335417,10 @@ var init_CharSelectV4 = __esmMin((() => {
 	* @param {object} pkt - packet structure
 	*/
 	CharSelectV4.setInfo = function setInfo(pkt) {
+		CharSelectV4.clearAllSlots();
 		_maxSlots = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 15);
 		_sex = pkt.sex;
-		_slots.length = 0;
-		_entitySlots.length = 0;
-		_list.length = 0;
-		if (pkt.charInfo) {
-			for (let i = 0, count = pkt.charInfo.length; i < count; ++i) CharSelectV4.addCharacter(pkt.charInfo[i]);
-			updateCharSlot();
-		}
+		if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) CharSelectV4.addCharacter(pkt.charInfo[i]);
 		moveCursorTo(_index);
 	};
 	/**
@@ -335422,6 +335469,7 @@ var init_CharSelectV4 = __esmMin((() => {
 					_list.splice(i, 1);
 					--count;
 				} else i++;
+				CharSelectV4.updateCharSlot(_index);
 				moveCursorTo(_index);
 				return;
 			}
@@ -335458,7 +335506,7 @@ var init_CharSelectV4 = __esmMin((() => {
 		_entitySlots[character.CharNum].set(character);
 		_entitySlots[character.CharNum].effectState = _entitySlots[character.CharNum]._effectState & ~StatusState_default.EffectState.INVISIBLE;
 		_entitySlots[character.CharNum].hideShadow = true;
-		updateCharSlot();
+		CharSelectV4.updateCharSlot(character.CharNum);
 	};
 	/**
 	* Disable or Enable the UI.
@@ -335477,6 +335525,53 @@ var init_CharSelectV4 = __esmMin((() => {
 	CharSelectV4.onCreateRequest = function onCreateRequest() {};
 	CharSelectV4.onConnectRequest = function onConnectRequest() {};
 	CharSelectV4.onCancelDeleteRequest = function onCancelDeleteRequest() {};
+	CharSelectV4.updateCharSlot = function updateCharSlot(slotId) {
+		let start = 0;
+		let loopMax = Math.max(_maxSlots, _slots.length);
+		if (typeof slotId !== "undefined") {
+			start = slotId;
+			loopMax = slotId + 1;
+		}
+		for (let i = start; i < loopMax; ++i) {
+			jquery_default(CharSelectV4.ui.find(".char_canvas")[i]).find(".name").html(_slots[i] ? _slots[i].name : "");
+			if (!_slots[i]) {
+				const slotNum = i;
+				jquery_default(CharSelectV4.ui.find(".job_icon")[slotNum]).css("background-image", "");
+				if (CharSelectV4.ui.find("#slot" + slotNum)) Client.loadFile(DB.INTERFACE_PATH + "select_character_ver3/img_slot2_normal.bmp", function(dataURI) {
+					CharSelectV4.ui.find("#slot" + slotNum).css("backgroundImage", "url(" + dataURI + ")");
+				});
+				const countdown = document.querySelector(".timedelete.slot" + slotNum);
+				if (countdown) {
+					countdown.setAttribute("data-duration", 0);
+					countdown.classList.add("hidden");
+					countdown.style.display = "none";
+				}
+			} else {
+				Client.loadFile(DB.INTERFACE_PATH + "select_character_ver3/img_slot_normal.bmp", function(dataURI) {
+					CharSelectV4.ui.find("#slot" + i).css("backgroundImage", "url(" + dataURI + ")");
+				});
+				const slotJobIcon = jquery_default(CharSelectV4.ui.find(".job_icon")[i]);
+				Client.loadFile(DB.INTERFACE_PATH + "renewalparty/icon_jobs_" + _slots[i].job + ".bmp", function(dataURI) {
+					slotJobIcon.css("backgroundImage", "url(" + dataURI + ")");
+				});
+				if (_slots[i].DeleteDate) {
+					const slotNum = i;
+					const countdown = document.querySelector(".timedelete.slot" + slotNum);
+					if (countdown) {
+						countdown.setAttribute("data-duration", _slots[i].DeleteDate);
+						countdown.classList.remove("hidden");
+						countdown.style.display = "block";
+					}
+				}
+			}
+		}
+	};
+	CharSelectV4.clearAllSlots = function clearAllSlots() {
+		_slots.length = 0;
+		_entitySlots.length = 0;
+		_list.length = 0;
+		CharSelectV4.updateCharSlot();
+	};
 	CharSelectV4_default = UIManager.addComponent(CharSelectV4);
 }));
 //#endregion
