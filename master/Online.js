@@ -153555,7 +153555,7 @@ var init_Storage$6 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$37(event) {
+function stopPropagation$36(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -153682,7 +153682,7 @@ function onItemOut$20() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$16(event) {
+function onItemDragStart$15(event) {
 	const i = getItemIndexById$3(parseInt(this.getAttribute("data-index"), 10));
 	if (i === -1) return;
 	const img = new Image();
@@ -153788,7 +153788,7 @@ var init_Storage$5 = __esmMin((() => {
 			top: Math.min(Math.max(0, _preferences$70.y), Renderer.height - this.ui.height()),
 			left: Math.min(Math.max(0, _preferences$70.x), Renderer.width - this.ui.width())
 		});
-		this.ui.on("drop", onDrop$23).on("dragover", stopPropagation$37).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$8).on("mouseover", ".item", onItemOver$19).on("mouseout", ".item", onItemOut$20).on("dragstart", ".item", onItemDragStart$16).on("dragend", ".item", onItemDragEnd$16).on("contextmenu", ".item", onItemInfo$23);
+		this.ui.on("drop", onDrop$23).on("dragover", stopPropagation$36).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$8).on("mouseover", ".item", onItemOver$19).on("mouseout", ".item", onItemOut$20).on("dragstart", ".item", onItemDragStart$15).on("dragend", ".item", onItemDragEnd$16).on("contextmenu", ".item", onItemInfo$23);
 		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
@@ -154129,7 +154129,7 @@ var init_Storage$3 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/Storage.js
-function stopPropagation$36(event) {
+function stopPropagation$35(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -154306,7 +154306,7 @@ function onItemOver$18() {
 function onItemOut$19() {
 	Storage.ui.find(".overlay").hide();
 }
-function onItemDragStart$15(event) {
+function onItemDragStart$14(event) {
 	const i = getItemIndexById$2(parseInt(this.getAttribute("data-index"), 10));
 	if (i === -1) return;
 	const img = new Image();
@@ -154400,7 +154400,7 @@ var init_Storage$2 = __esmMin((() => {
 			top: Math.min(Math.max(0, _preferences$69.y), Renderer.height - this.ui.height()),
 			left: Math.min(Math.max(0, _preferences$69.x), Renderer.width - this.ui.width())
 		});
-		this.ui.on("drop", onDrop$22).on("dragover", stopPropagation$36).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$7).on("mouseover", ".item", onItemOver$18).on("mouseout", ".item", onItemOut$19).on("dragstart", ".item", onItemDragStart$15).on("dragend", ".item", onItemDragEnd$15).on("contextmenu", ".item", onItemInfo$22);
+		this.ui.on("drop", onDrop$22).on("dragover", stopPropagation$35).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$7).on("mouseover", ".item", onItemOver$18).on("mouseout", ".item", onItemOut$19).on("dragstart", ".item", onItemDragStart$14).on("dragend", ".item", onItemDragEnd$15).on("contextmenu", ".item", onItemInfo$22);
 		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
@@ -154628,7 +154628,7 @@ var init_Storage$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$35(event) {
+function stopPropagation$34(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -154766,7 +154766,7 @@ function onItemOut$18() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$14(event) {
+function onItemDragStart$13(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = CartItems.getItemByIndex(index);
 	if (!item) return;
@@ -154884,13 +154884,13 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$35);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$34);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$4);
 		this.ui.find(".footer .extend").mousedown(onResize$15);
 		this.ui.find(".titlebar .close").click(function() {
 			CartItems.ui.hide();
 		});
-		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$35).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$14).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
+		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$34).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
 		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
@@ -160026,7 +160026,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$34(event) {
+function stopPropagation$33(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -160087,7 +160087,7 @@ function onItemOut$17() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$13(event) {
+function onItemDragStart$12(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(index);
 	if (!item) return;
@@ -160235,9 +160235,9 @@ var init_Mail$1 = __esmMin((() => {
 		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
 		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$34).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$34);
-		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$34);
+		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$33).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
+		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$33);
+		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$33);
 		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
 		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
 		onWindowMailbox();
@@ -195014,7 +195014,7 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$33(event) {
+function stopPropagation$32(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -195061,7 +195061,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this._shadow || this._host;
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$33));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$32));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -197768,7 +197768,7 @@ function onSkillFocus$2() {
 */
 function onSkillDragStart$2(event) {
 	const skill = getSkillById$2(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$32(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$31(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = this.firstChild.firstChild.src;
@@ -197802,7 +197802,7 @@ function skillLevelSelectDown$2(skill) {
 /**
 * Stop propagation of events
 */
-function stopPropagation$32(event) {
+function stopPropagation$31(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -197942,7 +197942,7 @@ var init_Guild$1 = __esmMin((() => {
 		MemberView = this.ui.find(".MemberView").remove();
 		PositionView = this.ui.find(".PositionView").remove();
 		ExpelView = this.ui.find(".ExpelView").remove();
-		ui.find(".titlebar .close").mousedown(stopPropagation$32).click(Guild.toggle.bind(this));
+		ui.find(".titlebar .close").mousedown(stopPropagation$31).click(Guild.toggle.bind(this));
 		ui.find(".tabs").on("click", "button", onChangeTab);
 		Client.loadFiles([DB.INTERFACE_PATH + "checkbox_0.bmp", DB.INTERFACE_PATH + "checkbox_1.bmp"], function(off, on) {
 			_checkbox_off = off;
@@ -198010,7 +198010,7 @@ var init_Guild$1 = __esmMin((() => {
 			_btnLevelUp$7.detach();
 			Guild.ui.show();
 			Guild.ui.parent().append(Guild.ui);
-		}).mousedown(stopPropagation$32);
+		}).mousedown(stopPropagation$31);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$2).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo$2).on("mousedown", ".selectable", onSkillFocus$2).on("dragstart", ".skill", onSkillDragStart$2).on("dragend", ".skill", onSkillDragEnd$2);
 		ui.find(".content.notice").on("focus", "textarea, input", function() {
 			ui.find(".footer .btn_ok").show();
@@ -202476,7 +202476,7 @@ function getSkillPosition$1(JobId) {
 /**
 * Stop event propagation
 */
-function stopPropagation$31(event) {
+function stopPropagation$30(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -202681,7 +202681,7 @@ function onSkillFocus$1() {
 */
 function onSkillDragStart$1(event) {
 	const skill = getSkillById$1(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$31(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$30(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = jquery_default(this).find(".icon img").attr("src");
@@ -202825,7 +202825,7 @@ var init_SkillList$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillList.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$31);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$30);
 		this.ui.find(".footer .extend").mousedown(onResize$12);
 		this.ui.find(".titlebar .close").click(onClose$15);
 		this.ui.find(".titlebar .mini").click(onMini$1);
@@ -202838,7 +202838,7 @@ var init_SkillList$1 = __esmMin((() => {
 			_btnLevelUp$6.detach();
 			SkillList.ui.show();
 			SkillList.ui.parent().append(SkillList.ui);
-		}).mousedown(stopPropagation$31);
+		}).mousedown(stopPropagation$30);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$1).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo$1).on("mousedown", ".selectable", onSkillFocus$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onRequestSkillInfo$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove$1).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice$1).on("dragstart", ".skill", onSkillDragStart$1).on("dragend", ".skill", onSkillDragEnd$1).on("touchstart", ".skill .icon", onSkillTouchStart).on("touchmove", ".skill .icon", onSkillTouchMove).on("touchend", ".skill .icon", onSkillTouchEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
@@ -203278,7 +203278,7 @@ function getSkillPosition(JobId) {
 /**
 * Stop event propagation
 */
-function stopPropagation$30(event) {
+function stopPropagation$29(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -203473,7 +203473,7 @@ function onSkillFocus() {
 */
 function onSkillDragStart(event) {
 	const skill = getSkillById(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$30(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$29(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = jquery_default(this).find(".icon img").attr("src");
@@ -203547,7 +203547,7 @@ var init_SkillListV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillListV0.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$30);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$29);
 		this.ui.find(".footer .extend").mousedown(onResize$11);
 		this.ui.find(".titlebar .close").click(onClose$14);
 		this.ui.find(".titlebar .mini").click(onMini);
@@ -203560,7 +203560,7 @@ var init_SkillListV0 = __esmMin((() => {
 			_btnLevelUp$5.detach();
 			SkillListV0.ui.show();
 			SkillListV0.ui.parent().append(SkillListV0.ui);
-		}).mousedown(stopPropagation$30);
+		}).mousedown(stopPropagation$29);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo).on("mousedown", ".selectable", onSkillFocus).on("mouseover", ".skillCol .skill .icon, .skill .name", onRequestSkillInfo).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice).on("dragstart", ".skill", onSkillDragStart).on("dragend", ".skill", onSkillDragEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
@@ -207364,7 +207364,7 @@ function onClose$9() {
 /**
 * Stop event propagation
 */
-function stopPropagation$29(event) {
+function stopPropagation$28(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -207468,7 +207468,7 @@ var init_Reputation = __esmMin((() => {
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
 		this.draggable(this.ui);
-		this.ui.find(".base").mousedown(stopPropagation$29);
+		this.ui.find(".base").mousedown(stopPropagation$28);
 		this.ui.find(".close").click(onClose$9);
 		this.ui.find(".big_btn_close").click(onClose$9);
 		const paginator = Reputation.ui.find(".paginator");
@@ -207975,7 +207975,7 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$28(event) {
+function stopPropagation$27(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208006,7 +208006,7 @@ function onItemOut$16() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$12(event) {
+function onItemDragStart$11(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(index);
 	if (!item) return;
@@ -208100,7 +208100,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$28);
+		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$27);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -208139,7 +208139,7 @@ var init_WriteRodex = __esmMin((() => {
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
 			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
 		});
-		content.find(".item[data-index=\"" + item.index + "\"]").on("mouseover", onItemOver$15).on("mouseout", onItemOut$16).on("dragstart", onItemDragStart$12).on("dragend", onItemDragEnd$12).on("contextmenu", onItemInfo$19);
+		content.find(".item[data-index=\"" + item.index + "\"]").on("mouseover", onItemOver$15).on("mouseout", onItemOut$16).on("dragstart", onItemDragStart$11).on("dragend", onItemDragEnd$12).on("contextmenu", onItemInfo$19);
 		WriteRodex.updateWeight(item.weight);
 		WriteRodex.updateTax();
 	};
@@ -208216,7 +208216,7 @@ function getItemTab$3(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$27(event) {
+function stopPropagation$26(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208368,7 +208368,7 @@ function onItemOut$15() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$11(event) {
+function onItemDragStart$10(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV0.getItemByIndex(index);
 	if (!item) return;
@@ -208516,14 +208516,14 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$27);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$26);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$3);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$3);
 		this.ui.find(".footer .extend").mousedown(onResize$10);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV0.ui.hide();
 		});
-		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$27).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$11).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
+		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$26).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
 		this.ui.find(".ncnt").text(0);
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
@@ -208875,7 +208875,7 @@ function getItemTab$2(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$26(event) {
+function stopPropagation$25(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -209037,7 +209037,7 @@ function onItemOut$14() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$10(event) {
+function onItemDragStart$9(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV1.getItemByIndex(index);
 	if (!item) return;
@@ -209272,18 +209272,18 @@ var init_InventoryV1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$26);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$25);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$2);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$2);
 		this.ui.find(".footer .extend").mousedown(onResize$9);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV1.ui.hide();
 		});
-		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$26).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
+		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$25).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$26).on("drop", onTabDrop$2);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$25).on("drop", onTabDrop$2);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$38.tab).addClass("selected");
 		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -210087,7 +210087,7 @@ function getItemTab$1(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$25(event) {
+function stopPropagation$24(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -210249,7 +210249,7 @@ function onItemOut$13() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$9(event) {
+function onItemDragStart$8(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(index);
 	if (!item) return;
@@ -210489,18 +210489,18 @@ var init_InventoryV2 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV2.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$25);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$1);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$1);
 		this.ui.find(".footer .extend").mousedown(onResize$8);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV2.ui.hide();
 		});
-		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$25).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
+		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$24).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$25).on("drop", onTabDrop$1);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$24).on("drop", onTabDrop$1);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$37.tab).addClass("selected");
 		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -211004,7 +211004,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$24(event) {
+function stopPropagation$23(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -211560,7 +211560,7 @@ function onItemInfo$15(event) {
 /**
 * Start dragging an item
 */
-function onItemDragStart$8(event) {
+function onItemDragStart$7(event) {
 	event.originalEvent.dataTransfer.setData("text", event.target.id);
 }
 /**
@@ -211756,14 +211756,14 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$24).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$8);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$23).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
 		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
 		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
 		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
@@ -211885,7 +211885,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$23(event) {
+function stopPropagation$22(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -212265,7 +212265,7 @@ function onItemInfo$14(event) {
 /**
 * Start dragging an item
 */
-function onItemDragStart$7(event) {
+function onItemDragStart$6(event) {
 	event.originalEvent.dataTransfer.setData("text", event.target.id);
 }
 /**
@@ -212410,8 +212410,8 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$23);
-		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$7);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$22);
+		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
 		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".BED_container").on("contextmenu", ".item", onItemInfo$14);
@@ -214120,7 +214120,7 @@ function getItemTab(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$22(event) {
+function stopPropagation$21(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -214282,7 +214282,7 @@ function onItemOut$11() {
 /**
 * Start dragging an item
 */
-function onItemDragStart$6(event) {
+function onItemDragStart$5(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(index);
 	if (!item) return;
@@ -214615,18 +214615,18 @@ var init_InventoryV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV3.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
 		this.ui.find(".titlebar .mini").click(onToggleReduction);
 		this.ui.find(".tabs button").mousedown(onSwitchTab);
 		this.ui.find(".footer .extend").mousedown(onResize$7);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV3.ui.hide();
 		});
-		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$22).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
+		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$21).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$22).on("drop", onTabDrop);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$21).on("drop", onTabDrop);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$36.tab).addClass("selected");
 		const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -215644,7 +215644,7 @@ function onRemoveOption$5() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$21(event) {
+function stopPropagation$20(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -215833,7 +215833,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	*/
 	EquipmentV0.init = function init() {
 		_ctx$9 = this.ui.find("canvas")[0].getContext("2d");
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$21).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$20).click(function() {
 			_btnLevelUp$4.detach();
 			EquipmentV0.ui.show();
 			EquipmentV0.ui.parent().append(EquipmentV0.ui);
@@ -215844,7 +215844,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV0.ui.find(".panel").toggle();
 		});
@@ -216123,7 +216123,7 @@ function onRemoveOption$4() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$20(event) {
+function stopPropagation$19(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216350,7 +216350,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (i != 0) contentDivs$3[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$20).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$19).click(function() {
 			_btnLevelUp$3.detach();
 			EquipmentV1.ui.show();
 			EquipmentV1.ui.parent().append(EquipmentV1.ui);
@@ -216361,7 +216361,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV1.ui.find(".panel").toggle();
 		});
@@ -216666,7 +216666,7 @@ function onRemoveOption$3() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$19(event) {
+function stopPropagation$18(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216893,7 +216893,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (i != 0) contentDivs$2[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$19).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(function() {
 			_btnLevelUp$2.detach();
 			EquipmentV2.ui.show();
 			EquipmentV2.ui.parent().append(EquipmentV2.ui);
@@ -216904,7 +216904,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV2.ui.find(".panel").toggle();
 		});
@@ -217242,7 +217242,7 @@ function onRemoveOption$2() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$18(event) {
+function stopPropagation$17(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -217473,7 +217473,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (i != 0) contentDivs$1[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(() => {
 			_btnLevelUp$1.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -217482,7 +217482,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV3.ui.find(".panel").toggle();
 		});
@@ -217895,7 +217895,7 @@ function onRemoveOption$1() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$17(event) {
+function stopPropagation$16(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -218134,7 +218134,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (i != 0) contentDivs[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(() => {
 			_btnLevelUp.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -218143,7 +218143,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV4.ui.find(".panel").toggle();
 		});
@@ -221699,7 +221699,7 @@ function onClose$8() {
 /**
 * Stop event propagation
 */
-function stopPropagation$16(event) {
+function stopPropagation$15(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -221736,7 +221736,7 @@ var init_HomunInformations = __esmMin((() => {
 	*/
 	HomunInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".base").mousedown(stopPropagation$16);
+		this.ui.find(".base").mousedown(stopPropagation$15);
 		this.ui.find(".close").click(onClose$8);
 		this.ui.find(".modify").click(onChangeName$1);
 		this.ui.find(".feed").click(onFeed);
@@ -221971,7 +221971,7 @@ var init_MercenaryInformations$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$15(event) {
+function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -222015,8 +222015,8 @@ var init_MercenaryInformations = __esmMin((() => {
 	*/
 	MercenaryInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".content").mousedown(stopPropagation$15);
-		this.ui.find(".content .base").mousedown(stopPropagation$15);
+		this.ui.find(".content").mousedown(stopPropagation$14);
+		this.ui.find(".content .base").mousedown(stopPropagation$14);
 		this.ui.find(".close").click(onClose$7);
 		this.ui.find(".dismiss").click(onDelete);
 		if (!_preferences$28.show) this.ui.hide();
@@ -223844,7 +223844,7 @@ function onDropText$1(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$14(event) {
+function stopPropagation$13(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -224144,7 +224144,7 @@ var init_ChatBox = __esmMin((() => {
 				if (!movedInsideChatbox && !isTextInput && !isChatMessage) this.ui.find(".input .username").focus();
 			}.bind(this), 1e3);
 		}.bind(this));
-		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$14);
+		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$13);
 		this.ui.find(".header input").dblclick(function() {
 			this.type = "text";
 			this.select();
@@ -244227,7 +244227,7 @@ function onContainerMouseLeave(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$13(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -244254,7 +244254,7 @@ function onResize$3(event) {
 			jquery_default(window).off("mouseup.resize");
 		}
 	});
-	return stopPropagation$13(event);
+	return stopPropagation$12(event);
 }
 /**
 * Displays the cat hand over an icon
@@ -244618,8 +244618,8 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.init = function init() {
 		this.ui.find(".resize").mousedown(onResize$3);
-		this.ui.find(".close").mousedown(stopPropagation$13).click(onClose$6);
-		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$13).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
+		this.ui.find(".close").mousedown(stopPropagation$12).click(onClose$6);
+		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$12).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
 			event.stopImmediatePropagation();
 		});
 		this.draggable();
@@ -247615,7 +247615,7 @@ function onClose$5() {
 /**
 * Stop event propagation
 */
-function stopPropagation$12(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -247642,7 +247642,7 @@ var init_PetInformations = __esmMin((() => {
 	*/
 	PetInformations.init = function init() {
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".base").mousedown(stopPropagation$12);
+		this.ui.find(".base").mousedown(stopPropagation$11);
 		this.ui.find(".close").click(onClose$5);
 		this.ui.find(".modify").click(onChangeName);
 		this.ui.find(".command").change(onCommandSelected);
@@ -247797,7 +247797,7 @@ function onRequestAddItem(index, count) {
 /**
 * Stop event propagation
 */
-function stopPropagation$11(event) {
+function stopPropagation$10(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -247883,12 +247883,12 @@ function onItemOut$10() {
 function onItemInfo$12(event) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = this.parentNode.className.match(/send/i) ? _send[idx] : _recv[idx];
-	if (!item) return stopPropagation$11(event);
+	if (!item) return stopPropagation$10(event);
 	if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return stopPropagation$11(event);
+	return stopPropagation$10(event);
 }
 var Trade, _tmpCount, _send, _recv, Trade_default;
 var init_Trade$1 = __esmMin((() => {
@@ -247920,7 +247920,7 @@ var init_Trade$1 = __esmMin((() => {
 		this.ui.find(".ok.enabled").click(onConclude);
 		this.ui.find(".trade.enabled").click(onTrade.bind(this));
 		this.ui.find(".cancel").click(onCancel.bind(this));
-		this.ui.on("mousedown", ".disabled", stopPropagation$11).on("drop", onDrop$7).on("dragover", stopPropagation$11);
+		this.ui.on("mousedown", ".disabled", stopPropagation$10).on("drop", onDrop$7).on("dragover", stopPropagation$10);
 		this.ui.find(".zeny.send").mousedown(function() {
 			this.select();
 		});
@@ -311555,7 +311555,7 @@ function startAutoTarget() {
 /**
 * Stop event propagation
 */
-function stopPropagation$10(event) {
+function stopPropagation$9(event) {
 	if (event && typeof event.preventDefault === "function") event.preventDefault();
 	event.stopImmediatePropagation();
 	return false;
@@ -311826,195 +311826,195 @@ var init_MobileUI = __esmMin((() => {
 	MobileUI.init = function init() {
 		this.ui.find("#toggleUIButton").on("click touchstart", function(e) {
 			toggleButtons();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#fullscreenButton").on("click touchstart", function(e) {
 			toggleFullScreen();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f1Button").on("click touchstart", function(e) {
 			logKeyPress(112);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f2Button").on("click touchstart", function(e) {
 			logKeyPress(113);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f3Button").on("click touchstart", function(e) {
 			logKeyPress(114);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f4Button").on("click touchstart", function(e) {
 			logKeyPress(115);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f5Button").on("click touchstart", function(e) {
 			logKeyPress(116);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f6Button").on("click touchstart", function(e) {
 			logKeyPress(117);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f7Button").on("click touchstart", function(e) {
 			logKeyPress(118);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f8Button").on("click touchstart", function(e) {
 			logKeyPress(119);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f9Button").on("click touchstart", function(e) {
 			logKeyPress(120);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n1Button").on("click touchstart", function(e) {
 			logKeyPress(49);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n2Button").on("click touchstart", function(e) {
 			logKeyPress(50);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n3Button").on("click touchstart", function(e) {
 			logKeyPress(51);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n4Button").on("click touchstart", function(e) {
 			logKeyPress(52);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n5Button").on("click touchstart", function(e) {
 			logKeyPress(53);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n6Button").on("click touchstart", function(e) {
 			logKeyPress(54);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n7Button").on("click touchstart", function(e) {
 			logKeyPress(55);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n8Button").on("click touchstart", function(e) {
 			logKeyPress(56);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#n9Button").on("click touchstart", function(e) {
 			logKeyPress(57);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#qButton").on("click touchstart", function(e) {
 			logKeyPress(81);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#wButton").on("click touchstart", function(e) {
 			logKeyPress(87);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#eButton").on("click touchstart", function(e) {
 			logKeyPress(69);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#rButton").on("click touchstart", function(e) {
 			logKeyPress(82);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#tButton").on("click touchstart", function(e) {
 			logKeyPress(84);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#yButton").on("click touchstart", function(e) {
 			logKeyPress(89);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#uButton").on("click touchstart", function(e) {
 			logKeyPress(85);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#iButton").on("click touchstart", function(e) {
 			logKeyPress(73);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#oButton").on("click touchstart", function(e) {
 			logKeyPress(89);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#aButton").on("click touchstart", function(e) {
 			logKeyPress(65);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#sButton").on("click touchstart", function(e) {
 			logKeyPress(83);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#dButton").on("click touchstart", function(e) {
 			logKeyPress(68);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#fButton").on("click touchstart", function(e) {
 			logKeyPress(70);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#gButton").on("click touchstart", function(e) {
 			logKeyPress(71);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#hButton").on("click touchstart", function(e) {
 			logKeyPress(72);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#jButton").on("click touchstart", function(e) {
 			logKeyPress(74);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#kButton").on("click touchstart", function(e) {
 			logKeyPress(75);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#lButton").on("click touchstart", function(e) {
 			logKeyPress(76);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f10Button").on("click touchstart", function(e) {
 			logKeyPress(121);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#f12Button").on("click touchstart", function(e) {
 			logKeyPress(123);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#insButton").on("click touchstart", function(e) {
 			logKeyPress(45);
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#toggleStatusButton").on("click touchstart", function(e) {
 			toggleStatus();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#toggleTargetingButton").on("click touchstart", function(e) {
 			toggleTouchTargeting();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#toggleAutoFollowButton").on("click touchstart", function(e) {
 			toggleAutoFollow();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#toggleAutoTargetButton").on("click touchstart", function(e) {
 			toggleAutoTargeting();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#attackButton").on("click touchstart", function(e) {
 			attackTargeted();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#pickupButton").on("click touchstart", function(e) {
 			pickUpItem();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find("#switchshorcutButton").on("click touchstart", function(e) {
 			switchSkillButtons();
-			stopPropagation$10(e);
+			stopPropagation$9(e);
 		});
 		this.ui.find(".buttons").on("mousedown", function(e) {
 			jquery_default(e.target).addClass("pressed");
@@ -314336,44 +314336,37 @@ var init_VendingModelMessage = __esmMin((() => {
 //#region src/UI/Components/Vending/Vending.html?raw
 var Vending_default$2;
 var init_Vending$2 = __esmMin((() => {
-	Vending_default$2 = "<div id=\"vending\">\r\n	<div class=\"InputWindow\">\r\n		<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n			<div class=\"text\">\r\n				<span class=\"WinSell\" data-text=\"232\">Available Items for Vending</span>\r\n				<span class=\"WinBuy\" data-text=\"1733\">Available Items for Buying</span>\r\n			</div>\r\n		</div>\r\n		<div class=\"container\">\r\n			<div class=\"overlay\"></div>\r\n			<div class=\"content available\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n		</div>\r\n	</div>\r\n	<div class=\"OutputWindow\">\r\n		<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n			<div class=\"text\">\r\n				<span class=\"WinSell\" data-text=\"224\">Vending</span>\r\n				<span class=\"WinBuy\" data-text=\"1720\">Buying</span>\r\n			</div>\r\n		</div>\r\n		<div class=\"container\">\r\n			<div class=\"nstore\"><span data-text=\"407\">Name</span></div>\r\n			<input class=\"shopname\" type=\"text\" value=\"\" maxlength=\"36\" /><br />\r\n			<div class=\"content add_shop\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n		</div>\r\n		<div class=\"footer WinBuy\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<span class=\"WinBuy zenyLabel\" data-text=\"2464\">Zeny</span>\r\n			<span class=\"WinBuy zenySpan\">0</span>\r\n			<span class=\"WinBuy weightLabel\">Weigth:</span>\r\n			<span class=\"WinBuy weightSpan\">0/0</span>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"limit WinBuy\"><span data-text=\"1723\">Purchase Zeny Limit</span></div>\r\n			<input class=\"limitZeny WinBuy\" type=\"text\" value=\"\" maxlength=\"36\" /><br />\r\n			<div class=\"zeny WinBuy\"><span data-text=\"2464\">Zeny</span></div>\r\n			<button\r\n				class=\"btn sell\"\r\n				data-background=\"btn_ok.bmp\"\r\n				data-hover=\"btn_ok_a.bmp\"\r\n				data-down=\"btn_ok_b.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"btn cancel\"\r\n				data-background=\"btn_cancel.bmp\"\r\n				data-hover=\"btn_cancel_a.bmp\"\r\n				data-down=\"btn_cancel_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	Vending_default$2 = "<div id=\"vending\">\r\n	<div class=\"InputWindow\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n			<div class=\"text\">\r\n				<span class=\"WinSell\"><ui-text msg=\"232\">Available Items for Vending</ui-text></span>\r\n				<span class=\"WinBuy\"><ui-text msg=\"1733\">Available Items for Buying</ui-text></span>\r\n			</div>\r\n		</div>\r\n		<div class=\"container\">\r\n			<div class=\"overlay\"></div>\r\n			<div class=\"content available\">\r\n				<ui-image src=\"basic_interface/itemwin_mid.bmp\"></ui-image>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n	<div class=\"OutputWindow\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n			<div class=\"text\">\r\n				<span class=\"WinSell\"><ui-text msg=\"224\">Vending</ui-text></span>\r\n				<span class=\"WinBuy\"><ui-text msg=\"1720\">Buying</ui-text></span>\r\n			</div>\r\n		</div>\r\n		<div class=\"container\">\r\n			<div class=\"nstore\"><ui-text msg=\"407\">Name</ui-text></div>\r\n			<input class=\"shopname\" type=\"text\" value=\"\" maxlength=\"36\" /><br />\r\n			<div class=\"content add_shop\">\r\n				<ui-image src=\"basic_interface/itemwin_mid.bmp\"></ui-image>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer WinBuy\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<span class=\"WinBuy zenyLabel\"><ui-text msg=\"2464\">Zeny</ui-text></span>\r\n			<span class=\"WinBuy zenySpan\">0</span>\r\n			<span class=\"WinBuy weightLabel\">Weigth:</span>\r\n			<span class=\"WinBuy weightSpan\">0/0</span>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"limit WinBuy\"><ui-text msg=\"1723\">Purchase Zeny Limit</ui-text></div>\r\n			<input class=\"limitZeny WinBuy\" type=\"text\" value=\"\" maxlength=\"36\" /><br />\r\n			<div class=\"zeny WinBuy\"><ui-text msg=\"2464\">Zeny</ui-text></div>\r\n			<ui-button class=\"btn sell\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n			<ui-button\r\n				class=\"btn cancel\"\r\n				bg=\"btn_cancel.bmp\"\r\n				hover=\"btn_cancel_a.bmp\"\r\n				down=\"btn_cancel_b.bmp\"\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.css?raw
 var Vending_default$1;
 var init_Vending$1 = __esmMin((() => {
-	Vending_default$1 = "#vending {\r\n	position: relative;\r\n}\r\n#vending .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n	text-shadow: 1px 1px white;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#vending .titlebar .text {\r\n	position: relative;\r\n	top: 2px;\r\n	left: 15px;\r\n	white-space: nowrap;\r\n}\r\n#vending .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-radius: 0px 0px 3px 3px;\r\n	position: relative;\r\n}\r\n#vending .resize {\r\n	position: absolute;\r\n	right: 1px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#vending .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vending .selectall {\r\n	vertical-align: 2px;\r\n	width: 10px;\r\n	height: 10px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vending .ask_quantity {\r\n	padding-top: 7px;\r\n	padding-left: 20px;\r\n}\r\n\r\n#vending .nstore {\r\n	position: absolute;\r\n	top: 24px;\r\n	border: none;\r\n	padding-left: 2px;\r\n	outline: none;\r\n}\r\n#vending .limit {\r\n	position: absolute;\r\n	top: 8px;\r\n	border: none;\r\n	padding-left: 5px;\r\n	outline: none;\r\n}\r\n#vending input.shopname {\r\n	position: absolute;\r\n	left: 55px;\r\n	width: 310px;\r\n	border: none;\r\n	background-color: #e9e9e9;\r\n	padding-left: 2px;\r\n	outline: none;\r\n}\r\n#vending input.shopname {\r\n	top: 22px;\r\n}\r\n#vending input.limitZeny {\r\n	top: 6px;\r\n}\r\n#vending input.limitZeny {\r\n	position: absolute;\r\n	left: 120px;\r\n	width: 100px;\r\n	border: none;\r\n	background-color: #e9e9e9;\r\n	padding-left: 2px;\r\n	outline: none;\r\n}\r\n\r\n#vending .content .item-container {\r\n	width: 32px;\r\n	height: 32px;\r\n	display: block;\r\n	float: left;\r\n	clear: both;\r\n}\r\n#vending .content .damaged {\r\n	background-color: red;\r\n	background-blend-mode: luminosity;\r\n}\r\n#vending .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	background-repeat: repeat-y;\r\n	padding-right: 2px;\r\n	padding-top: 5px;\r\n	padding-bottom: 5px;\r\n}\r\n#vending .container .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#vending .content {\r\n	overflow-y: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n}\r\n#vending .content .add_shop {\r\n	margin-top: 10px;\r\n}\r\n#vending .content .item {\r\n	display: block;\r\n	position: relative;\r\n	height: 28px;\r\n	padding-top: 4px;\r\n}\r\n#vending .content .item.selected {\r\n	background-color: #346ae180;\r\n}\r\n\r\n#vending .content.available {\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n}\r\n#vending .content.available .item {\r\n	display: block;\r\n	float: left;\r\n	width: 28px;\r\n	position: relative;\r\n	height: 28px;\r\n	padding-top: 4px;\r\n}\r\n#vending .content.available .item.selected {\r\n	background-color: transparent;\r\n}\r\n\r\n#vending .content .item .icon {\r\n	position: absolute;\r\n	top: 6px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vending .content .item .amount {\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	top: 18px;\r\n	left: 18px;\r\n	text-align: left;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#vending .content .item .amount_ {\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	top: 13px;\r\n	left: 200px;\r\n	text-align: left;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#vending .content .item .name {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 32px;\r\n	width: 115px;\r\n	white-space: nowrap;\r\n}\r\n#vending .content .item .price {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 260px;\r\n	white-space: nowrap;\r\n	text-align: right;\r\n}\r\n#vending .content .item .unity {\r\n	position: absolute;\r\n	top: 13px;\r\n	right: 2px;\r\n	width: 10px;\r\n}\r\n\r\n#vending .footer .total,\r\n#vending .footer .totalP,\r\n#vending .footer .cashuser {\r\n	padding-left: 10px;\r\n	padding-top: 8px;\r\n}\r\n#vending .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#vending .InputWindow {\r\n	width: 280px;\r\n	position: absolute;\r\n	z-index: 50;\r\n}\r\n#vending .OutputWindow {\r\n	width: 400px;\r\n	position: absolute;\r\n	z-index: 50;\r\n}\r\n#vending .btn.buy,\r\n#vending .btn.sell {\r\n	position: absolute;\r\n	top: 4px;\r\n	right: 62px;\r\n}\r\n#vending .zeny {\r\n	position: absolute;\r\n	top: 8px;\r\n	left: 230px;\r\n}\r\n#vending .btn.cancel {\r\n	position: absolute;\r\n	top: 4px;\r\n	right: 15px;\r\n}\r\n#vending .zenyLabel,\r\n#vending .zenySpan,\r\n#vending .weightLabel,\r\n#vending .weightSpan {\r\n	position: absolute;\r\n	top: 10px;\r\n}\r\n#vending .zenyLabel {\r\n	left: 5px;\r\n}\r\n#vending .zenySpan {\r\n	left: 40px;\r\n}\r\n#vending .weightLabel {\r\n	left: 215px;\r\n}\r\n#vending .weightSpan {\r\n	left: 260px;\r\n}\r\n";
+	Vending_default$1 = ":host {\r\n	width: 100%;\r\n	height: 100%;\r\n	top: 0;\r\n	left: 0;\r\n}\r\n\r\n#vending {\r\n	position: absolute;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#vending .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n	text-shadow: 1px 1px white;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#vending .titlebar .text {\r\n	position: relative;\r\n	top: 2px;\r\n	left: 15px;\r\n	white-space: nowrap;\r\n}\r\n#vending .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-radius: 0px 0px 3px 3px;\r\n}\r\n#vending .resize {\r\n	position: absolute;\r\n	right: 1px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#vending .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vending .selectall {\r\n	vertical-align: 2px;\r\n	width: 10px;\r\n	height: 10px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vending .ask_quantity {\r\n	padding-top: 7px;\r\n	padding-left: 20px;\r\n}\r\n\r\n#vending .nstore {\r\n	position: absolute;\r\n	top: 24px;\r\n	border: none;\r\n	padding-left: 2px;\r\n	outline: none;\r\n}\r\n#vending .limit {\r\n	position: absolute;\r\n	top: 8px;\r\n	border: none;\r\n	padding-left: 5px;\r\n	outline: none;\r\n}\r\n#vending input.shopname {\r\n	position: absolute;\r\n	left: 55px;\r\n	width: 310px;\r\n	border: none;\r\n	background-color: #e9e9e9;\r\n	padding-left: 2px;\r\n	outline: none;\r\n}\r\n#vending input.shopname {\r\n	top: 22px;\r\n}\r\n#vending input.limitZeny {\r\n	top: 6px;\r\n}\r\n#vending input.limitZeny {\r\n	position: absolute;\r\n	left: 120px;\r\n	width: 100px;\r\n	border: none;\r\n	background-color: #e9e9e9;\r\n	padding-left: 2px;\r\n	outline: none;\r\n}\r\n\r\n#vending .content .item-container {\r\n	width: 32px;\r\n	height: 32px;\r\n	display: block;\r\n	float: left;\r\n	clear: both;\r\n}\r\n#vending .content .damaged {\r\n	background-color: red;\r\n	background-blend-mode: luminosity;\r\n}\r\n#vending .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	background-repeat: repeat-y;\r\n	padding-right: 2px;\r\n	padding-top: 5px;\r\n	padding-bottom: 5px;\r\n}\r\n#vending .container .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#vending .content {\r\n	overflow-y: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n}\r\n#vending .content .add_shop {\r\n	margin-top: 10px;\r\n}\r\n#vending .content .item {\r\n	display: block;\r\n	position: relative;\r\n	height: 28px;\r\n	padding-top: 4px;\r\n}\r\n#vending .content .item.selected {\r\n	background-color: #346ae180;\r\n}\r\n\r\n#vending .content.available {\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n}\r\n#vending .content.available .item {\r\n	display: block;\r\n	float: left;\r\n	width: 28px;\r\n	position: relative;\r\n	height: 28px;\r\n	padding-top: 4px;\r\n}\r\n#vending .content.available .item.selected {\r\n	background-color: transparent;\r\n}\r\n\r\n#vending .content .item .icon {\r\n	position: absolute;\r\n	top: 6px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vending .content .item .amount {\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	top: 18px;\r\n	left: 18px;\r\n	text-align: left;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#vending .content .item .amount_ {\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	top: 13px;\r\n	left: 200px;\r\n	text-align: left;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#vending .content .item .name {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 32px;\r\n	width: 115px;\r\n	white-space: nowrap;\r\n}\r\n#vending .content .item .price {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 260px;\r\n	white-space: nowrap;\r\n	text-align: right;\r\n}\r\n#vending .content .item .unity {\r\n	position: absolute;\r\n	top: 13px;\r\n	right: 2px;\r\n	width: 10px;\r\n}\r\n\r\n#vending .footer .total,\r\n#vending .footer .totalP,\r\n#vending .footer .cashuser {\r\n	padding-left: 10px;\r\n	padding-top: 8px;\r\n}\r\n#vending .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#vending .InputWindow {\r\n	width: 280px;\r\n	position: absolute;\r\n	z-index: 50;\r\n}\r\n#vending .OutputWindow {\r\n	width: 400px;\r\n	position: absolute;\r\n	z-index: 50;\r\n}\r\n#vending .btn.buy,\r\n#vending .btn.sell {\r\n	position: absolute;\r\n	top: 4px;\r\n	right: 62px;\r\n}\r\n#vending .zeny {\r\n	position: absolute;\r\n	top: 8px;\r\n	left: 230px;\r\n}\r\n#vending .btn.cancel {\r\n	position: absolute;\r\n	top: 4px;\r\n	right: 15px;\r\n}\r\n#vending .zenyLabel,\r\n#vending .zenySpan,\r\n#vending .weightLabel,\r\n#vending .weightSpan {\r\n	position: absolute;\r\n	top: 10px;\r\n}\r\n#vending .zenyLabel {\r\n	left: 5px;\r\n}\r\n#vending .zenySpan {\r\n	left: 40px;\r\n}\r\n#vending .weightLabel {\r\n	left: 215px;\r\n}\r\n#vending .weightSpan {\r\n	left: 260px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.js
-function isItemStackable(item) {
-	if (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR || item.type === ItemType_default.PETEGG || item.type === ItemType_default.PETARMOR) return false;
-	else return true;
+function _getRoot() {
+	return Vending._shadow || Vending._host;
 }
-/**
-* Resize the content
-*
-* @param {jQueryElement} content
-* @param {number} height
-*/
+function escapeHtml(text) {
+	const div = document.createElement("div");
+	div.appendChild(document.createTextNode(text));
+	return div.innerHTML;
+}
+function isItemStackable(item) {
+	return item.type !== ItemType_default.WEAPON && item.type !== ItemType_default.ARMOR && item.type !== ItemType_default.SHADOWGEAR && item.type !== ItemType_default.PETEGG && item.type !== ItemType_default.PETARMOR;
+}
 function resize$1(content, height) {
 	height = Math.min(Math.max(height, 2), 9);
-	content.css("height", height * 32);
+	content.style.height = `${height * 32}px`;
 }
-/**
-* Prettify zeny : 1000000 -> 1,000,000
-*
-* @param {number} zeny
-* @param {boolean} use color
-* @return {string}
-*/
 function prettyZeny$3(val, useStyle) {
 	const list = val.toString().split("");
 	const count = list.length;
-	let i;
 	let str = "";
-	for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-	if (useStyle) str = "<span style=\"" + [
+	for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+	if (useStyle) str = `<span style="${[
 		"color:#000000; text-shadow:1px 0px #00ffff;",
 		"color:#0000ff; text-shadow:1px 0px #ce00ce;",
 		"color:#0000ff; text-shadow:1px 0px #00ffff;",
@@ -314384,60 +314377,59 @@ function prettyZeny$3(val, useStyle) {
 		"color:#ff0000;",
 		"color:#000000; text-shadow:1px 0px #cece63;",
 		"color:#ff0000; text-shadow:1px 0px #ff007b;"
-	][count - 1] + "\">" + str + "</span>";
+	][count - 1]}">${str}</span>`;
 	return str;
 }
-/**
-* Add item to the list
-*
-* @param {jQuery} content element
-* @param {Item} item info
-*/
 function addItem$1(content, item, isinput) {
 	const it = DB.getItemInfo(item.ITID);
-	const element = content.find(".item[data-index=" + item.index + "]:first");
-	let price;
+	const element = content.querySelector(`.item[data-index="${item.index}"]`);
 	const textPrice = DB.getMessage(1721);
 	if (item.count === 0) {
-		if (element.length) {
-			const parent = element.parent(".item-container");
-			element.remove();
-			parent.remove();
+		if (element) {
+			const parent = element.closest(".item-container");
+			if (parent) parent.remove();
+			else element.remove();
 		}
 		return;
 	}
-	if (element.length) {
-		element.find(".amount").text(item.IsStackable ? item.count : "");
+	if (element) {
+		const amountEl = element.querySelector(".amount");
+		if (amountEl) amountEl.textContent = item.IsStackable ? item.count : "";
 		return;
 	}
-	if (isinput == false) price = prettyZeny$3(item.price, true);
-	let itemObj = "";
-	if (isinput == true) itemObj = jquery_default("<div class=\"item input\" draggable=\"true\" data-index=\"" + item.index + "\"><div class=\"icon\"></div><div class=\"amount\">" + (item.IsStackable ? item.count : "") + "</div></div>");
-	else {
-		itemObj = jquery_default("<div class=\"item-container\"><div class=\"item output\" draggable=\"true\" data-index=\"" + item.index + "\"><div class=\"icon\"></div><div class=\"amount\">" + (_type$3 === Vending.Type.BUYING_STORE ? item.total : item.IsStackable ? item.count : "") + "</div>" + (_type$3 === Vending.Type.BUYING_STORE ? "<div class=\"amount_\">" + item.count + " ea</div>" : "") + "<div class=\"name\">" + jquery_default.escape(DB.getItemName(item)) + "</div><div class=\"price\">" + textPrice + " " + price + "</div></div></div>");
+	let itemObj;
+	if (isinput) {
+		itemObj = document.createElement("div");
+		itemObj.className = "item input";
+		itemObj.draggable = true;
+		itemObj.dataset.index = item.index;
+		itemObj.innerHTML = `<div class="icon"></div><div class="amount">${item.IsStackable ? item.count : ""}</div>`;
+	} else {
+		const price = prettyZeny$3(item.price, true);
+		const container = document.createElement("div");
+		container.className = "item-container";
+		const amountText = _type$3 === Vending.Type.BUYING_STORE ? item.total : item.IsStackable ? item.count : "";
+		const eaHtml = _type$3 === Vending.Type.BUYING_STORE ? `<div class="amount_">${item.count} ea</div>` : "";
+		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
+		itemObj = container;
 		if (_type$3 === Vending.Type.BUYING_STORE) {
-			let limit = parseInt(Vending.ui.find(".limitZeny").val(), 10);
+			const limitInput = _getRoot().querySelector(".limitZeny");
+			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
-			Vending.ui.find(".limitZeny").val(limit);
+			limitInput.value = limit;
 		}
 	}
+	const actualItem = itemObj.classList.contains("item") ? itemObj : itemObj.querySelector(".item");
 	if (item.IsDamaged) {
-		itemObj.css("backgroundImage", "url(\"" + Vending.itemBg + "\")");
-		itemObj.addClass("damaged");
+		actualItem.style.backgroundImage = `url("${Vending.itemBg}")`;
+		actualItem.classList.add("damaged");
 	}
-	content.append(itemObj);
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-		content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+	content.appendChild(itemObj);
+	Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+		const icon = content.querySelector(`.item[data-index="${item.index}"] .icon`);
+		if (icon) icon.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Request move item from box to another
-*
-* @param {number} item index
-* @param {jQueryElement} from the content
-* @param {jQueryElement} to the content
-* @param {boolean} add the content to the output box ?
-*/
 function requestMoveItem$1(index, fromContent, toContent, isAdding) {
 	let count, item_price;
 	const item = isAdding ? _input$1[index] : _output$1[index];
@@ -314482,100 +314474,81 @@ function requestMoveItem$1(index, fromContent, toContent, isAdding) {
 		}
 	};
 }
-/**
-* Drop an input in the InputWindow or OutputWindow
-*
-* @param {jQueryEvent} event
-*/
 function onDrop$5(event) {
 	let data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (e) {
-		return false;
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return false;
-	requestMoveItem$1(data.index, jquery_default("." + data.container + " .content"), jquery_default(this).find(".content"), this.className === "OutputWindow");
-	return false;
+	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return;
+	const fromContent = _getRoot().querySelector(`.${data.container} .content`);
+	const toContent = this.querySelector(".content");
+	requestMoveItem$1(data.index, fromContent, toContent, this.className === "OutputWindow");
 }
-/**
-* Get informations about an item
-*/
 function onItemInfo$11(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const item = _input$1[parseInt(this.parentNode.getAttribute("data-index"), 10)];
-	if (!item) return false;
+	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
-/**
-* Select an item, put it on the other box
-*/
 function onItemSelected$1() {
-	let from, to;
 	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
-	const input = Vending.ui.find(".InputWindow:first");
-	if (jquery_default.contains(input.get(0), this)) {
-		from = input;
-		to = Vending.ui.find(".OutputWindow:first");
+	const root = _getRoot();
+	const inputWin = root.querySelector(".InputWindow");
+	let from, to;
+	if (inputWin.contains(this)) {
+		from = inputWin;
+		to = root.querySelector(".OutputWindow");
 	} else {
-		from = Vending.ui.find(".OutputWindow:first");
-		to = input;
+		from = root.querySelector(".OutputWindow");
+		to = inputWin;
 	}
-	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.find(".content:first"), to.find(".content:first"), from === input);
+	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.querySelector(".content"), to.querySelector(".content"), from === inputWin);
 }
-/**
-* Focus an item
-*/
 function onItemFocus$1() {
-	Vending.ui.find(".item.selected").removeClass("selected");
-	jquery_default(this).addClass("selected");
+	_getRoot().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	this.classList.add("selected");
 }
-/**
-* Update scroll by block (32px)
-*/
 function onScroll$4(event) {
 	let delta;
-	if (event.originalEvent.wheelDelta) {
-		delta = event.originalEvent.wheelDelta / 120;
+	if (event.wheelDelta) {
+		delta = event.wheelDelta / 120;
 		if (window.opera) delta = -delta;
-	} else if (event.originalEvent.detail) delta = -event.originalEvent.detail;
+	} else if (event.detail) delta = -event.detail;
 	this.scrollTop = Math.floor(this.scrollTop / 32) * 32 - delta * 32;
-	return false;
+	event.preventDefault();
 }
-/**
-* Start dragging an item
-*/
 function onDragStart$1(event) {
-	const InputWindow = Vending.ui.find(".InputWindow:first").get(0);
-	const OutputWindow = Vending.ui.find(".OutputWindow:first").get(0);
-	const container = (jquery_default.contains(InputWindow, this) ? InputWindow : OutputWindow).className;
+	const root = _getRoot();
+	const inputWin = root.querySelector(".InputWindow");
+	const outputWin = root.querySelector(".OutputWindow");
+	const container = (inputWin.contains(this) ? inputWin : outputWin).className;
 	const img = new Image();
-	const url = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1].replace(/"/g, "");
+	const url = this.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1].replace(/"/g, "");
 	img.decoding = "async";
 	img.src = url;
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Vending",
 		container,
 		index: this.getAttribute("data-index")
 	}));
 }
-/**
-* Extend InputWindow size
-*/
 function onResizeInput() {
-	const InputWindow = Vending.ui.find(".InputWindow");
-	const content = InputWindow.find(".container .content");
-	const top = InputWindow.position().top;
+	const inputWin = _getRoot().querySelector(".InputWindow");
+	const content = inputWin.querySelector(".container .content");
+	const top = inputWin.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
@@ -314585,12 +314558,13 @@ function onResizeInput() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 function countSlotsUsed() {
 	let count = 0;
@@ -314602,32 +314576,23 @@ function countSlotsUsed() {
 function submitNetworkPacket(pkt) {
 	Network.sendPacket(pkt);
 }
-/**
-* Show item name when mouse is over
-*/
 function onItemOver$8() {
 	if (!this.classList.contains("input")) return;
 	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = _type$3 == Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
+	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const pos = jquery_default(this).position();
-	const overlay = Vending.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top - 20,
-		left: pos.left - 10
-	});
-	overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
+	const overlay = _getRoot().querySelector(".overlay");
+	overlay.style.display = "";
+	overlay.style.top = `${this.offsetTop - 20}px`;
+	overlay.style.left = `${this.offsetLeft - 10}px`;
+	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
 }
-/**
-* Hide the item name
-*/
 function onItemOut$9() {
-	Vending.ui.find(".overlay").hide();
+	const overlay = _getRoot().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
 var init_Vending = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_NetworkManager();
 	init_PacketStructure();
@@ -314638,7 +314603,8 @@ var init_Vending = __esmMin((() => {
 	init_MouseEventHandler();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_InputBox();
 	init_CartItems();
@@ -314648,14 +314614,12 @@ var init_Vending = __esmMin((() => {
 	init_Renderer();
 	init_Inventory();
 	init_BasicInfo();
-	Vending = new UIComponent("Vending", Vending_default$2, Vending_default$1);
+	Vending = new GUIComponent("Vending", Vending_default$1);
+	Vending.render = () => Vending_default$2;
 	Vending.isOpen = false;
 	Vending.Type = {
 		VENDING_STORE: 0,
 		BUYING_STORE: 1
-	};
-	Vending.setType = function(type) {
-		this.type = type;
 	};
 	_preferences$20 = Preferences.get("Vending", {
 		inputWindow: {
@@ -314673,142 +314637,202 @@ var init_Vending = __esmMin((() => {
 	_input$1 = [];
 	_output$1 = [];
 	_slots$4 = 0;
-	/**
-	* Initialize component
-	*/
+	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
-		const ui = this.ui;
-		const InputWindow = ui.find(".InputWindow");
-		const OutputWindow = ui.find(".OutputWindow");
-		ui.find(".btn.sell").click(function(e) {
-			e.stopImmediatePropagation();
-			Vending.onSubmit();
+		const root = _getRoot();
+		const sellBtn = root.querySelector(".btn.sell");
+		if (sellBtn) {
+			sellBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			sellBtn.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				Vending.onSubmit();
+			});
+		}
+		const cancelBtn = root.querySelector(".btn.cancel");
+		if (cancelBtn) {
+			cancelBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			cancelBtn.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				let pkt;
+				if (_type$3 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
+				else pkt = new PACKET.CZ.REQ_OPEN_BUYING_STORE();
+				submitNetworkPacket(pkt);
+				Vending.onRemove();
+			});
+		}
+		const extendBtn = root.querySelector(".InputWindow .footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResizeInput);
+		root.querySelectorAll(".content").forEach((content) => {
+			content.addEventListener("contextmenu", (e) => {
+				const icon = e.target.closest(".icon");
+				if (icon) onItemInfo$11.call(icon, e);
+			});
+			content.addEventListener("wheel", (e) => {
+				onScroll$4.call(content, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$8.call(item);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$9();
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemSelected$1.call(item);
+			});
+			content.addEventListener("mousedown", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemFocus$1.call(item);
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onDragStart$1.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) delete window._OBJ_DRAG_;
+			});
 		});
-		this.ui.find(".btn.cancel").click(function(e) {
-			e.stopImmediatePropagation();
-			let pkt;
-			if (_type$3 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
-			else pkt = new PACKET.CZ.REQ_OPEN_BUYING_STORE();
-			submitNetworkPacket(pkt);
-			Vending.onRemove();
+		const inputWin = root.querySelector(".InputWindow");
+		const outputWin = root.querySelector(".OutputWindow");
+		[inputWin, outputWin].forEach((win) => {
+			if (!win) return;
+			win.addEventListener("drop", (e) => {
+				onDrop$5.call(win, e);
+			});
+			win.addEventListener("dragover", (e) => {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			});
+			win.addEventListener("mousedown", () => {
+				Vending.focus();
+			});
 		});
-		InputWindow.find(".footer .extend").mousedown(onResizeInput);
-		ui.find(".content").on("contextmenu", ".icon", onItemInfo$11).on("mousewheel DOMMouseScroll", onScroll$4).on("mouseover", ".item", onItemOver$8).on("mouseout", ".item", onItemOut$9).on("dblclick", ".item", onItemSelected$1).on("mousedown", ".item", onItemFocus$1).on("dragstart", ".item", onDragStart$1).on("dragend", ".item", function() {
-			delete window._OBJ_DRAG_;
-		});
-		ui.find(".InputWindow, .OutputWindow").on("drop", onDrop$5).on("dragover", function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		}).on("mousedown", function() {
-			Vending.focus();
-		});
-		this.draggable.call({ ui: InputWindow }, InputWindow.find(".titlebar"));
-		this.draggable.call({ ui: OutputWindow }, OutputWindow.find(".titlebar"));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/itemwin_mid.bmp", function(data) {
+		if (inputWin) this.draggable.call({
+			_host: inputWin,
+			_shadow: null,
+			_container: inputWin,
+			magnet: {},
+			needFocus: false,
+			manager: null
+		}, inputWin.querySelector(".titlebar"));
+		if (outputWin) this.draggable.call({
+			_host: outputWin,
+			_shadow: null,
+			_container: outputWin,
+			magnet: {},
+			needFocus: false,
+			manager: null
+		}, outputWin.querySelector(".titlebar"));
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/itemwin_mid.bmp`, (data) => {
 			Vending.itemBg = data;
 		});
 	};
-	/**
-	* Player should not be able to move when the store is opened
-	*/
 	Vending.onAppend = function onAppend() {
-		const InputWindow = this.ui.find(".InputWindow");
-		const OutputWindow = this.ui.find(".OutputWindow");
-		InputWindow.css({
-			top: Math.min(Math.max(0, _preferences$20.inputWindow.y), Renderer.height - InputWindow.find(".content").height()),
-			left: Math.min(Math.max(0, _preferences$20.inputWindow.x), Renderer.width - InputWindow.find(".content").width())
-		});
-		OutputWindow.css({
-			top: Math.min(Math.max(0, _preferences$20.outputWindow.y), Renderer.height - OutputWindow.find(".content").height()),
-			left: Math.min(Math.max(0, _preferences$20.outputWindow.x), Renderer.width - OutputWindow.find(".content").width())
-		});
-		resize$1(InputWindow.find(".content"), _preferences$20.inputWindow.height);
-		resize$1(OutputWindow.find(".content"), _preferences$20.outputWindow.height);
-		this.ui.hide();
+		const root = _getRoot();
+		const inputWin = root.querySelector(".InputWindow");
+		const outputWin = root.querySelector(".OutputWindow");
+		const inputContent = inputWin.querySelector(".content");
+		const outputContent = outputWin.querySelector(".content");
+		inputWin.style.top = `${Math.min(Math.max(0, _preferences$20.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
+		inputWin.style.left = `${Math.min(Math.max(0, _preferences$20.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
+		outputWin.style.top = `${Math.min(Math.max(0, _preferences$20.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
+		outputWin.style.left = `${Math.min(Math.max(0, _preferences$20.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
+		resize$1(inputContent, _preferences$20.inputWindow.height);
+		resize$1(outputContent, _preferences$20.outputWindow.height);
+		this._host.style.display = "none";
 	};
-	/**
-	* Specify the type of the shop
-	*
-	* @param {number} type (see NpcStore.Type.*)
-	*/
 	Vending.setType = function setType(type) {
+		const root = _getRoot();
+		const winBuyEls = root.querySelectorAll(".WinBuy");
+		const winSellEls = root.querySelectorAll(".WinSell");
 		switch (type) {
 			case Vending.Type.VENDING_STORE:
-				this.ui.find(".WinBuy").hide();
-				this.ui.find(".WinSell").show();
+				winBuyEls.forEach((el) => {
+					el.style.display = "none";
+				});
+				winSellEls.forEach((el) => {
+					el.style.display = "";
+				});
 				break;
 			case Vending.Type.BUYING_STORE:
-				this.ui.find(".WinSell").hide();
-				this.ui.find(".WinBuy").show();
-				this.ui.find(".zenySpan").text(prettyZeny$3(SessionStorage_default.zeny));
-				this.ui.find(".weightSpan").text(BasicInfoController.getUI().weight + "/" + BasicInfoController.getUI().weight_max);
-				this.ui.find(".limitZeny").val("0");
+				winSellEls.forEach((el) => {
+					el.style.display = "none";
+				});
+				winBuyEls.forEach((el) => {
+					el.style.display = "";
+				});
+				root.querySelector(".zenySpan").textContent = prettyZeny$3(SessionStorage_default.zeny);
+				root.querySelector(".weightSpan").textContent = `${BasicInfoController.getUI().weight}/${BasicInfoController.getUI().weight_max}`;
+				root.querySelector(".limitZeny").value = "0";
 				break;
 		}
 		_type$3 = type;
 	};
-	/**
-	* Released movement and save preferences
-	*/
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
-		const InputWindow = this.ui.find(".InputWindow");
-		const OutputWindow = this.ui.find(".OutputWindow");
+		const root = _getRoot();
+		const inputWin = root.querySelector(".InputWindow");
+		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
 		_output$1.length = 0;
-		_preferences$20.inputWindow.x = parseInt(InputWindow.css("left"), 10);
-		_preferences$20.inputWindow.y = parseInt(InputWindow.css("top"), 10);
-		_preferences$20.inputWindow.height = InputWindow.find(".content").height() / 32 | 0;
-		_preferences$20.outputWindow.x = parseInt(OutputWindow.css("left"), 10);
-		_preferences$20.outputWindow.y = parseInt(OutputWindow.css("top"), 10);
-		_preferences$20.outputWindow.height = OutputWindow.find(".content").height() / 32 | 0;
+		_preferences$20.inputWindow.x = parseInt(inputWin.style.left, 10);
+		_preferences$20.inputWindow.y = parseInt(inputWin.style.top, 10);
+		_preferences$20.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$20.outputWindow.x = parseInt(outputWin.style.left, 10);
+		_preferences$20.outputWindow.y = parseInt(outputWin.style.top, 10);
+		_preferences$20.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
 		_preferences$20.save();
-		this.ui.find(".content").empty();
-		this.ui.hide();
+		root.querySelectorAll(".content").forEach((el) => {
+			el.innerHTML = "";
+		});
+		this._host.style.display = "none";
 		Vending.isOpen = false;
 	};
-	/**
-	* Key Listener
-	*
-	* Remove the UI when Escape key is pressed
-	*/
 	Vending.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.remove();
+		const focused = (this._shadow || this._host).activeElement;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				this.remove();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this.remove();
+		return true;
 	};
-	/**
-	* Add items to list
-	*
-	* @param {Array} item list
-	*/
 	Vending.setList = function setList(items) {
-		let i, count, out;
-		this.ui.find(".content").empty();
+		const root = _getRoot();
+		root.querySelectorAll(".content").forEach((el) => {
+			el.innerHTML = "";
+		});
 		_input$1.length = 0;
 		_output$1.length = 0;
-		const content = this.ui.find(".InputWindow .content");
-		for (i = 0, count = items.length; i < count; ++i) {
+		const content = root.querySelector(".InputWindow .content");
+		for (let i = 0, count = items.length; i < count; ++i) {
 			if (!("index" in items[i])) items[i].index = i;
-			if (isItemStackable(items[i])) items[i].IsStackable = true;
-			else items[i].IsStackable = false;
-			if (!items[i].hasOwnProperty("count")) items[i].count = 1;
+			items[i].IsStackable = isItemStackable(items[i]);
+			if (!Object.prototype.hasOwnProperty.call(items[i], "count")) items[i].count = 1;
 			items[i].total = items[i].count;
-			out = jquery_default.extend({}, items[i]);
+			const out = Object.assign({}, items[i]);
 			out.count = 0;
 			addItem$1(content, items[i], true);
 			_input$1[items[i].index] = items[i];
 			_output$1[items[i].index] = out;
 		}
 	};
-	transferItem$1 = (function transferItemQuantityClosure() {
+	transferItem$1 = (() => {
 		let tmpItem = {};
-		return function _transferItem(fromContent, toContent, isAdding, index, count) {
+		return (fromContent, toContent, isAdding, index, count) => {
 			if (isAdding) {
 				if (!_input$1[index].IsIdentified) {
 					VendingModelMessage_default.setInit(603);
 					return;
 				}
 				_output$1[index].count = _type$3 === Vending.Type.BUYING_STORE ? count : Math.min(_output$1[index].count + count, _input$1[index].count);
-				tmpItem = jquery_default.extend({}, _input$1[index]);
+				tmpItem = Object.assign({}, _input$1[index]);
 				tmpItem.count = _type$3 === Vending.Type.BUYING_STORE ? 0 : _input$1[index].count - _output$1[index].count;
 				addItem$1(fromContent, tmpItem, true);
 				addItem$1(toContent, _output$1[index], false);
@@ -314816,7 +314840,7 @@ var init_Vending = __esmMin((() => {
 				count = Math.min(count, _output$1[index].count);
 				if (!count) return;
 				_output$1[index].count = _type$3 === Vending.Type.BUYING_STORE ? 0 : _output$1[index].count - count;
-				tmpItem = jquery_default.extend({}, _input$1[index]);
+				tmpItem = Object.assign({}, _input$1[index]);
 				tmpItem.count = _type$3 === Vending.Type.BUYING_STORE ? _input$1[index].total : _input$1[index].count + _output$1[index].count;
 				addItem$1(fromContent, _output$1[index], false);
 				addItem$1(toContent, tmpItem, true);
@@ -314827,35 +314851,41 @@ var init_Vending = __esmMin((() => {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
 		this.setList(CartItems_default.list);
-		this.ui.find(".add_shop")[0].style.height = 32 * _slots$4 + "px";
-		this.ui.find(".shopname").val("");
-		this.ui.show();
+		const root = _getRoot();
+		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
+		root.querySelector(".shopname").value = "";
+		this._host.style.display = "";
+		this._fixPositionOverflow();
 		Vending.isOpen = true;
 	};
 	Vending.onBuyingSkill = function onBuyingSkill(pkt) {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
-		const buyable = new Array();
+		const buyable = [];
 		for (const key in InventoryController.getUI().list) {
 			const item = InventoryController.getUI().list[key];
 			if (isItemStackable(item) && DB.isBuyable(item.ITID)) buyable.push(item);
 		}
 		this.setList(buyable);
-		this.ui.find(".add_shop")[0].style.height = 32 * _slots$4 + "px";
-		this.ui.find(".shopname").val("");
-		this.ui.show();
+		const root = _getRoot();
+		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
+		root.querySelector(".shopname").value = "";
+		this._host.style.display = "";
+		this._fixPositionOverflow();
 		Vending.isOpen = true;
 	};
-	Vending.onClose = function() {
-		if (this.ui) this.ui.hide();
+	Vending.onClose = function onClose() {
+		this._host.style.display = "none";
 		Vending.isOpen = false;
 	};
 	Vending.onSubmit = function onSubmit() {
 		const output = [];
 		const count = _output$1.length;
-		const shopname = this.ui.find(".shopname").val();
-		let i, limitZeny, ctr = 0;
-		for (i = 0; i < count; ++i) if (_output$1[i] && _output$1[i].count) {
+		const root = _getRoot();
+		const shopname = root.querySelector(".shopname").value;
+		let limitZeny;
+		let ctr = 0;
+		for (let i = 0; i < count; ++i) if (_output$1[i] && _output$1[i].count) {
 			output.push(_output$1[i]);
 			ctr++;
 		}
@@ -314867,7 +314897,7 @@ var init_Vending = __esmMin((() => {
 		if (_type$3 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
 		else {
 			pkt = new PACKET.CZ.REQ_OPEN_BUYING_STORE();
-			limitZeny = parseInt(this.ui.find(".limitZeny").val(), 10);
+			limitZeny = parseInt(root.querySelector(".limitZeny").value, 10);
 			if (limitZeny > SessionStorage_default.zeny) {
 				VendingModelMessage_default.setInit(3683);
 				return;
@@ -314890,19 +314920,20 @@ var init_Vending = __esmMin((() => {
 		}
 		this.onRemove();
 	};
+	Vending.mouseMode = GUIComponent.MouseMode.STOP;
 	Vending_default = UIManager.addComponent(Vending);
 }));
 //#endregion
 //#region src/UI/Components/VendingShop/VendingShop.html?raw
 var VendingShop_default$2;
 var init_VendingShop$2 = __esmMin((() => {
-	VendingShop_default$2 = "<div id=\"vendingshop\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text shopname\"></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tr>\r\n				<td class=\"container\">\r\n					<div class=\"ff_bugfix\">\r\n						<div class=\"hide\"></div>\r\n						<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n					</div>\r\n				</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n					<div class=\"right\">\r\n						<button\r\n							class=\"btn close\"\r\n							data-background=\"btn_close.bmp\"\r\n							data-hover=\"btn_close_a.bmp\"\r\n							data-down=\"btn_close_b.bmp\"\r\n						></button>\r\n					</div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
+	VendingShop_default$2 = "<div id=\"vendingshop\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text shopname\"></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tr>\r\n				<td class=\"container\">\r\n					<div class=\"ff_bugfix\">\r\n						<div class=\"hide\"></div>\r\n						<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n					</div>\r\n				</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n					<div class=\"right\">\r\n						<ui-button\r\n							class=\"btn close\"\r\n							bg=\"btn_close.bmp\"\r\n							hover=\"btn_close_a.bmp\"\r\n							down=\"btn_close_b.bmp\"\r\n						></ui-button>\r\n					</div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/VendingShop/VendingShop.css?raw
 var VendingShop_default$1;
 var init_VendingShop$1 = __esmMin((() => {
-	VendingShop_default$1 = "#vendingshop {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n#vendingshop table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#vendingshop .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#vendingshop .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#vendingshop .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#vendingshop .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#vendingshop .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#vendingshop .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#vendingshop .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#vendingshop .hide {\r\n	height: 100%;\r\n	width: 16px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#vendingshop .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n}\r\n\r\n#vendingshop .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#vendingshop .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vendingshop .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#vendingshop .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#vendingshop .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#vendingshop .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#vendingshop .footer .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#vendingshop .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+	VendingShop_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 288px;\r\n	height: 114px;\r\n}\r\n\r\n#vendingshop {\r\n	position: absolute;\r\n	width: 288px;\r\n	height: 114px;\r\n}\r\n#vendingshop table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#vendingshop .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#vendingshop .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#vendingshop .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#vendingshop .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#vendingshop .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#vendingshop .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#vendingshop .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#vendingshop .hide {\r\n	height: 100%;\r\n	width: 16px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#vendingshop .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n}\r\n\r\n#vendingshop .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#vendingshop .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#vendingshop .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#vendingshop .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#vendingshop .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#vendingshop .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#vendingshop .footer .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#vendingshop .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/VendingShop/VendingShop.js
@@ -314910,16 +314941,15 @@ var init_VendingShop$1 = __esmMin((() => {
 * Prettify zeny : 1000000 -> 1,000,000
 *
 * @param {number} zeny
-* @param {boolean} use color
+* @param {boolean} useStyle
 * @return {string}
 */
 function prettyZeny$2(val, useStyle) {
 	const list = val.toString().split("");
 	const count = list.length;
-	let i;
 	let str = "";
-	for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-	if (useStyle) str = "<span style=\"" + [
+	for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+	if (useStyle) str = `<span style="${[
 		"color:#000000; text-shadow:1px 0px #00ffff;",
 		"color:#0000ff; text-shadow:1px 0px #ce00ce;",
 		"color:#0000ff; text-shadow:1px 0px #00ffff;",
@@ -314930,69 +314960,57 @@ function prettyZeny$2(val, useStyle) {
 		"color:#ff0000;",
 		"color:#000000; text-shadow:1px 0px #cece63;",
 		"color:#ff0000; text-shadow:1px 0px #ff007b;"
-	][count - 1] + "\">" + str + "</span>";
+	][count - 1]}">${str}</span>`;
 	return str;
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$9(event) {
-	event.stopImmediatePropagation();
-	return false;
 }
 /**
 * Drop an item from storage to inventory
 *
-* @param {event}
+* @param {Event} event
 */
 function onDrop$4(event) {
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Block the scroll to move 32px at each move
 */
 function onScroll$3(event) {
 	let delta;
-	if (event.originalEvent.wheelDelta) {
-		delta = event.originalEvent.wheelDelta / 120;
+	if (event.wheelDelta) {
+		delta = event.wheelDelta / 120;
 		if (window.opera) delta = -delta;
-	} else if (event.originalEvent.detail) delta = -event.originalEvent.detail;
-	this.scrollTop = Math.floor(this.scrollTop / 32) * 32 - delta * 32;
+	} else if (event.detail) delta = -event.detail;
+	else if (event.deltaY) delta = -event.deltaY / 100;
+	event.currentTarget.scrollTop = Math.floor(event.currentTarget.scrollTop / 32) * 32 - delta * 32;
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$7() {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onItemOver$7(itemEl, root) {
+	const idx = parseInt(itemEl.getAttribute("data-index"), 10);
 	const item = VendingShop.getItemByIndex(idx);
 	if (!item) return;
-	const pos = jquery_default(this).position();
-	const overlay = VendingShop.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + " " + prettyZeny$2(item.price, false) + " " + DB.getMessage(2328));
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else if (_type$2 === VendingShop.Type.VENDING_LIST) overlay.addClass("grey");
+	const overlay = root.querySelector(".overlay");
+	if (!overlay) return;
+	overlay.style.display = "";
+	overlay.style.top = `${itemEl.offsetTop}px`;
+	overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+	overlay.textContent = `${DB.getItemName(item)} ${prettyZeny$2(item.price, false)} ${DB.getMessage(2328)}`;
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else if (_type$2 === VendingShop.Type.VENDING_LIST) overlay.classList.add("grey");
 }
 /**
 * Hide the item name
 */
-function onItemOut$8() {
-	VendingShop.ui.find(".overlay").hide();
+function onItemOut$8(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
-* Start dragging an item
-*/
-function onItemDragStart$5(event) {}
-/**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$5() {
 	delete window._OBJ_DRAG_;
@@ -315000,52 +315018,53 @@ function onItemDragEnd$5() {
 /**
 * Get item info (open description window)
 */
-function onItemInfo$10(event) {
+function onItemInfo$10(event, itemEl) {
 	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
+	event.preventDefault();
+	const index = parseInt(itemEl.getAttribute("data-index"), 10);
 	const item = VendingShop.getItemByIndex(index);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
 /**
 * Ask to use an item
 */
-function onItemUsed(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
+function onItemUsed(event, itemEl) {
+	const index = parseInt(itemEl.getAttribute("data-index"), 10);
 	const item = VendingShop.getItemByIndex(index);
 	if (item) {
 		VendingShop.useItem(item);
-		onItemOut$8();
+		onItemOut$8(VendingShop._shadow || VendingShop._host);
 	}
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 var VendingShop, _realSize, _type$2, _preferences$19, VendingShop_default;
 var init_VendingShop = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_PacketVerManager();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
+	init_GUIComponent();
 	init_UIManager();
-	init_UIComponent();
+	init_Elements();
 	init_ChatBox();
 	init_ItemInfo();
 	init_Vending();
 	init_VendingShop$2();
 	init_VendingShop$1();
 	init_VendingReport();
-	VendingShop = new UIComponent("VendingShop", VendingShop_default$2, VendingShop_default$1);
+	VendingShop = new GUIComponent("VendingShop", VendingShop_default$1);
+	VendingShop.render = () => VendingShop_default$2;
 	/**
 	* @var {enum} Store type
 	*/
@@ -315068,26 +315087,59 @@ var init_VendingShop = __esmMin((() => {
 	/**
 	* Initialize UI
 	*/
-	VendingShop.init = function Init() {
-		this.ui.find(".btn.close").click(function() {
-			VendingShop.onSubmit();
+	VendingShop.init = function init() {
+		const root = this._shadow || this._host;
+		const closeBtn = root.querySelector(".btn.close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => VendingShop.onSubmit());
+		}
+		this._host.addEventListener("drop", onDrop$4);
+		this._host.addEventListener("dragover", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
 		});
-		this.ui.on("drop", onDrop$4).on("dragover", stopPropagation$9).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$3).on("mouseover", ".item", onItemOver$7).on("mouseout", ".item", onItemOut$8).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$5).on("contextmenu", ".item", onItemInfo$10).on("dblclick", ".item", onItemUsed);
-		this.draggable(this.ui.find(".titlebar"));
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", onScroll$3);
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemOver$7(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$8(root);
+			});
+			content.addEventListener("dragstart", (e) => {
+				if (e.target.closest(".item"));
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$5();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemInfo$10(e, itemEl);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemUsed(e, itemEl);
+			});
+		}
+		this.draggable(".titlebar");
+		this._host.style.display = "none";
 	};
 	/**
 	* Apply preferences once append to body
 	*/
-	VendingShop.onAppend = function OnAppend() {
+	VendingShop.onAppend = function onAppend() {
 		this.resize(_preferences$19.width, _preferences$19.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$19.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$19.x), Renderer.width - this.ui.width())
-		});
-		_realSize = _preferences$19.reduce ? 0 : this.ui.height();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$19.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$19.x), Renderer.width - hostRect.width)}px`;
+		_realSize = _preferences$19.reduce ? 0 : hostRect.height;
 		const messageText = DB.getMessage(226);
-		const titleShop = Vending_default._shopname.length > 25 ? Vending_default._shopname.substring(0, 25) + "..." : Vending_default._shopname;
-		this.ui.find(".text.shopname").text(messageText + " : " + titleShop);
+		const titleShop = Vending_default._shopname.length > 25 ? `${Vending_default._shopname.substring(0, 25)}...` : Vending_default._shopname;
+		const shopnameEl = (this._shadow || this._host).querySelector(".text.shopname");
+		if (shopnameEl) shopnameEl.textContent = `${messageText} : ${titleShop}`;
 	};
 	/**
 	* Specify the type of the shop
@@ -315100,17 +315152,19 @@ var init_VendingShop = __esmMin((() => {
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
-	VendingShop.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+	VendingShop.onRemove = function onRemove() {
+		const content = (this._shadow || this._host).querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
-		jquery_default(".ItemInfo").remove();
+		const itemInfoEl = document.querySelector(".ItemInfo");
+		if (itemInfoEl) itemInfoEl.remove();
 		_preferences$19.reduce = !!_realSize;
-		_preferences$19.y = parseInt(this.ui.css("top"), 10);
-		_preferences$19.x = parseInt(this.ui.css("left"), 10);
-		_preferences$19.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$19.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$19.y = parseInt(this._host.style.top, 10);
+		_preferences$19.x = parseInt(this._host.style.left, 10);
+		_preferences$19.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
+		_preferences$19.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
 		_preferences$19.save();
-		this.ui.hide();
+		this._host.style.display = "none";
 	};
 	/**
 	* Extend inventory window size
@@ -315118,17 +315172,24 @@ var init_VendingShop = __esmMin((() => {
 	* @param {number} width
 	* @param {number} height
 	*/
-	VendingShop.resize = function Resize(width, height) {
+	VendingShop.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		this.ui.find(".container .content").css({
-			width: width * 32 + 13,
-			height: height * 32
-		});
-		this.ui.css({
-			width: 32 + width * 32,
-			height: 50 + height * 32
-		});
+		const root = this._shadow || this._host;
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.style.width = `${width * 32 + 13}px`;
+			content.style.height = `${height * 32}px`;
+		}
+		const innerW = 32 + width * 32;
+		const innerH = 50 + height * 32;
+		this._host.style.width = `${innerW}px`;
+		this._host.style.height = `${innerH}px`;
+		const inner = root.querySelector("#vendingshop");
+		if (inner) {
+			inner.style.width = `${innerW}px`;
+			inner.style.height = `${innerH}px`;
+		}
 	};
 	/**
 	* Get item object
@@ -315136,10 +315197,9 @@ var init_VendingShop = __esmMin((() => {
 	* @param {number} id
 	* @returns {Item}
 	*/
-	VendingShop.getItemById = function GetItemById(id) {
-		let i, count;
+	VendingShop.getItemById = function getItemById(id) {
 		const list = VendingShop.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
 	/**
@@ -315149,9 +315209,8 @@ var init_VendingShop = __esmMin((() => {
 	* @returns {Item}
 	*/
 	VendingShop.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = VendingShop.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
 	/**
@@ -315159,23 +315218,23 @@ var init_VendingShop = __esmMin((() => {
 	* if the item index is exist you should clear it;[skybook888]
 	*/
 	VendingShop.setItems = function setItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) this.list.push(items[i]);
-		this.ui.show();
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) this.list.push(items[i]);
+		this._host.style.display = "";
 	};
 	/**
 	* Insert Item to inventory
 	*
 	* @param {object} Item
 	*/
-	VendingShop.addItem = function AddItem(item) {
+	VendingShop.addItem = function addItem(item) {
 		let object = this.getItemByIndex(item.index);
 		if (object) {
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		if (this.addItemSub(object)) this.list.push(object);
 	};
 	/**
@@ -315183,14 +315242,23 @@ var init_VendingShop = __esmMin((() => {
 	*
 	* @param {object} Item
 	*/
-	VendingShop.addItemSub = function AddItemSub(item) {
+	VendingShop.addItemSub = function addItemSub(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const content = this.ui.find(".container .content");
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-		if (content.height() < content[0].scrollHeight) this.ui.find(".hide").hide();
-		else this.ui.find(".hide").show();
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const root = this._shadow || this._host;
+		const content = root.querySelector(".container .content");
+		if (!content) return false;
+		const itemDiv = document.createElement("div");
+		itemDiv.className = "item";
+		itemDiv.setAttribute("data-index", item.index);
+		itemDiv.setAttribute("draggable", "true");
+		itemDiv.innerHTML = `<div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div>`;
+		content.appendChild(itemDiv);
+		const hideEl = root.querySelector(".hide");
+		if (hideEl) if (content.clientHeight < content.scrollHeight) hideEl.style.display = "none";
+		else hideEl.style.display = "";
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const iconEl = content.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
 		});
 		return true;
 	};
@@ -315200,44 +315268,52 @@ var init_VendingShop = __esmMin((() => {
 	* @param {number} index in inventory
 	* @param {number} count
 	*/
-	VendingShop.removeItem = function RemoveItem(index, count) {
-		let i, ctr;
+	VendingShop.removeItem = function removeItem(index, count) {
 		const item = this.getItemByIndex(index);
 		if (!item || count <= 0) return null;
 		const msg = DB.getMessage(231).replace("%s", DB.getItemName(item)).replace("%d", count);
 		ChatBox_default.addText(msg, ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
+		const root = this._shadow || this._host;
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		ctr = 0;
-		for (i = 0; i < this.list.length; i++) if (this.list[i].count > 0) ctr++;
-		if (ctr == 0) this.onSubmit();
+		const itemEl = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (itemEl) itemEl.remove();
+		let ctr = 0;
+		for (let i = 0; i < this.list.length; i++) if (this.list[i].count > 0) ctr++;
+		if (ctr === 0) this.onSubmit();
 		return item;
 	};
 	/**
-	* Remove item from inventory
+	* Update item in inventory
 	*
 	* @param {number} index in inventory
 	* @param {number} count
 	*/
-	VendingShop.updateItem = function UpdateItem(index, count) {
+	VendingShop.updateItem = function updateItem(index, count) {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
+		const root = this._shadow || this._host;
 		if (item.count > 0) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
 			return;
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		const content = this.ui.find(".container .content");
-		if (content.height() === content[0].scrollHeight) this.ui.find(".hide").show();
+		const itemEl = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (itemEl) itemEl.remove();
+		const content = root.querySelector(".container .content");
+		const hideEl = root.querySelector(".hide");
+		if (content && hideEl) {
+			if (content.clientHeight >= content.scrollHeight) hideEl.style.display = "";
+		}
 	};
 	/**
 	* Submit data to send items
@@ -315250,6 +315326,7 @@ var init_VendingShop = __esmMin((() => {
 		this.onRemove();
 		if (_type$2 === VendingShop.Type.VENDING_LIST && PacketVerManager_default.value >= 20141016) VendingReport_default.append();
 	};
+	VendingShop.mouseMode = GUIComponent.MouseMode.STOP;
 	VendingShop_default = UIManager.addComponent(VendingShop);
 }));
 //#endregion
