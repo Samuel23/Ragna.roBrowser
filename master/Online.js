@@ -337310,40 +337310,42 @@ var init_CharEngine = __esmMin((() => {
 //#region src/UI/Components/WinList/WinList.html?raw
 var WinList_default$2;
 var init_WinList$2 = __esmMin((() => {
-	WinList_default$2 = "<div id=\"serverlist\">\r\n	<div class=\"head\" data-background=\"login_interface/win_service.bmp\"></div>\r\n	<div class=\"bottom\" data-background=\"login_interface/win_service.bmp\">\r\n		<button\r\n			class=\"btn cancel\"\r\n			data-background=\"btn_cancel.bmp\"\r\n			data-hover=\"btn_cancel_a.bmp\"\r\n			data-down=\"btn_cancel_b.bmp\"\r\n		></button>\r\n		<button class=\"btn ok\" data-background=\"btn_ok.bmp\" data-hover=\"btn_ok_a.bmp\" data-down=\"btn_ok_b.bmp\"></button>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"list\"></div>\r\n	</div>\r\n</div>\r\n";
+	WinList_default$2 = "<div id=\"serverlist\">\r\n	<div class=\"head\">\r\n		<ui-image src=\"login_interface/win_service.bmp\"></ui-image>\r\n	</div>\r\n	<div class=\"bottom\">\r\n		<ui-image src=\"login_interface/win_service.bmp\"></ui-image>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"list\"></div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/WinList/WinList.css?raw
 var WinList_default$1;
 var init_WinList$1 = __esmMin((() => {
-	WinList_default$1 = "#serverlist {\r\n	z-index: 100;\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 200px;\r\n}\r\n#serverlist .head {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 22px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#serverlist .bottom {\r\n	position: relative;\r\n	width: 280px;\r\n	height: 120px;\r\n	top: 80px;\r\n	left: 0px;\r\n}\r\n\r\n#serverlist .content {\r\n	position: absolute;\r\n	width: 258px;\r\n	height: 145px;\r\n	top: 22px;\r\n	left: 0px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n	background-color: white;\r\n	border-left: 1px solid #c7c7c7;\r\n	border-right: 1px solid #c7c7c7;\r\n}\r\n#serverlist .list {\r\n	background-color: #f7f7f7;\r\n	height: 145px;\r\n	width: 260px;\r\n}\r\n#serverlist .menu_node {\r\n	width: 255px;\r\n	height: 15px;\r\n	display: block;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#serverlist .btn {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	background-color: transparent;\r\n}\r\n#serverlist .ok {\r\n	right: 50px;\r\n}\r\n#serverlist .cancel {\r\n	right: 5px;\r\n}\r\n";
+	WinList_default$1 = ":host {\r\n	width: 280px;\r\n	height: 200px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#serverlist {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 200px;\r\n}\r\n#serverlist .head {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 22px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#serverlist .bottom {\r\n	position: relative;\r\n	width: 280px;\r\n	height: 120px;\r\n	top: 80px;\r\n	left: 0px;\r\n}\r\n\r\n#serverlist .content {\r\n	position: absolute;\r\n	width: 258px;\r\n	height: 145px;\r\n	top: 22px;\r\n	left: 0px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n	background-color: white;\r\n	border-left: 1px solid #c7c7c7;\r\n	border-right: 1px solid #c7c7c7;\r\n}\r\n#serverlist .list {\r\n	background-color: #f7f7f7;\r\n	height: 145px;\r\n	width: 260px;\r\n}\r\n#serverlist .menu_node {\r\n	width: 255px;\r\n	height: 15px;\r\n	display: block;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#serverlist .btn {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-color: transparent;\r\n}\r\n#serverlist .ok {\r\n	right: 50px;\r\n}\r\n#serverlist .cancel {\r\n	right: 5px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/WinList/WinList.js
 var WinList, WinList_default;
 var init_WinList = __esmMin((() => {
-	init_jquery();
 	init_Renderer();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_WinList$2();
 	init_WinList$1();
-	WinList = new UIComponent("WinList", WinList_default$2, WinList_default$1);
+	WinList = new GUIComponent("WinList", WinList_default$1);
+	WinList.render = () => WinList_default$2;
 	/**
 	* Initialize UI
 	*/
 	WinList.init = function init() {
-		this.ui.css({
-			top: (Renderer.height - 280) / 1.5,
-			left: (Renderer.width - 280) / 2
-		});
+		this._host.style.top = `${(Renderer.height - 280) / 1.5}px`;
+		this._host.style.left = `${(Renderer.width - 280) / 2}px`;
 		this.draggable();
-		this.ui_list = this.ui.find(".list:first");
+		const root = this._shadow || this._host;
+		this._listEl = root.querySelector(".list");
 		this.list = null;
 		this.index = 0;
-		this.ui.find(".ok").click(this.selectIndex.bind(this));
-		this.ui.find(".cancel").click(this.exit.bind(this));
+		const okBtn = root.querySelector(".ok");
+		const cancelBtn = root.querySelector(".cancel");
+		if (okBtn) okBtn.addEventListener("click", () => WinList.selectIndex());
+		if (cancelBtn) cancelBtn.addEventListener("click", () => WinList.exit());
 	};
 	/**
 	* Add elements to the list
@@ -337351,15 +337353,20 @@ var init_WinList = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	WinList.setList = function setList(list) {
-		let i, count;
 		this.list = list;
-		this.ui_list.empty();
-		function onSelectListIndex(event) {
-			WinList.setIndex(jquery_default(this).data("id"));
-			event.stopImmediatePropagation();
-			return false;
+		this._listEl.innerHTML = "";
+		for (let i = 0, count = list.length; i < count; ++i) {
+			const node = document.createElement("div");
+			node.classList.add("menu_node");
+			node.textContent = list[i];
+			node.dataset.id = i;
+			node.addEventListener("mousedown", (event) => {
+				WinList.setIndex(parseInt(node.dataset.id, 10));
+				event.stopImmediatePropagation();
+			});
+			node.addEventListener("dblclick", () => WinList.selectIndex());
+			this._listEl.appendChild(node);
 		}
-		for (i = 0, count = list.length; i < count; ++i) this.ui_list.append(jquery_default("<div/>").addClass("menu_node").text(list[i]).data("id", i).mousedown(onSelectListIndex).dblclick(this.selectIndex.bind(this)));
 		this.setIndex(0);
 	};
 	/**
@@ -337380,8 +337387,9 @@ var init_WinList = __esmMin((() => {
 	*/
 	WinList.setIndex = function setIndex(id) {
 		if (id > -1 && id < this.list.length) {
-			this.ui_list.find("div:eq(" + this.index + ")").css("backgroundColor", "transparent");
-			this.ui_list.find("div:eq(" + id + ")").css("backgroundColor", "#cde0ff");
+			const nodes = this._listEl.querySelectorAll(".menu_node");
+			if (nodes[this.index]) nodes[this.index].style.backgroundColor = "transparent";
+			if (nodes[id]) nodes[id].style.backgroundColor = "#cde0ff";
 			this.index = id;
 		}
 	};
@@ -337397,7 +337405,7 @@ var init_WinList = __esmMin((() => {
 	* @param {object} event
 	*/
 	WinList.onKeyDown = function onKeyDown(event) {
-		if (!this.ui.is(":visible")) return true;
+		if (this._host.style.display === "none") return true;
 		switch (event.which) {
 			default: return;
 			case KEYS.ENTER:
@@ -337419,10 +337427,11 @@ var init_WinList = __esmMin((() => {
 	* Free variables once removed from HTML
 	*/
 	WinList.onRemove = function onRemove() {
-		this.ui_list.empty();
+		this._listEl.innerHTML = "";
 		this.list = null;
 		this.index = 0;
 	};
+	WinList.mouseMode = GUIComponent.MouseMode.STOP;
 	WinList_default = UIManager.addComponent(WinList);
 }));
 //#endregion
