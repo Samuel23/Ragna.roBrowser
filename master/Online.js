@@ -158848,6 +158848,179 @@ var init_PartyHelper$1 = __esmMin((() => {
 	PartyHelper_default$1 = "#PartyHelper {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n\r\n#PartyHelper .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyHelper .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyHelper .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyHelper .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyHelper .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyHelper .content {\r\n	background-color: white;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#PartyHelper .party-content {\r\n	min-height: 100px;\r\n}\r\n\r\n#PartyHelper .friend-content {\r\n	padding: 5px;\r\n}\r\n\r\n#PartyHelper .disabled,\r\n#PartyHelper .disabled button {\r\n	color: #888;\r\n}\r\n\r\n#PartyHelper .on,\r\n#PartyHelper .off {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 3px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .content p {\r\n	padding: 0;\r\n	margin: 0;\r\n	padding-top: 10px;\r\n}\r\n\r\n#PartyHelper .content div {\r\n	margin-left: 10px;\r\n}\r\n\r\n#PartyHelper .content button {\r\n	margin-left: 10px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .name {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 95px;\r\n	height: 20px;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#PartyHelper .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyHelper .btn {\r\n	position: absolute;\r\n	bottom: 3px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyHelper .ok {\r\n	right: 46px;\r\n}\r\n\r\n#PartyHelper .cancel {\r\n	right: 2px;\r\n}\r\n\r\n#PartyHelper .friend-setup .setting-row {\r\n	margin-left: 0px;\r\n	margin-bottom: 3px;\r\n	cursor: pointer;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyHelper .friend-setup .off {\r\n	display: none;\r\n}\r\n\r\n#PartyHelper .friend-setup .on {\r\n	display: inline-block;\r\n}\r\n\r\n#PartyHelper .friend-setup span {\r\n	margin-left: 5px;\r\n	font-size: 11px;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .friend-setup button {\r\n	display: inline-block;\r\n	width: 15px;\r\n	height: 18px;\r\n	background-position: 0px 3px;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	vertical-align: middle;\r\n}\r\n";
 }));
 //#endregion
+//#region src/UI/Elements/UIButton.js
+var UIButton;
+var init_UIButton = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIButton = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const bg = this.getAttribute("bg");
+			const hover = this.getAttribute("hover");
+			const down = this.getAttribute("down");
+			let bgUri = null, hoverUri = null, downUri = null;
+			const state = {
+				hover: false,
+				down: false
+			};
+			const update = () => {
+				if (this.disabled) {
+					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+					this.style.opacity = "0.5";
+					this.style.cursor = "default";
+					return;
+				}
+				this.style.opacity = "";
+				this.style.cursor = "";
+				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
+				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
+				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+				else this.style.backgroundImage = "";
+			};
+			this._update = update;
+			const loadBmp = (path, cb) => {
+				if (!path) return;
+				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+					if (dataURI instanceof ArrayBuffer) try {
+						const tga = new Targa();
+						tga.load(new Uint8Array(dataURI));
+						cb(tga.getDataURL());
+					} catch (e) {
+						console.error(e.message);
+					}
+					else cb(dataURI);
+				});
+			};
+			loadBmp(bg, (uri) => {
+				bgUri = uri;
+				update();
+			});
+			loadBmp(hover, (uri) => {
+				hoverUri = uri;
+			});
+			loadBmp(down, (uri) => {
+				downUri = uri;
+			});
+			this.addEventListener("mouseover", () => {
+				if (this.disabled) return;
+				state.hover = true;
+				update();
+			});
+			this.addEventListener("mouseout", () => {
+				state.hover = false;
+				state.down = false;
+				update();
+			});
+			this.addEventListener("mousedown", () => {
+				if (this.disabled) return;
+				state.down = true;
+				update();
+			});
+			this.addEventListener("mouseup", () => {
+				state.down = false;
+				update();
+			});
+			this.addEventListener("click", (e) => {
+				if (this.disabled) {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				}
+			}, true);
+		}
+		get disabled() {
+			return this.hasAttribute("disabled");
+		}
+		set disabled(val) {
+			if (val) this.setAttribute("disabled", "");
+			else this.removeAttribute("disabled");
+		}
+		static get observedAttributes() {
+			return ["disabled"];
+		}
+		attributeChangedCallback(name) {
+			if (name === "disabled" && this._initialized) {
+				if (this._update) this._update();
+			}
+		}
+	};
+	customElements.define("ui-button", UIButton);
+}));
+//#endregion
+//#region src/UI/Elements/UIText.js
+var UIText;
+var init_UIText = __esmMin((() => {
+	init_DBManager();
+	UIText = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const msgId = this.getAttribute("msg");
+			if (msgId) {
+				const text = DB.getMessage(msgId, "");
+				if (text) this.textContent = text;
+			}
+		}
+		static get observedAttributes() {
+			return ["msg"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "msg" && newVal) {
+				const text = DB.getMessage(newVal, "");
+				if (text) this.textContent = text;
+			}
+		}
+	};
+	customElements.define("ui-text", UIText);
+}));
+//#endregion
+//#region src/UI/Elements/UIImage.js
+var UIImage;
+var init_UIImage = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIImage = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			this.style.display = "none";
+			this._loadSrc(this.getAttribute("src"));
+		}
+		static get observedAttributes() {
+			return ["src"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "src") this._loadSrc(newVal);
+		}
+		_loadSrc(path) {
+			if (!path) return;
+			const target = this.parentElement;
+			if (!target) return;
+			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+				if (dataURI instanceof ArrayBuffer) try {
+					const tga = new Targa();
+					tga.load(new Uint8Array(dataURI));
+					target.style.backgroundImage = `url(${tga.getDataURL()})`;
+				} catch (e) {
+					console.error(e.message);
+				}
+				else target.style.backgroundImage = `url(${dataURI})`;
+			});
+		}
+	};
+	customElements.define("ui-image", UIImage);
+}));
+//#endregion
+//#region src/UI/Elements/Elements.js
+var init_Elements = __esmMin((() => {
+	init_UIButton();
+	init_UIText();
+	init_UIImage();
+}));
+//#endregion
 //#region src/UI/Components/ChatBox/History.js
 /**
 * UI/Components/ChatBox/History.js
@@ -158923,13 +159096,13 @@ var init_History = __esmMin((() => {
 //#region src/UI/Components/WhisperBox/WhisperBox.html?raw
 var WhisperBox_default$1;
 var init_WhisperBox$2 = __esmMin((() => {
-	WhisperBox_default$1 = "<div class=\"whisper-container\">\r\n	<div class=\"whisper-header\">\r\n		<span class=\"title\">With weeeee (Friend) *^.^* [813-338]</span>\r\n		<button\r\n			class=\"close\"\r\n			data-background=\"basic_interface/sys_close_off.bmp\"\r\n			data-hover=\"basic_interface/sys_close_on.bmp\"\r\n		></button>\r\n	</div>\r\n	<div class=\"whisper-body\">\r\n		<div class=\"content\"></div>\r\n	</div>\r\n	<div class=\"whisper-footer\">\r\n		<div class=\"input-wrapper\">\r\n			<div contenteditable=\"true\" class=\"message input-whisper\"></div>\r\n		</div>\r\n		<div class=\"resizer event_add_cursor\" data-background=\"btn_resize.bmp\"></div>\r\n	</div>\r\n</div>\r\n";
+	WhisperBox_default$1 = "<div id=\"WhisperBox\" class=\"whisper-container\">\r\n	<div class=\"whisper-header\">\r\n		<span class=\"title\">With weeeee (Friend) *^.^* [813-338]</span>\r\n		<ui-button\r\n			class=\"close\"\r\n			bg=\"basic_interface/sys_close_off.bmp\"\r\n			hover=\"basic_interface/sys_close_on.bmp\"\r\n		></ui-button>\r\n	</div>\r\n	<div class=\"whisper-body\">\r\n		<div class=\"content\"></div>\r\n	</div>\r\n	<div class=\"whisper-footer\">\r\n		<div class=\"input-wrapper\">\r\n			<div contenteditable=\"true\" class=\"message input-whisper\"></div>\r\n		</div>\r\n		<div class=\"resizer event_add_cursor\" data-background=\"btn_resize.bmp\"></div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/WhisperBox/WhisperBox.css?raw
 var WhisperBox_default;
 var init_WhisperBox$1 = __esmMin((() => {
-	WhisperBox_default = ".whisper-container {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 156px;\r\n	border: 1px solid white;\r\n	border-radius: 5px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	display: flex;\r\n	flex-direction: column;\r\n	overflow: hidden;\r\n	color: #ffffff;\r\n	z-index: 50;\r\n	min-width: 150px;\r\n	min-height: 100px;\r\n}\r\n\r\n.whisper-header {\r\n	background: rgba(255, 255, 255, 0.2);\r\n	height: 18px;\r\n	padding: 0 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: space-between;\r\n	color: #ffffff;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n	cursor: move;\r\n}\r\n\r\n.whisper-header .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.whisper-body {\r\n	flex: 1;\r\n	padding: 0 2px 2px 5px;\r\n	overflow: hidden;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n.whisper-body .contentwrapper {\r\n	height: 100%;\r\n}\r\n\r\n.whisper-body .content {\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	font-size: 12px;\r\n	text-shadow: 1px 1px 0px #000;\r\n	word-break: break-all;\r\n	line-height: 14px;\r\n}\r\n\r\n.whisper-footer {\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.whisper-footer .input-wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	height: 23px;\r\n	width: calc(100% - 25px);\r\n	overflow: hidden;\r\n}\r\n\r\n.whisper-footer .message {\r\n	width: 100%;\r\n	padding-left: 2px;\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	color: #ffffff;\r\n	font-size: 12px;\r\n	display: inline-block;\r\n}\r\n\r\n.whisper-container img {\r\n	max-height: 1.25em;\r\n	width: auto;\r\n	vertical-align: middle;\r\n	background: transparent !important;\r\n}\r\n\r\n.whisper-footer .resizer {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* Scrollbar styling - handled dynamically in JS to use RO assets */\r\n";
+	WhisperBox_default = ":host {\r\n	width: 280px;\r\n	height: 156px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.whisper-container {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 156px;\r\n	border: 1px solid white;\r\n	border-radius: 5px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	display: flex;\r\n	flex-direction: column;\r\n	overflow: hidden;\r\n	color: #ffffff;\r\n	min-width: 150px;\r\n	min-height: 100px;\r\n}\r\n\r\n.whisper-header {\r\n	background: rgba(255, 255, 255, 0.2);\r\n	height: 18px;\r\n	padding: 0 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: space-between;\r\n	color: #ffffff;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n	cursor: move;\r\n}\r\n\r\n.whisper-header .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.whisper-body {\r\n	flex: 1;\r\n	padding: 0 2px 2px 5px;\r\n	overflow: hidden;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n.whisper-body .contentwrapper {\r\n	height: 100%;\r\n}\r\n\r\n.whisper-body .content {\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	font-size: 12px;\r\n	text-shadow: 1px 1px 0px #000;\r\n	word-break: break-all;\r\n	line-height: 14px;\r\n}\r\n\r\n.whisper-footer {\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.whisper-footer .input-wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	height: 23px;\r\n	width: calc(100% - 25px);\r\n	overflow: hidden;\r\n}\r\n\r\n.whisper-footer .message {\r\n	width: 100%;\r\n	padding-left: 2px;\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	color: #ffffff;\r\n	font-size: 12px;\r\n	display: inline-block;\r\n}\r\n\r\n.whisper-container img {\r\n	max-height: 1.25em;\r\n	width: auto;\r\n	vertical-align: middle;\r\n	background: transparent !important;\r\n}\r\n\r\n.whisper-footer .resizer {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/Engine/MapEngine/Friends.js
@@ -159132,38 +159305,74 @@ function setCaretToEnd(el) {
 }
 /**
 * Extract plain chat text from input while preserving item links
-* @param {jQuery} $input
+* @param {HTMLElement} inputEl
 * @returns {string}
 */
-function extractChatMessage$1($input) {
-	const clone = $input.clone();
-	clone.find("span.item-link").each(function() {
-		const data = jquery_default(this).attr("data-item") || jquery_default(this).data("item") || "";
-		jquery_default(this).replaceWith(document.createTextNode(data));
+function extractChatMessage$1(inputEl) {
+	const clone = inputEl.cloneNode(true);
+	clone.querySelectorAll("span.item-link").forEach((link) => {
+		const data = link.getAttribute("data-item") || "";
+		link.replaceWith(document.createTextNode(data));
 	});
-	return clone.text().replace(/\u00A0/g, " ");
+	return clone.textContent.replace(/\u00A0/g, " ");
+}
+/**
+* Set up item link click handler inside an instance's shadow DOM
+* @param {GUIComponent} instance
+*/
+function setupItemLinkHandler(instance) {
+	(instance._shadow || instance._host).addEventListener("click", (event) => {
+		const link = event.target.closest(".item-link");
+		if (!link) return;
+		const match = link.getAttribute("data-item");
+		const item = DB.parseItemLink(match);
+		if (item) __vitePreload(() => Promise.resolve().then(() => (init_ItemInfo(), ItemInfo_exports)).then((m) => {
+			const ItemInfo = m.default;
+			ItemInfo.append();
+			ItemInfo.uid = item.ITID;
+			ItemInfo.setItem(item);
+		}), void 0, import.meta.url);
+	});
+}
+/**
+* Set up nickname link click handler inside an instance's shadow DOM
+* @param {GUIComponent} instance
+*/
+function setupNicknameLinkHandler(instance) {
+	(instance._shadow || instance._host).addEventListener("click", (event) => {
+		const link = event.target.closest(".nickname-link");
+		if (!link) return;
+		const nickname = link.getAttribute("data-nickname");
+		if (nickname) WhisperBox.show(nickname);
+		event.stopImmediatePropagation();
+	});
 }
 /**
 * Initialize resizable logic for an instance
-* @param {UIComponent} instance
+* @param {GUIComponent} instance
 */
 function initResizable(instance) {
-	const resizer = instance.ui.find(".resizer")[0];
+	const root = instance._shadow || instance._host;
+	const resizer = root.querySelector(".resizer");
 	if (!resizer) return;
-	const resize = function(e) {
-		const width = Math.max(150, e.pageX - instance.ui.offset().left);
-		const height = Math.max(100, e.pageY - instance.ui.offset().top);
-		instance.ui.css({
-			width: width + "px",
-			height: height + "px"
-		});
-		instance.$content[0].scrollTop = instance.$content[0].scrollHeight;
+	const resize = (e) => {
+		const rect = instance._host.getBoundingClientRect();
+		const width = Math.max(150, e.pageX - rect.left);
+		const height = Math.max(100, e.pageY - rect.top);
+		instance._host.style.width = `${width}px`;
+		instance._host.style.height = `${height}px`;
+		const container = root.querySelector(".whisper-container");
+		if (container) {
+			container.style.width = `${width}px`;
+			container.style.height = `${height}px`;
+		}
+		instance._contentEl.scrollTop = instance._contentEl.scrollHeight;
 	};
-	const stopResize = function() {
+	const stopResize = () => {
 		window.removeEventListener("mousemove", resize);
 		window.removeEventListener("mouseup", stopResize);
 	};
-	resizer.addEventListener("mousedown", function(e) {
+	resizer.addEventListener("mousedown", (e) => {
 		e.preventDefault();
 		e.stopPropagation();
 		window.addEventListener("mousemove", resize);
@@ -159173,9 +159382,9 @@ function initResizable(instance) {
 var WhisperBox, _preferences$67;
 var init_WhisperBox = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Preferences$1();
 	init_KeyEventHandler();
 	init_Renderer();
@@ -159184,7 +159393,8 @@ var init_WhisperBox = __esmMin((() => {
 	init_WhisperBox$2();
 	init_WhisperBox$1();
 	init_preload_helper();
-	WhisperBox = new UIComponent("WhisperBox", WhisperBox_default$1, WhisperBox_default);
+	WhisperBox = new GUIComponent("WhisperBox", WhisperBox_default);
+	WhisperBox.render = () => WhisperBox_default$1;
 	/**
 	* @var {Object} active whisper windows indexed by nickname
 	*/
@@ -159203,32 +159413,18 @@ var init_WhisperBox = __esmMin((() => {
 		alarm1to1: true
 	}, 1);
 	_preferences$67 = WhisperBox.preferences;
+	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
+	WhisperBox.captureKeyEvents = true;
 	/**
 	* Initialize component
 	*/
-	WhisperBox.init = function() {
+	WhisperBox.init = function init() {
 		this.clearAll();
-		jquery_default(document).on("click.whisperbox", ".whisperbox .item-link, .whisper-container .item-link", function(event) {
-			const match = jquery_default(this).attr("data-item") || jquery_default(this).data("item");
-			const item = DB.parseItemLink(match);
-			if (item) __vitePreload(() => Promise.resolve().then(() => (init_ItemInfo(), ItemInfo_exports)).then((m) => {
-				const ItemInfo = m.default;
-				ItemInfo.append();
-				ItemInfo.uid = item.ITID;
-				ItemInfo.setItem(item);
-			}), void 0, import.meta.url);
-		});
-		jquery_default(document).on("click.whisperbox", ".whisperbox .nickname-link, .whisper-container .nickname-link", function(event) {
-			const nickname = jquery_default(this).attr("data-nickname") || jquery_default(this).data("nickname");
-			if (nickname) WhisperBox.show(nickname);
-			event.stopImmediatePropagation();
-			return false;
-		});
 	};
 	/**
 	* Clear all history and windows
 	*/
-	WhisperBox.clearAll = function() {
+	WhisperBox.clearAll = function clearAll() {
 		const keys = Object.keys(this.instances);
 		for (let i = 0; i < keys.length; i++) this.instances[keys[i]].remove();
 		this.instances = {};
@@ -159238,95 +159434,110 @@ var init_WhisperBox = __esmMin((() => {
 	* @param {string} nickname
 	* @param {boolean} [bHasMessage]
 	*/
-	WhisperBox.show = function(nickname, bHasMessage) {
-		const self = this;
+	WhisperBox.show = function show(nickname, bHasMessage) {
 		if (this.instances[nickname]) {
-			this.instances[nickname].ui.show();
+			this.instances[nickname]._host.style.display = "";
 			this.instances[nickname].focus();
 			return this.instances[nickname];
 		}
 		if (_preferences$67.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
 		const instance = this.clone(nickname);
 		instance.nickname = nickname;
-		instance.name = "WhisperBox:" + nickname;
+		instance.name = `WhisperBox:${nickname}`;
 		instance.needFocus = true;
+		instance.captureKeyEvents = true;
+		instance.onKeyDown = function onKeyDown(event) {
+			const focused = (this._shadow || this._host).activeElement;
+			if (focused && focused.tagName) {
+				const isInput = focused.tagName.match(/input|select|textarea/i);
+				const isContentEditable = focused.getAttribute("contenteditable") === "true";
+				if (isInput || isContentEditable) switch (event.which) {
+					case KEYS.ESCAPE:
+						this.remove();
+						event.stopImmediatePropagation();
+						return false;
+					case KEYS.ENTER: {
+						const msg = extractChatMessage$1(this._inputEl).replace(/\u00A0/g, " ").trim();
+						if (msg.length) {
+							this.history.push(msg);
+							WhisperBox.onRequestTalk(this.nickname, msg);
+							this._inputEl.innerHTML = "";
+						}
+						event.stopImmediatePropagation();
+						return false;
+					}
+					case KEYS.UP:
+					case KEYS.DOWN: {
+						const historyMsg = event.which === KEYS.UP ? this.history.previous() : this.history.next();
+						this._inputEl.innerHTML = historyMsg;
+						setCaretToEnd(this._inputEl);
+						event.stopImmediatePropagation();
+						return false;
+					}
+					default: {
+						const currentText = extractChatMessage$1(this._inputEl);
+						if (event.which >= 32 && currentText.length >= 100 && !event.ctrlKey && !event.altKey) {
+							event.stopImmediatePropagation();
+							return false;
+						}
+						event.stopImmediatePropagation();
+						return true;
+					}
+				}
+			}
+			return true;
+		};
 		UIManager.addComponent(instance);
 		instance.prepare();
 		instance.append();
-		const $ui = instance.ui;
-		instance.$content = $ui.find(".content");
-		instance.$input = $ui.find(".input-whisper");
+		const root = instance._shadow || instance._host;
+		instance._contentEl = root.querySelector(".content");
+		instance._inputEl = root.querySelector(".input-whisper");
 		__vitePreload(() => Promise.resolve().then(() => (init_Friends(), Friends_exports)).then((Friends) => {
 			const isFriend = Friends && Friends.default.isFriend ? Friends.default.isFriend(nickname) : false;
-			$ui.find(".title").text("With " + nickname + (isFriend ? " (Friend)" : ""));
+			const titleEl = root.querySelector(".title");
+			if (titleEl) titleEl.textContent = `With ${nickname}${isFriend ? " (Friend)" : ""}`;
 		}), void 0, import.meta.url);
-		instance.draggable($ui.find(".whisper-header, .whisper-footer"));
-		$ui.find(".close").click(function() {
-			instance.remove();
-		});
-		instance.onRemove = function() {
+		instance.draggable(".whisper-header, .whisper-footer");
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				instance.remove();
+			});
+		}
+		const self = this;
+		instance.onRemove = function onRemove() {
 			delete self.instances[nickname];
 			delete UIManager.components[this.name];
 		};
 		instance.history = new History();
-		instance.$input.on("keydown", function(event) {
-			switch (event.which) {
-				case KEYS.ENTER: {
-					const msg = extractChatMessage$1(jquery_default(this)).replace(/\u00A0/g, " ").trim();
-					if (msg.length) {
-						instance.history.push(msg);
-						self.onRequestTalk(nickname, msg);
-						jquery_default(this).html("");
-					}
-					event.preventDefault();
-					event.stopImmediatePropagation();
-					return false;
-				}
-				case KEYS.UP:
-				case KEYS.DOWN: {
-					const historyMsg = event.which === KEYS.UP ? instance.history.previous() : instance.history.next();
-					jquery_default(this).html(historyMsg);
-					setCaretToEnd(this);
-					break;
-				}
-				default: {
-					const currentText = extractChatMessage$1(jquery_default(this));
-					if (event.which >= 32 && currentText.length >= 100 && !event.ctrlKey && !event.altKey) {
-						event.preventDefault();
-						return false;
-					}
-					return true;
-				}
-			}
-		});
-		instance.$input.on("paste", function(event) {
+		instance._inputEl.addEventListener("paste", (event) => {
 			event.preventDefault();
 			const clipboard = (event.originalEvent || event).clipboardData;
 			let paste = clipboard ? clipboard.getData("text/plain") : "";
 			if (!paste) return false;
 			paste = paste.replace(/\u00A0/g, " ");
-			const remaining = 100 - extractChatMessage$1(jquery_default(this)).length;
+			const remaining = 100 - extractChatMessage$1(instance._inputEl).length;
 			if (remaining <= 0) return false;
 			const toInsert = paste.substr(0, remaining);
-			if (document.queryCommandSupported && document.queryCommandSupported("insertText")) document.execCommand("insertText", false, toInsert);
-			else {
-				const selection = window.getSelection();
-				if (selection.rangeCount) {
-					selection.deleteFromDocument();
-					selection.getRangeAt(0).insertNode(document.createTextNode(toInsert));
-				}
+			const selection = window.getSelection();
+			if (selection.rangeCount) {
+				selection.deleteFromDocument();
+				selection.getRangeAt(0).insertNode(document.createTextNode(toInsert));
+				selection.collapseToEnd();
 			}
 		});
-		$ui.mousedown(function() {
+		instance._host.addEventListener("mousedown", () => {
 			instance.focus();
 		});
+		setupItemLinkHandler(instance);
+		setupNicknameLinkHandler(instance);
 		initResizable(instance);
 		const offset = this._spawnCounter % 10 * 20;
 		this._spawnCounter++;
-		$ui.css({
-			top: Math.min(Math.max(0, _preferences$67.y + offset), Renderer.height - 156),
-			left: Math.min(Math.max(0, _preferences$67.x + offset), Renderer.width - 280)
-		});
+		instance._host.style.top = `${Math.min(Math.max(0, _preferences$67.y + offset), Renderer.height - 156)}px`;
+		instance._host.style.left = `${Math.min(Math.max(0, _preferences$67.x + offset), Renderer.width - 280)}px`;
 		this.instances[nickname] = instance;
 		return instance;
 	};
@@ -159336,26 +159547,29 @@ var init_WhisperBox = __esmMin((() => {
 	* @param {string} text
 	* @param {string} color
 	*/
-	WhisperBox.addText = function(nickname, text, color) {
+	WhisperBox.addText = function addText(nickname, text, color) {
 		const instance = this.instances[nickname] || this.show(nickname, true);
 		let override = false;
-		text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, function(match) {
+		text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, (match) => {
 			const item = DB.parseItemLink(match);
 			if (!item) return match;
 			override = true;
-			return "<span data-item=\"" + match + "\" class=\"item-link\" style=\"color:#FFFF63; cursor:pointer;\">&lt;" + item.name + "&gt;</span>";
+			return `<span data-item="${match}" class="item-link" style="color:#FFFF63; cursor:pointer;">&lt;${item.name}&gt;</span>`;
 		});
-		const $content = instance.$content;
-		const isAtBottom = $content[0].scrollHeight - $content.scrollTop() <= $content.outerHeight() + 10;
-		const $div = jquery_default("<div/>").css("color", color || "#ffffff")[override ? "html" : "text"](text);
-		$content.append($div);
-		while ($content[0].childElementCount > 100) $content[0].firstElementChild.remove();
-		if (isAtBottom) $content.scrollTop($content[0].scrollHeight);
+		const contentEl = instance._contentEl;
+		const isAtBottom = contentEl.scrollHeight - contentEl.scrollTop <= contentEl.offsetHeight + 10;
+		const div = document.createElement("div");
+		div.style.color = color || "#ffffff";
+		if (override) div.innerHTML = text;
+		else div.textContent = text;
+		contentEl.appendChild(div);
+		while (contentEl.childElementCount > 100) contentEl.firstElementChild.remove();
+		if (isAtBottom) contentEl.scrollTop = contentEl.scrollHeight;
 	};
 	/**
 	* Interface to be overriden by Engine
 	*/
-	WhisperBox.onRequestTalk = function(nickname, text) {};
+	WhisperBox.onRequestTalk = function onRequestTalk(_nickname, _text) {};
 	UIManager.addComponent(WhisperBox);
 }));
 //#endregion
@@ -198355,179 +198569,6 @@ var init_Guild$1 = __esmMin((() => {
 	Guild.onUpdateSkill = function onUpdateSkill() {};
 	Guild.getSkillById = getSkillById$2;
 	Guild_default = UIManager.addComponent(Guild);
-}));
-//#endregion
-//#region src/UI/Elements/UIButton.js
-var UIButton;
-var init_UIButton = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIButton = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const bg = this.getAttribute("bg");
-			const hover = this.getAttribute("hover");
-			const down = this.getAttribute("down");
-			let bgUri = null, hoverUri = null, downUri = null;
-			const state = {
-				hover: false,
-				down: false
-			};
-			const update = () => {
-				if (this.disabled) {
-					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-					this.style.opacity = "0.5";
-					this.style.cursor = "default";
-					return;
-				}
-				this.style.opacity = "";
-				this.style.cursor = "";
-				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
-				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
-				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-				else this.style.backgroundImage = "";
-			};
-			this._update = update;
-			const loadBmp = (path, cb) => {
-				if (!path) return;
-				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-					if (dataURI instanceof ArrayBuffer) try {
-						const tga = new Targa();
-						tga.load(new Uint8Array(dataURI));
-						cb(tga.getDataURL());
-					} catch (e) {
-						console.error(e.message);
-					}
-					else cb(dataURI);
-				});
-			};
-			loadBmp(bg, (uri) => {
-				bgUri = uri;
-				update();
-			});
-			loadBmp(hover, (uri) => {
-				hoverUri = uri;
-			});
-			loadBmp(down, (uri) => {
-				downUri = uri;
-			});
-			this.addEventListener("mouseover", () => {
-				if (this.disabled) return;
-				state.hover = true;
-				update();
-			});
-			this.addEventListener("mouseout", () => {
-				state.hover = false;
-				state.down = false;
-				update();
-			});
-			this.addEventListener("mousedown", () => {
-				if (this.disabled) return;
-				state.down = true;
-				update();
-			});
-			this.addEventListener("mouseup", () => {
-				state.down = false;
-				update();
-			});
-			this.addEventListener("click", (e) => {
-				if (this.disabled) {
-					e.stopImmediatePropagation();
-					e.preventDefault();
-				}
-			}, true);
-		}
-		get disabled() {
-			return this.hasAttribute("disabled");
-		}
-		set disabled(val) {
-			if (val) this.setAttribute("disabled", "");
-			else this.removeAttribute("disabled");
-		}
-		static get observedAttributes() {
-			return ["disabled"];
-		}
-		attributeChangedCallback(name) {
-			if (name === "disabled" && this._initialized) {
-				if (this._update) this._update();
-			}
-		}
-	};
-	customElements.define("ui-button", UIButton);
-}));
-//#endregion
-//#region src/UI/Elements/UIText.js
-var UIText;
-var init_UIText = __esmMin((() => {
-	init_DBManager();
-	UIText = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const msgId = this.getAttribute("msg");
-			if (msgId) {
-				const text = DB.getMessage(msgId, "");
-				if (text) this.textContent = text;
-			}
-		}
-		static get observedAttributes() {
-			return ["msg"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "msg" && newVal) {
-				const text = DB.getMessage(newVal, "");
-				if (text) this.textContent = text;
-			}
-		}
-	};
-	customElements.define("ui-text", UIText);
-}));
-//#endregion
-//#region src/UI/Elements/UIImage.js
-var UIImage;
-var init_UIImage = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIImage = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			this.style.display = "none";
-			this._loadSrc(this.getAttribute("src"));
-		}
-		static get observedAttributes() {
-			return ["src"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "src") this._loadSrc(newVal);
-		}
-		_loadSrc(path) {
-			if (!path) return;
-			const target = this.parentElement;
-			if (!target) return;
-			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-				if (dataURI instanceof ArrayBuffer) try {
-					const tga = new Targa();
-					tga.load(new Uint8Array(dataURI));
-					target.style.backgroundImage = `url(${tga.getDataURL()})`;
-				} catch (e) {
-					console.error(e.message);
-				}
-				else target.style.backgroundImage = `url(${dataURI})`;
-			});
-		}
-	};
-	customElements.define("ui-image", UIImage);
-}));
-//#endregion
-//#region src/UI/Elements/Elements.js
-var init_Elements = __esmMin((() => {
-	init_UIButton();
-	init_UIText();
-	init_UIImage();
 }));
 //#endregion
 //#region src/UI/Components/SoundOption/SoundOption.html?raw
