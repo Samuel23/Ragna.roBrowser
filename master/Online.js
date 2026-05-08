@@ -91420,6 +91420,18 @@ var init_Sounds = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/Renderer/Effects/RainWeather.vs?raw
+var RainWeather_default$1;
+var init_RainWeather$2 = __esmMin((() => {
+	RainWeather_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec3 aPosition;\r\nin vec2 aTextureCoord;\r\n\r\nout vec2 vTextureCoord;\r\nout vec3 vWorldPos;\r\n\r\nuniform mat4 uModelViewMat;\r\nuniform mat4 uProjectionMat;\r\nuniform vec3 uWorldPosition;\r\nuniform vec2 uSize;\r\nuniform float uAngle;\r\nuniform float uZIndex;\r\n\r\nvoid main(void) {\r\n	// Convert size from SpriteRenderer units to world units\r\n	float sizeX = uSize.x / 35.0;\r\n	float sizeY = uSize.y / 35.0;\r\n\r\n	// Scale the quad by size\r\n	vec3 pos = vec3(aPosition.x * sizeX, aPosition.y, aPosition.z * sizeY);\r\n\r\n	// Rotate around Y axis by angle\r\n	float cosA = cos(uAngle);\r\n	float sinA = sin(uAngle);\r\n	vec3 rotatedPos = vec3(\r\n		pos.x * cosA - pos.z * sinA,\r\n		pos.y,\r\n		pos.x * sinA + pos.z * cosA\r\n	);\r\n\r\n	// World position following RO coordinate system: x, -z (height), y\r\n	vWorldPos = vec3(\r\n		uWorldPosition.x + 0.5 + rotatedPos.x,\r\n		-uWorldPosition.z + rotatedPos.y,\r\n		uWorldPosition.y + 0.5 + rotatedPos.z\r\n	);\r\n\r\n	gl_Position = uProjectionMat * uModelViewMat * vec4(vWorldPos, 1.0);\r\n	gl_Position.z -= uZIndex * 0.01;\r\n\r\n	vTextureCoord = aTextureCoord;\r\n}\r\n";
+}));
+//#endregion
+//#region src/Renderer/Effects/RainWeather.fs?raw
+var RainWeather_default;
+var init_RainWeather$1 = __esmMin((() => {
+	RainWeather_default = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 vTextureCoord;\r\nin vec3 vWorldPos;\r\nout vec4 fragColor;\r\n\r\nuniform sampler2D uDiffuse;\r\nuniform vec4 uColor;\r\nuniform float uTime;\r\nuniform vec3 uFogColor;\r\nuniform float uFogNear;\r\nuniform float uFogFar;\r\nuniform bool uFogUse;\r\nuniform vec3 uCameraPos;\r\n\r\nvoid main(void) {\r\n	vec2 uv = vTextureCoord;\r\n	vec2 center = vec2(0.5, 0.5);\r\n	float dist = distance(uv, center);\r\n\r\n	// Multi-layered procedural ripples - made slower for \"standing water\" look\r\n	float wave1 = sin(dist * 20.0 - uTime * 2.2) * 0.5 + 0.5;\r\n	float wave2 = sin(dist * 12.0 + uTime * 1.4 + vWorldPos.x * 0.5) * 0.5 + 0.5;\r\n	float combinedWave = (wave1 * 0.7 + wave2 * 0.3) * (1.0 - dist * 2.0);\r\n\r\n	// Distort UV based on waves for a \"refraction\" feel\r\n	vec2 distortedUV = uv + (uv - center) * combinedWave * 0.035;\r\n	vec4 texColor = texture(uDiffuse, distortedUV);\r\n\r\n	if (texColor.a < 0.01) {\r\n		discard;\r\n	}\r\n\r\n	// Fresnel Effect: Water reflects more at shallow angles\r\n	vec3 viewDir = normalize(uCameraPos - vWorldPos);\r\n	float fresnel = pow(1.0 - max(0.0, dot(viewDir, vec3(0.0, 1.0, 0.0))), 3.5);\r\n\r\n	// Fake sky reflection (Bright Platinum mix)\r\n	vec3 skyReflect = vec3(0.88, 0.92, 1.0); \r\n	float reflectFactor = (pow(combinedWave, 2.5) * 0.45 + fresnel * 0.5) * 0.8;\r\n	\r\n	// Brighter deep water tone\r\n	texColor.rgb *= 0.98; \r\n	texColor.rgb = mix(texColor.rgb, skyReflect, reflectFactor);\r\n\r\n	// Dynamic specular highlight (shine) on wave peaks\r\n	float shine = pow(combinedWave, 8.0) * 0.55 + fresnel * 0.1;\r\n	texColor.rgb += vec3(shine);\r\n\r\n	// Final color with alpha from uColor\r\n	vec4 finalColor = texColor * uColor;\r\n\r\n	// Apply Fog\r\n	if (uFogUse) {\r\n		float depth = gl_FragCoord.z / gl_FragCoord.w;\r\n		float fogFactor = smoothstep(uFogNear, uFogFar, depth);\r\n		finalColor.rgb = mix(finalColor.rgb, uFogColor, fogFactor);\r\n	}\r\n\r\n	fragColor = finalColor;\r\n}\r\n";
+}));
+//#endregion
 //#region src/Renderer/Effects/RainWeather.js
 function ensureDropFrame(gl) {
 	if (_dropFrame && _dropFrame.texture && gl.isTexture(_dropFrame.texture)) return;
@@ -91512,6 +91524,82 @@ function ensureSplashFrame(gl) {
 		type: 1
 	};
 }
+function ensurePuddleFrame(gl) {
+	if (_puddleFrame && _puddleFrame.texture && gl.isTexture(_puddleFrame.texture)) return;
+	_puddleFrame = null;
+	const w = 64, h = 64;
+	const data = new Uint8Array(w * h * 4);
+	const cx = (w - 1) / 2;
+	const cy = (h - 1) / 2;
+	const maxR = Math.min(cx, cy) * .85;
+	for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+		const dx = x - cx;
+		const dy = y - cy;
+		const dist = Math.sqrt(dx * dx + dy * dy);
+		const angle = Math.atan2(dy, dx);
+		const r = dist / (maxR * (1 + .15 * Math.sin(angle * 5) + .08 * Math.sin(angle * 3 + 1.5) + .05 * Math.cos(angle * 11)));
+		let a = 0;
+		if (r <= 1) a = Math.pow(1 - r, .7);
+		const alphaByte = Math.max(0, Math.min(255, Math.floor(a * 255)));
+		const idx = (y * w + x) * 4;
+		data[idx + 0] = 18;
+		data[idx + 1] = 32;
+		data[idx + 2] = 55;
+		data[idx + 3] = alphaByte;
+	}
+	const tex = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, tex);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, w, h, 0, gl.RGBA, gl.UNSIGNED_BYTE, data);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	_puddleFrame = {
+		texture: tex,
+		width: w,
+		height: h,
+		type: 1
+	};
+}
+function initPuddleShader(gl) {
+	if (_puddleProgram) return;
+	_puddleProgram = WebGL_default.createShaderProgram(gl, RainWeather_default$1, RainWeather_default);
+	const vertices = new Float32Array([
+		-.5,
+		0,
+		-.5,
+		0,
+		0,
+		.5,
+		0,
+		-.5,
+		1,
+		0,
+		-.5,
+		0,
+		.5,
+		0,
+		1,
+		.5,
+		0,
+		-.5,
+		1,
+		0,
+		.5,
+		0,
+		.5,
+		1,
+		1,
+		-.5,
+		0,
+		.5,
+		0,
+		1
+	]);
+	_puddleBuffer = gl.createBuffer();
+	gl.bindBuffer(gl.ARRAY_BUFFER, _puddleBuffer);
+	gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+}
 function randRange$1(min, max) {
 	return min + Math.random() * (max - min);
 }
@@ -91561,7 +91649,7 @@ function computeDropTilt(vx, vy, speedMs) {
 	if (Math.abs(vxView) < 1e-6 && Math.abs(vyView) < 1e-6) return 0;
 	return Math.atan2(vxView, vyView) * 180 / Math.PI;
 }
-var RAG_TICK_MS$2, FADEOUT_TAIL_MS$3, EMIT_PER_TICK, EMIT_STOP_BEFORE_END_MS$2, MAX_DROPS, SCATTER_RADIUS_CELLS$2, SPAWN_HEIGHT_MIN_CELLS$2, SPAWN_HEIGHT_MAX_CELLS$2, WIND_STRENGTH_BASE, WIND_STRENGTH_VAR, WIND_ANGLE_MAX_RAD, THUNDER_MIN_INTERVAL, THUNDER_MAX_INTERVAL, FLASH_FADE_IN, FLASH_FADE_OUT, RAIN_VOLUME, LAYERS, _layerCDF, _dropFrame, _filterFrame$1, _splashFrame, SPLASH_LIFE_MS, SPLASH_SIZE_PX, SPLASH_ALPHA, _instance$4, _mapName$5, _isStopping$2, RainWeatherEffect;
+var RAG_TICK_MS$2, FADEOUT_TAIL_MS$3, EMIT_PER_TICK, EMIT_STOP_BEFORE_END_MS$2, MAX_DROPS, SCATTER_RADIUS_CELLS$2, SPAWN_HEIGHT_MIN_CELLS$2, SPAWN_HEIGHT_MAX_CELLS$2, WIND_STRENGTH_BASE, WIND_STRENGTH_VAR, WIND_ANGLE_MAX_RAD, THUNDER_MIN_INTERVAL, THUNDER_MAX_INTERVAL, FLASH_FADE_IN, FLASH_FADE_OUT, RAIN_VOLUME, LAYERS, _layerCDF, MAX_PUDDLES, PUDDLE_INITIAL_SIZE, PUDDLE_MAX_SIZE, PUDDLE_GROWTH_PER_DROP, PUDDLE_ALPHA_MAX, PUDDLE_FADE_SPEED, PUDDLE_SEED_CHANCE, _dropFrame, _filterFrame$1, _splashFrame, SPLASH_LIFE_MS, SPLASH_SIZE_PX, SPLASH_ALPHA, _puddleFrame, _puddleProgram, _puddleBuffer, _instance$4, _mapName$5, _isStopping$2, RainWeatherEffect;
 var init_RainWeather = __esmMin((() => {
 	init_Renderer();
 	init_MapRenderer();
@@ -91570,6 +91658,9 @@ var init_RainWeather = __esmMin((() => {
 	init_Camera();
 	init_Audio();
 	init_SessionStorage();
+	init_RainWeather$2();
+	init_RainWeather$1();
+	init_WebGL();
 	RAG_TICK_MS$2 = 25;
 	FADEOUT_TAIL_MS$3 = 1e3 * RAG_TICK_MS$2;
 	EMIT_PER_TICK = 10;
@@ -91621,12 +91712,22 @@ var init_RainWeather = __esmMin((() => {
 		}
 		return out;
 	})();
+	MAX_PUDDLES = 600;
+	PUDDLE_INITIAL_SIZE = 20;
+	PUDDLE_MAX_SIZE = 230;
+	PUDDLE_GROWTH_PER_DROP = 4.5;
+	PUDDLE_ALPHA_MAX = .45;
+	PUDDLE_FADE_SPEED = 4e-5;
+	PUDDLE_SEED_CHANCE = .06;
 	_dropFrame = null;
 	_filterFrame$1 = null;
 	_splashFrame = null;
 	SPLASH_LIFE_MS = 220;
 	SPLASH_SIZE_PX = [10, 18];
 	SPLASH_ALPHA = .45;
+	_puddleFrame = null;
+	_puddleProgram = null;
+	_puddleBuffer = null;
 	_instance$4 = null;
 	_mapName$5 = "";
 	_isStopping$2 = false;
@@ -91639,6 +91740,7 @@ var init_RainWeather = __esmMin((() => {
 			this.lastEmitTick = this.startTick;
 			this.drops = [];
 			this.splashes = [];
+			this.puddles = [];
 			this._wind = {
 				xTick: 0,
 				yTick: 0,
@@ -91712,12 +91814,18 @@ var init_RainWeather = __esmMin((() => {
 			}
 			this.beforeRender(gl, modelView, projection, fog);
 			SpriteRenderer.runWithDepth(false, false, true, () => {
-				_instance$4.render(gl, tick);
+				_instance$4.render(gl, tick, false);
 			});
 			if (_instance$4.needCleanUp) {
 				_instance$4.free();
 				_instance$4 = null;
 			}
+			this.afterRender(gl);
+		}
+		static renderPuddles(gl, modelView, projection, fog, tick) {
+			if (!_instance$4 || !_instance$4.puddles.length) return;
+			this.beforeRender(gl, modelView, projection, fog);
+			_instance$4.render(gl, tick, true);
 			this.afterRender(gl);
 		}
 		static stop(ownerAID, tick) {
@@ -91807,16 +91915,18 @@ var init_RainWeather = __esmMin((() => {
 			const radius = Math.random() * SCATTER_RADIUS_CELLS$2;
 			const ox = Math.cos(theta) * radius;
 			const oy = Math.sin(theta) * radius;
+			const speedTick = randRange$1(layer.speedTick[0], layer.speedTick[1]);
+			const speedMs = speedTick / RAG_TICK_MS$2;
+			const widthPx = randRange$1(layer.widthPx[0], layer.widthPx[1]);
+			const lengthPx = randRange$1(layer.lengthPx[0], layer.lengthPx[1]);
 			const spawnHeight = randRange$1(SPAWN_HEIGHT_MIN_CELLS$2, SPAWN_HEIGHT_MAX_CELLS$2);
-			const upwindX = -this._wind.xTick * spawnHeight * .6;
-			const upwindY = -this._wind.yTick * spawnHeight * .6;
+			const driftTimeTicks = spawnHeight / speedTick;
+			const upwindX = -this._wind.xTick * driftTimeTicks;
+			const upwindY = -this._wind.yTick * driftTimeTicks;
 			const x = px + ox + upwindX;
 			const y = py + oy + upwindY;
 			const groundZ = Altitude.getCellHeight(x, y);
 			const z = groundZ + spawnHeight;
-			const speedMs = randRange$1(layer.speedTick[0], layer.speedTick[1]) / RAG_TICK_MS$2;
-			const widthPx = randRange$1(layer.widthPx[0], layer.widthPx[1]);
-			const lengthPx = randRange$1(layer.lengthPx[0], layer.lengthPx[1]);
 			const windJitterXMs = (Math.random() - .5) * .002;
 			const windJitterYMs = (Math.random() - .5) * .002;
 			const tiltJitter = randRange$1(-4, 4);
@@ -91839,11 +91949,78 @@ var init_RainWeather = __esmMin((() => {
 			});
 			if (this.drops.length > MAX_DROPS) this.drops.splice(0, this.drops.length - MAX_DROPS);
 		}
-		render(gl, tick) {
+		updatePuddle(x, y, z, tick) {
+			let bestPuddle = null;
+			let bestDistSq = Infinity;
+			for (let i = 0; i < this.puddles.length; i++) {
+				const p = this.puddles[i];
+				const dx = p.x - x;
+				const dy = p.y - y;
+				const distSq = dx * dx + dy * dy;
+				const impactRadius = Math.max(1.5, p.size / 35 * .8);
+				if (distSq < impactRadius * impactRadius) {
+					if (distSq < bestDistSq) {
+						bestDistSq = distSq;
+						bestPuddle = p;
+					}
+				}
+			}
+			if (bestPuddle) {
+				bestPuddle.size = Math.min(PUDDLE_MAX_SIZE, bestPuddle.size + PUDDLE_GROWTH_PER_DROP);
+				bestPuddle.alpha = Math.min(PUDDLE_ALPHA_MAX, bestPuddle.alpha + .02);
+				const currentLife = Math.max(0, (bestPuddle.nextDryTick || tick) - tick);
+				const newLife = Math.min(1e4, currentLife + 1500);
+				bestPuddle.nextDryTick = tick + newLife;
+				bestPuddle.lastUpdate = tick;
+			} else if (Math.random() < PUDDLE_SEED_CHANCE) {
+				let tooClose = false;
+				for (let i = 0; i < this.puddles.length; i++) {
+					const p = this.puddles[i];
+					const dx = p.x - x;
+					const dy = p.y - y;
+					if (dx * dx + dy * dy < PUDDLE_MAX_SIZE / 4) {
+						tooClose = true;
+						p.size = Math.min(PUDDLE_MAX_SIZE, p.size + PUDDLE_GROWTH_PER_DROP * .5);
+						break;
+					}
+				}
+				if (!tooClose) {
+					if (this.puddles.length >= MAX_PUDDLES) {
+						let worstIdx = 0;
+						let minScore = Infinity;
+						for (let i = 0; i < this.puddles.length; i++) {
+							const score = this.puddles[i].size * this.puddles[i].alpha;
+							if (score < minScore) {
+								minScore = score;
+								worstIdx = i;
+							}
+						}
+						this.puddles.splice(worstIdx, 1);
+					}
+					this.puddles.push({
+						x,
+						y,
+						z,
+						size: PUDDLE_INITIAL_SIZE,
+						alpha: .12,
+						angle: Math.random() * Math.PI * 2,
+						lastUpdate: tick,
+						nextDryTick: tick + 3500
+					});
+				}
+			}
+		}
+		render(gl, tick, puddlesOnly = false) {
 			if (!SessionStorage_default.Entity) return;
 			ensureDropFrame(gl);
 			ensureFilterFrame$1(gl);
 			ensureSplashFrame(gl);
+			ensurePuddleFrame(gl);
+			initPuddleShader(gl);
+			if (puddlesOnly) {
+				this.renderPuddles(gl, tick);
+				return;
+			}
 			if (!_dropFrame) return;
 			this._wind = computeGlobalWind(tick);
 			const now = Date.now();
@@ -91937,6 +92114,7 @@ var init_RainWeather = __esmMin((() => {
 						if (this.splashes.length > 300) this.splashes.splice(0, this.splashes.length - 300);
 						this.triggerRainDropSound();
 					}
+					this.updatePuddle(drop.x, drop.y, drop.groundZ, tick);
 					this.drops.splice(d, 1);
 					continue;
 				}
@@ -92002,6 +92180,57 @@ var init_RainWeather = __esmMin((() => {
 				SpriteRenderer.render(false);
 			}
 		}
+		renderPuddles(gl, tick) {
+			if (_puddleFrame && this.puddles.length) {
+				const self = this;
+				SpriteRenderer.runWithDepth(true, false, false, () => {
+					const uniform = _puddleProgram.uniform;
+					const attribute = _puddleProgram.attribute;
+					gl.useProgram(_puddleProgram);
+					gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+					gl.uniformMatrix4fv(uniform.uModelViewMat, false, Camera.modelView);
+					gl.uniformMatrix4fv(uniform.uProjectionMat, false, Camera.projection);
+					const fog = MapRenderer.fog;
+					gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
+					gl.uniform1f(uniform.uFogNear, fog.near);
+					gl.uniform1f(uniform.uFogFar, fog.far);
+					gl.uniform3fv(uniform.uFogColor, fog.color);
+					gl.activeTexture(gl.TEXTURE0);
+					gl.bindTexture(gl.TEXTURE_2D, _puddleFrame.texture);
+					gl.uniform1i(uniform.uDiffuse, 0);
+					gl.uniform1f(uniform.uTime, tick * .001);
+					gl.uniform3fv(uniform.uCameraPos, Camera.position);
+					gl.bindBuffer(gl.ARRAY_BUFFER, _puddleBuffer);
+					gl.enableVertexAttribArray(attribute.aPosition);
+					gl.enableVertexAttribArray(attribute.aTextureCoord);
+					gl.vertexAttribPointer(attribute.aPosition, 3, gl.FLOAT, false, 20, 0);
+					gl.vertexAttribPointer(attribute.aTextureCoord, 2, gl.FLOAT, false, 20, 12);
+					for (let p = self.puddles.length - 1; p >= 0; p--) {
+						const puddle = self.puddles[p];
+						if (tick > (puddle.nextDryTick || tick)) {
+							const dt = tick - (puddle._lastTick || tick);
+							const fade = PUDDLE_FADE_SPEED / (1 + puddle.size * .003) * dt;
+							puddle.alpha -= fade;
+							puddle.size -= fade * 8500;
+						}
+						puddle._lastTick = tick;
+						if (puddle.size <= .1 || puddle.alpha <= 1e-4) {
+							self.puddles.splice(p, 1);
+							continue;
+						}
+						gl.uniform3f(uniform.uWorldPosition, puddle.x, puddle.y, puddle.z + .01);
+						gl.uniform2f(uniform.uSize, puddle.size, puddle.size);
+						gl.uniform1f(uniform.uAngle, puddle.angle);
+						gl.uniform4f(uniform.uColor, 1, 1, 1, puddle.alpha);
+						gl.uniform1f(uniform.uZIndex, 1);
+						gl.drawArrays(gl.TRIANGLES, 0, 6);
+					}
+					gl.disableVertexAttribArray(attribute.aPosition);
+					gl.disableVertexAttribArray(attribute.aTextureCoord);
+					gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+				});
+			}
+		}
 		free() {
 			if (this.audioCtx) try {
 				if (this.rainNode) {
@@ -92015,6 +92244,7 @@ var init_RainWeather = __esmMin((() => {
 			}
 			this.drops = [];
 			this.splashes = [];
+			this.puddles = [];
 			this.ready = false;
 		}
 	};
@@ -94002,7 +94232,7 @@ var init_CloudWeatherEffect = __esmMin((() => {
 				1,
 				1,
 				1,
-				.38
+				.18
 			]
 		},
 		230: {
@@ -243531,6 +243761,9 @@ var init_ScreenEffectManager = __esmMin((() => {
 			Blind.setActive(false);
 			VerticalFlip.setActive(false);
 		}
+		static renderBeforeEntities(gl, modelView, projection, fog, tick) {
+			RainWeatherEffect.renderPuddles(gl, modelView, projection, fog, tick);
+		}
 		/**
 		* Rendering self screen effects
 		*
@@ -243539,9 +243772,14 @@ var init_ScreenEffectManager = __esmMin((() => {
 		* @param {mat4} projection
 		* @param {object} fog structure
 		* @param {number} tick - game tick
+		* @param {boolean} beforeEntities - render before entities
 		*/
-		static render(gl, modelView, projection, fog, tick) {
+		static render(gl, modelView, projection, fog, tick, beforeEntities = false) {
 			if (!ScreenEffectManager.hasAnyActiveEffect()) return;
+			if (beforeEntities) {
+				ScreenEffectManager.renderBeforeEntities(gl, modelView, projection, fog, tick);
+				return;
+			}
 			beforeRender(gl, modelView, projection, fog, tick);
 			SnowWeatherEffect.renderAll(gl, modelView, projection, fog, tick);
 			RainWeatherEffect.renderAll(gl, modelView, projection, fog, tick);
@@ -247218,8 +247456,8 @@ var init_MapRenderer = __esmMin((() => {
 			const modelView = Camera.modelView;
 			const projection = Camera.projection;
 			const normalMat = Camera.normalMat;
-			Effects_default.spam(SessionStorage_default.Entity.position, tick);
 			Ground_default.render(gl, modelView, projection, normalMat, fog, light);
+			Effects_default.spam(SessionStorage_default.Entity.position, tick);
 			if (Mouse.intersect && Altitude.intersect(modelView, projection, _pos$6)) {
 				x = _pos$6[0];
 				y = _pos$6[1];
@@ -247244,6 +247482,7 @@ var init_MapRenderer = __esmMin((() => {
 			Sky_default.render(gl, modelView, projection, fog, tick);
 			Models_default.render(gl, modelView, projection, normalMat, fog, light);
 			AnimatedModels_default.render(gl, modelView, projection, normalMat, fog, light, tick);
+			ScreenEffectManager.render(gl, modelView, projection, fog, tick, true);
 			EffectManager.render(gl, modelView, projection, fog, tick, true);
 			EntityManager.render(gl, modelView, projection, fog, false);
 			Water_default.render(gl, modelView, projection, fog, light, tick);
