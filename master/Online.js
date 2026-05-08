@@ -153539,31 +153539,194 @@ var init_CartItems$1 = __esmMin((() => {
 	CartItems_default$1 = "#cartitems {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n#cartitems table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#cartitems .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#cartitems .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#cartitems .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#cartitems .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#cartitems .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#cartitems .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#cartitems .container {\r\n	padding-left: 40px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#cartitems .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#cartitems .hide {\r\n	height: 100%;\r\n	width: 13px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#cartitems .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n	background-attachment: local;\r\n}\r\n\r\n#cartitems .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#cartitems .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#cartitems .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#cartitems .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#cartitems .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#cartitems .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#cartitems .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#cartitems .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n#cartitems .footer .wt {\r\n	position: absolute;\r\n	left: 80px;\r\n	bottom: 6px;\r\n}\r\n\r\n#cartitems .content .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n";
 }));
 //#endregion
+//#region src/UI/Elements/UIButton.js
+var UIButton;
+var init_UIButton = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIButton = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const bg = this.getAttribute("bg");
+			const hover = this.getAttribute("hover");
+			const down = this.getAttribute("down");
+			let bgUri = null, hoverUri = null, downUri = null;
+			const state = {
+				hover: false,
+				down: false
+			};
+			const update = () => {
+				if (this.disabled) {
+					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+					this.style.opacity = "0.5";
+					this.style.cursor = "default";
+					return;
+				}
+				this.style.opacity = "";
+				this.style.cursor = "";
+				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
+				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
+				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+				else this.style.backgroundImage = "";
+			};
+			this._update = update;
+			const loadBmp = (path, cb) => {
+				if (!path) return;
+				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+					if (dataURI instanceof ArrayBuffer) try {
+						const tga = new Targa();
+						tga.load(new Uint8Array(dataURI));
+						cb(tga.getDataURL());
+					} catch (e) {
+						console.error(e.message);
+					}
+					else cb(dataURI);
+				});
+			};
+			loadBmp(bg, (uri) => {
+				bgUri = uri;
+				update();
+			});
+			loadBmp(hover, (uri) => {
+				hoverUri = uri;
+			});
+			loadBmp(down, (uri) => {
+				downUri = uri;
+			});
+			this.addEventListener("mouseover", () => {
+				if (this.disabled) return;
+				state.hover = true;
+				update();
+			});
+			this.addEventListener("mouseout", () => {
+				state.hover = false;
+				state.down = false;
+				update();
+			});
+			this.addEventListener("mousedown", () => {
+				if (this.disabled) return;
+				state.down = true;
+				update();
+			});
+			this.addEventListener("mouseup", () => {
+				state.down = false;
+				update();
+			});
+			this.addEventListener("click", (e) => {
+				if (this.disabled) {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				}
+			}, true);
+		}
+		get disabled() {
+			return this.hasAttribute("disabled");
+		}
+		set disabled(val) {
+			if (val) this.setAttribute("disabled", "");
+			else this.removeAttribute("disabled");
+		}
+		static get observedAttributes() {
+			return ["disabled"];
+		}
+		attributeChangedCallback(name) {
+			if (name === "disabled" && this._initialized) {
+				if (this._update) this._update();
+			}
+		}
+	};
+	customElements.define("ui-button", UIButton);
+}));
+//#endregion
+//#region src/UI/Elements/UIText.js
+var UIText;
+var init_UIText = __esmMin((() => {
+	init_DBManager();
+	UIText = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const msgId = this.getAttribute("msg");
+			if (msgId) {
+				const text = DB.getMessage(msgId, "");
+				if (text) this.textContent = text;
+			}
+		}
+		static get observedAttributes() {
+			return ["msg"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "msg" && newVal) {
+				const text = DB.getMessage(newVal, "");
+				if (text) this.textContent = text;
+			}
+		}
+	};
+	customElements.define("ui-text", UIText);
+}));
+//#endregion
+//#region src/UI/Elements/UIImage.js
+var UIImage;
+var init_UIImage = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIImage = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			this.style.display = "none";
+			this._loadSrc(this.getAttribute("src"));
+		}
+		static get observedAttributes() {
+			return ["src"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "src") this._loadSrc(newVal);
+		}
+		_loadSrc(path) {
+			if (!path) return;
+			const target = this.parentElement;
+			if (!target) return;
+			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+				if (dataURI instanceof ArrayBuffer) try {
+					const tga = new Targa();
+					tga.load(new Uint8Array(dataURI));
+					target.style.backgroundImage = `url(${tga.getDataURL()})`;
+				} catch (e) {
+					console.error(e.message);
+				}
+				else target.style.backgroundImage = `url(${dataURI})`;
+			});
+		}
+	};
+	customElements.define("ui-image", UIImage);
+}));
+//#endregion
+//#region src/UI/Elements/Elements.js
+var init_Elements = __esmMin((() => {
+	init_UIButton();
+	init_UIText();
+	init_UIImage();
+}));
+//#endregion
 //#region src/UI/Components/Storage/StorageV0/Storage.html?raw
 var Storage_default$5;
 var init_Storage$7 = __esmMin((() => {
-	Storage_default$5 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\" data-text=\"169\">Storage</span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tr>\r\n				<td\r\n					class=\"tabs\"\r\n					rowspan=\"2\"\r\n					data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n					data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n				>\r\n					<button class=\"item\"></button>\r\n					<button class=\"kafra\"></button>\r\n					<button class=\"armor\"></button>\r\n					<button class=\"arms\"></button>\r\n					<button class=\"ammo\"></button>\r\n					<button class=\"card\"></button>\r\n					<button class=\"etc\"></button>\r\n				</td>\r\n				<td class=\"container\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n					<span class=\"current\">0</span>/<span class=\"limit\">0</span>\r\n					<button\r\n						class=\"close\"\r\n						data-background=\"btn_close.bmp\"\r\n						data-hover=\"btn_close_a.bmp\"\r\n						data-down=\"btn_close_b.bmp\"\r\n					></button>\r\n					<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
+	Storage_default$5 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\"><ui-text msg=\"169\">Storage</ui-text></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tr>\r\n				<td\r\n					class=\"tabs\"\r\n					rowspan=\"2\"\r\n					data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n					data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n				>\r\n					<button class=\"item\"></button>\r\n					<button class=\"kafra\"></button>\r\n					<button class=\"armor\"></button>\r\n					<button class=\"arms\"></button>\r\n					<button class=\"ammo\"></button>\r\n					<button class=\"card\"></button>\r\n					<button class=\"etc\"></button>\r\n				</td>\r\n				<td class=\"container\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n					<span class=\"current\">0</span>/<span class=\"limit\">0</span>\r\n					<ui-button\r\n						class=\"close\"\r\n						bg=\"btn_close.bmp\"\r\n						hover=\"btn_close_a.bmp\"\r\n						down=\"btn_close_b.bmp\"\r\n					></ui-button>\r\n					<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV0/Storage.css?raw
 var Storage_default$4;
 var init_Storage$6 = __esmMin((() => {
-	Storage_default$4 = "#Storage {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 280px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+	Storage_default$4 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV0/Storage.js
-/**
-* Stop event propagation
-*/
-function stopPropagation$36(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Extend Storage window size
-*/
 function onResize$17() {
-	const top = Storage$1.ui.position().top;
+	const top = Storage$1._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
@@ -153573,39 +153736,32 @@ function onResize$17() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
-/**
-* Extend Storage window size
-*/
 function resizeHeight$3(height) {
 	height = Math.min(Math.max(height, 8), 17);
-	Storage$1.ui.find(".container .content").css("height", height * 32);
-	Storage$1.ui.css("height", 50 + height * 32);
+	const content = (Storage$1._shadow || Storage$1._host).querySelector(".container .content");
+	if (content) content.style.height = `${height * 32}px`;
+	Storage$1._host.style.height = `${50 + height * 32}px`;
 }
-/**
-* Modify tab, filter display entries
-*/
-function onSwitchTab$5() {
-	const idx = jquery_default(this).index();
+function onSwitchTab$5(idx) {
 	_preferences$70.tab = idx;
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_ex_0" + (idx + 1) + ".bmp", function(data) {
-		Storage$1.ui.find(".tabs").css("backgroundImage", "url(\"" + data + "\")");
+	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
+		const tabs = (Storage$1._shadow || Storage$1._host).querySelector(".tabs");
+		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		requestFilter$5();
 	});
 }
-/**
-* Drop from inventory to storage
-*/
 function onDrop$23(event) {
 	let data;
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 	} catch (e) {}
 	event.stopImmediatePropagation();
 	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
@@ -153624,93 +153780,62 @@ function onDrop$23(event) {
 	else Storage$1.reqAddItem(item.index, 1);
 	return false;
 }
-/**
-* Change tab,
-* Update its content
-*/
 function requestFilter$5() {
-	Storage$1.ui.find(".container .content").empty();
-	let i, count;
-	for (i = 0, count = _list$15.length; i < count; ++i) Storage$1.addItemSub(_list$15[i]);
+	const content = (Storage$1._shadow || Storage$1._host).querySelector(".container .content");
+	if (content) content.innerHTML = "";
+	for (let i = 0, count = _list$15.length; i < count; ++i) Storage$1.addItemSub(_list$15[i]);
 }
-/**
-* Get item index in list base on it's ID
-*
-* @param {number} item id
-*/
 function getItemIndexById$3(index) {
-	let i, count;
-	for (i = 0, count = _list$15.length; i < count; ++i) if (_list$15[i].index === index) return i;
+	for (let i = 0, count = _list$15.length; i < count; ++i) if (_list$15[i].index === index) return i;
 	return -1;
 }
-/**
-* Update scroll by block (32px)
-*/
-function onScroll$8(event) {
+function onScroll$8(event, contentEl) {
 	let delta;
-	if (event.originalEvent.wheelDelta) {
-		delta = event.originalEvent.wheelDelta / 120;
-		if (window.opera) delta = -delta;
-	} else if (event.originalEvent.detail) delta = -event.originalEvent.detail;
-	this.scrollTop = Math.floor(this.scrollTop / 32) * 32 - delta * 32;
-	return false;
+	if (event.wheelDelta) delta = event.wheelDelta / 120;
+	else if (event.detail) delta = -event.detail;
+	else if (event.deltaY) delta = -event.deltaY / 100;
+	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
+	event.preventDefault();
 }
-/**
-* Mouse over item, display name and informations
-*/
-function onItemOver$19() {
-	const i = getItemIndexById$3(parseInt(this.getAttribute("data-index"), 10));
+function onItemOver$19(itemEl, root) {
+	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i < 0) return;
 	const item = _list$15[i];
-	const pos = jquery_default(this).position();
-	const overlay = Storage$1.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top - 10,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const overlay = root.querySelector(".overlay");
+	if (overlay) {
+		overlay.style.display = "";
+		overlay.style.top = `${itemEl.offsetTop - 10}px`;
+		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
-/**
-* Mouse mouve out of an item, hide title description
-*/
-function onItemOut$20() {
-	Storage$1.ui.find(".overlay").hide();
+function onItemOut$20(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* Start dragging an item
-*/
-function onItemDragStart$15(event) {
-	const i = getItemIndexById$3(parseInt(this.getAttribute("data-index"), 10));
+function onItemDragStart$15(event, itemEl) {
+	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i === -1) return;
 	const img = new Image();
-	let url = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1];
-	url = url = url.replace(/^\"/, "").replace(/\"$/, "");
+	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+	url = url.replace(/^"/, "").replace(/"$/, "");
 	img.decoding = "async";
 	img.src = url;
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Storage",
 		data: _list$15[i]
 	}));
-	onItemOut$20();
 }
-/**
-* Stop the drag/drop on an item
-*/
 function onItemDragEnd$16() {
 	delete window._OBJ_DRAG_;
 }
-/**
-* Display item description
-*
-*/
-function onItemInfo$23(event) {
+function onItemInfo$23(event, itemEl) {
 	event.stopImmediatePropagation();
-	const i = getItemIndexById$3(parseInt(this.getAttribute("data-index"), 10));
+	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i === -1) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
@@ -153723,9 +153848,6 @@ function onItemInfo$23(event) {
 	ItemInfo_default.setItem(_list$15[i]);
 	return false;
 }
-/**
-* Alt Right Click Request Transfer
-*/
 function transferItemToOtherUI$5(item) {
 	const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
 	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
@@ -153739,24 +153861,22 @@ var Storage$1, _list$15, _preferences$70, Storage_default$3;
 var init_Storage$5 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_InputBox();
 	init_ItemInfo();
 	init_Storage$7();
 	init_Storage$6();
 	init_CartItems();
 	init_Inventory();
-	Storage$1 = new UIComponent("Storage", Storage_default$5, Storage_default$4);
-	/**
-	* Tab constant
-	*/
+	Storage$1 = new GUIComponent("Storage", Storage_default$4);
+	Storage$1.render = () => Storage_default$5;
 	Storage$1.TAB = {
 		ITEM: 0,
 		KAFRA: 1,
@@ -153773,63 +153893,88 @@ var init_Storage$5 = __esmMin((() => {
 		height: 8,
 		tab: Storage$1.TAB.ITEM
 	}, 1);
-	/**
-	* Initialize UI
-	*/
-	Storage$1.init = function Init() {
-		this.ui.find(".tabs button").mousedown(onSwitchTab$5);
-		this.ui.find(".footer .extend").mousedown(onResize$17);
-		this.ui.find(".footer .close").click(this.onClosePressed.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_ex_0" + (_preferences$70.tab + 1) + ".bmp", function(data) {
-			Storage$1.ui.find(".tabs").css("backgroundImage", "url(\"" + data + "\")");
+	Storage$1.init = function init() {
+		const root = this._shadow || this._host;
+		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
+			btn.addEventListener("mousedown", () => onSwitchTab$5(idx));
+		});
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$17());
+		const closeBtn = root.querySelector(".footer .close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
+			});
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$70.tab + 1}.bmp`, (data) => {
+			const tabs = root.querySelector(".tabs");
+			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
 		resizeHeight$3(_preferences$70.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$70.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$70.x), Renderer.width - this.ui.width())
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", (e) => onScroll$8(e, content));
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemOver$19(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$20(root);
+			});
+			content.addEventListener("dragstart", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					onItemDragStart$15(e, itemEl);
+					onItemOut$20(root);
+				}
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$16();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					e.preventDefault();
+					onItemInfo$23(e, itemEl);
+				}
+			});
+		}
+		this._host.addEventListener("drop", (e) => onDrop$23(e));
+		this._host.addEventListener("dragover", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
 		});
-		this.ui.on("drop", onDrop$23).on("dragover", stopPropagation$36).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$8).on("mouseover", ".item", onItemOver$19).on("mouseout", ".item", onItemOut$20).on("dragstart", ".item", onItemDragStart$15).on("dragend", ".item", onItemDragEnd$16).on("contextmenu", ".item", onItemInfo$23);
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(".titlebar");
+		this.ui.hide();
 	};
-	/**
-	* Remove Storage from window (and so clean up items)
-	*/
+	Storage$1.onAppend = function onAppend() {
+		this.ui.show();
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$70.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$70.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+	};
 	Storage$1.onRemove = function onRemove() {
-		this.ui.find(".container .content").empty();
+		const content = (this._shadow || this._host).querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		_list$15.length = 0;
-		_preferences$70.y = parseInt(this.ui.css("top"), 10);
-		_preferences$70.x = parseInt(this.ui.css("left"), 10);
-		_preferences$70.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$70.y = parseInt(this._host.style.top, 10);
+		_preferences$70.x = parseInt(this._host.style.left, 10);
+		_preferences$70.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
 		_preferences$70.save();
 	};
-	/**
-	* Add items to the list
-	*
-	* @param {Array} item list
-	*/
 	Storage$1.setItems = function setItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$15.push(items[i]);
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$15.push(items[i]);
 	};
-	/**
-	* Insert Item to Storage
-	*
-	* @param {object} Item
-	*/
 	Storage$1.addItem = function addItem(item) {
 		const i = getItemIndexById$3(item.index);
 		if (i > -1) {
 			_list$15[i].count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(_list$15[i].count);
+			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = _list$15[i].count;
 			return;
 		}
 		if (this.addItemSub(item)) _list$15.push(item);
 	};
-	/**
-	* Add item to Storage
-	*
-	* @param {object} Item
-	*/
 	Storage$1.addItemSub = function addItemSub(item) {
 		let tab;
 		switch (item.type) {
@@ -153863,83 +154008,101 @@ var init_Storage$5 = __esmMin((() => {
 		}
 		if (tab === _preferences$70.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			this.ui.find(".container .content").append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\">" + (item.count ? "<span class=\"count\">" + item.count + "</span> " : "") + "</div><span class=\"name\">" + jquery_default.escape(DB.getItemName(item)) + "</span></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
-			}.bind(this));
+			const root = this._shadow || this._host;
+			const content = root.querySelector(".container .content");
+			const itemEl = document.createElement("div");
+			itemEl.className = "item";
+			itemEl.setAttribute("data-index", item.index);
+			itemEl.setAttribute("draggable", "true");
+			const iconDiv = document.createElement("div");
+			iconDiv.className = "icon";
+			itemEl.appendChild(iconDiv);
+			const amountDiv = document.createElement("div");
+			amountDiv.className = "amount";
+			if (item.count) {
+				const countSpan = document.createElement("span");
+				countSpan.className = "count";
+				countSpan.textContent = item.count;
+				amountDiv.appendChild(countSpan);
+				amountDiv.appendChild(document.createTextNode(" "));
+			}
+			itemEl.appendChild(amountDiv);
+			const nameSpan = document.createElement("span");
+			nameSpan.className = "name";
+			nameSpan.innerHTML = DB.getItemName(item);
+			itemEl.appendChild(nameSpan);
+			if (content) content.appendChild(itemEl);
+			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
+			});
 		}
 		return true;
 	};
-	/**
-	* Remove item from Storage
-	*
-	* @param {number} index in Storage
-	*/
 	Storage$1.removeItem = function removeItem(index, count) {
 		const i = getItemIndexById$3(index);
 		if (i < 0) return null;
 		if (_list$15[i].count) {
 			_list$15[i].count -= count;
 			if (_list$15[i].count > 0) {
-				this.ui.find(".item[data-index=\"" + index + "\"] .count").text(_list$15[i].count);
+				const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${index}"] .count`);
+				if (countEl) countEl.textContent = _list$15[i].count;
 				return _list$15[i];
 			}
 		}
 		const item = _list$15[i];
 		_list$15.splice(i, 1);
-		this.ui.find(".item[data-index=\"" + index + "\"]").remove();
+		const el = (this._shadow || this._host).querySelector(`.item[data-index="${index}"]`);
+		if (el) el.remove();
 		return item;
 	};
-	/**
-	* Update or set the current amount of items in storage in ui
-	*/
 	Storage$1.setItemInfo = function setItemInfo(current, limit) {
-		this.ui.find(".footer .current").text(current);
-		this.ui.find(".footer .limit").text(limit);
+		const root = this._shadow || this._host;
+		const currentEl = root.querySelector(".footer .current");
+		const limitEl = root.querySelector(".footer .limit");
+		if (currentEl) currentEl.textContent = current;
+		if (limitEl) limitEl.textContent = limit;
 	};
 	Storage$1.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
 			if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
 		}
 	};
-	/**
-	* Callbacks
-	*/
 	Storage$1.onClosePressed = function onClosedPressed() {};
 	Storage$1.reqAddItem = function reqAddItem() {};
 	Storage$1.reqAddItemFromCart = function reqAddItemFromCart() {};
 	Storage$1.reqRemoveItem = function reqRemoveItem() {};
 	Storage$1.reqMoveItemToCart = function reqMoveItemToCart() {};
+	Storage$1.mouseMode = GUIComponent.MouseMode.STOP;
 	Storage_default$3 = UIManager.addComponent(Storage$1);
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/StorageFilter.html?raw
 var StorageFilter_default$1;
 var init_StorageFilter$2 = __esmMin((() => {
-	StorageFilter_default$1 = "<div id=\"StorageFilter\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\">Item Filter</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n	</div>\r\n\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n		<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
+	StorageFilter_default$1 = "<div id=\"StorageFilter\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\">Item Filter</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n	</div>\r\n\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n		<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/StorageFilter.css?raw
 var StorageFilter_default;
 var init_StorageFilter$1 = __esmMin((() => {
-	StorageFilter_default = "#StorageFilter {\r\n	position: absolute;\r\n	top: 150px;\r\n	left: 150px;\r\n	width: 220px;\r\n	z-index: 100;\r\n}\r\n#StorageFilter .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#StorageFilter .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#StorageFilter .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#StorageFilter .titlebar .right {\r\n	margin-right: 3px;\r\n	float: right;\r\n}\r\n#StorageFilter .titlebar .clear {\r\n	clear: both;\r\n}\r\n#StorageFilter .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#StorageFilter .panel {\r\n	border: 1px solid #ccc;\r\n	border-bottom: none;\r\n	background: white;\r\n	padding-left: 16px;\r\n}\r\n\r\n#StorageFilter .content {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	min-height: 128px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#StorageFilter .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#StorageFilter .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#StorageFilter .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#StorageFilter .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#StorageFilter .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#StorageFilter .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 160px;\r\n}\r\n\r\n#StorageFilter .footer {\r\n	width: 100%;\r\n	height: 19px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border: 1px solid #ccc;\r\n	border-top: none;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#StorageFilter .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: se-resize;\r\n}\r\n";
+	StorageFilter_default = ":host {\r\n	width: 220px;\r\n	height: 164px;\r\n	top: 150px;\r\n	left: 150px;\r\n}\r\n\r\n#StorageFilter {\r\n	position: absolute;\r\n	width: 220px;\r\n}\r\n#StorageFilter .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#StorageFilter .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#StorageFilter .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#StorageFilter .titlebar .right {\r\n	margin-right: 3px;\r\n	float: right;\r\n}\r\n#StorageFilter .titlebar .clear {\r\n	clear: both;\r\n}\r\n#StorageFilter .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#StorageFilter .panel {\r\n	border: 1px solid #ccc;\r\n	border-bottom: none;\r\n	background: white;\r\n	padding-left: 16px;\r\n}\r\n\r\n#StorageFilter .content {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	min-height: 128px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#StorageFilter .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#StorageFilter .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#StorageFilter .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#StorageFilter .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#StorageFilter .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#StorageFilter .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 160px;\r\n}\r\n\r\n#StorageFilter .footer {\r\n	width: 100%;\r\n	height: 19px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border: 1px solid #ccc;\r\n	border-top: none;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#StorageFilter .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: se-resize;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/StorageFilter.js
-/**
-* Create StorageFilter "class"
-* Inherit from UIComponent
-*/
 function StorageFilter(tabId) {
 	const prefName = "StorageFilter_" + tabId;
-	UIComponent.call(this, prefName, StorageFilter_default$1, StorageFilter_default);
+	GUIComponent.call(this, prefName, StorageFilter_default);
+	this.render = () => StorageFilter_default$1;
 	this.onRemove = function() {
-		this.ui.find(".content").empty();
+		const root = this._shadow || this._host;
+		const content = root.querySelector(".content");
+		if (content) content.innerHTML = "";
 		this._list.length = 0;
 		this._currentTabId = -1;
-		this._preferences.y = parseInt(this.ui.css("top"), 10);
-		this._preferences.x = parseInt(this.ui.css("left"), 10);
-		this._preferences.height = Math.floor(this.ui.find(".content").height() / 32);
+		this._preferences.y = parseInt(this._host.style.top, 10);
+		this._preferences.x = parseInt(this._host.style.left, 10);
+		this._preferences.height = Math.floor((root.querySelector(".content") ? root.querySelector(".content").offsetHeight : 128) / 32);
 		this._preferences.save();
 		if (typeof this.onCloseCallback === "function") this.onCloseCallback();
 	};
@@ -153954,98 +154117,149 @@ function StorageFilter(tabId) {
 }
 var init_StorageFilter = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_StorageFilter$2();
 	init_StorageFilter$1();
-	StorageFilter.prototype = Object.create(UIComponent.prototype);
+	StorageFilter.prototype = Object.create(GUIComponent.prototype);
 	StorageFilter.prototype.constructor = StorageFilter;
-	/**
-	* Initialize the component
-	*/
-	StorageFilter.prototype.init = function Init() {
+	StorageFilter.prototype.init = function init() {
 		const self = this;
-		this.ui.find(".titlebar .right .close").click(function() {
-			self.remove();
-		});
-		this.ui.find(".footer .extend").mousedown(this.onResize.bind(this));
-		this.ui.css({
-			top: Math.min(Math.max(0, this._preferences.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, this._preferences.x), Renderer.width - this.ui.width())
-		});
+		const root = this._shadow || this._host;
+		const closeBtn = root.querySelector(".titlebar .right .close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				self.remove();
+			});
+		}
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => this.onResize());
 		this.resizeHeight(this._preferences.height);
-		this.ui.find(".content").on("mouseover", ".item", this.onItemOver.bind(this)).on("mouseout", ".item", this.onItemOut.bind(this)).on("contextmenu", ".item", this.onItemInfo.bind(this)).on("dragstart", ".item", this.onItemDragStart.bind(this)).on("dragend", ".item", this.onItemDragEnd.bind(this));
-		this.draggable(this.ui.find(".titlebar"));
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) this.onItemOver(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) this.onItemOut(root);
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					e.preventDefault();
+					this.onItemInfo(e, itemEl);
+				}
+			});
+			content.addEventListener("dragstart", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					this.onItemDragStart(e, itemEl);
+					this.onItemOut(root);
+				}
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) this.onItemDragEnd();
+			});
+		}
+		this.draggable(".titlebar");
+		this.ui.hide();
 	};
-	/**
-	* Public method to set the items and title of this window
-	*/
-	StorageFilter.prototype.setItems = function SetItems(title, items, tabId) {
+	StorageFilter.prototype.onAppend = function onAppend() {
+		this.ui.show();
+		this._host.style.left = `${Math.min(Math.max(0, this._preferences.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, this._preferences.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+	};
+	StorageFilter.prototype.setItems = function setItems(title, items, tabId) {
 		this._list = items.slice(0);
 		this._currentTabId = tabId;
-		this.ui.find(".titlebar .text").text(title);
-		this.ui.find(".content").empty();
-		let i, count;
-		for (i = 0, count = this._list.length; i < count; ++i) this.renderItem(this._list[i]);
+		const root = this._shadow || this._host;
+		const titleEl = root.querySelector(".titlebar .text");
+		if (titleEl) titleEl.textContent = title;
+		const content = root.querySelector(".content");
+		if (content) content.innerHTML = "";
+		for (let i = 0, count = this._list.length; i < count; ++i) this.renderItem(this._list[i]);
 	};
-	/**
-	* Renders a single item in the content area
-	*/
-	StorageFilter.prototype.renderItem = function RenderItem(item) {
+	StorageFilter.prototype.renderItem = function renderItem(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const self = this;
-		this.ui.find(".content").append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\">" + (item.count ? "<span class=\"count\">" + item.count + "</span> " : "") + "</div><span class=\"name\">" + jquery_default.escape(DB.getItemName(item)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			self.ui.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const root = this._shadow || this._host;
+		const content = root.querySelector(".content");
+		const itemEl = document.createElement("div");
+		itemEl.className = "item";
+		itemEl.setAttribute("data-index", item.index);
+		itemEl.setAttribute("draggable", "true");
+		const iconDiv = document.createElement("div");
+		iconDiv.className = "icon";
+		itemEl.appendChild(iconDiv);
+		const amountDiv = document.createElement("div");
+		amountDiv.className = "amount";
+		if (item.count) {
+			const countSpan = document.createElement("span");
+			countSpan.className = "count";
+			countSpan.textContent = item.count;
+			amountDiv.appendChild(countSpan);
+			amountDiv.appendChild(document.createTextNode(" "));
+		}
+		itemEl.appendChild(amountDiv);
+		const nameSpan = document.createElement("span");
+		nameSpan.className = "name";
+		nameSpan.innerHTML = DB.getItemName(item);
+		itemEl.appendChild(nameSpan);
+		if (content) content.appendChild(itemEl);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 	};
 	StorageFilter.prototype.getItemFromIndex = function getItemFromIndex(index) {
-		return this._list.filter(function(item) {
-			return item.index === index;
-		})[0];
+		return this._list.filter((item) => item.index === index)[0];
 	};
-	StorageFilter.prototype.onItemOver = function onItemOver(event) {
-		const index = parseInt(event.currentTarget.getAttribute("data-index"), 10);
+	StorageFilter.prototype.onItemOver = function onItemOver(itemEl, root) {
+		const index = parseInt(itemEl.getAttribute("data-index"), 10);
 		const item = this.getItemFromIndex(index);
 		if (!item) return;
-		const pos = jquery_default(event.currentTarget).position();
-		const overlay = this.ui.find(".overlay");
-		overlay.show();
-		overlay.css({
-			top: pos.top - 10,
-			left: pos.left + 35
-		});
-		overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
-		overlay.toggleClass("grey", !item.IsIdentified);
+		const overlay = root.querySelector(".overlay");
+		if (overlay) {
+			overlay.style.display = "";
+			overlay.style.top = `${itemEl.offsetTop - 10}px`;
+			overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+			overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+			if (item.IsIdentified) overlay.classList.remove("grey");
+			else overlay.classList.add("grey");
+		}
 	};
-	StorageFilter.prototype.onItemOut = function onItemOut() {
-		this.ui.find(".overlay").hide();
+	StorageFilter.prototype.onItemOut = function onItemOut(root) {
+		if (!root) root = this._shadow || this._host;
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 	};
-	StorageFilter.prototype.onItemDragStart = function onItemDragStart(event) {
-		const index = parseInt(event.currentTarget.getAttribute("data-index"), 10);
+	StorageFilter.prototype.onItemDragStart = function onItemDragStart(event, itemEl) {
+		const index = parseInt(itemEl.getAttribute("data-index"), 10);
 		const item = this.getItemFromIndex(index);
 		if (!item) return;
 		const img = new Image();
-		img.src = event.currentTarget.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1].replace(/\"/g, "");
-		event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-		event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+		let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+		url = url.replace(/^"/, "").replace(/"$/, "");
+		img.src = url;
+		event.dataTransfer.setDragImage(img, 12, 12);
+		event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 			type: "item",
 			from: "Storage",
 			data: item
 		}));
-		this.onItemOut();
 	};
 	StorageFilter.prototype.onItemDragEnd = function onItemDragEnd() {
 		delete window._OBJ_DRAG_;
 	};
-	StorageFilter.prototype.onItemInfo = function onItemInfo(event) {
+	StorageFilter.prototype.onItemInfo = function onItemInfo(event, itemEl) {
 		event.stopImmediatePropagation();
-		const index = parseInt(event.currentTarget.getAttribute("data-index"), 10);
+		const index = parseInt(itemEl.getAttribute("data-index"), 10);
 		const item = this.getItemFromIndex(index);
 		if (!item) return false;
 		if (event.altKey && event.which === 3) {
@@ -154060,12 +154274,13 @@ var init_StorageFilter = __esmMin((() => {
 	};
 	StorageFilter.prototype.resizeHeight = function resizeHeight(height) {
 		height = Math.min(Math.max(height, 4), 10);
-		this.ui.find(".content").css("height", height * 32);
-		this.ui.css("height", height * 32 + 17 + 19);
+		const content = (this._shadow || this._host).querySelector(".content");
+		if (content) content.style.height = `${height * 32}px`;
+		this._host.style.height = `${height * 32 + 17 + 19}px`;
 	};
 	StorageFilter.prototype.onResize = function onResize() {
 		const self = this;
-		const top = this.ui.position().top;
+		const top = this._host.offsetTop;
 		let lastHeight = 0;
 		const extraY = 36;
 		function resizing() {
@@ -154076,17 +154291,18 @@ var init_StorageFilter = __esmMin((() => {
 			lastHeight = h;
 		}
 		const _Interval = setInterval(resizing, 30);
-		jquery_default(window).on("mouseup.resizeStorageFilter", function(event) {
+		const onMouseUp = (event) => {
 			if (event.which === 1) {
 				clearInterval(_Interval);
-				jquery_default(window).off("mouseup.resizeStorageFilter");
+				window.removeEventListener("mouseup", onMouseUp);
 			}
-		});
+		};
+		window.addEventListener("mouseup", onMouseUp);
 	};
-	StorageFilter.prototype.getCurrentTab = function GetCurrentTab() {
+	StorageFilter.prototype.getCurrentTab = function getCurrentTab() {
 		return this._currentTabId;
 	};
-	StorageFilter.prototype.removeItem = function RemoveItem(index, count) {
+	StorageFilter.prototype.removeItem = function removeItem(index, count) {
 		let i = -1;
 		for (let j = 0, count_ = this._list.length; j < count_; ++j) if (this._list[j].index === index) {
 			i = j;
@@ -154097,44 +154313,46 @@ var init_StorageFilter = __esmMin((() => {
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + index + "\"] .count").text(item.count);
+				const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				return;
 			}
 		}
 		this._list.splice(i, 1);
-		this.ui.find(".item[data-index=\"" + index + "\"]").remove();
-		this.ui.find(".overlay").hide();
+		const root = this._shadow || this._host;
+		const el = root.querySelector(`.item[data-index="${index}"]`);
+		if (el) el.remove();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 	};
-	StorageFilter.prototype.addItem = function AddItem(item) {
+	StorageFilter.prototype.addItem = function addItem(item) {
 		for (let j = 0, count_ = this._list.length; j < count_; ++j) if (this._list[j].index === item.index) {
 			this._list[j].count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(this._list[j].count);
+			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = this._list[j].count;
 			return;
 		}
 		this._list.push(JSON.parse(JSON.stringify(item)));
 		this.renderItem(item);
 	};
+	StorageFilter.prototype.mouseMode = GUIComponent.MouseMode.STOP;
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/Storage.html?raw
 var Storage_default$2;
 var init_Storage$4 = __esmMin((() => {
-	Storage_default$2 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\" data-text=\"169\">Storage</span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tbody>\r\n				<tr>\r\n					<td\r\n						colspan=\"2\"\r\n						class=\"tabs\"\r\n						data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n						data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n					>\r\n						<button class=\"item\"></button>\r\n						<button class=\"kafra\"></button>\r\n						<button class=\"armor\"></button>\r\n						<button class=\"arms\"></button>\r\n						<button class=\"ammo\"></button>\r\n						<button class=\"card\"></button>\r\n						<button class=\"etc\"></button>\r\n					</td>\r\n					<td class=\"container\">\r\n						<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n					</td>\r\n				</tr>\r\n			</tbody>\r\n			<tfoot class=\"footer\" data-background=\"basic_interface/btnbar_mid3.bmp\">\r\n				<tr>\r\n					<td colspan=\"3\" class=\"filter-buttons\">\r\n						<button\r\n							class=\"filter-use\"\r\n							data-tab-id=\"0\"\r\n							data-title=\"Use\"\r\n							data-background=\"basic_interface/¼Òºñ-2.bmp\"\r\n							data-down=\"basic_interface/¼Òºñ-1.bmp\"\r\n							data-active=\"basic_interface/¼Òºñ-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-kafra\"\r\n							data-tab-id=\"1\"\r\n							data-title=\"Cash\"\r\n							data-background=\"basic_interface/Ä³½Ã-2.bmp\"\r\n							data-down=\"basic_interface/Ä³½Ã-1.bmp\"\r\n							data-active=\"basic_interface/Ä³½Ã-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-armor\"\r\n							data-tab-id=\"2\"\r\n							data-title=\"Armor\"\r\n							data-background=\"basic_interface/ÀÇ»ó-2.bmp\"\r\n							data-down=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n							data-active=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-arms\"\r\n							data-tab-id=\"3\"\r\n							data-title=\"Weapon\"\r\n							data-background=\"basic_interface/¹«±â-2.bmp\"\r\n							data-down=\"basic_interface/¹«±â-1.bmp\"\r\n							data-active=\"basic_interface/¹«±â-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-ammo\"\r\n							data-tab-id=\"4\"\r\n							data-title=\"Ammo\"\r\n							data-background=\"basic_interface/Åõ»çÃ¼-2.bmp\"\r\n							data-down=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n							data-active=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-card\"\r\n							data-tab-id=\"5\"\r\n							data-title=\"Card\"\r\n							data-background=\"basic_interface/Ä«µå-2.bmp\"\r\n							data-down=\"basic_interface/Ä«µå-1.bmp\"\r\n							data-active=\"basic_interface/Ä«µå-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-etc\"\r\n							data-tab-id=\"6\"\r\n							data-title=\"Etc\"\r\n							data-background=\"basic_interface/±âÅ¸-2.bmp\"\r\n							data-down=\"basic_interface/±âÅ¸-1.bmp\"\r\n							data-active=\"basic_interface/±âÅ¸-1.bmp\"\r\n						></button>\r\n						<select class=\"storage-order-by\">\r\n							<option value=\"BASE\">Base</option>\r\n							<option value=\"UPGRADE\">Upgrade</option>\r\n							<option value=\"DOWNGRADE\">Downgrade</option>\r\n						</select>\r\n					</td>\r\n				</tr>\r\n				<tr>\r\n					<td colspan=\"2\">\r\n						<div class=\"item_num_display\">\r\n							<button class=\"item_num\" data-background=\"inventory/icon_num.bmp\"></button>\r\n							<span class=\"current\">0</span><span class=\"divider\">/</span><span class=\"limit\">0</span>\r\n						</div>\r\n					</td>\r\n					<td>\r\n						<div class=\"search-container\">\r\n							<input id=\"storage-search-input\" type=\"text\" class=\"search-input\" />\r\n							<button\r\n								class=\"search-button\"\r\n								data-background=\"bt_search_normal.bmp\"\r\n								data-hover=\"bt_search_over.bmp\"\r\n								data-down=\"bt_search_press.bmp\"\r\n							></button>\r\n						</div>\r\n						<button\r\n							class=\"close\"\r\n							data-background=\"btn_close.bmp\"\r\n							data-hover=\"btn_close_a.bmp\"\r\n							data-down=\"btn_close_b.bmp\"\r\n						></button>\r\n						<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n					</td>\r\n				</tr>\r\n			</tfoot>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
+	Storage_default$2 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\"><ui-text msg=\"169\">Storage</ui-text></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tbody>\r\n				<tr>\r\n					<td\r\n						colspan=\"2\"\r\n						class=\"tabs\"\r\n						data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n						data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n					>\r\n						<button class=\"item\"></button>\r\n						<button class=\"kafra\"></button>\r\n						<button class=\"armor\"></button>\r\n						<button class=\"arms\"></button>\r\n						<button class=\"ammo\"></button>\r\n						<button class=\"card\"></button>\r\n						<button class=\"etc\"></button>\r\n					</td>\r\n					<td class=\"container\">\r\n						<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n					</td>\r\n				</tr>\r\n			</tbody>\r\n			<tfoot class=\"footer\" data-background=\"basic_interface/btnbar_mid3.bmp\">\r\n				<tr>\r\n					<td colspan=\"3\" class=\"filter-buttons\">\r\n						<button\r\n							class=\"filter-use\"\r\n							data-tab-id=\"0\"\r\n							data-title=\"Use\"\r\n							data-background=\"basic_interface/¼Òºñ-2.bmp\"\r\n							data-down=\"basic_interface/¼Òºñ-1.bmp\"\r\n							data-active=\"basic_interface/¼Òºñ-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-kafra\"\r\n							data-tab-id=\"1\"\r\n							data-title=\"Cash\"\r\n							data-background=\"basic_interface/Ä³½Ã-2.bmp\"\r\n							data-down=\"basic_interface/Ä³½Ã-1.bmp\"\r\n							data-active=\"basic_interface/Ä³½Ã-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-armor\"\r\n							data-tab-id=\"2\"\r\n							data-title=\"Armor\"\r\n							data-background=\"basic_interface/ÀÇ»ó-2.bmp\"\r\n							data-down=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n							data-active=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-arms\"\r\n							data-tab-id=\"3\"\r\n							data-title=\"Weapon\"\r\n							data-background=\"basic_interface/¹«±â-2.bmp\"\r\n							data-down=\"basic_interface/¹«±â-1.bmp\"\r\n							data-active=\"basic_interface/¹«±â-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-ammo\"\r\n							data-tab-id=\"4\"\r\n							data-title=\"Ammo\"\r\n							data-background=\"basic_interface/Åõ»çÃ¼-2.bmp\"\r\n							data-down=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n							data-active=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-card\"\r\n							data-tab-id=\"5\"\r\n							data-title=\"Card\"\r\n							data-background=\"basic_interface/Ä«µå-2.bmp\"\r\n							data-down=\"basic_interface/Ä«µå-1.bmp\"\r\n							data-active=\"basic_interface/Ä«µå-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-etc\"\r\n							data-tab-id=\"6\"\r\n							data-title=\"Etc\"\r\n							data-background=\"basic_interface/±âÅ¸-2.bmp\"\r\n							data-down=\"basic_interface/±âÅ¸-1.bmp\"\r\n							data-active=\"basic_interface/±âÅ¸-1.bmp\"\r\n						></button>\r\n						<select class=\"storage-order-by\">\r\n							<option value=\"BASE\">Base</option>\r\n							<option value=\"UPGRADE\">Upgrade</option>\r\n							<option value=\"DOWNGRADE\">Downgrade</option>\r\n						</select>\r\n					</td>\r\n				</tr>\r\n				<tr>\r\n					<td colspan=\"2\">\r\n						<div class=\"item_num_display\">\r\n							<button class=\"item_num\" data-background=\"inventory/icon_num.bmp\"></button>\r\n							<span class=\"current\">0</span><span class=\"divider\">/</span><span class=\"limit\">0</span>\r\n						</div>\r\n					</td>\r\n					<td>\r\n						<div class=\"search-container\">\r\n							<input id=\"storage-search-input\" type=\"text\" class=\"search-input\" />\r\n							<ui-button\r\n								class=\"search-button\"\r\n								bg=\"bt_search_normal.bmp\"\r\n								hover=\"bt_search_over.bmp\"\r\n								down=\"bt_search_press.bmp\"\r\n							></ui-button>\r\n						</div>\r\n						<ui-button\r\n							class=\"close\"\r\n							bg=\"btn_close.bmp\"\r\n							hover=\"btn_close_a.bmp\"\r\n							down=\"btn_close_b.bmp\"\r\n						></ui-button>\r\n						<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n					</td>\r\n				</tr>\r\n			</tfoot>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/Storage.css?raw
 var Storage_default$1;
 var init_Storage$3 = __esmMin((() => {
-	Storage_default$1 = "#Storage {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 280px;\r\n	border-radius: 3px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	width: 100%;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 55px;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 2px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Storage .footer .divider-bar {\r\n	left: 0;\r\n	right: 0;\r\n	height: 10px;\r\n}\r\n\r\n#Storage .footer .filter-buttons {\r\n	padding-left: 5px;\r\n	height: 28px;\r\n}\r\n\r\n#Storage .footer .filter-buttons button {\r\n	width: 23px;\r\n	height: 23px;\r\n	border: 1px solid #cfcfcf;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	padding: 0;\r\n	border-radius: 2px;\r\n	margin: 2px 1px 0px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .filter-buttons button:hover {\r\n	background-color: #f5f5f5;\r\n}\r\n\r\n#Storage .footer .item_num_display {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 3px;\r\n}\r\n\r\n#Storage .footer .item_num {\r\n	display: inline-block;\r\n	height: 14px;\r\n	width: 11px;\r\n	margin-right: 2px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Storage .footer .current {\r\n	margin-left: 2px;\r\n}\r\n\r\n#Storage .footer .current,\r\n#Storage .footer .divider,\r\n#Storage .footer .limit {\r\n	font-size: 12px;\r\n}\r\n\r\n/* Search */\r\n#Storage .footer .search-container {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 18px;\r\n}\r\n\r\n#Storage .footer .search-input {\r\n	border: 1px solid #ccc;\r\n	border-radius: 5px;\r\n	padding: 2px;\r\n	width: 130px;\r\n	height: 14px;\r\n}\r\n\r\n#Storage .footer .search-button {\r\n	width: 23px;\r\n	height: 18px;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	border: none;\r\n	margin-left: -23px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .storage-order-by {\r\n	margin-left: 2px;\r\n	width: 70px;\r\n	vertical-align: super;\r\n	border-radius: 3px;\r\n}\r\n\r\n/* add blue border to options */\r\n#Storage .footer .storage-order-by option {\r\n	border: 1px solid blue;\r\n}\r\n";
+	Storage_default$1 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n	border-radius: 3px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	width: 100%;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 55px;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 2px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Storage .footer .divider-bar {\r\n	left: 0;\r\n	right: 0;\r\n	height: 10px;\r\n}\r\n\r\n#Storage .footer .filter-buttons {\r\n	padding-left: 5px;\r\n	height: 28px;\r\n}\r\n\r\n#Storage .footer .filter-buttons button {\r\n	width: 23px;\r\n	height: 23px;\r\n	border: 1px solid #cfcfcf;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	padding: 0;\r\n	border-radius: 2px;\r\n	margin: 2px 1px 0px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .filter-buttons button:hover {\r\n	background-color: #f5f5f5;\r\n}\r\n\r\n#Storage .footer .item_num_display {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 3px;\r\n}\r\n\r\n#Storage .footer .item_num {\r\n	display: inline-block;\r\n	height: 14px;\r\n	width: 11px;\r\n	margin-right: 2px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Storage .footer .current {\r\n	margin-left: 2px;\r\n}\r\n\r\n#Storage .footer .current,\r\n#Storage .footer .divider,\r\n#Storage .footer .limit {\r\n	font-size: 12px;\r\n}\r\n\r\n/* Search */\r\n#Storage .footer .search-container {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 18px;\r\n}\r\n\r\n#Storage .footer .search-input {\r\n	border: 1px solid #ccc;\r\n	border-radius: 5px;\r\n	padding: 2px;\r\n	width: 130px;\r\n	height: 14px;\r\n}\r\n\r\n#Storage .footer .search-button {\r\n	width: 23px;\r\n	height: 18px;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	border: none;\r\n	margin-left: -23px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .storage-order-by {\r\n	margin-left: 2px;\r\n	width: 70px;\r\n	vertical-align: super;\r\n	border-radius: 3px;\r\n}\r\n\r\n/* add blue border to options */\r\n#Storage .footer .storage-order-by option {\r\n	border: 1px solid blue;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/Storage.js
-function stopPropagation$35(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
 function onResize$16() {
-	const top = Storage.ui.position().top;
+	const top = Storage._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
@@ -154144,30 +154362,32 @@ function onResize$16() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 function resizeHeight$2(height) {
 	height = Math.min(Math.max(height, 8), 17);
-	Storage.ui.find(".container .content").css("height", height * 32);
-	Storage.ui.css("height", 50 + height * 32);
+	const content = (Storage._shadow || Storage._host).querySelector(".container .content");
+	if (content) content.style.height = `${height * 32}px`;
+	Storage._host.style.height = `${50 + height * 32}px`;
 }
-function onSwitchTab$4() {
-	const idx = jquery_default(this).index();
+function onSwitchTab$4(idx) {
 	_preferences$69.tab = idx;
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_ex_0" + (idx + 1) + ".bmp", function(data) {
-		Storage.ui.find(".tabs").css("backgroundImage", "url(\"" + data + "\")");
+	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
+		const tabs = (Storage._shadow || Storage._host).querySelector(".tabs");
+		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		requestFilter$4();
 	});
 }
 function onDrop$22(event) {
 	let data;
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 	} catch (e) {}
 	event.stopImmediatePropagation();
 	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
@@ -154187,51 +154407,47 @@ function onDrop$22(event) {
 	return false;
 }
 function requestFilter$4() {
-	Storage.ui.find(".container .content").empty();
-	let i, count;
+	const root = Storage._shadow || Storage._host;
+	const content = root.querySelector(".container .content");
+	if (content) content.innerHTML = "";
 	let list = _list$14;
-	const orderBy = Storage.ui.find(".storage-order-by").val();
+	const orderBySelect = root.querySelector(".storage-order-by");
+	const orderBy = orderBySelect ? orderBySelect.value : "BASE";
 	if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
 		list = _list$14.slice(0);
-		list.sort(function(a, b) {
+		list.sort((a, b) => {
 			const nameA = DB.getItemName(a);
 			const nameB = DB.getItemName(b);
 			return orderBy === "UPGRADE" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
 		});
 	}
-	for (i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
+	for (let i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
 }
 function getItemIndexById$2(index) {
-	let i, count;
-	for (i = 0, count = _list$14.length; i < count; ++i) if (_list$14[i].index === index) return i;
+	for (let i = 0, count = _list$14.length; i < count; ++i) if (_list$14[i].index === index) return i;
 	return -1;
 }
-function onScroll$7(event) {
+function onScroll$7(event, contentEl) {
 	let delta;
-	if (event.originalEvent.wheelDelta) {
-		delta = event.originalEvent.wheelDelta / 120;
-		if (window.opera) delta = -delta;
-	} else if (event.originalEvent.detail) delta = -event.originalEvent.detail;
-	this.scrollTop = Math.floor(this.scrollTop / 32) * 32 - delta * 32;
-	return false;
+	if (event.wheelDelta) delta = event.wheelDelta / 120;
+	else if (event.detail) delta = -event.detail;
+	else if (event.deltaY) delta = -event.deltaY / 100;
+	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
+	event.preventDefault();
 }
-/**
-* NEW: Toggles a filter window on/off
-*/
-function onFilterWindowOpen() {
-	const $button = jquery_default(this);
-	const tabId = parseInt($button.attr("data-tab-id"), 10);
-	const title = $button.attr("data-title") || "Items";
-	$button.toggleClass("active");
+function onFilterWindowOpen(button) {
+	const tabId = parseInt(button.getAttribute("data-tab-id"), 10);
+	const title = button.getAttribute("data-title") || "Items";
+	button.classList.toggle("active");
 	if (_openFilters[tabId]) {
 		_openFilters[tabId].remove();
 		delete _openFilters[tabId];
 		return;
 	}
-	let i, count, tab;
 	const filtered_list = [];
-	for (i = 0, count = _list$14.length; i < count; ++i) {
+	for (let i = 0, count = _list$14.length; i < count; ++i) {
 		const item = _list$14[i];
+		let tab;
 		switch (item.type) {
 			case ItemType_default.HEALING:
 			case ItemType_default.USABLE:
@@ -154266,7 +154482,7 @@ function onFilterWindowOpen() {
 	const newFilter = new StorageFilter(tabId);
 	_openFilters[tabId] = newFilter;
 	newFilter.onCloseCallback = function() {
-		$button.removeClass("active");
+		button.classList.remove("active");
 		if (_openFilters[tabId]) delete _openFilters[tabId];
 	};
 	newFilter.onTransferItemToOtherUI = function(item) {
@@ -154275,58 +154491,59 @@ function onFilterWindowOpen() {
 	newFilter.append();
 	newFilter.setItems(title, filtered_list, tabId);
 }
-function onFilterWindowHover() {
-	const $button = jquery_default(this);
-	const title = $button.attr("data-title");
-	Storage.ui.find(".overlay").text(title);
-	const height = Storage.ui.height();
-	Storage.ui.find(".overlay").css({
-		top: height - 50,
-		left: $button.position().left
-	});
-	Storage.ui.find(".overlay").show();
+function onFilterWindowHover(button, root) {
+	const title = button.getAttribute("data-title");
+	const overlay = root.querySelector(".overlay");
+	if (overlay) {
+		overlay.textContent = title;
+		const height = Storage._host.getBoundingClientRect().height;
+		overlay.style.top = `${height - 50}px`;
+		overlay.style.left = `${button.offsetLeft}px`;
+		overlay.style.display = "";
+	}
 }
-function onFilterWindowHoverOut() {
-	Storage.ui.find(".overlay").hide();
+function onFilterWindowHoverOut(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-function onItemOver$18() {
-	const i = getItemIndexById$2(parseInt(this.getAttribute("data-index"), 10));
+function onItemOver$18(itemEl, root) {
+	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i < 0) return;
 	const item = _list$14[i];
-	const pos = jquery_default(this).position();
-	const overlay = Storage.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top - 10,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
-	overlay.toggleClass("grey", !item.IsIdentified);
+	const overlay = root.querySelector(".overlay");
+	if (overlay) {
+		overlay.style.display = "";
+		overlay.style.top = `${itemEl.offsetTop - 10}px`;
+		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
-function onItemOut$19() {
-	Storage.ui.find(".overlay").hide();
+function onItemOut$19(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-function onItemDragStart$14(event) {
-	const i = getItemIndexById$2(parseInt(this.getAttribute("data-index"), 10));
+function onItemDragStart$14(event, itemEl) {
+	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i === -1) return;
 	const img = new Image();
-	let url = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1];
-	url = url = url.replace(/^\"/, "").replace(/\"$/, "");
+	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+	url = url.replace(/^"/, "").replace(/"$/, "");
 	img.src = url;
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Storage",
 		data: _list$14[i]
 	}));
-	onItemOut$19();
 }
 function onItemDragEnd$15() {
 	delete window._OBJ_DRAG_;
 }
-function onItemInfo$22(event) {
+function onItemInfo$22(event, itemEl) {
 	event.stopImmediatePropagation();
-	const i = getItemIndexById$2(parseInt(this.getAttribute("data-index"), 10));
+	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i === -1) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
@@ -154339,18 +154556,18 @@ function onItemInfo$22(event) {
 	ItemInfo_default.setItem(_list$14[i]);
 	return false;
 }
-var Storage, _baseOnRemove, _list$14, _openFilters, _preferences$69, Storage_default;
+var Storage, _list$14, _openFilters, _preferences$69, Storage_default;
 var init_Storage$2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_InputBox();
 	init_ItemInfo();
 	init_StorageFilter();
@@ -154358,11 +154575,8 @@ var init_Storage$2 = __esmMin((() => {
 	init_Storage$3();
 	init_CartItems();
 	init_Inventory();
-	Storage = new UIComponent("Storage", Storage_default$2, Storage_default$1);
-	_baseOnRemove = Storage.onRemove;
-	/**
-	* Tab constant
-	*/
+	Storage = new GUIComponent("Storage", Storage_default$1);
+	Storage.render = () => Storage_default$2;
 	Storage.TAB = {
 		ITEM: 0,
 		KAFRA: 1,
@@ -154380,56 +154594,95 @@ var init_Storage$2 = __esmMin((() => {
 		height: 8,
 		tab: Storage.TAB.ITEM
 	}, 1);
-	/**
-	* Initialize UI
-	*/
-	Storage.init = function Init() {
-		this.ui.find(".tabs button").mousedown(onSwitchTab$4);
-		this.ui.find(".footer .extend").mousedown(onResize$16);
-		this.ui.find(".footer .close").click(this.onClosePressed.bind(this));
-		this.ui.find(".filter-buttons button").mousedown(onFilterWindowOpen);
-		this.ui.find(".filter-buttons button").mouseover(onFilterWindowHover);
-		this.ui.find(".filter-buttons button").mouseout(onFilterWindowHoverOut);
-		this.ui.find(".search-button").mousedown(this.onSearch.bind(this));
-		this.ui.find(".storage-order-by").change(requestFilter$4);
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_ex_0" + (_preferences$69.tab + 1) + ".bmp", function(data) {
-			Storage.ui.find(".tabs").css("backgroundImage", "url(\"" + data + "\")");
+	Storage.init = function init() {
+		const root = this._shadow || this._host;
+		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
+			btn.addEventListener("mousedown", () => onSwitchTab$4(idx));
+		});
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$16());
+		const closeBtn = root.querySelector(".footer .close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
+			});
+		}
+		root.querySelectorAll(".filter-buttons button").forEach((btn) => {
+			btn.addEventListener("mousedown", () => onFilterWindowOpen(btn));
+			btn.addEventListener("mouseover", () => onFilterWindowHover(btn, root));
+			btn.addEventListener("mouseout", () => onFilterWindowHoverOut(root));
+		});
+		const searchBtn = root.querySelector(".search-button");
+		if (searchBtn) {
+			searchBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			searchBtn.addEventListener("click", () => Storage.onSearch());
+		}
+		const orderBySelect = root.querySelector(".storage-order-by");
+		if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter$4());
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$69.tab + 1}.bmp`, (data) => {
+			const tabs = root.querySelector(".tabs");
+			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
 		resizeHeight$2(_preferences$69.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$69.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$69.x), Renderer.width - this.ui.width())
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", (e) => onScroll$7(e, content));
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemOver$18(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$19(root);
+			});
+			content.addEventListener("dragstart", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					onItemDragStart$14(e, itemEl);
+					onItemOut$19(root);
+				}
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$15();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					e.preventDefault();
+					onItemInfo$22(e, itemEl);
+				}
+			});
+		}
+		this._host.addEventListener("drop", (e) => onDrop$22(e));
+		this._host.addEventListener("dragover", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
 		});
-		this.ui.on("drop", onDrop$22).on("dragover", stopPropagation$35).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$7).on("mouseover", ".item", onItemOver$18).on("mouseout", ".item", onItemOut$19).on("dragstart", ".item", onItemDragStart$14).on("dragend", ".item", onItemDragEnd$15).on("contextmenu", ".item", onItemInfo$22);
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(".titlebar");
+		this.ui.hide();
 	};
-	/**
-	* Remove Storage from window (and so clean up items)
-	*/
+	Storage.onAppend = function onAppend() {
+		this.ui.show();
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$69.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$69.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+	};
 	Storage.onRemove = function onRemove() {
-		this.ui.find(".container .content").empty();
+		const root = this._shadow || this._host;
+		const content = root.querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		_list$14.length = 0;
-		_preferences$69.y = parseInt(this.ui.css("top"), 10);
-		_preferences$69.x = parseInt(this.ui.css("left"), 10);
-		_preferences$69.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$69.y = parseInt(this._host.style.top, 10);
+		_preferences$69.x = parseInt(this._host.style.left, 10);
+		_preferences$69.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
 		_preferences$69.save();
-		let tabId;
-		for (tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
-		for (tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
+		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
 		_openFilters = {};
-		if (typeof _baseOnRemove === "function") _baseOnRemove.call(this);
-		Storage.ui.find("#storage-search-input").val("");
+		const searchInput = root.querySelector("#storage-search-input");
+		if (searchInput) searchInput.value = "";
 	};
-	/**
-	* Add items to the list
-	*/
 	Storage.setItems = function setItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$14.push(items[i]);
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$14.push(items[i]);
 	};
-	/**
-	* Insert Item to Storage
-	*/
 	Storage.addItem = function addItem(item) {
 		const i = getItemIndexById$2(item.index);
 		let itemTab;
@@ -154465,14 +154718,12 @@ var init_Storage$2 = __esmMin((() => {
 		if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
 		if (i > -1) {
 			_list$14[i].count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(_list$14[i].count);
+			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = _list$14[i].count;
 			return;
 		}
 		if (this.addItemSub(item)) _list$14.push(item);
 	};
-	/**
-	* Add item to Storage
-	*/
 	Storage.addItemSub = function addItemSub(item) {
 		let tab;
 		switch (item.type) {
@@ -154506,16 +154757,37 @@ var init_Storage$2 = __esmMin((() => {
 		}
 		if (tab === _preferences$69.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			this.ui.find(".container .content").append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\">" + (item.count ? "<span class=\"count\">" + item.count + "</span> " : "") + "</div><span class=\"name\">" + jquery_default.escape(DB.getItemName(item)) + "</span></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
-			}.bind(this));
+			const root = this._shadow || this._host;
+			const content = root.querySelector(".container .content");
+			const itemEl = document.createElement("div");
+			itemEl.className = "item";
+			itemEl.setAttribute("data-index", item.index);
+			itemEl.setAttribute("draggable", "true");
+			const iconDiv = document.createElement("div");
+			iconDiv.className = "icon";
+			itemEl.appendChild(iconDiv);
+			const amountDiv = document.createElement("div");
+			amountDiv.className = "amount";
+			if (item.count) {
+				const countSpan = document.createElement("span");
+				countSpan.className = "count";
+				countSpan.textContent = item.count;
+				amountDiv.appendChild(countSpan);
+				amountDiv.appendChild(document.createTextNode(" "));
+			}
+			itemEl.appendChild(amountDiv);
+			const nameSpan = document.createElement("span");
+			nameSpan.className = "name";
+			nameSpan.innerHTML = DB.getItemName(item);
+			itemEl.appendChild(nameSpan);
+			if (content) content.appendChild(itemEl);
+			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
+			});
 		}
 		return true;
 	};
-	/**
-	* Remove item from Storage
-	*/
 	Storage.removeItem = function removeItem(index, count) {
 		const i = getItemIndexById$2(index);
 		if (i < 0) return null;
@@ -154523,25 +154795,29 @@ var init_Storage$2 = __esmMin((() => {
 		if (_list$14[i].count) {
 			_list$14[i].count -= count;
 			if (_list$14[i].count > 0) {
-				this.ui.find(".item[data-index=\"" + index + "\"] .count").text(_list$14[i].count);
+				const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${index}"] .count`);
+				if (countEl) countEl.textContent = _list$14[i].count;
 				return _list$14[i];
 			}
 		}
 		const item = _list$14[i];
 		_list$14.splice(i, 1);
-		this.ui.find(".item[data-index=\"" + index + "\"]").remove();
-		this.ui.find(".overlay").hide();
+		const root = this._shadow || this._host;
+		const el = root.querySelector(`.item[data-index="${index}"]`);
+		if (el) el.remove();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 		return item;
 	};
-	/**
-	* Update or set the current amount of items in storage in ui
-	*/
 	Storage.setItemInfo = function setItemInfo(current, limit) {
-		this.ui.find(".footer .current").text(current);
-		this.ui.find(".footer .limit").text(limit);
+		const root = this._shadow || this._host;
+		const currentEl = root.querySelector(".footer .current");
+		const limitEl = root.querySelector(".footer .limit");
+		if (currentEl) currentEl.textContent = current;
+		if (limitEl) limitEl.textContent = limit;
 	};
 	Storage.onKeyDown = function onKeyDown(event) {
-		if (this.ui.is(":visible")) {
+		if (this._host.style.display !== "none") {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
 			}
@@ -154551,10 +154827,10 @@ var init_Storage$2 = __esmMin((() => {
 		}
 	};
 	Storage.onSearch = function onSearch() {
-		const searchInput = Storage.ui.find("#storage-search-input");
+		const searchInput = (this._shadow || this._host).querySelector("#storage-search-input");
 		if (!searchInput) return;
-		const searchTerm = searchInput.val().toLowerCase();
-		const filteredItems = _list$14.filter(function(item) {
+		const searchTerm = searchInput.value.toLowerCase();
+		const filteredItems = _list$14.filter((item) => {
 			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
 		});
 		if (!_openFilters[ItemType_default.SEARCH]) {
@@ -154584,6 +154860,7 @@ var init_Storage$2 = __esmMin((() => {
 	Storage.reqAddItemFromCart = function reqAddItemFromCart() {};
 	Storage.reqRemoveItem = function reqRemoveItem() {};
 	Storage.reqMoveItemToCart = function reqMoveItemToCart() {};
+	Storage.mouseMode = GUIComponent.MouseMode.STOP;
 	Storage_default = UIManager.addComponent(Storage);
 }));
 //#endregion
@@ -154628,7 +154905,7 @@ var init_Storage$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$34(event) {
+function stopPropagation$33(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -154884,13 +155161,13 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$34);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$33);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$4);
 		this.ui.find(".footer .extend").mousedown(onResize$15);
 		this.ui.find(".titlebar .close").click(function() {
 			CartItems.ui.hide();
 		});
-		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$34).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
+		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$33).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
 		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
@@ -158848,179 +159125,6 @@ var init_PartyHelper$1 = __esmMin((() => {
 	PartyHelper_default$1 = "#PartyHelper {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n\r\n#PartyHelper .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyHelper .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyHelper .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyHelper .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyHelper .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyHelper .content {\r\n	background-color: white;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#PartyHelper .party-content {\r\n	min-height: 100px;\r\n}\r\n\r\n#PartyHelper .friend-content {\r\n	padding: 5px;\r\n}\r\n\r\n#PartyHelper .disabled,\r\n#PartyHelper .disabled button {\r\n	color: #888;\r\n}\r\n\r\n#PartyHelper .on,\r\n#PartyHelper .off {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 3px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .content p {\r\n	padding: 0;\r\n	margin: 0;\r\n	padding-top: 10px;\r\n}\r\n\r\n#PartyHelper .content div {\r\n	margin-left: 10px;\r\n}\r\n\r\n#PartyHelper .content button {\r\n	margin-left: 10px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .name {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 95px;\r\n	height: 20px;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#PartyHelper .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyHelper .btn {\r\n	position: absolute;\r\n	bottom: 3px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyHelper .ok {\r\n	right: 46px;\r\n}\r\n\r\n#PartyHelper .cancel {\r\n	right: 2px;\r\n}\r\n\r\n#PartyHelper .friend-setup .setting-row {\r\n	margin-left: 0px;\r\n	margin-bottom: 3px;\r\n	cursor: pointer;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyHelper .friend-setup .off {\r\n	display: none;\r\n}\r\n\r\n#PartyHelper .friend-setup .on {\r\n	display: inline-block;\r\n}\r\n\r\n#PartyHelper .friend-setup span {\r\n	margin-left: 5px;\r\n	font-size: 11px;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .friend-setup button {\r\n	display: inline-block;\r\n	width: 15px;\r\n	height: 18px;\r\n	background-position: 0px 3px;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	vertical-align: middle;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Elements/UIButton.js
-var UIButton;
-var init_UIButton = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIButton = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const bg = this.getAttribute("bg");
-			const hover = this.getAttribute("hover");
-			const down = this.getAttribute("down");
-			let bgUri = null, hoverUri = null, downUri = null;
-			const state = {
-				hover: false,
-				down: false
-			};
-			const update = () => {
-				if (this.disabled) {
-					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-					this.style.opacity = "0.5";
-					this.style.cursor = "default";
-					return;
-				}
-				this.style.opacity = "";
-				this.style.cursor = "";
-				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
-				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
-				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-				else this.style.backgroundImage = "";
-			};
-			this._update = update;
-			const loadBmp = (path, cb) => {
-				if (!path) return;
-				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-					if (dataURI instanceof ArrayBuffer) try {
-						const tga = new Targa();
-						tga.load(new Uint8Array(dataURI));
-						cb(tga.getDataURL());
-					} catch (e) {
-						console.error(e.message);
-					}
-					else cb(dataURI);
-				});
-			};
-			loadBmp(bg, (uri) => {
-				bgUri = uri;
-				update();
-			});
-			loadBmp(hover, (uri) => {
-				hoverUri = uri;
-			});
-			loadBmp(down, (uri) => {
-				downUri = uri;
-			});
-			this.addEventListener("mouseover", () => {
-				if (this.disabled) return;
-				state.hover = true;
-				update();
-			});
-			this.addEventListener("mouseout", () => {
-				state.hover = false;
-				state.down = false;
-				update();
-			});
-			this.addEventListener("mousedown", () => {
-				if (this.disabled) return;
-				state.down = true;
-				update();
-			});
-			this.addEventListener("mouseup", () => {
-				state.down = false;
-				update();
-			});
-			this.addEventListener("click", (e) => {
-				if (this.disabled) {
-					e.stopImmediatePropagation();
-					e.preventDefault();
-				}
-			}, true);
-		}
-		get disabled() {
-			return this.hasAttribute("disabled");
-		}
-		set disabled(val) {
-			if (val) this.setAttribute("disabled", "");
-			else this.removeAttribute("disabled");
-		}
-		static get observedAttributes() {
-			return ["disabled"];
-		}
-		attributeChangedCallback(name) {
-			if (name === "disabled" && this._initialized) {
-				if (this._update) this._update();
-			}
-		}
-	};
-	customElements.define("ui-button", UIButton);
-}));
-//#endregion
-//#region src/UI/Elements/UIText.js
-var UIText;
-var init_UIText = __esmMin((() => {
-	init_DBManager();
-	UIText = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const msgId = this.getAttribute("msg");
-			if (msgId) {
-				const text = DB.getMessage(msgId, "");
-				if (text) this.textContent = text;
-			}
-		}
-		static get observedAttributes() {
-			return ["msg"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "msg" && newVal) {
-				const text = DB.getMessage(newVal, "");
-				if (text) this.textContent = text;
-			}
-		}
-	};
-	customElements.define("ui-text", UIText);
-}));
-//#endregion
-//#region src/UI/Elements/UIImage.js
-var UIImage;
-var init_UIImage = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIImage = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			this.style.display = "none";
-			this._loadSrc(this.getAttribute("src"));
-		}
-		static get observedAttributes() {
-			return ["src"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "src") this._loadSrc(newVal);
-		}
-		_loadSrc(path) {
-			if (!path) return;
-			const target = this.parentElement;
-			if (!target) return;
-			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-				if (dataURI instanceof ArrayBuffer) try {
-					const tga = new Targa();
-					tga.load(new Uint8Array(dataURI));
-					target.style.backgroundImage = `url(${tga.getDataURL()})`;
-				} catch (e) {
-					console.error(e.message);
-				}
-				else target.style.backgroundImage = `url(${dataURI})`;
-			});
-		}
-	};
-	customElements.define("ui-image", UIImage);
-}));
-//#endregion
-//#region src/UI/Elements/Elements.js
-var init_Elements = __esmMin((() => {
-	init_UIButton();
-	init_UIText();
-	init_UIImage();
-}));
-//#endregion
 //#region src/UI/Components/ChatBox/History.js
 /**
 * UI/Components/ChatBox/History.js
@@ -160026,7 +160130,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$33(event) {
+function stopPropagation$32(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -160235,9 +160339,9 @@ var init_Mail$1 = __esmMin((() => {
 		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
 		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$33).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$33);
-		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$33);
+		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$32).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
+		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$32);
+		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$32);
 		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
 		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
 		onWindowMailbox();
@@ -195014,7 +195118,7 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$32(event) {
+function stopPropagation$31(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -195061,7 +195165,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this._shadow || this._host;
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$32));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$31));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -197768,7 +197872,7 @@ function onSkillFocus$2() {
 */
 function onSkillDragStart$2(event) {
 	const skill = getSkillById$2(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$31(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$30(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = this.firstChild.firstChild.src;
@@ -197802,7 +197906,7 @@ function skillLevelSelectDown$2(skill) {
 /**
 * Stop propagation of events
 */
-function stopPropagation$31(event) {
+function stopPropagation$30(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -197942,7 +198046,7 @@ var init_Guild$1 = __esmMin((() => {
 		MemberView = this.ui.find(".MemberView").remove();
 		PositionView = this.ui.find(".PositionView").remove();
 		ExpelView = this.ui.find(".ExpelView").remove();
-		ui.find(".titlebar .close").mousedown(stopPropagation$31).click(Guild.toggle.bind(this));
+		ui.find(".titlebar .close").mousedown(stopPropagation$30).click(Guild.toggle.bind(this));
 		ui.find(".tabs").on("click", "button", onChangeTab);
 		Client.loadFiles([DB.INTERFACE_PATH + "checkbox_0.bmp", DB.INTERFACE_PATH + "checkbox_1.bmp"], function(off, on) {
 			_checkbox_off = off;
@@ -198010,7 +198114,7 @@ var init_Guild$1 = __esmMin((() => {
 			_btnLevelUp$7.detach();
 			Guild.ui.show();
 			Guild.ui.parent().append(Guild.ui);
-		}).mousedown(stopPropagation$31);
+		}).mousedown(stopPropagation$30);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$2).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo$2).on("mousedown", ".selectable", onSkillFocus$2).on("dragstart", ".skill", onSkillDragStart$2).on("dragend", ".skill", onSkillDragEnd$2);
 		ui.find(".content.notice").on("focus", "textarea, input", function() {
 			ui.find(".footer .btn_ok").show();
@@ -202476,7 +202580,7 @@ function getSkillPosition$1(JobId) {
 /**
 * Stop event propagation
 */
-function stopPropagation$30(event) {
+function stopPropagation$29(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -202681,7 +202785,7 @@ function onSkillFocus$1() {
 */
 function onSkillDragStart$1(event) {
 	const skill = getSkillById$1(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$30(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$29(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = jquery_default(this).find(".icon img").attr("src");
@@ -202825,7 +202929,7 @@ var init_SkillList$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillList.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$30);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$29);
 		this.ui.find(".footer .extend").mousedown(onResize$12);
 		this.ui.find(".titlebar .close").click(onClose$15);
 		this.ui.find(".titlebar .mini").click(onMini$1);
@@ -202838,7 +202942,7 @@ var init_SkillList$1 = __esmMin((() => {
 			_btnLevelUp$6.detach();
 			SkillList.ui.show();
 			SkillList.ui.parent().append(SkillList.ui);
-		}).mousedown(stopPropagation$30);
+		}).mousedown(stopPropagation$29);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$1).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo$1).on("mousedown", ".selectable", onSkillFocus$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onRequestSkillInfo$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove$1).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice$1).on("dragstart", ".skill", onSkillDragStart$1).on("dragend", ".skill", onSkillDragEnd$1).on("touchstart", ".skill .icon", onSkillTouchStart).on("touchmove", ".skill .icon", onSkillTouchMove).on("touchend", ".skill .icon", onSkillTouchEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
@@ -203278,7 +203382,7 @@ function getSkillPosition(JobId) {
 /**
 * Stop event propagation
 */
-function stopPropagation$29(event) {
+function stopPropagation$28(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -203473,7 +203577,7 @@ function onSkillFocus() {
 */
 function onSkillDragStart(event) {
 	const skill = getSkillById(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$29(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$28(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = jquery_default(this).find(".icon img").attr("src");
@@ -203547,7 +203651,7 @@ var init_SkillListV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillListV0.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$29);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$28);
 		this.ui.find(".footer .extend").mousedown(onResize$11);
 		this.ui.find(".titlebar .close").click(onClose$14);
 		this.ui.find(".titlebar .mini").click(onMini);
@@ -203560,7 +203664,7 @@ var init_SkillListV0 = __esmMin((() => {
 			_btnLevelUp$5.detach();
 			SkillListV0.ui.show();
 			SkillListV0.ui.parent().append(SkillListV0.ui);
-		}).mousedown(stopPropagation$29);
+		}).mousedown(stopPropagation$28);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo).on("mousedown", ".selectable", onSkillFocus).on("mouseover", ".skillCol .skill .icon, .skill .name", onRequestSkillInfo).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice).on("dragstart", ".skill", onSkillDragStart).on("dragend", ".skill", onSkillDragEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
@@ -207364,7 +207468,7 @@ function onClose$9() {
 /**
 * Stop event propagation
 */
-function stopPropagation$28(event) {
+function stopPropagation$27(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -207468,7 +207572,7 @@ var init_Reputation = __esmMin((() => {
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
 		this.draggable(this.ui);
-		this.ui.find(".base").mousedown(stopPropagation$28);
+		this.ui.find(".base").mousedown(stopPropagation$27);
 		this.ui.find(".close").click(onClose$9);
 		this.ui.find(".big_btn_close").click(onClose$9);
 		const paginator = Reputation.ui.find(".paginator");
@@ -207975,7 +208079,7 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$27(event) {
+function stopPropagation$26(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208100,7 +208204,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$27);
+		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$26);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -208216,7 +208320,7 @@ function getItemTab$3(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$26(event) {
+function stopPropagation$25(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208516,14 +208620,14 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$26);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$25);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$3);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$3);
 		this.ui.find(".footer .extend").mousedown(onResize$10);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV0.ui.hide();
 		});
-		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$26).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
+		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$25).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
 		this.ui.find(".ncnt").text(0);
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
@@ -208875,7 +208979,7 @@ function getItemTab$2(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$25(event) {
+function stopPropagation$24(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -209272,18 +209376,18 @@ var init_InventoryV1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$25);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$2);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$2);
 		this.ui.find(".footer .extend").mousedown(onResize$9);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV1.ui.hide();
 		});
-		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$25).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
+		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$24).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$25).on("drop", onTabDrop$2);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$24).on("drop", onTabDrop$2);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$38.tab).addClass("selected");
 		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -210087,7 +210191,7 @@ function getItemTab$1(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$24(event) {
+function stopPropagation$23(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -210489,18 +210593,18 @@ var init_InventoryV2 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV2.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$1);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$1);
 		this.ui.find(".footer .extend").mousedown(onResize$8);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV2.ui.hide();
 		});
-		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$24).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
+		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$23).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$24).on("drop", onTabDrop$1);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$23).on("drop", onTabDrop$1);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$37.tab).addClass("selected");
 		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -211004,7 +211108,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$23(event) {
+function stopPropagation$22(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -211756,14 +211860,14 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$23).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$22).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
 		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
 		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
 		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
@@ -211885,7 +211989,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$22(event) {
+function stopPropagation$21(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -212410,7 +212514,7 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$22);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$21);
 		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
 		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
@@ -214120,7 +214224,7 @@ function getItemTab(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$21(event) {
+function stopPropagation$20(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -214615,18 +214719,18 @@ var init_InventoryV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV3.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
 		this.ui.find(".titlebar .mini").click(onToggleReduction);
 		this.ui.find(".tabs button").mousedown(onSwitchTab);
 		this.ui.find(".footer .extend").mousedown(onResize$7);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV3.ui.hide();
 		});
-		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$21).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
+		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$20).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$21).on("drop", onTabDrop);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$20).on("drop", onTabDrop);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$36.tab).addClass("selected");
 		const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -215644,7 +215748,7 @@ function onRemoveOption$5() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$20(event) {
+function stopPropagation$19(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -215833,7 +215937,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	*/
 	EquipmentV0.init = function init() {
 		_ctx$9 = this.ui.find("canvas")[0].getContext("2d");
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$20).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$19).click(function() {
 			_btnLevelUp$4.detach();
 			EquipmentV0.ui.show();
 			EquipmentV0.ui.parent().append(EquipmentV0.ui);
@@ -215844,7 +215948,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV0.ui.find(".panel").toggle();
 		});
@@ -216123,7 +216227,7 @@ function onRemoveOption$4() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$19(event) {
+function stopPropagation$18(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216350,7 +216454,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (i != 0) contentDivs$3[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$19).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(function() {
 			_btnLevelUp$3.detach();
 			EquipmentV1.ui.show();
 			EquipmentV1.ui.parent().append(EquipmentV1.ui);
@@ -216361,7 +216465,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV1.ui.find(".panel").toggle();
 		});
@@ -216666,7 +216770,7 @@ function onRemoveOption$3() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$18(event) {
+function stopPropagation$17(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216893,7 +216997,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (i != 0) contentDivs$2[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(function() {
 			_btnLevelUp$2.detach();
 			EquipmentV2.ui.show();
 			EquipmentV2.ui.parent().append(EquipmentV2.ui);
@@ -216904,7 +217008,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV2.ui.find(".panel").toggle();
 		});
@@ -217242,7 +217346,7 @@ function onRemoveOption$2() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$17(event) {
+function stopPropagation$16(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -217473,7 +217577,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (i != 0) contentDivs$1[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(() => {
 			_btnLevelUp$1.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -217482,7 +217586,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV3.ui.find(".panel").toggle();
 		});
@@ -217895,7 +217999,7 @@ function onRemoveOption$1() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$16(event) {
+function stopPropagation$15(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -218134,7 +218238,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (i != 0) contentDivs[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$15).click(() => {
 			_btnLevelUp.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -218143,7 +218247,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$15);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV4.ui.find(".panel").toggle();
 		});
@@ -221699,7 +221803,7 @@ function onClose$8() {
 /**
 * Stop event propagation
 */
-function stopPropagation$15(event) {
+function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -221736,7 +221840,7 @@ var init_HomunInformations = __esmMin((() => {
 	*/
 	HomunInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".base").mousedown(stopPropagation$15);
+		this.ui.find(".base").mousedown(stopPropagation$14);
 		this.ui.find(".close").click(onClose$8);
 		this.ui.find(".modify").click(onChangeName$1);
 		this.ui.find(".feed").click(onFeed);
@@ -221971,7 +222075,7 @@ var init_MercenaryInformations$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$14(event) {
+function stopPropagation$13(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -222015,8 +222119,8 @@ var init_MercenaryInformations = __esmMin((() => {
 	*/
 	MercenaryInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".content").mousedown(stopPropagation$14);
-		this.ui.find(".content .base").mousedown(stopPropagation$14);
+		this.ui.find(".content").mousedown(stopPropagation$13);
+		this.ui.find(".content .base").mousedown(stopPropagation$13);
 		this.ui.find(".close").click(onClose$7);
 		this.ui.find(".dismiss").click(onDelete);
 		if (!_preferences$28.show) this.ui.hide();
@@ -223844,7 +223948,7 @@ function onDropText$1(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$13(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -224144,7 +224248,7 @@ var init_ChatBox = __esmMin((() => {
 				if (!movedInsideChatbox && !isTextInput && !isChatMessage) this.ui.find(".input .username").focus();
 			}.bind(this), 1e3);
 		}.bind(this));
-		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$13);
+		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$12);
 		this.ui.find(".header input").dblclick(function() {
 			this.type = "text";
 			this.select();
@@ -244227,7 +244331,7 @@ function onContainerMouseLeave(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$12(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -244254,7 +244358,7 @@ function onResize$3(event) {
 			jquery_default(window).off("mouseup.resize");
 		}
 	});
-	return stopPropagation$12(event);
+	return stopPropagation$11(event);
 }
 /**
 * Displays the cat hand over an icon
@@ -244618,8 +244722,8 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.init = function init() {
 		this.ui.find(".resize").mousedown(onResize$3);
-		this.ui.find(".close").mousedown(stopPropagation$12).click(onClose$6);
-		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$12).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
+		this.ui.find(".close").mousedown(stopPropagation$11).click(onClose$6);
+		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$11).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
 			event.stopImmediatePropagation();
 		});
 		this.draggable();
@@ -247615,7 +247719,7 @@ function onClose$5() {
 /**
 * Stop event propagation
 */
-function stopPropagation$11(event) {
+function stopPropagation$10(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -247642,7 +247746,7 @@ var init_PetInformations = __esmMin((() => {
 	*/
 	PetInformations.init = function init() {
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".base").mousedown(stopPropagation$11);
+		this.ui.find(".base").mousedown(stopPropagation$10);
 		this.ui.find(".close").click(onClose$5);
 		this.ui.find(".modify").click(onChangeName);
 		this.ui.find(".command").change(onCommandSelected);
@@ -247748,39 +247852,72 @@ var init_PetInformations = __esmMin((() => {
 //#region src/UI/Components/Trade/Trade.html?raw
 var Trade_default$2;
 var init_Trade$3 = __esmMin((() => {
-	Trade_default$2 = "<div id=\"Trade\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">Trade : <span class=\"title\"></span></div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"content\" data-background=\"basic_interface/exchange_bg2.bmp\">\r\n		<div class=\"box send\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n		<div class=\"box recv\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n\r\n		<input type=\"text\" class=\"zeny send\" value=\"0\" />\r\n		<div class=\"zeny recv disabled\">0</div>\r\n\r\n		<button\r\n			class=\"btn ok enabled\"\r\n			data-background=\"btn_ok.bmp\"\r\n			data-hover=\"btn_ok_a.bmp\"\r\n			data-down=\"btn_ok_b.bmp\"\r\n		></button>\r\n		<button class=\"btn ok disabled\" data-background=\"btn_ok_dis.bmp\"></button>\r\n		<button\r\n			class=\"btn trade enabled\"\r\n			data-background=\"btn_exchange.bmp\"\r\n			data-hover=\"btn_exchange_a.bmp\"\r\n			data-down=\"btn_exchange_b.bmp\"\r\n		></button>\r\n		<button class=\"btn trade disabled\" data-background=\"btn_exchange_dis.bmp\"></button>\r\n		<button\r\n			class=\"btn cancel\"\r\n			data-background=\"btn_cancel.bmp\"\r\n			data-hover=\"btn_cancel_a.bmp\"\r\n			data-down=\"btn_cancel_b.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
+	Trade_default$2 = "<div id=\"Trade\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		Trade : <span class=\"title\"></span>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"content\">\r\n		<ui-image src=\"basic_interface/exchange_bg2.bmp\"></ui-image>\r\n		<div class=\"box send\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n		<div class=\"box recv\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n\r\n		<input type=\"text\" class=\"zeny send\" value=\"0\" />\r\n		<div class=\"zeny recv disabled\">0</div>\r\n\r\n		<ui-button class=\"btn ok enabled\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok disabled\" bg=\"btn_ok_dis.bmp\"></ui-button>\r\n		<ui-button\r\n			class=\"btn trade enabled\"\r\n			bg=\"btn_exchange.bmp\"\r\n			hover=\"btn_exchange_a.bmp\"\r\n			down=\"btn_exchange_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn trade disabled\" bg=\"btn_exchange_dis.bmp\"></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Trade/Trade.css?raw
 var Trade_default$1;
 var init_Trade$2 = __esmMin((() => {
-	Trade_default$1 = "#Trade {\r\n	width: 560px;\r\n	height: 380px;\r\n	position: absolute;\r\n}\r\n\r\n#Trade .titlebar {\r\n	height: 14px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 5px 5px 0px 0px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n	position: relative;\r\n	padding-left: 15px;\r\n	padding-top: 3px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n/** When mouse over items **/\r\n\r\n#Trade .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#Trade .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/** Content **/\r\n\r\n#Trade .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 560px;\r\n	height: 360px;\r\n}\r\n\r\n#Trade .box {\r\n	position: absolute;\r\n	top: 3px;\r\n	width: 275px;\r\n	height: 305px;\r\n	background-repeat: repeat-y;\r\n	background-size: 32px 10%; /* 10% for 10 items */\r\n	background-position: 1px 0px;\r\n}\r\n\r\n#Trade .box.disabled {\r\n	background: #ccc !important;\r\n}\r\n\r\n#Trade .box.send {\r\n	left: 2px;\r\n}\r\n\r\n#Trade .box.recv {\r\n	right: 3px;\r\n}\r\n\r\n/** Items in box **/\r\n\r\n#Trade .box .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 26px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n\r\n#Trade .box .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Trade .box .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#Trade .box .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n/** Zeny input **/\r\n\r\n#Trade .zeny {\r\n	position: absolute;\r\n	top: 311px;\r\n	background-color: #ddd;\r\n	border: none;\r\n	width: 70px;\r\n	height: 13px;\r\n	padding: 2px;\r\n}\r\n\r\n#Trade .zeny.send {\r\n	left: 160px;\r\n}\r\n\r\n#Trade .zeny.recv {\r\n	left: 440px;\r\n}\r\n\r\n#Trade .zeny.disabled {\r\n	background-color: transparent;\r\n}\r\n\r\n/** Buttons **/\r\n\r\n#Trade .btn {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Trade .btn.disabled {\r\n	cursor: default;\r\n}\r\n#Trade .btn.ok {\r\n	left: 5px;\r\n}\r\n#Trade .btn.trade {\r\n	left: 260px;\r\n}\r\n#Trade .btn.cancel {\r\n	left: 510px;\r\n}\r\n";
+	Trade_default$1 = ":host {\r\n	width: 560px;\r\n	height: 380px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#Trade {\r\n	position: absolute;\r\n	width: 560px;\r\n	height: 380px;\r\n}\r\n\r\n#Trade .titlebar {\r\n	height: 14px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 5px 5px 0px 0px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n	position: relative;\r\n	padding-left: 15px;\r\n	padding-top: 3px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n/** When mouse over items **/\r\n\r\n#Trade .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#Trade .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/** Content **/\r\n\r\n#Trade .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 560px;\r\n	height: 360px;\r\n}\r\n\r\n#Trade .box {\r\n	position: absolute;\r\n	top: 3px;\r\n	width: 275px;\r\n	height: 305px;\r\n	background-repeat: repeat-y;\r\n	background-size: 32px 10%; /* 10% for 10 items */\r\n	background-position: 1px 0px;\r\n}\r\n\r\n#Trade .box.disabled {\r\n	background: #ccc !important;\r\n}\r\n\r\n#Trade .box.send {\r\n	left: 2px;\r\n}\r\n\r\n#Trade .box.recv {\r\n	right: 3px;\r\n}\r\n\r\n/** Items in box **/\r\n\r\n#Trade .box .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 26px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n\r\n#Trade .box .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Trade .box .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#Trade .box .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n/** Zeny input **/\r\n\r\n#Trade .zeny {\r\n	position: absolute;\r\n	top: 311px;\r\n	background-color: #ddd;\r\n	border: none;\r\n	width: 70px;\r\n	height: 13px;\r\n	padding: 2px;\r\n}\r\n\r\n#Trade .zeny.send {\r\n	left: 160px;\r\n}\r\n\r\n#Trade .zeny.recv {\r\n	left: 440px;\r\n}\r\n\r\n#Trade .zeny.disabled {\r\n	background-color: transparent;\r\n}\r\n\r\n/** Buttons **/\r\n\r\n#Trade .btn {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: inline-block;\r\n}\r\n#Trade .btn.disabled {\r\n	cursor: default;\r\n}\r\n#Trade .btn.ok {\r\n	left: 5px;\r\n}\r\n#Trade .btn.trade {\r\n	left: 260px;\r\n}\r\n#Trade .btn.cancel {\r\n	left: 510px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Trade/Trade.js
 /**
+* Escape HTML special characters
+*
+* @param {string} text
+* @returns {string}
+*/
+function escapeHtml$1(text) {
+	const div = document.createElement("div");
+	div.appendChild(document.createTextNode(text));
+	return div.innerHTML;
+}
+/**
+* Reset the UI to its initial state
+*/
+function resetUI() {
+	_tmpCount = {};
+	_recv.length = 0;
+	_send.length = 0;
+	const root = this._shadow || this._host;
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
+	const okDisabled = root.querySelector(".ok.disabled");
+	const tradeEnabled = root.querySelector(".trade.enabled");
+	if (okDisabled) okDisabled.style.display = "none";
+	if (tradeEnabled) tradeEnabled.style.display = "none";
+	const okEnabled = root.querySelector(".ok.enabled");
+	const tradeDisabled = root.querySelector(".trade.disabled");
+	if (okEnabled) okEnabled.style.display = "";
+	if (tradeDisabled) tradeDisabled.style.display = "";
+	root.querySelectorAll(".box").forEach((box) => {
+		box.classList.remove("disabled");
+		box.innerHTML = "";
+	});
+	const zenySend = root.querySelector(".zeny.send");
+	if (zenySend) {
+		zenySend.value = "0";
+		zenySend.classList.remove("disabled");
+		zenySend.disabled = false;
+	}
+	const zenyRecv = root.querySelector(".zeny.recv");
+	if (zenyRecv) zenyRecv.textContent = "0";
+}
+/**
 * Prettify number (15000 -> 15,000)
 *
-* @param {number}
+* @param {number} value
 * @return {string}
 */
 function prettifyZeny$2(value) {
-	const num = String(value);
-	let i = 0;
-	const len = num.length;
-	let out = "";
-	while (i < len) {
-		out = num[len - i - 1] + out;
-		if ((i + 1) % 3 === 0 && i + 1 !== len) out = "," + out;
-		++i;
-	}
-	return out;
+	return Number(value).toLocaleString("en-US");
 }
 /**
 * Request to add an item to the trade UI
 *
-* @param {number} item index in inventory
-* @param {number} item count
+* @param {number} index - item index in inventory
+* @param {number} count - item count
 */
 function onRequestAddItem(index, count) {
 	if (index in _tmpCount) {
@@ -247795,24 +247932,18 @@ function onRequestAddItem(index, count) {
 	Trade.reqAddItem(index, count);
 }
 /**
-* Stop event propagation
-*/
-function stopPropagation$10(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
 * Cancel the deal
 */
 function onCancel() {
-	this.remove();
+	Trade.remove();
 	Trade.onCancel();
 }
 /**
 * Conclude our part
 */
 function onConclude() {
-	let zeny = parseInt(Trade.ui.find(".zeny.send").val(), 10) || 0;
+	const zenySend = (Trade._shadow || Trade._host).querySelector(".zeny.send");
+	let zeny = parseInt(zenySend ? zenySend.value : "0", 10) || 0;
 	zeny = Math.min(Math.max(0, zeny), SessionStorage_default.zeny);
 	onRequestAddItem(0, zeny);
 	Trade.onConclude();
@@ -247822,18 +247953,22 @@ function onConclude() {
 */
 function onTrade() {
 	Trade.onTradeSubmit();
-	this.ui.find(".trade.enabled").hide();
-	this.ui.find(".trade.disabled").show();
+	const root = Trade._shadow || Trade._host;
+	const tradeEnabled = root.querySelector(".trade.enabled");
+	const tradeDisabled = root.querySelector(".trade.disabled");
+	if (tradeEnabled) tradeEnabled.style.display = "none";
+	if (tradeDisabled) tradeDisabled.style.display = "";
 }
 /**
-* Drop from inventory to storage
+* Drop from inventory to trade
 */
 function onDrop$7(event) {
 	let data;
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (e) {}
+		data = JSON.parse(event.dataTransfer ? event.dataTransfer.getData("Text") : event.originalEvent.dataTransfer.getData("Text"));
+	} catch (_e) {}
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	if (!data || data.type !== "item" || data.from !== "Inventory") return false;
 	const item = data.data;
 	if (item.count > 1) {
@@ -247852,60 +247987,74 @@ function onDrop$7(event) {
 }
 /**
 * When mouse is over an item, show title
+*
+* @param {HTMLElement} itemEl
 */
-function onItemOver$9() {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = this.parentNode.className.match(/send/i) ? _send[idx] : _recv[idx];
+function onItemOver$9(itemEl) {
+	const idx = parseInt(itemEl.getAttribute("data-index"), 10);
+	const item = itemEl.parentNode.className.match(/send/i) ? _send[idx] : _recv[idx];
 	if (!item) return;
-	const $e = jquery_default(this);
-	const pos = $e.parent().position();
-	const overlay = Trade.ui.find(".overlay");
-	pos.left += $e.position().left;
-	pos.top += $e.position().top;
-	overlay.show();
-	overlay.css({
-		top: pos.top + 5,
-		left: pos.left + 30
-	});
-	overlay.text(DB.getItemName(item));
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const overlay = (Trade._shadow || Trade._host).querySelector(".overlay");
+	if (!overlay) return;
+	const itemRect = itemEl.getBoundingClientRect();
+	const hostRect = Trade._host.getBoundingClientRect();
+	const posLeft = itemRect.left - hostRect.left;
+	const posTop = itemRect.top - hostRect.top;
+	overlay.style.display = "";
+	overlay.style.top = `${posTop + 5}px`;
+	overlay.style.left = `${posLeft + 30}px`;
+	overlay.textContent = DB.getItemName(item);
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
 }
 /**
 * Hide the item title when mouse is not over anymore
 */
 function onItemOut$10() {
-	Trade.ui.find(".overlay").hide();
+	const overlay = (Trade._shadow || Trade._host).querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Display ItemInfo UI
+*
+* @param {Event} event
+* @param {HTMLElement} itemEl
 */
-function onItemInfo$12(event) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = this.parentNode.className.match(/send/i) ? _send[idx] : _recv[idx];
-	if (!item) return stopPropagation$10(event);
+function onItemInfo$12(event, itemEl) {
+	const idx = parseInt(itemEl.getAttribute("data-index"), 10);
+	const item = itemEl.parentNode.className.match(/send/i) ? _send[idx] : _recv[idx];
+	if (!item) {
+		event.stopImmediatePropagation();
+		event.preventDefault();
+		return;
+	}
 	if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return stopPropagation$10(event);
+	event.stopImmediatePropagation();
+	event.preventDefault();
 }
 var Trade, _tmpCount, _send, _recv, Trade_default;
 var init_Trade$1 = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_Client();
 	init_SessionStorage();
 	init_Renderer();
+	init_GUIComponent();
 	init_UIManager();
-	init_UIComponent();
+	init_Elements();
 	init_InputBox();
 	init_ItemInfo();
 	init_Inventory();
 	init_ChatBox();
 	init_Trade$3();
 	init_Trade$2();
-	Trade = new UIComponent("Trade", Trade_default$2, Trade_default$1);
+	Trade = new GUIComponent("Trade", Trade_default$1);
+	/**
+	* HTML returned by render()
+	*/
+	Trade.render = () => Trade_default$2;
 	_tmpCount = {};
 	_send = [];
 	_recv = [];
@@ -247914,43 +248063,84 @@ var init_Trade$1 = __esmMin((() => {
 	*/
 	Trade.title = "";
 	/**
-	* Initialize UI
+	* Capture key events so the zeny input field works inside Shadow DOM
 	*/
-	Trade.init = function Init() {
-		this.ui.find(".ok.enabled").click(onConclude);
-		this.ui.find(".trade.enabled").click(onTrade.bind(this));
-		this.ui.find(".cancel").click(onCancel.bind(this));
-		this.ui.on("mousedown", ".disabled", stopPropagation$10).on("drop", onDrop$7).on("dragover", stopPropagation$10);
-		this.ui.find(".zeny.send").mousedown(function() {
-			this.select();
-		});
-		this.ui.find(".box").on("mouseover", ".item", onItemOver$9).on("mouseout", ".item", onItemOut$10).on("contextmenu", ".item", onItemInfo$12);
-		this.draggable(this.ui.find(".titlebar"));
-	};
+	Trade.captureKeyEvents = true;
 	/**
 	* Initialize UI
 	*/
-	Trade.onAppend = function onAppend() {
-		this.onRemove();
-		this.ui.find(".titlebar .title").text(this.title);
-		this.ui.css({
-			top: (Renderer.height - this.ui.height()) / 2,
-			left: (Renderer.width - this.ui.width()) / 2
+	Trade.init = function init() {
+		const root = this._shadow || this._host;
+		const okBtn = root.querySelector(".ok.enabled");
+		if (okBtn) {
+			okBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			okBtn.addEventListener("click", () => onConclude());
+		}
+		const tradeBtn = root.querySelector(".trade.enabled");
+		if (tradeBtn) {
+			tradeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			tradeBtn.addEventListener("click", () => onTrade());
+		}
+		const cancelBtn = root.querySelector(".cancel");
+		if (cancelBtn) {
+			cancelBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			cancelBtn.addEventListener("click", () => onCancel());
+		}
+		root.addEventListener("mousedown", (e) => {
+			if (e.target.closest && e.target.closest(".disabled")) e.stopImmediatePropagation();
 		});
+		this._host.addEventListener("drop", (e) => onDrop$7(e));
+		this._host.addEventListener("dragover", (e) => {
+			e.preventDefault();
+			e.stopImmediatePropagation();
+		});
+		const zenyInput = root.querySelector(".zeny.send");
+		if (zenyInput) zenyInput.addEventListener("mousedown", function() {
+			this.select();
+		});
+		root.querySelectorAll(".box").forEach((box) => {
+			box.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemOver$9(itemEl);
+			});
+			box.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$10();
+			});
+			box.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemInfo$12(e, itemEl);
+			});
+		});
+		this.draggable(".titlebar");
+	};
+	/**
+	* Guard keyboard input for the zeny <input> inside Shadow DOM
+	*/
+	Trade.onKeyDown = function onKeyDown(event) {
+		const focused = (this._shadow || this._host).activeElement;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
+	};
+	/**
+	* Initialize UI on append
+	*/
+	Trade.onAppend = function onAppend() {
+		resetUI.call(this);
+		const titleEl = (this._shadow || this._host).querySelector(".titlebar .title");
+		if (titleEl) titleEl.textContent = this.title;
+		const width = this._host.getBoundingClientRect().width;
+		const height = this._host.getBoundingClientRect().height;
+		this._host.style.top = `${(Renderer.height - height) / 2}px`;
+		this._host.style.left = `${(Renderer.width - width) / 2}px`;
 	};
 	/**
 	* Clean UP UI
 	*/
 	Trade.onRemove = function onRemove() {
-		_tmpCount = {};
-		_recv.length = 0;
-		_send.length = 0;
-		this.ui.find(".overlay").hide();
-		this.ui.find(".ok.disabled, .trade.enabled").hide();
-		this.ui.find(".ok.enabled, .trade.disabled").show();
-		this.ui.find(".box").removeClass("disabled").empty();
-		this.ui.find(".zeny.send").val(0).removeClass("disabled").attr("disabled", false);
-		this.ui.find(".zeny.recv").text("0");
+		resetUI.call(this);
 	};
 	/**
 	* Add Item to the trade window from our inventory
@@ -247963,19 +248153,27 @@ var init_Trade$1 = __esmMin((() => {
 			delete _tmpCount[index];
 			return;
 		}
+		const root = this._shadow || this._host;
 		if (index === 0) {
-			this.ui.find(".zeny.send").val(prettifyZeny$2(_tmpCount[index]));
+			const zenySend = root.querySelector(".zeny.send");
+			if (zenySend) zenySend.value = prettifyZeny$2(_tmpCount[index]);
 			return;
 		}
-		const item = jquery_default.extend({}, InventoryController.getUI().removeItem(index, _tmpCount[index]));
+		const inventoryItem = InventoryController.getUI().removeItem(index, _tmpCount[index]);
+		const item = Object.assign({}, inventoryItem);
 		const it = DB.getItemInfo(item.ITID);
 		const idx = _send.push(item) - 1;
-		const box = this.ui.find(".box.send");
+		const box = root.querySelector(".box.send");
 		item.count = _tmpCount[index];
-		box.append("<div class=\"item\" data-index=\"" + idx + "\"><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (_tmpCount[index] || 1) + "</span></div><span class=\"name\">" + jquery_default.escape(DB.getItemName(item)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			box.find(".item[data-index=\"" + idx + "\"] .icon").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const itemDiv = document.createElement("div");
+		itemDiv.className = "item";
+		itemDiv.setAttribute("data-index", idx);
+		itemDiv.innerHTML = `<div class="icon"></div><div class="amount"><span class="count">${_tmpCount[index] || 1}</span></div><span class="name">${escapeHtml$1(DB.getItemName(item))}</span>`;
+		box.appendChild(itemDiv);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = root.querySelector(`.item[data-index="${idx}"] .icon`);
+			if (icon && icon.closest(".box.send")) icon.style.backgroundImage = `url(${data})`;
+		});
 	};
 	/**
 	* Add item to the trade UI
@@ -247983,33 +248181,52 @@ var init_Trade$1 = __esmMin((() => {
 	* @param {object} item
 	*/
 	Trade.addItem = function addItem(item) {
+		const root = this._shadow || this._host;
 		if (item.ITID === 0) {
-			this.ui.find(".zeny.recv").text(prettifyZeny$2(item.count));
+			const zenyRecv = root.querySelector(".zeny.recv");
+			if (zenyRecv) zenyRecv.textContent = prettifyZeny$2(item.count);
 			return;
 		}
 		const it = DB.getItemInfo(item.ITID);
 		const idx = _recv.push(item) - 1;
-		const box = this.ui.find(".box.recv");
-		box.append("<div class=\"item\" data-index=\"" + idx + "\"><div class=\"icon\"></div><div class=\"amount\">" + item.count + "</div><span class=\"name\">" + jquery_default.escape(DB.getItemName(item)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			box.find(".item[data-index=\"" + idx + "\"] .icon").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const box = root.querySelector(".box.recv");
+		const itemDiv = document.createElement("div");
+		itemDiv.className = "item";
+		itemDiv.setAttribute("data-index", idx);
+		itemDiv.innerHTML = `<div class="icon"></div><div class="amount">${item.count}</div><span class="name">${escapeHtml$1(DB.getItemName(item))}</span>`;
+		box.appendChild(itemDiv);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = root.querySelector(`.item[data-index="${idx}"] .icon`);
+			if (icon && icon.closest(".box.recv")) icon.style.backgroundImage = `url(${data})`;
+		});
 	};
 	/**
 	* Conclude a part of the trade
 	*
-	* @param {string} selector
+	* @param {string} element - 'send' or 'recv'
 	*/
 	Trade.conclude = function conclude(element) {
-		this.ui.find(".box." + element).addClass("disabled");
+		const root = this._shadow || this._host;
+		const box = root.querySelector(`.box.${element}`);
+		if (box) box.classList.add("disabled");
 		if (element === "send") {
-			this.ui.find(".ok.disabled").show();
-			this.ui.find(".ok.enabled").hide();
-			this.ui.find(".zeny.send").addClass("disabled").attr("disabled", true);
+			const okDisabled = root.querySelector(".ok.disabled");
+			const okEnabled = root.querySelector(".ok.enabled");
+			if (okDisabled) okDisabled.style.display = "";
+			if (okEnabled) okEnabled.style.display = "none";
+			const zenySend = root.querySelector(".zeny.send");
+			if (zenySend) {
+				zenySend.classList.add("disabled");
+				zenySend.disabled = true;
+			}
 		}
-		if (this.ui.find(".box.recv.disabled").is(":visible") && this.ui.find(".box.send.disabled").is(":visible")) {
-			this.ui.find(".trade.enabled").show();
-			this.ui.find(".trade.disabled").hide();
+		const recvDisabled = root.querySelector(".box.recv.disabled");
+		const sendDisabled = root.querySelector(".box.send.disabled");
+		if (recvDisabled && recvDisabled.style.display !== "none" && sendDisabled && sendDisabled.style.display !== "none") {
+			const tradeEnabled = root.querySelector(".trade.enabled");
+			const tradeDisabledBtn = root.querySelector(".trade.disabled");
+			if (tradeEnabled) tradeEnabled.style.display = "";
+			if (tradeDisabledBtn) tradeDisabledBtn.style.display = "none";
 		}
 	};
 	/**
@@ -248019,6 +248236,10 @@ var init_Trade$1 = __esmMin((() => {
 	Trade.onTradeSubmit = function onTradeSubmit() {};
 	Trade.reqAddItem = function reqAddItem() {};
 	Trade.onCancel = function onCancel() {};
+	/**
+	* Set mouse mode
+	*/
+	Trade.mouseMode = GUIComponent.MouseMode.STOP;
 	Trade_default = UIManager.addComponent(Trade);
 }));
 //#endregion
