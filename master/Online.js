@@ -148266,7 +148266,8 @@ function onClose$20() {
 	if (this === _socket) {
 		console.warn("[Network] Disconnect from server");
 		if (_socket.ping) clearInterval(_socket.ping);
-		__vitePreload(() => Promise.resolve().then(() => (init_UIManager(), UIManager_exports)).then((UIManager) => {
+		if (_onDisconnect) _onDisconnect();
+		else __vitePreload(() => Promise.resolve().then(() => (init_UIManager(), UIManager_exports)).then((UIManager) => {
 			UIManager.default.showErrorBox("Disconnected from Server.");
 		}), void 0, import.meta.url);
 	}
@@ -148279,11 +148280,12 @@ function onClose$20() {
 function close() {
 	let idx;
 	if (_socket) {
-		_socket.close();
-		if (_socket.izZone) PacketCrypt_default.reset();
-		if (_socket.ping) clearInterval(_socket.ping);
-		idx = _sockets.indexOf(_socket);
+		const s = _socket;
 		_socket = null;
+		s.close();
+		if (s.izZone) PacketCrypt_default.reset();
+		if (s.ping) clearInterval(s.ping);
+		idx = _sockets.indexOf(s);
 		if (idx !== -1) _sockets.splice(idx, 1);
 	}
 }
@@ -148333,7 +148335,7 @@ function utilsLongToIP(long) {
 function utilsBufferToHexString(buffer) {
 	return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0") + " ").join("");
 }
-var _sockets, _socketFactory, _socket, _save_buffer, packetDump, Network;
+var _sockets, _socketFactory, _socket, _save_buffer, _onDisconnect, packetDump, Network;
 var init_NetworkManager = __esmMin((() => {
 	init_Configs();
 	init_BinaryReader();
@@ -148349,6 +148351,7 @@ var init_NetworkManager = __esmMin((() => {
 	_socketFactory = null;
 	_socket = null;
 	_save_buffer = null;
+	_onDisconnect = null;
 	packetDump = Configs.get("packetDump", false);
 	/**
 	* List of supported packets
@@ -148377,6 +148380,12 @@ var init_NetworkManager = __esmMin((() => {
 			hookPacket,
 			close,
 			read: read$1,
+			set onDisconnect(callback) {
+				_onDisconnect = callback;
+			},
+			get onDisconnect() {
+				return _onDisconnect;
+			},
 			setSocketFactory,
 			defaultSocketFactory,
 			registerPacket,
@@ -340945,7 +340954,10 @@ function onConnectionRequest(username, password) {
 	_loginID = username;
 	Network.connect(_server.address, _server.port, (success) => {
 		if (!success) {
-			UIManager.showErrorBox(DB.getMessage(1));
+			UIManager.showMessageBox(DB.getMessage(1), "ok", () => {
+				UIManager.removeComponents();
+				Controller.getUI().append();
+			}, true);
 			return;
 		}
 		let pkt;
@@ -341033,6 +341045,7 @@ function onCharServerSelected(index) {
 	WinList_default.remove();
 	WinLoading.append();
 	SessionStorage_default.ServerName = _charServers[index].name;
+	Network.onDisconnect = null;
 	CharEngine.init(_charServers[index]);
 }
 /**
@@ -341059,6 +341072,7 @@ function onConnectionAccepted(pkt) {
 	if (count === 1 && Configs.get("skipServerList")) {
 		WinLoading.append();
 		SessionStorage_default.ServerName = _charServers[0].name;
+		Network.onDisconnect = null;
 		CharEngine.init(_charServers[0]);
 	} else {
 		WinList_default.onIndexSelected = onCharServerSelected;
@@ -341209,7 +341223,10 @@ function onServerClosed(pkt) {
 			msg_id = 1179;
 			break;
 	}
-	UIManager.showErrorBox(DB.getMessage(msg_id));
+	UIManager.showMessageBox(DB.getMessage(msg_id), "ok", () => {
+		UIManager.removeComponents();
+		Controller.getUI().append();
+	}, true);
 	Network.close();
 }
 var WinLoading, _server, _charServers, _loginID, LoginEngine;
@@ -341301,6 +341318,12 @@ var init_LoginEngine = __esmMin((() => {
 			Background.setLoginBackground();
 			Controller.getUI().onConnectionRequest = onConnectionRequest;
 			Controller.getUI().onExitRequest = onExitRequest;
+			Network.onDisconnect = () => {
+				UIManager.showMessageBox(DB.getMessage(1), "ok", () => {
+					UIManager.removeComponents();
+					Controller.getUI().append();
+				}, true);
+			};
 			if (autoLogin instanceof Array && autoLogin[0] && autoLogin[1]) {
 				onConnectionRequest.apply(null, autoLogin);
 				Configs.set("autoLogin", null);
