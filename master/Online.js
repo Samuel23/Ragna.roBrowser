@@ -89311,11 +89311,7 @@ var init_BGM = __esmMin((() => {
 * Render background (or a black background if no image is loaded yet)
 */
 function render$24() {
-	if (_image.complete && _image.width) _ctx$17.drawImage(_image, 0, 0, _canvas[0].width, _canvas[0].height);
-	else {
-		_ctx$17.fillStyle = "#000";
-		_ctx$17.fillRect(0, 0, _canvas[0].width, _canvas[0].height);
-	}
+	_ctx$17.clearRect(0, 0, _canvas[0].width, _canvas[0].height);
 	if (_progress > -1) Background.setPercent(_progress);
 }
 /**
@@ -89332,19 +89328,13 @@ function transition(callback) {
 		});
 	});
 }
-var _canvas, _ctx$17, _overlay, _progress, _image, _loading, Background;
+var _overlay, _container, _canvas, _ctx$17, _progress, _loading, Background;
 var init_Background = __esmMin((() => {
 	init_DBManager();
 	init_jquery();
 	init_Client();
 	init_Configs();
-	_canvas = jquery_default("<canvas/>").css({
-		position: "absolute",
-		top: 0,
-		left: 0,
-		zIndex: 5
-	});
-	_ctx$17 = _canvas[0].getContext("2d");
+	init_PacketVerManager();
 	_overlay = jquery_default("<div/>").css({
 		position: "absolute",
 		top: 0,
@@ -89353,8 +89343,23 @@ var init_Background = __esmMin((() => {
 		backgroundColor: "black",
 		opacity: 0
 	});
+	_container = jquery_default("<div/>").css({
+		position: "absolute",
+		top: 0,
+		left: 0,
+		zIndex: 1,
+		width: "100%",
+		height: "100%",
+		backgroundColor: "black"
+	});
+	_canvas = jquery_default("<canvas/>").css({
+		position: "absolute",
+		top: 0,
+		left: 0,
+		zIndex: 2
+	});
+	_ctx$17 = _canvas[0].getContext("2d");
 	_progress = -1;
-	_image = new Image();
 	_loading = [];
 	Background = class Background {
 		/**
@@ -89365,7 +89370,7 @@ var init_Background = __esmMin((() => {
 		static init(loading) {
 			let i;
 			_progress = 0;
-			_canvas.css("zIndex", 0);
+			_canvas.css("zIndex", 1);
 			render$24();
 			if (loading) {
 				_loading = loading;
@@ -89384,34 +89389,99 @@ var init_Background = __esmMin((() => {
 				width,
 				height
 			});
-			_ctx$17.fillStyle = "black";
-			_ctx$17.fillRect(0, 0, width, height);
+			_container.css({
+				width: width + "px",
+				height: height + "px"
+			});
+			_ctx$17.clearRect(0, 0, width, height);
 			render$24();
 		}
 		/**
 		* Set an image as background
 		*
-		* @param {string} filename
+		* @param {string|Array<string>} filename
 		* @param {function} callback once the image is loaded (optional)
 		*/
 		static setImage(filename, callback) {
-			const exist = !!_canvas[0].parentNode;
+			const exist = !!_container[0].parentNode;
 			_progress = -1;
+			_container.empty().css("backgroundImage", "none");
 			render$24();
-			Client.loadFile(DB.INTERFACE_PATH + filename, (url) => {
-				if (url !== _image.src) {
-					_image.decoding = "async";
-					_image.src = url;
-					_image.onload = render$24;
+			if (Array.isArray(filename)) {
+				let loadedCount = 0;
+				const total = filename.length;
+				const divs = [];
+				for (let i = 0; i < total; i++) {
+					const div = jquery_default("<div/>").css({
+						width: "25%",
+						height: "33.333%",
+						float: "left",
+						backgroundSize: "100% 100%"
+					});
+					divs.push(div);
+					_container.append(div);
 				}
-				if (exist && callback) callback();
-			}, () => {
-				if (exist && callback) callback();
-			});
+				filename.forEach((file, index) => {
+					const fullPath = DB.INTERFACE_PATH + file;
+					Client.loadFile(fullPath, (url) => {
+						divs[index].css("backgroundImage", "url(" + url + ")");
+						loadedCount++;
+						if (loadedCount === total) {
+							if (exist && callback) callback();
+						}
+					}, () => {
+						loadedCount++;
+						if (loadedCount === total) {
+							if (exist && callback) callback();
+						}
+					});
+				});
+			} else {
+				const fullPath = DB.INTERFACE_PATH + filename;
+				Client.loadFile(fullPath, (url) => {
+					_container.css({
+						backgroundImage: "url(" + url + ")",
+						backgroundSize: "100% 100%"
+					});
+					if (exist && callback) callback();
+				}, () => {
+					if (exist && callback) callback();
+				});
+			}
 			if (!exist) transition(() => {
+				_container.appendTo("body");
 				_canvas.appendTo("body");
 				if (callback) callback();
 			});
+		}
+		/**
+		* Helper method to return the right login background filename(s) based on packet version.
+		*/
+		static getLoginBackgroundName() {
+			if (PacketVerManager_default.value >= 20221207) return "t_login.jpg";
+			if (PacketVerManager_default.value >= 20181114) return [
+				"t_¹è°æ1-1.bmp",
+				"t_¹è°æ1-2.bmp",
+				"t_¹è°æ1-3.bmp",
+				"t_¹è°æ1-4.bmp",
+				"t_¹è°æ2-1.bmp",
+				"t_¹è°æ2-2.bmp",
+				"t_¹è°æ2-3.bmp",
+				"t_¹è°æ2-4.bmp",
+				"t_¹è°æ3-1.bmp",
+				"t_¹è°æ3-2.bmp",
+				"t_¹è°æ3-3.bmp",
+				"t_¹è°æ3-4.bmp"
+			];
+			return "bgi_temp.bmp";
+		}
+		/**
+		* Add versioned login background
+		*
+		* @param {function} callback once the background is display (optional)
+		*/
+		static setLoginBackground(callback) {
+			Background.setImage(Background.getLoginBackgroundName(), callback);
 		}
 		/**
 		* Add loading background
@@ -89432,10 +89502,16 @@ var init_Background = __esmMin((() => {
 		* @param {function} callback once the overlay hide the window (optional)
 		*/
 		static remove(callback) {
+			if (!!!_container[0].parentNode) {
+				if (callback) callback();
+				return;
+			}
 			transition(() => {
+				_container.css("zIndex", 0);
 				_canvas.css("zIndex", 0);
-				_canvas.remove();
-				_image.src = "";
+				_container.detach();
+				_canvas.detach();
+				_container.empty().css("backgroundImage", "none");
 				if (callback) callback();
 			});
 		}
@@ -155095,19 +155171,19 @@ var init_Storage$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Storage/Storage.js
-var publicName$13, versionInfo$13, StorageController, _selectUIVersion$6;
+var publicName$12, versionInfo$12, StorageController, _selectUIVersion$6;
 var init_Storage$1 = __esmMin((() => {
 	init_Storage$5();
 	init_Storage$2();
 	init_UIVersionManager();
-	publicName$13 = "Storage";
-	versionInfo$13 = {
+	publicName$12 = "Storage";
+	versionInfo$12 = {
 		default: Storage_default$3,
 		common: { 20181219: Storage_default },
 		re: {},
 		prere: {}
 	};
-	StorageController = UIVersionManager.getUIController(publicName$13, versionInfo$13);
+	StorageController = UIVersionManager.getUIController(publicName$12, versionInfo$12);
 	_selectUIVersion$6 = StorageController.selectUIVersion;
 	StorageController.selectUIVersion = function() {
 		_selectUIVersion$6();
@@ -195971,24 +196047,24 @@ var init_MiniMapV2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap.js
-var publicName$12, versionInfo$12, Controller$6;
+var publicName$11, versionInfo$11, Controller$5;
 var init_MiniMap = __esmMin((() => {
 	init_MiniMap$1();
 	init_MiniMapV2();
 	init_UIVersionManager();
-	publicName$12 = "MiniMap";
-	versionInfo$12 = {
+	publicName$11 = "MiniMap";
+	versionInfo$11 = {
 		default: MiniMap_default,
 		common: { 20180124: MiniMapV2_default },
 		re: {},
 		prere: {}
 	};
-	Controller$6 = UIVersionManager.getUIController(publicName$12, versionInfo$12);
+	Controller$5 = UIVersionManager.getUIController(publicName$11, versionInfo$11);
 	/**
 	* Proxy for getMemberColor
 	*/
-	Controller$6.getMemberColor = function getMemberColor(key) {
-		const ui = Controller$6.getUI();
+	Controller$5.getMemberColor = function getMemberColor(key) {
+		const ui = Controller$5.getUI();
 		return ui && ui.getMemberColor ? ui.getMemberColor(key) : "white";
 	};
 }));
@@ -197327,7 +197403,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const isDetached = !!_detachedMembers[player.AID];
 		const jobName = MonsterTable_default[job] || "Unknown";
 		const mapDisplay = DB.getMapName(player.mapName);
-		player.color = Controller$6 && Controller$6.getMemberColor ? Controller$6.getMemberColor(player.AID) : "white";
+		player.color = Controller$5 && Controller$5.getMemberColor ? Controller$5.getMemberColor(player.AID) : "white";
 		const nameTooltip = player.characterName + " (" + mapDisplay + ")";
 		const hasLife = !!(player.life && player.life.display);
 		const barVisibility = hasLife ? "visible" : "hidden";
@@ -197517,19 +197593,19 @@ var init_PartyFriendsV1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriends.js
-var publicName$11, versionInfo$11, controller;
+var publicName$10, versionInfo$10, controller;
 var init_PartyFriends = __esmMin((() => {
 	init_PartyFriendsV0();
 	init_PartyFriendsV1();
 	init_UIVersionManager();
-	publicName$11 = "PartyFriends";
-	versionInfo$11 = {
+	publicName$10 = "PartyFriends";
+	versionInfo$10 = {
 		default: PartyFriendsV0_default,
 		common: { 20170524: PartyFriendsV1_default },
 		re: {},
 		prere: {}
 	};
-	controller = UIVersionManager.getUIController(publicName$11, versionInfo$11);
+	controller = UIVersionManager.getUIController(publicName$10, versionInfo$10);
 	/**
 	* Proxy for isGroupMember
 	*/
@@ -198017,15 +198093,15 @@ var init_WinStatsV2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/WinStats/WinStats.js
-var publicName$10, versionInfo$10, WinStatsController, _selectUIVersion$5;
+var publicName$9, versionInfo$9, WinStatsController, _selectUIVersion$5;
 var init_WinStats = __esmMin((() => {
 	init_WinStats$1();
 	init_WinStatsV1();
 	init_WinStatsV2();
 	init_UIVersionManager();
 	init_KeyEventHandler();
-	publicName$10 = "WinStats";
-	versionInfo$10 = {
+	publicName$9 = "WinStats";
+	versionInfo$9 = {
 		default: WinStats_default,
 		common: {
 			20200520: WinStatsV2_default,
@@ -198034,7 +198110,7 @@ var init_WinStats = __esmMin((() => {
 		re: {},
 		prere: {}
 	};
-	WinStatsController = UIVersionManager.getUIController(publicName$10, versionInfo$10);
+	WinStatsController = UIVersionManager.getUIController(publicName$9, versionInfo$9);
 	_selectUIVersion$5 = WinStatsController.selectUIVersion;
 	WinStatsController.selectUIVersion = function() {
 		_selectUIVersion$5();
@@ -204150,24 +204226,24 @@ var init_SkillListV0 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList.js
-var publicName$9, versionInfo$9, Controller$5, _selectUIVersion$4;
+var publicName$8, versionInfo$8, Controller$4, _selectUIVersion$4;
 var init_SkillList = __esmMin((() => {
 	init_SkillList$1();
 	init_SkillListV0();
 	init_UIVersionManager();
 	init_KeyEventHandler();
-	publicName$9 = "SkillList";
-	versionInfo$9 = {
+	publicName$8 = "SkillList";
+	versionInfo$8 = {
 		default: SkillListV0_default,
 		common: { 20090601: SkillList_default },
 		re: {},
 		prere: {}
 	};
-	Controller$5 = UIVersionManager.getUIController(publicName$9, versionInfo$9);
-	_selectUIVersion$4 = Controller$5.selectUIVersion;
-	Controller$5.selectUIVersion = function() {
+	Controller$4 = UIVersionManager.getUIController(publicName$8, versionInfo$8);
+	_selectUIVersion$4 = Controller$4.selectUIVersion;
+	Controller$4.selectUIVersion = function() {
 		_selectUIVersion$4();
-		const component = Controller$5.getUI();
+		const component = Controller$4.getUI();
 		component.onKeyDown = function onKeyDown(e) {
 			if ((e.which === KEYS.ESCAPE || e.key === "Escape") && component.ui.is(":visible")) {
 				if (typeof component.toggle === "function") component.toggle();
@@ -205244,24 +205320,24 @@ var init_QuestV1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest.js
-var publicName$8, versionInfo$8, Controller$4, _selectUIVersion$3;
+var publicName$7, versionInfo$7, Controller$3, _selectUIVersion$3;
 var init_Quest$1 = __esmMin((() => {
 	init_Quest$2();
 	init_QuestV1();
 	init_UIVersionManager();
 	init_KeyEventHandler();
-	publicName$8 = "Quest";
-	versionInfo$8 = {
+	publicName$7 = "Quest";
+	versionInfo$7 = {
 		default: QuestV1_default,
 		common: { 20180307: Quest_default },
 		re: {},
 		prere: {}
 	};
-	Controller$4 = UIVersionManager.getUIController(publicName$8, versionInfo$8);
-	_selectUIVersion$3 = Controller$4.selectUIVersion;
-	Controller$4.selectUIVersion = function() {
+	Controller$3 = UIVersionManager.getUIController(publicName$7, versionInfo$7);
+	_selectUIVersion$3 = Controller$3.selectUIVersion;
+	Controller$3.selectUIVersion = function() {
 		_selectUIVersion$3();
-		const component = Controller$4.getUI();
+		const component = Controller$3.getUI();
 		component.onKeyDown = function onKeyDown(e) {
 			if ((e.which === KEYS.ESCAPE || e.key === "Escape") && component.ui.is(":visible")) {
 				if (typeof component.toggle === "function") component.toggle();
@@ -205341,7 +205417,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 					EquipmentController.getUI().toggle();
 					break;
 				case "skill":
-					Controller$5.getUI().toggle();
+					Controller$4.getUI().toggle();
 					break;
 				case "option":
 					Escape_default.ui.toggle();
@@ -205356,7 +205432,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 					WorldMap_default.toggle();
 					break;
 				case "quest":
-					Controller$4.getUI().toggle();
+					Controller$3.getUI().toggle();
 					break;
 			}
 		});
@@ -205600,7 +205676,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 					EquipmentController.getUI().toggle();
 					break;
 				case "skill":
-					Controller$5.getUI().toggle();
+					Controller$4.getUI().toggle();
 					break;
 				case "option":
 					Escape_default.ui.toggle();
@@ -205618,7 +205694,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 					WorldMap_default.toggle();
 					break;
 				case "quest":
-					Controller$4.getUI().toggle();
+					Controller$3.getUI().toggle();
 					break;
 			}
 		});
@@ -206753,7 +206829,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 					EquipmentController.getUI().toggle();
 					break;
 				case "skill":
-					Controller$5.getUI().toggle();
+					Controller$4.getUI().toggle();
 					break;
 				case "option":
 					Escape_default.ui.toggle();
@@ -206771,7 +206847,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 					Bank_default.toggle();
 					break;
 				case "quest":
-					Controller$4.getUI().toggle();
+					Controller$3.getUI().toggle();
 					break;
 				case "mail":
 					Rodex_default.toggle();
@@ -207185,7 +207261,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 					EquipmentController.getUI().toggle();
 					break;
 				case "skill":
-					Controller$5.getUI().toggle();
+					Controller$4.getUI().toggle();
 					break;
 				case "option":
 					Escape_default.ui.toggle();
@@ -207197,7 +207273,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 					Guild_default.toggle();
 					break;
 				case "quest":
-					Controller$4.getUI().toggle();
+					Controller$3.getUI().toggle();
 					break;
 				case "map":
 					WorldMap_default.toggle();
@@ -207942,7 +208018,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 					EquipmentController.getUI().toggle();
 					break;
 				case "skill":
-					Controller$5.getUI().toggle();
+					Controller$4.getUI().toggle();
 					break;
 				case "option":
 					Escape_default.ui.toggle();
@@ -207954,7 +208030,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 					Guild_default.toggle();
 					break;
 				case "quest":
-					Controller$4.getUI().toggle();
+					Controller$3.getUI().toggle();
 					break;
 				case "map":
 					WorldMap_default.toggle();
@@ -208172,7 +208248,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo.js
-var publicName$7, versionInfo$7, BasicInfoController;
+var publicName$6, versionInfo$6, BasicInfoController;
 var init_BasicInfo = __esmMin((() => {
 	init_BasicInfo$1();
 	init_BasicInfoV0();
@@ -208180,8 +208256,8 @@ var init_BasicInfo = __esmMin((() => {
 	init_BasicInfoV4();
 	init_BasicInfoV5();
 	init_UIVersionManager();
-	publicName$7 = "BasicInfo";
-	versionInfo$7 = {
+	publicName$6 = "BasicInfo";
+	versionInfo$6 = {
 		default: BasicInfoV0_default,
 		common: {
 			20200520: BasicInfoV5_default,
@@ -208196,7 +208272,7 @@ var init_BasicInfo = __esmMin((() => {
 			default: BasicInfoV4_default
 		}
 	};
-	BasicInfoController = UIVersionManager.getUIController(publicName$7, versionInfo$7);
+	BasicInfoController = UIVersionManager.getUIController(publicName$6, versionInfo$6);
 }));
 //#endregion
 //#region src/UI/Components/Rodex/WriteRodex.html?raw
@@ -215445,7 +215521,7 @@ var init_InventoryV3 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/Inventory.js
-var publicName$6, versionInfo$6, InventoryController, _selectUIVersion$2;
+var publicName$5, versionInfo$5, InventoryController, _selectUIVersion$2;
 var init_Inventory = __esmMin((() => {
 	init_InventoryV0();
 	init_InventoryV1();
@@ -215454,8 +215530,8 @@ var init_Inventory = __esmMin((() => {
 	init_UIVersionManager();
 	init_DBManager();
 	init_KeyEventHandler();
-	publicName$6 = "Inventory";
-	versionInfo$6 = {
+	publicName$5 = "Inventory";
+	versionInfo$5 = {
 		default: InventoryV0_default,
 		common: {
 			20181219: InventoryV3_default,
@@ -215465,7 +215541,7 @@ var init_Inventory = __esmMin((() => {
 		re: {},
 		prere: {}
 	};
-	InventoryController = UIVersionManager.getUIController(publicName$6, versionInfo$6);
+	InventoryController = UIVersionManager.getUIController(publicName$5, versionInfo$5);
 	_selectUIVersion$2 = InventoryController.selectUIVersion;
 	InventoryController.selectUIVersion = function() {
 		_selectUIVersion$2();
@@ -218867,7 +218943,7 @@ var init_EquipmentV4 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/Equipment.js
-var publicName$5, versionInfo$5, EquipmentController, _selectUIVersion$1;
+var publicName$4, versionInfo$4, EquipmentController, _selectUIVersion$1;
 var init_Equipment = __esmMin((() => {
 	init_EquipmentV0();
 	init_EquipmentV1();
@@ -218877,8 +218953,8 @@ var init_Equipment = __esmMin((() => {
 	init_UIVersionManager();
 	init_DBManager();
 	init_KeyEventHandler();
-	publicName$5 = "Equipment";
-	versionInfo$5 = {
+	publicName$4 = "Equipment";
+	versionInfo$4 = {
 		default: EquipmentV0_default,
 		common: {
 			20220831: EquipmentV4_default,
@@ -218889,7 +218965,7 @@ var init_Equipment = __esmMin((() => {
 		re: {},
 		prere: {}
 	};
-	EquipmentController = UIVersionManager.getUIController(publicName$5, versionInfo$5);
+	EquipmentController = UIVersionManager.getUIController(publicName$4, versionInfo$4);
 	_selectUIVersion$1 = EquipmentController.selectUIVersion;
 	EquipmentController.selectUIVersion = function() {
 		_selectUIVersion$1();
@@ -219378,8 +219454,8 @@ function onMemberTalk$1(pkt) {
 * @param {object} pkt - PACKET.ZC.NOTIFY_POSITION_TO_GROUPM
 */
 function onMemberMove$1(pkt) {
-	if (pkt.xPos < 0 || pkt.yPos < 0) Controller$6.getUI().removePartyMemberMark(pkt.AID);
-	else Controller$6.getUI().addPartyMemberMark(pkt.AID, pkt.xPos, pkt.yPos);
+	if (pkt.xPos < 0 || pkt.yPos < 0) Controller$5.getUI().removePartyMemberMark(pkt.AID);
+	else Controller$5.getUI().addPartyMemberMark(pkt.AID, pkt.xPos, pkt.yPos);
 }
 /**
 * Get party information
@@ -220460,8 +220536,8 @@ function onMemberTalk(pkt) {
 * @param {object} pkt - PACKET.ZC.NOTIFY_POSITION_TO_GUILDM
 */
 function onMemberMove(pkt) {
-	if (pkt.xPos < 0 || pkt.yPos < 0) Controller$6.getUI().removeGuildMemberMark(pkt.AID);
-	else Controller$6.getUI().addGuildMemberMark(pkt.AID, pkt.xPos, pkt.yPos);
+	if (pkt.xPos < 0 || pkt.yPos < 0) Controller$5.getUI().removeGuildMemberMark(pkt.AID);
+	else Controller$5.getUI().addGuildMemberMark(pkt.AID, pkt.xPos, pkt.yPos);
 }
 /**
 * Get guild informations
@@ -244984,7 +245060,7 @@ var init_ShortCut = __esmMin((() => {
 		this.magnet.BOTTOM = _preferences$23.magnet_bottom;
 		this.magnet.LEFT = _preferences$23.magnet_left;
 		this.magnet.RIGHT = _preferences$23.magnet_right;
-		Controller$5.getUI().onUpdateSkill = onUpdateSkill;
+		Controller$4.getUI().onUpdateSkill = onUpdateSkill;
 		updateEmptySlotTooltips();
 	};
 	/**
@@ -245032,7 +245108,7 @@ var init_ShortCut = __esmMin((() => {
 		else if (id > 8e3 && id < 8044) {
 			SkillListMH_default.mercenary.useSkillID(id, level);
 			SkillListMH_default.homunculus.useSkillID(id, level);
-		} else Controller$5.getUI().useSkillID(id, level);
+		} else Controller$4.getUI().useSkillID(id, level);
 	};
 	ShortCut.getSkillById = function getSkillById(id) {
 		let skill;
@@ -245040,7 +245116,7 @@ var init_ShortCut = __esmMin((() => {
 		else if (id > 8e3 && id < 8044) {
 			skill = SkillListMH_default.mercenary.getSkillById(id);
 			if (!skill) skill = SkillListMH_default.homunculus.getSkillById(id);
-		} else skill = Controller$5.getUI().getSkillById(id);
+		} else skill = Controller$4.getUI().getSkillById(id);
 		return skill;
 	};
 	/**
@@ -319421,7 +319497,7 @@ var init_Roulette$1 = __esmMin((() => {
 		const maxAttempts = 20;
 		const tryAddButton = function() {
 			attempts++;
-			const miniMapComponent = Controller$6.getUI();
+			const miniMapComponent = Controller$5.getUI();
 			if (miniMapComponent && miniMapComponent.ui) {
 				clearTimeout(retryTimeout);
 				addButtonToMiniMap(miniMapComponent.ui);
@@ -320949,7 +321025,7 @@ var init_PlayerViewEquipV2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PlayerViewEquip/PlayerViewEquip.js
-var publicName$4, versionInfo$4, PlayerViewEquipController, _selectUIVersion;
+var publicName$3, versionInfo$3, PlayerViewEquipController, _selectUIVersion;
 var init_PlayerViewEquip = __esmMin((() => {
 	init_PlayerViewEquipV0();
 	init_PlayerViewEquipV1();
@@ -320957,8 +321033,8 @@ var init_PlayerViewEquip = __esmMin((() => {
 	init_UIVersionManager();
 	init_DBManager();
 	init_KeyEventHandler();
-	publicName$4 = "PlayerViewEquip";
-	versionInfo$4 = {
+	publicName$3 = "PlayerViewEquip";
+	versionInfo$3 = {
 		default: PlayerViewEquipV0_default,
 		common: {
 			20150225: PlayerViewEquipV2_default,
@@ -320967,7 +321043,7 @@ var init_PlayerViewEquip = __esmMin((() => {
 		re: {},
 		prere: {}
 	};
-	PlayerViewEquipController = UIVersionManager.getUIController(publicName$4, versionInfo$4);
+	PlayerViewEquipController = UIVersionManager.getUIController(publicName$3, versionInfo$3);
 	_selectUIVersion = PlayerViewEquipController.selectUIVersion;
 	PlayerViewEquipController.selectUIVersion = function() {
 		_selectUIVersion();
@@ -321502,7 +321578,7 @@ function onParameterChange$1(pkt) {
 			}
 			break;
 		case StatusProperty_default.SKPOINT:
-			Controller$5.getUI().setPoints(amount);
+			Controller$4.getUI().setPoints(amount);
 			break;
 		case StatusProperty_default.STR:
 			WinStatsController.getUI().update("str", pkt.defaultStatus);
@@ -321607,7 +321683,7 @@ function onParameterChange$1(pkt) {
 			break;
 		case StatusProperty_default.JOBLEVEL:
 			BasicInfoController.getUI().update("jlvl", amount);
-			Controller$5.getUI().onLevelUp();
+			Controller$4.getUI().onLevelUp();
 			break;
 		case StatusProperty_default.VAR_SP_POW:
 			WinStatsController.getUI().update("pow", pkt.defaultStatus);
@@ -322444,13 +322520,13 @@ function onCutin(pkt) {
 function onMinimapMarker(pkt) {
 	switch (pkt.type) {
 		case 0:
-			Controller$6.getUI().addNpcMark(pkt.id, pkt.xPos, pkt.yPos, pkt.color, 15e3);
+			Controller$5.getUI().addNpcMark(pkt.id, pkt.xPos, pkt.yPos, pkt.color, 15e3);
 			break;
 		case 1:
-			Controller$6.getUI().addNpcMark(pkt.id, pkt.xPos, pkt.yPos, pkt.color, Infinity);
+			Controller$5.getUI().addNpcMark(pkt.id, pkt.xPos, pkt.yPos, pkt.color, Infinity);
 			break;
 		case 2:
-			Controller$6.getUI().removeNpcMark(pkt.id);
+			Controller$5.getUI().removeNpcMark(pkt.id);
 			break;
 	}
 }
@@ -323770,7 +323846,7 @@ function onEntityQuestNotifyEffect(pkt) {
 			break;
 		default: return;
 	}
-	Controller$6.getUI().addNpcMark(pkt.npcID, pkt.xPos, pkt.yPos, color, Infinity);
+	Controller$5.getUI().addNpcMark(pkt.npcID, pkt.xPos, pkt.yPos, color, Infinity);
 }
 /**
 * Updating entity direction
@@ -324741,8 +324817,8 @@ function onNotifyExp(pkt) {
 *   probably it's not updated with Tombstone system, but Tombstones are fail...
 */
 function onMarkMvp(pkt) {
-	Controller$6.getUI().removeNpcMark("mvp");
-	if (pkt.infoType == 1) Controller$6.getUI().addNpcMark("mvp", pkt.xPos, pkt.yPos, 16711680, Infinity);
+	Controller$5.getUI().removeNpcMark("mvp");
+	if (pkt.infoType == 1) Controller$5.getUI().addNpcMark("mvp", pkt.xPos, pkt.yPos, 16711680, Infinity);
 	if (pkt.infoType == 0) ChatBox_default.addText("Boss monster not found.", ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
 }
 /**
@@ -328120,7 +328196,7 @@ function onSkillResult(pkt) {
 * @param {object} pkt - PACKET_ZC_SKILLINFO_LIST
 */
 function onSkillList$2(pkt) {
-	Controller$5.getUI().setSkills(pkt.skillList);
+	Controller$4.getUI().setSkills(pkt.skillList);
 }
 /**
 * Update a specified skill
@@ -328128,7 +328204,7 @@ function onSkillList$2(pkt) {
 * @param {object} pkt - PACKET.ZC.SKILLINFO_UPDATE
 */
 function onSkillUpdate$2(pkt) {
-	Controller$5.getUI().updateSkill(pkt);
+	Controller$4.getUI().updateSkill(pkt);
 }
 /**
 * List of skills/items in hotkey
@@ -328145,7 +328221,7 @@ function onShortCutList(pkt) {
 * @param {object} pkt - PACKET.ZC.ADD_SKILL
 */
 function onSkillAdded(pkt) {
-	Controller$5.getUI().addSkill(pkt.data);
+	Controller$4.getUI().addSkill(pkt.data);
 }
 /**
 * Server notify use that we need to cast a skill
@@ -328153,7 +328229,7 @@ function onSkillAdded(pkt) {
 * @param {object} pkt - PACKET.ZC.AUTORUN_SKILL
 */
 function onAutoCastSkill(pkt) {
-	Controller$5.getUI().useSkill(pkt.data);
+	Controller$4.getUI().useSkill(pkt.data);
 }
 /**
 * Get a list of item to identify
@@ -328393,7 +328469,7 @@ function onUseSkill(id, level, targetID) {
 	else entity = SessionStorage_default.Entity;
 	if (entity && entity.amotionTick > Renderer.tick) return;
 	const target = EntityManager.get(targetID) || entity;
-	const skill = Controller$5.getUI().getSkillById(id);
+	const skill = Controller$4.getUI().getSkillById(id);
 	const out = [];
 	if (skill) range = skill.attackRange + 1;
 	else if (SkillInfo[id]) range = SkillInfo[id].AttackRange[level - 1] + 1;
@@ -328510,8 +328586,8 @@ function onSense(pkt) {
 	Sense_default.setWindow(pkt);
 }
 function hookSkillWindow() {
-	Controller$5.getUI().onIncreaseSkill = onIncreaseSkill;
-	Controller$5.getUI().onUseSkill = onUseSkill;
+	Controller$4.getUI().onIncreaseSkill = onIncreaseSkill;
+	Controller$4.getUI().onUseSkill = onUseSkill;
 }
 /**
 * Initialize
@@ -328634,7 +328710,7 @@ var init_Skill = __esmMin((() => {
 		}
 		if (entity && entity.amotionTick > Renderer.tick) return;
 		const pos = entity.position;
-		const skill = Controller$5.getUI().getSkillById(id);
+		const skill = Controller$4.getUI().getSkillById(id);
 		const out = [];
 		if (skill) range = skill.attackRange + 1;
 		else if (SkillInfo[id]) range = SkillInfo[id].AttackRange[level - 1] + 1;
@@ -331417,7 +331493,7 @@ function onAllQuestList(pkt) {
 		}
 		quest_list[local_quest.questID] = local_quest;
 	}
-	Controller$4.getUI().setQuestList(quest_list);
+	Controller$3.getUI().setQuestList(quest_list);
 }
 /**
 * Quest added
@@ -331461,7 +331537,7 @@ function onAddQuest(pkt) {
 		const ID = hunt.huntID ? hunt.huntID : hunt.mobGID;
 		quest.hunt_list[ID] = local_hunt;
 	}
-	Controller$4.getUI().addQuest(quest, quest.questID);
+	Controller$3.getUI().addQuest(quest, quest.questID);
 }
 /**
 * Quest Hunt updated
@@ -331472,7 +331548,7 @@ function onUpdateMissionHunt(pkt) {
 	for (let i = 0; i < pkt.questCount; i++) {
 		const local_hunt = pkt.hunt[i];
 		const ID = local_hunt.huntID ? local_hunt.huntID : local_hunt.mobGID;
-		if (local_hunt.questID !== void 0) if (Controller$4.getUI().questExists(local_hunt.questID)) Controller$4.getUI().updateMissionHunt(local_hunt, local_hunt.questID, ID);
+		if (local_hunt.questID !== void 0) if (Controller$3.getUI().questExists(local_hunt.questID)) Controller$3.getUI().updateMissionHunt(local_hunt, local_hunt.questID, ID);
 		else {
 			const quest_info = DB.getQuestInfo(local_hunt.questID);
 			const local_quest = {
@@ -331505,11 +331581,11 @@ function onUpdateMissionHunt(pkt) {
 				maxCount: local_hunt.maxCount || 0,
 				mobName: local_hunt.mobName || ""
 			};
-			Controller$4.getUI().addQuest(local_quest, local_quest.questID);
+			Controller$3.getUI().addQuest(local_quest, local_quest.questID);
 		}
 		else {
-			const quest_saved_id = Controller$4.getUI().getQuestIDByServerID(ID);
-			if (quest_saved_id > 0) Controller$4.getUI().updateMissionHunt(local_hunt, quest_saved_id, ID);
+			const quest_saved_id = Controller$3.getUI().getQuestIDByServerID(ID);
+			if (quest_saved_id > 0) Controller$3.getUI().updateMissionHunt(local_hunt, quest_saved_id, ID);
 		}
 	}
 }
@@ -331519,7 +331595,7 @@ function onUpdateMissionHunt(pkt) {
 * @param {object} pkt - PACKET.ZC.ACTIVE_QUEST
 */
 function onActiveQuest(pkt) {
-	Controller$4.getUI().toggleQuestActive(pkt.questID, pkt.active);
+	Controller$3.getUI().toggleQuestActive(pkt.questID, pkt.active);
 }
 /**
 * Quest deleted
@@ -331527,7 +331603,7 @@ function onActiveQuest(pkt) {
 * @param {object} pkt - PACKET.ZC.DEL_QUEST
 */
 function onDeleteQuest(pkt) {
-	Controller$4.getUI().removeQuest(pkt.questID);
+	Controller$3.getUI().removeQuest(pkt.questID);
 }
 /**
 * Initialize
@@ -332910,8 +332986,8 @@ function onMapChange(pkt) {
 		}
 		Camera.setTarget(SessionStorage_default.Entity);
 		Camera.init();
-		Controller$6.getUI().append();
-		Controller$6.getUI().setMap(MapRenderer.currentMap);
+		Controller$5.getUI().append();
+		Controller$5.getUI().setMap(MapRenderer.currentMap);
 		if (Configs.get("enableMapName")) {
 			MapName_default.setMap(MapRenderer.currentMap);
 			MapName_default.append();
@@ -332931,7 +333007,7 @@ function onMapChange(pkt) {
 		ShortCut_default.append();
 		ChatRoomCreate_default.append();
 		Emoticons_default.append();
-		Controller$5.getUI().append();
+		Controller$4.getUI().append();
 		FPS_default.append();
 		controller.getUI().append();
 		Guild_default.append();
@@ -332945,7 +333021,7 @@ function onMapChange(pkt) {
 		if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.append();
 		if (SessionStorage_default.PCGoldTimer) PCGoldTimer_default.append();
 		WinStatsController.getUI().append();
-		Controller$4.getUI().append();
+		Controller$3.getUI().append();
 		if (Configs.get("enableCashShop")) CashShopIcon_default.append();
 		if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.append();
 		Plugins.init();
@@ -333048,7 +333124,7 @@ function onRestartAnswer(pkt) {
 		StatusIcons_default.clean();
 		ChatBox_default.clean();
 		ShortCut_default.clean();
-		Controller$4.getUI().clean();
+		Controller$3.getUI().clean();
 		controller.getUI().clean();
 		CashShop_default.clean();
 		SessionStorage_default.Achievement = null;
@@ -333071,7 +333147,7 @@ function onDisconnectAnswer(pkt) {
 			StatusIcons_default.clean();
 			ChatBox_default.clean();
 			ShortCut_default.clean();
-			Controller$4.getUI().clean();
+			Controller$3.getUI().clean();
 			controller.getUI().clean();
 			Renderer.stop();
 			onExitSuccess();
@@ -333514,9 +333590,9 @@ var init_MapEngine = __esmMin((() => {
 			}, true);
 			if (MapEngine.needsUIVerUpdate || !_isInitialised) {
 				if (PacketVerManager_default.value < 20200520) BasicInfoController.selectUIVersion();
-				Controller$6.selectUIVersion();
 				Controller$5.selectUIVersion();
 				Controller$4.selectUIVersion();
+				Controller$3.selectUIVersion();
 				EquipmentController.selectUIVersion();
 				PlayerViewEquipController.selectUIVersion();
 				WinStatsController.selectUIVersion();
@@ -333647,11 +333723,11 @@ var init_MapEngine = __esmMin((() => {
 				WhisperBox.onRequestTalk = onRequestTalk;
 			}
 			if (MapEngine.needsUIVerUpdate || !_isInitialised) {
-				Controller$6.getUI().prepare();
 				Controller$5.getUI().prepare();
+				Controller$4.getUI().prepare();
 				if (PacketVerManager_default.value < 20200520) BasicInfoController.getUI().prepare();
 				EquipmentController.getUI().prepare();
-				Controller$4.getUI().prepare();
+				Controller$3.getUI().prepare();
 				WinStatsController.getUI().prepare();
 				controller.selectUIVersion();
 				WinStatsController.getUI().onRequestUpdate = onRequestStatUpdate;
@@ -334142,113 +334218,6 @@ var init_CharSelect$2 = __esmMin((() => {
 	CharSelect_default$1 = "#charselect {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 342px;\r\n	z-index: 100;\r\n}\r\n\r\n/** Box **/\r\n#charselect .box_select {\r\n	position: absolute;\r\n	width: 139px;\r\n	height: 144px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n}\r\n#charselect canvas {\r\n	position: absolute;\r\n	top: 44px;\r\n}\r\n#charselect .slot1 {\r\n	left: 60px;\r\n}\r\n#charselect .slot2 {\r\n	left: 224px;\r\n}\r\n#charselect .slot3 {\r\n	left: 386px;\r\n}\r\n\r\n/** Arrow **/\r\n#charselect .arrow {\r\n	position: absolute;\r\n	top: 105px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#charselect .arrow.left {\r\n	left: 40px;\r\n}\r\n#charselect .arrow.right {\r\n	right: 40px;\r\n}\r\n\r\n/** Slot info **/\r\n#charselect .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#charselect .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#charselect .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#charselect .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#charselect .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#charselect .charinfo {\r\n	position: absolute;\r\n	width: 285px;\r\n	top: 204px;\r\n	left: 16px;\r\n}\r\n#charselect .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#charselect .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#charselect .charinfo .job {\r\n	left: 52px;\r\n	top: 18px;\r\n}\r\n#charselect .charinfo .lvl {\r\n	left: 52px;\r\n	top: 34px;\r\n}\r\n#charselect .charinfo .exp {\r\n	left: 52px;\r\n	top: 50px;\r\n}\r\n#charselect .charinfo .hp {\r\n	left: 52px;\r\n	top: 66px;\r\n}\r\n#charselect .charinfo .sp {\r\n	left: 52px;\r\n	top: 82px;\r\n}\r\n#charselect .charinfo .map {\r\n	left: 52px;\r\n	top: 98px;\r\n	width: 238px;\r\n}\r\n#charselect .charinfo .str {\r\n	left: 200px;\r\n	top: 2px;\r\n}\r\n#charselect .charinfo .agi {\r\n	left: 200px;\r\n	top: 18px;\r\n}\r\n#charselect .charinfo .vit {\r\n	left: 200px;\r\n	top: 34px;\r\n}\r\n#charselect .charinfo .int {\r\n	left: 200px;\r\n	top: 50px;\r\n}\r\n#charselect .charinfo .dex {\r\n	left: 200px;\r\n	top: 66px;\r\n}\r\n#charselect .charinfo .luk {\r\n	left: 200px;\r\n	top: 82px;\r\n}\r\n\r\n/** Buttons **/\r\n#charselect .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#charselect .btn {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#charselect .ok,\r\n#charselect .make {\r\n	right: 50px;\r\n}\r\n#charselect .cancel {\r\n	right: 4px;\r\n}\r\n#charselect .delete {\r\n	left: 4px;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/WinLogin/WinLogin/WinLoginBackground.html?raw
-var WinLoginBackground_default$2;
-var init_WinLoginBackground$3 = __esmMin((() => {
-	WinLoginBackground_default$2 = "<div id=\"login_background\">\r\n	<div class=\"login_background_image\" data-background=\"bgi_temp.bmp\"></div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLogin/WinLoginBackground.css?raw
-var WinLoginBackground_default$1;
-var init_WinLoginBackground$2 = __esmMin((() => {
-	WinLoginBackground_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#login_background {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n	z-index: 0;\r\n}\r\n#login_background .login_background_image {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-size: 100% 100%;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLogin/WinLoginBackground.js
-var WinLoginBackground, WinLoginBackground_default;
-var init_WinLoginBackground$1 = __esmMin((() => {
-	init_UIManager();
-	init_GUIComponent();
-	init_WinLoginBackground$3();
-	init_WinLoginBackground$2();
-	WinLoginBackground = new GUIComponent("WinLoginBackground", WinLoginBackground_default$1);
-	WinLoginBackground.render = () => WinLoginBackground_default$2;
-	WinLoginBackground.init = function init() {};
-	WinLoginBackground.onAppend = function onAppend() {};
-	WinLoginBackground.mouseMode = GUIComponent.MouseMode.CROSS;
-	WinLoginBackground_default = UIManager.addComponent(WinLoginBackground);
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginV2/WinLoginV2Background.html?raw
-var WinLoginV2Background_default$2;
-var init_WinLoginV2Background$2 = __esmMin((() => {
-	WinLoginV2Background_default$2 = "<div id=\"login_background\">\r\n	<div id=\"login_background_image_1\" class=\"login_background_image\" data-background=\"t_¹è°æ1-1.bmp\"></div>\r\n	<div id=\"login_background_image_2\" class=\"login_background_image\" data-background=\"t_¹è°æ1-2.bmp\"></div>\r\n	<div id=\"login_background_image_3\" class=\"login_background_image\" data-background=\"t_¹è°æ1-3.bmp\"></div>\r\n	<div id=\"login_background_image_4\" class=\"login_background_image\" data-background=\"t_¹è°æ1-4.bmp\"></div>\r\n	<div id=\"login_background_image_5\" class=\"login_background_image\" data-background=\"t_¹è°æ2-1.bmp\"></div>\r\n	<div id=\"login_background_image_6\" class=\"login_background_image\" data-background=\"t_¹è°æ2-2.bmp\"></div>\r\n	<div id=\"login_background_image_7\" class=\"login_background_image\" data-background=\"t_¹è°æ2-3.bmp\"></div>\r\n	<div id=\"login_background_image_8\" class=\"login_background_image\" data-background=\"t_¹è°æ2-4.bmp\"></div>\r\n	<div id=\"login_background_image_9\" class=\"login_background_image\" data-background=\"t_¹è°æ3-1.bmp\"></div>\r\n	<div id=\"login_background_image_10\" class=\"login_background_image\" data-background=\"t_¹è°æ3-2.bmp\"></div>\r\n	<div id=\"login_background_image_11\" class=\"login_background_image\" data-background=\"t_¹è°æ3-3.bmp\"></div>\r\n	<div id=\"login_background_image_12\" class=\"login_background_image\" data-background=\"t_¹è°æ3-4.bmp\"></div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginV2/WinLoginV2Background.css?raw
-var WinLoginV2Background_default$1;
-var init_WinLoginV2Background$1 = __esmMin((() => {
-	WinLoginV2Background_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#login_background {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n	z-index: 0;\r\n}\r\n#login_background .login_background_image {\r\n	float: left;\r\n	width: 25%;\r\n	height: 33.3%;\r\n	background-size: 100% 100%;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginV2/WinLoginV2Background.js
-var WinLoginV2Background, WinLoginV2Background_default;
-var init_WinLoginV2Background = __esmMin((() => {
-	init_UIManager();
-	init_GUIComponent();
-	init_WinLoginV2Background$2();
-	init_WinLoginV2Background$1();
-	WinLoginV2Background = new GUIComponent("WinLoginV2Background", WinLoginV2Background_default$1);
-	WinLoginV2Background.render = () => WinLoginV2Background_default$2;
-	/**
-	* Initialize win_login UI - Inherit from UIComponent
-	*/
-	WinLoginV2Background.init = function init() {};
-	/**
-	* Once the component is on html - InHerit from UIComponent
-	*/
-	WinLoginV2Background.onAppend = function onAppend() {};
-	WinLoginV2Background.mouseMode = GUIComponent.MouseMode.CROSS;
-	WinLoginV2Background_default = UIManager.addComponent(WinLoginV2Background);
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginV3/WinLoginV3Background.html?raw
-var WinLoginV3Background_default$2;
-var init_WinLoginV3Background$2 = __esmMin((() => {
-	WinLoginV3Background_default$2 = "<div id=\"login_background\">\r\n	<div class=\"login_background_image\" data-background=\"t_login.jpg\"></div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginV3/WinLoginV3Background.css?raw
-var WinLoginV3Background_default$1;
-var init_WinLoginV3Background$1 = __esmMin((() => {
-	WinLoginV3Background_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#login_background {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n	z-index: 0;\r\n}\r\n#login_background .login_background_image {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-size: 100% 100%;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginV3/WinLoginV3Background.js
-var WinLoginV3Background, WinLoginV3Background_default;
-var init_WinLoginV3Background = __esmMin((() => {
-	init_UIManager();
-	init_GUIComponent();
-	init_WinLoginV3Background$2();
-	init_WinLoginV3Background$1();
-	WinLoginV3Background = new GUIComponent("WinLoginV3Background", WinLoginV3Background_default$1);
-	WinLoginV3Background.render = () => WinLoginV3Background_default$2;
-	WinLoginV3Background.init = function init() {};
-	WinLoginV3Background.onAppend = function onAppend() {};
-	WinLoginV3Background.mouseMode = GUIComponent.MouseMode.CROSS;
-	WinLoginV3Background_default = UIManager.addComponent(WinLoginV3Background);
-}));
-//#endregion
-//#region src/UI/Components/WinLogin/WinLoginBackground.js
-var publicName$3, versionInfo$3, Controller$3;
-var init_WinLoginBackground = __esmMin((() => {
-	init_WinLoginBackground$1();
-	init_WinLoginV2Background();
-	init_WinLoginV3Background();
-	init_UIVersionManager();
-	publicName$3 = "WinLoginBackground";
-	versionInfo$3 = {
-		default: WinLoginBackground_default,
-		common: {
-			20221207: WinLoginV3Background_default,
-			20181114: WinLoginV2Background_default
-		},
-		re: {},
-		prere: {}
-	};
-	Controller$3 = UIVersionManager.getUIController(publicName$3, versionInfo$3);
-}));
-//#endregion
 //#region src/UI/Components/CharSelect/CharSelect/CharSelect.js
 /**
 * Generic method to handle mousedown on arrow
@@ -334392,7 +334361,6 @@ var init_CharSelect$1 = __esmMin((() => {
 	init_UIComponent();
 	init_CharSelect$3();
 	init_CharSelect$2();
-	init_WinLoginBackground();
 	CharSelect = new UIComponent("CharSelect", CharSelect_default$2, CharSelect_default$1);
 	_preferences$4 = Preferences.get("CharSelect", { index: 0 }, 1);
 	_maxSlots$3 = 27;
@@ -334433,7 +334401,6 @@ var init_CharSelect$1 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelect.onAppend = function onAppend() {
-		if (Controller$3) Controller$3.getUI().append();
 		_index$3 = _preferences$4.index;
 		this.ui.find(".slotinfo .number").text(_list$3.length + " / " + _maxSlots$3);
 		this.ui.find(".pageinfo .count").text(_maxSlots$3 / 3);
@@ -334835,7 +334802,6 @@ var init_CharSelectV2 = __esmMin((() => {
 	init_PacketVerManager();
 	init_CharSelectV2$2();
 	init_CharSelectV2$1();
-	init_WinLoginBackground();
 	CharSelectV2 = new UIComponent("CharSelectV2", CharSelectV2_default$2, CharSelectV2_default$1);
 	_preferences$3 = Preferences.get("CharSelectV2", { index: 0 }, 1);
 	_maxSlots$2 = 27;
@@ -334878,7 +334844,6 @@ var init_CharSelectV2 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelectV2.onAppend = function onAppend() {
-		if (Controller$3) Controller$3.getUI().append();
 		_index$2 = _preferences$3.index;
 		this.ui.find(".slotinfo .number").text(_list$2.length + " / " + _maxSlots$2);
 		this.ui.find(".pageinfo .count").text(_maxSlots$2 / 3);
@@ -335386,7 +335351,6 @@ var init_CharSelectV3 = __esmMin((() => {
 	init_PacketVerManager();
 	init_CharSelectV3$2();
 	init_CharSelectV3$1();
-	init_WinLoginBackground();
 	CharSelectV3 = new UIComponent("CharSelectV3", CharSelectV3_default$2, CharSelectV3_default$1);
 	_preferences$2 = Preferences.get("CharSelectV3", { index: 0 }, 1);
 	_maxSlots$1 = 27;
@@ -335441,7 +335405,6 @@ var init_CharSelectV3 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelectV3.onAppend = function onAppend() {
-		if (Controller$3) Controller$3.getUI().append();
 		_index$1 = _preferences$2.index;
 		this.ui.find(".slotinfo .number").text(_list$1.length + " / " + _maxSlots$1);
 		this.ui.find(".pageinfo .count").text(_maxSlots$1 / 3);
@@ -335889,7 +335852,6 @@ var init_CharSelectV4 = __esmMin((() => {
 	init_CharSelectV4$1();
 	init_Client();
 	init_jquery();
-	init_WinLoginBackground();
 	CharSelectV4 = new UIComponent("CharSelectV4", CharSelectV4_default$2, CharSelectV4_default$1);
 	_preferences$1 = Preferences.get("CharSelectV4", { index: 0 }, 1);
 	_maxSlots = 15;
@@ -335940,7 +335902,6 @@ var init_CharSelectV4 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelectV4.onAppend = function onAppend() {
-		if (Controller$3) Controller$3.getUI().append();
 		CharSelectV4.clearAllSlots();
 		if (CharSelectV4.ui) startCountdownInterval();
 		moveCursorTo(_index);
@@ -340822,7 +340783,6 @@ function createWinLogin({ name, htmlText, cssText }) {
 		root.querySelector(".exit").addEventListener("click", exit);
 	};
 	Component.onAppend = function onAppend() {
-		Controller$3.getUI().append();
 		_inputUsername.value = _preferences.saveID ? _preferences.ID : "";
 		_inputPassword.value = "";
 		Client.loadFile(`${DB.INTERFACE_PATH}login_interface/chk_save${_preferences.saveID ? "on" : "off"}.bmp`, (url) => {
@@ -340897,7 +340857,6 @@ var init_WinLoginCommon = __esmMin((() => {
 	init_UIManager();
 	init_GUIComponent();
 	init_Elements();
-	init_WinLoginBackground();
 }));
 //#endregion
 //#region src/UI/Components/WinLogin/WinLogin/WinLogin.js
@@ -341108,7 +341067,6 @@ function onConnectionAccepted(pkt) {
 			WinList_default.remove();
 			Controller.getUI().append();
 		};
-		Controller$3.getUI().append();
 		WinList_default.append();
 		WinList_default.setList(list);
 	}
@@ -341277,7 +341235,6 @@ var init_LoginEngine = __esmMin((() => {
 	init_spark_md5_min();
 	init_Rijndael();
 	init_WinLogin();
-	init_WinLoginBackground();
 	init_preload_helper();
 	WinLoading = WinPopup_default.clone("WinLoading");
 	WinLoading.init = function() {
@@ -341322,7 +341279,7 @@ var init_LoginEngine = __esmMin((() => {
 				Thread.send("SET_HOST", remoteClient);
 				if (old_server != null && (old_server.address != _server.address || old_server.port != _server.port)) q.add(() => {
 					DB.onReady = () => {
-						Background.setImage("bgi_temp.bmp");
+						Background.setLoginBackground();
 						q._next();
 					};
 					DB.onProgress = (i, count) => {
@@ -341331,7 +341288,7 @@ var init_LoginEngine = __esmMin((() => {
 					UIManager.removeComponents();
 					Background.init();
 					Background.resize(Renderer.width, Renderer.height);
-					Background.setImage("bgi_temp.bmp", () => {
+					Background.setLoginBackground(() => {
 						DB.isLoaded = false;
 						DB.init();
 					});
@@ -341341,7 +341298,7 @@ var init_LoginEngine = __esmMin((() => {
 			SessionStorage_default.AdminList = server.adminList || [];
 			Plugins.init();
 			Controller.selectUIVersion();
-			Controller$3.selectUIVersion();
+			Background.setLoginBackground();
 			Controller.getUI().onConnectionRequest = onConnectionRequest;
 			Controller.getUI().onExitRequest = onExitRequest;
 			if (autoLogin instanceof Array && autoLogin[0] && autoLogin[1]) {
@@ -342197,10 +342154,8 @@ function onReload() {
 	let i;
 	const count = list.length;
 	if (count === 0) UIManager.showMessageBox("Sorry, no server found.", "ok", GameEngine.init);
-	else if (count === 1 && Configs.get("skipServerList")) {
-		LoginEngine.init(_servers[0]);
-		Background.remove();
-	} else {
+	else if (count === 1 && Configs.get("skipServerList")) LoginEngine.init(_servers[0]);
+	else {
 		for (i = 0; i < count; ++i) list[i] = _servers[i].display;
 		WinList_default.append();
 		WinList_default.setList(list);
@@ -342212,7 +342167,6 @@ function onReload() {
 function onReadyLoginServer(index) {
 	_previous_server = _servers[index];
 	WinList_default.remove();
-	Background.remove();
 	LoginEngine.init(_servers[index]);
 }
 /**
