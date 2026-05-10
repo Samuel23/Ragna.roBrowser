@@ -107722,6 +107722,11 @@ var init_PacketStructure = __esmMin((() => {
 		this.maxhp = fp.readULong();
 	};
 	PACKET.ZC.NOTIFY_MONSTER_HP.size = 14;
+	PACKET.ZC.HP_INFO_TINY = function PACKET_ZC_HP_INFO_TINY(fp, end) {
+		this.GID = fp.readULong();
+		this.hp = fp.readUChar();
+	};
+	PACKET.ZC.HP_INFO_TINY.size = 7;
 	PACKET.ZC.ALL_QUEST_LIST_V2 = function PACKET_ZC_ALL_QUEST_LIST_V2(fp, end) {
 		this.questCount = fp.readLong();
 		this.QuestList = (function(questCount) {
@@ -145524,6 +145529,7 @@ var init_PacketRegister = __esmMin((() => {
 		2600: PACKET.ZC.ACK_OPENSTORE2,
 		2605: PACKET.ZC.EQUIPWIN_MICROSCOPE_V5,
 		2608: PACKET.ZC.ACK_REQNAMEALL2,
+		2614: PACKET.ZC.HP_INFO_TINY,
 		2615: PACKET.ZC.ITEM_PICKUP_ACK7,
 		2617: PACKET.CH.MAKE_CHAR3,
 		2619: PACKET.ZC.HAT_EFFECT,
@@ -148201,8 +148207,10 @@ function send(buffer) {
 * @param {function} struct - packet structure callback
 */
 function registerPacket(id, Struct) {
-	Struct.id = id;
-	Packets.list[id] = new Packets(Struct.name, Struct, Struct.size);
+	if (Struct) {
+		Struct.id = id;
+		Packets.list[id] = new Packets(Struct.name, Struct, Struct.size);
+	} else console.error("registerPacket: Struct is undefined for id: 0x" + parseInt(id, 10).toString(16));
 }
 /**
 * Hook a Packet
@@ -323820,6 +323828,26 @@ function onEntityLifeUpdate(pkt) {
 		entity.life.hp = pkt.hp;
 		entity.life.hp_max = pkt.maxhp;
 		entity.life.update();
+		entity.life.display = true;
+	}
+}
+/**
+* Update entity's life (Tiny)
+*
+* @param {object} pkt - PACKET.ZC.HP_INFO_TINY
+*/
+function onEntityLifeUpdateTiny(pkt) {
+	const hp = pkt.hp * 5;
+	EntityManager.storeLife(pkt.GID, {
+		hp,
+		hp_max: 100
+	});
+	const entity = EntityManager.get(pkt.GID);
+	if (entity) {
+		entity.life.hp = hp;
+		entity.life.hp_max = 100;
+		entity.life.update();
+		entity.life.display = true;
 	}
 }
 /**
@@ -325054,6 +325082,7 @@ function EntityEngine() {
 	Network.hookPacket(PACKET.ZC.RESURRECTION, onEntityResurect);
 	Network.hookPacket(PACKET.ZC.EMOTION, onEntityEmotion);
 	Network.hookPacket(PACKET.ZC.NOTIFY_MONSTER_HP, onEntityLifeUpdate);
+	Network.hookPacket(PACKET.ZC.HP_INFO_TINY, onEntityLifeUpdateTiny);
 	Network.hookPacket(PACKET.ZC.QUEST_NOTIFY_EFFECT, onEntityQuestNotifyEffect);
 	Network.hookPacket(PACKET.ZC.BLADESTOP, onBladeStopPacket);
 	Network.hookPacket(PACKET.ZC.NOTIFY_EXP, onNotifyExp);
