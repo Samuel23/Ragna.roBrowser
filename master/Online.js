@@ -82359,7 +82359,7 @@ var init_preload_helper = __esmMin((() => {
 //#region src/UI/Common.css?raw
 var Common_default$1;
 var init_Common$1 = __esmMin((() => {
-	Common_default$1 = "/* Avoid input focus border */\r\n:focus {\r\n	outline: none;\r\n}\r\n::-moz-focus-inner {\r\n	border: 0;\r\n}\r\n\r\n* {\r\n	-moz-user-select: none;\r\n}\r\n\r\nhtml,\r\nbody {\r\n	touch-action: manipulation;\r\n	margin: 0;\r\n}\r\n\r\ncanvas {\r\n	touch-action: none;\r\n}\r\n\r\nbody {\r\n	background-color: black;\r\n	font-size: 12px;\r\n	font-family: 'SCDream', Arial, Helvetica, sans-serif;\r\n	overflow: hidden;\r\n	-webkit-user-select: none;\r\n	user-select: none;\r\n	min-width: 100vw;\r\n	min-height: 100vh;\r\n}\r\n\r\nbutton,\r\nui-button {\r\n	padding: 0;\r\n}\r\n\r\nui-button {\r\n	display: inline-block;\r\n}\r\n\r\n.ui-btn {\r\n	-webkit-appearance: none;\r\n	appearance: none;\r\n	display: inline-flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	height: 20px;\r\n	min-width: 52px;\r\n	padding: 0 10px;\r\n\r\n	font-size: 12px;\r\n	line-height: 1;\r\n	color: #3f3f3f;\r\n	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);\r\n\r\n	border-radius: 4px;\r\n	border: 1px solid;\r\n\r\n	/* 3D border: top right bottom left */\r\n	border-color: #cfcfcf #a9a9a9 #5f5f5f #bdbdbd;\r\n\r\n	/* glossy + subtle depth */\r\n	background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 35%, #dcdcdc 55%, #f9f9f9 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		/* top highlight */ inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		/* bottom inner edge */ 0 1px 0 rgba(0, 0, 0, 0.12); /* outer bottom shadow */\r\n\r\n	cursor: pointer;\r\n}\r\n\r\n/* Hover: hơi xanh nhẹ giống button Reset */\r\n.ui-btn:hover {\r\n	border-color: #c9d1dd #8ea2c4 #4d5f86 #b1bfd5;\r\n	background: linear-gradient(to bottom, #f7fbff 0%, #dfe8f6 35%, #c0d0ee 55%, #f0f6ff 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		0 1px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n/* Active: giống \"ấn xuống\" */\r\n.ui-btn:active {\r\n	border-color: #9fb0c9 #6f86a6 #3b4b67 #7f96b6;\r\n\r\n	background: linear-gradient(to bottom, #cdd8eb 0%, #b7c8e5 45%, #dfe9fb 100%);\r\n\r\n	box-shadow:\r\n		inset 0 2px 3px rgba(0, 0, 0, 0.18),\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.35);\r\n\r\n	transform: translateY(1px); /* cảm giác bị nhấn */\r\n}\r\n\r\n/* Disabled */\r\n.ui-btn:disabled,\r\n.ui-btn.is-disabled {\r\n	cursor: default;\r\n	color: #8f8f8f;\r\n	text-shadow: none;\r\n\r\n	border-color: #d3d3d3 #bdbdbd #9b9b9b #c9c9c9;\r\n\r\n	background: linear-gradient(to bottom, #f6f6f6 0%, #e7e7e7 55%, #fafafa 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.9),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.08),\r\n		0 1px 0 rgba(0, 0, 0, 0.08);\r\n\r\n	transform: none;\r\n}\r\n\r\n/* Hide native cursor inside Shadow DOM when custom cursor is active */\r\n:host-context(.custom-cursor) * {\r\n	cursor: none !important;\r\n}\r\n";
+	Common_default$1 = "/* Avoid input focus border */\r\n:focus {\r\n	outline: none;\r\n}\r\n::-moz-focus-inner {\r\n	border: 0;\r\n}\r\n\r\n* {\r\n	-moz-user-select: none;\r\n}\r\n\r\nhtml,\r\nbody {\r\n	touch-action: manipulation;\r\n	margin: 0;\r\n}\r\n\r\ncanvas {\r\n	touch-action: none;\r\n}\r\n\r\nbody {\r\n	background-color: #000;\r\n	color: #484848;\r\n	font-size: 11px;\r\n	font-weight: 400;\r\n	font-family: Gulim, Dotum, 'Malgun Gothic', sans-serif, Arial;\r\n	overflow: hidden;\r\n	-webkit-user-select: none;\r\n	user-select: none;\r\n	min-width: 100vw;\r\n	min-height: 100vh;\r\n	letter-spacing: 0;\r\n	line-height: 1.2;\r\n}\r\n\r\n.title {\r\n	font-size: 12px;\r\n}\r\n\r\nbutton,\r\nui-button {\r\n	padding: 0;\r\n}\r\n\r\nui-button {\r\n	display: inline-block;\r\n}\r\n\r\n.ui-btn {\r\n	-webkit-appearance: none;\r\n	appearance: none;\r\n	display: inline-flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	height: 20px;\r\n	min-width: 52px;\r\n	padding: 0 10px;\r\n\r\n	font-size: 12px;\r\n	line-height: 1;\r\n	color: #3f3f3f;\r\n	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);\r\n\r\n	border-radius: 4px;\r\n	border: 1px solid;\r\n\r\n	/* 3D border: top right bottom left */\r\n	border-color: #cfcfcf #a9a9a9 #5f5f5f #bdbdbd;\r\n\r\n	/* glossy + subtle depth */\r\n	background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 35%, #dcdcdc 55%, #f9f9f9 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		/* top highlight */ inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		/* bottom inner edge */ 0 1px 0 rgba(0, 0, 0, 0.12); /* outer bottom shadow */\r\n\r\n	cursor: pointer;\r\n}\r\n\r\n/* Hover: hơi xanh nhẹ giống button Reset */\r\n.ui-btn:hover {\r\n	border-color: #c9d1dd #8ea2c4 #4d5f86 #b1bfd5;\r\n	background: linear-gradient(to bottom, #f7fbff 0%, #dfe8f6 35%, #c0d0ee 55%, #f0f6ff 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		0 1px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n/* Active: giống \"ấn xuống\" */\r\n.ui-btn:active {\r\n	border-color: #9fb0c9 #6f86a6 #3b4b67 #7f96b6;\r\n\r\n	background: linear-gradient(to bottom, #cdd8eb 0%, #b7c8e5 45%, #dfe9fb 100%);\r\n\r\n	box-shadow:\r\n		inset 0 2px 3px rgba(0, 0, 0, 0.18),\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.35);\r\n\r\n	transform: translateY(1px); /* cảm giác bị nhấn */\r\n}\r\n\r\n/* Disabled */\r\n.ui-btn:disabled,\r\n.ui-btn.is-disabled {\r\n	cursor: default;\r\n	color: #8f8f8f;\r\n	text-shadow: none;\r\n\r\n	border-color: #d3d3d3 #bdbdbd #9b9b9b #c9c9c9;\r\n\r\n	background: linear-gradient(to bottom, #f6f6f6 0%, #e7e7e7 55%, #fafafa 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.9),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.08),\r\n		0 1px 0 rgba(0, 0, 0, 0.08);\r\n\r\n	transform: none;\r\n}\r\n\r\n/* Hide native cursor inside Shadow DOM when custom cursor is active */\r\n:host-context(.custom-cursor) * {\r\n	cursor: none !important;\r\n}\r\n";
 }));
 //#endregion
 //#region src/Core/Preferences.js
@@ -102868,7 +102868,7 @@ var init_PacketStructure = __esmMin((() => {
 	PACKET.ZC.ITEM_ENTRY.size = PacketVerManager_default.value >= 20181121 ? 19 : 17;
 	PACKET.ZC.ITEM_FALL_ENTRY = function PACKET_ZC_ITEM_FALL_ENTRY(fp, end) {
 		this.ITAID = fp.readULong();
-		this.ITID = fp.readUShort();
+		this.ITID = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
 		this.IsIdentified = fp.readUChar();
 		this.xPos = fp.readShort();
 		this.yPos = fp.readShort();
@@ -102876,7 +102876,7 @@ var init_PacketStructure = __esmMin((() => {
 		this.subY = fp.readUChar();
 		this.count = fp.readShort();
 	};
-	PACKET.ZC.ITEM_FALL_ENTRY.size = 17;
+	PACKET.ZC.ITEM_FALL_ENTRY.size = PacketVerManager_default.value >= 20181121 ? 19 : 17;
 	PACKET.ZC.ITEM_PICKUP_ACK = function PACKET_ZC_ITEM_PICKUP_ACK(fp, end) {
 		this.index = fp.readUShort();
 		this.count = fp.readUShort();
@@ -106996,7 +106996,7 @@ var init_PacketStructure = __esmMin((() => {
 	PACKET.HC.NOTIFY_ACCESSIBLE_MAPNAME.size = -1;
 	PACKET.ZC.ITEM_FALL_ENTRY2 = function PACKET_ZC_ITEM_FALL_ENTRY2(fp, end) {
 		this.ITAID = fp.readULong();
-		this.ITID = fp.readUShort();
+		this.ITID = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
 		this.type = fp.readUShort();
 		this.IsIdentified = fp.readUChar();
 		this.xPos = fp.readShort();
@@ -107005,7 +107005,7 @@ var init_PacketStructure = __esmMin((() => {
 		this.subY = fp.readUChar();
 		this.count = fp.readShort();
 	};
-	PACKET.ZC.ITEM_FALL_ENTRY2.size = 19;
+	PACKET.ZC.ITEM_FALL_ENTRY2.size = PacketVerManager_default.value >= 20181121 ? 21 : 19;
 	PACKET.ZC.NOTIFY_MOVEENTRY6 = function PACKET_ZC_NOTIFY_MOVEENTRY6(fp, end) {
 		this.objecttype = fp.readUChar();
 		this.GID = fp.readULong();
@@ -108074,6 +108074,11 @@ var init_PacketStructure = __esmMin((() => {
 		return pkt_buf;
 	};
 	PACKET.CH.CHARLIST_REQ.size = 2;
+	PACKET.AC.REFUSE_LOGIN3 = function PACKET_AC_REFUSE_LOGIN3(fp, end) {
+		this.ErrorCode = fp.readUChar();
+		this.blockDate = fp.readULong();
+	};
+	PACKET.AC.REFUSE_LOGIN3.size = 7;
 	PACKET.ZC.BANKING_CHECK = function PACKET_ZC_BANKING_CHECK(fp, end) {
 		this.money = fp.readLong();
 		this.reason = fp.readShort();
@@ -108363,6 +108368,15 @@ var init_PacketStructure = __esmMin((() => {
 		}
 	};
 	PACKET.ZC.ACK_RODEX_LIST3.size = -1;
+	PACKET.AC.LOGIN_TAREN_REFUSE = function PACKET_AC_LOGIN_TAREN_REFUSE(fp, end) {
+		this.ErrorCode = fp.readUChar();
+	};
+	PACKET.AC.LOGIN_TAREN_REFUSE.size = 3;
+	PACKET.AC.LOGIN_TAREN_REFUSE2 = function PACKET_AC_LOGIN_TAREN_REFUSE2(fp, end) {
+		this.ErrorCode = fp.readUChar();
+		this.blockDate = fp.readBinaryString(20);
+	};
+	PACKET.AC.LOGIN_TAREN_REFUSE2.size = 23;
 	PACKET.ZC.GRADE_ENCHANT_MATERIAL_LIST = function PACKET_ZC_GRADE_ENCHANT_MATERIAL_LIST(fp, end) {
 		this.index = fp.readShort();
 		this.success_chance = fp.readLong();
@@ -109607,6 +109621,12 @@ var init_PacketStructure = __esmMin((() => {
 		pkt_buf.writeUChar(this.UIType);
 		return pkt_buf;
 	};
+	PACKET.AC.REFUSE_LOGIN_USA = function PACKET_AC_REFUSE_LOGIN_USA(fp, end) {
+		this.ErrorCode = fp.readULong();
+		this.Error = fp.readULong();
+		this.blockDate = fp.readBinaryString(20);
+	};
+	PACKET.AC.REFUSE_LOGIN_USA.size = 30;
 	PACKET.ZC.UI_OPEN = function PACKET_ZC_UI_OPEN(fp, end) {
 		this.ui_type = fp.readByte();
 		this.data = fp.readULong();
@@ -109702,7 +109722,7 @@ var init_PacketStructure = __esmMin((() => {
 		this.PosDir = [
 			fp.readShort(),
 			fp.readShort(),
-			6
+			4
 		];
 		this.sex = fp.readUChar();
 		this.head = fp.readShort();
@@ -110201,6 +110221,11 @@ var init_PacketStructure = __esmMin((() => {
 		})(this.questCount);
 	};
 	PACKET.ZC.ALL_QUEST_LIST_V4.size = -1;
+	PACKET.AC.REFUSE_LOGIN_EX = function PACKET_AC_REFUSE_LOGIN_EX(fp, end) {
+		this.ErrorCode = fp.readULong();
+		this.blockDate = fp.readBinaryString(20);
+	};
+	PACKET.AC.REFUSE_LOGIN_EX.size = 26;
 	PACKET.ZC.EQUIPWIN_MICROSCOPE_V6 = function PACKET_ZC_EQUIPWIN_MICROSCOPE_V6(fp, end) {
 		this.characterName = fp.readString(NAME_LENGTH);
 		this.job = fp.readShort();
@@ -110258,7 +110283,7 @@ var init_PacketStructure = __esmMin((() => {
 		this.PosDir = [
 			fp.readShort(),
 			fp.readShort(),
-			6
+			4
 		];
 		this.sex = fp.readUChar();
 		this.head = fp.readShort();
@@ -145417,6 +145442,7 @@ var init_PacketRegister = __esmMin((() => {
 		2463: PACKET.ZC.SKILL_ENTRY4,
 		2461: PACKET.HC.ACCEPT_ENTER_NEO_UNION_LIST,
 		2464: PACKET.HC.CHARLIST_NOTIFY,
+		2469: PACKET.AC.REFUSE_LOGIN3,
 		2470: PACKET.ZC.BANKING_CHECK,
 		2471: PACKET.CZ.REQ_BANKING_DEPOSIT,
 		2472: PACKET.ZC.ACK_BANKING_DEPOSIT,
@@ -145560,8 +145586,11 @@ var init_PacketRegister = __esmMin((() => {
 		2756: PACKET.AC.ACCEPT_LOGIN3,
 		2757: PACKET.HC.NOTIFY_ZONESVR2,
 		2759: PACKET.ZC.NPCACK_SERVERMOVE2,
+		2762: PACKET.AC.LOGIN_TAREN_REFUSE,
 		2763: PACKET.ZC.LONGLONGPAR_CHANGE,
 		2764: PACKET.ZC.NOTIFY_EXP2,
+		2765: PACKET.AC.LOGIN_TAREN_REFUSE2,
+		2784: PACKET.AC.REFUSE_LOGIN_USA,
 		2799: PACKET.CZ.REQ_CHECK_ATTENDANCE,
 		2804: PACKET.CZ.USE_SKILL_TOGROUND3,
 		2806: PACKET.ZC.ACK_RANKING2,
@@ -145576,7 +145605,7 @@ var init_PacketRegister = __esmMin((() => {
 		2783: PACKET.ZC.ACK_REQNAMEALL3,
 		2788: PACKET.ZC.ADD_MEMBER_TO_GROUP4,
 		2789: PACKET.ZC.GROUP_LIST3,
-		2818: PACKET.AC.REFUSE_LOGIN,
+		2818: PACKET.AC.REFUSE_LOGIN_EX,
 		2819: PACKET.ZC.EQUIPWIN_MICROSCOPE_V6,
 		2821: PACKET.ZC.STORE_ASSISTANT_ENTRY_V2,
 		2824: PACKET.ZC.SPLIT_SEND_ITEMLIST_SET,
@@ -206766,7 +206795,7 @@ var init_BasicInfoV3$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.css?raw
 var BasicInfoV3_default$1;
 var init_BasicInfoV3$1 = __esmMin((() => {
-	BasicInfoV3_default$1 = "#BasicInfoV3 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV3.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV3.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV3.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV3.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV3.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV3.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV3.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV3 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV3 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV3 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV3 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV3 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV3 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .hp_bar,\r\n#BasicInfoV3 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV3 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV3 .large .hp_bar div,\r\n#BasicInfoV3 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV3 .large div.hp_bar_perc,\r\n#BasicInfoV3 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV3 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .bexp,\r\n#BasicInfoV3 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV3 .large .bexp div,\r\n#BasicInfoV3 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV3 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV3 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV3 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV3 .buttons:hover {\r\n}\r\n#BasicInfoV3 .buttons div {\r\n	float: left;\r\n	width: 36px;\r\n	height: 36px;\r\n	border: none;\r\n	margin: 0px;\r\n}\r\n#BasicInfoV3 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV3 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV3 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV3 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV3 .buttons div .name {\r\n	display: none;\r\n}\r\n";
+	BasicInfoV3_default$1 = "#BasicInfoV3 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV3.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV3.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV3.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV3.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV3.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV3.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV3.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV3 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV3 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV3 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV3 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV3 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV3 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .hp_bar,\r\n#BasicInfoV3 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV3 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV3 .large .hp_bar div,\r\n#BasicInfoV3 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV3 .large div.hp_bar_perc,\r\n#BasicInfoV3 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV3 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .bexp,\r\n#BasicInfoV3 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV3 .large .bexp div,\r\n#BasicInfoV3 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV3 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV3 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV3 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV3 .buttons:hover {\r\n}\r\n#BasicInfoV3 .buttons div {\r\n	float: left;\r\n	width: 36px;\r\n	height: 36px;\r\n	border: none;\r\n	margin: 0px;\r\n}\r\n#BasicInfoV3 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV3 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV3 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV3 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV3 .buttons div .name {\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
@@ -207196,7 +207225,7 @@ var init_BasicInfoV4$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.css?raw
 var BasicInfoV4_default$1;
 var init_BasicInfoV4$1 = __esmMin((() => {
-	BasicInfoV4_default$1 = "#BasicInfoV4 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV4.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV4.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV4.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV4.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV4.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV4 .buttons {\r\n	background-position: left bottom;\r\n}\r\n#BasicInfoV4.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV4.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV4 .topbar {\r\n	height: 16px;\r\n}\r\n#BasicInfoV4 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV4 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV4 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV4 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV4 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV4 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .hp_bar,\r\n#BasicInfoV4 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV4 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV4 .large .hp_bar div,\r\n#BasicInfoV4 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV4 .large div.hp_bar_perc,\r\n#BasicInfoV4 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV4 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .bexp,\r\n#BasicInfoV4 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV4 .large .bexp div,\r\n#BasicInfoV4 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV4 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV4 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	display: grid;\r\n	grid-template-columns: auto auto auto auto auto;\r\n	justify-items: center;\r\n}\r\n#BasicInfoV4 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV4 .buttons button {\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n	background: transparent;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV4 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV4 .buttons button .name {\r\n	pointer-events: none;\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV4 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV4 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV4 .buttons .btn_overlay {\r\n	pointer-events: none;\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -6px;\r\n	left: 0;\r\n	display: none;\r\n}\r\n#BasicInfoV4 .buttons button:active .btn_overlay {\r\n	pointer-events: none;\r\n	top: -5px;\r\n}\r\n";
+	BasicInfoV4_default$1 = "#BasicInfoV4 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV4.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV4.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV4.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV4.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV4.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV4 .buttons {\r\n	background-position: left bottom;\r\n}\r\n#BasicInfoV4.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV4.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV4 .topbar {\r\n	height: 16px;\r\n}\r\n#BasicInfoV4 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV4 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV4 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV4 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV4 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV4 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .hp_bar,\r\n#BasicInfoV4 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV4 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV4 .large .hp_bar div,\r\n#BasicInfoV4 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV4 .large div.hp_bar_perc,\r\n#BasicInfoV4 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV4 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .bexp,\r\n#BasicInfoV4 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV4 .large .bexp div,\r\n#BasicInfoV4 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV4 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV4 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	display: grid;\r\n	grid-template-columns: auto auto auto auto auto;\r\n	justify-items: center;\r\n}\r\n#BasicInfoV4 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV4 .buttons button {\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n	background: transparent;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV4 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV4 .buttons button .name {\r\n	pointer-events: none;\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV4 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV4 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV4 .buttons .btn_overlay {\r\n	pointer-events: none;\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -6px;\r\n	left: 0;\r\n	display: none;\r\n}\r\n#BasicInfoV4 .buttons button:active .btn_overlay {\r\n	pointer-events: none;\r\n	top: -5px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
@@ -207953,7 +207982,7 @@ var init_BasicInfoV5$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.css?raw
 var BasicInfoV5_default$1;
 var init_BasicInfoV5$1 = __esmMin((() => {
-	BasicInfoV5_default$1 = "#BasicInfoV5 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 115px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 130px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons div {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px; /* Set your desired width */\r\n	text-align: left; /* Align the text to the right within the span */\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px; /* Set your desired width */\r\n	text-align: left; /* Align the text to the right within the span */\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
+	BasicInfoV5_default$1 = "#BasicInfoV5 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 115px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 130px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons div {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px; /* Set your desired width */\r\n	text-align: left; /* Align the text to the right within the span */\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px; /* Set your desired width */\r\n	text-align: left; /* Align the text to the right within the span */\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
@@ -306571,48 +306600,20 @@ function loadFontFromClient(fontPath) {
 		Client.loadFile(fontPath + "SCDream6.otf", function(fontData6) {
 			const fontUrl6 = "data:font/opentype;base64," + arrayBufferToBase64(fontData6);
 			const style = document.createElement("style");
-			style.textContent = `  
+			style.textContent = `  						
 							@font-face {  
 								font-family: 'SCDream';  
-								src: url('${fontUrl6}') format('opentype');  
-								font-weight: 100; /* Thin */  
-								font-style: normal;  
-							}  
-							
-							@font-face {  
-								font-family: 'SCDream';  
-								src: url('${fontUrl6}') format('opentype');  
-								font-weight: 200; /* Extra Light */  
-								font-style: normal;  
-							}  
-							
-							@font-face {  
-								font-family: 'SCDream';  
-								src: url('${fontUrl6}') format('opentype');  
-								font-weight: 300; /* Light */  
-								font-style: normal;  
-							}  
-							
-							@font-face {  
-								font-family: 'SCDream';  
-								src: url('${fontUrl6}') format('opentype');  
+								src: url('${fontUrl4}') format('opentype');  
 								font-weight: 400; /* Normal */  
 								font-style: normal;  
 							}  
 							
 							@font-face {  
 								font-family: 'SCDream';  
-								src: url('${fontUrl4}') format('opentype');  
+								src: url('${fontUrl6}') format('opentype');  
 								font-weight: 700; /* Bold */  
 								font-style: normal;  
-							}  
-							
-							@font-face {  
-								font-family: 'SCDream';  
-								src: url('${fontUrl4}') format('opentype');  
-								font-weight: 900; /* Black/Bolder */  
-								font-style: normal;  
-							}  
+							}
 						`;
 			document.head.appendChild(style);
 		}, function(error) {
@@ -309317,7 +309318,7 @@ var init_DBManager = __esmMin((() => {
 					if (index === count && DB.onReady) DB.onReady();
 				};
 			}
-			loadFontFromClient("System/Font/");
+			if (Configs.get("useSystemFolderFont", false)) loadFontFromClient("System/Font/");
 			loadTable("data/mp3nametable.txt", "#", 2, function(_index, key, val) {
 				(MapTable[key] || (MapTable[key] = {})).mp3 = val;
 			}, onLoad());
@@ -332932,6 +332933,14 @@ function onConnectionAccepted$2(pkt) {
 	});
 }
 /**
+* onConnectionRefused
+*
+* @param {object} pkt - PACKET.ZC.REFUSE_ENTER
+*/
+function onConnectionRefused$2(pkt) {
+	UIManager.showErrorBox(DB.getMessage(9));
+}
+/**
 * Changing map, loading new map
 *
 * @param {object} pkt - PACKET.ZC.NPCACK_MAPMOVE
@@ -333088,12 +333097,7 @@ function onExitSuccess() {
 	MapRenderer.free();
 	SoundManager.stop();
 	BGM.stop();
-	if (PacketVerManager_default.value < 20181114) {
-		Background.remove();
-		Background.setImage("bgi_temp.bmp", () => {
-			__vitePreload(() => Promise.resolve().then(() => (init_GameEngine(), GameEngine_exports)).then((m) => m.default.reload()), void 0, import.meta.url);
-		});
-	} else __vitePreload(() => Promise.resolve().then(() => (init_GameEngine(), GameEngine_exports)).then((m) => m.default.reload()), void 0, import.meta.url);
+	__vitePreload(() => Promise.resolve().then(() => (init_GameEngine(), GameEngine_exports)).then((m) => m.default.reload()), void 0, import.meta.url);
 }
 /**
 * Try to return to char-server
@@ -333450,7 +333454,6 @@ var init_MapEngine = __esmMin((() => {
 	init_KeyEventHandler();
 	init_UIManager();
 	init_EffectManager();
-	init_Background();
 	init_Escape();
 	init_ChatBox();
 	init_ChatBoxSettings();
@@ -333633,6 +333636,7 @@ var init_MapEngine = __esmMin((() => {
 				Network.hookPacket(PACKET.ZC.CONFIG_NOTIFY3, onConfigNotify);
 				Network.hookPacket(PACKET.ZC.CONFIG_NOTIFY4, onConfigNotify);
 				Network.hookPacket(PACKET.ZC.CONFIG, onConfig);
+				Network.hookPacket(PACKET.ZC.REFUSE_ENTER, onConnectionRefused$2);
 				for (let i = 1; i <= 42; i++) {
 					const id = String(i).padStart(2, "0");
 					const ZC = PACKET.ZC[`REASSEMBLY_AUTH${id}`];
@@ -335609,7 +335613,7 @@ var init_CharSelectV4$2 = __esmMin((() => {
 //#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.css?raw
 var CharSelectV4_default$1;
 var init_CharSelectV4$1 = __esmMin((() => {
-	CharSelectV4_default$1 = "#CharSelectV4 {\r\n	position: absolute;\r\n	min-width: 100%;\r\n	min-height: 100%;\r\n	z-index: 100;\r\n	top: 0;\r\n	left: 0;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	flex-direction: column;\r\n}\r\n\r\n#CharSelectV4 .char_select_container {\r\n	position: absolute;\r\n	display: flex;\r\n	flex-direction: row;\r\n	background-color: rgba(0, 0, 0, 0.1);\r\n	border-radius: 5px;\r\n	padding-top: 20px;\r\n	padding-left: 5px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV4 .char_list {\r\n	flex: 1;\r\n	max-width: 800px;\r\n	min-width: 157px;\r\n	height: 595px;\r\n	max-height: 80vh;\r\n	display: flex;\r\n	flex-direction: row;\r\n	flex-wrap: wrap;\r\n	overflow-y: auto;\r\n}\r\n\r\n#CharSelectV4 .box_select {\r\n	position: absolute;\r\n	width: 157px;\r\n	height: 159px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n}\r\n#CharSelectV4 .char_canvas {\r\n	width: 157px;\r\n	height: 195px;\r\n	position: relative;\r\n	z-index: 10;\r\n}\r\n#CharSelectV4 .char_canvas .name {\r\n	position: absolute;\r\n	bottom: 15px;\r\n	width: 100%;\r\n	text-align: center;\r\n}\r\n\r\n#CharSelectV4 .char_canvas .job_icon {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 12px;\r\n	width: 25px;\r\n	height: 25px;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV4 .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV4 .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#CharSelectV4 .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV4 .charinfo {\r\n	height: 585px;\r\n	max-height: 80vh;\r\n	width: 185px;\r\n	background-repeat: no-repeat;\r\n	margin-top: 10px;\r\n	margin-left: 10px;\r\n	position: relative;\r\n}\r\n#CharSelectV4 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV4 .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV4 .charinfo .job {\r\n	left: 60px;\r\n	top: 105px;\r\n}\r\n#CharSelectV4 .charinfo .lvl {\r\n	left: 60px;\r\n	top: 123px;\r\n}\r\n#CharSelectV4 .charinfo .exp {\r\n	left: 60px;\r\n	top: 140px;\r\n}\r\n#CharSelectV4 .charinfo .hp {\r\n	left: 60px;\r\n	top: 157px;\r\n}\r\n#CharSelectV4 .charinfo .sp {\r\n	left: 60px;\r\n	top: 174px;\r\n}\r\n#CharSelectV4 .charinfo .map {\r\n	left: 60px;\r\n	top: 89px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n#CharSelectV4 .charinfo .str {\r\n	left: 60px;\r\n	top: 191px;\r\n}\r\n#CharSelectV4 .charinfo .agi {\r\n	left: 60px;\r\n	top: 208px;\r\n}\r\n#CharSelectV4 .charinfo .vit {\r\n	left: 60px;\r\n	top: 225px;\r\n}\r\n#CharSelectV4 .charinfo .int {\r\n	left: 60px;\r\n	top: 242px;\r\n}\r\n#CharSelectV4 .charinfo .dex {\r\n	left: 60px;\r\n	top: 259px;\r\n}\r\n#CharSelectV4 .charinfo .luk {\r\n	left: 60px;\r\n	top: 276px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV4 .btn.delete {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 131px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CharSelectV4 .btn.canceldelete {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 131px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CharSelectV4 .btn.finaldelete {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 131px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CharSelectV4 .btn.ok {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 165px;\r\n	height: 110px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	color: white;\r\n	padding-top: 20px;\r\n}\r\n#CharSelectV4 .btn.ok:hover {\r\n	text-shadow: #000 1px 1px;\r\n}\r\n\r\n#CharSelectV4 .ok,\r\n#CharSelectV4 .make {\r\n	right: 15px;\r\n	top: 380px;\r\n}\r\n#CharSelectV4 .cancel {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 5px;\r\n	width: 17px;\r\n	height: 18px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#CharSelectV4 .delete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .canceldelete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .finaldelete {\r\n	right: 33px;\r\n	top: 330px;\r\n}\r\n\r\n#CharSelectV4 .timedelete {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 100px;\r\n	top: -150px;\r\n	left: 40px;\r\n}\r\n\r\n#CharSelectV4 .hidden {\r\n	display: none;\r\n}\r\n";
+	CharSelectV4_default$1 = "#CharSelectV4 {\r\n	position: absolute;\r\n	min-width: 100%;\r\n	min-height: 100%;\r\n	z-index: 100;\r\n	top: 0;\r\n	left: 0;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	flex-direction: column;\r\n}\r\n\r\n#CharSelectV4 .char_select_container {\r\n	position: absolute;\r\n	display: flex;\r\n	flex-direction: row;\r\n	background-color: rgba(0, 0, 0, 0.1);\r\n	border-radius: 5px;\r\n	padding-top: 20px;\r\n	padding-left: 5px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV4 .char_list {\r\n	flex: 1;\r\n	max-width: 800px;\r\n	min-width: 157px;\r\n	height: 595px;\r\n	max-height: 80vh;\r\n	display: flex;\r\n	flex-direction: row;\r\n	flex-wrap: wrap;\r\n	overflow-y: auto;\r\n}\r\n\r\n#CharSelectV4 .box_select {\r\n	position: absolute;\r\n	width: 157px;\r\n	height: 159px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n}\r\n#CharSelectV4 .char_canvas {\r\n	width: 157px;\r\n	height: 195px;\r\n	position: relative;\r\n	z-index: 10;\r\n}\r\n#CharSelectV4 .char_canvas .name {\r\n	position: absolute;\r\n	bottom: 17px;\r\n	width: 100%;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #15154a;\r\n}\r\n\r\n#CharSelectV4 .char_canvas .job_icon {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 12px;\r\n	width: 25px;\r\n	height: 25px;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV4 .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV4 .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#CharSelectV4 .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV4 .charinfo {\r\n	height: 585px;\r\n	max-height: 80vh;\r\n	width: 185px;\r\n	background-repeat: no-repeat;\r\n	margin-top: 10px;\r\n	margin-left: 10px;\r\n	position: relative;\r\n}\r\n#CharSelectV4 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV4 .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV4 .charinfo .job {\r\n	left: 60px;\r\n	top: 105px;\r\n}\r\n#CharSelectV4 .charinfo .lvl {\r\n	left: 60px;\r\n	top: 123px;\r\n}\r\n#CharSelectV4 .charinfo .exp {\r\n	left: 60px;\r\n	top: 140px;\r\n}\r\n#CharSelectV4 .charinfo .hp {\r\n	left: 60px;\r\n	top: 157px;\r\n}\r\n#CharSelectV4 .charinfo .sp {\r\n	left: 60px;\r\n	top: 174px;\r\n}\r\n#CharSelectV4 .charinfo .map {\r\n	left: 60px;\r\n	top: 89px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n#CharSelectV4 .charinfo .str {\r\n	left: 60px;\r\n	top: 191px;\r\n}\r\n#CharSelectV4 .charinfo .agi {\r\n	left: 60px;\r\n	top: 208px;\r\n}\r\n#CharSelectV4 .charinfo .vit {\r\n	left: 60px;\r\n	top: 225px;\r\n}\r\n#CharSelectV4 .charinfo .int {\r\n	left: 60px;\r\n	top: 242px;\r\n}\r\n#CharSelectV4 .charinfo .dex {\r\n	left: 60px;\r\n	top: 259px;\r\n}\r\n#CharSelectV4 .charinfo .luk {\r\n	left: 60px;\r\n	top: 276px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV4 .btn.delete {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 131px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CharSelectV4 .btn.canceldelete {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 131px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CharSelectV4 .btn.finaldelete {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 131px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CharSelectV4 .btn.ok {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 165px;\r\n	height: 110px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	color: white;\r\n	padding-top: 20px;\r\n}\r\n#CharSelectV4 .btn.ok:hover {\r\n	text-shadow: #000 1px 1px;\r\n}\r\n\r\n#CharSelectV4 .ok,\r\n#CharSelectV4 .make {\r\n	right: 15px;\r\n	top: 380px;\r\n}\r\n#CharSelectV4 .cancel {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 5px;\r\n	width: 17px;\r\n	height: 18px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#CharSelectV4 .delete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .canceldelete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .finaldelete {\r\n	right: 33px;\r\n	top: 330px;\r\n}\r\n\r\n#CharSelectV4 .timedelete {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 100px;\r\n	top: -150px;\r\n	left: 40px;\r\n}\r\n\r\n#CharSelectV4 .hidden {\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.js
@@ -337357,6 +337361,38 @@ function onConnectionAccepted$1(pkt) {
 	*/
 }
 /**
+* Server don't want the user to select a character
+*
+* @param {object} pkt - PACKET.HC.REFUSE_SELECTCHAR
+*/
+function onSelectionRefused(pkt) {
+	let msg_id;
+	switch (pkt.ErrorCode) {
+		case 0:
+			msg_id = 1350;
+			break;
+		case 1:
+			msg_id = 1351;
+			break;
+		case 2:
+			msg_id = 1352;
+			break;
+		case 3:
+			msg_id = 1353;
+			break;
+		case 4:
+			msg_id = 1354;
+			break;
+		case 5:
+			msg_id = 1364;
+			break;
+		default:
+			msg_id = 2;
+			break;
+	}
+	UIManager.showErrorBox(DB.getMessage(msg_id));
+}
+/**
 * Server don't want the user to connect
 *
 * @param {object} pkt - PACKET.HC.REFUSE_ENTER
@@ -337364,9 +337400,20 @@ function onConnectionAccepted$1(pkt) {
 function onConnectionRefused$1(pkt) {
 	let msg_id;
 	switch (pkt.ErrorCode) {
+		case 1:
+			msg_id = 208;
+			break;
+		case 111:
+			msg_id = 1865;
+			break;
+		case 118:
+			msg_id = 3818;
+			break;
+		case 119:
+			msg_id = 2929;
+			break;
 		default:
-		case 0:
-			msg_id = 3;
+			msg_id = 2;
 			break;
 	}
 	UIManager.showErrorBox(DB.getMessage(msg_id));
@@ -337820,6 +337867,7 @@ var init_CharEngine = __esmMin((() => {
 			Controller$1.selectUIVersion();
 			Network.hookPacket(PACKET.HC.ACCEPT_ENTER_NEO_UNION, onConnectionAccepted$1);
 			Network.hookPacket(PACKET.HC.REFUSE_ENTER, onConnectionRefused$1);
+			Network.hookPacket(PACKET.HC.REFUSE_SELECTCHAR, onSelectionRefused);
 			Network.hookPacket(PACKET.HC.ACCEPT_MAKECHAR_NEO_UNION, onCreationSuccess);
 			Network.hookPacket(PACKET.HC.ACCEPT_MAKECHAR, onCreationSuccess);
 			Network.hookPacket(PACKET.HC.REFUSE_MAKECHAR, onCreationFail);
@@ -337842,14 +337890,10 @@ var init_CharEngine = __esmMin((() => {
 		*/
 		static reload() {
 			Network.close();
-			if (PacketVerManager_default.value < 20181114) Background.setImage("bgi_temp.bmp", () => {
+			Background.setLoginBackground(() => {
 				UIManager.removeComponents();
 				CharEngine.init(_server$1);
 			});
-			else {
-				UIManager.removeComponents();
-				CharEngine.init(_server$1);
-			}
 		}
 	};
 	retryCount = 0;
@@ -341094,6 +341138,158 @@ function onConnectionAccepted(pkt) {
 	}), void 0, import.meta.url);
 }
 /**
+* Received data from server, connection refused (Taren)
+*
+* @param {object} pkt - PACKET.AC.LOGIN_TAREN_REFUSE
+*/
+function onTarenConnectionRefused(pkt) {
+	let msg_id;
+	switch (pkt.ErrorCode) {
+		case 1:
+			msg_id = 3196;
+			break;
+		case 2:
+			msg_id = 3197;
+			break;
+		case 3:
+			msg_id = 3198;
+			break;
+		case 4:
+			msg_id = 3199;
+			break;
+		case 5:
+			msg_id = 3200;
+			break;
+		case 6:
+			msg_id = 3201;
+			break;
+		case 7:
+			msg_id = 3214;
+			break;
+		case 9:
+			msg_id = 3911;
+			break;
+		default:
+			msg_id = 3202;
+			break;
+	}
+	UIManager.showMessageBox(DB.getMessage(msg_id), "ok", () => {
+		UIManager.removeComponents();
+		Controller.getUI().append();
+	}, true);
+	Network.close();
+}
+/**
+* Received data from server, connection refused (Taren)
+*
+* @param {object} pkt - PACKET.AC.LOGIN_TAREN_REFUSE2
+*/
+function onTarenConnectionRefused2(pkt) {
+	let msg_id;
+	switch (pkt.ErrorCode) {
+		case 1:
+			msg_id = 3196;
+			break;
+		case 2:
+			msg_id = 3197;
+			break;
+		case 3:
+			msg_id = 3198;
+			break;
+		case 4:
+			msg_id = 3199;
+			break;
+		case 5:
+			msg_id = 3200;
+			break;
+		case 6:
+			msg_id = 3201;
+			break;
+		case 7:
+			msg_id = 3214;
+			break;
+		case 8:
+		case 100:
+		case 102:
+			msg_id = 3202;
+			break;
+		case 9:
+			msg_id = 3911;
+			break;
+		case 101:
+			msg_id = 449;
+			break;
+		default:
+			msg_id = 3202;
+			break;
+	}
+	UIManager.showMessageBox(DB.getMessage(msg_id).replace("%s", pkt.blockDate), "ok", () => {
+		UIManager.removeComponents();
+		Controller.getUI().append();
+	}, true);
+}
+/**
+* Received data from server, connection refused (International)
+*
+* @param {object} pkt - PACKET.AC.REFUSE_LOGIN_USA
+*/
+function onInternationalConnectionRefused(pkt) {
+	let msg_id;
+	switch (pkt.ErrorCode) {
+		default:
+		case 5200:
+			msg_id = 3314;
+			break;
+		case 5201:
+			msg_id = 3315;
+			break;
+		case 5202:
+			msg_id = 3316;
+			break;
+		case 5203:
+			msg_id = 3317;
+			break;
+		case 5204:
+			msg_id = 3318;
+			break;
+		case 5205:
+			msg_id = 3319;
+			break;
+		case 5206:
+			msg_id = 3320;
+			break;
+		case 5207:
+			msg_id = 3321;
+			break;
+		case 5208:
+			msg_id = 3322;
+			break;
+		case 5209:
+			msg_id = 3323;
+			break;
+		case 5210:
+			msg_id = 3324;
+			break;
+		case 5211:
+			msg_id = 3325;
+			break;
+		case 5212:
+			msg_id = 3326;
+			break;
+		case 5213:
+			msg_id = 3327;
+			break;
+		case 5214:
+			msg_id = 3328;
+			break;
+	}
+	UIManager.showMessageBox(DB.getMessage(msg_id).replace("%d", pkt.blockDate), "ok", () => {
+		UIManager.removeComponents();
+		Controller.getUI().append();
+	}, true);
+	Network.close();
+}
+/**
 * Received data from server, connection refused
 *
 * @param {object} pkt - PACKET.AC.REFUSE_LOGIN
@@ -341105,7 +341301,7 @@ function onConnectionRefused(pkt) {
 			error = 6;
 			break;
 		case 1:
-			error = 7;
+			error = 267;
 			break;
 		case 2:
 			error = 8;
@@ -341123,7 +341319,7 @@ function onConnectionRefused(pkt) {
 			error = 449;
 			break;
 		case 7:
-			error = 264;
+			error = 439;
 			break;
 		case 8:
 			error = 681;
@@ -341149,6 +341345,45 @@ function onConnectionRefused(pkt) {
 		case 15:
 			error = 709;
 			break;
+		case 16:
+			error = 9;
+			break;
+		case 17:
+			error = 1380;
+			break;
+		case 18:
+			error = 1381;
+			break;
+		case 19:
+			error = 1751;
+			break;
+		case 20:
+			error = 1752;
+			break;
+		case 21:
+			error = 1786;
+			break;
+		case 22:
+		case 23:
+		case 24:
+		case 25:
+		case 26:
+		case 27:
+		case 30:
+			error = 3440;
+			break;
+		case 28:
+			error = 2731;
+			break;
+		case 29:
+			error = 2732;
+			break;
+		case 33:
+			error = 2682;
+			break;
+		case 36:
+			error = 3453;
+			break;
 		case 99:
 			error = 368;
 			break;
@@ -341166,6 +341401,88 @@ function onConnectionRefused(pkt) {
 			break;
 		case 104:
 			error = 860;
+			break;
+		case 105:
+			error = 1372;
+			break;
+		case 106:
+			error = 1293;
+			break;
+		case 108:
+			error = 1393;
+			break;
+		case 109:
+			error = 1394;
+			break;
+		case 110:
+			error = 2345;
+			break;
+		case 112:
+			error = 2410;
+			break;
+		case 242:
+			error = 3439;
+			break;
+		case 243:
+			error = 3687;
+			break;
+		case 244:
+			error = 4190;
+			break;
+		case 5011:
+			error = 1839;
+			break;
+		case 5012:
+			error = 823;
+			break;
+		case 5013:
+		case 5054:
+			error = 1789;
+			break;
+		case 5014:
+		case 5016:
+		case 5019:
+		case 5021:
+		case 5052:
+		case 5053:
+		case 5055:
+		case 5056:
+		case 5057:
+		case 5058:
+		case 5059:
+		case 5060:
+		case 5061:
+			error = 1838;
+			break;
+		case 5015:
+			error = 1840;
+			break;
+		case 5017:
+			error = 1841;
+			break;
+		case 5018:
+			error = 1786;
+			break;
+		case 5050:
+			error = 1830;
+			break;
+		case 5051:
+			error = 5;
+			break;
+		case 5062:
+			error = 266;
+			break;
+		case 5063:
+			error = 1793;
+			break;
+		case 5064:
+			error = 1794;
+			break;
+		case 5300:
+			error = 3534;
+			break;
+		case 5301:
+			error = 3539;
 			break;
 	}
 	UIManager.showMessageBox(DB.getMessage(error).replace("%s", pkt.blockDate), "ok", () => {
@@ -341193,10 +341510,10 @@ function onServerClosed(pkt) {
 			msg_id = 5;
 			break;
 		case 3:
-			msg_id = 9;
+			msg_id = 241;
 			break;
 		case 4:
-			msg_id = 439;
+			msg_id = 264;
 			break;
 		case 5:
 			msg_id = 305;
@@ -341213,14 +341530,62 @@ function onServerClosed(pkt) {
 		case 10:
 			msg_id = 530;
 			break;
+		case 11:
+			msg_id = 575;
+			break;
+		case 12:
+			msg_id = 576;
+			break;
+		case 13:
+			msg_id = 577;
+			break;
+		case 14:
+			msg_id = 578;
+			break;
 		case 15:
 			msg_id = 579;
 			break;
+		case 16:
+			msg_id = 606;
+			break;
+		case 17:
+			msg_id = 607;
+			break;
+		case 18:
+			msg_id = 678;
+			break;
+		case 100:
+			msg_id = 1123;
+			break;
 		case 101:
-			msg_id = 810;
+			msg_id = 1178;
 			break;
 		case 102:
 			msg_id = 1179;
+			break;
+		case 103:
+			msg_id = 1309;
+			break;
+		case 104:
+			msg_id = 1310;
+			break;
+		case 105:
+			msg_id = 1311;
+			break;
+		case 106:
+			msg_id = 1373;
+			break;
+		case 107:
+			msg_id = 1429;
+			break;
+		case 108:
+			msg_id = 1582;
+			break;
+		case 109:
+			msg_id = 1583;
+			break;
+		case 110:
+			msg_id = 1589;
 			break;
 	}
 	UIManager.showMessageBox(DB.getMessage(msg_id), "ok", () => {
@@ -341334,6 +341699,11 @@ var init_LoginEngine = __esmMin((() => {
 			else Network.hookPacket(PACKET.AC.ACCEPT_LOGIN3, onConnectionAccepted);
 			Network.hookPacket(PACKET.AC.REFUSE_LOGIN, onConnectionRefused);
 			Network.hookPacket(PACKET.AC.REFUSE_LOGIN_R2, onConnectionRefused);
+			Network.hookPacket(PACKET.AC.REFUSE_LOGIN3, onConnectionRefused);
+			Network.hookPacket(PACKET.AC.REFUSE_LOGIN_EX, onConnectionRefused);
+			Network.hookPacket(PACKET.AC.REFUSE_LOGIN_USA, onInternationalConnectionRefused);
+			Network.hookPacket(PACKET.AC.LOGIN_TAREN_REFUSE, onTarenConnectionRefused);
+			Network.hookPacket(PACKET.AC.LOGIN_TAREN_REFUSE2, onTarenConnectionRefused2);
 			Network.hookPacket(PACKET.SC.NOTIFY_BAN, onServerClosed);
 			q.run();
 		}
