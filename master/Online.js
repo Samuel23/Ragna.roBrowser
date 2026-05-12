@@ -89326,7 +89326,7 @@ var init_BGM = __esmMin((() => {
 /**
 * Render background (or a black background if no image is loaded yet)
 */
-function render$24() {
+function render$23() {
 	_ctx$17.clearRect(0, 0, _canvas[0].width, _canvas[0].height);
 	if (_progress > -1) Background.setPercent(_progress);
 }
@@ -89387,7 +89387,7 @@ var init_Background = __esmMin((() => {
 			let i;
 			_progress = 0;
 			_canvas.css("zIndex", 1);
-			render$24();
+			render$23();
 			if (loading) {
 				_loading = loading;
 				return;
@@ -89410,7 +89410,7 @@ var init_Background = __esmMin((() => {
 				height: height + "px"
 			});
 			_ctx$17.clearRect(0, 0, width, height);
-			render$24();
+			render$23();
 		}
 		/**
 		* Set an image as background
@@ -89422,7 +89422,7 @@ var init_Background = __esmMin((() => {
 			const exist = !!_container[0].parentNode;
 			_progress = -1;
 			_container.empty().css("backgroundImage", "none");
-			render$24();
+			render$23();
 			if (Array.isArray(filename)) {
 				let loadedCount = 0;
 				const total = filename.length;
@@ -89892,7 +89892,7 @@ function init$12(gl) {
 * @param {number} x
 * @param {number} y
 */
-function render$23(gl, modelView, projection, fog, x, y) {
+function render$22(gl, modelView, projection, fog, x, y) {
 	if (!_texture$5) return;
 	const uniform = _program$25.uniform;
 	const attribute = _program$25.attribute;
@@ -89986,7 +89986,7 @@ var init_GridSelector = __esmMin((() => {
 	GridSelector_default = {
 		init: init$12,
 		free: free$7,
-		render: render$23
+		render: render$22
 	};
 }));
 //#endregion
@@ -90069,7 +90069,7 @@ var init_Ground$1 = __esmMin((() => {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$22(gl, modelView, projection, normalMat, fog, light) {
+function render$21(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program$24.uniform;
 	const attribute = _program$24.attribute;
 	gl.useProgram(_program$24);
@@ -90314,7 +90314,7 @@ var init_Ground = __esmMin((() => {
 	Ground_default = {
 		init: init$11,
 		free: free$6,
-		render: render$22,
+		render: render$21,
 		getShadowFactor
 	};
 }));
@@ -90752,7 +90752,7 @@ function init$10(gl, water) {
 * @param {object} light structure
 * @param {number} tick (game tick)
 */
-function render$21(gl, modelView, projection, fog, light, tick) {
+function render$20(gl, modelView, projection, fog, light, tick) {
 	if (!_vertCount) return;
 	const uniform = _program$22.uniform;
 	const attribute = _program$22.attribute;
@@ -90821,7 +90821,7 @@ var init_Water = __esmMin((() => {
 	Water_default = {
 		init: init$10,
 		free: free$5,
-		render: render$21
+		render: render$20
 	};
 }));
 //#endregion
@@ -90899,7 +90899,7 @@ function init$9(gl, data) {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$20(gl, modelView, projection, normalMat, fog, light) {
+function render$19(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program$21.uniform;
 	const attribute = _program$21.attribute;
 	let i, count;
@@ -90982,7 +90982,7 @@ var init_Models = __esmMin((() => {
 	_pendingTextures = 0;
 	Models_default = {
 		init: init$9,
-		render: render$20,
+		render: render$19,
 		free: free$4
 	};
 }));
@@ -91401,7 +91401,7 @@ function updateModelBuffer(gl, model, frame, force) {
 /**
 * Render animated models
 */
-function render$19(gl, modelView, projection, normalMat, fog, light, tick) {
+function render$18(gl, modelView, projection, normalMat, fog, light, tick) {
 	if (_animatedModels.length === 0) return;
 	if (!_program$20) init$8(gl);
 	const uniform = _program$20.uniform;
@@ -91467,7 +91467,7 @@ var init_AnimatedModels = __esmMin((() => {
 		init: init$8,
 		free: free$3,
 		add: add$2,
-		render: render$19,
+		render: render$18,
 		hasAnimatedModels
 	};
 }));
@@ -91490,7 +91490,7 @@ function free$2() {
 *
 * @param {vec2} position
 */
-function render$18(position, tick) {
+function render$17(position, tick) {
 	_list$16.forEach((sound) => {
 		const dist = Math.floor(vec2$3.dist(sound.pos, position));
 		if (sound.tick < tick && dist <= sound.range) {
@@ -91508,7 +91508,7 @@ var init_Sounds = __esmMin((() => {
 	Sounds_default = {
 		add: add$1,
 		free: free$2,
-		render: render$18
+		render: render$17
 	};
 }));
 //#endregion
@@ -190669,20 +190669,38 @@ var init_SkillInfo = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.html?raw
+var SkillTargetSelection_default$2;
+var init_SkillTargetSelection$2 = __esmMin((() => {
+	SkillTargetSelection_default$2 = "<div id=\"SkillTargetSelection\">\r\n	<canvas class=\"skill-name\"></canvas>\r\n	<canvas class=\"skill-description\"></canvas>\r\n	<canvas class=\"skill-level\"></canvas>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.css?raw
+var SkillTargetSelection_default$1;
+var init_SkillTargetSelection$1 = __esmMin((() => {
+	SkillTargetSelection_default$1 = ":host {\r\n	top: 0;\r\n	left: 0;\r\n	overflow: visible;\r\n	pointer-events: none;\r\n}\r\n\r\n#SkillTargetSelection {\r\n	display: block;\r\n}\r\n\r\n.skill-name {\r\n	position: fixed;\r\n	top: 45px;\r\n	z-index: 100;\r\n	border-radius: 3px;\r\n	border: 1px solid #555;\r\n	pointer-events: auto;\r\n}\r\n\r\n.skill-description {\r\n	position: fixed;\r\n	bottom: 60px;\r\n	z-index: 100;\r\n	border-radius: 3px;\r\n	border: 1px solid #555;\r\n	pointer-events: auto;\r\n}\r\n\r\n.skill-level {\r\n	position: fixed;\r\n	left: 0;\r\n	top: 0;\r\n	z-index: 100;\r\n	pointer-events: auto;\r\n}\r\n";
+}));
+//#endregion
 //#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.js
+/**
+* Helper to get the shadow root
+*/
+function _getRoot$2() {
+	return SkillTargetSelection._shadow || SkillTargetSelection._host;
+}
 /**
 * Render text into the canvas
 *
 * @param {string} text to render
 * @param {CanvasElement} canvas node
 */
-function render$17(text, canvas) {
+function renderText(text, canvas) {
 	const fontSize = 12;
 	const ctx = canvas.getContext("2d");
-	ctx.font = fontSize + "px Arial";
+	ctx.font = `${fontSize}px Arial`;
 	canvas.width = ctx.measureText(text).width + 14;
 	canvas.height = 23;
-	ctx.font = fontSize + "px Arial";
+	ctx.font = `${fontSize}px Arial`;
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.fillStyle = "rgba(0,0,0,0.5)";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -190690,10 +190708,10 @@ function render$17(text, canvas) {
 	ctx.fillText(text, 8, 17);
 	ctx.fillStyle = "#00FF00";
 	ctx.fillText(text, 7, 16);
-	canvas.style.left = (Renderer.width - canvas.width >> 1) + "px";
+	canvas.style.left = `${Renderer.width - canvas.width >> 1}px`;
 }
 /**
-* Render text into the canvas
+* Render level text into the canvas
 *
 * @param {string} text to render
 * @param {CanvasElement} canvas node
@@ -190703,7 +190721,7 @@ function renderLevel(text, canvas) {
 	const ctx = canvas.getContext("2d");
 	canvas.width = 35;
 	canvas.height = 35;
-	ctx.font = fontSize + "px Arial";
+	ctx.font = `${fontSize}px Arial`;
 	ctx.strokeStyle = "#333333";
 	ctx.lineWidth = 3;
 	ctx.strokeText(text, 0, 30);
@@ -190714,10 +190732,15 @@ function renderLevel(text, canvas) {
 * Intersect entity when clicking
 */
 function intersectEntities(event) {
+	if (_mousedownHandler) {
+		window.removeEventListener("mousedown", _mousedownHandler, true);
+		_mousedownHandler = null;
+	}
 	SkillTargetSelection.remove();
 	if (!Mouse.intersect) return false;
 	if (event.which !== 1) return true;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	if (_flag & SkillTargetSelection.TYPE.PLACE) {
 		SkillTargetSelection.onUseSkillToPos(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, Mouse.world.x, Mouse.world.y);
 		return false;
@@ -190761,27 +190784,37 @@ function intersectEntity(entity) {
 	if (_flag & SkillTargetSelection.TYPE.ENEMY && entity === SessionStorage_default.Entity) return;
 	SkillTargetSelection.onUseSkillToId(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entity.GID);
 }
-var SkillTargetSelection, _flag, _skill, _skillName, _description, _skill_level, SkillTargetSelection_default;
+var SkillTargetSelection, _flag, _skill, _skillName, _description, _skillLevel, _mousedownHandler, SkillTargetSelection_default;
 var init_SkillTargetSelection = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
 	init_KeyEventHandler();
 	init_MouseEventHandler();
-	init_jquery();
 	init_Renderer();
 	init_Entity$1();
 	init_EntityManager();
 	init_SessionStorage();
 	init_Controls();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_CursorManager();
 	init_PartyFriends();
-	SkillTargetSelection = new UIComponent("SkillTargetSelection");
+	init_SkillTargetSelection$2();
+	init_SkillTargetSelection$1();
+	SkillTargetSelection = new GUIComponent("SkillTargetSelection", SkillTargetSelection_default$1);
+	SkillTargetSelection.render = () => SkillTargetSelection_default$2;
 	/**
 	* Mouse can cross this UI
 	*/
-	SkillTargetSelection.mouseMode = UIComponent.MouseMode.CROSS;
+	SkillTargetSelection.mouseMode = GUIComponent.MouseMode.CROSS;
+	/**
+	* Do not focus this UI
+	*/
+	SkillTargetSelection.needFocus = false;
+	/**
+	* Handle ESCAPE before other handlers
+	*/
+	SkillTargetSelection.captureKeyEvents = true;
 	/**
 	* @var {constant}
 	*/
@@ -190796,54 +190829,41 @@ var init_SkillTargetSelection = __esmMin((() => {
 		HOMUN: 128
 	};
 	_flag = 0;
+	_mousedownHandler = null;
 	/**
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		_skillName = document.createElement("canvas");
-		_description = document.createElement("canvas");
-		_skill_level = document.createElement("canvas");
-		_skillName.style.position = "absolute";
-		_skillName.style.top = "45px";
-		_skillName.style.zIndex = 100;
-		_skillName.style.borderRadius = "3px";
-		_skillName.style.border = "1px solid #555";
-		_description.style.position = "absolute";
-		_description.style.bottom = "60px";
-		_description.style.zIndex = 100;
-		_description.style.borderRadius = "3px";
-		_description.style.border = "1px solid #555";
-		_skill_level.style.position = "absolute";
-		_skill_level.style.left = 0;
-		_skill_level.style.top = 0;
-		_skill_level.style.zIndex = 100;
-		jquery_default(window).mousemove(function(event) {
-			_skill_level.style.left = event.pageX + 20 + "px";
-			_skill_level.style.top = event.pageY - 18 + "px";
+		const root = _getRoot$2();
+		_skillName = root.querySelector(".skill-name");
+		_description = root.querySelector(".skill-description");
+		_skillLevel = root.querySelector(".skill-level");
+		_skillName.style.display = "none";
+		_description.style.display = "none";
+		_skillLevel.style.display = "none";
+		window.addEventListener("mousemove", (event) => {
+			_skillLevel.style.left = `${event.pageX + 20}px`;
+			_skillLevel.style.top = `${event.pageY - 18}px`;
 		});
-		render$17(DB.getMessage(234), _description);
-		this.ui = jquery_default("<div id =\"SkillTargetSelection\"/>");
-		this.ui.append();
+		renderText(DB.getMessage(234), _description);
 	};
 	/**
 	* Append to body
 	*/
 	SkillTargetSelection.onAppend = function onAppend() {
-		let events;
-		if (!_skillName.parentNode) document.body.appendChild(_skillName);
-		if (!_description.parentNode) document.body.appendChild(_description);
-		if (!_skill_level.parentNode) document.body.appendChild(_skill_level);
-		events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		jquery_default(window).one("mousedown.targetselection", intersectEntities);
-		events = jquery_default._data(window, "events").mousedown;
-		events.unshift(events.pop());
+		_skillName.style.display = "block";
+		_description.style.display = "block";
+		_skillLevel.style.display = "block";
+		_mousedownHandler = (event) => {
+			intersectEntities(event);
+		};
+		window.addEventListener("mousedown", _mousedownHandler, true);
 	};
 	/**
 	* Possible to exit using ESCAPE
 	*/
 	SkillTargetSelection.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
 			this.remove();
 			event.stopImmediatePropagation();
 			return false;
@@ -190854,14 +190874,17 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Remove from body
 	*/
 	SkillTargetSelection.onRemove = function onRemove() {
-		jquery_default(window).off("mousedown.targetselection");
+		if (_mousedownHandler) {
+			window.removeEventListener("mousedown", _mousedownHandler, true);
+			_mousedownHandler = null;
+		}
 		Cursor.blockMagnetism = false;
 		Cursor.freeze = false;
 		Cursor.setType(Cursor.ACTION.DEFAULT);
 		EntityManager.setSupportPicking(false);
-		if (_skillName.parentNode) document.body.removeChild(_skillName);
-		if (_description.parentNode) document.body.removeChild(_description);
-		if (_skill_level.parentNode) document.body.removeChild(_skill_level);
+		_skillName.style.display = "none";
+		_description.style.display = "none";
+		_skillLevel.style.display = "none";
 		Mouse.state = Mouse.MOUSE_STATE.NORMAL;
 	};
 	/**
@@ -190888,8 +190911,8 @@ var init_SkillTargetSelection = __esmMin((() => {
 		Mouse.state = Mouse.MOUSE_STATE.USESKILL;
 		EntityManager.setSupportPicking((_flag & SkillTargetSelection.TYPE.FRIEND) > 0);
 		const sk = SkillInfo[skill.SKID];
-		render$17(description || sk.SkillName, _skillName);
-		renderLevel(_skill.useLevel ? _skill.useLevel : _skill.level, _skill_level);
+		renderText(description || sk.SkillName, _skillName);
+		renderLevel(_skill.useLevel ? _skill.useLevel : _skill.level, _skillLevel);
 		Cursor.setType(Cursor.ACTION.TARGET);
 		Cursor.freeze = true;
 	};
@@ -190899,7 +190922,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 		_skill.useLevel += delta;
 		if (_skill.useLevel < 1) _skill.useLevel = 1;
 		if (_skill.useLevel > _skill.level) _skill.useLevel = _skill.level;
-		renderLevel(_skill.useLevel, _skill_level);
+		renderLevel(_skill.useLevel, _skillLevel);
 	};
 	/**
 	* Intersect with an entity ID
@@ -190925,7 +190948,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Functions to define
 	*/
 	SkillTargetSelection.onUseSkillToId = function onUseSkillToId() {};
-	SkillTargetSelection.onUseSkillToPos = function onUseSkillToId() {};
+	SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos() {};
 	SkillTargetSelection_default = UIManager.addComponent(SkillTargetSelection);
 }));
 //#endregion
