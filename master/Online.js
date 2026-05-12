@@ -141,6 +141,12 @@ function returnTrue() {
 function returnFalse() {
 	return false;
 }
+/*!
+* Sizzle CSS Selector Engine
+* Copyright 2012 jQuery Foundation and other contributors
+* Released under the MIT license
+* http://sizzlejs.com/
+*/
 function sibling(cur, dir) {
 	do
 		cur = cur[dir];
@@ -2248,12 +2254,6 @@ var init_jquery_1_9_1 = __esmMin((() => {
 			if (elem) return jQuery.event.trigger(type, data, elem, true);
 		}
 	});
-	/*!
-	* Sizzle CSS Selector Engine
-	* Copyright 2012 jQuery Foundation and other contributors
-	* Released under the MIT license
-	* http://sizzlejs.com/
-	*/
 	(function(window, undefined) {
 		var i, cachedruns, Expr, getText, isXML, compile, hasDuplicate, outermostContext, setDocument, document, docElem, documentIsXML, rbuggyQSA, rbuggyMatches, matches, contains, sortOrder, expando = "sizzle" + -/* @__PURE__ */ new Date(), preferredDoc = window.document, support = {}, dirruns = 0, done = 0, classCache = createCache(), tokenCache = createCache(), compilerCache = createCache(), strundefined = typeof undefined, MAX_NEGATIVE = 1 << 31, arr = [], pop = arr.pop, push = arr.push, slice = arr.slice, indexOf = arr.indexOf || function(elem) {
 			var i = 0, len = this.length;
@@ -14996,6 +14996,22 @@ var init_iconv_lite = __esmMin((() => {
 		} })();
 	})();
 }));
+/*! Bundled license information:
+
+ieee754/index.js:
+(*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> *)
+
+buffer/index.js:
+(*!
+* The buffer module from node.js, for the browser.
+*
+* @author   Feross Aboukhadijeh <https://feross.org>
+* @license  MIT
+*)
+
+safe-buffer/index.js:
+(*! safe-buffer. MIT License. Feross Aboukhadijeh <https://feross.org/opensource> *)
+*/
 //#endregion
 //#region src/Utils/CodepageManager.js
 /**
@@ -256030,6 +256046,14 @@ var init_Client = __esmMin((() => {
 //#endregion
 //#region node_modules/lodash/lodash.js
 var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* @license
+	* Lodash <https://lodash.com/>
+	* Copyright OpenJS Foundation and other contributors <https://openjsf.org/>
+	* Released under MIT license <https://lodash.com/license>
+	* Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	* Copyright Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	*/
 	(function() {
 		/** Used as a safe reference for `undefined` in pre-ES5 environments. */
 		var undefined;
@@ -314900,7 +314924,7 @@ var init_Vending$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.js
-function _getRoot() {
+function _getRoot$1() {
 	return Vending._shadow || Vending._host;
 }
 function escapeHtml(text) {
@@ -314967,7 +314991,7 @@ function addItem$1(content, item, isinput) {
 		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
 		itemObj = container;
 		if (_type$3 === Vending.Type.BUYING_STORE) {
-			const limitInput = _getRoot().querySelector(".limitZeny");
+			const limitInput = _getRoot$1().querySelector(".limitZeny");
 			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
 			limitInput.value = limit;
@@ -315038,7 +315062,7 @@ function onDrop$5(event) {
 		return;
 	}
 	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return;
-	const fromContent = _getRoot().querySelector(`.${data.container} .content`);
+	const fromContent = _getRoot$1().querySelector(`.${data.container} .content`);
 	const toContent = this.querySelector(".content");
 	requestMoveItem$1(data.index, fromContent, toContent, this.className === "OutputWindow");
 }
@@ -315057,7 +315081,7 @@ function onItemInfo$11(event) {
 }
 function onItemSelected$1() {
 	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
-	const root = _getRoot();
+	const root = _getRoot$1();
 	const inputWin = root.querySelector(".InputWindow");
 	let from, to;
 	if (inputWin.contains(this)) {
@@ -315070,7 +315094,7 @@ function onItemSelected$1() {
 	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.querySelector(".content"), to.querySelector(".content"), from === inputWin);
 }
 function onItemFocus$1() {
-	_getRoot().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	_getRoot$1().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
 	this.classList.add("selected");
 }
 function onScroll$4(event) {
@@ -315083,7 +315107,7 @@ function onScroll$4(event) {
 	event.preventDefault();
 }
 function onDragStart$1(event) {
-	const root = _getRoot();
+	const root = _getRoot$1();
 	const inputWin = root.querySelector(".InputWindow");
 	const outputWin = root.querySelector(".OutputWindow");
 	const container = (inputWin.contains(this) ? inputWin : outputWin).className;
@@ -315100,7 +315124,7 @@ function onDragStart$1(event) {
 	}));
 }
 function onResizeInput() {
-	const inputWin = _getRoot().querySelector(".InputWindow");
+	const inputWin = _getRoot$1().querySelector(".InputWindow");
 	const content = inputWin.querySelector(".container .content");
 	const top = inputWin.offsetTop;
 	let lastHeight = 0;
@@ -315135,14 +315159,14 @@ function onItemOver$8() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const overlay = _getRoot().querySelector(".overlay");
+	const overlay = _getRoot$1().querySelector(".overlay");
 	overlay.style.display = "";
 	overlay.style.top = `${this.offsetTop - 20}px`;
 	overlay.style.left = `${this.offsetLeft - 10}px`;
 	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
 }
 function onItemOut$9() {
-	const overlay = _getRoot().querySelector(".overlay");
+	const overlay = _getRoot$1().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
@@ -315193,7 +315217,7 @@ var init_Vending = __esmMin((() => {
 	_slots$4 = 0;
 	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
-		const root = _getRoot();
+		const root = _getRoot$1();
 		const sellBtn = root.querySelector(".btn.sell");
 		if (sellBtn) {
 			sellBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -315283,7 +315307,7 @@ var init_Vending = __esmMin((() => {
 		});
 	};
 	Vending.onAppend = function onAppend() {
-		const root = _getRoot();
+		const root = _getRoot$1();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		const inputContent = inputWin.querySelector(".content");
@@ -315297,7 +315321,7 @@ var init_Vending = __esmMin((() => {
 		this._host.style.display = "none";
 	};
 	Vending.setType = function setType(type) {
-		const root = _getRoot();
+		const root = _getRoot$1();
 		const winBuyEls = root.querySelectorAll(".WinBuy");
 		const winSellEls = root.querySelectorAll(".WinSell");
 		switch (type) {
@@ -315325,7 +315349,7 @@ var init_Vending = __esmMin((() => {
 	};
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
-		const root = _getRoot();
+		const root = _getRoot$1();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
@@ -315358,7 +315382,7 @@ var init_Vending = __esmMin((() => {
 		return true;
 	};
 	Vending.setList = function setList(items) {
-		const root = _getRoot();
+		const root = _getRoot$1();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -315405,7 +315429,7 @@ var init_Vending = __esmMin((() => {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
 		this.setList(CartItems_default.list);
-		const root = _getRoot();
+		const root = _getRoot$1();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315421,7 +315445,7 @@ var init_Vending = __esmMin((() => {
 			if (isItemStackable(item) && DB.isBuyable(item.ITID)) buyable.push(item);
 		}
 		this.setList(buyable);
-		const root = _getRoot();
+		const root = _getRoot$1();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315435,7 +315459,7 @@ var init_Vending = __esmMin((() => {
 	Vending.onSubmit = function onSubmit() {
 		const output = [];
 		const count = _output$1.length;
-		const root = _getRoot();
+		const root = _getRoot$1();
 		const shopname = root.querySelector(".shopname").value;
 		let limitZeny;
 		let ctr = 0;
@@ -315517,6 +315541,14 @@ function prettyZeny$2(val, useStyle) {
 	][count - 1]}">${str}</span>`;
 	return str;
 }
+/**
+* Hide/show inventory's content
+* @preserved currently unused, might be needed in the future
+*/
+/**
+* Update tab, reset inventory content
+* @preserved currently unused, might be needed in the future
+*/
 /**
 * Drop an item from storage to inventory
 *
@@ -316970,13 +317002,25 @@ var init_ShortCuts = __esmMin((() => {
 	ShortCuts_default = UIManager.addComponent(ShortCuts);
 }));
 //#endregion
+//#region src/UI/Components/StatusIcons/StatusIcons.html?raw
+var StatusIcons_default$2;
+var init_StatusIcons$2 = __esmMin((() => {
+	StatusIcons_default$2 = "<div id=\"StatusIcons\"></div>\r\n";
+}));
+//#endregion
 //#region src/UI/Components/StatusIcons/StatusIcons.css?raw
 var StatusIcons_default$1;
 var init_StatusIcons$1 = __esmMin((() => {
-	StatusIcons_default$1 = "#StatusIcons {\r\n	display: block;\r\n	position: absolute;\r\n	top: 166px;\r\n	right: 20px;\r\n	z-index: 50;\r\n}\r\n\r\n#StatusIcons .state {\r\n	position: absolute;\r\n}\r\n\r\n#StatusIcons .state .description {\r\n	display: none;\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 33px;\r\n	top: 0px;\r\n	padding: 0px 5px 0px 5px;\r\n	background-color: rgba(0, 0, 0, 0.5);\r\n	border: 1px solid #c6c6c6;\r\n	border-radius: 3px;\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	white-space: nowrap;\r\n	line-height: 16px;\r\n}\r\n\r\n#StatusIcons .state:hover .description {\r\n	display: block;\r\n}\r\n\r\n#StatusIcons .state canvas {\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n";
+	StatusIcons_default$1 = ":host {\r\n	top: 166px;\r\n	right: 20px;\r\n	overflow: visible;\r\n}\r\n\r\n#StatusIcons {\r\n	display: block;\r\n}\r\n\r\n#StatusIcons .state {\r\n	position: absolute;\r\n}\r\n\r\n#StatusIcons .state .description {\r\n	display: none;\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 33px;\r\n	top: 0px;\r\n	padding: 0px 5px 0px 5px;\r\n	background-color: rgba(0, 0, 0, 0.5);\r\n	border: 1px solid #c6c6c6;\r\n	border-radius: 3px;\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	white-space: nowrap;\r\n	line-height: 16px;\r\n}\r\n\r\n#StatusIcons .state:hover .description {\r\n	display: block;\r\n}\r\n\r\n#StatusIcons .state canvas {\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/StatusIcons/StatusIcons.js
+/**
+* Helper to get the shadow root
+*/
+function _getRoot() {
+	return StatusIcons._shadow || StatusIcons._host;
+}
 function addResizedStatusIcon(img, index) {
 	if (img.width < 33 && img.height < 33) {
 		_status[index].img = img;
@@ -316999,7 +317043,7 @@ function addResizedStatusIcon(img, index) {
 	ctx.restore();
 	const resizedImg = new Image();
 	resizedImg.src = canvas.toDataURL();
-	resizedImg.onload = function() {
+	resizedImg.onload = () => {
 		_status[index].img = resizedImg;
 		addElement$4(_status[index].element);
 	};
@@ -317010,7 +317054,7 @@ function addResizedStatusIcon(img, index) {
 * Used when one element is removed.
 */
 function resetElementsPosition() {
-	const elements = StatusIcons.ui.find(".state");
+	const elements = _getRoot().querySelectorAll(".state");
 	const count = elements.length;
 	let x = 0;
 	let y = 0;
@@ -317020,8 +317064,8 @@ function resetElementsPosition() {
 			x += 45;
 		}
 		const element = elements[i];
-		element.style.top = y + "px";
-		element.style.right = x + "px";
+		element.style.top = `${y}px`;
+		element.style.right = `${x}px`;
 	}
 }
 /**
@@ -317077,14 +317121,16 @@ function createElement(index) {
 * @param {CanvasElement}
 */
 function addElement$4(element) {
-	const elements = StatusIcons.ui.find(".state");
+	const root = _getRoot();
+	const elements = root.querySelectorAll(".state");
 	const max = (Renderer.height - 166) / 36 | 0;
 	const count = elements.length;
 	const x = (count / max | 0) * 45;
 	const y = count % max * 36;
-	element.style.top = y + "px";
-	element.style.right = x + "px";
-	StatusIcons.ui.append(element);
+	element.style.top = `${y}px`;
+	element.style.right = `${x}px`;
+	const container = root.querySelector("#StatusIcons");
+	if (container) container.appendChild(element);
 }
 /**
 * Rendering a status icon
@@ -317118,7 +317164,7 @@ function renderStatus(status, now) {
 		const tick = (end - now) / 1e3 | 0;
 		const seconds = tick % 60;
 		const minutes = tick / 60 | 0;
-		status.time.textContent = now >= end || end === Infinity ? "" : (minutes ? minutes + " " + DB.getMessage(1807, "minute") + " " : "") + seconds + " " + DB.getMessage(1808, "second");
+		status.time.textContent = now >= end || end === Infinity ? "" : (minutes ? `${minutes} ${DB.getMessage(1807, "minute")} ` : "") + `${seconds} ${DB.getMessage(1808, "second")}`;
 	}
 }
 /**
@@ -317139,19 +317185,20 @@ var StatusIcons, _status, _last_updated_time, _render_time, StatusIcons_default;
 var init_StatusIcons = __esmMin((() => {
 	init_StatusInfo();
 	init_DBManager();
-	init_jquery();
 	init_Texture();
 	init_Client();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_ScreenEffectManager();
+	init_StatusIcons$2();
 	init_StatusIcons$1();
-	StatusIcons = new UIComponent("StatusIcons", null, StatusIcons_default$1);
+	StatusIcons = new GUIComponent("StatusIcons", StatusIcons_default$1);
+	StatusIcons.render = () => StatusIcons_default$2;
 	/**
 	* Mouse can cross this UI
 	*/
-	StatusIcons.mouseMode = UIComponent.MouseMode.CROSS;
+	StatusIcons.mouseMode = GUIComponent.MouseMode.CROSS;
 	/**
 	* @var {boolean} do not focus this UI
 	*/
@@ -317159,12 +317206,6 @@ var init_StatusIcons = __esmMin((() => {
 	_status = {};
 	_last_updated_time = Date.now();
 	_render_time = 500;
-	/**
-	* Initialize component
-	*/
-	StatusIcons.init = function init() {
-		this.ui = jquery_default("<div/>").attr("id", "StatusIcons");
-	};
 	/**
 	* Start rendering icons
 	*/
@@ -317181,7 +317222,8 @@ var init_StatusIcons = __esmMin((() => {
 	* Clean up component
 	*/
 	StatusIcons.clean = function clean() {
-		this.ui.empty();
+		const container = _getRoot().querySelector("#StatusIcons");
+		if (container) container.innerHTML = "";
 		_status = {};
 		ScreenEffectManager.clean();
 	};
@@ -317203,8 +317245,8 @@ var init_StatusIcons = __esmMin((() => {
 		_status[index].start = Renderer.tick;
 		_status[index].end = Renderer.tick + life;
 		if (life === 9999) _status[index].end = Infinity;
-		if (_status.img) return;
-		Client.loadFile("data/texture/effect/" + StatusInfo[index].icon, function(data) {
+		if (_status[index].img) return;
+		Client.loadFile(`data/texture/effect/${StatusInfo[index].icon}`, (data) => {
 			Texture.load(data, function() {
 				if (_status[index] && !_status[index].img) addResizedStatusIcon(this, index);
 			});
@@ -328997,18 +329039,32 @@ var init_ChatRoom = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/Components/SlotMachine/SlotMachine.html?raw
+var SlotMachine_default$2;
+var init_SlotMachine$2 = __esmMin((() => {
+	SlotMachine_default$2 = "<div id=\"SlotMachine\">\r\n	<canvas width=\"270\" height=\"260\"></canvas>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SlotMachine/SlotMachine.css?raw
+var SlotMachine_default$1;
+var init_SlotMachine$1 = __esmMin((() => {
+	SlotMachine_default$1 = ":host {\r\n	width: 270px;\r\n	height: 260px;\r\n}\r\n\r\n#SlotMachine {\r\n	position: absolute;\r\n	width: 270px;\r\n	height: 260px;\r\n}\r\n\r\n#SlotMachine canvas {\r\n	display: block;\r\n	width: 270px;\r\n	height: 260px;\r\n}\r\n";
+}));
+//#endregion
 //#region src/UI/Components/SlotMachine/SlotMachine.js
 var SlotMachine, _sprite, _action, _type$1, _result, _ctx$4, _entity, _start, rendering, SlotMachine_default;
 var init_SlotMachine = __esmMin((() => {
-	init_jquery();
+	init_GUIComponent();
 	init_UIManager();
-	init_UIComponent();
 	init_Client();
 	init_Events();
 	init_Renderer();
 	init_Entity$1();
 	init_SpriteRenderer();
-	SlotMachine = new UIComponent("SlotMachine");
+	init_SlotMachine$2();
+	init_SlotMachine$1();
+	SlotMachine = new GUIComponent("SlotMachine", SlotMachine_default$1);
+	SlotMachine.render = () => SlotMachine_default$2;
 	_type$1 = 0;
 	_result = false;
 	_entity = new Entity();
@@ -329017,29 +329073,21 @@ var init_SlotMachine = __esmMin((() => {
 	* Initialize UI
 	*/
 	SlotMachine.init = function init() {
-		this.ui = jquery_default("<canvas/>").attr({
-			width: 270,
-			height: 260,
-			id: "SlotMachine"
-		}).css({
-			zIndex: 500,
-			position: "absolute",
-			top: Renderer.height / 2 - 130,
-			left: Renderer.width / 2 - 135
-		});
-		_ctx$4 = this.ui[0].getContext("2d");
-		Client.loadFiles(["data/sprite/slotmachine.spr", "data/sprite/slotmachine.act"], function(spr, act) {
+		const canvas = (this._shadow || this._host).querySelector("canvas");
+		_ctx$4 = canvas.getContext("2d");
+		this._host.style.zIndex = "500";
+		Client.loadFiles(["data/sprite/slotmachine.spr", "data/sprite/slotmachine.act"], (spr, act) => {
 			_sprite = spr;
 			_action = act;
 			_type$1 = 0;
 			_start = Renderer.tick;
-			if (this.ui[0].parentNode) Renderer.render(rendering);
-		}.bind(this));
-		this.ui.mousedown(function(event) {
+			if (this._host.parentNode) Renderer.render(rendering);
+		});
+		canvas.addEventListener("mousedown", (event) => {
 			if (_type$1 === 0) {
 				SlotMachine.onTry();
 				event.stopImmediatePropagation();
-				return false;
+				event.preventDefault();
 			}
 		});
 	};
@@ -329049,6 +329097,8 @@ var init_SlotMachine = __esmMin((() => {
 	SlotMachine.onAppend = function onAppend() {
 		_type$1 = 0;
 		_start = Renderer.tick;
+		this._host.style.top = `${Renderer.height / 2 - 130}px`;
+		this._host.style.left = `${Renderer.width / 2 - 135}px`;
 		if (_sprite && _action) Renderer.render(rendering);
 	};
 	/**
@@ -329067,19 +329117,18 @@ var init_SlotMachine = __esmMin((() => {
 		_result = result;
 		_start = Renderer.tick;
 	};
-	rendering = (function renderingClosure() {
+	rendering = (() => {
 		const position = new Uint16Array([0, 0]);
-		return function _renderFrame() {
-			let i, count, max;
+		return () => {
 			let action, anim;
 			switch (_type$1) {
 				case 0:
 					action = _action.actions[0];
 					anim = Math.floor((Renderer.tick - _start) / action.delay * 2);
 					break;
-				case 1:
+				case 1: {
 					action = _action.actions[1];
-					max = action.animations.length + (_result ? 7 : 3);
+					const max = action.animations.length + (_result ? 7 : 3);
 					anim = Renderer.tick - _start;
 					anim = Math.floor(anim / action.delay);
 					anim = Math.min(anim, max);
@@ -329088,30 +329137,33 @@ var init_SlotMachine = __esmMin((() => {
 						_start = Renderer.tick;
 					}
 					break;
+				}
 				case 2:
-				case 3:
+				case 3: {
 					action = _action.actions[_type$1];
-					max = action.animations.length;
+					const max = action.animations.length;
 					anim = Renderer.tick - _start;
 					anim = Math.floor(anim / action.delay);
 					if (anim >= max) {
 						Renderer.stop(rendering);
-						Events.setTimeout(function() {
+						Events.setTimeout(() => {
 							SlotMachine.remove();
 						}, 500);
 					}
 					break;
+				}
 			}
 			const animation = action.animations[anim % action.animations.length];
 			SpriteRenderer.bind2DContext(_ctx$4, 140, 165);
 			_ctx$4.clearRect(0, 0, _ctx$4.canvas.width, _ctx$4.canvas.height);
-			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite, _sprite, 1, position, false);
+			for (let i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite, _sprite, 1, position, false);
 		};
 	})();
 	/**
 	* Functions defined in Engine/MapEngine/Pet.js
 	*/
 	SlotMachine.onTry = function onTry() {};
+	SlotMachine.mouseMode = GUIComponent.MouseMode.STOP;
 	SlotMachine_default = UIManager.addComponent(SlotMachine);
 }));
 //#endregion
