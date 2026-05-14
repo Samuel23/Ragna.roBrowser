@@ -190685,7 +190685,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$2() {
+function _getRoot$3() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -190834,7 +190834,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$2();
+		const root = _getRoot$3();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -314947,7 +314947,7 @@ var init_Vending$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.js
-function _getRoot$1() {
+function _getRoot$2() {
 	return Vending._shadow || Vending._host;
 }
 function escapeHtml(text) {
@@ -315014,7 +315014,7 @@ function addItem$1(content, item, isinput) {
 		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
 		itemObj = container;
 		if (_type$3 === Vending.Type.BUYING_STORE) {
-			const limitInput = _getRoot$1().querySelector(".limitZeny");
+			const limitInput = _getRoot$2().querySelector(".limitZeny");
 			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
 			limitInput.value = limit;
@@ -315085,7 +315085,7 @@ function onDrop$5(event) {
 		return;
 	}
 	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return;
-	const fromContent = _getRoot$1().querySelector(`.${data.container} .content`);
+	const fromContent = _getRoot$2().querySelector(`.${data.container} .content`);
 	const toContent = this.querySelector(".content");
 	requestMoveItem$1(data.index, fromContent, toContent, this.className === "OutputWindow");
 }
@@ -315104,7 +315104,7 @@ function onItemInfo$11(event) {
 }
 function onItemSelected$1() {
 	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
-	const root = _getRoot$1();
+	const root = _getRoot$2();
 	const inputWin = root.querySelector(".InputWindow");
 	let from, to;
 	if (inputWin.contains(this)) {
@@ -315117,7 +315117,7 @@ function onItemSelected$1() {
 	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.querySelector(".content"), to.querySelector(".content"), from === inputWin);
 }
 function onItemFocus$1() {
-	_getRoot$1().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	_getRoot$2().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
 	this.classList.add("selected");
 }
 function onScroll$4(event) {
@@ -315130,7 +315130,7 @@ function onScroll$4(event) {
 	event.preventDefault();
 }
 function onDragStart$1(event) {
-	const root = _getRoot$1();
+	const root = _getRoot$2();
 	const inputWin = root.querySelector(".InputWindow");
 	const outputWin = root.querySelector(".OutputWindow");
 	const container = (inputWin.contains(this) ? inputWin : outputWin).className;
@@ -315147,7 +315147,7 @@ function onDragStart$1(event) {
 	}));
 }
 function onResizeInput() {
-	const inputWin = _getRoot$1().querySelector(".InputWindow");
+	const inputWin = _getRoot$2().querySelector(".InputWindow");
 	const content = inputWin.querySelector(".container .content");
 	const top = inputWin.offsetTop;
 	let lastHeight = 0;
@@ -315182,14 +315182,14 @@ function onItemOver$8() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const overlay = _getRoot$1().querySelector(".overlay");
+	const overlay = _getRoot$2().querySelector(".overlay");
 	overlay.style.display = "";
 	overlay.style.top = `${this.offsetTop - 20}px`;
 	overlay.style.left = `${this.offsetLeft - 10}px`;
 	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
 }
 function onItemOut$9() {
-	const overlay = _getRoot$1().querySelector(".overlay");
+	const overlay = _getRoot$2().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
@@ -315240,7 +315240,7 @@ var init_Vending = __esmMin((() => {
 	_slots$4 = 0;
 	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		const sellBtn = root.querySelector(".btn.sell");
 		if (sellBtn) {
 			sellBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -315330,7 +315330,7 @@ var init_Vending = __esmMin((() => {
 		});
 	};
 	Vending.onAppend = function onAppend() {
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		const inputContent = inputWin.querySelector(".content");
@@ -315344,7 +315344,7 @@ var init_Vending = __esmMin((() => {
 		this._host.style.display = "none";
 	};
 	Vending.setType = function setType(type) {
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		const winBuyEls = root.querySelectorAll(".WinBuy");
 		const winSellEls = root.querySelectorAll(".WinSell");
 		switch (type) {
@@ -315372,7 +315372,7 @@ var init_Vending = __esmMin((() => {
 	};
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
@@ -315405,7 +315405,7 @@ var init_Vending = __esmMin((() => {
 		return true;
 	};
 	Vending.setList = function setList(items) {
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -315452,7 +315452,7 @@ var init_Vending = __esmMin((() => {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
 		this.setList(CartItems_default.list);
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315468,7 +315468,7 @@ var init_Vending = __esmMin((() => {
 			if (isItemStackable(item) && DB.isBuyable(item.ITID)) buyable.push(item);
 		}
 		this.setList(buyable);
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315482,7 +315482,7 @@ var init_Vending = __esmMin((() => {
 	Vending.onSubmit = function onSubmit() {
 		const output = [];
 		const count = _output$1.length;
-		const root = _getRoot$1();
+		const root = _getRoot$2();
 		const shopname = root.querySelector(".shopname").value;
 		let limitZeny;
 		let ctr = 0;
@@ -317041,7 +317041,7 @@ var init_StatusIcons$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot() {
+function _getRoot$1() {
 	return StatusIcons._shadow || StatusIcons._host;
 }
 function addResizedStatusIcon(img, index) {
@@ -317077,7 +317077,7 @@ function addResizedStatusIcon(img, index) {
 * Used when one element is removed.
 */
 function resetElementsPosition() {
-	const elements = _getRoot().querySelectorAll(".state");
+	const elements = _getRoot$1().querySelectorAll(".state");
 	const count = elements.length;
 	let x = 0;
 	let y = 0;
@@ -317144,7 +317144,7 @@ function createElement(index) {
 * @param {CanvasElement}
 */
 function addElement$4(element) {
-	const root = _getRoot();
+	const root = _getRoot$1();
 	const elements = root.querySelectorAll(".state");
 	const max = (Renderer.height - 166) / 36 | 0;
 	const count = elements.length;
@@ -317245,7 +317245,7 @@ var init_StatusIcons = __esmMin((() => {
 	* Clean up component
 	*/
 	StatusIcons.clean = function clean() {
-		const container = _getRoot().querySelector("#StatusIcons");
+		const container = _getRoot$1().querySelector("#StatusIcons");
 		if (container) container.innerHTML = "";
 		_status = {};
 		ScreenEffectManager.clean();
@@ -327965,14 +327965,29 @@ var init_Sense$2 = __esmMin((() => {
 //#region src/UI/Components/Sense/Sense.css?raw
 var Sense_default$1;
 var init_Sense$1 = __esmMin((() => {
-	Sense_default$1 = "#win_sense {\r\n	position: absolute;\r\n	width: 400px;\r\n	height: 200px;\r\n	z-index: 999;\r\n}\r\n\r\n#win_sense .header {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 17px;\r\n	width: 100%;\r\n}\r\n#win_sense .header .titbar_left {\r\n	height: 100%;\r\n	width: 12px;\r\n	float: left;\r\n}\r\n#win_sense .header .titbar_mid {\r\n	height: 100%;\r\n	width: 376px;\r\n	float: left;\r\n	background-repeat: repeat-x;\r\n}\r\n#win_sense .header .titbar_right {\r\n	height: 100%;\r\n	width: 12px;\r\n	float: left;\r\n}\r\n#win_sense .header .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 12px;\r\n}\r\n\r\n#win_sense .content {\r\n	position: absolute;\r\n	top: 17px;\r\n	left: 0px;\r\n	height: 155px;\r\n	width: 100%;\r\n	background-color: white;\r\n}\r\n\r\n#win_sense .sprite {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 155px;\r\n	width: 120px;\r\n}\r\n\r\n#win_sense .stats {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 120px;\r\n	width: 280px;\r\n}\r\n#win_sense .stats tr td {\r\n	padding: 0px;\r\n	height: 14px;\r\n}\r\n\r\n#win_sense .elements {\r\n	position: absolute;\r\n	bottom: 5px;\r\n	left: 120px;\r\n	border: 0px;\r\n	border-spacing: 9px 2px;\r\n}\r\n#win_sense .elements tr td {\r\n	border: 1px solid blue;\r\n	text-align: center;\r\n	width: 75px;\r\n	padding: 1px;\r\n}\r\n\r\n#win_sense .element_good {\r\n	color: darkgreen;\r\n	font-weight: bold;\r\n}\r\n#win_sense .element_bad {\r\n	color: darkred;\r\n}\r\n\r\n#win_sense .footer {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	left: 0px;\r\n	height: 29px;\r\n	width: 100%;\r\n}\r\n#win_sense .footer .bg_left {\r\n	height: 100%;\r\n	width: 21px;\r\n	float: left;\r\n}\r\n#win_sense .footer .bg_mid {\r\n	height: 100%;\r\n	width: 357px;\r\n	float: left;\r\n	background-repeat: repeat-x;\r\n}\r\n#win_sense .footer .bg_right {\r\n	height: 100%;\r\n	width: 21px;\r\n	float: left;\r\n}\r\n\r\n#win_sense .footer .btns {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 3px;\r\n}\r\n#win_sense .footer .btn {\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	margin-left: 3px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.win_sense_overlay {\r\n	position: fixed;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 100%;\r\n	height: 100%;\r\n	z-index: 99;\r\n}\r\n";
+	Sense_default$1 = ":host {\r\n	width: 400px;\r\n	height: 200px;\r\n	top: 150px;\r\n	left: 150px;\r\n}\r\n\r\n#win_sense {\r\n	position: absolute;\r\n	width: 400px;\r\n	height: 200px;\r\n}\r\n\r\n#win_sense .header {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 17px;\r\n	width: 100%;\r\n}\r\n#win_sense .header .titbar_left {\r\n	height: 100%;\r\n	width: 12px;\r\n	float: left;\r\n}\r\n#win_sense .header .titbar_mid {\r\n	height: 100%;\r\n	width: 376px;\r\n	float: left;\r\n	background-repeat: repeat-x;\r\n}\r\n#win_sense .header .titbar_right {\r\n	height: 100%;\r\n	width: 12px;\r\n	float: left;\r\n}\r\n#win_sense .header .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 12px;\r\n}\r\n\r\n#win_sense .content {\r\n	position: absolute;\r\n	top: 17px;\r\n	left: 0px;\r\n	height: 155px;\r\n	width: 100%;\r\n	background-color: white;\r\n}\r\n\r\n#win_sense .sprite {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 155px;\r\n	width: 120px;\r\n}\r\n\r\n#win_sense .stats {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 120px;\r\n	width: 280px;\r\n}\r\n#win_sense .stats tr td {\r\n	padding: 0px;\r\n	height: 14px;\r\n}\r\n\r\n#win_sense .elements {\r\n	position: absolute;\r\n	bottom: 5px;\r\n	left: 120px;\r\n	border: 0px;\r\n	border-spacing: 9px 2px;\r\n}\r\n#win_sense .elements tr td {\r\n	border: 1px solid blue;\r\n	text-align: center;\r\n	width: 75px;\r\n	padding: 1px;\r\n}\r\n\r\n#win_sense .element_good {\r\n	color: darkgreen;\r\n	font-weight: bold;\r\n}\r\n#win_sense .element_bad {\r\n	color: darkred;\r\n}\r\n\r\n#win_sense .footer {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	left: 0px;\r\n	height: 29px;\r\n	width: 100%;\r\n}\r\n#win_sense .footer .bg_left {\r\n	height: 100%;\r\n	width: 21px;\r\n	float: left;\r\n}\r\n#win_sense .footer .bg_mid {\r\n	height: 100%;\r\n	width: 357px;\r\n	float: left;\r\n	background-repeat: repeat-x;\r\n}\r\n#win_sense .footer .bg_right {\r\n	height: 100%;\r\n	width: 21px;\r\n	float: left;\r\n}\r\n\r\n#win_sense .footer .btns {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 3px;\r\n}\r\n#win_sense .footer .btn {\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	margin-left: 3px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Sense/Sense.js
 /**
+* Helper to get the shadow root
+*/
+function _getRoot() {
+	return Sense._shadow || Sense._host;
+}
+/**
+* Set element class based on property value
+*/
+function _setElementClass(el, value, label) {
+	el.className = "";
+	if (value < 100) el.className = "element_bad";
+	else if (value > 100) el.className = "element_good";
+	el.textContent = `${label}: ${value}`;
+}
+/**
 * Rendering the Character
 */
-function render$9(tick) {
+function render$9() {
 	SpriteRenderer.bind2DContext(_model$2.ctx, Math.floor(_model$2.ctx.canvas.width / 2), _model$2.ctx.canvas.height);
 	_model$2.ctx.clearRect(0, 0, _model$2.ctx.canvas.width, _model$2.ctx.canvas.height);
 	_model$2.entity.renderEntity();
@@ -327984,10 +327999,11 @@ var init_Sense = __esmMin((() => {
 	init_Entity$1();
 	init_SpriteRenderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Sense$2();
 	init_Sense$1();
-	Sense = new UIComponent("Sense", Sense_default$2, Sense_default$1);
+	Sense = new GUIComponent("Sense", Sense_default$1);
+	Sense.render = () => Sense_default$2;
 	Elements = [];
 	Sizes = [];
 	Races = [];
@@ -328001,17 +328017,19 @@ var init_Sense = __esmMin((() => {
 	* Initialize popup
 	*/
 	Sense.init = function init() {
-		this.ui.css({
-			top: (Renderer.height - 120) / 1.5 - 120,
-			left: (Renderer.width - 280) / 2,
-			zIndex: 100
-		});
-		this.ui.find(".close").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		}).click(this.remove.bind(this));
-		this.draggable(this.ui.find(".header"));
-		_model$2.ctx = this.ui.find("#canvas_model")[0].getContext("2d");
+		this._host.style.top = `${(Renderer.height - 120) / 1.5 - 120}px`;
+		this._host.style.left = `${(Renderer.width - 280) / 2}px`;
+		this._host.style.zIndex = "100";
+		const root = _getRoot();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+			});
+			closeBtn.addEventListener("click", () => Sense.remove());
+		}
+		this.draggable(".header");
+		_model$2.ctx = root.querySelector("#canvas_model").getContext("2d");
 		Elements = [
 			DB.getMessage(414),
 			DB.getMessage(415),
@@ -328045,87 +328063,44 @@ var init_Sense = __esmMin((() => {
 	/**
 	* Set stats
 	*
-	* @param {string} title
+	* @param {object} pkt
 	*/
 	Sense.setWindow = function setWindow(pkt) {
-		this.ui.find(".header .title").text(DB.getMessage(406));
+		const root = _getRoot();
+		root.querySelector(".header .title").textContent = DB.getMessage(406);
 		_model$2.entity.set({
 			job: pkt.job,
 			action: 0,
 			direction: 0
 		});
 		_model$2.render = true;
-		this.ui.find("#label_name").text(DB.getMessage(407));
-		this.ui.find("#value_name").html("<a href=\"https://ratemyserver.net/mob_db.php?small=1&mob_id=" + pkt.job + "\" target=\"_blank\">" + DB.getMonsterName(pkt.job) + " </a>");
-		this.ui.find("#label_size").text(DB.getMessage(410));
-		this.ui.find("#value_size").text(Sizes[pkt.size]);
-		this.ui.find("#label_level").text(DB.getMessage(408));
-		this.ui.find("#value_level").text(pkt.level);
-		this.ui.find("#label_type").text(DB.getMessage(411));
-		this.ui.find("#value_type").text(Races[pkt.raceType]);
-		this.ui.find("#label_hp").text(DB.getMessage(409));
-		this.ui.find("#value_hp").text(pkt.hp);
-		this.ui.find("#label_mdef").text(DB.getMessage(412));
-		this.ui.find("#value_mdef").text(pkt.mdefPower);
-		this.ui.find("#label_def").text(DB.getMessage(270));
-		this.ui.find("#value_def").text(pkt.def);
-		this.ui.find("#label_attr").text(DB.getMessage(413));
-		this.ui.find("#value_attr").text(Elements[pkt.property]);
-		const water = this.ui.find("#element_water");
-		water.removeClass("element_good");
-		water.removeClass("element_bad");
-		if (pkt.propertyTable.water < 100) water.addClass("element_bad");
-		else if (pkt.propertyTable.water > 100) water.addClass("element_good");
-		water.text(DB.getMessage(415) + ": " + pkt.propertyTable.water);
-		const wind = this.ui.find("#element_wind");
-		wind.removeClass("element_good");
-		wind.removeClass("element_bad");
-		if (pkt.propertyTable.wind < 100) wind.addClass("element_bad");
-		else if (pkt.propertyTable.wind > 100) wind.addClass("element_good");
-		wind.text(DB.getMessage(418) + ": " + pkt.propertyTable.wind);
-		const dark = this.ui.find("#element_shadow");
-		dark.removeClass("element_good");
-		dark.removeClass("element_bad");
-		if (pkt.propertyTable.dark < 100) dark.addClass("element_bad");
-		else if (pkt.propertyTable.dark > 100) dark.addClass("element_good");
-		dark.text(DB.getMessage(421) + ": " + pkt.propertyTable.dark);
-		const earth = this.ui.find("#element_earth");
-		earth.removeClass("element_good");
-		earth.removeClass("element_bad");
-		if (pkt.propertyTable.earth < 100) earth.addClass("element_bad");
-		else if (pkt.propertyTable.earth > 100) earth.addClass("element_good");
-		earth.text(DB.getMessage(416) + ": " + pkt.propertyTable.earth);
-		const poison = this.ui.find("#element_poison");
-		poison.removeClass("element_good");
-		poison.removeClass("element_bad");
-		if (pkt.propertyTable.poison < 100) poison.addClass("element_bad");
-		else if (pkt.propertyTable.poison > 100) poison.addClass("element_good");
-		poison.text(DB.getMessage(419) + ": " + pkt.propertyTable.poison);
-		const mental = this.ui.find("#element_ghost");
-		mental.removeClass("element_good");
-		mental.removeClass("element_bad");
-		if (pkt.propertyTable.mental < 100) mental.addClass("element_bad");
-		else if (pkt.propertyTable.mental > 100) mental.addClass("element_good");
-		mental.text(DB.getMessage(422) + ": " + pkt.propertyTable.mental);
-		const fire = this.ui.find("#element_fire");
-		fire.removeClass("element_good");
-		fire.removeClass("element_bad");
-		if (pkt.propertyTable.fire < 100) fire.addClass("element_bad");
-		else if (pkt.propertyTable.fire > 100) fire.addClass("element_good");
-		fire.text(DB.getMessage(417) + ": " + pkt.propertyTable.fire);
-		const saint = this.ui.find("#element_holy");
-		saint.removeClass("element_good");
-		saint.removeClass("element_bad");
-		if (pkt.propertyTable.saint < 100) saint.addClass("element_bad");
-		else if (pkt.propertyTable.saint > 100) saint.addClass("element_good");
-		saint.text(DB.getMessage(420) + ": " + pkt.propertyTable.saint);
-		const undead = this.ui.find("#element_undead");
-		undead.removeClass("element_good");
-		undead.removeClass("element_bad");
-		if (pkt.propertyTable.undead < 100) undead.addClass("element_bad");
-		else if (pkt.propertyTable.undead > 100) undead.addClass("element_good");
-		undead.text(DB.getMessage(423) + ": " + pkt.propertyTable.undead);
-		this.ui.show();
+		root.querySelector("#label_name").textContent = DB.getMessage(407);
+		const valueName = root.querySelector("#value_name");
+		valueName.innerHTML = `<a href="https://ratemyserver.net/mob_db.php?small=1&mob_id=${pkt.job}" target="_blank">${DB.getMonsterName(pkt.job)} </a>`;
+		root.querySelector("#label_size").textContent = DB.getMessage(410);
+		root.querySelector("#value_size").textContent = Sizes[pkt.size];
+		root.querySelector("#label_level").textContent = DB.getMessage(408);
+		root.querySelector("#value_level").textContent = pkt.level;
+		root.querySelector("#label_type").textContent = DB.getMessage(411);
+		root.querySelector("#value_type").textContent = Races[pkt.raceType];
+		root.querySelector("#label_hp").textContent = DB.getMessage(409);
+		root.querySelector("#value_hp").textContent = pkt.hp;
+		root.querySelector("#label_mdef").textContent = DB.getMessage(412);
+		root.querySelector("#value_mdef").textContent = pkt.mdefPower;
+		root.querySelector("#label_def").textContent = DB.getMessage(270);
+		root.querySelector("#value_def").textContent = pkt.def;
+		root.querySelector("#label_attr").textContent = DB.getMessage(413);
+		root.querySelector("#value_attr").textContent = Elements[pkt.property];
+		_setElementClass(root.querySelector("#element_water"), pkt.propertyTable.water, DB.getMessage(415));
+		_setElementClass(root.querySelector("#element_wind"), pkt.propertyTable.wind, DB.getMessage(418));
+		_setElementClass(root.querySelector("#element_shadow"), pkt.propertyTable.dark, DB.getMessage(421));
+		_setElementClass(root.querySelector("#element_earth"), pkt.propertyTable.earth, DB.getMessage(416));
+		_setElementClass(root.querySelector("#element_poison"), pkt.propertyTable.poison, DB.getMessage(419));
+		_setElementClass(root.querySelector("#element_ghost"), pkt.propertyTable.mental, DB.getMessage(422));
+		_setElementClass(root.querySelector("#element_fire"), pkt.propertyTable.fire, DB.getMessage(417));
+		_setElementClass(root.querySelector("#element_holy"), pkt.propertyTable.saint, DB.getMessage(420));
+		_setElementClass(root.querySelector("#element_undead"), pkt.propertyTable.undead, DB.getMessage(423));
+		this._host.style.display = "";
 		Renderer.render(render$9);
 	};
 	/**
