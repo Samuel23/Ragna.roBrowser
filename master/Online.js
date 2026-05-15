@@ -190685,7 +190685,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$3() {
+function _getRoot$4() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -190834,7 +190834,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$3();
+		const root = _getRoot$4();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -197723,38 +197723,65 @@ var init_SkillDescription$2 = __esmMin((() => {
 //#region src/UI/Components/SkillDescription/SkillDescription.css?raw
 var SkillDescription_default$1;
 var init_SkillDescription$1 = __esmMin((() => {
-	SkillDescription_default$1 = "#SkillDescription {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	padding: 1px;\r\n	border: 1px solid #c5c5c5;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n}\r\n#SkillDescription .content {\r\n	padding: 5px;\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	width: 278px;\r\n}\r\n#SkillDescription .close {\r\n	position: absolute;\r\n	right: 3px;\r\n	top: 3px;\r\n	border: none;\r\n	width: 9px;\r\n	height: 10px;\r\n	padding: 0px;\r\n	margin: 0px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+	SkillDescription_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#SkillDescription {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	padding: 1px;\r\n	border: 1px solid #c5c5c5;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n}\r\n#SkillDescription .content {\r\n	padding: 5px;\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	width: 278px;\r\n}\r\n#SkillDescription .close {\r\n	position: absolute;\r\n	right: 3px;\r\n	top: 3px;\r\n	border: none;\r\n	width: 9px;\r\n	height: 10px;\r\n	padding: 0px;\r\n	margin: 0px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillDescription/SkillDescription.js
-var SkillDescription$1, SkillDescription_default;
+/**
+* Sanitize and format RO text with ^rrggbb color codes, ^nItemID^NNN
+* item name substitution, and newline conversion.
+* Replicates the logic from Utils/jquery.js overridden .text() method.
+*
+* @param {string} value - raw skill description text
+* @returns {string} safe HTML string
+*/
+function _formatROText(value) {
+	const tmp = document.createElement("div");
+	tmp.innerHTML = String(value);
+	tmp.querySelectorAll("*").forEach((el) => {
+		if (!_allowedTags.has(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
+	});
+	let txt = tmp.innerHTML;
+	let result;
+	const colorReg = /\^([a-fA-F0-9]{6})/;
+	while (result = colorReg.exec(txt)) txt = txt.replace(result[0], `<span style="color:#${result[1]}">`) + "</span>";
+	const itemReg = /\^nItemID\^(\d+)/g;
+	while (result = itemReg.exec(txt)) txt = txt.replace(result[0], DB.getItemInfo(result[1]).identifiedDisplayName);
+	txt = txt.replace(/\n/g, "<br/>");
+	return txt;
+}
+/**
+* Helper to get the shadow root
+*/
+function _getRoot$3() {
+	return SkillDescription$1._shadow || SkillDescription$1._host;
+}
+var _allowedTags, SkillDescription$1, SkillDescription_default;
 var init_SkillDescription = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_Renderer();
 	init_KeyEventHandler();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_SkillDescription$2();
 	init_SkillDescription$1();
-	SkillDescription$1 = new UIComponent("SkillDescription", SkillDescription_default$2, SkillDescription_default$1);
+	_allowedTags = new Set([
+		"font",
+		"i",
+		"b"
+	]);
+	SkillDescription$1 = new GUIComponent("SkillDescription", SkillDescription_default$1);
+	SkillDescription$1.render = () => SkillDescription_default$2;
 	/**
 	* SkillDescription unique id
 	*/
 	SkillDescription$1.uid = -1;
 	/**
-	* Once append to the DOM
+	* Possible to exit using ESCAPE
 	*/
 	SkillDescription$1.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.remove();
-	};
-	/**
-	* Once append
-	*/
-	SkillDescription$1.onAppend = function onAppend() {
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this.remove();
 	};
 	/**
 	* Once removed
@@ -197766,9 +197793,11 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		this.ui.find(".close").click(function() {
-			this.remove();
-		}.bind(this));
+		const closeBtn = _getRoot$3().querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
+		}
 		this.draggable();
 	};
 	/**
@@ -197778,11 +197807,12 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		this.ui.find(".content").text(DB.getSkillDescription(id));
-		this.ui.css({
-			top: Math.min(Mouse.screen.y + 10, Renderer.height - this.ui.height()),
-			left: Math.min(Mouse.screen.x + 10, Renderer.width - this.ui.width())
-		});
+		const content = _getRoot$3().querySelector(".content");
+		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
+		const hostWidth = this._host.getBoundingClientRect().width;
+		const hostHeight = this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Mouse.screen.y + 10, Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Mouse.screen.x + 10, Renderer.width - hostWidth)}px`;
 	};
 	SkillDescription_default = UIManager.addComponent(SkillDescription$1);
 }));
@@ -198238,7 +198268,7 @@ function onRequestUseSkill$2() {
 /**
 * Request to get skill info (right click on a skill)
 */
-function onRequestSkillInfo$2() {
+function onRequestSkillInfo() {
 	let main = jquery_default(this).parent();
 	if (!main.hasClass("skill")) main = main.parent();
 	const skill = getSkillById$2(parseInt(main.data("index"), 10));
@@ -198506,7 +198536,7 @@ var init_Guild$1 = __esmMin((() => {
 			Guild.ui.show();
 			Guild.ui.parent().append(Guild.ui);
 		}).mousedown(stopPropagation$30);
-		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$2).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo$2).on("mousedown", ".selectable", onSkillFocus$2).on("dragstart", ".skill", onSkillDragStart$2).on("dragend", ".skill", onSkillDragEnd$2);
+		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$2).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo).on("mousedown", ".selectable", onSkillFocus$2).on("dragstart", ".skill", onSkillDragStart$2).on("dragend", ".skill", onSkillDragEnd$2);
 		ui.find(".content.notice").on("focus", "textarea, input", function() {
 			ui.find(".footer .btn_ok").show();
 		});
@@ -203133,27 +203163,41 @@ function onNecessarySkillsRemove$1() {
 	SkillList.ui.find(".counterSkill").remove();
 }
 /**
-* Request to get skill info (right click on a skill)
+* Resolve the skill ID from the hovered/clicked element
 */
-function onRequestSkillInfo$1() {
-	let main = jquery_default(this).parent();
+function _resolveSkillID$1(el) {
+	let main = jquery_default(el).parent();
 	if (!main.hasClass("skill")) main = main.parent();
 	const id = parseInt(main.data("index"), 10);
-	const skillID = getSkillById$1(id)?.SKID ?? id;
+	return getSkillById$1(id)?.SKID ?? id;
+}
+/**
+* Show skill description on right-click (always, regardless of checkbox)
+*/
+function onContextMenuSkillInfo$1() {
+	const skillID = _resolveSkillID$1(this);
 	if (SkillDescription_default.uid === skillID) {
 		SkillDescription_default.remove();
 		return;
 	}
-	if (_preferences$55.skillInfo) {
-		SkillDescription_default.append();
-		SkillDescription_default.setSkill(skillID);
-	}
+	SkillDescription_default.append();
+	SkillDescription_default.setSkill(skillID);
 }
 /**
-* Hide description
+* Show skill description on mouseover (only when checkbox is checked)
+*/
+function onMouseOverSkillInfo$1() {
+	if (!_preferences$55.skillInfo) return;
+	const skillID = _resolveSkillID$1(this);
+	if (SkillDescription_default.uid === skillID) return;
+	SkillDescription_default.append();
+	SkillDescription_default.setSkill(skillID);
+}
+/**
+* Hide description (only auto-hide on mouseout when checkbox is checked)
 */
 function onSkillDescriptionRemove$1() {
-	SkillDescription_default.remove();
+	if (_preferences$55.skillInfo) SkillDescription_default.remove();
 }
 /**
 * Checkbox show/hide description
@@ -203334,7 +203378,7 @@ var init_SkillList$1 = __esmMin((() => {
 			SkillList.ui.show();
 			SkillList.ui.parent().append(SkillList.ui);
 		}).mousedown(stopPropagation$29);
-		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$1).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo$1).on("mousedown", ".selectable", onSkillFocus$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onRequestSkillInfo$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove$1).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice$1).on("dragstart", ".skill", onSkillDragStart$1).on("dragend", ".skill", onSkillDragEnd$1).on("touchstart", ".skill .icon", onSkillTouchStart).on("touchmove", ".skill .icon", onSkillTouchMove).on("touchend", ".skill .icon", onSkillTouchEnd);
+		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$1).on("contextmenu", ".skill .icon, .skill .name", onContextMenuSkillInfo$1).on("mousedown", ".selectable", onSkillFocus$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onMouseOverSkillInfo$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove$1).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice$1).on("dragstart", ".skill", onSkillDragStart$1).on("dragend", ".skill", onSkillDragEnd$1).on("touchstart", ".skill .icon", onSkillTouchStart).on("touchmove", ".skill .icon", onSkillTouchMove).on("touchend", ".skill .icon", onSkillTouchEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
 			rArrow$1 = "url(" + data + ")";
@@ -203925,27 +203969,41 @@ function onNecessarySkillsRemove() {
 	SkillListV0.ui.find(".counterSkill").remove();
 }
 /**
-* Request to get skill info (right click on a skill)
+* Resolve the skill ID from the hovered/clicked element
 */
-function onRequestSkillInfo() {
-	let main = jquery_default(this).parent();
+function _resolveSkillID(el) {
+	let main = jquery_default(el).parent();
 	if (!main.hasClass("skill")) main = main.parent();
 	const id = parseInt(main.data("index"), 10);
-	const skillID = getSkillById(id)?.SKID ?? id;
+	return getSkillById(id)?.SKID ?? id;
+}
+/**
+* Show skill description on right-click (always, regardless of checkbox)
+*/
+function onContextMenuSkillInfo() {
+	const skillID = _resolveSkillID(this);
 	if (SkillDescription_default.uid === skillID) {
 		SkillDescription_default.remove();
 		return;
 	}
-	if (_preferences$54.mini || _preferences$54.skillInfo) {
-		SkillDescription_default.append();
-		SkillDescription_default.setSkill(skillID);
-	}
+	SkillDescription_default.append();
+	SkillDescription_default.setSkill(skillID);
 }
 /**
-* Hide description
+* Show skill description on mouseover (only when checkbox is checked)
+*/
+function onMouseOverSkillInfo() {
+	if (!(_preferences$54.mini || _preferences$54.skillInfo)) return;
+	const skillID = _resolveSkillID(this);
+	if (SkillDescription_default.uid === skillID) return;
+	SkillDescription_default.append();
+	SkillDescription_default.setSkill(skillID);
+}
+/**
+* Hide description (only auto-hide on mouseout when checkbox is checked)
 */
 function onSkillDescriptionRemove() {
-	SkillDescription_default.remove();
+	if (_preferences$54.mini || _preferences$54.skillInfo) SkillDescription_default.remove();
 }
 /**
 * Checkbox show/hide description
@@ -204056,7 +204114,7 @@ var init_SkillListV0 = __esmMin((() => {
 			SkillListV0.ui.show();
 			SkillListV0.ui.parent().append(SkillListV0.ui);
 		}).mousedown(stopPropagation$28);
-		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo).on("mousedown", ".selectable", onSkillFocus).on("mouseover", ".skillCol .skill .icon, .skill .name", onRequestSkillInfo).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice).on("dragstart", ".skill", onSkillDragStart).on("dragend", ".skill", onSkillDragEnd);
+		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill).on("contextmenu", ".skill .icon, .skill .name", onContextMenuSkillInfo).on("mousedown", ".selectable", onSkillFocus).on("mouseover", ".skillCol .skill .icon, .skill .name", onMouseOverSkillInfo).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice).on("dragstart", ".skill", onSkillDragStart).on("dragend", ".skill", onSkillDragEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
 			rArrow = "url(" + data + ")";
