@@ -148177,7 +148177,7 @@ function Packets(name, Struct, size) {
 function connect$4(host, port, callback, isZone) {
 	const socket = _socketFactory ? _socketFactory(host, port) : defaultSocketFactory(host, port);
 	socket.isZone = !!isZone;
-	socket.onClose = onClose$20;
+	socket.onClose = onClose$19;
 	socket.onComplete = function onComplete(success) {
 		let msg = "Fail";
 		let color = "red";
@@ -148314,7 +148314,7 @@ function receive(buf) {
 * Communication end
 * Server ask to close the socket
 */
-function onClose$20() {
+function onClose$19() {
 	const idx = _sockets.indexOf(this);
 	if (this === _socket) {
 		console.warn("[Network] Disconnect from server");
@@ -152973,7 +152973,7 @@ function cleanTextColor(text) {
 /**
 * Exit window
 */
-function onClose$19(e) {
+function onClose$18(e) {
 	try {
 		e.stopImmediatePropagation();
 	} catch (error) {}
@@ -153081,7 +153081,7 @@ var init_MakeReadBook = __esmMin((() => {
 			canvas.className = "clone_book event_add_cursor";
 			MakeReadBook.ui.find(".footer").find("canvas").remove();
 			MakeReadBook.ui.find(".footer").append(canvas);
-			MakeReadBook.ui.find(".clone_book").click(onClose$19);
+			MakeReadBook.ui.find(".clone_book").click(onClose$18);
 			const canvas2 = new SPR(spr_highlighter).getCanvasFromFrame(0);
 			canvas2.className = "highlighter event_add_cursor";
 			MakeReadBook.ui.find("#highlighter").find("canvas").remove();
@@ -153146,7 +153146,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$71.show) onClose$19();
+		if (_preferences$71.show) onClose$18();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -155273,7 +155273,7 @@ var init_Storage$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$33(event) {
+function stopPropagation$32(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -155529,13 +155529,13 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$33);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$32);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$4);
 		this.ui.find(".footer .extend").mousedown(onResize$15);
 		this.ui.find(".titlebar .close").click(function() {
 			CartItems.ui.hide();
 		});
-		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$33).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
+		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$32).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
 		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
@@ -160498,7 +160498,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$32(event) {
+function stopPropagation$31(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -160707,9 +160707,9 @@ var init_Mail$1 = __esmMin((() => {
 		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
 		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$32).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$32);
-		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$32);
+		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$31).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
+		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$31);
+		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$31);
 		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
 		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
 		onWindowMailbox();
@@ -190685,7 +190685,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$4() {
+function _getRoot$5() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -190834,7 +190834,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -190997,7 +190997,7 @@ function onResize$14() {
 /**
 * Close the window
 */
-function onClose$18() {
+function onClose$17() {
 	PartyFriendsV0.ui.hide();
 	PartyHelper_default.remove();
 }
@@ -191224,7 +191224,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$18);
+		this.ui.find(".close").click(onClose$17);
 		this.ui.find(".lock").mousedown(onToggleLock$1);
 		this.ui.find(".switchtab.off").mousedown(onChangeTab$2);
 		this.ui.find(".remove").mousedown(onRequestRemoveSelection$1);
@@ -195509,14 +195509,14 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$31(event) {
+function stopPropagation$30(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Closing window
 */
-function onClose$17() {
+function onClose$16() {
 	WorldMap._host.style.display = "none";
 }
 var WorldMap, _preferences$63, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
@@ -195556,7 +195556,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this._shadow || this._host;
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$31));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$30));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -195564,7 +195564,7 @@ var init_WorldMap = __esmMin((() => {
 		const showLvlBtn = root.querySelector(".titlebar .showlvl");
 		if (showLvlBtn) showLvlBtn.addEventListener("click", onShowLVL);
 		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$17);
+		if (closeBtn) closeBtn.addEventListener("click", onClose$16);
 		const content = root.querySelector(".map .content");
 		if (content) {
 			content.addEventListener("click", onWorldMapSectionClick);
@@ -196915,7 +196915,7 @@ function onResize$13() {
 /**
 * Close the window
 */
-function onClose$16() {
+function onClose$15() {
 	PartyFriendsV1.ui.hide();
 	PartyHelper_default.remove();
 }
@@ -197195,7 +197195,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$16);
+		this.ui.find(".close").click(onClose$15);
 		this.ui.find(".lock").mousedown(onToggleLock);
 		this.ui.find(".switchtab.off").mousedown(onChangeTab$1);
 		this.ui.find(".remove").mousedown(onRequestRemoveSelection);
@@ -197753,7 +197753,7 @@ function _formatROText(value) {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$3() {
+function _getRoot$4() {
 	return SkillDescription$1._shadow || SkillDescription$1._host;
 }
 var _allowedTags, SkillDescription$1, SkillDescription_default;
@@ -197793,7 +197793,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$3().querySelector(".close");
+		const closeBtn = _getRoot$4().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -197807,7 +197807,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$3().querySelector(".content");
+		const content = _getRoot$4().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -198293,7 +198293,7 @@ function onSkillFocus$2() {
 */
 function onSkillDragStart$2(event) {
 	const skill = getSkillById$2(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$30(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$29(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = this.firstChild.firstChild.src;
@@ -198327,7 +198327,7 @@ function skillLevelSelectDown$2(skill) {
 /**
 * Stop propagation of events
 */
-function stopPropagation$30(event) {
+function stopPropagation$29(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -198467,7 +198467,7 @@ var init_Guild$1 = __esmMin((() => {
 		MemberView = this.ui.find(".MemberView").remove();
 		PositionView = this.ui.find(".PositionView").remove();
 		ExpelView = this.ui.find(".ExpelView").remove();
-		ui.find(".titlebar .close").mousedown(stopPropagation$30).click(Guild.toggle.bind(this));
+		ui.find(".titlebar .close").mousedown(stopPropagation$29).click(Guild.toggle.bind(this));
 		ui.find(".tabs").on("click", "button", onChangeTab);
 		Client.loadFiles([DB.INTERFACE_PATH + "checkbox_0.bmp", DB.INTERFACE_PATH + "checkbox_1.bmp"], function(off, on) {
 			_checkbox_off = off;
@@ -198535,7 +198535,7 @@ var init_Guild$1 = __esmMin((() => {
 			_btnLevelUp$7.detach();
 			Guild.ui.show();
 			Guild.ui.parent().append(Guild.ui);
-		}).mousedown(stopPropagation$30);
+		}).mousedown(stopPropagation$29);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$2).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo).on("mousedown", ".selectable", onSkillFocus$2).on("dragstart", ".skill", onSkillDragStart$2).on("dragend", ".skill", onSkillDragEnd$2);
 		ui.find(".content.notice").on("focus", "textarea, input", function() {
 			ui.find(".footer .btn_ok").show();
@@ -203001,7 +203001,7 @@ function getSkillPosition$1(JobId) {
 /**
 * Stop event propagation
 */
-function stopPropagation$29(event) {
+function stopPropagation$28(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -203090,7 +203090,7 @@ function resize$6(width, height) {
 /**
 * Closing window
 */
-function onClose$15() {
+function onClose$14() {
 	SkillList.ui.hide();
 }
 /**
@@ -203220,7 +203220,7 @@ function onSkillFocus$1() {
 */
 function onSkillDragStart$1(event) {
 	const skill = getSkillById$1(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$29(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$28(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = jquery_default(this).find(".icon img").attr("src");
@@ -203364,9 +203364,9 @@ var init_SkillList$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillList.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$29);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$28);
 		this.ui.find(".footer .extend").mousedown(onResize$12);
-		this.ui.find(".titlebar .close").click(onClose$15);
+		this.ui.find(".titlebar .close").click(onClose$14);
 		this.ui.find(".titlebar .mini").click(onMini$1);
 		this.ui.find(".view_skill_info").change(onToggleSkillInfo$1);
 		this.ui.find(".reset").click(onResetChoice$1);
@@ -203377,7 +203377,7 @@ var init_SkillList$1 = __esmMin((() => {
 			_btnLevelUp$6.detach();
 			SkillList.ui.show();
 			SkillList.ui.parent().append(SkillList.ui);
-		}).mousedown(stopPropagation$29);
+		}).mousedown(stopPropagation$28);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$1).on("contextmenu", ".skill .icon, .skill .name", onContextMenuSkillInfo$1).on("mousedown", ".selectable", onSkillFocus$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onMouseOverSkillInfo$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove$1).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice$1).on("dragstart", ".skill", onSkillDragStart$1).on("dragend", ".skill", onSkillDragEnd$1).on("touchstart", ".skill .icon", onSkillTouchStart).on("touchmove", ".skill .icon", onSkillTouchMove).on("touchend", ".skill .icon", onSkillTouchEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
@@ -203817,7 +203817,7 @@ function getSkillPosition(JobId) {
 /**
 * Stop event propagation
 */
-function stopPropagation$28(event) {
+function stopPropagation$27(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -203896,7 +203896,7 @@ function resize$5(width, height) {
 /**
 * Closing window
 */
-function onClose$14() {
+function onClose$13() {
 	SkillListV0.ui.hide();
 }
 /**
@@ -204026,7 +204026,7 @@ function onSkillFocus() {
 */
 function onSkillDragStart(event) {
 	const skill = getSkillById(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$28(event);
+	if (!skill || !skill.level || !skill.type) return stopPropagation$27(event);
 	const img = new Image();
 	img.decoding = "async";
 	img.src = jquery_default(this).find(".icon img").attr("src");
@@ -204100,9 +204100,9 @@ var init_SkillListV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillListV0.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$28);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$27);
 		this.ui.find(".footer .extend").mousedown(onResize$11);
-		this.ui.find(".titlebar .close").click(onClose$14);
+		this.ui.find(".titlebar .close").click(onClose$13);
 		this.ui.find(".titlebar .mini").click(onMini);
 		this.ui.find(".view_skill_info").change(onToggleSkillInfo);
 		this.ui.find(".reset").click(onResetChoice);
@@ -204113,7 +204113,7 @@ var init_SkillListV0 = __esmMin((() => {
 			_btnLevelUp$5.detach();
 			SkillListV0.ui.show();
 			SkillListV0.ui.parent().append(SkillListV0.ui);
-		}).mousedown(stopPropagation$28);
+		}).mousedown(stopPropagation$27);
 		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill).on("contextmenu", ".skill .icon, .skill .name", onContextMenuSkillInfo).on("mousedown", ".selectable", onSkillFocus).on("mouseover", ".skillCol .skill .icon, .skill .name", onMouseOverSkillInfo).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice).on("dragstart", ".skill", onSkillDragStart).on("dragend", ".skill", onSkillDragEnd);
 		this.draggable(this.ui.find(".titlebar"));
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
@@ -204462,7 +204462,7 @@ function onClickClose$4(e) {
 /**
 * Close the window
 */
-function onClose$13() {
+function onClose$12() {
 	QuestHelper.ui.hide();
 }
 var QuestHelper, _preferences$53, QuestHelper_default;
@@ -204569,7 +204569,7 @@ var init_QuestHelper = __esmMin((() => {
 	*/
 	QuestHelper.clean = function clean() {
 		QuestHelper.ui.hide();
-		onClose$13();
+		onClose$12();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -204772,7 +204772,7 @@ function refreshQuestUI$1() {
 /**
 * Close the window
 */
-function onClose$12() {
+function onClose$11() {
 	Quest.ui.hide();
 }
 var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$51, Quest_default;
@@ -204812,7 +204812,7 @@ var init_Quest$2 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$12);
+		this.ui.find(".close").click(onClose$11);
 		this.ui.on("click", ".quest-menu-item", onClickMenu$2);
 		this.ui.on("click", ".close-quest-container-btn", onClickClose$3);
 		this.draggable(this.ui.find(".titlebar"));
@@ -204850,7 +204850,7 @@ var init_Quest$2 = __esmMin((() => {
 		Quest.ClearQuestList();
 		QuestHelper_default.clearQuestDesc();
 		QuestWindow_default.ClearQuestList();
-		onClose$12();
+		onClose$11();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -205072,7 +205072,7 @@ function onClickClose$2(e) {
 /**
 * Close the window
 */
-function onClose$11() {
+function onClose$10() {
 	QuestHelperV1.ui.hide();
 }
 function onSelectMonster(e) {
@@ -205174,7 +205174,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 	*/
 	QuestHelperV1.clean = function clean() {
 		QuestHelperV1.ui.hide();
-		onClose$11();
+		onClose$10();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -205264,7 +205264,7 @@ function refreshQuestUI() {
 /**
 * Close the window
 */
-function onClose$10() {
+function onClose$9() {
 	QuestV1.ui.hide();
 }
 var QuestV1, _index$5, _questList, _active_menu, _preferences$49, QuestV1_default;
@@ -205303,8 +205303,8 @@ var init_QuestV1 = __esmMin((() => {
 			return false;
 		});
 		this.ui.find(".view").click(onClickView);
-		this.ui.find(".close").click(onClose$10);
-		this.ui.find(".btn-right").click(onClose$10);
+		this.ui.find(".close").click(onClose$9);
+		this.ui.find(".btn-right").click(onClose$9);
 		this.ui.on("click", ".quest-menu-item", onClickMenu$1);
 		this.ui.find("#active-quest-list").show();
 		this.draggable(this.ui.find(".titlebar"));
@@ -205337,7 +205337,7 @@ var init_QuestV1 = __esmMin((() => {
 		QuestV1.ui.find("#all-quest-list").hide();
 		QuestV1.ClearQuestList();
 		QuestHelperV1_default.clearQuestDesc();
-		onClose$10();
+		onClose$9();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -207911,13 +207911,13 @@ function performSearch(query) {
 /**
 * Closing window
 */
-function onClose$9() {
+function onClose$8() {
 	Reputation.ui.hide();
 }
 /**
 * Stop event propagation
 */
-function stopPropagation$27(event) {
+function stopPropagation$26(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208021,9 +208021,9 @@ var init_Reputation = __esmMin((() => {
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
 		this.draggable(this.ui);
-		this.ui.find(".base").mousedown(stopPropagation$27);
-		this.ui.find(".close").click(onClose$9);
-		this.ui.find(".big_btn_close").click(onClose$9);
+		this.ui.find(".base").mousedown(stopPropagation$26);
+		this.ui.find(".close").click(onClose$8);
+		this.ui.find(".big_btn_close").click(onClose$8);
 		const paginator = Reputation.ui.find(".paginator");
 		paginator.find(".page_prev").on("click", () => {
 			if (Reputation.page.current > 0) renderReputePage(Reputation.page.current - 1);
@@ -208528,7 +208528,7 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$26(event) {
+function stopPropagation$25(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208653,7 +208653,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$26);
+		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$25);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -208769,7 +208769,7 @@ function getItemTab$3(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$25(event) {
+function stopPropagation$24(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -209069,14 +209069,14 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$25);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$3);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$3);
 		this.ui.find(".footer .extend").mousedown(onResize$10);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV0.ui.hide();
 		});
-		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$25).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
+		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$24).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
 		this.ui.find(".ncnt").text(0);
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
@@ -209428,7 +209428,7 @@ function getItemTab$2(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$24(event) {
+function stopPropagation$23(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -209825,18 +209825,18 @@ var init_InventoryV1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$2);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$2);
 		this.ui.find(".footer .extend").mousedown(onResize$9);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV1.ui.hide();
 		});
-		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$24).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
+		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$23).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$24).on("drop", onTabDrop$2);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$23).on("drop", onTabDrop$2);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$38.tab).addClass("selected");
 		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -210640,7 +210640,7 @@ function getItemTab$1(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$23(event) {
+function stopPropagation$22(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -211042,18 +211042,18 @@ var init_InventoryV2 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV2.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$1);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$1);
 		this.ui.find(".footer .extend").mousedown(onResize$8);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV2.ui.hide();
 		});
-		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$23).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
+		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$22).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$23).on("drop", onTabDrop$1);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$22).on("drop", onTabDrop$1);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$37.tab).addClass("selected");
 		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -211557,7 +211557,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$22(event) {
+function stopPropagation$21(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -212309,14 +212309,14 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$22).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$21).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
 		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
 		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
 		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
@@ -212438,7 +212438,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$21(event) {
+function stopPropagation$20(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -212963,7 +212963,7 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$21);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$20);
 		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
 		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
@@ -214673,7 +214673,7 @@ function getItemTab(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$20(event) {
+function stopPropagation$19(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -215168,18 +215168,18 @@ var init_InventoryV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV3.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
 		this.ui.find(".titlebar .mini").click(onToggleReduction);
 		this.ui.find(".tabs button").mousedown(onSwitchTab);
 		this.ui.find(".footer .extend").mousedown(onResize$7);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV3.ui.hide();
 		});
-		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$20).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
+		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$19).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$20).on("drop", onTabDrop);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$19).on("drop", onTabDrop);
 		jquery_default(".tabs button").removeClass("selected");
 		this.ui.find(".tabs button").eq(_preferences$36.tab).addClass("selected");
 		const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
@@ -216197,7 +216197,7 @@ function onRemoveOption$5() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$19(event) {
+function stopPropagation$18(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216386,7 +216386,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	*/
 	EquipmentV0.init = function init() {
 		_ctx$9 = this.ui.find("canvas")[0].getContext("2d");
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$19).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(function() {
 			_btnLevelUp$4.detach();
 			EquipmentV0.ui.show();
 			EquipmentV0.ui.parent().append(EquipmentV0.ui);
@@ -216397,7 +216397,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV0.ui.find(".panel").toggle();
 		});
@@ -216676,7 +216676,7 @@ function onRemoveOption$4() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$18(event) {
+function stopPropagation$17(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216903,7 +216903,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (i != 0) contentDivs$3[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(function() {
 			_btnLevelUp$3.detach();
 			EquipmentV1.ui.show();
 			EquipmentV1.ui.parent().append(EquipmentV1.ui);
@@ -216914,7 +216914,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV1.ui.find(".panel").toggle();
 		});
@@ -217219,7 +217219,7 @@ function onRemoveOption$3() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$17(event) {
+function stopPropagation$16(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -217446,7 +217446,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (i != 0) contentDivs$2[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(function() {
 			_btnLevelUp$2.detach();
 			EquipmentV2.ui.show();
 			EquipmentV2.ui.parent().append(EquipmentV2.ui);
@@ -217457,7 +217457,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV2.ui.find(".panel").toggle();
 		});
@@ -217795,7 +217795,7 @@ function onRemoveOption$2() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$16(event) {
+function stopPropagation$15(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -218026,7 +218026,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (i != 0) contentDivs$1[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$15).click(() => {
 			_btnLevelUp$1.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -218035,7 +218035,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$15);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV3.ui.find(".panel").toggle();
 		});
@@ -218448,7 +218448,7 @@ function onRemoveOption$1() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$15(event) {
+function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -218687,7 +218687,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (i != 0) contentDivs[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$15).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$14).click(() => {
 			_btnLevelUp.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -218696,7 +218696,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$15);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$14);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV4.ui.find(".panel").toggle();
 		});
@@ -222238,21 +222238,21 @@ function homunToggleAutoFeed() {
 /**
 * Request to modify homun's name
 */
-function onChangeName$1() {
+function onChangeName() {
 	const input = HomunInformations.ui.find(".name");
 	HomunInformations.reqNameEdit(input.val());
 }
 /**
 * Closing window
 */
-function onClose$8() {
+function onClose$7() {
 	HomunInformations.ui.hide();
 	SkillListMH_default.homunculus.ui.hide();
 }
 /**
 * Stop event propagation
 */
-function stopPropagation$14(event) {
+function stopPropagation$13(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -222289,9 +222289,9 @@ var init_HomunInformations = __esmMin((() => {
 	*/
 	HomunInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".base").mousedown(stopPropagation$14);
-		this.ui.find(".close").click(onClose$8);
-		this.ui.find(".modify").click(onChangeName$1);
+		this.ui.find(".base").mousedown(stopPropagation$13);
+		this.ui.find(".close").click(onClose$7);
+		this.ui.find(".modify").click(onChangeName);
 		this.ui.find(".feed").click(onFeed);
 		this.ui.find(".del").click(onDelete$1);
 		this.ui.find(".homun_auto_feed").click(homunToggleAutoFeed);
@@ -222524,14 +222524,14 @@ var init_MercenaryInformations$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$13(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Closing window
 */
-function onClose$7() {
+function onClose$6() {
 	MercenaryInformations.ui.hide();
 	SkillListMH_default.mercenary.ui.hide();
 }
@@ -222568,9 +222568,9 @@ var init_MercenaryInformations = __esmMin((() => {
 	*/
 	MercenaryInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".content").mousedown(stopPropagation$13);
-		this.ui.find(".content .base").mousedown(stopPropagation$13);
-		this.ui.find(".close").click(onClose$7);
+		this.ui.find(".content").mousedown(stopPropagation$12);
+		this.ui.find(".content .base").mousedown(stopPropagation$12);
+		this.ui.find(".close").click(onClose$6);
 		this.ui.find(".dismiss").click(onDelete);
 		if (!_preferences$28.show) this.ui.hide();
 		this.ui.css({
@@ -224397,7 +224397,7 @@ function onDropText$1(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$12(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -224697,7 +224697,7 @@ var init_ChatBox = __esmMin((() => {
 				if (!movedInsideChatbox && !isTextInput && !isChatMessage) this.ui.find(".input .username").focus();
 			}.bind(this), 1e3);
 		}.bind(this));
-		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$12);
+		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$11);
 		this.ui.find(".header input").dblclick(function() {
 			this.type = "text";
 			this.select();
@@ -244788,7 +244788,7 @@ function onContainerMouseLeave(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$11(event) {
+function stopPropagation$10(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -244815,7 +244815,7 @@ function onResize$3(event) {
 			jquery_default(window).off("mouseup.resize");
 		}
 	});
-	return stopPropagation$11(event);
+	return stopPropagation$10(event);
 }
 /**
 * Displays the cat hand over an icon
@@ -244957,7 +244957,7 @@ function clickElement(index) {
 /**
 * Closing the window
 */
-function onClose$6() {
+function onClose$5() {
 	ShortCut.ui.css("height", 0);
 	_preferences$23.size = 0;
 	_preferences$23.save();
@@ -245179,8 +245179,8 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.init = function init() {
 		this.ui.find(".resize").mousedown(onResize$3);
-		this.ui.find(".close").mousedown(stopPropagation$11).click(onClose$6);
-		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$11).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
+		this.ui.find(".close").mousedown(stopPropagation$10).click(onClose$5);
+		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$10).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
 			event.stopImmediatePropagation();
 		});
 		this.draggable();
@@ -248123,63 +248123,15 @@ var init_PetInformations$2 = __esmMin((() => {
 //#region src/UI/Components/PetInformations/PetInformations.css?raw
 var PetInformations_default$1;
 var init_PetInformations$1 = __esmMin((() => {
-	PetInformations_default$1 = "#PetInformations {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 280px;\r\n	height: 180px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#PetInformations .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PetInformations .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PetInformations .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#PetInformations .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PetInformations .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PetInformations .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PetInformations .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#PetInformations .title_name {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 100px;\r\n}\r\n#PetInformations .name {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 150px;\r\n	border: none;\r\n	background-color: #eee;\r\n	margin: 0px;\r\n	width: 70px;\r\n	color: black;\r\n}\r\n\r\n#PetInformations .modify {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 5px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PetInformations .name.disabled {\r\n	color: black;\r\n	text-shadow: 1px 1px 0px #00ff00;\r\n	background-color: transparent;\r\n}\r\n#PetInformations .modify.disabled {\r\n	display: none;\r\n}\r\n\r\n#PetInformations .title_level {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 100px;\r\n}\r\n#PetInformations .level {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 150px;\r\n}\r\n\r\n#PetInformations .title_hunger {\r\n	position: absolute;\r\n	top: 55px;\r\n	left: 100px;\r\n}\r\n#PetInformations .hunger {\r\n	position: absolute;\r\n	top: 55px;\r\n	left: 150px;\r\n}\r\n\r\n#PetInformations .title_intimacy {\r\n	position: absolute;\r\n	top: 75px;\r\n	left: 100px;\r\n}\r\n#PetInformations .intimacy {\r\n	position: absolute;\r\n	top: 75px;\r\n	left: 150px;\r\n}\r\n\r\n#PetInformations .title_accessory {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n#PetInformations .accessory {\r\n	position: absolute;\r\n	top: 120px;\r\n	left: 100px;\r\n}\r\n#PetInformations .feeding {\r\n	position: absolute;\r\n	top: 140px;\r\n	left: 100px;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#PetInformations .feeding .pet_auto_feed {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	margin-left: 5px;\r\n}\r\n\r\n#PetInformations .command {\r\n	position: absolute;\r\n	top: 27px;\r\n	right: 5px;\r\n	width: 105px;\r\n}\r\n";
+	PetInformations_default$1 = ":host {\r\n	width: 280px;\r\n	height: 180px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#PetInformations {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 180px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#PetInformations .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PetInformations .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PetInformations .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#PetInformations .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PetInformations .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PetInformations .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PetInformations .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#PetInformations .title_name {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 100px;\r\n}\r\n#PetInformations .name {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 150px;\r\n	border: none;\r\n	background-color: #eee;\r\n	margin: 0px;\r\n	width: 70px;\r\n	color: black;\r\n}\r\n\r\n#PetInformations .modify {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 5px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PetInformations .name.disabled {\r\n	color: black;\r\n	text-shadow: 1px 1px 0px #00ff00;\r\n	background-color: transparent;\r\n}\r\n#PetInformations .modify.disabled {\r\n	display: none;\r\n}\r\n\r\n#PetInformations .title_level {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 100px;\r\n}\r\n#PetInformations .level {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 150px;\r\n}\r\n\r\n#PetInformations .title_hunger {\r\n	position: absolute;\r\n	top: 55px;\r\n	left: 100px;\r\n}\r\n#PetInformations .hunger {\r\n	position: absolute;\r\n	top: 55px;\r\n	left: 150px;\r\n}\r\n\r\n#PetInformations .title_intimacy {\r\n	position: absolute;\r\n	top: 75px;\r\n	left: 100px;\r\n}\r\n#PetInformations .intimacy {\r\n	position: absolute;\r\n	top: 75px;\r\n	left: 150px;\r\n}\r\n\r\n#PetInformations .title_accessory {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n#PetInformations .accessory {\r\n	position: absolute;\r\n	top: 120px;\r\n	left: 100px;\r\n}\r\n#PetInformations .feeding {\r\n	position: absolute;\r\n	top: 140px;\r\n	left: 100px;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#PetInformations .feeding .pet_auto_feed {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	margin-left: 5px;\r\n}\r\n\r\n#PetInformations .command {\r\n	position: absolute;\r\n	top: 27px;\r\n	right: 5px;\r\n	width: 105px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PetInformations/PetInformations.js
 /**
-* User just execute a command
+* Helper to get the shadow root
 */
-function onCommandSelected() {
-	const value = this.value;
-	if (value.startsWith("evolution_")) {
-		const baseJobID = Number(value.replace("evolution_", ""));
-		PetInformations.reqEvolution(baseJobID);
-		this.value = "default";
-		return;
-	}
-	switch (value) {
-		case "feed":
-			PetInformations.reqPetFeed();
-			break;
-		case "action":
-			PetInformations.reqPetAction();
-			break;
-		case "release":
-			PetInformations.reqBackToEgg();
-			break;
-		case "unequip":
-			PetInformations.reqUnEquipPet();
-			break;
-		default:
-	}
-	this.value = "default";
-}
-/**
-* Toggle Auto Feed
-*/
-function petToggleAutoFeed() {
-	PetInformations.onConfigUpdate(2, !petAutoFeeding ? 1 : 0);
-}
-/**
-* Request to modify pet's name
-*/
-function onChangeName() {
-	const input = PetInformations.ui.find(".name");
-	PetInformations.reqNameEdit(input.val());
-}
-/**
-* Closing window
-*/
-function onClose$5() {
-	PetInformations.ui.hide();
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$10(event) {
-	event.stopImmediatePropagation();
-	return false;
+function _getRoot$3() {
+	return PetInformations._shadow || PetInformations._host;
 }
 var PetInformations, _preferences$22, petAutoFeeding, PetInformations_default;
 var init_PetInformations = __esmMin((() => {
@@ -248188,11 +248140,14 @@ var init_PetInformations = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_PetInformations$2();
 	init_PetInformations$1();
+	init_KeyEventHandler();
 	init_PacketVerManager();
-	PetInformations = new UIComponent("PetInformations", PetInformations_default$2, PetInformations_default$1);
+	PetInformations = new GUIComponent("PetInformations", PetInformations_default$1);
+	PetInformations.render = () => PetInformations_default$2;
+	PetInformations.captureKeyEvents = true;
 	_preferences$22 = Preferences.get("PetInformations", {
 		x: 100,
 		y: 200,
@@ -248203,30 +248158,71 @@ var init_PetInformations = __esmMin((() => {
 	* Initialize component
 	*/
 	PetInformations.init = function init() {
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".base").mousedown(stopPropagation$10);
-		this.ui.find(".close").click(onClose$5);
-		this.ui.find(".modify").click(onChangeName);
-		this.ui.find(".command").change(onCommandSelected);
-		this.ui.find(".pet_auto_feed").mousedown(petToggleAutoFeed);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$22.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$22.x), Renderer.width - this.ui.width())
+		this.draggable(".titlebar");
+		const root = _getRoot$3();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				this._host.style.display = "none";
+			});
+		}
+		const modifyBtn = root.querySelector(".modify");
+		if (modifyBtn) modifyBtn.addEventListener("click", () => {
+			const input = root.querySelector(".name");
+			if (input) PetInformations.reqNameEdit(input.value);
+		});
+		const commandSelect = root.querySelector(".command");
+		if (commandSelect) commandSelect.addEventListener("change", function() {
+			const value = this.value;
+			if (value.startsWith("evolution_")) {
+				const baseJobID = Number(value.replace("evolution_", ""));
+				PetInformations.reqEvolution(baseJobID);
+				this.value = "default";
+				return;
+			}
+			switch (value) {
+				case "feed":
+					PetInformations.reqPetFeed();
+					break;
+				case "action":
+					PetInformations.reqPetAction();
+					break;
+				case "release":
+					PetInformations.reqBackToEgg();
+					break;
+				case "unequip":
+					PetInformations.reqUnEquipPet();
+					break;
+				default:
+			}
+			this.value = "default";
+		});
+		const autoFeedBtn = root.querySelector(".pet_auto_feed");
+		if (autoFeedBtn) autoFeedBtn.addEventListener("mousedown", () => {
+			PetInformations.onConfigUpdate(2, !petAutoFeeding ? 1 : 0);
 		});
 	};
 	PetInformations.onAppend = function onAppend() {
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", function(data) {
-			PetInformations.ui.find(".pet_auto_feed").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$3();
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
+			const el = root.querySelector(".pet_auto_feed");
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		if (PacketVerManager_default.value < 20141008) PetInformations.ui.find(".feeding").hide();
+		if (PacketVerManager_default.value < 20141008) {
+			const feeding = root.querySelector(".feeding");
+			if (feeding) feeding.style.display = "none";
+		}
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$22.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$22.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body, save user preferences
 	*/
 	PetInformations.onRemove = function onRemove() {
-		_preferences$22.show = this.ui.is(":visible");
-		_preferences$22.y = parseInt(this.ui.css("top"), 10);
-		_preferences$22.x = parseInt(this.ui.css("left"), 10);
+		_preferences$22.show = this._host.style.display !== "none";
+		_preferences$22.y = parseInt(this._host.style.top, 10);
+		_preferences$22.x = parseInt(this._host.style.left, 10);
 		_preferences$22.save();
 	};
 	/**
@@ -248235,11 +248231,12 @@ var init_PetInformations = __esmMin((() => {
 	* @param {object} key
 	*/
 	PetInformations.onShortCut = function onShortCut(key) {
-		if (!this.ui) return;
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else this._host.style.display = "none";
 				break;
 		}
 	};
@@ -248249,27 +248246,54 @@ var init_PetInformations = __esmMin((() => {
 	* @param {object} pet info
 	*/
 	PetInformations.setInformations = function setInformations(info) {
-		this.ui.find(".name").val(info.szName);
-		this.ui.find(".level").text(info.nLevel);
+		const root = _getRoot$3();
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.value = info.szName;
+		const levelEl = root.querySelector(".level");
+		if (levelEl) levelEl.textContent = info.nLevel;
 		this.setHunger(info.nFullness);
 		this.setIntimacy(info.nRelationship);
-		this.ui.find(".accessory").text(DB.getMessage(info.ITID ? 598 : 600));
-		Client.loadFile(DB.getPetIllustPath(info.job), function(data) {
-			this.ui.find(".content").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		if (!info.bModified) this.ui.find(".name, .modify").removeClass("disabled").attr("disabled", false);
-		else this.ui.find(".name, .modify").addClass("disabled").attr("disabled", true);
-		const cmdSelect = this.ui.find(".command");
-		cmdSelect.find(".evolution-option").remove();
-		const evolution = DB.getPetEvolutionByJob(info.job);
-		if (evolution) for (const targetEggID in evolution) {
-			const evoPet = DB.getPetByEggID(Number(targetEggID));
-			const evoName = evoPet ? evoPet.PetString || evoPet.PetName : `Evolution ${targetEggID}`;
-			const option = document.createElement("option");
-			option.className = "evolution-option";
-			option.value = "evolution_" + info.job;
-			option.textContent = "Evolution - " + evoName;
-			cmdSelect.append(option);
+		const accessoryEl = root.querySelector(".accessory");
+		if (accessoryEl) accessoryEl.textContent = DB.getMessage(info.ITID ? 598 : 600);
+		Client.loadFile(DB.getPetIllustPath(info.job), (data) => {
+			const contentEl = root.querySelector(".content");
+			if (contentEl) contentEl.style.backgroundImage = `url(${data})`;
+		});
+		if (!info.bModified) {
+			if (nameInput) {
+				nameInput.classList.remove("disabled");
+				nameInput.disabled = false;
+			}
+			const modifyBtn = root.querySelector(".modify");
+			if (modifyBtn) {
+				modifyBtn.classList.remove("disabled");
+				modifyBtn.disabled = false;
+			}
+		} else {
+			if (nameInput) {
+				nameInput.classList.add("disabled");
+				nameInput.disabled = true;
+			}
+			const modifyBtn = root.querySelector(".modify");
+			if (modifyBtn) {
+				modifyBtn.classList.add("disabled");
+				modifyBtn.disabled = true;
+			}
+		}
+		const cmdSelect = root.querySelector(".command");
+		if (cmdSelect) {
+			const oldOptions = cmdSelect.querySelectorAll(".evolution-option");
+			for (const opt of oldOptions) opt.remove();
+			const evolution = DB.getPetEvolutionByJob(info.job);
+			if (evolution) for (const targetEggID in evolution) {
+				const evoPet = DB.getPetByEggID(Number(targetEggID));
+				const evoName = evoPet ? evoPet.PetString || evoPet.PetName : `Evolution ${targetEggID}`;
+				const option = document.createElement("option");
+				option.className = "evolution-option";
+				option.value = `evolution_${info.job}`;
+				option.textContent = `Evolution - ${evoName}`;
+				cmdSelect.appendChild(option);
+			}
 		}
 	};
 	/**
@@ -248278,12 +248302,15 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} intimacy
 	*/
 	PetInformations.setIntimacy = function setIntimacy(val) {
-		this.ui.find(".intimacy").text(DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675));
+		const el = _getRoot$3().querySelector(".intimacy");
+		if (el) el.textContent = DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675);
 	};
 	PetInformations.setFeedConfig = function setFeedConfig(flag) {
 		petAutoFeeding = flag;
-		if (PetInformations.ui) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", function(data) {
-			PetInformations.ui.find(".pet_auto_feed").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$3();
+		if (root) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
+			const el = root.querySelector(".pet_auto_feed");
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
 	};
 	/**
@@ -248292,7 +248319,30 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} hunger
 	*/
 	PetInformations.setHunger = function setHunger(val) {
-		this.ui.find(".hunger").text(DB.getMessage(val < 10 ? 667 : val < 25 ? 668 : val < 75 ? 669 : val < 90 ? 670 : 671));
+		const el = _getRoot$3().querySelector(".hunger");
+		if (el) el.textContent = DB.getMessage(val < 10 ? 667 : val < 25 ? 668 : val < 75 ? 669 : val < 90 ? 670 : 671);
+	};
+	/**
+	* Handle keyboard events inside shadow DOM
+	* Protects input fields from being consumed by global handlers
+	*/
+	PetInformations.onKeyDown = function onKeyDown(event) {
+		const focused = (this._shadow || this._host).activeElement;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				focused.blur();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			if (event.which === KEYS.ENTER) {
+				if (focused.classList.contains("name")) PetInformations.reqNameEdit(focused.value);
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
 	};
 	/**
 	* Functions defined in Engine/MapEngine/Pet.js
