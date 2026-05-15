@@ -276292,7 +276292,7 @@ var init_WeaponAction = __esmMin((() => {
 		this[WeaponType_default.SPEAR] = 2;
 		this[WeaponType_default.TWOHANDSPEAR] = 2;
 	})();
-	WeaponAction[JobConst_default.MAGICIA] = new (function() {
+	WeaponAction[JobConst_default.MAGICIAN] = new (function() {
 		this[WeaponType_default.NONE] = 0;
 		this[WeaponType_default.ROD] = 1;
 		this[WeaponType_default.TWOHANDROD] = 1;
