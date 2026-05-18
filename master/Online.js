@@ -190685,7 +190685,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$5() {
+function _getRoot$7() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -190834,7 +190834,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$5();
+		const root = _getRoot$7();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -197753,7 +197753,7 @@ function _formatROText(value) {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$4() {
+function _getRoot$6() {
 	return SkillDescription$1._shadow || SkillDescription$1._host;
 }
 var _allowedTags, SkillDescription$1, SkillDescription_default;
@@ -197793,7 +197793,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$4().querySelector(".close");
+		const closeBtn = _getRoot$6().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -197807,7 +197807,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$4().querySelector(".content");
+		const content = _getRoot$6().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -248130,7 +248130,7 @@ var init_PetInformations$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$3() {
+function _getRoot$5() {
 	return PetInformations._shadow || PetInformations._host;
 }
 var PetInformations, _preferences$22, petAutoFeeding, PetInformations_default;
@@ -248159,7 +248159,7 @@ var init_PetInformations = __esmMin((() => {
 	*/
 	PetInformations.init = function init() {
 		this.draggable(".titlebar");
-		const root = _getRoot$3();
+		const root = _getRoot$5();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -248204,7 +248204,7 @@ var init_PetInformations = __esmMin((() => {
 		});
 	};
 	PetInformations.onAppend = function onAppend() {
-		const root = _getRoot$3();
+		const root = _getRoot$5();
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
 			const el = root.querySelector(".pet_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -248246,7 +248246,7 @@ var init_PetInformations = __esmMin((() => {
 	* @param {object} pet info
 	*/
 	PetInformations.setInformations = function setInformations(info) {
-		const root = _getRoot$3();
+		const root = _getRoot$5();
 		const nameInput = root.querySelector(".name");
 		if (nameInput) nameInput.value = info.szName;
 		const levelEl = root.querySelector(".level");
@@ -248302,12 +248302,12 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} intimacy
 	*/
 	PetInformations.setIntimacy = function setIntimacy(val) {
-		const el = _getRoot$3().querySelector(".intimacy");
+		const el = _getRoot$5().querySelector(".intimacy");
 		if (el) el.textContent = DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675);
 	};
 	PetInformations.setFeedConfig = function setFeedConfig(flag) {
 		petAutoFeeding = flag;
-		const root = _getRoot$3();
+		const root = _getRoot$5();
 		if (root) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
 			const el = root.querySelector(".pet_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -248319,7 +248319,7 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} hunger
 	*/
 	PetInformations.setHunger = function setHunger(val) {
-		const el = _getRoot$3().querySelector(".hunger");
+		const el = _getRoot$5().querySelector(".hunger");
 		if (el) el.textContent = DB.getMessage(val < 10 ? 667 : val < 25 ? 668 : val < 75 ? 669 : val < 90 ? 670 : 671);
 	};
 	/**
@@ -315055,7 +315055,7 @@ var init_Vending$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.js
-function _getRoot$2() {
+function _getRoot$4() {
 	return Vending._shadow || Vending._host;
 }
 function escapeHtml(text) {
@@ -315122,7 +315122,7 @@ function addItem$1(content, item, isinput) {
 		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
 		itemObj = container;
 		if (_type$3 === Vending.Type.BUYING_STORE) {
-			const limitInput = _getRoot$2().querySelector(".limitZeny");
+			const limitInput = _getRoot$4().querySelector(".limitZeny");
 			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
 			limitInput.value = limit;
@@ -315193,7 +315193,7 @@ function onDrop$5(event) {
 		return;
 	}
 	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return;
-	const fromContent = _getRoot$2().querySelector(`.${data.container} .content`);
+	const fromContent = _getRoot$4().querySelector(`.${data.container} .content`);
 	const toContent = this.querySelector(".content");
 	requestMoveItem$1(data.index, fromContent, toContent, this.className === "OutputWindow");
 }
@@ -315212,7 +315212,7 @@ function onItemInfo$11(event) {
 }
 function onItemSelected$1() {
 	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
-	const root = _getRoot$2();
+	const root = _getRoot$4();
 	const inputWin = root.querySelector(".InputWindow");
 	let from, to;
 	if (inputWin.contains(this)) {
@@ -315225,7 +315225,7 @@ function onItemSelected$1() {
 	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.querySelector(".content"), to.querySelector(".content"), from === inputWin);
 }
 function onItemFocus$1() {
-	_getRoot$2().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	_getRoot$4().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
 	this.classList.add("selected");
 }
 function onScroll$4(event) {
@@ -315238,7 +315238,7 @@ function onScroll$4(event) {
 	event.preventDefault();
 }
 function onDragStart$1(event) {
-	const root = _getRoot$2();
+	const root = _getRoot$4();
 	const inputWin = root.querySelector(".InputWindow");
 	const outputWin = root.querySelector(".OutputWindow");
 	const container = (inputWin.contains(this) ? inputWin : outputWin).className;
@@ -315255,7 +315255,7 @@ function onDragStart$1(event) {
 	}));
 }
 function onResizeInput() {
-	const inputWin = _getRoot$2().querySelector(".InputWindow");
+	const inputWin = _getRoot$4().querySelector(".InputWindow");
 	const content = inputWin.querySelector(".container .content");
 	const top = inputWin.offsetTop;
 	let lastHeight = 0;
@@ -315290,14 +315290,14 @@ function onItemOver$8() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const overlay = _getRoot$2().querySelector(".overlay");
+	const overlay = _getRoot$4().querySelector(".overlay");
 	overlay.style.display = "";
 	overlay.style.top = `${this.offsetTop - 20}px`;
 	overlay.style.left = `${this.offsetLeft - 10}px`;
 	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
 }
 function onItemOut$9() {
-	const overlay = _getRoot$2().querySelector(".overlay");
+	const overlay = _getRoot$4().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
@@ -315348,7 +315348,7 @@ var init_Vending = __esmMin((() => {
 	_slots$4 = 0;
 	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		const sellBtn = root.querySelector(".btn.sell");
 		if (sellBtn) {
 			sellBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -315438,7 +315438,7 @@ var init_Vending = __esmMin((() => {
 		});
 	};
 	Vending.onAppend = function onAppend() {
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		const inputContent = inputWin.querySelector(".content");
@@ -315452,7 +315452,7 @@ var init_Vending = __esmMin((() => {
 		this._host.style.display = "none";
 	};
 	Vending.setType = function setType(type) {
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		const winBuyEls = root.querySelectorAll(".WinBuy");
 		const winSellEls = root.querySelectorAll(".WinSell");
 		switch (type) {
@@ -315480,7 +315480,7 @@ var init_Vending = __esmMin((() => {
 	};
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
@@ -315513,7 +315513,7 @@ var init_Vending = __esmMin((() => {
 		return true;
 	};
 	Vending.setList = function setList(items) {
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -315560,7 +315560,7 @@ var init_Vending = __esmMin((() => {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
 		this.setList(CartItems_default.list);
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315576,7 +315576,7 @@ var init_Vending = __esmMin((() => {
 			if (isItemStackable(item) && DB.isBuyable(item.ITID)) buyable.push(item);
 		}
 		this.setList(buyable);
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315590,7 +315590,7 @@ var init_Vending = __esmMin((() => {
 	Vending.onSubmit = function onSubmit() {
 		const output = [];
 		const count = _output$1.length;
-		const root = _getRoot$2();
+		const root = _getRoot$4();
 		const shopname = root.querySelector(".shopname").value;
 		let limitZeny;
 		let ctr = 0;
@@ -317149,7 +317149,7 @@ var init_StatusIcons$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$1() {
+function _getRoot$3() {
 	return StatusIcons._shadow || StatusIcons._host;
 }
 function addResizedStatusIcon(img, index) {
@@ -317185,7 +317185,7 @@ function addResizedStatusIcon(img, index) {
 * Used when one element is removed.
 */
 function resetElementsPosition() {
-	const elements = _getRoot$1().querySelectorAll(".state");
+	const elements = _getRoot$3().querySelectorAll(".state");
 	const count = elements.length;
 	let x = 0;
 	let y = 0;
@@ -317252,7 +317252,7 @@ function createElement(index) {
 * @param {CanvasElement}
 */
 function addElement$4(element) {
-	const root = _getRoot$1();
+	const root = _getRoot$3();
 	const elements = root.querySelectorAll(".state");
 	const max = (Renderer.height - 166) / 36 | 0;
 	const count = elements.length;
@@ -317353,7 +317353,7 @@ var init_StatusIcons = __esmMin((() => {
 	* Clean up component
 	*/
 	StatusIcons.clean = function clean() {
-		const container = _getRoot$1().querySelector("#StatusIcons");
+		const container = _getRoot$3().querySelector("#StatusIcons");
 		if (container) container.innerHTML = "";
 		_status = {};
 		ScreenEffectManager.clean();
@@ -320415,14 +320415,21 @@ var init_PvPTimer$2 = __esmMin((() => {
 //#region src/UI/Components/PvPTimer/PvPTimer.css?raw
 var PvPTimer_default$1;
 var init_PvPTimer$1 = __esmMin((() => {
-	PvPTimer_default$1 = "#PvPTimer {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	text-align: center;\r\n	width: 360px;\r\n	height: 250px;\r\n	pointer-events: none;\r\n	z-index: 1000 !important;\r\n}\r\n\r\n#PvPTimer .pvp-timer-canvas {\r\n	display: block;\r\n	width: 300px;\r\n	height: 110px;\r\n	margin: 0 auto;\r\n}\r\n\r\n#PvPTimer .pvp-timeattack-canvas {\r\n	display: block;\r\n	width: 360px;\r\n	height: 128px;\r\n	margin-top: -12px;\r\n}\r\n\r\n#PvPTimer canvas {\r\n	background: transparent;\r\n	image-rendering: pixelated;\r\n}\r\n";
+	PvPTimer_default$1 = ":host {\r\n	top: 0px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 360px;\r\n	height: 250px;\r\n	pointer-events: none;\r\n	z-index: 1000 !important;\r\n}\r\n\r\n#PvPTimer {\r\n	position: absolute;\r\n	text-align: center;\r\n	width: 360px;\r\n	height: 250px;\r\n}\r\n\r\n#PvPTimer .pvp-timer-canvas {\r\n	display: block;\r\n	width: 300px;\r\n	height: 110px;\r\n	margin: 0 auto;\r\n}\r\n\r\n#PvPTimer .pvp-timeattack-canvas {\r\n	display: block;\r\n	width: 360px;\r\n	height: 128px;\r\n	margin-top: -12px;\r\n}\r\n\r\n#PvPTimer canvas {\r\n	background: transparent;\r\n	image-rendering: pixelated;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PvPTimer/PvPTimer.js
 /**
+* Helper to get the shadow root
+*/
+function _getRoot$2() {
+	return PvPTimer._shadow || PvPTimer._host;
+}
+/**
 * Pick layers from act
 * @param {Object} act
 * @param {number} actionId
+* @param {number} frameId
 * @returns {Object[]}
 */
 function pickLayers$1(act, actionId, frameId) {
@@ -320447,9 +320454,9 @@ function renderTimer(seconds) {
 	_timerCtx.clearRect(0, 0, TIMER_W, TIMER_H);
 	const m = Math.floor(seconds / 60);
 	const s = seconds % 60;
-	const text = m == 0 ? String(s).padStart(2, "0") : String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+	const text = m === 0 ? String(s).padStart(2, "0") : `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 	const digitWidth = 50;
-	let x = TIMER_W - (m == 0 ? 2 * digitWidth : 5 * digitWidth) >> 1;
+	let x = TIMER_W - (m === 0 ? 2 * digitWidth : 5 * digitWidth) >> 1;
 	for (let i = 0; i < text.length; i++) {
 		const a = timerCharToAction(text[i]);
 		if (!isNaN(a)) {
@@ -320462,7 +320469,7 @@ function startTimer() {
 	if (_timerInterval) return;
 	_startTs = Date.now() / 1e3 | 0;
 	renderTimer(0);
-	_timerInterval = setInterval(function() {
+	_timerInterval = setInterval(() => {
 		renderTimer((Date.now() / 1e3 | 0) - _startTs);
 	}, 1e3);
 }
@@ -320487,7 +320494,7 @@ function playTimeAttackBanner() {
 		drawActionToCanvas$1(_taCtx, _timeAtkAct, _timeAtkSpr, 0, (TA_W >> 1) - 100, TA_Y, frame);
 		frame++;
 		if (frame < count) _taHideTimer = setTimeout(run, 100);
-		else _taHideTimer = setTimeout(function() {
+		else _taHideTimer = setTimeout(() => {
 			_taCtx.clearRect(0, 0, TA_W, TA_H);
 		}, 300);
 	}
@@ -320496,13 +320503,16 @@ function playTimeAttackBanner() {
 var PvPTimer, TIMER_W, TIMER_H, TA_W, TA_H, TIMER_Y, TA_Y, _timerCanvas, _timerCtx, _taCanvas, _taCtx, _timefontAct, _timefontSpr, _timeAtkAct, _timeAtkSpr, _timerInterval, _startTs, _layerEntity$1, _taHideTimer, isFirstTime, PvPTimer_default;
 var init_PvPTimer = __esmMin((() => {
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Client();
 	init_SpriteRenderer();
 	init_Entity$1();
 	init_PvPTimer$2();
 	init_PvPTimer$1();
-	PvPTimer = new UIComponent("PvPTimer", PvPTimer_default$2, PvPTimer_default$1);
+	PvPTimer = new GUIComponent("PvPTimer", PvPTimer_default$1);
+	PvPTimer.render = () => PvPTimer_default$2;
+	PvPTimer.mouseMode = GUIComponent.MouseMode.CROSS;
+	PvPTimer.needFocus = false;
 	TIMER_W = 300, TIMER_H = 110;
 	TA_W = 360, TA_H = 128;
 	TIMER_Y = 60;
@@ -320521,14 +320531,15 @@ var init_PvPTimer = __esmMin((() => {
 			"data/sprite/ÀÌÆÑÆ®/timefont.spr",
 			"data/sprite/ÀÌÆÑÆ®/timeattack.act",
 			"data/sprite/ÀÌÆÑÆ®/timeattack.spr"
-		], function(tAct, tSpr, aAct, aSpr) {
+		], (tAct, tSpr, aAct, aSpr) => {
 			_timefontAct = tAct;
 			_timefontSpr = tSpr;
 			_timeAtkAct = aAct;
 			_timeAtkSpr = aSpr;
 		});
-		_timerCanvas = PvPTimer.ui.find(".pvp-timer-canvas")[0];
-		_taCanvas = PvPTimer.ui.find(".pvp-timeattack-canvas")[0];
+		const root = _getRoot$2();
+		_timerCanvas = root.querySelector(".pvp-timer-canvas");
+		_taCanvas = root.querySelector(".pvp-timeattack-canvas");
 		if (!_timerCanvas || !_taCanvas) return;
 		_timerCanvas.width = TIMER_W;
 		_timerCanvas.height = TIMER_H;
@@ -320541,7 +320552,7 @@ var init_PvPTimer = __esmMin((() => {
 	* Append UI
 	*/
 	PvPTimer.onAppend = function onAppend() {
-		this.ui.hide();
+		this._host.style.display = "none";
 	};
 	/**
 	* Remove UI
@@ -320554,15 +320565,15 @@ var init_PvPTimer = __esmMin((() => {
 	* Set data
 	* @param {Object} data
 	*/
-	PvPTimer.setData = function setData(data) {};
+	PvPTimer.setData = function setData(_data) {};
 	PvPTimer.hide = function hide() {
-		this.ui.hide();
+		this._host.style.display = "none";
 		stopTimer();
 	};
 	PvPTimer.show = function show() {
-		this.ui.show();
+		this._host.style.display = "";
 		startTimer();
-		if (isFirstTime == true) {
+		if (isFirstTime === true) {
 			playTimeAttackBanner();
 			isFirstTime = false;
 		}
@@ -320579,10 +320590,16 @@ var init_PvPCount$2 = __esmMin((() => {
 //#region src/UI/Components/PvPCount/PvPCount.css?raw
 var PvPCount_default$1;
 var init_PvPCount$1 = __esmMin((() => {
-	PvPCount_default$1 = "#PvPCount {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 240px;\r\n	height: 96px;\r\n	pointer-events: none;\r\n	z-index: 1000 !important;\r\n}\r\n\r\n#PvPCount .pvp-rank-canvas {\r\n	display: block;\r\n	width: 240px;\r\n	height: 96px;\r\n}\r\n\r\n/* Pixel accuracy */\r\n#PvPCount canvas {\r\n	background: transparent;\r\n	image-rendering: pixelated;\r\n}\r\n";
+	PvPCount_default$1 = ":host {\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 240px;\r\n	height: 96px;\r\n	pointer-events: none;\r\n	z-index: 1000 !important;\r\n}\r\n\r\n#PvPCount {\r\n	position: absolute;\r\n	width: 240px;\r\n	height: 96px;\r\n}\r\n\r\n#PvPCount .pvp-rank-canvas {\r\n	display: block;\r\n	width: 240px;\r\n	height: 96px;\r\n}\r\n\r\n/* Pixel accuracy */\r\n#PvPCount canvas {\r\n	background: transparent;\r\n	image-rendering: pixelated;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PvPCount/PvPCount.js
+/**
+* Helper to get the shadow root
+*/
+function _getRoot$1() {
+	return PvPCount._shadow || PvPCount._host;
+}
 /**
 * Pick layers from act
 * @param {Object} act
@@ -320638,14 +320655,17 @@ function clearRank() {
 var PvPCount, RANK_W, RANK_H, RANK_Y, _rankCanvas, _rankCtx, _rankfontAct, _rankfontSpr, _layerEntity, ranking, total, PvPCount_default;
 var init_PvPCount = __esmMin((() => {
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Client();
 	init_SpriteRenderer();
 	init_Entity$1();
 	init_SoundManager();
 	init_PvPCount$2();
 	init_PvPCount$1();
-	PvPCount = new UIComponent("PvPCount", PvPCount_default$2, PvPCount_default$1);
+	PvPCount = new GUIComponent("PvPCount", PvPCount_default$1);
+	PvPCount.render = () => PvPCount_default$2;
+	PvPCount.mouseMode = GUIComponent.MouseMode.CROSS;
+	PvPCount.needFocus = false;
 	RANK_W = 240, RANK_H = 96;
 	RANK_Y = 52;
 	_layerEntity = new Entity();
@@ -320655,11 +320675,11 @@ var init_PvPCount = __esmMin((() => {
 	* Initialize UI
 	*/
 	PvPCount.init = function init() {
-		Client.loadFiles(["data/sprite/ÀÌÆÑÆ®/rankfont.act", "data/sprite/ÀÌÆÑÆ®/rankfont.spr"], function(rAct, rSpr) {
+		Client.loadFiles(["data/sprite/ÀÌÆÑÆ®/rankfont.act", "data/sprite/ÀÌÆÑÆ®/rankfont.spr"], (rAct, rSpr) => {
 			_rankfontAct = rAct;
 			_rankfontSpr = rSpr;
 		});
-		_rankCanvas = PvPCount.ui.find(".pvp-rank-canvas")[0];
+		_rankCanvas = _getRoot$1().querySelector(".pvp-rank-canvas");
 		if (!_rankCanvas) return;
 		_rankCanvas.width = RANK_W;
 		_rankCanvas.height = RANK_H;
@@ -320682,8 +320702,8 @@ var init_PvPCount = __esmMin((() => {
 	* @param {Object} data
 	*/
 	PvPCount.setData = function setData(data) {
-		if (data.ranking == ranking && data.total == total) return;
-		renderRankText(data.ranking + "/" + data.total);
+		if (data.ranking === ranking && data.total === total) return;
+		renderRankText(`${data.ranking}/${data.total}`);
 		if (data.total > total) SoundManager.play("effect/number_change.wav");
 		ranking = data.ranking;
 		total = data.total;
