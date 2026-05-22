@@ -91974,7 +91974,7 @@ var init_RainWeather = __esmMin((() => {
 					osc.disconnect();
 					gain.disconnect();
 				} catch (e) {}
-			}, duration * 1e3 + 50);
+			}, 60);
 		}
 		triggerThunderSound() {
 			if (!this.audioCtx) return;
@@ -92135,11 +92135,11 @@ var init_RainWeather = __esmMin((() => {
 				else {
 					const elapsed2 = elapsed - 160;
 					if (elapsed2 < FLASH_FADE_IN) flashAlpha = elapsed2 / FLASH_FADE_IN * .8;
-					else if (elapsed2 < FLASH_FADE_IN + FLASH_FADE_OUT) flashAlpha = .8 * (1 - (elapsed2 - FLASH_FADE_IN) / FLASH_FADE_OUT);
+					else if (elapsed2 < 350) flashAlpha = .8 * (1 - (elapsed2 - FLASH_FADE_IN) / FLASH_FADE_OUT);
 					else this.isFlashing = false;
 				}
 				else if (elapsed < FLASH_FADE_IN) flashAlpha = elapsed / FLASH_FADE_IN * .8;
-				else if (elapsed < FLASH_FADE_IN + FLASH_FADE_OUT) flashAlpha = .8 * (1 - (elapsed - FLASH_FADE_IN) / FLASH_FADE_OUT);
+				else if (elapsed < 350) flashAlpha = .8 * (1 - (elapsed - FLASH_FADE_IN) / FLASH_FADE_OUT);
 				else this.isFlashing = false;
 				if (this.isFlashing) {
 					overlayR = .9;
@@ -92378,7 +92378,7 @@ function renderLayer$2(layer, spr, pal, sizeScale, pos, alpha) {
 	SpriteRenderer.image.texture = frame.texture;
 	SpriteRenderer.render(false);
 }
-var RAG_TICK_MS$1, FADEOUT_TAIL_MS$2, EMIT_STOP_BEFORE_END_MS$1, FLAKE_LIFE_MS, FLAKE_FADEIN_MS, FLAKE_FADEOUT_START_MS, SCATTER_RADIUS_CELLS$1, SPAWN_HEIGHT_MIN_CELLS$1, SPAWN_HEIGHT_MAX_CELLS$1, FALL_SPEED_CELLS_PER_MS, SPR_PATH, _instance$3, _mapName$4, _isStopping$1, SnowWeatherEffect;
+var RAG_TICK_MS$1, FADEOUT_TAIL_MS$2, EMIT_STOP_BEFORE_END_MS$1, FLAKE_LIFE_MS, FLAKE_FADEIN_MS, FLAKE_FADEOUT_START_MS, SCATTER_RADIUS_CELLS$1, SPAWN_HEIGHT_MIN_CELLS$1, SPAWN_HEIGHT_MAX_CELLS$1, FALL_SPEED_CELLS_PER_MS, _instance$3, _mapName$4, _isStopping$1, SnowWeatherEffect;
 var init_SnowWeather = __esmMin((() => {
 	init_Client();
 	init_Renderer();
@@ -92396,7 +92396,6 @@ var init_SnowWeather = __esmMin((() => {
 	SPAWN_HEIGHT_MIN_CELLS$1 = 18;
 	SPAWN_HEIGHT_MAX_CELLS$1 = 22;
 	FALL_SPEED_CELLS_PER_MS = .1 / RAG_TICK_MS$1;
-	SPR_PATH = "data/sprite/ÀÌÆÑÆ®/ef_snow";
 	_instance$3 = null;
 	_mapName$4 = "";
 	_isStopping$1 = false;
@@ -92513,8 +92512,8 @@ var init_SnowWeather = __esmMin((() => {
 		}
 		render(gl, tick) {
 			if (!SessionStorage_default.Entity) return;
-			const spr = Client.loadFile(SPR_PATH + ".spr", null, null, { to_rgba: true });
-			const act = Client.loadFile(SPR_PATH + ".act");
+			const spr = Client.loadFile("data/sprite/ÀÌÆÑÆ®/ef_snow.spr", null, null, { to_rgba: true });
+			const act = Client.loadFile("data/sprite/ÀÌÆÑÆ®/ef_snow.act");
 			if (!spr || !act) return;
 			this.spr = spr;
 			this.act = act;
@@ -148177,7 +148176,7 @@ function Packets(name, Struct, size) {
 function connect$4(host, port, callback, isZone) {
 	const socket = _socketFactory ? _socketFactory(host, port) : defaultSocketFactory(host, port);
 	socket.isZone = !!isZone;
-	socket.onClose = onClose$19;
+	socket.onClose = onClose$17;
 	socket.onComplete = function onComplete(success) {
 		let msg = "Fail";
 		let color = "red";
@@ -148314,7 +148313,7 @@ function receive(buf) {
 * Communication end
 * Server ask to close the socket
 */
-function onClose$19() {
+function onClose$17() {
 	const idx = _sockets.indexOf(this);
 	if (this === _socket) {
 		console.warn("[Network] Disconnect from server");
@@ -151849,7 +151848,7 @@ var init_GUIComponent = __esmMin((() => {
 						const lockX = component.magnet && (component.magnet.LEFT || component.magnet.RIGHT);
 						const lockY = component.magnet && (component.magnet.TOP || component.magnet.BOTTOM);
 						let snapX = null, snapY = null;
-						let snapXD = SNAP_DISTANCE + 1, snapYD = SNAP_DISTANCE + 1;
+						let snapXD = 11, snapYD = 11;
 						const checkX = (val) => {
 							const d = Math.abs(val - x_);
 							if (d < snapXD) {
@@ -152812,38 +152811,49 @@ var init_MakeReadBook$1 = __esmMin((() => {
 	MakeReadBook_default$1 = "#MakeReadBook {\r\n	width: 555px;\r\n	height: 455px;\r\n	position: absolute;\r\n}\r\n\r\n#MakeReadBook .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#MakeReadBook .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#MakeReadBook .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#MakeReadBook .titlebar .title {\r\n	margin-left: 3px;\r\n	text-align: center;\r\n}\r\n\r\n#MakeReadBook #textBook {\r\n	margin: 0;\r\n	margin-top: -25px;\r\n	width: 500px;\r\n	white-space: break-spaces;\r\n}\r\n\r\n#MakeReadBook .panel {\r\n	height: 415px;\r\n	display: block;\r\n}\r\n#MakeReadBook .body {\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	padding: 0px 0px 0px 30px;\r\n	white-space: pre-wrap;\r\n}\r\n#MakeReadBook .head {\r\n	display: flex;\r\n	text-align: center;\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	width: 535px;\r\n	height: 25px;\r\n}\r\n#MakeReadBook .footer {\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 555px;\r\n	height: 25px;\r\n}\r\n#MakeReadBook .event_book {\r\n	flex: 1;\r\n}\r\n#MakeReadBook .clone_book {\r\n	position: absolute;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	right: 4px;\r\n	top: 10%;\r\n}\r\n#MakeReadBook .highlighter {\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n#MakeReadBook #highlighter {\r\n	text-align: left;\r\n}\r\n#MakeReadBook #next_previous {\r\n	text-align: right;\r\n	text-align: right;\r\n	margin-top: 5px;\r\n	margin-right: -10px;\r\n}\r\n\r\n#MakeReadBook .bookmark {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 8px;\r\n	left: 11px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n#MakeReadBook .previous {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 6px;\r\n	right: 12px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n#MakeReadBook .next {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 6px;\r\n	right: -10px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n\r\n/* resto */\r\n\r\n#MakeReadBook .alt_ {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 75%;\r\n	height: 15px;\r\n	margin-left: 5%;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n#MakeReadBook .input_alt_focus {\r\n	background-color: rgb(205, 224, 255) !important;\r\n}\r\n";
 }));
 //#endregion
+//#region src/UI/Components/Announce/Announce.html?raw
+var Announce_default$2;
+var init_Announce$2 = __esmMin((() => {
+	Announce_default$2 = "<div id=\"Announce\">\r\n	<canvas></canvas>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Announce/Announce.css?raw
+var Announce_default$1;
+var init_Announce$1 = __esmMin((() => {
+	Announce_default$1 = ":host {\r\n	top: 40px;\r\n	left: 0px;\r\n}\r\n\r\n#Announce canvas {\r\n	display: block;\r\n}\r\n";
+}));
+//#endregion
 //#region src/UI/Components/Announce/Announce.js
+function _getRoot$15() {
+	return Announce._shadow || Announce._host;
+}
 var Announce, _timer$2, _life$1, Announce_default;
 var init_Announce = __esmMin((() => {
-	init_jquery();
 	init_Events();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
-	Announce = new UIComponent("Announce");
+	init_GUIComponent();
+	init_Announce$2();
+	init_Announce$1();
+	Announce = new GUIComponent("Announce", Announce_default$1);
 	/**
 	* Mouse can cross this UI
 	*/
-	Announce.mouseMode = UIComponent.MouseMode.CROSS;
+	Announce.mouseMode = GUIComponent.MouseMode.CROSS;
 	/**
 	* @var {boolean} do not focus this UI
 	*/
 	Announce.needFocus = false;
 	_timer$2 = 0;
 	_life$1 = 20 * 1e3;
+	Announce.render = () => Announce_default$2;
 	/**
 	* Initialize component
 	*/
 	Announce.init = function init() {
-		this.canvas = document.createElement("canvas");
+		const root = _getRoot$15();
+		this.canvas = root.querySelector("canvas");
 		this.ctx = this.canvas.getContext("2d");
-		this.ui = jquery_default(this.canvas);
-		this.canvas.id = "Announce";
-		Object.assign(this.canvas.style, {
-			position: "absolute",
-			top: "40px",
-			zIndex: "40"
-		});
 	};
 	/**
 	* Once removed from HTML, clean timer
@@ -152853,7 +152863,6 @@ var init_Announce = __esmMin((() => {
 			Events.clearTimeout(_timer$2);
 			_timer$2 = 0;
 		}
-		if (this.canvas.parentNode) this.canvas.parentNode.removeChild(this.canvas);
 	};
 	/**
 	* Timer end, cleaning announce
@@ -152882,10 +152891,10 @@ var init_Announce = __esmMin((() => {
 			const words = line.split(" ");
 			let currentLine = "";
 			words.forEach((word) => {
-				const testLine = currentLine + word + " ";
+				const testLine = `${currentLine}${word} `;
 				if (this.ctx.measureText(testLine).width > maxWidth) {
 					lines.push(currentLine.trim());
-					currentLine = word + " ";
+					currentLine = `${word} `;
 				} else currentLine = testLine;
 			});
 			if (currentLine.trim()) lines.push(currentLine.trim());
@@ -152893,19 +152902,19 @@ var init_Announce = __esmMin((() => {
 		else {
 			let currentLine = "";
 			text.split(" ").forEach((word) => {
-				const testLine = currentLine + word + " ";
+				const testLine = `${currentLine}${word} `;
 				if (this.ctx.measureText(testLine).width > maxWidth) {
 					lines.push(currentLine.trim());
-					currentLine = word + " ";
+					currentLine = `${word} `;
 				} else currentLine = testLine;
 			});
 			if (currentLine.trim()) lines.push(currentLine.trim());
 		}
 		this.canvas.width = targetWidth || 20 + Math.max(...lines.map((line) => this.ctx.measureText(line).width));
 		this.canvas.height = opts.height || 10 + (fontSize + 5) * lines.length;
-		if (opts.width === "100%") this.canvas.style.left = "0px";
-		else this.canvas.style.left = `${Renderer.width - this.canvas.width >> 1}px`;
-		this.ctx.font = fontSize + "px Arial";
+		if (opts.width === "100%") this._host.style.left = "0px";
+		else this._host.style.left = `${Renderer.width - this.canvas.width >> 1}px`;
+		this.ctx.font = `${fontSize}px Arial`;
 		if (!opts.noBackground) {
 			this.ctx.fillStyle = "rgba(0,0,0,0.5)";
 			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -152973,7 +152982,7 @@ function cleanTextColor(text) {
 /**
 * Exit window
 */
-function onClose$18(e) {
+function onClose$16(e) {
 	try {
 		e.stopImmediatePropagation();
 	} catch (error) {}
@@ -153081,7 +153090,7 @@ var init_MakeReadBook = __esmMin((() => {
 			canvas.className = "clone_book event_add_cursor";
 			MakeReadBook.ui.find(".footer").find("canvas").remove();
 			MakeReadBook.ui.find(".footer").append(canvas);
-			MakeReadBook.ui.find(".clone_book").click(onClose$18);
+			MakeReadBook.ui.find(".clone_book").click(onClose$16);
 			const canvas2 = new SPR(spr_highlighter).getCanvasFromFrame(0);
 			canvas2.className = "highlighter event_add_cursor";
 			MakeReadBook.ui.find("#highlighter").find("canvas").remove();
@@ -153146,7 +153155,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$71.show) onClose$18();
+		if (_preferences$71.show) onClose$16();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -155273,7 +155282,7 @@ var init_Storage$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$32(event) {
+function stopPropagation$27(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -155529,13 +155538,13 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$32);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$27);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$4);
 		this.ui.find(".footer .extend").mousedown(onResize$15);
 		this.ui.find(".titlebar .close").click(function() {
 			CartItems.ui.hide();
 		});
-		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$32).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
+		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$27).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$6).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
 		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
@@ -160498,7 +160507,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$31(event) {
+function stopPropagation$26(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -160707,9 +160716,9 @@ var init_Mail$1 = __esmMin((() => {
 		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
 		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$31).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$31);
-		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$31);
+		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$26).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
+		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$26);
+		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$26);
 		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
 		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
 		onWindowMailbox();
@@ -190685,7 +190694,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$7() {
+function _getRoot$14() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -190834,7 +190843,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$7();
+		const root = _getRoot$14();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -190997,7 +191006,7 @@ function onResize$14() {
 /**
 * Close the window
 */
-function onClose$17() {
+function onClose$15() {
 	PartyFriendsV0.ui.hide();
 	PartyHelper_default.remove();
 }
@@ -191224,7 +191233,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$17);
+		this.ui.find(".close").click(onClose$15);
 		this.ui.find(".lock").mousedown(onToggleLock$1);
 		this.ui.find(".switchtab.off").mousedown(onChangeTab$2);
 		this.ui.find(".remove").mousedown(onRequestRemoveSelection$1);
@@ -195509,14 +195518,14 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$30(event) {
+function stopPropagation$25(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Closing window
 */
-function onClose$16() {
+function onClose$14() {
 	WorldMap._host.style.display = "none";
 }
 var WorldMap, _preferences$63, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
@@ -195556,7 +195565,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this._shadow || this._host;
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$30));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$25));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -195564,7 +195573,7 @@ var init_WorldMap = __esmMin((() => {
 		const showLvlBtn = root.querySelector(".titlebar .showlvl");
 		if (showLvlBtn) showLvlBtn.addEventListener("click", onShowLVL);
 		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$16);
+		if (closeBtn) closeBtn.addEventListener("click", onClose$14);
 		const content = root.querySelector(".map .content");
 		if (content) {
 			content.addEventListener("click", onWorldMapSectionClick);
@@ -196915,7 +196924,7 @@ function onResize$13() {
 /**
 * Close the window
 */
-function onClose$15() {
+function onClose$13() {
 	PartyFriendsV1.ui.hide();
 	PartyHelper_default.remove();
 }
@@ -197195,7 +197204,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$15);
+		this.ui.find(".close").click(onClose$13);
 		this.ui.find(".lock").mousedown(onToggleLock);
 		this.ui.find(".switchtab.off").mousedown(onChangeTab$1);
 		this.ui.find(".remove").mousedown(onRequestRemoveSelection);
@@ -197753,7 +197762,7 @@ function _formatROText(value) {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$6() {
+function _getRoot$13() {
 	return SkillDescription$1._shadow || SkillDescription$1._host;
 }
 var _allowedTags, SkillDescription$1, SkillDescription_default;
@@ -197793,7 +197802,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$6().querySelector(".close");
+		const closeBtn = _getRoot$13().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -197807,7 +197816,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$6().querySelector(".content");
+		const content = _getRoot$13().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -197820,13 +197829,13 @@ var init_SkillDescription = __esmMin((() => {
 //#region src/UI/Components/Guild/Guild.html?raw
 var Guild_default$2;
 var init_Guild$3 = __esmMin((() => {
-	Guild_default$2 = "<div id=\"Guild\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n\r\n	<div class=\"tabs\">\r\n		<!--\r\n		--><button data-flag=\"0\" class=\"info\" data-text=\"340\">Guild Info</button\r\n		><!--\r\n		--><button data-flag=\"1\" class=\"members\" data-text=\"341\">Guildsmen Info</button\r\n		><!--\r\n		--><button data-flag=\"2\" class=\"positions\" data-text=\"342\">Position</button\r\n		><!--\r\n		--><button data-flag=\"3\" class=\"skills\" data-text=\"343\">Guild Skill</button\r\n		><!--\r\n		--><button data-flag=\"4\" class=\"history\" data-text=\"344\">Expel History</button\r\n		><!--\r\n		--><button data-flag=\"6\" class=\"notice\" data-text=\"345\">Guild Notice</button>\r\n	</div>\r\n\r\n	<div class=\"panel\">\r\n		<!-- INFO TAB -->\r\n		<div class=\"content info\">\r\n			<div class=\"name\"><span data-text=\"328\">Guild Name</span> : <span class=\"value\"></span></div>\r\n			<div class=\"level\"><span data-text=\"329\">Guild lvl</span> : <span class=\"value\"></span></div>\r\n			<div class=\"master\"><span data-text=\"330\">Guild Master</span> : <span class=\"value\"></span></div>\r\n			<div class=\"members\">\r\n				<span data-text=\"331\">Guildsmen</span> : <span class=\"numMember\">0</span> /\r\n				<span class=\"maxMember\">0</span> <button data-background=\"basic_interface/grp_online.bmp\"></button>\r\n				<span class=\"online\"></span>\r\n			</div>\r\n			<div class=\"avglevel\"><span data-text=\"332\">Avg.lvl of Guildsmen</span> : <span class=\"value\"></span></div>\r\n			<div class=\"territory\"><span data-text=\"333\">Territory</span> : <span class=\"value\"></span></div>\r\n			<div class=\"tendency\">\r\n				<div class=\"title\" data-text=\"334\">Tendency : <span class=\"value\"></span></div>\r\n				<div class=\"righteous\">R</div>\r\n				<div class=\"wiked\">W</div>\r\n				<div class=\"vulgar\">V</div>\r\n				<div class=\"famed\">F</div>\r\n				<canvas width=\"90\" height=\"90\"></canvas>\r\n			</div>\r\n			<!-- TODO graphic -->\r\n			<div class=\"exp\"><span data-text=\"335\">EXP</span> : <span class=\"value\"></span></div>\r\n			<div class=\"emblem\" data-text=\"336\">Emblem</div>\r\n			<div class=\"emblem_container\"></div>\r\n			<button\r\n				class=\"emblem_edit\"\r\n				data-background=\"btn_edit.bmp\"\r\n				data-hover=\"btn_edit_a.bmp\"\r\n				data-down=\"btn_edit_b.bmp\"\r\n			>\r\n				<input type=\"file\" />\r\n			</button>\r\n\r\n			<div class=\"tax\"><span data-text=\"337\">Tax Point</span> : <span class=\"value\">0</span></div>\r\n			<div class=\"ally\" data-text=\"338\">Alliance</div>\r\n			<div class=\"ally_list\"></div>\r\n			<div class=\"hostile\" data-text=\"339\">Antagonist</div>\r\n			<div class=\"hostile_list\"></div>\r\n		</div>\r\n\r\n		<!-- MEMBERS TAB -->\r\n		<div class=\"content members\">\r\n			<table>\r\n				<thead>\r\n					<tr>\r\n						<th data-text=\"407\" class=\"name\">Name</th>\r\n						<th data-text=\"503\" class=\"position\">Position</th>\r\n						<th data-text=\"504\" class=\"job\">Job</th>\r\n						<th data-text=\"408\" class=\"level\">Level</th>\r\n						<th data-text=\"505\" class=\"note\">Note</th>\r\n						<th data-text=\"506\" class=\"devotion\">Devotion</th>\r\n						<th data-text=\"507\" class=\"tax\">Tax Point</th>\r\n					</tr>\r\n				</thead>\r\n				<tbody>\r\n					<tr class=\"MemberView\">\r\n						<td class=\"name\">\r\n							<canvas width=\"30\" height=\"30\"></canvas>\r\n							<span class=\"value\"></span>\r\n						</td>\r\n						<td class=\"position\"></td>\r\n						<td class=\"job\"></td>\r\n						<td class=\"level\"></td>\r\n						<td class=\"note\"></td>\r\n						<td class=\"devotion\"></td>\r\n						<td class=\"tax\"></td>\r\n					</tr>\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n\r\n		<!-- POSITIONS TAB -->\r\n		<div class=\"content positions\">\r\n			<table>\r\n				<thead>\r\n					<tr>\r\n						<th data-text=\"510\" class=\"id\">Rank</th>\r\n						<th data-text=\"511\" class=\"title\">Position Title</th>\r\n						<th data-text=\"512\" class=\"invite\">Invitation</th>\r\n						<th data-text=\"513\" class=\"punish\">Punish</th>\r\n						<th data-text=\"514\" class=\"tax\">Tax</th>\r\n					</tr>\r\n				</thead>\r\n				<tbody>\r\n					<tr class=\"PositionView\">\r\n						<td class=\"id\"></td>\r\n						<td class=\"title\">\r\n							<input type=\"text\" value=\"\" />\r\n						</td>\r\n						<td class=\"invite\">\r\n							<button data-background=\"checkbox_0.bmp\" class=\"off\"></button>\r\n						</td>\r\n						<td class=\"punish\">\r\n							<button data-background=\"checkbox_0.bmp\" class=\"off\"></button>\r\n						</td>\r\n						<td class=\"tax\"><input type=\"text\" value=\"0\" /> %</td>\r\n					</tr>\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n\r\n		<!-- SKILLS TAB -->\r\n		<div class=\"content skills\">\r\n			<div class=\"skill_list\">\r\n				<table>\r\n					<!-- Just to get reference, will be removed -->\r\n					<button\r\n						class=\"btn levelup\"\r\n						data-background=\"basic_interface/skill_up_a.bmp\"\r\n						data-hover=\"basic_interface/skill_up_b.bmp\"\r\n						data-down=\"basic_interface/skill_up_c.bmp\"\r\n					></button>\r\n				</table>\r\n			</div>\r\n\r\n			<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<button\r\n					class=\"btn apply\"\r\n					data-background=\"btn_apply.bmp\"\r\n					data-hover=\"btn_apply_a.bmp\"\r\n					data-down=\"btn_apply_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"btn reset\"\r\n					data-background=\"btn_reset.bmp\"\r\n					data-hover=\"btn_reset_a.bmp\"\r\n					data-down=\"btn_reset_b.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n\r\n		<!-- HISTORY BAN TAB -->\r\n		<div class=\"content history\">\r\n			<table>\r\n				<thead>\r\n					<tr>\r\n						<th data-text=\"407\" class=\"name\">Name</th>\r\n						<th data-text=\"462\" class=\"reason\">The Reason of Expulsion</th>\r\n					</tr>\r\n				</thead>\r\n				<tbody>\r\n					<tr class=\"ExpelView\">\r\n						<td class=\"name\"></td>\r\n						<td class=\"reason\"></td>\r\n					</tr>\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n\r\n		<!-- NOTICE TAB -->\r\n		<div class=\"content notice\">\r\n			<div data-text=\"515\" class=\"subjectTitle\">Title</div>\r\n			<input type=\"text\" class=\"subject\" />\r\n\r\n			<div data-text=\"516\" class=\"noticeTitle\">Contents</div>\r\n			<textarea class=\"notice\"></textarea>\r\n		</div>\r\n	</div>\r\n\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n		<button class=\"btn_ok\" data-background=\"btn_ok.bmp\" data-hover=\"btn_ok_a.bmp\" data-down=\"btn_ok_b.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
+	Guild_default$2 = "<div id=\"Guild\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n\r\n	<div class=\"tabs\">\r\n		<!--\r\n		--><button data-flag=\"0\" class=\"info\"><ui-text msg=\"340\">Guild Info</ui-text></button\r\n		><!--\r\n		--><button data-flag=\"1\" class=\"members\"><ui-text msg=\"341\">Guildsmen Info</ui-text></button\r\n		><!--\r\n		--><button data-flag=\"2\" class=\"positions\"><ui-text msg=\"342\">Position</ui-text></button\r\n		><!--\r\n		--><button data-flag=\"3\" class=\"skills\"><ui-text msg=\"343\">Guild Skill</ui-text></button\r\n		><!--\r\n		--><button data-flag=\"4\" class=\"history\"><ui-text msg=\"344\">Expel History</ui-text></button\r\n		><!--\r\n		--><button data-flag=\"6\" class=\"notice\"><ui-text msg=\"345\">Guild Notice</ui-text></button>\r\n	</div>\r\n\r\n	<div class=\"panel\">\r\n		<!-- INFO TAB -->\r\n		<div class=\"content info\">\r\n			<div class=\"name\"><ui-text msg=\"328\">Guild Name</ui-text> : <span class=\"value\"></span></div>\r\n			<div class=\"level\"><ui-text msg=\"329\">Guild lvl</ui-text> : <span class=\"value\"></span></div>\r\n			<div class=\"master\"><ui-text msg=\"330\">Guild Master</ui-text> : <span class=\"value\"></span></div>\r\n			<div class=\"members\">\r\n				<ui-text msg=\"331\">Guildsmen</ui-text> : <span class=\"numMember\">0</span> /\r\n				<span class=\"maxMember\">0</span> <ui-button bg=\"basic_interface/grp_online.bmp\"></ui-button>\r\n				<span class=\"online\"></span>\r\n			</div>\r\n			<div class=\"avglevel\"><ui-text msg=\"332\">Avg.lvl of Guildsmen</ui-text> : <span class=\"value\"></span></div>\r\n			<div class=\"territory\"><ui-text msg=\"333\">Territory</ui-text> : <span class=\"value\"></span></div>\r\n			<div class=\"tendency\">\r\n				<div class=\"title\"><ui-text msg=\"334\">Tendency</ui-text> : <span class=\"value\"></span></div>\r\n				<div class=\"righteous\">R</div>\r\n				<div class=\"wiked\">W</div>\r\n				<div class=\"vulgar\">V</div>\r\n				<div class=\"famed\">F</div>\r\n				<canvas width=\"90\" height=\"90\"></canvas>\r\n			</div>\r\n			<div class=\"exp\"><ui-text msg=\"335\">EXP</ui-text> : <span class=\"value\"></span></div>\r\n			<div class=\"emblem\"><ui-text msg=\"336\">Emblem</ui-text></div>\r\n			<div class=\"emblem_container\"></div>\r\n			<ui-button class=\"emblem_edit\" bg=\"btn_edit.bmp\" hover=\"btn_edit_a.bmp\" down=\"btn_edit_b.bmp\">\r\n				<input type=\"file\" />\r\n			</ui-button>\r\n\r\n			<div class=\"tax\"><ui-text msg=\"337\">Tax Point</ui-text> : <span class=\"value\">0</span></div>\r\n			<div class=\"ally\"><ui-text msg=\"338\">Alliance</ui-text></div>\r\n			<div class=\"ally_list\"></div>\r\n			<div class=\"hostile\"><ui-text msg=\"339\">Antagonist</ui-text></div>\r\n			<div class=\"hostile_list\"></div>\r\n		</div>\r\n\r\n		<!-- MEMBERS TAB -->\r\n		<div class=\"content members\">\r\n			<table>\r\n				<thead>\r\n					<tr>\r\n						<th class=\"name\"><ui-text msg=\"407\">Name</ui-text></th>\r\n						<th class=\"position\"><ui-text msg=\"503\">Position</ui-text></th>\r\n						<th class=\"job\"><ui-text msg=\"504\">Job</ui-text></th>\r\n						<th class=\"level\"><ui-text msg=\"408\">Level</ui-text></th>\r\n						<th class=\"note\"><ui-text msg=\"505\">Note</ui-text></th>\r\n						<th class=\"devotion\"><ui-text msg=\"506\">Devotion</ui-text></th>\r\n						<th class=\"tax\"><ui-text msg=\"507\">Tax Point</ui-text></th>\r\n					</tr>\r\n				</thead>\r\n				<tbody>\r\n					<tr class=\"MemberView\">\r\n						<td class=\"name\">\r\n							<canvas width=\"30\" height=\"30\"></canvas>\r\n							<span class=\"value\"></span>\r\n						</td>\r\n						<td class=\"position\"></td>\r\n						<td class=\"job\"></td>\r\n						<td class=\"level\"></td>\r\n						<td class=\"note\"></td>\r\n						<td class=\"devotion\"></td>\r\n						<td class=\"tax\"></td>\r\n					</tr>\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n\r\n		<!-- POSITIONS TAB -->\r\n		<div class=\"content positions\">\r\n			<table>\r\n				<thead>\r\n					<tr>\r\n						<th class=\"id\"><ui-text msg=\"510\">Rank</ui-text></th>\r\n						<th class=\"title\"><ui-text msg=\"511\">Position Title</ui-text></th>\r\n						<th class=\"invite\"><ui-text msg=\"512\">Invitation</ui-text></th>\r\n						<th class=\"punish\"><ui-text msg=\"513\">Punish</ui-text></th>\r\n						<th class=\"tax\"><ui-text msg=\"514\">Tax</ui-text></th>\r\n					</tr>\r\n				</thead>\r\n				<tbody>\r\n					<tr class=\"PositionView\">\r\n						<td class=\"id\"></td>\r\n						<td class=\"title\">\r\n							<input type=\"text\" value=\"\" />\r\n						</td>\r\n						<td class=\"invite\">\r\n							<ui-button bg=\"checkbox_0.bmp\" class=\"off\"></ui-button>\r\n						</td>\r\n						<td class=\"punish\">\r\n							<ui-button bg=\"checkbox_0.bmp\" class=\"off\"></ui-button>\r\n						</td>\r\n						<td class=\"tax\"><input type=\"text\" value=\"0\" /> %</td>\r\n					</tr>\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n\r\n		<!-- SKILLS TAB -->\r\n		<div class=\"content skills\">\r\n			<div class=\"skill_list\">\r\n				<table>\r\n					<!-- Just to get reference, will be removed -->\r\n					<ui-button\r\n						class=\"btn levelup\"\r\n						bg=\"basic_interface/skill_up_a.bmp\"\r\n						hover=\"basic_interface/skill_up_b.bmp\"\r\n						down=\"basic_interface/skill_up_c.bmp\"\r\n					></ui-button>\r\n				</table>\r\n			</div>\r\n\r\n			<div class=\"footer\">\r\n				<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<ui-button\r\n					class=\"btn apply\"\r\n					bg=\"btn_apply.bmp\"\r\n					hover=\"btn_apply_a.bmp\"\r\n					down=\"btn_apply_b.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"btn reset\"\r\n					bg=\"btn_reset.bmp\"\r\n					hover=\"btn_reset_a.bmp\"\r\n					down=\"btn_reset_b.bmp\"\r\n				></ui-button>\r\n			</div>\r\n		</div>\r\n\r\n		<!-- HISTORY BAN TAB -->\r\n		<div class=\"content history\">\r\n			<table>\r\n				<thead>\r\n					<tr>\r\n						<th class=\"name\"><ui-text msg=\"407\">Name</ui-text></th>\r\n						<th class=\"reason\"><ui-text msg=\"462\">The Reason of Expulsion</ui-text></th>\r\n					</tr>\r\n				</thead>\r\n				<tbody>\r\n					<tr class=\"ExpelView\">\r\n						<td class=\"name\"></td>\r\n						<td class=\"reason\"></td>\r\n					</tr>\r\n				</tbody>\r\n			</table>\r\n		</div>\r\n\r\n		<!-- NOTICE TAB -->\r\n		<div class=\"content notice\">\r\n			<div class=\"subjectTitle\"><ui-text msg=\"515\">Title</ui-text></div>\r\n			<input type=\"text\" class=\"subject\" />\r\n\r\n			<div class=\"noticeTitle\"><ui-text msg=\"516\">Contents</ui-text></div>\r\n			<textarea class=\"notice\"></textarea>\r\n		</div>\r\n	</div>\r\n\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n		<ui-button class=\"btn_ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Guild/Guild.css?raw
 var Guild_default$1;
 var init_Guild$2 = __esmMin((() => {
-	Guild_default$1 = "#Guild {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 400px;\r\n	height: 317px;\r\n}\r\n\r\n#Guild .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#Guild .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Guild .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Guild .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Guild .panel {\r\n	background-color: white;\r\n	padding-right: 2px;\r\n}\r\n#Guild .content {\r\n	overflow-y: auto;\r\n	padding: 2px;\r\n	border-top: 1px solid #c6c6c6;\r\n	height: 238px;\r\n}\r\n\r\n#Guild .tabs {\r\n	height: 23px;\r\n	background-color: #b5b6b5;\r\n	white-space: nowrap;\r\n}\r\n#Guild .tabs button.active {\r\n	background-color: #fff;\r\n}\r\n#Guild .tabs button {\r\n	width: 64px;\r\n	height: 23px;\r\n	margin-left: 1px;\r\n	margin-right: 1px;\r\n	margin-top: 1px;\r\n	padding: 0;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n	background-color: #cecece;\r\n	border: 0px;\r\n	padding: 3px;\r\n}\r\n#Guild .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-radius: 0px 0px 3px 3px;\r\n}\r\n#Guild .footer .btn_ok {\r\n	display: none;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 4px;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n\r\n#charselect .ok,\r\n#charselect .make {\r\n	right: 50px;\r\n}\r\n#charselect .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#Guild .content.members,\r\n#Guild .content.positions,\r\n#Guild .content.skills,\r\n#Guild .content.history,\r\n#Guild .content.notice {\r\n	display: none;\r\n}\r\n\r\n/*\r\n * Guild Info CSS\r\n */\r\n#Guild .content.info .exp,\r\n#Guild .content.info .emblem,\r\n#Guild .content.info .tax,\r\n#Guild .content.info .ally,\r\n#Guild .content.info .ally_list,\r\n#Guild .content.info .hostile,\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n}\r\n\r\n#Guild .content.info .name {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .level {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 28px;\r\n}\r\n#Guild .content.info .master {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 45px;\r\n}\r\n#Guild .content.info .members {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .avglevel {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 77px;\r\n}\r\n#Guild .content.info .territory {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 93px;\r\n}\r\n#Guild .content.info .tendency {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 114px;\r\n}\r\n#Guild .content.info .tendency .title {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#Guild .content.info .tendency .righteous {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 16px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .wiked {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 120px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .vulgar {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency .famed {\r\n	position: absolute;\r\n	left: 102px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency canvas {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 10px;\r\n}\r\n\r\n#Guild .content.info .members button {\r\n	margin-left: 5px;\r\n	vertical-align: -4px;\r\n	border: none;\r\n	width: 15px;\r\n	height: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Guild .content.info .exp {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .emblem {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 37px;\r\n}\r\n#Guild .content.info .tax {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .ally {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 103px;\r\n}\r\n#Guild .content.info .ally_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 118px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n#Guild .content.info .hostile {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 177px;\r\n}\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 193px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n\r\n#Guild .content.info .ally_list div,\r\n#Guild .content.info .hostile_list div {\r\n	padding: 2px;\r\n}\r\n#Guild .content.info .ally_list div.active,\r\n#Guild .content.info .hostile_list div.active {\r\n	background-color: #739eef;\r\n	padding: 2px;\r\n}\r\n\r\n#Guild .content.info .emblem_container {\r\n	width: 24px;\r\n	height: 24px;\r\n	position: absolute;\r\n	top: 29px;\r\n	left: 300px;\r\n	background-color: #709ce7;\r\n	background-repeat: no-repeat;\r\n}\r\n#Guild .content.info .emblem_edit {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 330px;\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.info .emblem_edit input {\r\n	opacity: 0;\r\n}\r\n\r\n/*\r\n * Guild Members\r\n */\r\n#Guild .content.members table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.members tbody tr {\r\n	border-left: 1px solid #c2c2c2;\r\n	border-right: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td {\r\n	border-bottom: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members tr.active td {\r\n	background-color: #739eef !important;\r\n}\r\n#Guild .content.members th {\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td,\r\n#Guild .content.members th {\r\n	text-align: left;\r\n	font-weight: normal;\r\n	padding-left: 2px;\r\n	height: 35px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n}\r\n#Guild .content.members tr.online td {\r\n	background-color: #efe;\r\n}\r\n#Guild .content.members tr canvas {\r\n	display: inline;\r\n}\r\n#Guild .content.members .name {\r\n	width: 85px;\r\n	max-width: 85px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .name canvas {\r\n	vertical-align: -11px;\r\n}\r\n#Guild .content.members .position {\r\n	width: 70px;\r\n	max-width: 70px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .position select {\r\n	width: 65px;\r\n	max-width: 65px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .job {\r\n	width: 43px;\r\n	max-width: 43px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .level {\r\n	width: 30px;\r\n}\r\n#Guild .content.members .note {\r\n	width: 41px;\r\n}\r\n#Guild .content.members .devotion {\r\n	width: 42px;\r\n}\r\n#Guild .content.members .tax {\r\n	width: 63px;\r\n	max-width: 63px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n\r\n/*\r\n * Guild Positions\r\n */\r\n#Guild .content.positions table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.positions tr.active {\r\n	border: none;\r\n}\r\n#Guild .content.positions tr.active td {\r\n	background-color: #739eef;\r\n}\r\n#Guild .content.positions th,\r\n#Guild .content.positions td {\r\n	height: 20px;\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 2px 2px 0px 3px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.positions .id {\r\n	width: 57px;\r\n}\r\n#Guild .content.positions .title {\r\n	width: 158px;\r\n	padding: 0px;\r\n}\r\n#Guild .content.positions .invite {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .punish {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .tax {\r\n	width: 68px;\r\n	padding: 0;\r\n}\r\n#Guild .content.positions input {\r\n	border: none;\r\n	background-color: white;\r\n	padding: 0;\r\n	height: 18px;\r\n}\r\n#Guild .content.positions .title input {\r\n	padding-left: 2px;\r\n	width: 140px;\r\n	margin-left: 4px;\r\n}\r\n#Guild .content.positions .tax input {\r\n	width: 28px;\r\n	padding-left: 2px;\r\n	margin-left: 3px;\r\n}\r\n#Guild .content.positions button {\r\n	border: none;\r\n	width: 10px;\r\n	height: 10px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/*\r\n * Guild Skills\r\n */\r\n#Guild .content.skills {\r\n	overflow-y: hidden;\r\n}\r\n#Guild .content.skills .skill_list {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 394px;\r\n	height: 215px;\r\n}\r\n#Guild .content.skills .skill_list table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n	width: 100%;\r\n}\r\n#Guild .content.skills .skill_list td,\r\n#Guild .content.skills .skill_list .name {\r\n	padding: 0px;\r\n}\r\n\r\n#Guild .content.skills .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Guild .content.skills td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#Guild .content.skills .skill_list .icon {\r\n	padding-left: 15px;\r\n}\r\n#Guild .content.skills .skill_list .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#Guild .content.skills .skill_list div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#Guild .content.skills .disabled .icon,\r\n#Guild .content.skills .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#Guild .content.skills .disabled .consume,\r\n#Guild .content.skills .disabled .level {\r\n	display: none;\r\n}\r\n#Guild .content.skills .currentDown,\r\n#Guild .content.skills .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#Guild .content.skills .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#Guild .content.skills .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n#Guild .content.skills .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n#Guild .content.skills .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#Guild .content.skills .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#Guild .content.skills .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#Guild .content.skills .footer .apply {\r\n	right: 70px;\r\n}\r\n#Guild .content.skills .footer .reset {\r\n	right: 20px;\r\n}\r\n\r\n/*\r\n * Guild History\r\n */\r\n#Guild .content.history table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.history th,\r\n#Guild .content.history td {\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 5px 5px 0px 5px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.history .name {\r\n	width: 90px;\r\n}\r\n#Guild .content.history .reason {\r\n	width: 275px;\r\n}\r\n\r\n/*\r\n * Guild Notice\r\n */\r\n#Guild .notice .subjectTitle {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .subject {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 50px;\r\n	padding-left: 5px;\r\n	height: 14px;\r\n	border: none;\r\n	width: 333px;\r\n	background-color: #eee;\r\n}\r\n#Guild .notice .noticeTitle {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .notice {\r\n	position: absolute;\r\n	top: 52px;\r\n	left: 9px;\r\n	padding-left: 5px;\r\n	margin: 0px;\r\n	width: 372px;\r\n	height: 168px;\r\n	background-color: #eee;\r\n	border: none;\r\n	resize: none;\r\n}\r\n";
+	Guild_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Guild {\r\n	position: absolute;\r\n	width: 400px;\r\n	height: 317px;\r\n}\r\n\r\n#Guild .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#Guild .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Guild .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Guild .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Guild .panel {\r\n	background-color: white;\r\n	padding-right: 2px;\r\n}\r\n#Guild .content {\r\n	overflow-y: auto;\r\n	padding: 2px;\r\n	border-top: 1px solid #c6c6c6;\r\n	height: 238px;\r\n}\r\n\r\n#Guild .tabs {\r\n	height: 23px;\r\n	background-color: #b5b6b5;\r\n	white-space: nowrap;\r\n}\r\n#Guild .tabs button.active {\r\n	background-color: #fff;\r\n}\r\n#Guild .tabs button {\r\n	width: 64px;\r\n	height: 23px;\r\n	margin-left: 1px;\r\n	margin-right: 1px;\r\n	margin-top: 1px;\r\n	padding: 0;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n	background-color: #cecece;\r\n	border: 0px;\r\n	padding: 3px;\r\n}\r\n#Guild .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-radius: 0px 0px 3px 3px;\r\n}\r\n#Guild .footer .btn_ok {\r\n	display: none;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 4px;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n\r\n#Guild .content.members,\r\n#Guild .content.positions,\r\n#Guild .content.skills,\r\n#Guild .content.history,\r\n#Guild .content.notice {\r\n	display: none;\r\n}\r\n\r\n/*\r\n * Guild Info CSS\r\n */\r\n#Guild .content.info .exp,\r\n#Guild .content.info .emblem,\r\n#Guild .content.info .tax,\r\n#Guild .content.info .ally,\r\n#Guild .content.info .ally_list,\r\n#Guild .content.info .hostile,\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n}\r\n\r\n#Guild .content.info .name {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .level {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 28px;\r\n}\r\n#Guild .content.info .master {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 45px;\r\n}\r\n#Guild .content.info .members {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .avglevel {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 77px;\r\n}\r\n#Guild .content.info .territory {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 93px;\r\n}\r\n#Guild .content.info .tendency {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 114px;\r\n}\r\n#Guild .content.info .tendency .title {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#Guild .content.info .tendency .righteous {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 16px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .wiked {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 120px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .vulgar {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency .famed {\r\n	position: absolute;\r\n	left: 102px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency canvas {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 10px;\r\n}\r\n\r\n#Guild .content.info .members ui-button {\r\n	margin-left: 5px;\r\n	vertical-align: -4px;\r\n	border: none;\r\n	width: 15px;\r\n	height: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Guild .content.info .exp {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .emblem {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 37px;\r\n}\r\n#Guild .content.info .tax {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .ally {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 103px;\r\n}\r\n#Guild .content.info .ally_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 118px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n#Guild .content.info .hostile {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 177px;\r\n}\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 193px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n\r\n#Guild .content.info .ally_list div,\r\n#Guild .content.info .hostile_list div {\r\n	padding: 2px;\r\n}\r\n#Guild .content.info .ally_list div.active,\r\n#Guild .content.info .hostile_list div.active {\r\n	background-color: #739eef;\r\n	padding: 2px;\r\n}\r\n\r\n#Guild .content.info .emblem_container {\r\n	width: 24px;\r\n	height: 24px;\r\n	position: absolute;\r\n	top: 29px;\r\n	left: 300px;\r\n	background-color: #709ce7;\r\n	background-repeat: no-repeat;\r\n}\r\n#Guild .content.info .emblem_edit {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 330px;\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.info .emblem_edit input {\r\n	opacity: 0;\r\n}\r\n\r\n/*\r\n * Guild Members\r\n */\r\n#Guild .content.members table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.members tbody tr {\r\n	border-left: 1px solid #c2c2c2;\r\n	border-right: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td {\r\n	border-bottom: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members tr.active td {\r\n	background-color: #739eef !important;\r\n}\r\n#Guild .content.members th {\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td,\r\n#Guild .content.members th {\r\n	text-align: left;\r\n	font-weight: normal;\r\n	padding-left: 2px;\r\n	height: 35px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n}\r\n#Guild .content.members tr.online td {\r\n	background-color: #efe;\r\n}\r\n#Guild .content.members tr canvas {\r\n	display: inline;\r\n}\r\n#Guild .content.members .name {\r\n	width: 85px;\r\n	max-width: 85px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .name canvas {\r\n	vertical-align: -11px;\r\n}\r\n#Guild .content.members .position {\r\n	width: 70px;\r\n	max-width: 70px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .position select {\r\n	width: 65px;\r\n	max-width: 65px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .job {\r\n	width: 43px;\r\n	max-width: 43px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .level {\r\n	width: 30px;\r\n}\r\n#Guild .content.members .note {\r\n	width: 41px;\r\n}\r\n#Guild .content.members .devotion {\r\n	width: 42px;\r\n}\r\n#Guild .content.members .tax {\r\n	width: 63px;\r\n	max-width: 63px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n\r\n/*\r\n * Guild Positions\r\n */\r\n#Guild .content.positions table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.positions tr.active {\r\n	border: none;\r\n}\r\n#Guild .content.positions tr.active td {\r\n	background-color: #739eef;\r\n}\r\n#Guild .content.positions th,\r\n#Guild .content.positions td {\r\n	height: 20px;\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 2px 2px 0px 3px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.positions .id {\r\n	width: 57px;\r\n}\r\n#Guild .content.positions .title {\r\n	width: 158px;\r\n	padding: 0px;\r\n}\r\n#Guild .content.positions .invite {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .punish {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .tax {\r\n	width: 68px;\r\n	padding: 0;\r\n}\r\n#Guild .content.positions input {\r\n	border: none;\r\n	background-color: white;\r\n	padding: 0;\r\n	height: 18px;\r\n}\r\n#Guild .content.positions .title input {\r\n	padding-left: 2px;\r\n	width: 140px;\r\n	margin-left: 4px;\r\n}\r\n#Guild .content.positions .tax input {\r\n	width: 28px;\r\n	padding-left: 2px;\r\n	margin-left: 3px;\r\n}\r\n#Guild .content.positions ui-button {\r\n	border: none;\r\n	width: 10px;\r\n	height: 10px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/*\r\n * Guild Skills\r\n */\r\n#Guild .content.skills {\r\n	overflow-y: hidden;\r\n}\r\n#Guild .content.skills .skill_list {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 394px;\r\n	height: 215px;\r\n}\r\n#Guild .content.skills .skill_list table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n	width: 100%;\r\n}\r\n#Guild .content.skills .skill_list td,\r\n#Guild .content.skills .skill_list .name {\r\n	padding: 0px;\r\n}\r\n\r\n#Guild .content.skills .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Guild .content.skills td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#Guild .content.skills .skill_list .icon {\r\n	padding-left: 15px;\r\n}\r\n#Guild .content.skills .skill_list .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#Guild .content.skills .skill_list div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#Guild .content.skills .disabled .icon,\r\n#Guild .content.skills .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#Guild .content.skills .disabled .consume,\r\n#Guild .content.skills .disabled .level {\r\n	display: none;\r\n}\r\n#Guild .content.skills .currentDown,\r\n#Guild .content.skills .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#Guild .content.skills .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#Guild .content.skills .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n#Guild .content.skills .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n#Guild .content.skills .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#Guild .content.skills .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#Guild .content.skills .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#Guild .content.skills .footer .apply {\r\n	right: 70px;\r\n}\r\n#Guild .content.skills .footer .reset {\r\n	right: 20px;\r\n}\r\n\r\n/*\r\n * Guild History\r\n */\r\n#Guild .content.history table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.history th,\r\n#Guild .content.history td {\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 5px 5px 0px 5px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.history .name {\r\n	width: 90px;\r\n}\r\n#Guild .content.history .reason {\r\n	width: 275px;\r\n}\r\n\r\n/*\r\n * Guild Notice\r\n */\r\n#Guild .notice .subjectTitle {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .subject {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 50px;\r\n	padding-left: 5px;\r\n	height: 14px;\r\n	border: none;\r\n	width: 333px;\r\n	background-color: #eee;\r\n}\r\n#Guild .notice .noticeTitle {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .notice {\r\n	position: absolute;\r\n	top: 52px;\r\n	left: 9px;\r\n	padding-left: 5px;\r\n	margin: 0px;\r\n	width: 372px;\r\n	height: 168px;\r\n	background-color: #eee;\r\n	border: none;\r\n	resize: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/WinStats/WinStats/WinStats.html?raw
@@ -198240,38 +198249,37 @@ var init_WinStats = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/Guild/Guild.js
 /**
-* Find a skill by it's id
-*
-* @param {number} skill id
-* @returns {Skill}
+* Helper: query inside shadow root
 */
+function _root$3(comp) {
+	return comp._shadow || comp._host;
+}
+/**
+* Helper: escape HTML (replace jQuery.escape)
+*/
+function _escapeHTML$3(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
 function getSkillById$2(id) {
 	const count = _skills.length;
 	for (let i = 0; i < count; ++i) if (_skills[i].SKID === id) return _skills[i];
 	return null;
 }
-/**
-* Request to upgrade a skill
-*/
-function onRequestSkillUp$2() {
+function onRequestSkillUp() {
 	const index = this.parentNode.parentNode.getAttribute("data-index");
 	Guild.onIncreaseSkill(parseInt(index, 10));
 }
-/**
-* Request to use a skill
-*/
-function onRequestUseSkill$2() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	Guild.useSkillID(parseInt(main.data("index"), 10));
+function onRequestUseSkill() {
+	let main = this.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	Guild.useSkillID(parseInt(main.getAttribute("data-index"), 10));
 }
-/**
-* Request to get skill info (right click on a skill)
-*/
 function onRequestSkillInfo() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	const skill = getSkillById$2(parseInt(main.data("index"), 10));
+	let main = this.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	const skill = getSkillById$2(parseInt(main.getAttribute("data-index"), 10));
 	if (SkillDescription_default.uid === skill.SKID) {
 		SkillDescription_default.remove();
 		return;
@@ -198279,84 +198287,74 @@ function onRequestSkillInfo() {
 	SkillDescription_default.append();
 	SkillDescription_default.setSkill(skill.SKID);
 }
-/**
-* Focus a skill in the list (background color changed)
-*/
-function onSkillFocus$2() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	Guild.ui.find(".skill").removeClass("selected");
-	main.addClass("selected");
+function onSkillFocus() {
+	let main = this.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	const root = _root$3(Guild);
+	for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
+	main.classList.add("selected");
 }
-/**
-* Start to drag a skill (to put it on the hotkey UI ?)
-*/
-function onSkillDragStart$2(event) {
+function onSkillDragStart(event) {
 	const skill = getSkillById$2(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$29(event);
+	if (!skill || !skill.level || !skill.type) {
+		event.stopImmediatePropagation();
+		return false;
+	}
 	const img = new Image();
 	img.decoding = "async";
-	img.src = this.firstChild.firstChild.src;
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = this.querySelector(".icon img")?.src || "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "skill",
 		from: "Guild",
 		data: skill
 	}));
 }
-/**
-* Stop the drag drop action, clean up
-*/
-function onSkillDragEnd$2() {
+function onSkillDragEnd() {
 	delete window._OBJ_DRAG_;
 }
 function skillLevelSelectUp$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
-		Guild.ui.find(".skill.id" + skill.SKID + ":first").find(".level .current").text(skill.selectedLevel);
+		const element = _root$3(Guild).querySelector(`.skill.id${skill.SKID}`);
+		if (element) {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		}
 	}
 }
 function skillLevelSelectDown$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
-		Guild.ui.find(".skill.id" + skill.SKID + ":first").find(".level .current").text(skill.selectedLevel);
+		const element = _root$3(Guild).querySelector(`.skill.id${skill.SKID}`);
+		if (element) {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		}
 	}
 }
-/**
-* Stop propagation of events
-*/
-function stopPropagation$29(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Change tab
-*/
 function onChangeTab(event) {
 	const tab = parseInt(this.getAttribute("data-flag"), 10);
-	if (!event.isTrigger) {
-		if (this.classList.contains("active") || tab && !(_guildAccess & AccessTypeBit[tab])) return false;
-	}
+	const root = _root$3(Guild);
+	if (this.classList.contains("active") || tab && !(_guildAccess & AccessTypeBit[tab])) return false;
 	Guild.onGuildInfoRequest(tab);
-	Guild.ui.find(".tabs button").removeClass("active");
-	Guild.ui.find(".content").hide();
-	Guild.ui.find(".content." + this.className).show();
-	Guild.ui.find(".footer .btn_ok").hide();
-	if (this.className === "members") Renderer.render(renderMemberFaces);
+	for (const btn of root.querySelectorAll(".tabs button")) btn.classList.remove("active");
+	for (const content of root.querySelectorAll(".content")) content.style.display = "none";
+	const targetClass = this.className.replace(/\s*active\s*/g, "").trim();
+	const targetContent = root.querySelector(`.content.${targetClass}`);
+	if (targetContent) targetContent.style.display = "block";
+	const btnOk = root.querySelector(".footer .btn_ok");
+	if (btnOk) btnOk.style.display = "none";
+	if (targetClass === "members") Renderer.render(renderMemberFaces);
 	else Renderer.stop(renderMemberFaces);
 	this.classList.add("active");
 	return false;
 }
-/**
-* Render tendency graphic
-*
-* @param {number} honor [-100, 100]
-* @param {number} virtue [-100, 100]
-*/
 function renderTendency(honor, virtue) {
-	const canvas = Guild.ui.find(".content.info .tendency canvas").get(0);
+	const canvas = _root$3(Guild).querySelector(".content.info .tendency canvas");
+	if (!canvas) return;
 	const ctx = canvas.getContext("2d");
 	ctx.fillStyle = "#cecfce";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -198368,12 +198366,17 @@ function renderTendency(honor, virtue) {
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(canvas.width / 2 - 1, canvas.height / 2 - 1, 2, 2);
 }
-/**
-* Validate a change (notice, position, etc.)
-*/
 function onValidate() {
-	let activeTab = Guild.ui.find(".content:visible").get(0).className;
-	activeTab = activeTab.replace(/content/g, "").replace(/^\s+|\s+$/gm, "");
+	const root = _root$3(Guild);
+	const visibleContent = Array.from(root.querySelectorAll(".content")).find((el) => {
+		return el.style.display !== "none" && getComputedStyle(el).display !== "none";
+	});
+	if (!visibleContent) return;
+	let activeTab = "";
+	for (const cls of visibleContent.classList) if (cls !== "content") {
+		activeTab = cls;
+		break;
+	}
 	switch (activeTab) {
 		case "members": {
 			const list = [];
@@ -198388,18 +198391,18 @@ function onValidate() {
 			break;
 		}
 		case "positions": {
-			let i, count;
-			let position;
-			let right, posName, payRate;
 			const positionList = [];
-			const positions = Guild.ui.find(".PositionView");
-			for (i = 0, count = _positions.length; i < count; ++i) {
-				position = positions.eq(i);
-				posName = position.find(".title input").val();
-				payRate = parseInt(position.find(".tax input").val(), 10);
-				right = 0;
-				if (position.find(".invite button").hasClass("on")) right |= 1;
-				if (position.find(".punish button").hasClass("on")) right |= 16;
+			const positions = root.querySelectorAll(".PositionView");
+			for (let i = 0, count = _positions.length; i < count; ++i) {
+				const position = positions[i];
+				if (!position) continue;
+				const posName = position.querySelector(".title input")?.value || "";
+				const payRate = parseInt(position.querySelector(".tax input")?.value || "0", 10);
+				let right = 0;
+				const inviteBtn = position.querySelector(".invite ui-button");
+				if (inviteBtn && inviteBtn.classList.contains("on")) right |= 1;
+				const punishBtn = position.querySelector(".punish ui-button");
+				if (punishBtn && punishBtn.classList.contains("on")) right |= 16;
 				if (_positions[i].right !== right || _positions[i].posName !== posName || _positions[i].payRate !== payRate) positionList.push({
 					positionID: _positions[i].positionID,
 					ranking: _positions[i].ranking,
@@ -198412,19 +198415,19 @@ function onValidate() {
 			break;
 		}
 		case "notice": {
-			const subject = Guild.ui.find(".content.notice input").val();
-			const content = Guild.ui.find(".content.notice textarea").val();
+			const subject = root.querySelector(".content.notice input")?.value || "";
+			const content = root.querySelector(".content.notice textarea")?.value || "";
 			Guild.onNoticeUpdateRequest(subject, content);
 			break;
 		}
 	}
-	Guild.ui.find(".footer .btn_ok").hide();
+	const btnOk = root.querySelector(".footer .btn_ok");
+	if (btnOk) btnOk.style.display = "none";
 }
-var AccessTypeBit, Guild, MemberView, PositionView, ExpelView, _positions, _members, _skills, _btnIncSkill$2, _skpoints, _btnLevelUp$7, lArrow$2, rArrow$2, _totalExp, _guildAccess, _checkbox_off, _checkbox_on, renderMemberFaces, Guild_default;
+var AccessTypeBit, Guild, _memberViewTemplate, _positionViewTemplate, _expelViewTemplate, _positions, _members, _skills, _btnIncSkillTemplate, _skpoints, _btnLevelUp$7, lArrow, rArrow, _totalExp, _guildAccess, _checkbox_off, _checkbox_on, renderMemberFaces, Guild_default;
 var init_Guild$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
-	init_jquery();
 	init_KeyEventHandler();
 	init_MonsterTable();
 	init_SessionStorage();
@@ -198434,7 +198437,8 @@ var init_Guild$1 = __esmMin((() => {
 	init_Renderer();
 	init_Client();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ContextMenu();
 	init_ChatBox();
 	init_InputBox();
@@ -198452,7 +198456,8 @@ var init_Guild$1 = __esmMin((() => {
 		5: 64,
 		6: 128
 	};
-	Guild = new UIComponent("Guild", Guild_default$2, Guild_default$1);
+	Guild = new GUIComponent("Guild", Guild_default$1);
+	Guild.render = () => Guild_default$2;
 	_positions = [];
 	_members = [];
 	_skills = [];
@@ -198463,104 +198468,185 @@ var init_Guild$1 = __esmMin((() => {
 	* Initialize component
 	*/
 	Guild.init = function init() {
-		const ui = this.ui;
-		MemberView = this.ui.find(".MemberView").remove();
-		PositionView = this.ui.find(".PositionView").remove();
-		ExpelView = this.ui.find(".ExpelView").remove();
-		ui.find(".titlebar .close").mousedown(stopPropagation$29).click(Guild.toggle.bind(this));
-		ui.find(".tabs").on("click", "button", onChangeTab);
-		Client.loadFiles([DB.INTERFACE_PATH + "checkbox_0.bmp", DB.INTERFACE_PATH + "checkbox_1.bmp"], function(off, on) {
+		const root = _root$3(this);
+		_memberViewTemplate = root.querySelector(".MemberView");
+		if (_memberViewTemplate) _memberViewTemplate.remove();
+		_positionViewTemplate = root.querySelector(".PositionView");
+		if (_positionViewTemplate) _positionViewTemplate.remove();
+		_expelViewTemplate = root.querySelector(".ExpelView");
+		if (_expelViewTemplate) _expelViewTemplate.remove();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => Guild.toggle());
+		}
+		const tabsContainer = root.querySelector(".tabs");
+		if (tabsContainer) tabsContainer.addEventListener("click", (e) => {
+			const btn = e.target.closest("button");
+			if (btn) onChangeTab.call(btn, e);
+		});
+		Client.loadFiles([`${DB.INTERFACE_PATH}checkbox_0.bmp`, `${DB.INTERFACE_PATH}checkbox_1.bmp`], (off, on) => {
 			_checkbox_off = off;
 			_checkbox_on = on;
 		});
-		ui.find(".content.positions tbody").on("mousedown", "input", function() {
-			return SessionStorage_default.isGuildMaster;
-		}).on("focus", "input", function() {
-			ui.find(".footer .btn_ok").show();
-			this.select();
-		}).on("click", "button", function() {
-			if (SessionStorage_default.isGuildMaster) {
-				this.className = this.className === "on" ? "off" : "on";
-				this.style.backgroundImage = "url(" + (this.className === "on" ? _checkbox_on : _checkbox_off) + ")";
-				ui.find(".footer .btn_ok").show();
+		const posBody = root.querySelector(".content.positions tbody");
+		if (posBody) {
+			posBody.addEventListener("mousedown", (e) => {
+				if (e.target.closest("input") && !SessionStorage_default.isGuildMaster) e.preventDefault();
+				const tr = e.target.closest("tr");
+				if (tr) {
+					for (const row of posBody.querySelectorAll("tr")) row.classList.remove("active");
+					tr.classList.add("active");
+				}
+			});
+			posBody.addEventListener("focus", (e) => {
+				if (e.target.matches("input")) {
+					const btnOk = root.querySelector(".footer .btn_ok");
+					if (btnOk) btnOk.style.display = "block";
+					e.target.select();
+				}
+			}, true);
+			posBody.addEventListener("click", (e) => {
+				const btn = e.target.closest("ui-button");
+				if (btn && SessionStorage_default.isGuildMaster) {
+					btn.className = btn.className.replace(/\b(on|off)\b/g, "").trim();
+					const isOn = !btn.classList.contains("on");
+					btn.classList.add(isOn ? "on" : "off");
+					btn.style.backgroundImage = `url(${isOn ? _checkbox_on : _checkbox_off})`;
+					const btnOk = root.querySelector(".footer .btn_ok");
+					if (btnOk) btnOk.style.display = "block";
+				}
+			});
+		}
+		const allyHostileContainer = root.querySelector(".content.info");
+		if (allyHostileContainer) {
+			const lists = allyHostileContainer.querySelectorAll(".ally_list, .hostile_list");
+			for (const list of lists) list.addEventListener("contextmenu", (e) => {
+				const div = e.target.closest("div");
+				if (!div) return;
+				const relation = div.parentNode.classList.contains("ally_list") ? 0 : 1;
+				const guildId = parseInt(div.getAttribute("data-guild-id"), 10);
+				for (const d of allyHostileContainer.querySelectorAll(".ally_list div, .hostile_list div")) d.classList.remove("active");
+				div.classList.add("active");
+				ContextMenu_default.remove();
+				ContextMenu_default.append();
+				ContextMenu_default.addElement(DB.getMessage(351), () => {
+					Guild.onRequestDeleteRelation(guildId, relation);
+				});
+			});
+		}
+		const membersBody = root.querySelector(".content.members tbody");
+		if (membersBody) {
+			membersBody.addEventListener("mousedown", (e) => {
+				const tr = e.target.closest("tr");
+				if (tr) {
+					for (const row of membersBody.querySelectorAll("tr")) row.classList.remove("active");
+					tr.classList.add("active");
+				}
+			});
+			membersBody.addEventListener("contextmenu", (e) => {
+				const td = e.target.closest("td.name");
+				if (!td) return;
+				const member = _members[td.parentNode.getAttribute("data-index")];
+				const isSelf = member.AID === SessionStorage_default.AID && member.GID === SessionStorage_default.GID;
+				ContextMenu_default.remove();
+				ContextMenu_default.append();
+				ContextMenu_default.addElement(DB.getMessage(129), () => {
+					Guild.onRequestMemberInfo(member.AID);
+				});
+				if (isSelf && !SessionStorage_default.isGuildMaster) ContextMenu_default.addElement(DB.getMessage(508), () => {
+					InputBox_default.append();
+					InputBox_default.setType("text");
+					const textEl = (_root$3(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					if (textEl) textEl.textContent = DB.getMessage(523);
+					else InputBox_default.ui.find(".text").text(DB.getMessage(523));
+					InputBox_default.onSubmitRequest = (reason) => {
+						InputBox_default.remove();
+						Guild.onRequestLeave(member.AID, member.GID, reason);
+					};
+				});
+				if (SessionStorage_default.guildRight & 16 && !isSelf) ContextMenu_default.addElement(DB.getMessage(509), () => {
+					InputBox_default.append();
+					InputBox_default.setType("text");
+					const textEl = (_root$3(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					if (textEl) textEl.textContent = DB.getMessage(524);
+					else InputBox_default.ui.find(".text").text(DB.getMessage(524));
+					InputBox_default.onSubmitRequest = (reason) => {
+						InputBox_default.remove();
+						Guild.onRequestMemberExpel(member.AID, member.GID, reason);
+					};
+				});
+			});
+		}
+		const levelupBtn = root.querySelector(".btn.levelup");
+		if (levelupBtn) {
+			_btnIncSkillTemplate = levelupBtn.cloneNode(true);
+			levelupBtn.remove();
+			_btnIncSkillTemplate.addEventListener("click", function() {
+				onRequestSkillUp.call(this);
+			});
+		}
+		const lvlupBtn = root.querySelector("#lvlup_job");
+		if (lvlupBtn) {
+			_btnLevelUp$7 = lvlupBtn;
+			_btnLevelUp$7.remove();
+			_btnLevelUp$7.addEventListener("click", () => {
+				if (_btnLevelUp$7.parentNode) _btnLevelUp$7.remove();
+				Guild.ui.show();
+			});
+			_btnLevelUp$7.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		}
+		const container = root.querySelector("#Guild") || root;
+		container.addEventListener("dblclick", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) onRequestUseSkill.call(target);
+		});
+		container.addEventListener("contextmenu", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) onRequestSkillInfo.call(target);
+		});
+		container.addEventListener("mousedown", (e) => {
+			const target = e.target.closest(".selectable");
+			if (target && target.closest(".content.skills")) onSkillFocus.call(target);
+		});
+		container.addEventListener("dragstart", (e) => {
+			const target = e.target.closest(".skill");
+			if (target && target.closest(".content.skills")) onSkillDragStart.call(target, e);
+		});
+		container.addEventListener("dragend", (e) => {
+			const target = e.target.closest(".skill");
+			if (target && target.closest(".content.skills")) onSkillDragEnd.call(target);
+		});
+		const noticeContent = root.querySelector(".content.notice");
+		if (noticeContent) noticeContent.addEventListener("focus", (e) => {
+			if (e.target.matches("textarea, input")) {
+				const btnOk = root.querySelector(".footer .btn_ok");
+				if (btnOk) btnOk.style.display = "block";
 			}
-		}).on("mousedown", "tr", function() {
-			ui.find(".content.positions tbody tr").removeClass("active");
-			this.classList.add("active");
-		});
-		ui.find(".content.info .ally_list, .content.info .hostile_list").on("contextmenu", "div", function() {
-			const relation = this.parentNode.classList.contains("ally_list") ? 0 : 1;
-			const guild_id = parseInt(this.getAttribute("data-guild-id"), 10);
-			ui.find(".content.info .ally_list div, .content.info .hostile_list div").removeClass("active");
-			this.classList.add("active");
-			ContextMenu_default.remove();
-			ContextMenu_default.append();
-			ContextMenu_default.addElement(DB.getMessage(351), function() {
-				Guild.onRequestDeleteRelation(guild_id, relation);
-			});
-		});
-		ui.find(".content.members tbody").on("mousedown", "tr", function() {
-			ui.find(".content.members tbody tr").removeClass("active");
-			this.classList.add("active");
-		}).on("contextmenu", "td.name", function() {
-			const member = _members[this.parentNode.getAttribute("data-index")];
-			const isSelf = member.AID === SessionStorage_default.AID && member.GID === SessionStorage_default.GID;
-			ContextMenu_default.remove();
-			ContextMenu_default.append();
-			ContextMenu_default.addElement(DB.getMessage(129), function() {
-				Guild.onRequestMemberInfo(member.AID);
-			});
-			if (isSelf && !SessionStorage_default.isGuildMaster) ContextMenu_default.addElement(DB.getMessage(508), function() {
-				InputBox_default.append();
-				InputBox_default.setType("text");
-				InputBox_default.ui.find(".text").text(DB.getMessage(523));
-				InputBox_default.onSubmitRequest = function(reason) {
-					InputBox_default.remove();
-					Guild.onRequestLeave(member.AID, member.GID, reason);
-				};
-			});
-			if (SessionStorage_default.guildRight & 16 && !isSelf) ContextMenu_default.addElement(DB.getMessage(509), function() {
-				InputBox_default.append();
-				InputBox_default.setType("text");
-				InputBox_default.ui.find(".text").text(DB.getMessage(524));
-				InputBox_default.onSubmitRequest = function(reason) {
-					InputBox_default.remove();
-					Guild.onRequestMemberExpel(member.AID, member.GID, reason);
-				};
-			});
-		});
-		_btnIncSkill$2 = this.ui.find(".btn.levelup").detach().click(onRequestSkillUp$2);
-		_btnLevelUp$7 = jquery_default("#lvlup_job").detach();
-		_btnLevelUp$7.click(function() {
-			_btnLevelUp$7.detach();
-			Guild.ui.show();
-			Guild.ui.parent().append(Guild.ui);
-		}).mousedown(stopPropagation$29);
-		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$2).on("contextmenu", ".skill .icon, .skill .name", onRequestSkillInfo).on("mousedown", ".selectable", onSkillFocus$2).on("dragstart", ".skill", onSkillDragStart$2).on("dragend", ".skill", onSkillDragEnd$2);
-		ui.find(".content.notice").on("focus", "textarea, input", function() {
-			ui.find(".footer .btn_ok").show();
-		});
-		ui.find(".content.info .emblem_edit input").change(function() {
+		}, true);
+		const emblemInput = root.querySelector(".content.info .emblem_edit input");
+		if (emblemInput) emblemInput.addEventListener("change", function() {
 			const file = this.files[0];
 			if (!file) return;
 			const isBmp = /^image\/(bmp|x-bmp|x-ms-bmp|x-windows-bmp)$/.test(file.type) || /\.bmp$/i.test(file.name);
 			const isGif = file.type === "image/gif" || /\.gif$/i.test(file.name);
 			if (isBmp && file.size <= 1783 || isGif && file.size <= 5e4) {
 				const reader = new FileReader();
-				reader.onload = function(e) {
+				reader.onload = (e) => {
 					Guild.onSendEmblem(new Uint8Array(e.target.result));
 				};
 				reader.readAsArrayBuffer(this.files[0]);
 			} else console.warn("[Warning] Incorrect emblem file type. Only BMP, 24bit or lower is accepted or GIFs max size 50Kb or lower.");
 		});
-		ui.find(".footer .btn_ok").click(onValidate);
-		this.draggable(this.ui.find(".titlebar"));
+		const footerOk = root.querySelector(".footer .btn_ok");
+		if (footerOk) footerOk.addEventListener("click", () => onValidate());
+		this.draggable(".titlebar");
 		this.ui.hide();
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
-			rArrow$2 = "url(" + data + ")";
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
+			rArrow = `url(${data})`;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_left.bmp", function(data) {
-			lArrow$2 = "url(" + data + ")";
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
+			lArrow = `url(${data})`;
 		});
 		renderTendency(0, 0);
 	};
@@ -198570,173 +198656,153 @@ var init_Guild$1 = __esmMin((() => {
 	Guild.onRemove = function onRemove() {
 		Renderer.stop(renderMemberFaces);
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	Guild.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
+	Guild.onShortCut = function onShortCut(key) {
+		if (key.cmd === "TOGGLE") this.toggle();
 	};
-	/**
-	* Toggle Guild UI
-	*/
 	Guild.toggle = function onToggle() {
 		if (!SessionStorage_default.hasGuild) return;
 		if (this.ui.is(":visible")) {
 			this.hide();
-			_btnLevelUp$7.detach();
+			if (_btnLevelUp$7 && _btnLevelUp$7.parentNode) _btnLevelUp$7.remove();
 		} else this.show();
 	};
 	Guild.onKeyDown = function onKeyDown(event) {
 		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.toggle();
 	};
-	/**
-	* Show guild element
-	*/
 	Guild.show = function show() {
 		this.focus();
 		if (this.ui.is(":visible")) return;
 		this.ui.show();
-		if (!this.ui.find(".tabs .active").length) {
-			this.ui.find(".tabs .info").click();
+		const root = _root$3(this);
+		if (!root.querySelector(".tabs .active")) {
+			const infoBtn = root.querySelector(".tabs .info");
+			if (infoBtn) infoBtn.click();
 			Guild.onRequestAccess();
 		}
-		if (this.ui.find(".content.members").is(":visible")) Renderer.render(renderMemberFaces);
+		const membersContent = root.querySelector(".content.members");
+		if (membersContent && membersContent.style.display !== "none") Renderer.render(renderMemberFaces);
 	};
-	/**
-	* Hide guild element
-	*/
 	Guild.hide = function hide() {
 		this.ui.hide();
 		Renderer.stop(renderMemberFaces);
 	};
-	/**
-	* Update General guild infos
-	*
-	* @param {object} data
-	*/
 	Guild.setGuildInformations = function setGuildInformations(info) {
-		const general = this.ui.find(".content.info");
-		general.find(".name .value").text(info.guildname);
-		general.find(".level .value").text(info.level);
-		general.find(".master .value").text(info.masterName);
-		general.find(".members .online").text(info.userNum);
-		general.find(".members .maxMember").text(info.maxUserNum);
-		general.find(".avglevel .value").text(info.userAverageLevel);
-		general.find(".territory .value").text(info.manageLand);
-		general.find(".exp .value").text(info.exp);
-		general.find(".tax .value").text(info.point);
+		const general = _root$3(this).querySelector(".content.info");
+		if (!general) return;
+		general.querySelector(".name .value").textContent = info.guildname;
+		general.querySelector(".level .value").textContent = info.level;
+		general.querySelector(".master .value").textContent = info.masterName;
+		general.querySelector(".members .online").textContent = info.userNum;
+		general.querySelector(".members .maxMember").textContent = info.maxUserNum;
+		general.querySelector(".avglevel .value").textContent = info.userAverageLevel;
+		general.querySelector(".territory .value").textContent = info.manageLand;
+		general.querySelector(".exp .value").textContent = info.exp;
+		general.querySelector(".tax .value").textContent = info.point;
 		Guild.updateSession(info);
 		Guild.onRequestGuildEmblem(info.GDID, info.emblemVersion, Guild.setEmblem.bind(this));
-		if (SessionStorage_default.isGuildMaster) general.find(".emblem_edit").show();
-		else general.find(".emblem_edit").hide();
+		const emblemEdit = general.querySelector(".emblem_edit");
+		if (emblemEdit) emblemEdit.style.display = SessionStorage_default.isGuildMaster ? "" : "none";
 		WinStatsController.getUI().update("guildname", info.guildname);
 		renderTendency(info.honor, info.virtue);
 	};
-	/**
-	* Set guild emblem
-	*
-	* @param {Image}
-	*/
 	Guild.setEmblem = function setEmblem(image) {
-		this.ui.find(".content.info").find(".emblem_container").css("backgroundImage", "url(" + image.src + ")");
+		const el = _root$3(this).querySelector(".content.info .emblem_container");
+		if (el) el.style.backgroundImage = `url(${image.src})`;
 	};
-	/**
-	* Add guild relation (ally / enemy)
-	*
-	* @param {Array} guild list
-	*/
 	Guild.setRelations = function setRelations(guilds) {
-		let i, count;
-		this.ui.find(".ally_list, .hostile_list").empty();
-		for (i = 0, count = guilds.length; i < count; ++i) this.addRelation(guilds[i]);
+		const root = _root$3(this);
+		const allyList = root.querySelector(".ally_list");
+		const hostileList = root.querySelector(".hostile_list");
+		if (allyList) allyList.innerHTML = "";
+		if (hostileList) hostileList.innerHTML = "";
+		for (let i = 0, count = guilds.length; i < count; ++i) this.addRelation(guilds[i]);
 	};
-	/**
-	* Add a relation
-	*
-	* @param {object} guild
-	*/
 	Guild.addRelation = function addRelation(guild) {
-		const addRelationList = this.ui.find("." + (guild.relation === 0 ? "ally" : "hostile") + "_list");
+		const list = _root$3(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
+		if (!list) return;
 		const div = document.createElement("div");
 		div.setAttribute("data-guild-id", guild.GDID);
 		div.textContent = guild.guildName;
-		addRelationList.append(div);
+		list.appendChild(div);
 	};
-	/**
-	* Remove relation
-	*
-	* @param {number} guild id
-	* @param {number} relation
-	*/
-	Guild.removeRelation = function removeRelation(guild_id, relation) {
-		this.ui.find(".content.info ." + (relation === 0 ? "ally" : "hostile") + "_list").find("div[data-guild-id=\"" + guild_id + "\"]").remove();
+	Guild.removeRelation = function removeRelation(guildId, relation) {
+		const list = _root$3(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
+		if (!list) return;
+		const el = list.querySelector(`div[data-guild-id="${guildId}"]`);
+		if (el) el.remove();
 	};
-	/**
-	* Add guild members
-	*
-	* @param {Array} member list
-	*/
 	Guild.setMembers = function setMembers(members) {
-		let i, count, online;
-		count = members.length;
+		let online = 0;
+		const count = members.length;
 		_members.length = 0;
 		_totalExp = 0;
-		online = 0;
-		this.ui.find(".content.members tbody").empty();
-		for (i = 0; i < count; ++i) {
+		const root = _root$3(this);
+		const tbody = root.querySelector(".content.members tbody");
+		if (tbody) tbody.innerHTML = "";
+		for (let i = 0; i < count; ++i) {
 			_totalExp += members[i].MemberExp;
 			online += members[i].CurrentState ? 1 : 0;
 		}
-		this.ui.find(".content.info .members .numMember").text(count);
-		this.ui.find(".content.info .members .online").text(online);
-		for (i = 0, count = members.length; i < count; ++i) this.setMember(members[i]);
+		const numMember = root.querySelector(".content.info .members .numMember");
+		if (numMember) numMember.textContent = count;
+		const onlineEl = root.querySelector(".content.info .members .online");
+		if (onlineEl) onlineEl.textContent = online;
+		for (let i = 0; i < count; ++i) this.setMember(members[i]);
 		renderMemberFaces(Renderer.tick + 1e3);
 	};
-	/**
-	* Display member
-	*
-	* @param {object} member
-	*/
 	Guild.setMember = function setMember(member) {
-		let i, count, view;
+		let i, count;
+		const root = _root$3(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
-		if (i < count) view = this.ui.find(".MemberView[data-index=\"" + i + "\"]");
+		let view;
+		if (i < count) view = root.querySelector(`.MemberView[data-index="${i}"]`);
 		else {
-			view = MemberView.clone();
-			this.ui.find(".content.members tbody").append(view);
+			view = _memberViewTemplate.cloneNode(true);
+			const tbody = root.querySelector(".content.members tbody");
+			if (tbody) tbody.appendChild(view);
 			_members.push(member);
 		}
-		if (member.CurrentState) view.addClass("online");
-		view.attr("data-index", i);
-		view.find(".name .value").text(member.CharName);
-		view.find(".name .value")[0].title = member.CharName;
-		if (_positions[member.GPositionID]) if (SessionStorage_default.isGuildMaster && member.GPositionID !== 0) {
-			let selectElement = "<select class=\"changePosition member_" + member.AID + "_" + member.GID + "\">";
-			_positions.forEach((position, key) => {
-				selectElement += "<option value=\"" + position.positionID + "\" " + (key == member.GPositionID ? "selected" : "") + ">" + position.posName + "</option>";
-			});
-			selectElement += "</select>";
-			view.find(".position")[0].innerHTML = selectElement;
-			view.find(".member_" + member.AID + "_" + member.GID).change(function(evt) {
-				Guild.updateMemberPosition(member.AID, member.GID, evt.target.selectedIndex, true);
-			});
-		} else {
-			view.find(".position").text(_positions[member.GPositionID].posName);
-			view.find(".position")[0].title = _positions[member.GPositionID].posName;
+		if (member.CurrentState) view.classList.add("online");
+		view.setAttribute("data-index", i);
+		const nameValue = view.querySelector(".name .value");
+		if (nameValue) {
+			nameValue.textContent = member.CharName;
+			nameValue.title = member.CharName;
 		}
-		view.find(".job").text(MonsterTable_default[member.Job]);
-		view.find(".job")[0].title = MonsterTable_default[member.Job];
-		view.find(".level").text(member.Level);
-		view.find(".note").text(member.Memo);
-		view.find(".devotion").text((member.MemberExp ? Math.round(member.MemberExp / _totalExp * 100) : 0) + " %");
-		view.find(".tax").text(member.MemberExp);
-		view.find(".tax")[0].title = member.MemberExp;
+		if (_positions[member.GPositionID]) {
+			const positionCell = view.querySelector(".position");
+			if (SessionStorage_default.isGuildMaster && member.GPositionID !== 0) {
+				let selectHTML = `<select class="changePosition member_${member.AID}_${member.GID}">`;
+				_positions.forEach((position, key) => {
+					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$3(position.posName)}</option>`;
+				});
+				selectHTML += "</select>";
+				positionCell.innerHTML = selectHTML;
+				const selectEl = positionCell.querySelector(`.member_${member.AID}_${member.GID}`);
+				if (selectEl) selectEl.addEventListener("change", (evt) => {
+					Guild.updateMemberPosition(member.AID, member.GID, evt.target.selectedIndex, true);
+				});
+			} else {
+				positionCell.textContent = _positions[member.GPositionID].posName;
+				positionCell.title = _positions[member.GPositionID].posName;
+			}
+		}
+		const jobCell = view.querySelector(".job");
+		if (jobCell) {
+			jobCell.textContent = MonsterTable_default[member.Job];
+			jobCell.title = MonsterTable_default[member.Job];
+		}
+		const levelCell = view.querySelector(".level");
+		if (levelCell) levelCell.textContent = member.Level;
+		const noteCell = view.querySelector(".note");
+		if (noteCell) noteCell.textContent = member.Memo;
+		const devotionCell = view.querySelector(".devotion");
+		if (devotionCell) devotionCell.textContent = `${member.MemberExp ? Math.round(member.MemberExp / _totalExp * 100) : 0} %`;
+		const taxCell = view.querySelector(".tax");
+		if (taxCell) {
+			taxCell.textContent = member.MemberExp;
+			taxCell.title = member.MemberExp;
+		}
 		if (!member.entity) {
 			member.entity = new Entity();
 			member.entity.direction = 4;
@@ -198748,55 +198814,40 @@ var init_Guild$1 = __esmMin((() => {
 		member.entity._effectiveJob = member.Job;
 		member.entity.head = member.HeadType;
 		member.entity.headpalette = member.HeadPalette;
-		this.ui.find(".content.info .members .numMember").text(_members.length);
+		const numMember = root.querySelector(".content.info .members .numMember");
+		if (numMember) numMember.textContent = _members.length;
 	};
-	/**
-	* Display member
-	*
-	* @param {object} member
-	*/
 	Guild.updateMemberStatus = function updateMemberStatus(member) {
 		let i, count;
 		let online = 0;
+		const root = _root$3(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		if (i >= count) return;
-		const view = this.ui.find(".MemberView[data-index=\"" + i + "\"]");
+		const view = root.querySelector(`.MemberView[data-index="${i}"]`);
 		_members[i].CurrentState = member.status;
-		view.toggleClass("online", _members[i].CurrentState);
+		if (view) if (_members[i].CurrentState) view.classList.add("online");
+		else view.classList.remove("online");
 		if ("sex" in member) _members[i].entity.sex = member.sex;
 		if ("head" in member) _members[i].entity.head = member.head;
 		if ("headPalette" in member) _members[i].entity.headpalette = member.headPalette;
 		for (i = 0, count = _members.length; i < count; ++i) online += _members[i].CurrentState ? 1 : 0;
-		this.ui.find(".content.info .members .online").text(online);
-		ChatBox_default.addText(DB.getMessage(485 + (member.status ? 0 : 1)).replace("%s", view.find(".name .value").text()), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.GUILD);
+		const onlineEl = root.querySelector(".content.info .members .online");
+		if (onlineEl) onlineEl.textContent = online;
+		const nameValue = view?.querySelector(".name .value");
+		ChatBox_default.addText(DB.getMessage(485 + (member.status ? 0 : 1)).replace("%s", nameValue ? nameValue.textContent : ""), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.GUILD);
 	};
-	/**
-	* Update member position
-	*
-	* @param {number} AID
-	* @param {number} GID
-	* @param {number} position id
-	*/
 	Guild.updateMemberPosition = function updateMemberPosition(AID, GID, positionID, validate) {
-		let i, count;
-		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === AID && _members[i].GID === GID) {
+		for (let i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === AID && _members[i].GID === GID) {
 			_members[i].GPositionID = positionID;
 			Guild.setMember(_members[i]);
 			break;
 		}
 		if (validate) onValidate();
 	};
-	/**
-	* Set guild positions
-	*
-	* @param {Array} position list
-	* @param {boolean} erase array ?
-	*/
 	Guild.setPositions = function setPositions(positions, erase) {
-		let i, count;
 		let rank;
 		if (erase) _positions.length = positions.length;
-		for (i = 0, count = positions.length; i < count; ++i) {
+		for (let i = 0, count = positions.length; i < count; ++i) {
 			rank = positions[i];
 			if (!(rank.positionID in _positions)) _positions[rank.positionID] = {};
 			_positions[rank.positionID].positionID = rank.positionID;
@@ -198807,94 +198858,98 @@ var init_Guild$1 = __esmMin((() => {
 		}
 		Guild.updatePositionView();
 	};
-	/**
-	* Set guild positions name
-	*
-	* @param {Array} position list
-	*/
 	Guild.setPositionsName = function setPositionsName(positions) {
-		let i, count;
 		let rank;
-		for (i = 0, count = positions.length; i < count; ++i) {
+		for (let i = 0, count = positions.length; i < count; ++i) {
 			rank = positions[i];
 			if (!(rank.positionID in _positions)) _positions[rank.positionID] = {};
 			_positions[rank.positionID].posName = rank.posName;
 		}
 		Guild.updatePositionView();
 	};
-	/**
-	* Update guild positions view
-	*/
 	Guild.updatePositionView = function updatePositionView() {
-		let i;
-		let view, rank;
+		const container = _root$3(this).querySelector(".content.positions tbody");
+		if (!container) return;
+		container.innerHTML = "";
 		const count = _positions.length;
-		const container = this.ui.find(".content.positions tbody");
-		container.empty();
-		for (i = 0; i < count; ++i) {
-			view = PositionView.clone();
-			rank = _positions[i];
-			if (i === 0) view.addClass("active");
-			view.find(".id").text(rank.positionID);
-			view.find(".title input").val(rank.posName);
-			view.find(".tax input").val(rank.payRate);
-			view.find(".invite button").css("backgroundImage", "url(" + (rank.right & 1 ? _checkbox_on : _checkbox_off) + ")").removeClass("on off").addClass(rank.right & 1 ? "on" : "off");
-			view.find(".punish button").css("backgroundImage", "url(" + (rank.right & 16 ? _checkbox_on : _checkbox_off) + ")").removeClass("on off").addClass(rank.right & 16 ? "on" : "off");
-			container.append(view);
+		for (let i = 0; i < count; ++i) {
+			const view = _positionViewTemplate.cloneNode(true);
+			const rank = _positions[i];
+			if (i === 0) view.classList.add("active");
+			const idCell = view.querySelector(".id");
+			if (idCell) idCell.textContent = rank.positionID;
+			const titleInput = view.querySelector(".title input");
+			if (titleInput) titleInput.value = rank.posName;
+			const taxInput = view.querySelector(".tax input");
+			if (taxInput) taxInput.value = rank.payRate;
+			const inviteBtn = view.querySelector(".invite ui-button");
+			if (inviteBtn) {
+				inviteBtn.style.backgroundImage = `url(${rank.right & 1 ? _checkbox_on : _checkbox_off})`;
+				inviteBtn.className = inviteBtn.className.replace(/\b(on|off)\b/g, "").trim();
+				inviteBtn.classList.add(rank.right & 1 ? "on" : "off");
+			}
+			const punishBtn = view.querySelector(".punish ui-button");
+			if (punishBtn) {
+				punishBtn.style.backgroundImage = `url(${rank.right & 16 ? _checkbox_on : _checkbox_off})`;
+				punishBtn.className = punishBtn.className.replace(/\b(on|off)\b/g, "").trim();
+				punishBtn.classList.add(rank.right & 16 ? "on" : "off");
+			}
+			container.appendChild(view);
 		}
 	};
-	/**
-	* Add skills to the list
-	*/
 	Guild.setSkills = function setSkills(skills) {
-		let i, count;
-		for (i = 0, count = _skills.length; i < count; ++i) this.onUpdateSkill(_skills[i].SKID, 0);
+		const root = _root$3(this);
+		for (let i = 0, count = _skills.length; i < count; ++i) this.onUpdateSkill(_skills[i].SKID, 0);
 		_skills.length = 0;
-		this.ui.find(".content.skills .skill_list table").empty();
-		for (i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
+		const table = root.querySelector(".content.skills .skill_list table");
+		if (table) table.innerHTML = "";
+		for (let i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
 	};
-	/**
-	* Insert skill to list
-	*
-	* @param {object} skill
-	*/
 	Guild.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (this.ui.find(".skill.id" + skill.SKID + ":first").length) {
+		const root = _root$3(this);
+		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
 		const sk = SkillInfo[skill.SKID];
-		const levelup = _btnIncSkill$2.clone(true);
+		const levelup = _btnIncSkillTemplate.cloneNode(true);
+		levelup.addEventListener("click", function() {
+			onRequestSkillUp.call(this);
+		});
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = jquery_default("<tr class=\"skill id" + skill.SKID + " " + className + "\" data-index=\"" + skill.SKID + "\" draggable=\"true\"><td class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></td><td class=\"levelupcontainer\"></td><td class=selectable><div class=\"name\">" + jquery_default.escape(sk.SkillName) + "<br/><span class=\"level\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button>Lv : <span class=\"current\">" + skill.level + "</span> / <span class=\"max\">" + skill.level + "</span><button class=\"currentUp\"></button>" : "Lv : <span class=\"current\">" + skill.level + "</span>") + "</span></div></td><td class=\"selectable type\"><div class=\"consume\">" + (skill.type ? "Sp : <span class=\"spcost\">" + skill.spcost + "</span>" : "Passive") + "</div></td></tr>");
-		if (!skill.upgradable || !_skpoints) levelup.hide();
-		element.find(".levelupcontainer").append(levelup);
-		if (rArrow$2) element.find(".level .currentUp").css("background-image", rArrow$2);
-		if (lArrow$2) element.find(".level .currentDown").css("background-image", lArrow$2);
-		element.find(".level .currentUp").click(function() {
-			skillLevelSelectUp$2(skill);
-		});
-		element.find(".level .currentDown").click(function() {
-			skillLevelSelectDown$2(skill);
-		});
-		Guild.ui.find(".content.skills .skill_list table").append(element);
+		const tr = document.createElement("tr");
+		tr.className = `skill id${skill.SKID} ${className}`;
+		tr.setAttribute("data-index", skill.SKID);
+		tr.setAttribute("draggable", "true");
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		if (!skill.upgradable || !_skpoints) levelup.style.display = "none";
+		tr.querySelector(".levelupcontainer").appendChild(levelup);
+		const currentUp = tr.querySelector(".level .currentUp");
+		if (currentUp) {
+			if (rArrow) currentUp.style.backgroundImage = rArrow;
+			currentUp.addEventListener("click", () => {
+				skillLevelSelectUp$2(skill);
+			});
+		}
+		const currentDown = tr.querySelector(".level .currentDown");
+		if (currentDown) {
+			if (lArrow) currentDown.style.backgroundImage = lArrow;
+			currentDown.addEventListener("click", () => {
+				skillLevelSelectDown$2(skill);
+			});
+		}
+		const table = root.querySelector(".content.skills .skill_list table");
+		if (table) table.appendChild(tr);
 		this.parseHTML.call(levelup);
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-			element.find(".icon img").attr("src", data);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+			const img = tr.querySelector(".icon img");
+			if (img) img.src = data;
 		});
 		_skills.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Remove skill from list
-	*/
 	Guild.removeSkill = function removeSkill() {};
-	/**
-	* Update skill
-	*
-	* @param {object} skill : { SKID, level, spcost, attackRange, upgradable }
-	*/
 	Guild.updateSkill = function updateSkill(skill) {
 		const target = getSkillById$2(skill.SKID);
 		if (!target) return;
@@ -198903,31 +198958,26 @@ var init_Guild$1 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = this.ui.find(".skill.id" + skill.SKID + ":first");
-		element.find(".level .current, .level .max").text(skill.level);
-		if (skill.selectedLevel) element.find(".level .current").text(skill.selectedLevel);
-		element.find(".spcost").text(skill.spcost);
-		element.removeClass("active passive disabled");
-		element.addClass(!skill.level ? "disabled" : skill.type ? "active" : "passive");
-		if (skill.upgradable && _skpoints) element.find(".levelup").show();
-		else element.find(".levelup").hide();
+		const element = _root$3(this).querySelector(`.skill.id${skill.SKID}`);
+		if (!element) return;
+		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
+		if (skill.selectedLevel) {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		}
+		const spcost = element.querySelector(".spcost");
+		if (spcost) spcost.textContent = skill.spcost;
+		element.classList.remove("active", "passive", "disabled");
+		element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
+		const levelupEl = element.querySelector(".levelup");
+		if (levelupEl) levelupEl.style.display = skill.upgradable && _skpoints ? "" : "none";
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Use a skill index
-	*
-	* @param {number} skill id
-	*/
 	Guild.useSkillID = function useSkillID(id, level) {
 		const skill = getSkillById$2(id);
 		if (!skill || !skill.level || !skill.type) return;
 		Guild.useSkill(skill, level ? level : skill.selectedLevel);
 	};
-	/**
-	* Use a skill
-	*
-	* @param {object} skill
-	*/
 	Guild.useSkill = function useSkill(skill, level) {
 		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
 		skill.useLevel = level;
@@ -198936,61 +198986,44 @@ var init_Guild$1 = __esmMin((() => {
 			SkillTargetSelection_default.set(skill, skill.type);
 		}
 	};
-	/**
-	* Set skill points amount
-	*
-	* @param {number} skill points count
-	*/
-	Guild.setPoints = function SetPoints(amount) {
-		this.ui.find(".skpoints_count").text(amount);
+	Guild.setPoints = function setPoints(amount) {
+		const root = _root$3(this);
+		const el = root.querySelector(".skpoints_count");
+		if (el) el.textContent = amount;
 		if (!_skpoints === !amount) {
 			_skpoints = amount;
 			return;
 		}
 		_skpoints = amount;
 		const count = _skills.length;
-		for (let i = 0; i < count; ++i) if (_skills[i].upgradable && amount) this.ui.find(".skill.id" + _skills[i].SKID + " .levelup").show();
-		else this.ui.find(".skill.id" + _skills[i].SKID + " .levelup").hide();
-	};
-	/**
-	* Add the button when leveling up
-	*/
-	Guild.onLevelUp = function onLevelUp() {
-		_btnLevelUp$7.appendTo("body");
-	};
-	/**
-	* Set guild notice
-	*
-	* @param {string} notice subject
-	* @param {string} notice content
-	*/
-	Guild.setNotice = function setNotice(subject, notice) {
-		const element = this.ui.find(".content.notice");
-		element.find(".subject").val(subject);
-		element.find(".notice").val(notice);
-	};
-	/**
-	* Set expel list
-	*
-	* @param {Array} expel list
-	*/
-	Guild.setExpelList = function setExpelList(list) {
-		let i, count;
-		let element;
-		const container = this.ui.find(".content.history tbody");
-		container.empty();
-		for (i = 0, count = list.length; i < count; ++i) {
-			element = ExpelView.clone();
-			element.find(".name").text(list[i].charname);
-			element.find(".reason").text(list[i].reason);
-			container.append(element);
+		for (let i = 0; i < count; ++i) {
+			const levelupEl = root.querySelector(`.skill.id${_skills[i].SKID} .levelup`);
+			if (levelupEl) levelupEl.style.display = _skills[i].upgradable && amount ? "" : "none";
 		}
 	};
-	/**
-	* Set access to tabs
-	*
-	* @param {number} access
-	*/
+	Guild.onLevelUp = function onLevelUp() {
+		if (_btnLevelUp$7) document.body.appendChild(_btnLevelUp$7);
+	};
+	Guild.setNotice = function setNotice(subject, notice) {
+		const root = _root$3(this);
+		const subjectInput = root.querySelector(".content.notice .subject");
+		if (subjectInput) subjectInput.value = subject;
+		const noticeTextarea = root.querySelector(".content.notice textarea.notice");
+		if (noticeTextarea) noticeTextarea.value = notice;
+	};
+	Guild.setExpelList = function setExpelList(list) {
+		const container = _root$3(this).querySelector(".content.history tbody");
+		if (!container) return;
+		container.innerHTML = "";
+		for (let i = 0, count = list.length; i < count; ++i) {
+			const element = _expelViewTemplate.cloneNode(true);
+			const nameCell = element.querySelector(".name");
+			if (nameCell) nameCell.textContent = list[i].charname;
+			const reasonCell = element.querySelector(".reason");
+			if (reasonCell) reasonCell.textContent = list[i].reason;
+			container.appendChild(element);
+		}
+	};
 	Guild.setAccess = function setAccess(access) {
 		_guildAccess = access;
 	};
@@ -198998,13 +199031,12 @@ var init_Guild$1 = __esmMin((() => {
 		let lastTick = 0;
 		return function renderMemberFace(tick) {
 			if (tick < lastTick + 1e3) return;
-			let ctx;
-			let i, count;
 			lastTick = tick;
-			const canvas = Guild.ui.find(".content.members canvas");
+			const canvases = _root$3(Guild).querySelectorAll(".content.members canvas");
 			Camera.direction = 4;
-			for (i = 0, count = _members.length; i < count; ++i) {
-				ctx = canvas[i].getContext("2d");
+			for (let i = 0, count = _members.length; i < count; ++i) {
+				if (!canvases[i]) continue;
+				const ctx = canvases[i].getContext("2d");
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				if (!_members[i].CurrentState) continue;
 				SpriteRenderer.bind2DContext(ctx, 15, 45);
@@ -199012,83 +199044,23 @@ var init_Guild$1 = __esmMin((() => {
 			}
 		};
 	})();
-	/**
-	* When Requesting Guild Information Screen.
-	* @param {number}	type
-	*  GENERAL:     0, //	Request packets ZC_GUILD_INFO2, MYGUILD_BASIC_INFO
-	*	MEMBERS:     1, //	Request packets ZC_MEMBERMGR_INFO, ZC_POSITION_ID_NAME_INFO
-	*	POSITION:    2, //	Request packets ZC_POSITION_ID_NAME_INFO, ZC_POSITION_INFO
-	*	SKILLS:      3, //	Request packets ZC_GUILD_SKILLINFO
-	*  EXPEL:       4, //
-	*  NOTICE:      7, //
-	*/
 	Guild.onGuildInfoRequest = function() {};
-	/**
-	* Ask server to modify positions
-	* @param {Array} positions
-	*/
 	Guild.onPositionUpdateRequest = function() {};
-	/**
-	* Ask server to modify user's position
-	* @param {Array} memberInfo
-	*/
 	Guild.onChangeMemberPosRequest = function() {};
-	/**
-	* Ask server to modify notice
-	* @param {string} notice subject
-	* @param {string} notice content
-	*/
 	Guild.onNoticeUpdateRequest = function() {};
-	/**
-	* Ask server for member info
-	* @param {number} account id
-	*/
 	Guild.onRequestMemberInfo = function() {};
-	/**
-	* Ask to leave a guild
-	* @param {number} account id
-	* @param {number} character id
-	* @param {string} reason
-	*/
 	Guild.onRequestLeave = function() {};
-	/**
-	* Ask to expel a member from theguild
-	* @param {number} account id
-	* @param {number} character id
-	* @param {string} reason
-	*/
 	Guild.onRequestMemberExpel = function() {};
-	/**
-	* Ask to remove a guild relation
-	* @param {number} guild_id
-	* @param {number} relation
-	*/
 	Guild.onRequestDeleteRelation = function() {};
-	/**
-	* Request access to know what tab we can open
-	*/
 	Guild.onRequestAccess = function() {};
 	Guild.updateSession = function(info) {
 		SessionStorage_default.hasGuild = true;
 		SessionStorage_default.Entity.GUID = info.GDID;
 		SessionStorage_default.Entity.GEmblemVer = info.emblemVersion;
-		if (SessionStorage_default.Character.name == info.masterName) SessionStorage_default.isGuildMaster = true;
+		if (SessionStorage_default.Character.name === info.masterName) SessionStorage_default.isGuildMaster = true;
 	};
-	/**
-	* Request guild emblem
-	* @param {number} guild id
-	* @param {number} emblem version
-	* @param {function} callback once loaded
-	*/
 	Guild.onRequestGuildEmblem = function() {};
-	/**
-	* Send new guild emblem to the server
-	* @param {UInt8Array} emblem data
-	*/
 	Guild.onSendEmblem = function() {};
-	/**
-	* Abstract function to define
-	*/
 	Guild.onUseSkill = function onUseItem() {};
 	Guild.onIncreaseSkill = function onIncreaseSkill() {};
 	Guild.onUpdateSkill = function onUpdateSkill() {};
@@ -202869,21 +202841,31 @@ var init_SkillTreeView = __esmMin((() => {
 //#region src/UI/Components/SkillList/SkillList/SkillList.html?raw
 var SkillList_default$2;
 var init_SkillList$3 = __esmMin((() => {
-	SkillList_default$2 = "<div id=\"SkillList\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"base\"\r\n					data-background=\"basic_interface/sys_base_off.bmp\"\r\n					data-hover=\"basic_interface/sys_base_on.bmp\"\r\n				></button>\r\n				<span class=\"text\" data-text=\"283\">Skill Tree</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<button\r\n					class=\"base mini\"\r\n					data-background=\"basic_interface/sys_mini_off.bmp\"\r\n					data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: block; width: 256px; height: 320px\">\r\n				<!-- Just to get reference, will be removed -->\r\n				<button\r\n					class=\"btn levelup\"\r\n					data-background=\"basic_interface/skill_up_a.bmp\"\r\n					data-hover=\"basic_interface/skill_up_b.bmp\"\r\n					data-down=\"basic_interface/skill_up_c.bmp\"\r\n				></button>\r\n				<div class=\"tabs-mini\">\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1-mini\" checked class=\"tab-switch-mini\" />\r\n						<label for=\"tab-1-mini\" class=\"tab-label-mini\">1st</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab1\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-2-mini\" id=\"tabminil2\" class=\"tab-label-mini\">2nd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab2\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-3-mini\" id=\"tabminil3\" class=\"tab-label-mini\">3rd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab3\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-4-mini\" id=\"tabminil4\" class=\"tab-label-mini\">4th</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab4\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-5-mini\" class=\"tab-label-mini\">Etc</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab5\"></table>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">1st</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" id=\"tabl2\" class=\"tab-label\">2nd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" id=\"tabl3\" class=\"tab-label\">3rd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4\" class=\"tab-switch\" />\r\n						<label for=\"tab-4\" id=\"tabl4\" class=\"tab-label\">4th</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills4\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5\" class=\"tab-switch\" />\r\n						<label for=\"tab-5\" class=\"tab-label\">Etc</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"etcBIG5\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<button\r\n					class=\"btn apply\"\r\n					data-background=\"btn_apply.bmp\"\r\n					data-hover=\"btn_apply_a.bmp\"\r\n					data-down=\"btn_apply_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"btn reset\"\r\n					data-background=\"btn_reset.bmp\"\r\n					data-hover=\"btn_reset_a.bmp\"\r\n					data-down=\"btn_reset_b.bmp\"\r\n				></button>\r\n				<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"lvlup_job\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-down=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+	SkillList_default$2 = "<div id=\"SkillList\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<ui-text class=\"text\" msgid=\"283\">Skill Tree</ui-text>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<ui-button\r\n					class=\"base mini\"\r\n					bg=\"basic_interface/sys_mini_off.bmp\"\r\n					hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: block; width: 256px; height: 320px\">\r\n				<!-- Just to get reference, will be removed -->\r\n				<ui-button\r\n					class=\"btn levelup\"\r\n					bg=\"basic_interface/skill_up_a.bmp\"\r\n					hover=\"basic_interface/skill_up_b.bmp\"\r\n					down=\"basic_interface/skill_up_c.bmp\"\r\n				></ui-button>\r\n				<div class=\"tabs-mini\">\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1-mini\" checked class=\"tab-switch-mini\" />\r\n						<label for=\"tab-1-mini\" class=\"tab-label-mini\">1st</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab1\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-2-mini\" id=\"tabminil2\" class=\"tab-label-mini\">2nd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab2\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-3-mini\" id=\"tabminil3\" class=\"tab-label-mini\">3rd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab3\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-4-mini\" id=\"tabminil4\" class=\"tab-label-mini\">4th</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab4\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-5-mini\" class=\"tab-label-mini\">Etc</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab5\"></table>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">1st</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" id=\"tabl2\" class=\"tab-label\">2nd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" id=\"tabl3\" class=\"tab-label\">3rd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4\" class=\"tab-switch\" />\r\n						<label for=\"tab-4\" id=\"tabl4\" class=\"tab-label\">4th</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills4\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5\" class=\"tab-switch\" />\r\n						<label for=\"tab-5\" class=\"tab-label\">Etc</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"etcBIG5\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\">\r\n				<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<ui-button\r\n					class=\"btn apply\"\r\n					bg=\"btn_apply.bmp\"\r\n					hover=\"btn_apply_a.bmp\"\r\n					down=\"btn_apply_b.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"btn reset\"\r\n					bg=\"btn_reset.bmp\"\r\n					hover=\"btn_reset_a.bmp\"\r\n					down=\"btn_reset_b.bmp\"\r\n				></ui-button>\r\n				<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList/SkillList.css?raw
 var SkillList_default$1;
 var init_SkillList$2 = __esmMin((() => {
-	SkillList_default$1 = "#SkillList {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillList .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillList .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillList .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillList .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillList .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillList .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillList .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillList .content {\r\n	position: relative;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n#SkillList .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillList .content td,\r\n#SkillList .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n/* Mini Tab*/\r\n#SkillList .tabs-mini {\r\n	position: relative;\r\n}\r\n#SkillList .tabs-mini::before,\r\n.tabs-mini::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillList .tabs-mini::after {\r\n	clear: both;\r\n}\r\n#SkillList .tab-switch-mini {\r\n	display: none;\r\n}\r\n#SkillList .tab-label-mini {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillList .tab-content-mini {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	opacity: 0;\r\n}\r\n#SkillList .tab-switch-mini:checked + .tab-label-mini {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillList .tab-switch-mini:checked + label + .tab-content-mini {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n\r\n#SkillList .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillList td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillList .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillList .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillList .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillList .disabled .icon,\r\n#SkillList .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillList .disabled .consume,\r\n#SkillList .disabled .level {\r\n	display: none;\r\n}\r\n#SkillList .currentDown,\r\n#SkillList .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillList .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillList .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillList .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillList .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillList .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillList .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillList .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillList .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillList .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#SkillList .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillList .skillCol .name,\r\n.skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillList .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillList .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillList .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillList .tabs {\r\n	position: relative;\r\n}\r\n#SkillList .tabs::before,\r\n.tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillList .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillList .tab-switch {\r\n	display: none;\r\n}\r\n#SkillList .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillList .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillList .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillList .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillList .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillList .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillList .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
+	SkillList_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#SkillList {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillList .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillList .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillList .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillList .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillList .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillList .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillList .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillList .content {\r\n	position: relative;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n#SkillList .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillList .content td,\r\n#SkillList .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n/* Mini Tab*/\r\n#SkillList .tabs-mini {\r\n	position: relative;\r\n}\r\n#SkillList .tabs-mini::before,\r\n#SkillList .tabs-mini::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillList .tabs-mini::after {\r\n	clear: both;\r\n}\r\n#SkillList .tab-switch-mini {\r\n	display: none;\r\n}\r\n#SkillList .tab-label-mini {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillList .tab-content-mini {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	opacity: 0;\r\n}\r\n#SkillList .tab-switch-mini:checked + .tab-label-mini {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillList .tab-switch-mini:checked + label + .tab-content-mini {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n\r\n#SkillList .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillList td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillList .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillList .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillList .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillList .disabled .icon,\r\n#SkillList .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillList .disabled .consume,\r\n#SkillList .disabled .level {\r\n	display: none;\r\n}\r\n#SkillList .currentDown,\r\n#SkillList .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillList .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillList .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillList .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillList .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillList .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillList .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillList .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillList .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillList .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#SkillList .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillList .skillCol .name,\r\n#SkillList .skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillList .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillList .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillList .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillList .tabs {\r\n	position: relative;\r\n}\r\n#SkillList .tabs::before,\r\n#SkillList .tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillList .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillList .tab-switch {\r\n	display: none;\r\n}\r\n#SkillList .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillList .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillList .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillList .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillList .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillList .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillList .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList/SkillList.js
+function _root$2(comp) {
+	return comp._shadow || comp._host;
+}
+function _escapeHTML$2(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+function _isNumeric$1(val) {
+	return !isNaN(parseFloat(val)) && isFinite(val);
+}
 function createSkillDependencyTree$1() {
-	skillPosition$1.forEach(function(items, list) {
-		Object.entries(items).forEach((entry) => {
-			const [skid, pos] = entry;
-			if (!jquery_default.isNumeric(skid)) return;
+	skillPosition$1.forEach((items, list) => {
+		Object.entries(items).forEach(([skid, pos]) => {
+			if (!_isNumeric$1(skid)) return;
 			const sk = SkillInfo[skid];
 			if (sk?.MaxLv) {
 				skillDependencyTree$1[skid] = {
@@ -202892,66 +202874,64 @@ function createSkillDependencyTree$1() {
 					list,
 					MaxLv: sk.MaxLv
 				};
-				if (sk?.["_NeedSkillList"] !== void 0) sk["_NeedSkillList"].forEach(function(item) {
+				if (sk?.["_NeedSkillList"] !== void 0) sk["_NeedSkillList"].forEach((item) => {
 					skillDependencyTree$1[skid]["dependency"][item[0]] = item[1];
 				});
 			} else console.error("Something wrong with this skill: %d", skid);
 		});
 	});
 }
-function specifyRequirements$1(skillId, count = null) {
-	const showAll = true;
+function specifyRequirements$1(skillId, count, root) {
 	const skdt = skillDependencyTree$1[skillId];
-	if (skdt?.dependency || count != null) {
-		const element = "<div class=\"counterSkill\">" + count + "</div>";
-		skillPosition$1.forEach(function(items, list) {
-			if (items[skillId] !== void 0) {
-				const skillbox = SkillList.ui.find("#positionSkills" + list + " .s" + items[skillId]);
-				if (skillbox.children().hasClass("disabled") || showAll) {
-					skillbox.addClass("needleSkill");
-					if (count !== null) skillbox.append(element);
+	if (skdt?.dependency || count != null) skillPosition$1.forEach((items, list) => {
+		if (items[skillId] !== void 0) {
+			const skillbox = root.querySelector(`#positionSkills${list} .s${items[skillId]}`);
+			if (skillbox) {
+				skillbox.querySelector(".disabled");
+				skillbox.classList.add("needleSkill");
+				if (count !== null && count !== void 0) {
+					const counterEl = document.createElement("div");
+					counterEl.className = "counterSkill";
+					counterEl.textContent = count;
+					skillbox.appendChild(counterEl);
 				}
-			}
-		});
-	}
-	if (skdt?.dependency) skdt.dependency.forEach(function(item, key) {
-		specifyRequirements$1(key, item);
-	});
-}
-/**
-* get and show remember choice skills
-*/
-function onRememberChoice$1() {
-	if (_justDragged$1) return;
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	rememberChoice$1 = setRememberChoice$1(parseInt(main.data("index"), 10));
-	rememberChoice$1.forEach(function(item, skId) {
-		if (!rememberChoice$1[skId]["isQuest"] && totalCounter$1 < _points$1) {
-			const sk = skillDependencyTree$1[skId];
-			if (!sk) return;
-			const skillbox = SkillList.ui.find("#positionSkills" + sk.list + " .s" + sk.position);
-			if (skillbox.find(".current").text() != sk.MaxLv && skillbox.find(".current").text() != item.count) {
-				const level = skillbox.find(".current").text();
-				let diff = 0;
-				if (item.count > level) diff = item.count - level;
-				totalCounter$1 += diff;
-				skillbox.children().removeClass("disabled");
-				skillbox.find(".level").show();
-				skillbox.find(".current").empty().append(rememberChoice$1[skId]["count"]);
-				skillbox.find(".max").empty().append(rememberChoice$1[skId]["count"]);
 			}
 		}
 	});
-	SkillList.ui.find(".skpoints_count").text(_points$1 - totalCounter$1 + "/" + _points$1);
+	if (skdt?.dependency) skdt.dependency.forEach((item, key) => {
+		specifyRequirements$1(key, item, root);
+	});
 }
-/**
-* Remember Choice skills
-* @param skillId
-* @param count
-* @param isQuest
-* @returns {*[]}
-*/
+function onRememberChoice$1(target, root) {
+	if (_justDragged$1) return;
+	let main = target.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	rememberChoice$1 = setRememberChoice$1(parseInt(main.getAttribute("data-index"), 10));
+	rememberChoice$1.forEach((item, skId) => {
+		if (!rememberChoice$1[skId]["isQuest"] && totalCounter$1 < _points$1) {
+			const sk = skillDependencyTree$1[skId];
+			if (!sk) return;
+			const skillbox = root.querySelector(`#positionSkills${sk.list} .s${sk.position}`);
+			if (skillbox) {
+				const currentEl = skillbox.querySelector(".current");
+				if (currentEl && currentEl.textContent !== String(sk.MaxLv) && currentEl.textContent !== String(item.count)) {
+					const level = currentEl.textContent;
+					let diff = 0;
+					if (item.count > level) diff = item.count - level;
+					totalCounter$1 += diff;
+					skillbox.querySelectorAll(".skill").forEach((el) => el.classList.remove("disabled"));
+					const levelEl = skillbox.querySelector(".level");
+					if (levelEl) levelEl.style.display = "";
+					if (currentEl) currentEl.textContent = rememberChoice$1[skId]["count"];
+					const maxEl = skillbox.querySelector(".max");
+					if (maxEl) maxEl.textContent = rememberChoice$1[skId]["count"];
+				}
+			}
+		}
+	});
+	const skpointsEl = root.querySelector(".skpoints_count");
+	if (skpointsEl) skpointsEl.textContent = `${_points$1 - totalCounter$1}/${_points$1}`;
+}
 function setRememberChoice$1(skillId, count = null, isQuest = false) {
 	const sk = SkillInfo[skillId];
 	if (!isQuest && sk["Type"] === "Quest") {
@@ -202969,64 +202949,42 @@ function setRememberChoice$1(skillId, count = null, isQuest = false) {
 		} else if (sk["MaxLv"] > rememberChoice$1[skillId]["count"]) rememberChoice$1[skillId]["count"]++;
 	}
 	if (sk["_NeedSkillList"] !== void 0) {
-		sk["_NeedSkillList"].forEach(function(item) {
+		sk["_NeedSkillList"].forEach((item) => {
 			rememberChoice$1[skillId][item[0]] = setRememberChoice$1(item[0], item[1], isQuest)[item[0]];
 		});
-		Object.entries(rememberChoice$1[skillId]).forEach((entry) => {
-			const [key, value] = entry;
-			if (jquery_default.isNumeric(key) && value.isQuest) rememberChoice$1[skillId]["isQuest"] = value.isQuest;
+		Object.entries(rememberChoice$1[skillId]).forEach(([key, value]) => {
+			if (_isNumeric$1(key) && value.isQuest) rememberChoice$1[skillId]["isQuest"] = value.isQuest;
 		});
 	}
 	return rememberChoice$1;
 }
-/**
-* @param JobId
-* @returns {*[]}
-*/
 function getSkillPosition$1(JobId) {
 	const positions = [];
 	if (!(JobId in SkillTreeView)) {
-		console.error("Unimplemented JobId " + JobId + " in SkillTree!");
+		console.error(`Unimplemented JobId ${JobId} in SkillTree!`);
 		return positions;
 	}
 	positions[SkillTreeView[JobId]["list"]] = SkillTreeView[JobId];
 	if (SkillTreeView[JobId]["beforeJob"] !== null) {
 		const beforeJob = SkillTreeView[JobId]["beforeJob"];
-		getSkillPosition$1(beforeJob).forEach(function(items, list) {
+		getSkillPosition$1(beforeJob).forEach((items, list) => {
 			positions[list] = positions[list] ? Object.assign(positions[list], items) : items;
 		});
 	}
 	return positions;
 }
-/**
-* Stop event propagation
-*/
-function stopPropagation$28(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Find a skill by it's id
-*
-* @param {number} skill id
-* @returns {Skill}
-*/
 function getSkillById$1(id) {
-	let i;
 	const count = _list$13.length;
-	for (i = 0; i < count; ++i) if (_list$13[i].SKID === id) return _list$13[i];
+	for (let i = 0; i < count; ++i) if (_list$13[i].SKID === id) return _list$13[i];
 	return null;
 }
-/**
-* Extend SkillList window size
-*/
-function onResize$12() {
-	const ui = SkillList.ui;
-	const top = ui.position().top;
-	const left = ui.position().left;
+function onResize$12(e, comp) {
+	e.stopImmediatePropagation();
+	const top = parseInt(comp._host.style.top, 10) || 0;
+	const left = parseInt(comp._host.style.left, 10) || 0;
 	let lastWidth = 0;
 	let lastHeight = 0;
-	function resizing() {
+	const resizing = () => {
 		const extraX = -6;
 		const extraY = 32;
 		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
@@ -203034,234 +202992,148 @@ function onResize$12() {
 		w = Math.min(Math.max(w, 8), 8);
 		h = Math.min(Math.max(h, 4), 10);
 		if (w === lastWidth && h === lastHeight) return;
-		resize$6(w, h);
+		resize$6(comp, w, h);
 		lastWidth = w;
 		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	};
+	const interval = setInterval(resizing, 30);
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
-			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			clearInterval(interval);
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
-/**
-* Extend SkillList window size
-*
-* @param {number} width
-* @param {number} height
-*/
-function resize$6(width, height) {
+function resize$6(comp, width, height) {
+	const root = _root$2(comp);
 	if (_preferences$55.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
-		SkillList.ui.find(".extend").show();
-		SkillList.ui.find(".content").show();
-		const id = SkillList.ui.find(".tab-switch:checked").attr("id");
-		if (id) {
-			const i = parseInt(id.split("-")[1]);
-			SkillList.ui.find("#tab-" + i + "-mini").prop("checked", true);
+		const extend = root.querySelector(".extend");
+		if (extend) extend.style.display = "";
+		const content = root.querySelector(".content");
+		if (content) content.style.display = "";
+		const checkedBig = root.querySelector(".tab-switch:checked");
+		if (checkedBig) {
+			const tabId = checkedBig.id;
+			const i = parseInt(tabId.split("-")[1], 10);
+			const miniRadio = root.querySelector(`#tab-${i}-mini`);
+			if (miniRadio) miniRadio.checked = true;
 		}
-		SkillList.ui.find(".contentbig").hide();
-		SkillList.ui.find(".footer .btn").hide();
-		SkillList.ui.find(".content, .tab-content-mini").css({
-			width: width * 32,
-			height: height * 32
+		const contentbig = root.querySelector(".contentbig");
+		if (contentbig) contentbig.style.display = "none";
+		root.querySelectorAll(".footer .btn").forEach((el) => {
+			el.style.display = "none";
+		});
+		if (content) {
+			content.style.width = `${width * 32}px`;
+			content.style.height = `${height * 32}px`;
+		}
+		root.querySelectorAll(".tab-content-mini").forEach((el) => {
+			el.style.width = `${width * 32}px`;
+			el.style.height = `${height * 32}px`;
 		});
 	} else {
 		width = 17;
 		height = 12;
-		SkillList.ui.find(".extend").hide();
-		SkillList.ui.find(".content").hide();
-		const id = SkillList.ui.find(".tab-switch-mini:checked").attr("id");
-		if (id) {
-			const i = parseInt(id.split("-")[1]);
-			SkillList.ui.find("#tab-" + i).prop("checked", true);
+		const extend = root.querySelector(".extend");
+		if (extend) extend.style.display = "none";
+		const content = root.querySelector(".content");
+		if (content) content.style.display = "none";
+		const checkedMini = root.querySelector(".tab-switch-mini:checked");
+		if (checkedMini) {
+			const tabId = checkedMini.id;
+			const i = parseInt(tabId.split("-")[1], 10);
+			const bigRadio = root.querySelector(`#tab-${i}`);
+			if (bigRadio) bigRadio.checked = true;
 		}
-		SkillList.ui.find(".contentbig").show();
-		SkillList.ui.find(".footer .btn").show();
-		SkillList.ui.find(".contentbig").css({
-			width: width * 32,
-			height: height * 32
+		const contentbig = root.querySelector(".contentbig");
+		if (contentbig) {
+			contentbig.style.display = "";
+			contentbig.style.width = `${width * 32}px`;
+			contentbig.style.height = `${height * 32}px`;
+		}
+		root.querySelectorAll(".footer .btn").forEach((el) => {
+			el.style.display = "block";
 		});
 	}
 }
-/**
-* Closing window
-*/
-function onClose$14() {
-	SkillList.ui.hide();
-}
-/**
-* Resize and save
-*/
-function onMini$1() {
+function onMini$1(comp) {
 	_preferences$55.mini = !_preferences$55.mini;
 	_preferences$55.save();
-	resize$6(_preferences$55.width, _preferences$55.height);
+	resize$6(comp, _preferences$55.width, _preferences$55.height);
 }
-/**
-* Request to upgrade a skill
-*/
-function onRequestSkillUp$1() {
-	const index = this.parentNode.parentNode.getAttribute("data-index");
-	SkillList.onIncreaseSkill(parseInt(index, 10));
-}
-/**
-* Request to use a skill
-*/
-function onRequestUseSkill$1() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	SkillList.useSkillID(parseInt(main.data("index"), 10));
-}
-function onApplyChoice$1() {
+function onApplyChoice$1(comp) {
 	const applyArr = [];
-	rememberChoice$1.forEach(function(item, skillId) {
+	rememberChoice$1.forEach((item, skillId) => {
 		applyArr[skillId] = 0;
 		const level = hasSkills$1?.[skillId]?.level ?? 0;
 		if (item.count > level) applyArr[skillId] = item.count - level;
 		else applyArr[skillId] = item.count;
 	});
-	applyArr.forEach(function(c, k) {
+	applyArr.forEach((c, k) => {
 		for (let i = 0; i < c; i++) SkillList.onIncreaseSkill(parseInt(k, 10));
 	});
 	totalCounter$1 = 0;
-	SkillList.ui.find(".skpoints_count").text(_points$1 - totalCounter$1);
+	const skpointsEl = _root$2(comp).querySelector(".skpoints_count");
+	if (skpointsEl) skpointsEl.textContent = `${_points$1 - totalCounter$1}`;
 	rememberChoice$1 = [];
 }
-/**
-* Reset choice
-*/
-function onResetChoice$1() {
-	rememberChoice$1.forEach(function(count, skillId) {
+function onResetChoice$1(comp) {
+	const root = _root$2(comp);
+	rememberChoice$1.forEach((_count, skillId) => {
 		if (!skillDependencyTree$1[skillId]) return;
-		const skillbox = SkillList.ui.find(".skillCol.s" + skillDependencyTree$1[skillId].position);
-		if (!hasSkills$1?.[skillId]?.level) skillbox.children().addClass("disabled");
-		skillbox.find(".selectable").show();
-		skillbox.find(".current").empty().append(hasSkills$1?.[skillId]?.level ?? 0);
-		skillbox.find(".max").empty().append(hasSkills$1?.[skillId]?.level ?? 0);
+		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree$1[skillId].position}`);
+		if (skillbox) {
+			if (!hasSkills$1?.[skillId]?.level) skillbox.querySelectorAll(".skill").forEach((el) => el.classList.add("disabled"));
+			const selectable = skillbox.querySelector(".selectable");
+			if (selectable) selectable.style.display = "";
+			skillbox.querySelectorAll(".current").forEach((el) => {
+				el.textContent = hasSkills$1?.[skillId]?.level ?? 0;
+			});
+			skillbox.querySelectorAll(".max").forEach((el) => {
+				el.textContent = hasSkills$1?.[skillId]?.level ?? 0;
+			});
+		}
 	});
 	totalCounter$1 = 0;
-	SkillList.ui.find(".skpoints_count").text(_points$1);
+	const skpointsEl = root.querySelector(".skpoints_count");
+	if (skpointsEl) skpointsEl.textContent = _points$1;
 	rememberChoice$1 = [];
 }
-/**
-* Show backlight
-*/
-function onNecessarySkills$1() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	specifyRequirements$1(parseInt(main.data("index"), 10));
+function onNecessarySkills$1(target, root) {
+	let main = target.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	specifyRequirements$1(parseInt(main.getAttribute("data-index"), 10), null, root);
 }
-/**
-* Hide backlight
-*/
-function onNecessarySkillsRemove$1() {
-	SkillList.ui.find(".needleSkill").removeClass("needleSkill");
-	SkillList.ui.find(".counterSkill").remove();
-}
-/**
-* Resolve the skill ID from the hovered/clicked element
-*/
 function _resolveSkillID$1(el) {
-	let main = jquery_default(el).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	const id = parseInt(main.data("index"), 10);
+	let main = el.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	const id = parseInt(main.getAttribute("data-index"), 10);
 	return getSkillById$1(id)?.SKID ?? id;
 }
-/**
-* Show skill description on right-click (always, regardless of checkbox)
-*/
-function onContextMenuSkillInfo$1() {
-	const skillID = _resolveSkillID$1(this);
-	if (SkillDescription_default.uid === skillID) {
-		SkillDescription_default.remove();
-		return;
-	}
-	SkillDescription_default.append();
-	SkillDescription_default.setSkill(skillID);
-}
-/**
-* Show skill description on mouseover (only when checkbox is checked)
-*/
-function onMouseOverSkillInfo$1() {
-	if (!_preferences$55.skillInfo) return;
-	const skillID = _resolveSkillID$1(this);
-	if (SkillDescription_default.uid === skillID) return;
-	SkillDescription_default.append();
-	SkillDescription_default.setSkill(skillID);
-}
-/**
-* Hide description (only auto-hide on mouseout when checkbox is checked)
-*/
-function onSkillDescriptionRemove$1() {
-	if (_preferences$55.skillInfo) SkillDescription_default.remove();
-}
-/**
-* Checkbox show/hide description
-*/
-function onToggleSkillInfo$1() {
-	_preferences$55.skillInfo = !!this.checked;
-	_preferences$55.save();
-}
-/**
-* Focus a skill in the list (background color changed)
-*/
-function onSkillFocus$1() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	SkillList.ui.find(".skill").removeClass("selected");
-	main.addClass("selected");
-}
-/**
-* Start to drag a skill (to put it on the hotkey UI ?)
-*/
-function onSkillDragStart$1(event) {
-	const skill = getSkillById$1(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$28(event);
-	const img = new Image();
-	img.decoding = "async";
-	img.src = jquery_default(this).find(".icon img").attr("src");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "skill",
-		from: "SkillList",
-		data: skill
-	}));
-}
-/**
-* Stop the drag drop action, clean up
-*/
-function onSkillDragEnd$1() {
-	delete window._OBJ_DRAG_;
-	_justDragged$1 = true;
-	setTimeout(function() {
-		_justDragged$1 = false;
-	}, 0);
-}
-function onSkillTouchStart(event) {
-	const touch = event.originalEvent.touches[0];
-	const icon = jquery_default(this);
-	const skillDiv = icon.closest(".skill");
-	const skill = getSkillById$1(parseInt(skillDiv.attr("data-index"), 10));
+function onSkillTouchStart(event, iconEl) {
+	const touch = event.touches[0];
+	const skillDiv = iconEl.closest(".skill");
+	const skill = getSkillById$1(parseInt(skillDiv.getAttribute("data-index"), 10));
 	if (!skill || !skill.level || !skill.type) return;
 	_touchDrag.startX = touch.pageX;
 	_touchDrag.startY = touch.pageY;
 	_touchDrag.ghost = null;
 	_touchDrag.dragging = false;
-	_touchDrag.timer = setTimeout(function() {
+	_touchDrag.timer = setTimeout(() => {
 		_touchDrag.dragging = true;
-		_touchDrag.ghost = icon.clone().addClass("drag-ghost").appendTo("body");
-		_touchDrag.ghost.css({
-			position: "absolute",
-			zIndex: 1e4,
-			left: touch.pageX - 12,
-			top: touch.pageY - 12,
-			opacity: .8,
-			pointerEvents: "none"
-		});
+		const ghost = iconEl.cloneNode(true);
+		ghost.classList.add("drag-ghost");
+		ghost.style.position = "absolute";
+		ghost.style.zIndex = "10000";
+		ghost.style.left = `${touch.pageX - 12}px`;
+		ghost.style.top = `${touch.pageY - 12}px`;
+		ghost.style.opacity = "0.8";
+		ghost.style.pointerEvents = "none";
+		document.body.appendChild(ghost);
+		_touchDrag.ghost = ghost;
 		window._OBJ_DRAG_ = {
 			type: "skill",
 			from: "SkillList",
@@ -203271,13 +203143,13 @@ function onSkillTouchStart(event) {
 }
 function onSkillTouchMove(event) {
 	if (!_touchDrag.timer && !_touchDrag.dragging) return;
-	const touch = event.originalEvent.touches[0];
+	const touch = event.touches[0];
 	if (_touchDrag.dragging) {
 		event.preventDefault();
-		if (_touchDrag.ghost) _touchDrag.ghost.css({
-			left: touch.pageX - 12,
-			top: touch.pageY - 12
-		});
+		if (_touchDrag.ghost) {
+			_touchDrag.ghost.style.left = `${touch.pageX - 12}px`;
+			_touchDrag.ghost.style.top = `${touch.pageY - 12}px`;
+		}
 	} else {
 		const dx = touch.pageX - _touchDrag.startX;
 		const dy = touch.pageY - _touchDrag.startY;
@@ -203298,51 +203170,61 @@ function onSkillTouchEnd(event) {
 			_touchDrag.ghost.remove();
 			_touchDrag.ghost = null;
 		}
-		const touch = event.originalEvent.changedTouches[0];
-		const dropTarget = jquery_default(document.elementFromPoint(touch.clientX, touch.clientY)).closest(".container");
-		if (dropTarget.length) {
-			const dropEvent = jquery_default.Event("drop");
-			dropEvent.originalEvent = { dataTransfer: { getData: function(type) {
-				if (type === "Text") return JSON.stringify(window._OBJ_DRAG_);
-				return "";
-			} } };
-			dropTarget.trigger(dropEvent);
+		const touch = event.changedTouches[0];
+		const target = document.elementFromPoint(touch.clientX, touch.clientY);
+		if (target) {
+			const dropTarget = target.closest(".container");
+			if (dropTarget) {
+				const dropEvent = new Event("drop", { bubbles: true });
+				dropEvent.dataTransfer = { getData(type) {
+					if (type === "Text") return JSON.stringify(window._OBJ_DRAG_);
+					return "";
+				} };
+				dropTarget.dispatchEvent(dropEvent);
+			}
 		}
 		delete window._OBJ_DRAG_;
 	}
 }
-function skillLevelSelectUp$1(skill) {
+function skillLevelSelectUp$1(skill, root) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
-		SkillList.ui.find(".skill.id" + skill.SKID).find(".level .current").text(skill.selectedLevel);
+		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		});
 	}
 }
-function skillLevelSelectDown$1(skill) {
+function skillLevelSelectDown$1(skill, root) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
-		SkillList.ui.find(".skill.id" + skill.SKID).find(".level .current").text(skill.selectedLevel);
+		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		});
 	}
 }
-var SkillList, _preferences$55, _list$13, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$6, lArrow$1, rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
+var SkillList, _preferences$55, _list$13, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$6, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
 var init_SkillList$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
 	init_SkillTreeView();
 	init_SessionStorage();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_SkillTargetSelection();
 	init_SkillDescription();
 	init_SkillList$3();
 	init_SkillList$2();
-	SkillList = new UIComponent("SkillList", SkillList_default$2, SkillList_default$1);
+	SkillList = new GUIComponent("SkillList", SkillList_default$1);
+	SkillList.render = () => SkillList_default$2;
 	_preferences$55 = Preferences.get("SkillList", {
 		x: 100,
 		y: 200,
@@ -203360,254 +203242,410 @@ var init_SkillList$1 = __esmMin((() => {
 	rememberChoice$1 = [];
 	hasSkills$1 = [];
 	_justDragged$1 = false;
-	/**
-	* Initialize UI
-	*/
 	SkillList.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$28);
-		this.ui.find(".footer .extend").mousedown(onResize$12);
-		this.ui.find(".titlebar .close").click(onClose$14);
-		this.ui.find(".titlebar .mini").click(onMini$1);
-		this.ui.find(".view_skill_info").change(onToggleSkillInfo$1);
-		this.ui.find(".reset").click(onResetChoice$1);
-		this.ui.find(".apply").click(onApplyChoice$1);
-		_btnIncSkill$1 = this.ui.find(".btn.levelup").detach().click(onRequestSkillUp$1);
-		_btnLevelUp$6 = jquery_default("#lvlup_job").detach();
-		_btnLevelUp$6.click(function() {
-			_btnLevelUp$6.detach();
-			SkillList.ui.show();
-			SkillList.ui.parent().append(SkillList.ui);
-		}).mousedown(stopPropagation$28);
-		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill$1).on("contextmenu", ".skill .icon, .skill .name", onContextMenuSkillInfo$1).on("mousedown", ".selectable", onSkillFocus$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onMouseOverSkillInfo$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove$1).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills$1).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove$1).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice$1).on("dragstart", ".skill", onSkillDragStart$1).on("dragend", ".skill", onSkillDragEnd$1).on("touchstart", ".skill .icon", onSkillTouchStart).on("touchmove", ".skill .icon", onSkillTouchMove).on("touchend", ".skill .icon", onSkillTouchEnd);
-		this.draggable(this.ui.find(".titlebar"));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
-			rArrow$1 = "url(" + data + ")";
+		const root = _root$2(this);
+		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_left.bmp", function(data) {
-			lArrow$1 = "url(" + data + ")";
+		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
+			onResize$12(e, this);
+		});
+		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
+			this.ui.hide();
+		});
+		root.querySelector(".titlebar .mini")?.addEventListener("click", () => {
+			onMini$1(this);
+		});
+		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
+			_preferences$55.skillInfo = !!this.checked;
+			_preferences$55.save();
+		});
+		root.querySelector(".reset")?.addEventListener("click", () => {
+			onResetChoice$1(this);
+		});
+		root.querySelector(".apply")?.addEventListener("click", () => {
+			onApplyChoice$1(this);
+		});
+		const levelupBtn = root.querySelector(".btn.levelup");
+		if (levelupBtn) {
+			_btnIncSkill$1 = levelupBtn.cloneNode(true);
+			levelupBtn.remove();
+			_btnIncSkill$1.addEventListener("click", function() {
+				const index = this.parentNode.parentNode.getAttribute("data-index");
+				SkillList.onIncreaseSkill(parseInt(index, 10));
+			});
+		}
+		const lvlupBtn = root.querySelector("#lvlup_job");
+		if (lvlupBtn) {
+			_btnLevelUp$6 = lvlupBtn;
+			_btnLevelUp$6.style.zIndex = "51";
+			_btnLevelUp$6.style.position = "absolute";
+			_btnLevelUp$6.style.right = "0px";
+			_btnLevelUp$6.style.bottom = "0px";
+			_btnLevelUp$6.style.width = "43px";
+			_btnLevelUp$6.style.height = "43px";
+			_btnLevelUp$6.style.border = "none";
+			_btnLevelUp$6.style.backgroundColor = "transparent";
+			_btnLevelUp$6.style.backgroundRepeat = "no-repeat";
+			_btnLevelUp$6.remove();
+			_btnLevelUp$6.addEventListener("click", () => {
+				if (_btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
+				SkillList.ui.show();
+			});
+			_btnLevelUp$6.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+			});
+		}
+		const container = root.querySelector("#SkillList") || root;
+		container.addEventListener("dblclick", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				SkillList.useSkillID(parseInt(main.getAttribute("data-index"), 10));
+			}
+		});
+		container.addEventListener("contextmenu", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) {
+				const skillID = _resolveSkillID$1(target);
+				if (SkillDescription_default.uid === skillID) {
+					SkillDescription_default.remove();
+					return;
+				}
+				SkillDescription_default.append();
+				SkillDescription_default.setSkill(skillID);
+			}
+		});
+		container.addEventListener("mousedown", (e) => {
+			const target = e.target.closest(".selectable");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
+				main.classList.add("selected");
+			}
+		});
+		container.addEventListener("mouseover", (e) => {
+			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
+			if (target) {
+				if (_preferences$55.skillInfo) {
+					const skillID = _resolveSkillID$1(target);
+					if (SkillDescription_default.uid !== skillID) {
+						SkillDescription_default.append();
+						SkillDescription_default.setSkill(skillID);
+					}
+				}
+				onNecessarySkills$1(target, root);
+			}
+		});
+		container.addEventListener("mouseout", (e) => {
+			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
+				if (_preferences$55.skillInfo) SkillDescription_default.remove();
+				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
+				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
+			}
+		});
+		container.addEventListener("click", (e) => {
+			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
+			if (target) onRememberChoice$1(target, root);
+		});
+		container.addEventListener("dragstart", (e) => {
+			const skillEl = e.target.closest(".skill");
+			if (!skillEl) return;
+			const skill = getSkillById$1(parseInt(skillEl.getAttribute("data-index"), 10));
+			if (!skill || !skill.level || !skill.type) {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+				return;
+			}
+			const img = new Image();
+			img.decoding = "async";
+			img.src = skillEl.querySelector(".icon img")?.src || "";
+			e.dataTransfer.setDragImage(img, 12, 12);
+			e.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+				type: "skill",
+				from: "SkillList",
+				data: skill
+			}));
+		});
+		container.addEventListener("dragend", () => {
+			delete window._OBJ_DRAG_;
+			_justDragged$1 = true;
+			setTimeout(() => {
+				_justDragged$1 = false;
+			}, 0);
+		});
+		container.addEventListener("touchstart", (e) => {
+			const iconTarget = e.target.closest(".skill .icon");
+			if (iconTarget) onSkillTouchStart(e, iconTarget);
+		});
+		container.addEventListener("touchmove", (e) => {
+			if (e.target.closest(".skill .icon")) onSkillTouchMove(e);
+		});
+		container.addEventListener("touchend", (e) => {
+			if (e.target.closest(".skill .icon")) onSkillTouchEnd(e);
+		});
+		this.draggable(".titlebar");
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
+			_rArrow$1 = `url(${data})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
+			_lArrow$1 = `url(${data})`;
 		});
 	};
-	/**
-	* Apply preferences once append to body
-	*/
 	SkillList.onAppend = function onAppend() {
 		if (!_preferences$55.show) this.ui.hide();
-		resize$6(_preferences$55.width, _preferences$55.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$55.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$55.x), Renderer.width - this.ui.width())
-		});
-		this.ui.find(".view_skill_info").attr("checked", _preferences$55.skillInfo);
+		resize$6(this, _preferences$55.width, _preferences$55.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$55.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$55.x), Renderer.width - 100)}px`;
+		const cb = _root$2(this).querySelector(".view_skill_info");
+		if (cb) cb.checked = _preferences$55.skillInfo;
 	};
-	/**
-	* Remove Skill window from DROM
-	*/
 	SkillList.onRemove = function onRemove() {
-		_btnLevelUp$6.detach();
+		if (_btnLevelUp$6 && _btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
 		_preferences$55.show = this.ui.is(":visible");
-		_preferences$55.y = parseInt(this.ui.css("top"), 10);
-		_preferences$55.x = parseInt(this.ui.css("left"), 10);
-		_preferences$55.width = Math.floor(this.ui.find(".content").width() / 32);
-		_preferences$55.height = Math.floor(this.ui.find(".content").height() / 32);
+		_preferences$55.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$55.x = parseInt(this._host.style.left, 10) || 0;
+		const content = _root$2(this).querySelector(".content");
+		if (content) {
+			_preferences$55.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$55.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+		}
 		_preferences$55.save();
 	};
-	/**
-	* Show/Hide UI
-	*/
 	SkillList.toggle = function toggle() {
-		this.ui.toggle();
 		if (this.ui.is(":visible")) {
+			this.ui.hide();
+			if (_btnLevelUp$6 && _btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
+		} else {
+			this.ui.show();
 			this.focus();
-			_btnLevelUp$6.detach();
 		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	SkillList.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
 				this.toggle();
 				break;
 		}
-		onResetChoice$1();
+		onResetChoice$1(this);
 	};
-	/**
-	* Add skills to the list
-	*/
 	SkillList.setSkills = function setSkills(skills) {
-		SkillList.ui.find(".upgradable").removeClass("upgradable");
+		const root = _root$2(this);
+		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition$1 = getSkillPosition$1(skillJobId);
 		createSkillDependencyTree$1();
-		let i, count;
-		for (i = 0, count = _list$13.length; i < count; ++i) this.onUpdateSkill(_list$13[i].SKID, 0);
+		for (let i = 0, count = _list$13.length; i < count; ++i) this.onUpdateSkill(_list$13[i].SKID, 0);
 		_list$13.length = 0;
-		this.ui.find(".content table").empty();
-		this.ui.find(".skillCol").empty();
-		this.ui.find(".extraRow").remove();
-		for (i = 0, count = skills.length; i < count; ++i) {
+		root.querySelectorAll(".content table").forEach((t) => {
+			t.innerHTML = "";
+		});
+		root.querySelectorAll(".skillCol").forEach((el) => {
+			el.innerHTML = "";
+		});
+		root.querySelectorAll(".extraRow").forEach((el) => el.remove());
+		for (let i = 0, count = skills.length; i < count; ++i) {
 			this.addSkill(skills[i]);
 			hasSkills$1[skills[i].SKID] = skills[i];
 		}
-		skillPosition$1.forEach(function(items, list) {
+		skillPosition$1.forEach((items, list) => {
 			SkillList.prepareSkillTree(items, list);
 		});
-		for (i = 2; i <= 4; i++) {
-			const length = SkillList.ui.find("#minitab" + i + " tr").length;
-			const length2 = SkillList.ui.find("#positionSkills" + i + " .skill").length;
-			if (length > 0) SkillList.ui.find("#tabminil" + i).show();
-			else SkillList.ui.find("#tabminil" + i).hide();
-			if (length2 > 0) SkillList.ui.find("#tabl" + i).show();
-			else SkillList.ui.find("#tabl" + i).hide();
+		for (let i = 2; i <= 4; i++) {
+			const miniRows = root.querySelectorAll(`#minitab${i} tr`);
+			const bigSkills = root.querySelectorAll(`#positionSkills${i} .skill`);
+			const tabminil = root.querySelector(`#tabminil${i}`);
+			if (tabminil) tabminil.style.display = miniRows.length > 0 ? "" : "none";
+			const tabl = root.querySelector(`#tabl${i}`);
+			if (tabl) tabl.style.display = bigSkills.length > 0 ? "" : "none";
 		}
-		onResetChoice$1();
+		onResetChoice$1(this);
 	};
-	/**
-	* Insert skill to list
-	*
-	* @param {object} skill
-	*/
 	SkillList.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (this.ui.find(".skill.id" + skill.SKID).length) {
+		if (_root$2(this).querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
 		this.addSkillBig(skill);
 		this.addSkillMini(skill);
 	};
-	/**
-	* Create disabled skills preview
-	* @param items
-	* @param list
-	*/
 	SkillList.prepareSkillTree = function prepareSkillTree(items, list) {
-		Object.entries(items).forEach((entry) => {
-			const [key, value] = entry;
+		const root = _root$2(this);
+		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
+			const className = "disabled";
 			if (sk !== void 0) {
-				const element = jquery_default("<div class=\"skill id" + key + " disabled\" data-index=\"" + key + "\" draggable=\"true\"><div class=\"name\">" + jquery_default.escape(sk.SkillName).substr(0, 7) + "...<br/></div><div class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></div><div class=selectable><span class=\"level\" style=\"display: none\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button><span class=\"current\">0</span> / <span class=\"max\">0</span><button class=\"currentUp\"></button>" : "<span class=\"current\">0</span>") + "</span></div></div>");
-				if (rArrow$1) element.find(".level .currentUp").css("background-image", rArrow$1);
-				if (lArrow$1) element.find(".level .currentDown").css("background-image", lArrow$1);
-				element.find(".level .currentUp").click(function() {
-					skillLevelSelectUp$1(0);
-				});
-				element.find(".level .currentDown").click(function() {
-					skillLevelSelectDown$1(0);
-				});
+				const element = document.createElement("div");
+				element.className = `skill id${key} ${className}`;
+				element.setAttribute("data-index", key);
+				element.setAttribute("draggable", "true");
+				element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				const upBtn = element.querySelector(".level .currentUp");
+				if (upBtn) {
+					if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
+					upBtn.addEventListener("click", () => skillLevelSelectUp$1(0, root));
+				}
+				const downBtn = element.querySelector(".level .currentDown");
+				if (downBtn) {
+					if (_lArrow$1) downBtn.style.backgroundImage = _lArrow$1;
+					downBtn.addEventListener("click", () => skillLevelSelectDown$1(0, root));
+				}
 				if (value !== void 0) {
-					const box = SkillList.ui.find("#positionSkills" + list + " .s" + value);
-					if (key < 41) box.parent().show();
-					if (box.is(":empty")) box.append(element);
-					const miniBox = SkillList.ui.find("#minitab" + list);
-					if (miniBox.length && !miniBox.find(".skill.id" + key).length) {
-						const miniElement = jquery_default("<tr class=\"skill id" + key + " disabled\" data-index=\"" + key + "\"><td class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></td><td class=\"levelupcontainer\"></td><td class=\"selectable\"><div class=\"name\">" + jquery_default.escape(sk.SkillName) + "<br/><span class=\"level\">Lv : <span class=\"current\">0</span></span></div></td><td class=\"selectable type\"><div class=\"consume\">Passive</div></td></tr>");
-						miniBox.append(miniElement);
-						Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-							miniElement.find(".icon img").attr("src", data);
-						});
+					const box = root.querySelector(`#positionSkills${list} .s${value}`);
+					if (box) {
+						if (parseInt(key, 10) < 41) box.parentElement.style.display = "";
+						if (!box.hasChildNodes()) box.appendChild(element);
+						const miniBox = root.querySelector(`#minitab${list}`);
+						if (miniBox && !miniBox.querySelector(`.skill.id${key}`)) {
+							const miniTr = document.createElement("tr");
+							miniTr.className = `skill id${key} disabled`;
+							miniTr.setAttribute("data-index", key);
+							miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
+							miniBox.appendChild(miniTr);
+							Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+								const img = miniTr.querySelector(".icon img");
+								if (img) img.src = data;
+							});
+						}
 					}
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-					element.find(".icon img").attr("src", data);
+				Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+					const img = element.querySelector(".icon img");
+					if (img) img.src = data;
 				});
 			}
 		});
 	};
 	SkillList.addSkillBig = function addSkillBig(skill) {
+		const root = _root$2(this);
 		const sk = SkillInfo[skill.SKID];
-		const levelup = _btnIncSkill$1.clone(true);
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = jquery_default("<div class=\"skill id" + skill.SKID + " " + className + "\" data-index=\"" + skill.SKID + "\" draggable=\"true\"><div class=\"name\">" + jquery_default.escape(sk.SkillName).substr(0, 7) + "...<br/></div><div class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></div><div class=\"levelupcontainer\"></div><div class=selectable><span class=\"level\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button><span class=\"current\">" + skill.level + "</span> / <span class=\"max\">" + skill.level + "</span><button class=\"currentUp\"></button>" : "<span class=\"current\">" + skill.level + "</span>") + "</span></div></div>");
-		if (!skill.upgradable || !_points$1) levelup.hide();
-		if (rArrow$1) element.find(".level .currentUp").css("background-image", rArrow$1);
-		if (lArrow$1) element.find(".level .currentDown").css("background-image", lArrow$1);
-		element.find(".level .currentUp").click(function() {
-			skillLevelSelectUp$1(skill);
-		});
-		element.find(".level .currentDown").click(function() {
-			skillLevelSelectDown$1(skill);
-		});
-		skillPosition$1.forEach(function(items, list) {
+		const element = document.createElement("div");
+		element.className = `skill id${skill.SKID} ${className}`;
+		element.setAttribute("data-index", skill.SKID);
+		element.setAttribute("draggable", "true");
+		element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		const upBtn = element.querySelector(".level .currentUp");
+		if (upBtn) {
+			if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
+			upBtn.addEventListener("click", () => skillLevelSelectUp$1(skill, root));
+		}
+		const downBtn = element.querySelector(".level .currentDown");
+		if (downBtn) {
+			if (_lArrow$1) downBtn.style.backgroundImage = _lArrow$1;
+			downBtn.addEventListener("click", () => skillLevelSelectDown$1(skill, root));
+		}
+		skillPosition$1.forEach((items, list) => {
 			if (items[skill.SKID] !== void 0) {
-				let box = SkillList.ui.find("#positionSkills" + list + " .s" + items[skill.SKID]);
-				if (items[skill.SKID] > 41 && box.length == 0) {
+				let box = root.querySelector(`#positionSkills${list} .s${items[skill.SKID]}`);
+				if (items[skill.SKID] > 41 && !box) {
 					const startPos = items[skill.SKID] - items[skill.SKID] % 7;
 					const rowId = Math.floor(items[skill.SKID] / 7);
-					const newRow = jquery_default("<div class=\"skillRow extraRow\" data-order=\"" + rowId + "\">	<div class=\"skillCol s" + startPos + "\"></div><div class=\"skillCol s" + (startPos + 1) + "\"></div><div class=\"skillCol s" + (startPos + 2) + "\"></div>	<div class=\"skillCol s" + (startPos + 3) + "\"></div><div class=\"skillCol s" + (startPos + 4) + "\"></div><div class=\"skillCol s" + (startPos + 5) + "\"></div>	<div class=\"skillCol s" + (startPos + 6) + "\"></div></div>");
-					const rows = SkillList.ui.find("#positionSkills" + list + " .skillRow");
-					let beforeRow = rows.first();
-					const rowCnt = rows.length;
-					let i = 1;
-					while (i < rowCnt && rows.eq(i).attr("data-order") * 1 < rowId) {
-						beforeRow = rows.eq(i);
-						i++;
+					const newRow = document.createElement("div");
+					newRow.className = "skillRow extraRow";
+					newRow.setAttribute("data-order", rowId);
+					let rowHTML = "";
+					for (let c = 0; c < 7; c++) rowHTML += `<div class="skillCol s${startPos + c}"></div>`;
+					newRow.innerHTML = rowHTML;
+					const container = root.querySelector(`#positionSkills${list}`);
+					if (container) {
+						const rows = container.querySelectorAll(".skillRow");
+						let insertBefore = null;
+						for (const row of rows) if (parseInt(row.getAttribute("data-order"), 10) > rowId) {
+							insertBefore = row;
+							break;
+						}
+						if (insertBefore) container.insertBefore(newRow, insertBefore);
+						else container.appendChild(newRow);
 					}
-					beforeRow.after(newRow);
-					box = SkillList.ui.find("#positionSkills" + list + " .s" + items[skill.SKID]);
+					box = root.querySelector(`#positionSkills${list} .s${items[skill.SKID]}`);
 				}
-				if (!box.is(":empty")) box.empty();
-				box.append(element);
-				if (skill.upgradable) box.addClass("upgradable");
+				if (box) {
+					if (box.hasChildNodes()) box.innerHTML = "";
+					box.appendChild(element);
+					if (skill.upgradable) box.classList.add("upgradable");
+				}
 			}
 		});
-		if (!SkillList.ui.find(".contentbig .skill.id" + skill.SKID).length) {
-			const pos = SkillList.ui.find("#etcBIG5 .skill").length;
-			if (pos > 41 && (pos - 41) % 7 == 1) {
-				if (SkillList.ui.find("#etcBIG5 .s" + pos).length == 0) {
-					const newRow = jquery_default("<div class=\"skillRow extraRow\" data-order=\"" + Math.floor(pos / 7) + "\">	<div class=\"skillCol s" + pos + "\"></div><div class=\"skillCol s" + (pos + 1) + "\"></div><div class=\"skillCol s" + (pos + 2) + "\"></div>	<div class=\"skillCol s" + (pos + 3) + "\"></div><div class=\"skillCol s" + (pos + 4) + "\"></div><div class=\"skillCol s" + (pos + 5) + "\"></div>	<div class=\"skillCol s" + (pos + 6) + "\"></div></div>");
-					SkillList.ui.find("#etcBIG5").append(newRow);
+		if (!root.querySelector(`.contentbig .skill.id${skill.SKID}`)) {
+			const etcContainer = root.querySelector("#etcBIG5");
+			if (etcContainer) {
+				const pos = etcContainer.querySelectorAll(".skill").length;
+				if (pos > 41 && (pos - 41) % 7 === 1) {
+					if (!root.querySelector(`#etcBIG5 .s${pos}`)) {
+						const rowId = Math.floor(pos / 7);
+						const newRow = document.createElement("div");
+						newRow.className = "skillRow extraRow";
+						newRow.setAttribute("data-order", rowId);
+						let rowHTML = "";
+						for (let c = 0; c < 7; c++) rowHTML += `<div class="skillCol s${pos + c}"></div>`;
+						newRow.innerHTML = rowHTML;
+						etcContainer.appendChild(newRow);
+					}
 				}
+				const etcBox = root.querySelector(`#etcBIG5 .s${pos}`);
+				if (etcBox) etcBox.appendChild(element);
 			}
-			SkillList.ui.find("#etcBIG5 .s" + pos).append(element);
 		}
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-			element.find(".icon img").attr("src", data);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+			const img = element.querySelector(".icon img");
+			if (img) img.src = data;
 		});
 	};
 	SkillList.addSkillMini = function addSkillMini(skill) {
+		const root = _root$2(this);
 		const sk = SkillInfo[skill.SKID];
-		const levelup = _btnIncSkill$1.clone(true);
+		const levelup = _btnIncSkill$1.cloneNode(true);
+		levelup.addEventListener("click", function() {
+			const index = this.parentNode.parentNode.getAttribute("data-index");
+			SkillList.onIncreaseSkill(parseInt(index, 10));
+		});
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = jquery_default("<tr class=\"skill id" + skill.SKID + " " + className + "\" data-index=\"" + skill.SKID + "\" draggable=\"true\"><td class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></td><td class=\"levelupcontainer\"></td><td class=selectable><div class=\"name\">" + jquery_default.escape(sk.SkillName) + "<br/><span class=\"level\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button>Lv : <span class=\"current\">" + skill.level + "</span> / <span class=\"max\">" + skill.level + "</span><button class=\"currentUp\"></button>" : "Lv : <span class=\"current\">" + skill.level + "</span>") + "</span></div></td><td class=\"selectable type\"><div class=\"consume\">" + (skill.type ? "Sp : <span class=\"spcost\">" + skill.spcost + "</span>" : "Passive") + "</div></td></tr>");
-		if (!skill.upgradable || !_points$1) levelup.hide();
-		element.find(".levelupcontainer").append(levelup);
-		if (rArrow$1) element.find(".level .currentUp").css("background-image", rArrow$1);
-		if (lArrow$1) element.find(".level .currentDown").css("background-image", lArrow$1);
-		element.find(".level .currentUp").click(function() {
-			skillLevelSelectUp$1(skill);
+		const tr = document.createElement("tr");
+		tr.className = `skill id${skill.SKID} ${className}`;
+		tr.setAttribute("data-index", skill.SKID);
+		tr.setAttribute("draggable", "true");
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		if (!skill.upgradable || !_points$1) levelup.style.display = "none";
+		tr.querySelector(".levelupcontainer").appendChild(levelup);
+		const upBtn = tr.querySelector(".level .currentUp");
+		if (upBtn) {
+			if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
+			upBtn.addEventListener("click", () => skillLevelSelectUp$1(skill, root));
+		}
+		const downBtn = tr.querySelector(".level .currentDown");
+		if (downBtn) {
+			if (_lArrow$1) downBtn.style.backgroundImage = _lArrow$1;
+			downBtn.addEventListener("click", () => skillLevelSelectDown$1(skill, root));
+		}
+		skillPosition$1.forEach((items, list) => {
+			if (items[skill.SKID] !== void 0) {
+				const miniTable = root.querySelector(`#minitab${list}`);
+				if (miniTable) miniTable.appendChild(tr);
+			}
 		});
-		element.find(".level .currentDown").click(function() {
-			skillLevelSelectDown$1(skill);
-		});
-		skillPosition$1.forEach(function(items, list) {
-			if (items[skill.SKID] !== void 0) SkillList.ui.find("#minitab" + list).append(element);
-		});
-		if (!SkillList.ui.find(".content .skill.id" + skill.SKID).length) SkillList.ui.find("#minitab5").append(element);
+		if (!root.querySelector(`.content .skill.id${skill.SKID}`)) {
+			const etcTable = root.querySelector("#minitab5");
+			if (etcTable) etcTable.appendChild(tr);
+		}
 		this.parseHTML.call(levelup);
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-			element.find(".icon img").attr("src", data);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+			const img = tr.querySelector(".icon img");
+			if (img) img.src = data;
 		});
 		_list$13.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Remove skill from list
-	*/
 	SkillList.removeSkill = function removeSkill() {};
-	/**
-	* Update skill
-	*
-	* @param {object} skill : { SKID, level, spcost, attackRange, upgradable }
-	*/
 	SkillList.updateSkill = function updateSkill(skill) {
 		let target = getSkillById$1(skill.SKID);
-		if (!target) if (this.ui.find(".skill.id" + skill.SKID).length) {
+		const root = _root$2(this);
+		if (!target) if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			_list$13.push(skill);
 			this.onUpdateSkill(skill.SKID, 0);
 			hasSkills$1[skill.SKID] = skill;
@@ -203618,31 +203656,26 @@ var init_SkillList$1 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = this.ui.find(".skill.id" + skill.SKID);
-		element.find(".level .current, .level .max").text(skill.level);
-		if (skill.selectedLevel) element.find(".level .current").text(skill.selectedLevel);
-		element.find(".spcost").text(skill.spcost);
-		element.removeClass("active passive disabled");
-		element.addClass(!skill.level ? "disabled" : skill.type ? "active" : "passive");
-		if (skill.upgradable && _points$1) element.find(".levelup").show();
-		else element.find(".levelup").hide();
+		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+			for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
+			if (skill.selectedLevel) {
+				const current = element.querySelector(".level .current");
+				if (current) current.textContent = skill.selectedLevel;
+			}
+			const spcost = element.querySelector(".spcost");
+			if (spcost) spcost.textContent = skill.spcost;
+			element.classList.remove("active", "passive", "disabled");
+			element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
+			const levelupEl = element.querySelector(".levelup");
+			if (levelupEl) levelupEl.style.display = skill.upgradable && _points$1 ? "" : "none";
+		});
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Use a skill index
-	*
-	* @param {number} skill id
-	*/
 	SkillList.useSkillID = function useSkillID(id, level) {
 		const skill = getSkillById$1(id);
 		if (!skill || !skill.level || !skill.type) return;
 		SkillList.useSkill(skill, level ? level : skill.selectedLevel);
 	};
-	/**
-	* Use a skill
-	*
-	* @param {object} skill
-	*/
 	SkillList.useSkill = function useSkill(skill, level) {
 		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
 		skill.useLevel = level;
@@ -203651,28 +203684,22 @@ var init_SkillList$1 = __esmMin((() => {
 			SkillTargetSelection_default.set(skill, skill.type);
 		}
 	};
-	/**
-	* Set skill points amount
-	*
-	* @param {number} skill points count
-	*/
-	SkillList.setPoints = function SetPoints(amount) {
-		let i;
-		this.ui.find(".skpoints_count").text(amount);
+	SkillList.setPoints = function setPoints(amount) {
+		const root = _root$2(this);
+		const el = root.querySelector(".skpoints_count");
+		if (el) el.textContent = amount;
 		if (!_points$1 === !amount) {
 			_points$1 = amount;
 			return;
 		}
 		_points$1 = amount;
 		const count = _list$13.length;
-		for (i = 0; i < count; ++i) if (_list$13[i].upgradable && amount) this.ui.find(".skill.id" + _list$13[i].SKID + " .levelup").show();
-		else this.ui.find(".skill.id" + _list$13[i].SKID + " .levelup").hide();
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$13[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$13[i].upgradable && amount ? "" : "none";
+		});
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	SkillList.onLevelUp = function onLevelUp() {
-		_btnLevelUp$6.appendTo("body");
+		if (_btnLevelUp$6) document.body.appendChild(_btnLevelUp$6);
 	};
 	_touchDrag = {
 		timer: null,
@@ -203681,9 +203708,6 @@ var init_SkillList$1 = __esmMin((() => {
 		startX: 0,
 		startY: 0
 	};
-	/**
-	* Abstract function to define
-	*/
 	SkillList.onUseSkill = function onUseItem() {};
 	SkillList.onIncreaseSkill = function onIncreaseSkill() {};
 	SkillList.onUpdateSkill = function onUpdateSkill() {};
@@ -203694,84 +203718,93 @@ var init_SkillList$1 = __esmMin((() => {
 //#region src/UI/Components/SkillList/SkillListV0/SkillListV0.html?raw
 var SkillListV0_default$2;
 var init_SkillListV0$2 = __esmMin((() => {
-	SkillListV0_default$2 = "<div id=\"SkillListV0\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"base\"\r\n					data-background=\"basic_interface/sys_base_off.bmp\"\r\n					data-hover=\"basic_interface/sys_base_on.bmp\"\r\n				></button>\r\n				<span class=\"text\" data-text=\"283\">Skill Tree</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<button\r\n					class=\"base mini\"\r\n					data-background=\"basic_interface/sys_mini_off.bmp\"\r\n					data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: none; width: 256px; height: 320px\">\r\n				<table>\r\n					<!-- Just to get reference, will be removed -->\r\n					<button\r\n						class=\"btn levelup\"\r\n						data-background=\"basic_interface/skill_up_a.bmp\"\r\n						data-hover=\"basic_interface/skill_up_b.bmp\"\r\n						data-down=\"basic_interface/skill_up_c.bmp\"\r\n					></button>\r\n				</table>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">One</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" class=\"tab-label\">Two</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" class=\"tab-label\">Three</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<button\r\n					class=\"btn apply\"\r\n					data-background=\"btn_apply.bmp\"\r\n					data-hover=\"btn_apply_a.bmp\"\r\n					data-down=\"btn_apply_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"btn reset\"\r\n					data-background=\"btn_reset.bmp\"\r\n					data-hover=\"btn_reset_a.bmp\"\r\n					data-down=\"btn_reset_b.bmp\"\r\n				></button>\r\n				<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"lvlup_job\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-down=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+	SkillListV0_default$2 = "<div id=\"SkillListV0\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<ui-text class=\"text\" msgid=\"283\">Skill Tree</ui-text>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<ui-button\r\n					class=\"base mini\"\r\n					bg=\"basic_interface/sys_mini_off.bmp\"\r\n					hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: none; width: 256px; height: 320px\">\r\n				<table>\r\n					<!-- Just to get reference, will be removed -->\r\n					<ui-button\r\n						class=\"btn levelup\"\r\n						bg=\"basic_interface/skill_up_a.bmp\"\r\n						hover=\"basic_interface/skill_up_b.bmp\"\r\n						down=\"basic_interface/skill_up_c.bmp\"\r\n					></ui-button>\r\n				</table>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">One</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" class=\"tab-label\">Two</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" class=\"tab-label\">Three</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\">\r\n				<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<ui-button\r\n					class=\"btn apply\"\r\n					bg=\"btn_apply.bmp\"\r\n					hover=\"btn_apply_a.bmp\"\r\n					down=\"btn_apply_b.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"btn reset\"\r\n					bg=\"btn_reset.bmp\"\r\n					hover=\"btn_reset_a.bmp\"\r\n					down=\"btn_reset_b.bmp\"\r\n				></ui-button>\r\n				<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillListV0/SkillListV0.css?raw
 var SkillListV0_default$1;
 var init_SkillListV0$1 = __esmMin((() => {
-	SkillListV0_default$1 = "#SkillListV0 {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillListV0 .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillListV0 .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillListV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillListV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillListV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillListV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillListV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillListV0 .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 265px;\r\n	height: 200px;\r\n}\r\n#SkillListV0 .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillListV0 .content td,\r\n#SkillListV0 .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n#SkillListV0 .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillListV0 td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillListV0 .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillListV0 .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillListV0 .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillListV0 .disabled .icon,\r\n#SkillListV0 .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillListV0 .disabled .consume,\r\n#SkillListV0 .disabled .level {\r\n	display: none;\r\n}\r\n#SkillListV0 .currentDown,\r\n#SkillListV0 .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillListV0 .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillListV0 .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillListV0 .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillListV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillListV0 .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillListV0 .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillListV0 .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillListV0 .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillListV0 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n/* hidden 3 jobs */\r\n#SkillListV0 label[for='tab-3'] {\r\n	display: none;\r\n}\r\n\r\n#SkillListV0 .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillListV0 .skillCol .name,\r\n.skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillListV0 .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillListV0 .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillListV0 .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillListV0 .tabs {\r\n	position: relative;\r\n}\r\n#SkillListV0 .tabs::before,\r\n.tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillListV0 .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillListV0 .tab-switch {\r\n	display: none;\r\n}\r\n#SkillListV0 .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillListV0 .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillListV0 .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillListV0 .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillListV0 .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillListV0 .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillListV0 .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
+	SkillListV0_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#SkillListV0 {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillListV0 .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillListV0 .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillListV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillListV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillListV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillListV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillListV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillListV0 .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 265px;\r\n	height: 200px;\r\n}\r\n#SkillListV0 .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillListV0 .content td,\r\n#SkillListV0 .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n#SkillListV0 .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillListV0 td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillListV0 .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillListV0 .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillListV0 .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillListV0 .disabled .icon,\r\n#SkillListV0 .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillListV0 .disabled .consume,\r\n#SkillListV0 .disabled .level {\r\n	display: none;\r\n}\r\n#SkillListV0 .currentDown,\r\n#SkillListV0 .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillListV0 .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillListV0 .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillListV0 .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillListV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillListV0 .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillListV0 .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillListV0 .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillListV0 .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillListV0 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n/* hidden 3 jobs */\r\n#SkillListV0 label[for='tab-3'] {\r\n	display: none;\r\n}\r\n\r\n#SkillListV0 .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillListV0 .skillCol .name,\r\n#SkillListV0 .skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillListV0 .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillListV0 .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillListV0 .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillListV0 .tabs {\r\n	position: relative;\r\n}\r\n#SkillListV0 .tabs::before,\r\n#SkillListV0 .tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillListV0 .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillListV0 .tab-switch {\r\n	display: none;\r\n}\r\n#SkillListV0 .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillListV0 .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillListV0 .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillListV0 .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillListV0 .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillListV0 .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillListV0 .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillListV0/SkillListV0.js
+function _root$1(comp) {
+	return comp._shadow || comp._host;
+}
+function _escapeHTML$1(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+function _isNumeric(val) {
+	return !isNaN(parseFloat(val)) && isFinite(val);
+}
 function createSkillDependencyTree() {
-	skillPosition.forEach(function(items, list) {
-		Object.entries(items).forEach((entry) => {
-			const [skid, pos] = entry;
-			if (!jquery_default.isNumeric(skid)) return;
+	skillPosition.forEach((items) => {
+		Object.entries(items).forEach(([skid, pos]) => {
+			if (!_isNumeric(skid)) return;
 			const sk = SkillInfo[skid];
 			skillDependencyTree[skid] = {
 				dependency: [],
 				position: pos,
-				list,
+				list: void 0,
 				MaxLv: sk.MaxLv
 			};
-			if (sk?.["_NeedSkillListV0"] !== void 0) sk["_NeedSkillListV0"].forEach(function(item) {
+			if (sk?.["_NeedSkillListV0"] !== void 0) sk["_NeedSkillListV0"].forEach((item) => {
 				skillDependencyTree[skid]["dependency"][item[0]] = item[1];
 			});
 		});
 	});
 }
-function specifyRequirements(skillId, count = null) {
-	const showAll = true;
+function specifyRequirements(skillId, count, root) {
 	const skdt = skillDependencyTree[skillId];
-	if (skdt?.dependency || count != null) {
-		const element = "<div class=\"counterSkill\">" + count + "</div>";
-		skillPosition.forEach(function(items, list) {
-			if (items[skillId] !== void 0) {
-				const skillbox = SkillListV0.ui.find("#positionSkills" + list + " .s" + items[skillId]);
-				if (skillbox.children().hasClass("disabled") || showAll) {
-					skillbox.addClass("needleSkill");
-					if (count !== null) skillbox.append(element);
+	if (skdt?.dependency || count != null) skillPosition.forEach((items, list) => {
+		if (items[skillId] !== void 0) {
+			const skillbox = root.querySelector(`#positionSkills${list} .s${items[skillId]}`);
+			if (skillbox) {
+				skillbox.querySelector(".disabled");
+				skillbox.classList.add("needleSkill");
+				if (count !== null && count !== void 0) {
+					const counterEl = document.createElement("div");
+					counterEl.className = "counterSkill";
+					counterEl.textContent = count;
+					skillbox.appendChild(counterEl);
 				}
-			}
-		});
-	}
-	if (skdt?.dependency) skdt.dependency.forEach(function(item, key) {
-		specifyRequirements(key, item);
-	});
-}
-/**
-* get and show remember choice skills
-*/
-function onRememberChoice() {
-	if (_justDragged) return;
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	rememberChoice = setRememberChoice(parseInt(main.data("index"), 10));
-	rememberChoice.forEach(function(item, skId) {
-		if (!rememberChoice[skId]["isQuest"] && totalCounter < _points) {
-			const sk = skillDependencyTree[skId];
-			if (!sk) return;
-			const skillbox = SkillListV0.ui.find("#positionSkills" + sk.list + " .s" + sk.position);
-			if (skillbox.find(".current").text() != sk.MaxLv) {
-				totalCounter += rememberChoice[skId]["count"];
-				skillbox.children().removeClass("disabled");
-				skillbox.find(".level").show();
-				skillbox.find(".current").empty().append(rememberChoice[skId]["count"]);
-				skillbox.find(".max").empty().append(rememberChoice[skId]["count"]);
 			}
 		}
 	});
-	SkillListV0.ui.find(".skpoints_count").text(_points - totalCounter + "/" + _points);
+	if (skdt?.dependency) skdt.dependency.forEach((item, key) => {
+		specifyRequirements(key, item, root);
+	});
 }
-/**
-* Remember Choice skills
-* @param skillId
-* @param count
-* @param isQuest
-* @returns {*[]}
-*/
+function onRememberChoice(target, root) {
+	if (_justDragged) return;
+	let main = target.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	rememberChoice = setRememberChoice(parseInt(main.getAttribute("data-index"), 10));
+	rememberChoice.forEach((item, skId) => {
+		if (!rememberChoice[skId]["isQuest"] && totalCounter < _points) {
+			const sk = skillDependencyTree[skId];
+			if (!sk) return;
+			const skillbox = root.querySelector(`#positionSkills${sk.list} .s${sk.position}`);
+			if (skillbox) {
+				const currentEl = skillbox.querySelector(".current");
+				if (currentEl && currentEl.textContent !== String(sk.MaxLv)) {
+					totalCounter += rememberChoice[skId]["count"];
+					const disabledEl = skillbox.querySelector(".disabled");
+					if (disabledEl) disabledEl.classList.remove("disabled");
+					const levelEl = skillbox.querySelector(".level");
+					if (levelEl) levelEl.style.display = "";
+					if (currentEl) currentEl.textContent = rememberChoice[skId]["count"];
+					const maxEl = skillbox.querySelector(".max");
+					if (maxEl) maxEl.textContent = rememberChoice[skId]["count"];
+				}
+			}
+		}
+	});
+	const skpointsEl = root.querySelector(".skpoints_count");
+	if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}/${_points}`;
+}
 function setRememberChoice(skillId, count = null, isQuest = false) {
 	const sk = SkillInfo[skillId];
 	if (!isQuest && sk["Type"] === "Quest") {
@@ -203789,60 +203822,38 @@ function setRememberChoice(skillId, count = null, isQuest = false) {
 		} else if (sk["MaxLv"] > rememberChoice[skillId]["count"]) rememberChoice[skillId]["count"]++;
 	}
 	if (sk["_NeedSkillListV0"] !== void 0) {
-		sk["_NeedSkillListV0"].forEach(function(item) {
+		sk["_NeedSkillListV0"].forEach((item) => {
 			rememberChoice[skillId][item[0]] = setRememberChoice(item[0], item[1], isQuest)[item[0]];
 		});
-		Object.entries(rememberChoice[skillId]).forEach((entry) => {
-			const [key, value] = entry;
-			if (jquery_default.isNumeric(key) && value.isQuest) rememberChoice[skillId]["isQuest"] = value.isQuest;
+		Object.entries(rememberChoice[skillId]).forEach(([key, value]) => {
+			if (_isNumeric(key) && value.isQuest) rememberChoice[skillId]["isQuest"] = value.isQuest;
 		});
 	}
 	return rememberChoice;
 }
-/**
-* @param JobId
-* @returns {*[]}
-*/
 function getSkillPosition(JobId) {
 	const positions = [];
 	positions[SkillTreeView[JobId]["list"]] = SkillTreeView[JobId];
 	if (SkillTreeView[JobId]["beforeJob"] !== null) {
 		const beforeJob = SkillTreeView[JobId]["beforeJob"];
-		getSkillPosition(beforeJob).forEach(function(items, list) {
+		getSkillPosition(beforeJob).forEach((items, list) => {
 			positions[list] = positions[list] ? Object.assign(positions[list], items) : items;
 		});
 	}
 	return positions;
 }
-/**
-* Stop event propagation
-*/
-function stopPropagation$27(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Find a skill by it's id
-*
-* @param {number} skill id
-* @returns {Skill}
-*/
 function getSkillById(id) {
-	let i;
 	const count = _list$12.length;
-	for (i = 0; i < count; ++i) if (_list$12[i].SKID === id) return _list$12[i];
+	for (let i = 0; i < count; ++i) if (_list$12[i].SKID === id) return _list$12[i];
 	return null;
 }
-/**
-* Extend SkillListV0 window size
-*/
-function onResize$11() {
-	const ui = SkillListV0.ui;
-	const top = ui.position().top;
-	const left = ui.position().left;
+function onResize$11(e, comp) {
+	e.stopImmediatePropagation();
+	const top = parseInt(comp._host.style.top, 10) || 0;
+	const left = parseInt(comp._host.style.left, 10) || 0;
 	let lastWidth = 0;
 	let lastHeight = 0;
-	function resizing() {
+	const resizing = () => {
 		const extraX = -6;
 		const extraY = 32;
 		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
@@ -203850,235 +203861,148 @@ function onResize$11() {
 		w = Math.min(Math.max(w, 8), 8);
 		h = Math.min(Math.max(h, 4), 10);
 		if (w === lastWidth && h === lastHeight) return;
-		resize$5(w, h);
+		resize$5(comp, w, h);
 		lastWidth = w;
 		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	};
+	const interval = setInterval(resizing, 30);
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
-			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			clearInterval(interval);
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
-/**
-* Extend SkillListV0 window size
-*
-* @param {number} width
-* @param {number} height
-*/
-function resize$5(width, height) {
+function resize$5(comp, width, height) {
+	const root = _root$1(comp);
 	if (_preferences$54.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
-		SkillListV0.ui.find(".extend").show();
-		SkillListV0.ui.find(".content").show();
-		SkillListV0.ui.find(".contentbig").hide();
-		SkillListV0.ui.find(".footer .btn").hide();
-		SkillListV0.ui.find(".content").css({
-			width: width * 32,
-			height: height * 32
+		const extend = root.querySelector(".extend");
+		if (extend) extend.style.display = "";
+		const content = root.querySelector(".content");
+		if (content) {
+			content.style.display = "";
+			content.style.width = `${width * 32}px`;
+			content.style.height = `${height * 32}px`;
+		}
+		const contentbig = root.querySelector(".contentbig");
+		if (contentbig) contentbig.style.display = "none";
+		root.querySelectorAll(".footer .btn").forEach((el) => {
+			el.style.display = "none";
 		});
 	} else {
 		width = 17;
 		height = 12;
-		SkillListV0.ui.find(".extend").hide();
-		SkillListV0.ui.find(".content").hide();
-		SkillListV0.ui.find(".contentbig").show();
-		SkillListV0.ui.find(".footer .btn").show();
-		SkillListV0.ui.find(".contentbig").css({
-			width: width * 32,
-			height: height * 32
+		const extend = root.querySelector(".extend");
+		if (extend) extend.style.display = "none";
+		const content = root.querySelector(".content");
+		if (content) content.style.display = "none";
+		const contentbig = root.querySelector(".contentbig");
+		if (contentbig) {
+			contentbig.style.display = "";
+			contentbig.style.width = `${width * 32}px`;
+			contentbig.style.height = `${height * 32}px`;
+		}
+		root.querySelectorAll(".footer .btn").forEach((el) => {
+			el.style.display = "block";
 		});
 	}
 }
-/**
-* Closing window
-*/
-function onClose$13() {
-	SkillListV0.ui.hide();
-}
-/**
-* Resize and save
-*/
-function onMini() {
+function onMini(comp) {
 	_preferences$54.mini = !_preferences$54.mini;
 	_preferences$54.save();
-	resize$5(_preferences$54.width, _preferences$54.height);
+	resize$5(comp, _preferences$54.width, _preferences$54.height);
 }
-/**
-* Request to upgrade a skill
-*/
-function onRequestSkillUp() {
-	const index = this.parentNode.parentNode.getAttribute("data-index");
-	SkillListV0.onIncreaseSkill(parseInt(index, 10));
-}
-/**
-* Request to use a skill
-*/
-function onRequestUseSkill() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	SkillListV0.useSkillID(parseInt(main.data("index"), 10));
-}
-function onApplyChoice() {
+function onApplyChoice(comp) {
 	const applyArr = [];
-	rememberChoice.forEach(function(item, skillId) {
+	rememberChoice.forEach((item, skillId) => {
 		applyArr[skillId] = 0;
 		const level = hasSkills?.[skillId]?.level ?? 0;
 		if (item.count > level) applyArr[skillId] = item.count - level;
 		else applyArr[skillId] = item.count;
 	});
-	applyArr.forEach(function(c, k) {
+	applyArr.forEach((c, k) => {
 		for (let i = 0; i < c; i++) SkillListV0.onIncreaseSkill(parseInt(k, 10));
 	});
 	totalCounter = 0;
-	SkillListV0.ui.find(".skpoints_count").text(_points - totalCounter);
+	const skpointsEl = _root$1(comp).querySelector(".skpoints_count");
+	if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}`;
 	rememberChoice = [];
 }
-/**
-* Reset choice
-*/
-function onResetChoice() {
-	rememberChoice.forEach(function(count, skillId) {
+function onResetChoice(comp) {
+	const root = _root$1(comp);
+	rememberChoice.forEach((_count, skillId) => {
 		if (!skillDependencyTree[skillId]) return;
-		const skillbox = SkillListV0.ui.find(".skillCol.s" + skillDependencyTree[skillId].position);
-		if (!hasSkills?.[skillId]?.level) skillbox.children().addClass("disabled");
-		skillbox.find(".selectable").show();
-		skillbox.find(".current").empty().append(hasSkills?.[skillId]?.level ?? 0);
-		skillbox.find(".max").empty().append(hasSkills?.[skillId]?.level ?? 0);
+		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree[skillId].position}`);
+		if (skillbox) {
+			if (!hasSkills?.[skillId]?.level) skillbox.querySelectorAll(".skill").forEach((el) => el.classList.add("disabled"));
+			const selectable = skillbox.querySelector(".selectable");
+			if (selectable) selectable.style.display = "";
+			skillbox.querySelectorAll(".current").forEach((el) => {
+				el.textContent = hasSkills?.[skillId]?.level ?? 0;
+			});
+			skillbox.querySelectorAll(".max").forEach((el) => {
+				el.textContent = hasSkills?.[skillId]?.level ?? 0;
+			});
+		}
 	});
 	totalCounter = 0;
-	SkillListV0.ui.find(".skpoints_count").text(_points);
+	const skpointsEl = root.querySelector(".skpoints_count");
+	if (skpointsEl) skpointsEl.textContent = _points;
 	rememberChoice = [];
 }
-/**
-* Show backlight
-*/
-function onNecessarySkills() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	specifyRequirements(parseInt(main.data("index"), 10));
+function onNecessarySkills(target, root) {
+	let main = target.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	specifyRequirements(parseInt(main.getAttribute("data-index"), 10), null, root);
 }
-/**
-* Hide backlight
-*/
-function onNecessarySkillsRemove() {
-	SkillListV0.ui.find(".needleSkill").removeClass("needleSkill");
-	SkillListV0.ui.find(".counterSkill").remove();
-}
-/**
-* Resolve the skill ID from the hovered/clicked element
-*/
 function _resolveSkillID(el) {
-	let main = jquery_default(el).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	const id = parseInt(main.data("index"), 10);
+	let main = el.parentElement;
+	if (!main.classList.contains("skill")) main = main.parentElement;
+	const id = parseInt(main.getAttribute("data-index"), 10);
 	return getSkillById(id)?.SKID ?? id;
 }
-/**
-* Show skill description on right-click (always, regardless of checkbox)
-*/
-function onContextMenuSkillInfo() {
-	const skillID = _resolveSkillID(this);
-	if (SkillDescription_default.uid === skillID) {
-		SkillDescription_default.remove();
-		return;
-	}
-	SkillDescription_default.append();
-	SkillDescription_default.setSkill(skillID);
-}
-/**
-* Show skill description on mouseover (only when checkbox is checked)
-*/
-function onMouseOverSkillInfo() {
-	if (!(_preferences$54.mini || _preferences$54.skillInfo)) return;
-	const skillID = _resolveSkillID(this);
-	if (SkillDescription_default.uid === skillID) return;
-	SkillDescription_default.append();
-	SkillDescription_default.setSkill(skillID);
-}
-/**
-* Hide description (only auto-hide on mouseout when checkbox is checked)
-*/
-function onSkillDescriptionRemove() {
-	if (_preferences$54.mini || _preferences$54.skillInfo) SkillDescription_default.remove();
-}
-/**
-* Checkbox show/hide description
-*/
-function onToggleSkillInfo() {
-	_preferences$54.skillInfo = !!this.checked;
-	_preferences$54.save();
-}
-/**
-* Focus a skill in the list (background color changed)
-*/
-function onSkillFocus() {
-	let main = jquery_default(this).parent();
-	if (!main.hasClass("skill")) main = main.parent();
-	SkillListV0.ui.find(".skill").removeClass("selected");
-	main.addClass("selected");
-}
-/**
-* Start to drag a skill (to put it on the hotkey UI ?)
-*/
-function onSkillDragStart(event) {
-	const skill = getSkillById(parseInt(this.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return stopPropagation$27(event);
-	const img = new Image();
-	img.decoding = "async";
-	img.src = jquery_default(this).find(".icon img").attr("src");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "skill",
-		from: "SkillListV0",
-		data: skill
-	}));
-}
-/**
-* Stop the drag drop action, clean up
-*/
-function onSkillDragEnd() {
-	delete window._OBJ_DRAG_;
-	_justDragged = true;
-	setTimeout(function() {
-		_justDragged = false;
-	}, 0);
-}
-function skillLevelSelectUp(skill) {
+function skillLevelSelectUp(skill, root) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
-		SkillListV0.ui.find(".skill.id" + skill.SKID).find(".level .current").text(skill.selectedLevel);
+		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		});
 	}
 }
-function skillLevelSelectDown(skill) {
+function skillLevelSelectDown(skill, root) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
-		SkillListV0.ui.find(".skill.id" + skill.SKID).find(".level .current").text(skill.selectedLevel);
+		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		});
 	}
 }
-var SkillListV0, _preferences$54, _list$12, _btnIncSkill, _points, totalCounter, _btnLevelUp$5, lArrow, rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
+var SkillListV0, _preferences$54, _list$12, _btnIncSkill, _points, totalCounter, _btnLevelUp$5, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
 var init_SkillListV0 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
 	init_SkillTreeView();
 	init_SessionStorage();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_SkillTargetSelection();
 	init_SkillDescription();
 	init_SkillListV0$2();
 	init_SkillListV0$1();
-	SkillListV0 = new UIComponent("SkillListV0", SkillListV0_default$2, SkillListV0_default$1);
+	SkillListV0 = new GUIComponent("SkillListV0", SkillListV0_default$1);
+	SkillListV0.render = () => SkillListV0_default$2;
 	_preferences$54 = Preferences.get("SkillListV0", {
 		x: 100,
 		y: 200,
@@ -204096,204 +204020,324 @@ var init_SkillListV0 = __esmMin((() => {
 	rememberChoice = [];
 	hasSkills = [];
 	_justDragged = false;
-	/**
-	* Initialize UI
-	*/
 	SkillListV0.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$27);
-		this.ui.find(".footer .extend").mousedown(onResize$11);
-		this.ui.find(".titlebar .close").click(onClose$13);
-		this.ui.find(".titlebar .mini").click(onMini);
-		this.ui.find(".view_skill_info").change(onToggleSkillInfo);
-		this.ui.find(".reset").click(onResetChoice);
-		this.ui.find(".apply").click(onApplyChoice);
-		_btnIncSkill = this.ui.find(".btn.levelup").detach().click(onRequestSkillUp);
-		_btnLevelUp$5 = jquery_default("#lvlup_job").detach();
-		_btnLevelUp$5.click(function() {
-			_btnLevelUp$5.detach();
-			SkillListV0.ui.show();
-			SkillListV0.ui.parent().append(SkillListV0.ui);
-		}).mousedown(stopPropagation$27);
-		this.ui.on("dblclick", ".skill .icon, .skill .name", onRequestUseSkill).on("contextmenu", ".skill .icon, .skill .name", onContextMenuSkillInfo).on("mousedown", ".selectable", onSkillFocus).on("mouseover", ".skillCol .skill .icon, .skill .name", onMouseOverSkillInfo).on("mouseout", ".skillCol .skill .icon, .skill .name", onSkillDescriptionRemove).on("mouseover", ".skillCol .skill .icon, .skill .name", onNecessarySkills).on("mouseout", ".skillCol .skill .icon, .skill .name", onNecessarySkillsRemove).on("click", ".skillCol .skill .icon, .skill .name", onRememberChoice).on("dragstart", ".skill", onSkillDragStart).on("dragend", ".skill", onSkillDragEnd);
-		this.draggable(this.ui.find(".titlebar"));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
-			rArrow = "url(" + data + ")";
+		const root = _root$1(this);
+		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_left.bmp", function(data) {
-			lArrow = "url(" + data + ")";
+		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
+			onResize$11(e, this);
+		});
+		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
+			this.ui.hide();
+		});
+		root.querySelector(".titlebar .mini")?.addEventListener("click", () => {
+			onMini(this);
+		});
+		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
+			_preferences$54.skillInfo = !!this.checked;
+			_preferences$54.save();
+		});
+		root.querySelector(".reset")?.addEventListener("click", () => {
+			onResetChoice(this);
+		});
+		root.querySelector(".apply")?.addEventListener("click", () => {
+			onApplyChoice(this);
+		});
+		const levelupBtn = root.querySelector(".btn.levelup");
+		if (levelupBtn) {
+			_btnIncSkill = levelupBtn.cloneNode(true);
+			levelupBtn.remove();
+			_btnIncSkill.addEventListener("click", function() {
+				const index = this.parentNode.parentNode.getAttribute("data-index");
+				SkillListV0.onIncreaseSkill(parseInt(index, 10));
+			});
+		}
+		const lvlupBtn = root.querySelector("#lvlup_job");
+		if (lvlupBtn) {
+			_btnLevelUp$5 = lvlupBtn;
+			_btnLevelUp$5.style.zIndex = "51";
+			_btnLevelUp$5.style.position = "absolute";
+			_btnLevelUp$5.style.right = "0px";
+			_btnLevelUp$5.style.bottom = "0px";
+			_btnLevelUp$5.style.width = "43px";
+			_btnLevelUp$5.style.height = "43px";
+			_btnLevelUp$5.style.border = "none";
+			_btnLevelUp$5.style.backgroundColor = "transparent";
+			_btnLevelUp$5.style.backgroundRepeat = "no-repeat";
+			_btnLevelUp$5.remove();
+			_btnLevelUp$5.addEventListener("click", () => {
+				if (_btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
+				SkillListV0.ui.show();
+			});
+			_btnLevelUp$5.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+			});
+		}
+		const container = root.querySelector("#SkillListV0") || root;
+		container.addEventListener("dblclick", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				SkillListV0.useSkillID(parseInt(main.getAttribute("data-index"), 10));
+			}
+		});
+		container.addEventListener("contextmenu", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) {
+				const skillID = _resolveSkillID(target);
+				if (SkillDescription_default.uid === skillID) {
+					SkillDescription_default.remove();
+					return;
+				}
+				SkillDescription_default.append();
+				SkillDescription_default.setSkill(skillID);
+			}
+		});
+		container.addEventListener("mousedown", (e) => {
+			const target = e.target.closest(".selectable");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
+				main.classList.add("selected");
+			}
+		});
+		container.addEventListener("mouseover", (e) => {
+			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
+			if (target) {
+				if (_preferences$54.mini || _preferences$54.skillInfo) {
+					const skillID = _resolveSkillID(target);
+					if (SkillDescription_default.uid !== skillID) {
+						SkillDescription_default.append();
+						SkillDescription_default.setSkill(skillID);
+					}
+				}
+				onNecessarySkills(target, root);
+			}
+		});
+		container.addEventListener("mouseout", (e) => {
+			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
+				if (_preferences$54.mini || _preferences$54.skillInfo) SkillDescription_default.remove();
+				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
+				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
+			}
+		});
+		container.addEventListener("click", (e) => {
+			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
+			if (target) onRememberChoice(target, root);
+		});
+		container.addEventListener("dragstart", (e) => {
+			const skillEl = e.target.closest(".skill");
+			if (!skillEl) return;
+			const skill = getSkillById(parseInt(skillEl.getAttribute("data-index"), 10));
+			if (!skill || !skill.level || !skill.type) {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+				return;
+			}
+			const img = new Image();
+			img.decoding = "async";
+			img.src = skillEl.querySelector(".icon img")?.src || "";
+			e.dataTransfer.setDragImage(img, 12, 12);
+			e.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+				type: "skill",
+				from: "SkillListV0",
+				data: skill
+			}));
+		});
+		container.addEventListener("dragend", () => {
+			delete window._OBJ_DRAG_;
+			_justDragged = true;
+			setTimeout(() => {
+				_justDragged = false;
+			}, 0);
+		});
+		this.draggable(".titlebar");
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
+			_rArrow = `url(${data})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
+			_lArrow = `url(${data})`;
 		});
 	};
-	/**
-	* Apply preferences once append to body
-	*/
 	SkillListV0.onAppend = function onAppend() {
 		if (!_preferences$54.show) this.ui.hide();
-		resize$5(_preferences$54.width, _preferences$54.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$54.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$54.x), Renderer.width - this.ui.width())
-		});
-		this.ui.find(".view_skill_info").attr("checked", _preferences$54.skillInfo);
+		resize$5(this, _preferences$54.width, _preferences$54.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$54.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$54.x), Renderer.width - 100)}px`;
+		const cb = _root$1(this).querySelector(".view_skill_info");
+		if (cb) cb.checked = _preferences$54.skillInfo;
 	};
-	/**
-	* Remove Skill window from DROM
-	*/
 	SkillListV0.onRemove = function onRemove() {
-		_btnLevelUp$5.detach();
+		if (_btnLevelUp$5 && _btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
 		_preferences$54.show = this.ui.is(":visible");
-		_preferences$54.y = parseInt(this.ui.css("top"), 10);
-		_preferences$54.x = parseInt(this.ui.css("left"), 10);
-		_preferences$54.width = Math.floor(this.ui.find(".content").width() / 32);
-		_preferences$54.height = Math.floor(this.ui.find(".content").height() / 32);
+		_preferences$54.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$54.x = parseInt(this._host.style.left, 10) || 0;
+		const content = _root$1(this).querySelector(".content");
+		if (content) {
+			_preferences$54.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$54.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+		}
 		_preferences$54.save();
 	};
-	/**
-	* Show/Hide UI
-	*/
 	SkillListV0.toggle = function toggle() {
-		this.ui.toggle();
 		if (this.ui.is(":visible")) {
+			this.ui.hide();
+			if (_btnLevelUp$5 && _btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
+		} else {
+			this.ui.show();
 			this.focus();
-			_btnLevelUp$5.detach();
 		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	SkillListV0.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
 				this.toggle();
 				break;
 		}
-		onResetChoice();
+		onResetChoice(this);
 	};
-	/**
-	* Add skills to the list
-	*/
 	SkillListV0.setSkills = function setSkills(skills) {
-		SkillListV0.ui.find(".upgradable").removeClass("upgradable");
+		const root = _root$1(this);
+		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition = getSkillPosition(skillJobId);
 		createSkillDependencyTree();
-		let i, count;
-		for (i = 0, count = _list$12.length; i < count; ++i) this.onUpdateSkill(_list$12[i].SKID, 0);
+		for (let i = 0, count = _list$12.length; i < count; ++i) this.onUpdateSkill(_list$12[i].SKID, 0);
 		_list$12.length = 0;
-		this.ui.find(".content table").empty();
-		this.ui.find(".skillCol").empty();
-		for (i = 0, count = skills.length; i < count; ++i) {
+		const table = root.querySelector(".content table");
+		if (table) table.innerHTML = "";
+		root.querySelectorAll(".skillCol").forEach((el) => {
+			el.innerHTML = "";
+		});
+		for (let i = 0, count = skills.length; i < count; ++i) {
 			this.addSkill(skills[i]);
 			hasSkills[skills[i].SKID] = skills[i];
 		}
-		skillPosition.forEach(function(items, list) {
+		skillPosition.forEach((items, list) => {
 			SkillListV0.prepareSkillTree(items, list);
 		});
-		onResetChoice();
+		onResetChoice(this);
 	};
-	/**
-	* Insert skill to list
-	*
-	* @param {object} skill
-	*/
 	SkillListV0.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (this.ui.find(".skill.id" + skill.SKID).length) {
+		if (_root$1(this).querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
 		this.addSkillBig(skill);
 		this.addSkillMini(skill);
 	};
-	/**
-	* Create disabled skills preview
-	* @param items
-	* @param list
-	*/
 	SkillListV0.prepareSkillTree = function prepareSkillTree(items, list) {
-		Object.entries(items).forEach((entry) => {
-			const [key, value] = entry;
+		const root = _root$1(this);
+		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
+			const className = "disabled";
 			if (sk !== void 0) {
-				const element = jquery_default("<div class=\"skill id" + key + " disabled\" data-index=\"" + key + "\" draggable=\"true\"><div class=\"name\">" + jquery_default.escape(sk.SkillName).substr(0, 7) + "...<br/></div><div class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></div><div class=selectable><span class=\"level\" style=\"display: none\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button><span class=\"current\">0</span> / <span class=\"max\">0</span><button class=\"currentUp\"></button>" : "<span class=\"current\">0</span>") + "</span></div></div>");
-				if (rArrow) element.find(".level .currentUp").css("background-image", rArrow);
-				if (lArrow) element.find(".level .currentDown").css("background-image", lArrow);
-				element.find(".level .currentUp").click(function() {
-					skillLevelSelectUp(0);
-				});
-				element.find(".level .currentDown").click(function() {
-					skillLevelSelectDown(0);
-				});
-				if (value !== void 0) {
-					const box = SkillListV0.ui.find("#positionSkills" + list + " .s" + value);
-					if (key < 41) box.parent().show();
-					if (box.is(":empty")) box.append(element);
+				const element = document.createElement("div");
+				element.className = `skill id${key} ${className}`;
+				element.setAttribute("data-index", key);
+				element.setAttribute("draggable", "true");
+				element.innerHTML = `<div class="name">${_escapeHTML$1(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				const upBtn = element.querySelector(".level .currentUp");
+				if (upBtn) {
+					if (_rArrow) upBtn.style.backgroundImage = _rArrow;
+					upBtn.addEventListener("click", () => skillLevelSelectUp(0, root));
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-					element.find(".icon img").attr("src", data);
+				const downBtn = element.querySelector(".level .currentDown");
+				if (downBtn) {
+					if (_lArrow) downBtn.style.backgroundImage = _lArrow;
+					downBtn.addEventListener("click", () => skillLevelSelectDown(0, root));
+				}
+				if (value !== void 0) {
+					const box = root.querySelector(`#positionSkills${list} .s${value}`);
+					if (box) {
+						if (parseInt(key, 10) < 41) box.parentElement.style.display = "";
+						if (!box.hasChildNodes()) box.appendChild(element);
+					}
+				}
+				Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+					const img = element.querySelector(".icon img");
+					if (img) img.src = data;
 				});
 			}
 		});
 	};
 	SkillListV0.addSkillBig = function addSkillBig(skill) {
+		const root = _root$1(this);
 		const sk = SkillInfo[skill.SKID];
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = jquery_default("<div class=\"skill id" + skill.SKID + " " + className + "\" data-index=\"" + skill.SKID + "\" draggable=\"true\"><div class=\"name\">" + jquery_default.escape(sk.SkillName).substr(0, 7) + "...<br/></div><div class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></div><div class=\"levelupcontainer\"></div><div class=selectable><span class=\"level\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button><span class=\"current\">" + skill.level + "</span> / <span class=\"max\">" + skill.level + "</span><button class=\"currentUp\"></button>" : "<span class=\"current\">" + skill.level + "</span>") + "</span></div></div>");
-		if (rArrow) element.find(".level .currentUp").css("background-image", rArrow);
-		if (lArrow) element.find(".level .currentDown").css("background-image", lArrow);
-		element.find(".level .currentUp").click(function() {
-			skillLevelSelectUp(skill);
-		});
-		element.find(".level .currentDown").click(function() {
-			skillLevelSelectDown(skill);
-		});
-		skillPosition.forEach(function(items, list) {
+		const element = document.createElement("div");
+		element.className = `skill id${skill.SKID} ${className}`;
+		element.setAttribute("data-index", skill.SKID);
+		element.setAttribute("draggable", "true");
+		element.innerHTML = `<div class="name">${_escapeHTML$1(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		const upBtn = element.querySelector(".level .currentUp");
+		if (upBtn) {
+			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
+			upBtn.addEventListener("click", () => skillLevelSelectUp(skill, root));
+		}
+		const downBtn = element.querySelector(".level .currentDown");
+		if (downBtn) {
+			if (_lArrow) downBtn.style.backgroundImage = _lArrow;
+			downBtn.addEventListener("click", () => skillLevelSelectDown(skill, root));
+		}
+		skillPosition.forEach((items, list) => {
 			if (items[skill.SKID] !== void 0) {
-				const box = SkillListV0.ui.find("#positionSkills" + list + " .s" + items[skill.SKID]);
-				if (!box.is(":empty")) box.empty();
-				box.append(element);
-				if (skill.upgradable) box.addClass("upgradable");
+				const box = root.querySelector(`#positionSkills${list} .s${items[skill.SKID]}`);
+				if (box) {
+					if (box.hasChildNodes()) box.innerHTML = "";
+					box.appendChild(element);
+					if (skill.upgradable) box.classList.add("upgradable");
+				}
 			}
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-			element.find(".icon img").attr("src", data);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+			const img = element.querySelector(".icon img");
+			if (img) img.src = data;
 		});
 	};
 	SkillListV0.addSkillMini = function addSkillMini(skill) {
+		const root = _root$1(this);
 		const sk = SkillInfo[skill.SKID];
-		const levelup = _btnIncSkill.clone(true);
+		const levelup = _btnIncSkill.cloneNode(true);
+		levelup.addEventListener("click", function() {
+			const index = this.parentNode.parentNode.getAttribute("data-index");
+			SkillListV0.onIncreaseSkill(parseInt(index, 10));
+		});
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = jquery_default("<tr class=\"skill id" + skill.SKID + " " + className + "\" data-index=\"" + skill.SKID + "\" draggable=\"true\"><td class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></td><td class=\"levelupcontainer\"></td><td class=selectable><div class=\"name\">" + jquery_default.escape(sk.SkillName) + "<br/><span class=\"level\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button>Lv : <span class=\"current\">" + skill.level + "</span> / <span class=\"max\">" + skill.level + "</span><button class=\"currentUp\"></button>" : "Lv : <span class=\"current\">" + skill.level + "</span>") + "</span></div></td><td class=\"selectable type\"><div class=\"consume\">" + (skill.type ? "Sp : <span class=\"spcost\">" + skill.spcost + "</span>" : "Passive") + "</div></td></tr>");
-		if (!skill.upgradable || !_points) levelup.hide();
-		element.find(".levelupcontainer").append(levelup);
-		if (rArrow) element.find(".level .currentUp").css("background-image", rArrow);
-		if (lArrow) element.find(".level .currentDown").css("background-image", lArrow);
-		element.find(".level .currentUp").click(function() {
-			skillLevelSelectUp(skill);
-		});
-		element.find(".level .currentDown").click(function() {
-			skillLevelSelectDown(skill);
-		});
-		SkillListV0.ui.find(".content table").append(element);
+		const tr = document.createElement("tr");
+		tr.className = `skill id${skill.SKID} ${className}`;
+		tr.setAttribute("data-index", skill.SKID);
+		tr.setAttribute("draggable", "true");
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$1(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		if (!skill.upgradable || !_points) levelup.style.display = "none";
+		tr.querySelector(".levelupcontainer").appendChild(levelup);
+		const upBtn = tr.querySelector(".level .currentUp");
+		if (upBtn) {
+			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
+			upBtn.addEventListener("click", () => skillLevelSelectUp(skill, root));
+		}
+		const downBtn = tr.querySelector(".level .currentDown");
+		if (downBtn) {
+			if (_lArrow) downBtn.style.backgroundImage = _lArrow;
+			downBtn.addEventListener("click", () => skillLevelSelectDown(skill, root));
+		}
+		const table = root.querySelector(".content table");
+		if (table) table.appendChild(tr);
 		this.parseHTML.call(levelup);
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-			element.find(".icon img").attr("src", data);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+			const img = tr.querySelector(".icon img");
+			if (img) img.src = data;
 		});
 		_list$12.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Remove skill from list
-	*/
 	SkillListV0.removeSkill = function removeSkill() {};
-	/**
-	* Update skill
-	*
-	* @param {object} skill : { SKID, level, spcost, attackRange, upgradable }
-	*/
 	SkillListV0.updateSkill = function updateSkill(skill) {
 		const target = getSkillById(skill.SKID);
 		if (!target) return;
@@ -204302,31 +204346,26 @@ var init_SkillListV0 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = this.ui.find(".skill.id" + skill.SKID);
-		element.find(".level .current, .level .max").text(skill.level);
-		if (skill.selectedLevel) element.find(".level .current").text(skill.selectedLevel);
-		element.find(".spcost").text(skill.spcost);
-		element.removeClass("active passive disabled");
-		element.addClass(!skill.level ? "disabled" : skill.type ? "active" : "passive");
-		if (skill.upgradable && _points) element.find(".levelup").show();
-		else element.find(".levelup").hide();
+		_root$1(this).querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+			for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
+			if (skill.selectedLevel) {
+				const current = element.querySelector(".level .current");
+				if (current) current.textContent = skill.selectedLevel;
+			}
+			const spcost = element.querySelector(".spcost");
+			if (spcost) spcost.textContent = skill.spcost;
+			element.classList.remove("active", "passive", "disabled");
+			element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
+			const levelupEl = element.querySelector(".levelup");
+			if (levelupEl) levelupEl.style.display = skill.upgradable && _points ? "" : "none";
+		});
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Use a skill index
-	*
-	* @param {number} skill id
-	*/
 	SkillListV0.useSkillID = function useSkillID(id, level) {
 		const skill = getSkillById(id);
 		if (!skill || !skill.level || !skill.type) return;
 		SkillListV0.useSkill(skill, level ? level : skill.selectedLevel);
 	};
-	/**
-	* Use a skill
-	*
-	* @param {object} skill
-	*/
 	SkillListV0.useSkill = function useSkill(skill, level) {
 		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
 		skill.useLevel = level;
@@ -204335,32 +204374,23 @@ var init_SkillListV0 = __esmMin((() => {
 			SkillTargetSelection_default.set(skill, skill.type);
 		}
 	};
-	/**
-	* Set skill points amount
-	*
-	* @param {number} skill points count
-	*/
-	SkillListV0.setPoints = function SetPoints(amount) {
-		let i;
-		this.ui.find(".skpoints_count").text(amount);
+	SkillListV0.setPoints = function setPoints(amount) {
+		const root = _root$1(this);
+		const el = root.querySelector(".skpoints_count");
+		if (el) el.textContent = amount;
 		if (!_points === !amount) {
 			_points = amount;
 			return;
 		}
 		_points = amount;
 		const count = _list$12.length;
-		for (i = 0; i < count; ++i) if (_list$12[i].upgradable && amount) this.ui.find(".skill.id" + _list$12[i].SKID + " .levelup").show();
-		else this.ui.find(".skill.id" + _list$12[i].SKID + " .levelup").hide();
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$12[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$12[i].upgradable && amount ? "" : "none";
+		});
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	SkillListV0.onLevelUp = function onLevelUp() {
-		_btnLevelUp$5.appendTo("body");
+		if (_btnLevelUp$5) document.body.appendChild(_btnLevelUp$5);
 	};
-	/**
-	* Abstract function to define
-	*/
 	SkillListV0.onUseSkill = function onUseItem() {};
 	SkillListV0.onIncreaseSkill = function onIncreaseSkill() {};
 	SkillListV0.onUpdateSkill = function onUpdateSkill() {};
@@ -204387,7 +204417,7 @@ var init_SkillList = __esmMin((() => {
 	Controller$4.selectUIVersion = function() {
 		_selectUIVersion$4();
 		const component = Controller$4.getUI();
-		component.onKeyDown = function onKeyDown(e) {
+		component.onKeyDown = (e) => {
 			if ((e.which === KEYS.ESCAPE || e.key === "Escape") && component.ui.is(":visible")) {
 				if (typeof component.toggle === "function") component.toggle();
 			}
@@ -205498,10 +205528,13 @@ var init_BasicInfo$3 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.css?raw
 var BasicInfo_default$1;
 var init_BasicInfo$2 = __esmMin((() => {
-	BasicInfo_default$1 = "#basicinfo {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#basicinfo.small .large {\r\n	display: none;\r\n}\r\n#basicinfo.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#basicinfo.small {\r\n	height: 53px;\r\n}\r\n#basicinfo.large .buttons {\r\n	top: 135px;\r\n}\r\n#basicinfo.small .buttons {\r\n	top: 53px;\r\n}\r\n\r\n#basicinfo .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#basicinfo .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#basicinfo .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#basicinfo .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#basicinfo .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#basicinfo .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .hp_bar,\r\n#basicinfo .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#basicinfo .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#basicinfo .large .hp_bar div,\r\n#basicinfo .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#basicinfo .large div.hp_bar_perc,\r\n#basicinfo .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#basicinfo .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#basicinfo .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#basicinfo .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .bexp,\r\n#basicinfo .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#basicinfo .large .bexp div,\r\n#basicinfo .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#basicinfo .large .jexp {\r\n	top: 101px;\r\n}\r\n#basicinfo .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: 5px;\r\n	padding-right: 5px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 220px;\r\n	opacity: 0.5;\r\n}\r\n#basicinfo .buttons:hover {\r\n	opacity: 1;\r\n}\r\n#basicinfo .buttons button {\r\n	float: left;\r\n	width: 54px;\r\n	height: 18px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n}\r\n#basicinfo .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#basicinfo .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
+	BasicInfo_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#basicinfo {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#basicinfo.small .large {\r\n	display: none;\r\n}\r\n#basicinfo.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#basicinfo.small {\r\n	height: 53px;\r\n}\r\n#basicinfo.large .buttons {\r\n	top: 135px;\r\n}\r\n#basicinfo.small .buttons {\r\n	top: 53px;\r\n}\r\n\r\n#basicinfo .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#basicinfo .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#basicinfo .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#basicinfo .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#basicinfo .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#basicinfo .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .hp_bar,\r\n#basicinfo .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#basicinfo .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#basicinfo .large .hp_bar div,\r\n#basicinfo .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#basicinfo .large div.hp_bar_perc,\r\n#basicinfo .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#basicinfo .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#basicinfo .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#basicinfo .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .bexp,\r\n#basicinfo .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#basicinfo .large .bexp div,\r\n#basicinfo .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#basicinfo .large .jexp {\r\n	top: 101px;\r\n}\r\n#basicinfo .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: 5px;\r\n	padding-right: 5px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 220px;\r\n	opacity: 0.5;\r\n}\r\n#basicinfo .buttons:hover {\r\n	opacity: 1;\r\n}\r\n#basicinfo .buttons button {\r\n	float: left;\r\n	width: 54px;\r\n	height: 18px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n}\r\n#basicinfo .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#basicinfo .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.js
+function _getRoot$12() {
+	return BasicInfo._shadow || BasicInfo._host;
+}
 var BasicInfo, _preferences$48, BasicInfo_default;
 var init_BasicInfo$1 = __esmMin((() => {
 	init_DBManager();
@@ -205511,7 +205544,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	init_Renderer();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Inventory();
 	init_Equipment();
 	init_PartyFriends();
@@ -205522,7 +205555,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	init_Quest$1();
 	init_BasicInfo$3();
 	init_BasicInfo$2();
-	BasicInfo = new UIComponent("BasicInfo", BasicInfo_default$2, BasicInfo_default$1);
+	BasicInfo = new GUIComponent("BasicInfo", BasicInfo_default$1);
 	/**
 	* Stored data
 	*/
@@ -205532,6 +205565,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	BasicInfo.job_exp_next = -1;
 	BasicInfo.weight = 0;
 	BasicInfo.weight_max = 1;
+	BasicInfo.render = () => BasicInfo_default$2;
 	_preferences$48 = Preferences.get("BasicInfo", {
 		x: 0,
 		y: 0,
@@ -205546,38 +205580,43 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfo.init = function init() {
-		this.ui.find(".topbar button").mousedown(function(event) {
-			event.stopImmediatePropagation();
+		const root = _getRoot$12();
+		root.querySelectorAll(".topbar button").forEach((btn) => {
+			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
-		this.ui.find(".topbar .right").click(BasicInfo.toggleMode.bind(this));
-		this.ui.find(".toggle_btns").mousedown(BasicInfo.toggleButtons.bind(this));
-		this.ui.find(".buttons button").mousedown(function() {
-			switch (this.className) {
-				case "item":
-					InventoryController.getUI().toggle();
-					break;
-				case "info":
-					EquipmentController.getUI().toggle();
-					break;
-				case "skill":
-					Controller$4.getUI().toggle();
-					break;
-				case "option":
-					Escape_default.ui.toggle();
-					break;
-				case "party":
-					controller.toggle();
-					break;
-				case "guild":
-					Guild_default.toggle();
-					break;
-				case "map":
-					WorldMap_default.toggle();
-					break;
-				case "quest":
-					Controller$3.getUI().toggle();
-					break;
-			}
+		const rightBtn = root.querySelector(".topbar .right");
+		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfo.toggleMode());
+		const toggleBtn = root.querySelector(".toggle_btns");
+		if (toggleBtn) toggleBtn.addEventListener("mousedown", (e) => BasicInfo.toggleButtons(e));
+		root.querySelectorAll(".buttons button").forEach((btn) => {
+			btn.addEventListener("mousedown", () => {
+				switch (btn.className.split(" ")[0]) {
+					case "item":
+						InventoryController.getUI().toggle();
+						break;
+					case "info":
+						EquipmentController.getUI().toggle();
+						break;
+					case "skill":
+						Controller$4.getUI().toggle();
+						break;
+					case "option":
+						Escape_default.ui.toggle();
+						break;
+					case "party":
+						controller.toggle();
+						break;
+					case "guild":
+						Guild_default.toggle();
+						break;
+					case "map":
+						WorldMap_default.toggle();
+						break;
+					case "quest":
+						Controller$3.getUI().toggle();
+						break;
+				}
+			});
 		});
 		this.draggable();
 	};
@@ -205586,29 +205625,35 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfo.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$48.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$48.x), Renderer.width - this.ui.width())
-		});
+		const root = _getRoot$12();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$48.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$48.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$48.magnet_top;
 		this.magnet.BOTTOM = _preferences$48.magnet_bottom;
 		this.magnet.LEFT = _preferences$48.magnet_left;
 		this.magnet.RIGHT = _preferences$48.magnet_right;
-		this.ui.removeClass("small large");
-		if (_preferences$48.reduce) {
-			this.ui.addClass("small");
-			if (_preferences$48.buttons) this.ui.find(".buttons").show();
-			else this.ui.find(".buttons").hide();
-		} else this.ui.addClass("large");
+		const inner = root.querySelector("#basicinfo");
+		if (inner) {
+			inner.classList.remove("small", "large");
+			if (_preferences$48.reduce) {
+				inner.classList.add("small");
+				const buttons = root.querySelector(".buttons");
+				if (buttons) buttons.style.display = _preferences$48.buttons ? "" : "none";
+			} else inner.classList.add("large");
+		}
 	};
 	/**
 	* Once remove, save preferences
 	*/
 	BasicInfo.onRemove = function onRemove() {
-		_preferences$48.x = parseInt(this.ui.css("left"), 10);
-		_preferences$48.y = parseInt(this.ui.css("top"), 10);
-		_preferences$48.reduce = this.ui.hasClass("small");
-		_preferences$48.buttons = this.ui.find(".buttons").is(":visible");
+		const root = _getRoot$12();
+		const inner = root.querySelector("#basicinfo");
+		_preferences$48.x = parseInt(this._host.style.left, 10);
+		_preferences$48.y = parseInt(this._host.style.top, 10);
+		_preferences$48.reduce = inner ? inner.classList.contains("small") : _preferences$48.reduce;
+		const buttons = root.querySelector(".buttons");
+		_preferences$48.buttons = buttons ? buttons.style.display !== "none" : _preferences$48.buttons;
 		_preferences$48.magnet_top = this.magnet.TOP;
 		_preferences$48.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$48.magnet_left = this.magnet.LEFT;
@@ -205631,40 +205676,41 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfo.toggleMode = function toggleMode() {
-		let type;
-		this.ui.toggleClass("small large");
-		if (this.ui.hasClass("large")) {
-			this.ui.find(".buttons").show();
+		const root = _getRoot$12();
+		const inner = root.querySelector("#basicinfo");
+		if (!inner) return;
+		inner.classList.toggle("small");
+		inner.classList.toggle("large");
+		if (inner.classList.contains("large")) {
+			const buttons = root.querySelector(".buttons");
+			if (buttons) buttons.style.display = "";
 			return;
 		}
+		const buttons = root.querySelector(".buttons");
 		if (_preferences$48.buttons) {
-			this.ui.find(".buttons").show();
-			type = "off";
-		} else {
-			this.ui.find(".buttons").hide();
-			type = "on";
-		}
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + type + ".bmp", function(url) {
-			this.ui.find(".toggle_btns").css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
+			if (buttons) buttons.style.display = "";
+		} else if (buttons) buttons.style.display = "none";
+		const type = _preferences$48.buttons ? "off" : "on";
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
+			const toggleBtn = root.querySelector(".toggle_btns");
+			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
+		});
 	};
 	/**
 	* Toggle the list of buttons
 	*/
 	BasicInfo.toggleButtons = function toggleButtons(event) {
-		let type;
-		const $buttons = this.ui.find(".buttons");
-		_preferences$48.buttons = !$buttons.is(":visible");
-		if (_preferences$48.buttons) {
-			$buttons.show();
-			type = "off";
-		} else {
-			$buttons.hide();
-			type = "on";
-		}
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + type + ".bmp", function(url) {
-			this.ui.find(".toggle_btns").css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
+		const root = _getRoot$12();
+		const buttons = root.querySelector(".buttons");
+		if (!buttons) return;
+		_preferences$48.buttons = buttons.style.display === "none";
+		if (_preferences$48.buttons) buttons.style.display = "";
+		else buttons.style.display = "none";
+		const type = _preferences$48.buttons ? "off" : "on";
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
+			const toggleBtn = root.querySelector(".toggle_btns");
+			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
+		});
 		event.stopImmediatePropagation();
 	};
 	/**
@@ -205675,68 +205721,102 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfo.update = function update(type, val1, val2) {
-		let perc = 100, color = "blue", list, i, count, str;
+		const root = _getRoot$12();
+		if (!root) return;
+		let perc = 100;
+		let color = "blue";
 		switch (type) {
 			case "name":
 			case "blvl":
 			case "jlvl":
-				this.ui.find("." + type + "_value").text(val1);
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
 				break;
-			case "zeny":
+			case "zeny": {
 				SessionStorage_default.zeny = val1;
-				list = val1.toString().split("");
-				count = list.length;
-				str = "";
-				for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				this.ui.find("." + type + "_value").text(str);
+				const list = val1.toString().split("");
+				const count = list.length;
+				let str = "";
+				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = str;
+				});
 				break;
+			}
 			case "job":
 				SessionStorage_default.Character.job = val1;
-				this.ui.find(".job_value").text(MonsterTable_default[val1]);
+				root.querySelectorAll(".job_value").forEach((el) => {
+					el.textContent = MonsterTable_default[val1];
+				});
 				break;
 			case "bexp":
-			case "jexp":
+			case "jexp": {
+				const expEl = root.querySelector(`.${type}`);
 				if (!val2) {
-					this.ui.find("." + type).hide();
+					if (expEl) expEl.style.display = "none";
 					break;
 				}
-				this.ui.find("." + type).show();
-				this.ui.find("." + type + " div").css("width", Math.min(100, Math.floor(val1 * 100 / val2)) + "%");
-				this.ui.find("." + type).attr("title", (val1 / val2 * 100).toFixed(1) + "%");
-				this.ui.find("." + type + "_value").text(Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1)) + "%");
+				if (expEl) {
+					expEl.style.display = "";
+					const bar = expEl.querySelector("div");
+					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
+					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				}
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
+				});
 				break;
+			}
 			case "weight":
-				this.ui.find(".weight_value").text(val1 / 10 | 0);
-				this.ui.find(".weight_total").text(val2 / 10 | 0);
-				this.ui.find(".weight").css("color", val1 < val2 / 2 ? "" : "red");
-				this.ui.find(".weight").attr("title", (val1 / val2 * 100).toFixed(1) + "%");
+				root.querySelectorAll(".weight_value").forEach((el) => {
+					el.textContent = val1 / 10 | 0;
+				});
+				root.querySelectorAll(".weight_total").forEach((el) => {
+					el.textContent = val2 / 10 | 0;
+				});
+				root.querySelectorAll(".weight").forEach((el) => {
+					el.style.color = val1 < val2 / 2 ? "" : "red";
+					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				});
 				break;
 			case "hp":
 			case "sp":
 				perc = Math.floor(val1 * 100 / val2);
 				color = perc < 25 ? "red" : "blue";
-				this.ui.find("." + type + "_value").text(val1);
-				this.ui.find("." + type + "_max_value").text(val2);
-				this.ui.find("." + type + "_perc").text(perc + "%");
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
+				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+					el.textContent = val2;
+				});
+				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
+					el.textContent = `${perc}%`;
+				});
 				if (perc <= 0) {
-					this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
+					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+						el.style.backgroundImage = "none";
+					});
 					break;
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-					this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-					this.ui.find("." + type + "_bar_middle").css({
-						backgroundImage: "url(" + url + ")",
-						width: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-					this.ui.find("." + type + "_bar_right").css({
-						backgroundImage: "url(" + url + ")",
-						left: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_left`);
+					if (el) el.style.backgroundImage = `url(${url})`;
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_middle`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_right`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
 				break;
 		}
 	};
@@ -205752,10 +205832,13 @@ var init_BasicInfoV0$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.css?raw
 var BasicInfoV0_default$1;
 var init_BasicInfoV0$1 = __esmMin((() => {
-	BasicInfoV0_default$1 = "#BasicInfoV0 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 280px;\r\n	height: 120px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV0.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV0.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV0.small {\r\n	height: 33px;\r\n}\r\n#BasicInfoV0.large .buttons {\r\n	top: 18px;\r\n	padding-right: 8px;\r\n}\r\n#BasicInfoV0.small .buttons {\r\n	display: none;\r\n	width: 0;\r\n}\r\n\r\n#BasicInfoV0 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV0 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV0 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV0 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV0 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV0 .large .hp_title {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .sp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .hp_bar,\r\n#BasicInfoV0 .large .sp_bar {\r\n	position: absolute;\r\n	top: 22px;\r\n	left: 110px;\r\n	width: 85px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV0 .large .sp_bar {\r\n	top: 43px;\r\n}\r\n#BasicInfoV0 .large .hp_bar div,\r\n#BasicInfoV0 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#BasicInfoV0 .large div.hp_bar_perc,\r\n#BasicInfoV0 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 85px;\r\n	position: absolute;\r\n	top: 9px;\r\n}\r\n\r\n#BasicInfoV0 .large .blvl {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .jlvl {\r\n	position: absolute;\r\n	top: 83px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .bexp,\r\n#BasicInfoV0 .large .jexp {\r\n	position: absolute;\r\n	top: 77px;\r\n	left: 84px;\r\n	width: 100px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV0 .large .bexp div,\r\n#BasicInfoV0 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV0 .large .jexp {\r\n	top: 88px;\r\n}\r\n#BasicInfoV0 .large .extra {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 5px;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .buttons {\r\n	position: absolute;\r\n	right: 0;\r\n	width: 80px;\r\n}\r\n#BasicInfoV0 .buttons button {\r\n	float: right;\r\n	width: 30px;\r\n	height: 20px;\r\n	border: none;\r\n	margin-top: 4px;\r\n	margin-left: 4px;\r\n	background-color: transparent;\r\n}\r\n#BasicInfoV0 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV0 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line2 {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 18px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line3 {\r\n	position: absolute;\r\n	top: 18px;\r\n	right: 5px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
+	BasicInfoV0_default$1 = ":host {\r\n	width: 280px;\r\n	height: 120px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV0 {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 120px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV0.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV0.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV0.small {\r\n	height: 33px;\r\n}\r\n#BasicInfoV0.large .buttons {\r\n	top: 18px;\r\n	padding-right: 8px;\r\n}\r\n#BasicInfoV0.small .buttons {\r\n	display: none;\r\n	width: 0;\r\n}\r\n\r\n#BasicInfoV0 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV0 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV0 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV0 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV0 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV0 .large .hp_title {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .sp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .hp_bar,\r\n#BasicInfoV0 .large .sp_bar {\r\n	position: absolute;\r\n	top: 22px;\r\n	left: 110px;\r\n	width: 85px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV0 .large .sp_bar {\r\n	top: 43px;\r\n}\r\n#BasicInfoV0 .large .hp_bar div,\r\n#BasicInfoV0 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#BasicInfoV0 .large div.hp_bar_perc,\r\n#BasicInfoV0 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 85px;\r\n	position: absolute;\r\n	top: 9px;\r\n}\r\n\r\n#BasicInfoV0 .large .blvl {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .jlvl {\r\n	position: absolute;\r\n	top: 83px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .bexp,\r\n#BasicInfoV0 .large .jexp {\r\n	position: absolute;\r\n	top: 77px;\r\n	left: 84px;\r\n	width: 100px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV0 .large .bexp div,\r\n#BasicInfoV0 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV0 .large .jexp {\r\n	top: 88px;\r\n}\r\n#BasicInfoV0 .large .extra {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 5px;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .buttons {\r\n	position: absolute;\r\n	right: 0;\r\n	width: 80px;\r\n}\r\n#BasicInfoV0 .buttons button {\r\n	float: right;\r\n	width: 30px;\r\n	height: 20px;\r\n	border: none;\r\n	margin-top: 4px;\r\n	margin-left: 4px;\r\n	background-color: transparent;\r\n}\r\n#BasicInfoV0 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV0 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line2 {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 18px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line3 {\r\n	position: absolute;\r\n	top: 18px;\r\n	right: 5px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.js
+function _getRoot$11() {
+	return BasicInfoV0._shadow || BasicInfoV0._host;
+}
 var BasicInfoV0, _preferences$47, BasicInfoV0_default;
 var init_BasicInfoV0 = __esmMin((() => {
 	init_DBManager();
@@ -205765,7 +205848,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	init_Renderer();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Inventory();
 	init_Equipment();
 	init_PartyFriends();
@@ -205778,7 +205861,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	init_Quest$1();
 	init_BasicInfoV0$2();
 	init_BasicInfoV0$1();
-	BasicInfoV0 = new UIComponent("BasicInfoV0", BasicInfoV0_default$2, BasicInfoV0_default$1);
+	BasicInfoV0 = new GUIComponent("BasicInfoV0", BasicInfoV0_default$1);
 	/**
 	* Stored data
 	*/
@@ -205788,6 +205871,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	BasicInfoV0.job_exp_next = -1;
 	BasicInfoV0.weight = 0;
 	BasicInfoV0.weight_max = 1;
+	BasicInfoV0.render = () => BasicInfoV0_default$2;
 	_preferences$47 = Preferences.get("BasicInfoV0", {
 		x: 0,
 		y: 0,
@@ -205802,44 +205886,49 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV0.init = function init() {
-		this.ui.find(".topbar button").mousedown(function(event) {
-			event.stopImmediatePropagation();
+		const root = _getRoot$11();
+		root.querySelectorAll(".topbar button").forEach((btn) => {
+			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
-		this.ui.find(".topbar .right").click(BasicInfoV0.toggleMode.bind(this));
-		this.ui.find(".toggle_btns").mousedown(BasicInfoV0.toggleButtons.bind(this));
-		this.ui.find(".buttons button").mousedown(function() {
-			switch (this.className) {
-				case "item":
-					InventoryController.getUI().toggle();
-					break;
-				case "info":
-					WinStatsController.getUI().toggle();
-					break;
-				case "equip":
-					EquipmentController.getUI().toggle();
-					break;
-				case "skill":
-					Controller$4.getUI().toggle();
-					break;
-				case "option":
-					Escape_default.ui.toggle();
-					break;
-				case "party":
-					controller.toggle();
-					break;
-				case "guild":
-					Guild_default.toggle();
-					break;
-				case "chat":
-					ChatRoomCreate_default.toggle();
-					break;
-				case "map":
-					WorldMap_default.toggle();
-					break;
-				case "quest":
-					Controller$3.getUI().toggle();
-					break;
-			}
+		const rightBtn = root.querySelector(".topbar .right");
+		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV0.toggleMode());
+		const toggleBtn = root.querySelector(".toggle_btns");
+		if (toggleBtn) toggleBtn.addEventListener("mousedown", (e) => BasicInfoV0.toggleButtons(e));
+		root.querySelectorAll(".buttons button").forEach((btn) => {
+			btn.addEventListener("mousedown", () => {
+				switch (btn.className.split(" ")[0]) {
+					case "item":
+						InventoryController.getUI().toggle();
+						break;
+					case "info":
+						WinStatsController.getUI().toggle();
+						break;
+					case "equip":
+						EquipmentController.getUI().toggle();
+						break;
+					case "skill":
+						Controller$4.getUI().toggle();
+						break;
+					case "option":
+						Escape_default.ui.toggle();
+						break;
+					case "party":
+						controller.toggle();
+						break;
+					case "guild":
+						Guild_default.toggle();
+						break;
+					case "chat":
+						ChatRoomCreate_default.toggle();
+						break;
+					case "map":
+						WorldMap_default.toggle();
+						break;
+					case "quest":
+						Controller$3.getUI().toggle();
+						break;
+				}
+			});
 		});
 		this.draggable();
 	};
@@ -205848,34 +205937,43 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV0.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$47.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$47.x), Renderer.width - this.ui.width())
-		});
+		const root = _getRoot$11();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$47.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$47.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$47.magnet_top;
 		this.magnet.BOTTOM = _preferences$47.magnet_bottom;
 		this.magnet.LEFT = _preferences$47.magnet_left;
 		this.magnet.RIGHT = _preferences$47.magnet_right;
-		this.ui.removeClass("small large");
-		if (_preferences$47.reduce) {
-			this.ui.addClass("small");
-			this.ui.find(".buttons").hide();
-			Client.loadFile(DB.INTERFACE_PATH + this.ui.data("mini-background"), function(url) {
-				this.ui.css("backgroundImage", "url(" + url + ")");
-			}.bind(this));
-		} else {
-			this.ui.addClass("large");
-			this.ui.find(".buttons").show();
+		const inner = root.querySelector("#BasicInfoV0");
+		if (inner) {
+			inner.classList.remove("small", "large");
+			if (_preferences$47.reduce) {
+				inner.classList.add("small");
+				const buttons = root.querySelector(".buttons");
+				if (buttons) buttons.style.display = "none";
+				const bgAttr = inner.dataset.miniBackground;
+				if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
+					inner.style.backgroundImage = `url(${url})`;
+				});
+			} else {
+				inner.classList.add("large");
+				const buttons = root.querySelector(".buttons");
+				if (buttons) buttons.style.display = "";
+			}
 		}
 	};
 	/**
 	* Once remove, save preferences
 	*/
 	BasicInfoV0.onRemove = function onRemove() {
-		_preferences$47.x = parseInt(this.ui.css("left"), 10);
-		_preferences$47.y = parseInt(this.ui.css("top"), 10);
-		_preferences$47.reduce = this.ui.hasClass("small");
-		_preferences$47.buttons = this.ui.find(".buttons").is(":visible");
+		const root = _getRoot$11();
+		const inner = root.querySelector("#BasicInfoV0");
+		_preferences$47.x = parseInt(this._host.style.left, 10);
+		_preferences$47.y = parseInt(this._host.style.top, 10);
+		_preferences$47.reduce = inner ? inner.classList.contains("small") : _preferences$47.reduce;
+		const buttons = root.querySelector(".buttons");
+		_preferences$47.buttons = buttons ? buttons.style.display !== "none" : _preferences$47.buttons;
 		_preferences$47.magnet_top = this.magnet.TOP;
 		_preferences$47.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$47.magnet_left = this.magnet.LEFT;
@@ -205898,39 +205996,42 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV0.toggleMode = function toggleMode() {
-		this.ui.toggleClass("small large");
-		if (this.ui.hasClass("large")) {
-			this.ui.find(".buttons").show();
-			Client.loadFile(DB.INTERFACE_PATH + this.ui.data("background"), function(url) {
-				this.ui.css("backgroundImage", "url(" + url + ")");
-			}.bind(this));
+		const root = _getRoot$11();
+		const inner = root.querySelector("#BasicInfoV0");
+		if (!inner) return;
+		inner.classList.toggle("small");
+		inner.classList.toggle("large");
+		if (inner.classList.contains("large")) {
+			const buttons = root.querySelector(".buttons");
+			if (buttons) buttons.style.display = "";
+			const bgAttr = inner.dataset.background;
+			if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
+				inner.style.backgroundImage = `url(${url})`;
+			});
 			return;
 		}
-		Client.loadFile(DB.INTERFACE_PATH + this.ui.data("mini-background"), function(url) {
-			this.ui.css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
-		this.ui.find(".buttons").hide();
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewoff.bmp", function(url) {
-			this.ui.find(".toggle_btns").css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
+		const bgAttr = inner.dataset.miniBackground;
+		if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
+			inner.style.backgroundImage = `url(${url})`;
+		});
+		const buttons = root.querySelector(".buttons");
+		if (buttons) buttons.style.display = "none";
 	};
 	/**
 	* Toggle the list of buttons
 	*/
 	BasicInfoV0.toggleButtons = function toggleButtons(event) {
-		let type;
-		const $buttons = this.ui.find(".buttons");
-		_preferences$47.buttons = !$buttons.is(":visible");
-		if (_preferences$47.buttons) {
-			$buttons.show();
-			type = "off";
-		} else {
-			$buttons.hide();
-			type = "on";
-		}
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + type + ".bmp", function(url) {
-			this.ui.find(".toggle_btns").css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
+		const root = _getRoot$11();
+		const buttons = root.querySelector(".buttons");
+		if (!buttons) return;
+		_preferences$47.buttons = buttons.style.display === "none";
+		if (_preferences$47.buttons) buttons.style.display = "";
+		else buttons.style.display = "none";
+		const type = _preferences$47.buttons ? "off" : "on";
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
+			const toggleBtn = root.querySelector(".toggle_btns");
+			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
+		});
 		event.stopImmediatePropagation();
 	};
 	/**
@@ -205941,67 +206042,99 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV0.update = function update(type, val1, val2) {
-		let perc = 100, color = "blue", list, i, count, str;
+		const root = _getRoot$11();
+		if (!root) return;
+		let perc = 100;
+		let color = "blue";
 		switch (type) {
 			case "name":
 			case "blvl":
 			case "jlvl":
-				this.ui.find("." + type + "_value").text(val1);
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
 				break;
-			case "zeny":
+			case "zeny": {
 				SessionStorage_default.zeny = val1;
-				list = val1.toString().split("");
-				count = list.length;
-				str = "";
-				for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				this.ui.find("." + type + "_value").text(str);
+				const list = val1.toString().split("");
+				const count = list.length;
+				let str = "";
+				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = str;
+				});
 				break;
+			}
 			case "job":
 				SessionStorage_default.Character.job = val1;
-				this.ui.find(".job_value").text(MonsterTable_default[val1]);
+				root.querySelectorAll(".job_value").forEach((el) => {
+					el.textContent = MonsterTable_default[val1];
+				});
 				break;
 			case "bexp":
-			case "jexp":
+			case "jexp": {
+				const expEl = root.querySelector(`.${type}`);
 				if (!val2) {
-					this.ui.find("." + type).hide();
+					if (expEl) expEl.style.display = "none";
 					break;
 				}
-				this.ui.find("." + type).show();
-				this.ui.find("." + type + " div").css("width", Math.min(100, Math.floor(val1 * 100 / val2)) + "%");
-				this.ui.find("." + type).attr("title", (val1 / val2 * 100).toFixed(1) + "%");
-				this.ui.find("." + type + "_value").text(Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1)) + "%");
+				if (expEl) {
+					expEl.style.display = "";
+					const bar = expEl.querySelector("div");
+					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
+					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				}
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
+				});
 				break;
+			}
 			case "weight":
-				this.ui.find(".weight_value").text(val1 / 10 | 0);
-				this.ui.find(".weight_total").text(val2 / 10 | 0);
-				this.ui.find(".weight").css("color", val1 < val2 / 2 ? "" : "red");
-				this.ui.find(".weight").attr("title", (val1 / val2 * 100).toFixed(1) + "%");
+				root.querySelectorAll(".weight_value").forEach((el) => {
+					el.textContent = val1 / 10 | 0;
+				});
+				root.querySelectorAll(".weight_total").forEach((el) => {
+					el.textContent = val2 / 10 | 0;
+				});
+				root.querySelectorAll(".weight").forEach((el) => {
+					el.style.color = val1 < val2 / 2 ? "" : "red";
+					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				});
 				break;
 			case "hp":
 			case "sp":
 				perc = Math.floor(val1 * 100 / val2);
 				color = perc < 25 ? "red" : "blue";
-				this.ui.find("." + type + "_value").text(val1);
-				this.ui.find("." + type + "_max_value").text(val2);
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
+				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+					el.textContent = val2;
+				});
 				if (perc <= 0) {
-					this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
+					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+						el.style.backgroundImage = "none";
+					});
 					break;
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-					this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-					this.ui.find("." + type + "_bar_middle").css({
-						backgroundImage: "url(" + url + ")",
-						width: Math.floor(Math.min(perc, 100) * .77) + "px"
-					});
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-					this.ui.find("." + type + "_bar_right").css({
-						backgroundImage: "url(" + url + ")",
-						left: Math.floor(Math.min(perc, 100) * .77) + "px"
-					});
-				}.bind(this));
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_left`);
+					if (el) el.style.backgroundImage = `url(${url})`;
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_middle`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.width = `${Math.floor(Math.min(perc, 100) * .77)}px`;
+					}
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_right`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.left = `${Math.floor(Math.min(perc, 100) * .77)}px`;
+					}
+				});
 				break;
 		}
 	};
@@ -206900,10 +207033,13 @@ var init_BasicInfoV3$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.css?raw
 var BasicInfoV3_default$1;
 var init_BasicInfoV3$1 = __esmMin((() => {
-	BasicInfoV3_default$1 = "#BasicInfoV3 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV3.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV3.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV3.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV3.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV3.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV3.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV3.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV3 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV3 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV3 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV3 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV3 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV3 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .hp_bar,\r\n#BasicInfoV3 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV3 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV3 .large .hp_bar div,\r\n#BasicInfoV3 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV3 .large div.hp_bar_perc,\r\n#BasicInfoV3 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV3 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .bexp,\r\n#BasicInfoV3 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV3 .large .bexp div,\r\n#BasicInfoV3 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV3 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV3 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV3 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV3 .buttons:hover {\r\n}\r\n#BasicInfoV3 .buttons div {\r\n	float: left;\r\n	width: 36px;\r\n	height: 36px;\r\n	border: none;\r\n	margin: 0px;\r\n}\r\n#BasicInfoV3 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV3 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV3 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV3 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV3 .buttons div .name {\r\n	display: none;\r\n}\r\n";
+	BasicInfoV3_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV3 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV3.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV3.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV3.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV3.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV3.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV3.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV3.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV3 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV3 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV3 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV3 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV3 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV3 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .hp_bar,\r\n#BasicInfoV3 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV3 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV3 .large .hp_bar div,\r\n#BasicInfoV3 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV3 .large div.hp_bar_perc,\r\n#BasicInfoV3 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV3 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .bexp,\r\n#BasicInfoV3 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV3 .large .bexp div,\r\n#BasicInfoV3 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV3 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV3 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV3 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV3 .buttons:hover {\r\n}\r\n#BasicInfoV3 .buttons div {\r\n	float: left;\r\n	width: 36px;\r\n	height: 36px;\r\n	border: none;\r\n	margin: 0px;\r\n}\r\n#BasicInfoV3 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV3 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV3 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV3 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV3 .buttons div .name {\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
+function _getRoot$10() {
+	return BasicInfoV3._shadow || BasicInfoV3._host;
+}
 var BasicInfoV3, _preferences$44, BasicInfoV3_default;
 var init_BasicInfoV3 = __esmMin((() => {
 	init_DBManager();
@@ -206913,7 +207049,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	init_Renderer();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Configs();
 	init_PacketVerManager();
 	init_Inventory();
@@ -206931,7 +207067,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	init_Achievement$1();
 	init_BasicInfoV3$2();
 	init_BasicInfoV3$1();
-	BasicInfoV3 = new UIComponent("BasicInfoV3", BasicInfoV3_default$2, BasicInfoV3_default$1);
+	BasicInfoV3 = new GUIComponent("BasicInfoV3", BasicInfoV3_default$1);
 	/**
 	* Stored data
 	*/
@@ -206941,6 +207077,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	BasicInfoV3.job_exp_next = -1;
 	BasicInfoV3.weight = 0;
 	BasicInfoV3.weight_max = 1;
+	BasicInfoV3.render = () => BasicInfoV3_default$2;
 	_preferences$44 = Preferences.get("BasicInfoV3", {
 		x: 0,
 		y: 0,
@@ -206955,53 +207092,59 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV3.init = function init() {
-		this.ui.find(".topbar div").mousedown(function(event) {
-			event.stopImmediatePropagation();
+		const root = _getRoot$10();
+		root.querySelectorAll(".topbar div").forEach((el) => {
+			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
-		this.ui.find(".topbar .right").click(BasicInfoV3.toggleMode.bind(this));
-		this.ui.find(".toggle_btns").mousedown(BasicInfoV3.toggleButtons.bind(this));
-		this.ui.find(".buttons div").mousedown(function() {
-			switch (this.id) {
-				case "item":
-					InventoryController.getUI().toggle();
-					break;
-				case "info":
-					WinStatsController.getUI().toggle();
-					break;
-				case "equip":
-					EquipmentController.getUI().toggle();
-					break;
-				case "skill":
-					Controller$4.getUI().toggle();
-					break;
-				case "option":
-					Escape_default.ui.toggle();
-					break;
-				case "party":
-					controller.toggle();
-					break;
-				case "guild":
-					Guild_default.toggle();
-					break;
-				case "map":
-					WorldMap_default.toggle();
-					break;
-				case "bank":
-					Bank_default.toggle();
-					break;
-				case "quest":
-					Controller$3.getUI().toggle();
-					break;
-				case "mail":
-					Rodex_default.toggle();
-					break;
-				case "navigation":
-					Navigation_default.toggle();
-					break;
-				case "achievment":
-					if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
-					break;
-			}
+		const rightBtn = root.querySelector(".topbar .right");
+		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV3.toggleMode());
+		root.querySelectorAll(".toggle_btns").forEach((btn) => {
+			btn.addEventListener("mousedown", (e) => BasicInfoV3.toggleButtons(e));
+		});
+		root.querySelectorAll(".buttons div").forEach((el) => {
+			el.addEventListener("mousedown", () => {
+				switch (el.id) {
+					case "item":
+						InventoryController.getUI().toggle();
+						break;
+					case "info":
+						WinStatsController.getUI().toggle();
+						break;
+					case "equip":
+						EquipmentController.getUI().toggle();
+						break;
+					case "skill":
+						Controller$4.getUI().toggle();
+						break;
+					case "option":
+						Escape_default.ui.toggle();
+						break;
+					case "party":
+						controller.toggle();
+						break;
+					case "guild":
+						Guild_default.toggle();
+						break;
+					case "map":
+						WorldMap_default.toggle();
+						break;
+					case "bank":
+						Bank_default.toggle();
+						break;
+					case "quest":
+						Controller$3.getUI().toggle();
+						break;
+					case "mail":
+						Rodex_default.toggle();
+						break;
+					case "navigation":
+						Navigation_default.toggle();
+						break;
+					case "achievment":
+						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
+						break;
+				}
+			});
 		});
 		this.draggable();
 	};
@@ -207010,37 +207153,48 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV3.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$44.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$44.x), Renderer.width - this.ui.width())
-		});
+		const root = _getRoot$10();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$44.magnet_top;
 		this.magnet.BOTTOM = _preferences$44.magnet_bottom;
 		this.magnet.LEFT = _preferences$44.magnet_left;
 		this.magnet.RIGHT = _preferences$44.magnet_right;
-		this.ui.removeClass("small large");
-		if (_preferences$44.reduce) this.ui.addClass("small");
-		else this.ui.addClass("large");
-		if (_preferences$44.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find(".btn_open").hide();
-			this.ui.find(".btn_close").show();
-		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+		const inner = root.querySelector("#BasicInfoV3");
+		if (inner) {
+			inner.classList.remove("small", "large");
+			if (_preferences$44.reduce) inner.classList.add("small");
+			else inner.classList.add("large");
 		}
-		this.ui.find("#battle").hide();
-		this.ui.find("#replay").hide();
+		const buttons = root.querySelector(".buttons");
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
+		if (_preferences$44.buttons) {
+			if (buttons) buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
+		} else {
+			if (buttons) buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
+		}
+		const battle = root.querySelector("#battle");
+		const replay = root.querySelector("#replay");
+		if (battle) battle.style.display = "none";
+		if (replay) replay.style.display = "none";
 	};
 	/**
 	* Once remove, save preferences
 	*/
 	BasicInfoV3.onRemove = function onRemove() {
-		_preferences$44.x = parseInt(this.ui.css("left"), 10);
-		_preferences$44.y = parseInt(this.ui.css("top"), 10);
-		_preferences$44.reduce = this.ui.hasClass("small");
-		_preferences$44.buttons = this.ui.find(".buttons").is(":visible");
+		const root = _getRoot$10();
+		const inner = root.querySelector("#BasicInfoV3");
+		const buttons = root.querySelector(".buttons");
+		_preferences$44.x = parseInt(this._host.style.left, 10);
+		_preferences$44.y = parseInt(this._host.style.top, 10);
+		_preferences$44.reduce = inner ? inner.classList.contains("small") : _preferences$44.reduce;
+		_preferences$44.buttons = buttons ? buttons.style.display !== "none" : _preferences$44.buttons;
 		_preferences$44.magnet_top = this.magnet.TOP;
 		_preferences$44.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$44.magnet_left = this.magnet.LEFT;
@@ -207063,30 +207217,42 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV3.toggleMode = function toggleMode() {
-		this.ui.toggleClass("small large");
+		const root = _getRoot$10();
+		const inner = root.querySelector("#BasicInfoV3");
+		if (!inner) return;
+		inner.classList.toggle("small");
+		inner.classList.toggle("large");
+		const buttons = root.querySelector(".buttons");
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
 		if (_preferences$44.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find("#btn_open").hide();
-			this.ui.find(".btn_close").show();
+			if (buttons) buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
 		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+			if (buttons) buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
 		}
 	};
 	/**
 	* Toggle the list of buttons
 	*/
 	BasicInfoV3.toggleButtons = function toggleButtons(event) {
-		_preferences$44.buttons = !this.ui.find(".buttons").is(":visible");
+		const root = _getRoot$10();
+		const buttons = root.querySelector(".buttons");
+		if (!buttons) return;
+		_preferences$44.buttons = buttons.style.display === "none";
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
 		if (_preferences$44.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find("#btn_open").hide();
-			this.ui.find(".btn_close").show();
+			buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
 		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+			buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
 		}
 		event.stopImmediatePropagation();
 	};
@@ -207098,68 +207264,102 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV3.update = function update(type, val1, val2) {
-		let perc = 100, color = "blue", list, i, count, str;
+		const root = _getRoot$10();
+		if (!root) return;
+		let perc = 100;
+		let color = "blue";
 		switch (type) {
 			case "name":
 			case "blvl":
 			case "jlvl":
-				this.ui.find("." + type + "_value").text(val1);
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
 				break;
-			case "zeny":
+			case "zeny": {
 				SessionStorage_default.zeny = val1;
-				list = val1.toString().split("");
-				count = list.length;
-				str = "";
-				for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				this.ui.find("." + type + "_value").text(str);
+				const list = val1.toString().split("");
+				const count = list.length;
+				let str = "";
+				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = str;
+				});
 				break;
+			}
 			case "job":
 				SessionStorage_default.Character.job = val1;
-				this.ui.find(".job_value").text(MonsterTable_default[val1]);
+				root.querySelectorAll(".job_value").forEach((el) => {
+					el.textContent = MonsterTable_default[val1];
+				});
 				break;
 			case "bexp":
-			case "jexp":
+			case "jexp": {
+				const expEl = root.querySelector(`.${type}`);
 				if (!val2) {
-					this.ui.find("." + type).hide();
+					if (expEl) expEl.style.display = "none";
 					break;
 				}
-				this.ui.find("." + type).show();
-				this.ui.find("." + type + " div").css("width", Math.min(100, Math.floor(val1 * 100 / val2)) + "%");
-				this.ui.find("." + type).attr("title", (val1 / val2 * 100).toFixed(1) + "%");
-				this.ui.find("." + type + "_value").text(Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1)) + "%");
+				if (expEl) {
+					expEl.style.display = "";
+					const bar = expEl.querySelector("div");
+					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
+					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				}
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
+				});
 				break;
+			}
 			case "weight":
-				this.ui.find(".weight_value").text(val1 / 10 | 0);
-				this.ui.find(".weight_total").text(val2 / 10 | 0);
-				this.ui.find(".weight").css("color", val1 < val2 / 2 ? "" : "red");
-				this.ui.find(".weight").attr("title", (val1 / val2 * 100).toFixed(1) + "%");
+				root.querySelectorAll(".weight_value").forEach((el) => {
+					el.textContent = val1 / 10 | 0;
+				});
+				root.querySelectorAll(".weight_total").forEach((el) => {
+					el.textContent = val2 / 10 | 0;
+				});
+				root.querySelectorAll(".weight").forEach((el) => {
+					el.style.color = val1 < val2 / 2 ? "" : "red";
+					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				});
 				break;
 			case "hp":
 			case "sp":
 				perc = Math.floor(val1 * 100 / val2);
 				color = perc < 25 ? "red" : "blue";
-				this.ui.find("." + type + "_value").text(val1);
-				this.ui.find("." + type + "_max_value").text(val2);
-				this.ui.find("." + type + "_perc").text(perc + "%");
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
+				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+					el.textContent = val2;
+				});
+				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
+					el.textContent = `${perc}%`;
+				});
 				if (perc <= 0) {
-					this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
+					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+						el.style.backgroundImage = "none";
+					});
 					break;
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-					this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-					this.ui.find("." + type + "_bar_middle").css({
-						backgroundImage: "url(" + url + ")",
-						width: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-					this.ui.find("." + type + "_bar_right").css({
-						backgroundImage: "url(" + url + ")",
-						left: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_left`);
+					if (el) el.style.backgroundImage = `url(${url})`;
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_middle`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_right`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
 				break;
 		}
 	};
@@ -207330,10 +207530,13 @@ var init_BasicInfoV4$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.css?raw
 var BasicInfoV4_default$1;
 var init_BasicInfoV4$1 = __esmMin((() => {
-	BasicInfoV4_default$1 = "#BasicInfoV4 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV4.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV4.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV4.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV4.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV4.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV4 .buttons {\r\n	background-position: left bottom;\r\n}\r\n#BasicInfoV4.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV4.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV4 .topbar {\r\n	height: 16px;\r\n}\r\n#BasicInfoV4 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV4 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV4 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV4 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV4 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV4 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .hp_bar,\r\n#BasicInfoV4 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV4 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV4 .large .hp_bar div,\r\n#BasicInfoV4 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV4 .large div.hp_bar_perc,\r\n#BasicInfoV4 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV4 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .bexp,\r\n#BasicInfoV4 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV4 .large .bexp div,\r\n#BasicInfoV4 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV4 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV4 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	display: grid;\r\n	grid-template-columns: auto auto auto auto auto;\r\n	justify-items: center;\r\n}\r\n#BasicInfoV4 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV4 .buttons button {\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n	background: transparent;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV4 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV4 .buttons button .name {\r\n	pointer-events: none;\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV4 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV4 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV4 .buttons .btn_overlay {\r\n	pointer-events: none;\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -6px;\r\n	left: 0;\r\n	display: none;\r\n}\r\n#BasicInfoV4 .buttons button:active .btn_overlay {\r\n	pointer-events: none;\r\n	top: -5px;\r\n}\r\n";
+	BasicInfoV4_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV4 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV4.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV4.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV4.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV4.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV4.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV4.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV4.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV4 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV4 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV4 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV4 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV4 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV4 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .hp_bar,\r\n#BasicInfoV4 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV4 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV4 .large .hp_bar div,\r\n#BasicInfoV4 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV4 .large div.hp_bar_perc,\r\n#BasicInfoV4 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV4 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .bexp,\r\n#BasicInfoV4 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV4 .large .bexp div,\r\n#BasicInfoV4 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV4 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV4 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV4 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV4 .buttons:hover {\r\n}\r\n#BasicInfoV4 .buttons button {\r\n	float: left;\r\n	width: 22px;\r\n	height: 22px;\r\n	border: none;\r\n	margin: 0px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#BasicInfoV4 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV4 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV4 .buttons button .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV4 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV4 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV4 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
+function _getRoot$9() {
+	return BasicInfoV4._shadow || BasicInfoV4._host;
+}
 var BasicInfoV4, _preferences$42, BasicInfoV4_default;
 var init_BasicInfoV4 = __esmMin((() => {
 	init_DBManager();
@@ -207345,7 +207548,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	init_Renderer();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Inventory();
 	init_Equipment();
 	init_PartyFriends();
@@ -207362,7 +207565,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	init_Achievement$1();
 	init_BasicInfoV4$2();
 	init_BasicInfoV4$1();
-	BasicInfoV4 = new UIComponent("BasicInfoV4", BasicInfoV4_default$2, BasicInfoV4_default$1);
+	BasicInfoV4 = new GUIComponent("BasicInfoV4", BasicInfoV4_default$1);
 	/**
 	* Stored data
 	*/
@@ -207372,6 +207575,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	BasicInfoV4.job_exp_next = -1;
 	BasicInfoV4.weight = 0;
 	BasicInfoV4.weight_max = 1;
+	BasicInfoV4.render = () => BasicInfoV4_default$2;
 	_preferences$42 = Preferences.get("BasicInfoV4", {
 		x: 0,
 		y: 0,
@@ -207386,57 +207590,64 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV4.init = function init() {
-		this.ui.find(".topbar div").mousedown(function(event) {
-			event.stopImmediatePropagation();
+		const root = _getRoot$9();
+		root.querySelectorAll(".topbar div").forEach((el) => {
+			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
-		this.ui.find(".topbar").dblclick(BasicInfoV4.toggleMode.bind(this));
-		this.ui.find(".topbar .right").click(BasicInfoV4.toggleMode.bind(this));
-		this.ui.find(".toggle_btns").click(BasicInfoV4.toggleButtons.bind(this));
-		this.ui.find(".buttons button").click(function() {
-			switch (this.id) {
-				case "item":
-					InventoryController.getUI().toggle();
-					break;
-				case "info":
-					WinStatsController.getUI().toggle();
-					break;
-				case "equip":
-					EquipmentController.getUI().toggle();
-					break;
-				case "skill":
-					Controller$4.getUI().toggle();
-					break;
-				case "option":
-					Escape_default.ui.toggle();
-					break;
-				case "party":
-					controller.getUI().toggle();
-					break;
-				case "guild":
-					Guild_default.toggle();
-					break;
-				case "quest":
-					Controller$3.getUI().toggle();
-					break;
-				case "map":
-					WorldMap_default.toggle();
-					break;
-				case "bank":
-					Bank_default.toggle();
-					break;
-				case "attendance":
-					if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
-					break;
-				case "mail":
-					Rodex_default.toggle();
-					break;
-				case "navigation":
-					Navigation_default.toggle();
-					break;
-				case "achievment":
-					if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
-					break;
-			}
+		const topbar = root.querySelector(".topbar");
+		if (topbar) topbar.addEventListener("dblclick", () => BasicInfoV4.toggleMode());
+		const rightBtn = root.querySelector(".topbar .right");
+		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV4.toggleMode());
+		root.querySelectorAll(".toggle_btns").forEach((btn) => {
+			btn.addEventListener("click", (e) => BasicInfoV4.toggleButtons(e));
+		});
+		root.querySelectorAll(".buttons button").forEach((btn) => {
+			btn.addEventListener("click", () => {
+				switch (btn.id) {
+					case "item":
+						InventoryController.getUI().toggle();
+						break;
+					case "info":
+						WinStatsController.getUI().toggle();
+						break;
+					case "equip":
+						EquipmentController.getUI().toggle();
+						break;
+					case "skill":
+						Controller$4.getUI().toggle();
+						break;
+					case "option":
+						Escape_default.ui.toggle();
+						break;
+					case "party":
+						controller.getUI().toggle();
+						break;
+					case "guild":
+						Guild_default.toggle();
+						break;
+					case "quest":
+						Controller$3.getUI().toggle();
+						break;
+					case "map":
+						WorldMap_default.toggle();
+						break;
+					case "bank":
+						Bank_default.toggle();
+						break;
+					case "attendance":
+						if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
+						break;
+					case "mail":
+						Rodex_default.toggle();
+						break;
+					case "navigation":
+						Navigation_default.toggle();
+						break;
+					case "achievment":
+						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
+						break;
+				}
+			});
 		});
 		this.draggable();
 	};
@@ -207445,40 +207656,54 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV4.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$42.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$42.x), Renderer.width - this.ui.width())
-		});
+		const root = _getRoot$9();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$42.magnet_top;
 		this.magnet.BOTTOM = _preferences$42.magnet_bottom;
 		this.magnet.LEFT = _preferences$42.magnet_left;
 		this.magnet.RIGHT = _preferences$42.magnet_right;
-		this.ui.removeClass("small large");
-		if (_preferences$42.reduce) this.ui.addClass("small");
-		else this.ui.addClass("large");
-		if (_preferences$42.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find(".btn_open").hide();
-			this.ui.find(".btn_close").show();
-		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+		const inner = root.querySelector("#BasicInfoV4");
+		if (inner) {
+			inner.classList.remove("small", "large");
+			if (_preferences$42.reduce) inner.classList.add("small");
+			else inner.classList.add("large");
 		}
-		this.ui.find("#battle").hide();
-		this.ui.find("#replay").hide();
-		this.ui.find("#tipbox").hide();
-		this.ui.find("#shortcut").hide();
-		this.ui.find("#agency").hide();
+		const buttons = root.querySelector(".buttons");
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
+		if (_preferences$42.buttons) {
+			if (buttons) buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
+		} else {
+			if (buttons) buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
+		}
+		[
+			"battle",
+			"replay",
+			"tipbox",
+			"shortcut",
+			"agency"
+		].forEach((id) => {
+			const el = root.querySelector(`#${id}`);
+			if (el) el.style.display = "none";
+		});
 	};
 	/**
 	* Once remove, save preferences
 	*/
 	BasicInfoV4.onRemove = function onRemove() {
-		_preferences$42.x = parseInt(this.ui.css("left"), 10);
-		_preferences$42.y = parseInt(this.ui.css("top"), 10);
-		_preferences$42.reduce = this.ui.hasClass("small");
-		_preferences$42.buttons = this.ui.find(".buttons").is(":visible");
+		const root = _getRoot$9();
+		const inner = root.querySelector("#BasicInfoV4");
+		const buttons = root.querySelector(".buttons");
+		_preferences$42.x = parseInt(this._host.style.left, 10);
+		_preferences$42.y = parseInt(this._host.style.top, 10);
+		_preferences$42.reduce = inner ? inner.classList.contains("small") : _preferences$42.reduce;
+		_preferences$42.buttons = buttons ? buttons.style.display !== "none" : _preferences$42.buttons;
 		_preferences$42.magnet_top = this.magnet.TOP;
 		_preferences$42.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$42.magnet_left = this.magnet.LEFT;
@@ -207501,30 +207726,42 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV4.toggleMode = function toggleMode() {
-		this.ui.toggleClass("small large");
+		const root = _getRoot$9();
+		const inner = root.querySelector("#BasicInfoV4");
+		if (!inner) return;
+		inner.classList.toggle("small");
+		inner.classList.toggle("large");
+		const buttons = root.querySelector(".buttons");
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
 		if (_preferences$42.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find("#btn_open").hide();
-			this.ui.find(".btn_close").show();
+			if (buttons) buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
 		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+			if (buttons) buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
 		}
 	};
 	/**
 	* Toggle the list of buttons
 	*/
 	BasicInfoV4.toggleButtons = function toggleButtons(event) {
-		_preferences$42.buttons = !this.ui.find(".buttons").is(":visible");
+		const root = _getRoot$9();
+		const buttons = root.querySelector(".buttons");
+		if (!buttons) return;
+		_preferences$42.buttons = buttons.style.display === "none";
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
 		if (_preferences$42.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find("#btn_open").hide();
-			this.ui.find(".btn_close").show();
+			buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
 		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+			buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
 		}
 		event.stopImmediatePropagation();
 	};
@@ -207536,546 +207773,106 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV4.update = function update(type, val1, val2) {
-		let perc = 100, color = "blue", list, i, count, str;
+		const root = _getRoot$9();
+		if (!root) return;
+		let perc = 100;
+		let color = "blue";
 		switch (type) {
 			case "name":
 			case "blvl":
 			case "jlvl":
-				this.ui.find("." + type + "_value").text(val1);
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
 				break;
-			case "zeny":
+			case "zeny": {
 				SessionStorage_default.zeny = val1;
-				list = val1.toString().split("");
-				count = list.length;
-				str = "";
-				for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				this.ui.find("." + type + "_value").text(str);
+				const list = val1.toString().split("");
+				const count = list.length;
+				let str = "";
+				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = str;
+				});
 				break;
+			}
 			case "job":
 				SessionStorage_default.Character.job = val1;
-				this.ui.find(".job_value").text(MonsterTable_default[val1]);
+				root.querySelectorAll(".job_value").forEach((el) => {
+					el.textContent = MonsterTable_default[val1];
+				});
 				break;
 			case "bexp":
-			case "jexp":
+			case "jexp": {
+				const expEl = root.querySelector(`.${type}`);
 				if (!val2) {
-					this.ui.find("." + type).hide();
+					if (expEl) expEl.style.display = "none";
 					break;
 				}
-				this.ui.find("." + type).show();
-				this.ui.find("." + type + " div").css("width", Math.min(100, Math.floor(val1 * 100 / val2)) + "%");
-				this.ui.find("." + type).attr("title", (val1 / val2 * 100).toFixed(1) + "%");
-				this.ui.find("." + type + "_value").text(Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1)) + "%");
+				if (expEl) {
+					expEl.style.display = "";
+					const bar = expEl.querySelector("div");
+					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
+					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				}
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
+				});
 				break;
+			}
 			case "weight":
-				this.ui.find(".weight_value").text(val1 / 10 | 0);
-				this.ui.find(".weight_total").text(val2 / 10 | 0);
-				this.ui.find(".weight").css("color", val1 < val2 / 2 ? "" : "red");
-				this.ui.find(".weight").attr("title", (val1 / val2 * 100).toFixed(1) + "%");
+				root.querySelectorAll(".weight_value").forEach((el) => {
+					el.textContent = val1 / 10 | 0;
+				});
+				root.querySelectorAll(".weight_total").forEach((el) => {
+					el.textContent = val2 / 10 | 0;
+				});
+				root.querySelectorAll(".weight").forEach((el) => {
+					el.style.color = val1 < val2 / 2 ? "" : "red";
+					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				});
 				break;
 			case "hp":
 			case "sp":
 				perc = Math.floor(val1 * 100 / val2);
 				color = perc < 25 ? "red" : "blue";
-				this.ui.find("." + type + "_value").text(val1);
-				this.ui.find("." + type + "_max_value").text(val2);
-				this.ui.find("." + type + "_perc").text(perc + "%");
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
+				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+					el.textContent = val2;
+				});
+				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
+					el.textContent = `${perc}%`;
+				});
 				if (perc <= 0) {
-					this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
+					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+						el.style.backgroundImage = "none";
+					});
 					break;
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-					this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-					this.ui.find("." + type + "_bar_middle").css({
-						backgroundImage: "url(" + url + ")",
-						width: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-					this.ui.find("." + type + "_bar_right").css({
-						backgroundImage: "url(" + url + ")",
-						left: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_left`);
+					if (el) el.style.backgroundImage = `url(${url})`;
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_middle`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_right`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
 				break;
 		}
 	};
 	BasicInfoV4_default = UIManager.addComponent(BasicInfoV4);
-}));
-//#endregion
-//#region src/UI/Components/Reputation/Reputation.html?raw
-var Reputation_default$2;
-var init_Reputation$2 = __esmMin((() => {
-	Reputation_default$2 = "<div id=\"Reputation\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"3827\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overall_container\">\r\n		<div class=\"header\">\r\n			<div class=\"select-wrapper\">\r\n				<select id=\"repute_groups\" class=\"rep_group_selector\">\r\n					<option value=\"all\" data-text=\"3829\"></option>\r\n				</select>\r\n				<button\r\n					type=\"button\"\r\n					class=\"select-arrow\"\r\n					data-background=\"basic_interface/txtbox_btn_a.bmp\"\r\n					data-hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n					data-down=\"basic_interface/txtbox_btn_c.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"search_wrapper\">\r\n				<input class=\"rep_group_searchbar\" type=\"text\" />\r\n				<button\r\n					class=\"search\"\r\n					data-background=\"reputation/btn_search.bmp\"\r\n					data-hover=\"reputation/btn_search_over.bmp\"\r\n					data-down=\"reputation/btn_search_press.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"rep_group_total_points_wrapper\">\r\n				<div class=\"rep_group_text\">GROUP:</div>\r\n				<div class=\"rep_indicator\"></div>\r\n				<div class=\"rep_group_total_points_value\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"content\"></div>\r\n		<div class=\"paginator\">\r\n			<button class=\"page_prev\" data-background=\"reputation/arrow_prev.bmp\"></button>\r\n			<span class=\"page_text\">1 / 1</span>\r\n			<button class=\"page_next\" data-background=\"reputation/arrow_next.bmp\"></button>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button\r\n				class=\"big_btn_close\"\r\n				data-background=\"basic_interface/btn_close.bmp\"\r\n				data-hover=\"basic_interface/btn_close_a.bmp\"\r\n				data-down=\"basic_interface/btn_close_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Reputation/Reputation.css?raw
-var Reputation_default$1;
-var init_Reputation$1 = __esmMin((() => {
-	Reputation_default$1 = "#Reputation {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 665px;\r\n	height: 450px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Reputation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Reputation .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Reputation .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Reputation .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Reputation .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Reputation .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Reputation .overall_container {\r\n	display: flex;\r\n	flex-direction: column;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Reputation .header {\r\n	display: flex;\r\n	gap: 6px;\r\n}\r\n\r\n#Reputation .select-wrapper {\r\n	position: relative;\r\n	display: inline-block;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_selector {\r\n	width: 140px;\r\n	padding-right: 36px;\r\n	height: 18px;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .select-arrow {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 18px;\r\n	height: 18px;\r\n	border: none;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n#Reputation .search_wrapper {\r\n	height: 18px;\r\n	width: 235px;\r\n	margin-top: 5px;\r\n	display: inline-block;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_searchbar {\r\n	height: 14px;\r\n	width: 196px;\r\n	border: 1px solid black;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .search {\r\n	height: 18px;\r\n	width: 33px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#Reputation .rep_group_total_points_wrapper {\r\n	width: 245px;\r\n	border: 1px solid black;\r\n	margin-top: 5px;\r\n	background-color: #eeeeef;\r\n	align-items: center;\r\n	display: flex;\r\n}\r\n\r\n#Reputation .rep_group_text {\r\n	width: 50px;\r\n}\r\n\r\n#Reputation .rep_indicator {\r\n	width: 40px;\r\n	height: 100%;\r\n	background: no-repeat center;\r\n}\r\n\r\n#Reputation .rep_group_total_points_value {\r\n	margin-left: 5px;\r\n	margin-right: 5px;\r\n	width: 100%;\r\n	text-align: right;\r\n}\r\n\r\n#Reputation .content {\r\n	min-height: 350px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-wrap: wrap;\r\n	flex-basis: content;\r\n	align-content: flex-start;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Reputation .rep_group_wrapper {\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	width: 313px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_name {\r\n	margin-left: 5px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_indicator_wrapper {\r\n	display: flex;\r\n	height: 17px;\r\n	gap: 2px;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n\r\n#Reputation .rep_group_indicator {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#Reputation .rep_group_progess_bar {\r\n	height: 8px;\r\n	margin-top: 10px;\r\n	margin-left: 3px;\r\n	width: 97%;\r\n}\r\n\r\n#Reputation .rep_id_points {\r\n	width: 80px;\r\n	height: 20px;\r\n	margin-top: 5px;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n	text-align: center;\r\n}\r\n\r\n#Reputation .paginator {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	gap: 8px;\r\n	height: 30px;\r\n	margin-right: 25px;\r\n}\r\n\r\n#Reputation .paginator button {\r\n	width: 7px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .footer {\r\n	height: 28px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 3px 3px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n}\r\n\r\n#Reputation .big_btn_close {\r\n	height: 20px;\r\n	width: 42px;\r\n	border: none;\r\n	margin-top: 5px;\r\n	margin-right: 10px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Reputation/Reputation.js
-/**
-* Build the group selector based on the ReputeGroupTable in DB
-* Append a new <option> element for each group in the table
-* The option element will have the class 'repute_group_<groupIndex>'
-* The option element will have the value '<groupIndex>'
-* The option element will have the text content '<group.Name>'
-*/
-function buildGroupSelector() {
-	const groupSelector = Reputation.ui.find("#repute_groups");
-	const ReputeGroupTable = DB.getReputeGroup();
-	Object.entries(ReputeGroupTable).forEach(([groupIndex, group]) => {
-		const option = document.createElement("option");
-		option.className = "repute_group_" + groupIndex;
-		option.value = groupIndex;
-		option.textContent = group.Name;
-		groupSelector.append(option);
-	});
-}
-/**
-* Bind the group selector with the reputation page
-*
-* When the group selector changes, it will update the total points display
-* and re-render the reputation entries for the selected group
-*/
-function bindGroupSelector() {
-	Reputation.ui.find("#repute_groups").on("change", function() {
-		const selectedGroup = this.value;
-		updateGroupTotalPoints(selectedGroup);
-		Reputation.ui.find(".rep_group_searchbar").val("");
-		filterByGroup(selectedGroup);
-	});
-}
-/**
-* Bind search functionality to the input field and button
-*
-* Listens for the enter key on the search input field and performs a search
-* when the enter key is pressed. Listens for a click on the search button and
-* performs a search when the button is clicked.
-*
-*/
-function bindSearch() {
-	const input = Reputation.ui.find(".rep_group_searchbar");
-	const button = Reputation.ui.find(".search");
-	input.on("keydown", function(e) {
-		if (e.key === "Enter") performSearch(this.value.trim());
-	});
-	button.on("click", function() {
-		performSearch(input.val().trim());
-	});
-}
-/**
-* Build all reputation entries once
-*
-* Empties the content container and re-renders all reputation entries
-* using the createReputationEntry function. It also updates the UI state
-* of each entry with the current points value.
-*
-* @return {void}
-*/
-function buildAllReputeEntries() {
-	const content = Reputation.ui.find(".content");
-	const reputeIds = Object.keys(DB.getReputeInfo()).map(Number);
-	Reputation.page.reputeIds = reputeIds;
-	content.empty();
-	reputeIds.forEach((reputeId) => {
-		const info = DB.getReputeData(reputeId);
-		if (!info) return;
-		const points = Reputation.reputeState?.[reputeId] || 0;
-		const entry = createReputeEntry(reputeId, info);
-		entry.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
-		content.append(entry);
-		updateReputeUI(reputeId, points);
-	});
-}
-/**
-* Update the total points display for a given group id
-* @param {string} groupId - The ID of the group to update (or 'all' for all entries)
-*/
-function updateGroupTotalPoints(groupId) {
-	const wrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	const indicator = wrapper.find(".rep_indicator");
-	const pointsValue = wrapper.find(".rep_group_total_points_value");
-	if (groupId === "all") {
-		wrapper.hide();
-		return;
-	}
-	wrapper.show();
-	let reputeIds = DB.getReputeGroupList(groupId);
-	if (reputeIds && typeof reputeIds === "object") reputeIds = Object.values(reputeIds);
-	if (!reputeIds || !reputeIds.length) {
-		indicator.css("background-image", `url(${indicator_empty})`);
-		pointsValue.text("0");
-		return;
-	}
-	let totalPoints = 0;
-	reputeIds.forEach((reputeId) => {
-		totalPoints += Reputation.reputeState?.[reputeId] || 0;
-	});
-	if (totalPoints > 0) indicator.css("background-image", `url(${indicator_blue})`);
-	else if (totalPoints < 0) indicator.css("background-image", `url(${indicator_red})`);
-	else indicator.css("background-image", `url(${indicator_empty})`);
-	pointsValue.text(`${totalPoints} P`);
-}
-/**
-* Checks if a reputation entry is visible based on the info.Invisible value and the current points value
-* @param {object} info - The reputation entry info object
-* @param {number} points - The current points value of the reputation entry
-* @returns {boolean} True if the reputation entry is visible, false otherwise
-*/
-function isReputeVisible(info, points) {
-	switch (info.Invisible) {
-		case "VISIBLE_FALSE": return false;
-		case "VISIBLE_EXIST": return points !== 0;
-		default: return true;
-	}
-}
-/**
-* Filters the reputation entries based on the given group ID
-* If the group ID is 'all', shows all entries
-* If the group ID is not 'all', shows only the entries that belong to the group and updates the total points wrapper
-* @param {string} groupId - The ID of the group to filter by
-*/
-function filterByGroup(groupId) {
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	if (groupId === "all") {
-		items.each(function() {
-			const el = this;
-			const reputeId = Number(el.dataset.reputeId);
-			const info = DB.getReputeData(reputeId);
-			const points = Reputation.reputeState?.[reputeId] || 0;
-			el.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
-		});
-		totalWrapper.hide();
-	} else {
-		const groupList = Object.values(DB.getReputeGroupList(groupId) || {});
-		items.each(function() {
-			const el = this;
-			const reputeId = Number(el.dataset.reputeId);
-			const info = DB.getReputeData(reputeId);
-			const points = Reputation.reputeState?.[reputeId] || 0;
-			el.dataset.visible = groupList.includes(reputeId) && isReputeVisible(info, points) ? "true" : "false";
-		});
-		updateGroupTotalPoints(groupId);
-		totalWrapper.show();
-	}
-	const visibleIds = items.filter((i, el) => el.dataset.visible === "true").map((i, el) => Number(el.dataset.reputeId)).get();
-	Reputation.page.reputeIds = visibleIds;
-	Reputation.page.current = 0;
-	renderReputePage(0);
-}
-/**
-* Update the reputation pager UI.
-*
-* This function is called after the reputation entries have been updated.
-* It updates the pager UI to reflect the current page and total number of pages.
-*/
-function updateReputePager() {
-	const total = Reputation.page.reputeIds.length;
-	const perPage = Reputation.page.perPage;
-	const totalPages = Math.max(1, Math.ceil(total / perPage));
-	const current = Reputation.page.current + 1;
-	const paginator = Reputation.ui.find(".paginator");
-	const prevBtn = paginator.find(".page_prev");
-	const nextBtn = paginator.find(".page_next");
-	paginator.find(".page_text").text(`${current} / ${totalPages}`);
-	prevBtn.css("visibility", current === 1 ? "hidden" : "visible");
-	nextBtn.css("visibility", current === totalPages ? "hidden" : "visible");
-	if (totalPages === 1) prevBtn.add(nextBtn).css("visibility", "hidden");
-}
-/**
-* Render a page of reputation entries based on current page index.
-*
-* Hides all entries first, then shows only visible entries within the current page.
-* Updates the pager afterwards.
-*
-* @param {number} pageIndex - current page index (starts from 0)
-*/
-function renderReputePage(pageIndex) {
-	const { perPage } = Reputation.page;
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	Reputation.page.current = pageIndex;
-	items.hide();
-	const visibleItems = items.filter((i, el) => el.dataset.visible === "true");
-	const start = pageIndex * perPage;
-	const end = start + perPage;
-	const pageItems = visibleItems.slice(start, end);
-	pageItems.show();
-	if (Reputation.highlight.active && !Reputation.highlight.consumed) pageItems.each(function() {
-		const el = this;
-		if (Number(el.dataset.reputeId) === Reputation.highlight.reputeId) {
-			el.style.backgroundImage = `url(${bg_highlight})`;
-			Reputation.highlight.consumed = true;
-			Reputation.highlight.active = false;
-		}
-	});
-	else clearHighlights();
-	updateReputePager();
-}
-/**
-* Create a reputation entry element from given info
-* @param {number} reputeId - reputation id
-* @param {object} info - reputation info
-* @returns {HTMLDivElement} created element
-*/
-function createReputeEntry(reputeId, info) {
-	const wrapper = document.createElement("div");
-	wrapper.className = "rep_group_wrapper";
-	wrapper.dataset.reputeId = reputeId;
-	wrapper.style.backgroundImage = "url(" + bg + ")";
-	const name = document.createElement("div");
-	name.className = "rep_group_name";
-	name.textContent = info.Name;
-	wrapper.appendChild(name);
-	const indicatorWrapper = document.createElement("div");
-	indicatorWrapper.className = "rep_group_indicator_wrapper";
-	const indicatorCount = info.MaxPoint_Positive / 1e3;
-	for (let i = 1; i <= indicatorCount; i++) {
-		const indicator = document.createElement("div");
-		indicator.className = `rep_group_indicator indicator_${i}`;
-		indicator.dataset.index = i;
-		indicator.style.backgroundImage = `url(${indicator_empty})`;
-		indicatorWrapper.appendChild(indicator);
-	}
-	wrapper.appendChild(indicatorWrapper);
-	const progress = document.createElement("div");
-	progress.className = "rep_group_progess_bar";
-	wrapper.appendChild(progress);
-	const points = document.createElement("div");
-	points.className = "rep_id_points";
-	points.textContent = "0 / 1000";
-	wrapper.appendChild(points);
-	return wrapper;
-}
-/**
-* Update the UI of a specific Repute entry
-* @param {string} reputeId - The ID of the Repute entry to update
-* @param {number} points - The points to update the UI with
-*/
-function updateReputeUI(reputeId, points) {
-	const wrapper = Reputation.ui.find(`.rep_group_wrapper[data-repute-id="${reputeId}"]`);
-	if (!wrapper.length) return;
-	const indicators = wrapper.find(".rep_group_indicator");
-	const absPoints = Math.abs(points);
-	const fullIndicators = Math.floor(absPoints / 1e3);
-	const remainder = absPoints % 1e3;
-	indicators.each(function(index) {
-		this.style.backgroundImage = index < fullIndicators ? points >= 0 ? `url(${indicator_blue})` : `url(${indicator_red})` : `url(${indicator_empty})`;
-	});
-	wrapper.find(".rep_id_points").text(`${remainder} / 1000`);
-	const progress = wrapper.find(".rep_group_progess_bar");
-	const percent = remainder / 1e3 * 100;
-	const fillColor = points >= 0 ? "#7b95ce" : "#f60206";
-	progress.css("background-image", `linear-gradient(
-				to right,
-				${fillColor} 0%,
-				${fillColor} ${percent}%,
-				transparent ${percent}%
-			)`);
-}
-/**
-* Perform search on the reputation entries based on the given query.
-* If the query is empty, reset the search and show all entries.
-* Otherwise, filter the entries based on whether the entry name matches the query (case-insensitive) and whether the entry is visible.
-* @param {string} query - The search query to filter the reputation entries with
-*/
-function performSearch(query) {
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	const groupSelector = Reputation.ui.find("#repute_groups");
-	if (!query) {
-		groupSelector.val("all");
-		totalWrapper.hide();
-		filterByGroup("all");
-		return;
-	}
-	const lowerQuery = query.toLowerCase();
-	const visibleIds = [];
-	items.each(function() {
-		const el = this;
-		const reputeId = Number(el.dataset.reputeId);
-		const info = DB.getReputeData(reputeId);
-		const points = Reputation.reputeState?.[reputeId] || 0;
-		const show = info?.Name.toLowerCase().includes(lowerQuery) && isReputeVisible(info, points);
-		el.dataset.visible = show ? "true" : "false";
-		if (show) visibleIds.push(reputeId);
-	});
-	Reputation.page.reputeIds = visibleIds;
-	Reputation.page.current = 0;
-	renderReputePage(0);
-}
-/**
-* Closing window
-*/
-function onClose$8() {
-	Reputation.ui.hide();
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$26(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Packet received from server
-* Initializes the Reputation UI
-* Store the initial values received from the server and update UI
-* If UI is open, update UI
-* @param {object} pkt - PACKET.ZC.REPUTE_INFO
-*/
-function onReputeInfo(pkt) {
-	if (!Reputation.__active) {
-		Reputation.append();
-		Reputation.ui.hide();
-	}
-	const selectedGroup = Reputation.ui.find("#repute_groups").val();
-	let updateSelectedGroup = false;
-	pkt.reputeInfo.forEach((entry) => {
-		Reputation.reputeState[entry.type] = entry.points;
-		updateReputeUI(entry.type, entry.points);
-		if (selectedGroup && selectedGroup !== "all") {
-			if (Object.values(DB.getReputeGroupList(selectedGroup) || {}).includes(entry.type)) updateSelectedGroup = true;
-		}
-	});
-	if (updateSelectedGroup) updateGroupTotalPoints(selectedGroup);
-}
-/**
-* Sets up Highlight, selects the given group,
-* and filters the reputation entries normally
-*
-* @param {object} pkt - PACKET.ZC.REPUTE_OPEN
-*/
-function onReputeOpen(pkt) {
-	const groupId = pkt.table === 0 ? "all" : pkt.table;
-	const highlightId = pkt.type || null;
-	Reputation.highlight.reputeId = highlightId;
-	Reputation.highlight.active = !!highlightId;
-	Reputation.highlight.consumed = false;
-	Reputation.ui.find("#repute_groups").val(groupId);
-	filterByGroup(groupId);
-	Reputation.ui.show();
-}
-/**
-* Clears all highlight effects from the reputation entries.
-* This function is called when the reputation window is opened.
-* It resets the background image and removes the highlight property from all entries.
-*/
-function clearHighlights() {
-	Reputation.ui.find(".rep_group_wrapper").each(function() {
-		this.style.backgroundImage = `url(${bg})`;
-		this.dataset.highlight = "false";
-	});
-}
-var Reputation, _preferences$41, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
-var init_Reputation = __esmMin((() => {
-	init_DBManager();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_Client();
-	init_Preferences$1();
-	init_UIManager();
-	init_UIComponent();
-	init_Reputation$2();
-	init_Reputation$1();
-	Reputation = new UIComponent("Reputation", Reputation_default$2, Reputation_default$1);
-	_preferences$41 = Preferences.get("Reputation", {
-		x: 400,
-		y: 200,
-		show: true
-	}, 1);
-	/**
-	* @var Reputation UI
-	* Store Pagination Data
-	*/
-	Reputation.page = {
-		current: 0,
-		perPage: 8,
-		reputeIds: []
-	};
-	/**
-	* @var Reputation UI
-	* Store ReputeID and Points
-	*/
-	Reputation.reputeState = {};
-	/**
-	* @var Reputation UI
-	* Store Variables for Highlighted ReputeID
-	*/
-	Reputation.highlight = {
-		reputeId: null,
-		active: false,
-		consumed: false
-	};
-	/**
-	* Initialize component
-	*/
-	Reputation.init = function init() {
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_info.bmp", (d) => bg = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_highlight.bmp", (d) => bg_highlight = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_empty.bmp", (d) => indicator_empty = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
-		this.draggable(this.ui);
-		this.ui.find(".base").mousedown(stopPropagation$26);
-		this.ui.find(".close").click(onClose$8);
-		this.ui.find(".big_btn_close").click(onClose$8);
-		const paginator = Reputation.ui.find(".paginator");
-		paginator.find(".page_prev").on("click", () => {
-			if (Reputation.page.current > 0) renderReputePage(Reputation.page.current - 1);
-		});
-		paginator.find(".page_next").on("click", () => {
-			const maxPage = Math.ceil(Reputation.page.reputeIds.length / Reputation.page.perPage);
-			if (Reputation.page.current < maxPage - 1) renderReputePage(Reputation.page.current + 1);
-		});
-	};
-	/**
-	* Called when the component is appended to the body.
-	* Initializes the reputation system by building the group selector,
-	* binding group selector events and rendering the default view.
-	*/
-	Reputation.onAppend = function onAppend() {
-		buildGroupSelector();
-		bindGroupSelector();
-		bindSearch();
-		buildAllReputeEntries();
-		filterByGroup("all");
-	};
-	/**
-	* Once remove from body, save user preferences
-	*/
-	Reputation.onRemove = function onRemove() {
-		_preferences$41.show = this.ui.is(":visible");
-		_preferences$41.y = parseInt(this.ui.css("top"), 10);
-		_preferences$41.x = parseInt(this.ui.css("left"), 10);
-		_preferences$41.save();
-	};
-	/**
-	* Request to toggle open/close reputation
-	*/
-	Reputation.toggle = function toggle() {
-		const selector = Reputation.ui.find("#repute_groups");
-		const searchInput = Reputation.ui.find(".rep_group_searchbar");
-		if (Reputation.ui.is(":visible")) {
-			Reputation.ui.hide();
-			return;
-		}
-		selector.val("all");
-		searchInput.val("");
-		filterByGroup("all");
-		Reputation.page.current = 0;
-		Reputation.ui.show();
-	};
-	/**
-	* Packet Hooks to functions
-	*/
-	Network.hookPacket(PACKET.ZC.REPUTE_INFO, onReputeInfo);
-	Network.hookPacket(PACKET.ZC_REPUTE_OPEN, onReputeOpen);
-	Reputation_default = UIManager.addComponent(Reputation);
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.html?raw
@@ -208087,11 +207884,14 @@ var init_BasicInfoV5$2 = __esmMin((() => {
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.css?raw
 var BasicInfoV5_default$1;
 var init_BasicInfoV5$1 = __esmMin((() => {
-	BasicInfoV5_default$1 = "#BasicInfoV5 {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 115px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 130px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons div {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px; /* Set your desired width */\r\n	text-align: left; /* Align the text to the right within the span */\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px; /* Set your desired width */\r\n	text-align: left; /* Align the text to the right within the span */\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
+	BasicInfoV5_default$1 = ":host {\r\n	width: 220px;\r\n	height: 150px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV5 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	letter-spacing: 0.03em;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 159px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 79px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 104px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 116px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 134px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons button {\r\n	float: left;\r\n	width: 22px;\r\n	height: 22px;\r\n	border: none;\r\n	margin: 0px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 52px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons button .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
-var BasicInfoV5, _preferences$40, BasicInfoV5_default;
+function _getRoot$8() {
+	return BasicInfoV5._shadow || BasicInfoV5._host;
+}
+var BasicInfoV5, _preferences$41, BasicInfoV5_default;
 var init_BasicInfoV5 = __esmMin((() => {
 	init_DBManager();
 	init_Configs();
@@ -208102,7 +207902,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	init_Renderer();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Inventory();
 	init_Equipment();
 	init_PartyFriends();
@@ -208114,13 +207914,12 @@ var init_BasicInfoV5 = __esmMin((() => {
 	init_Rodex$1();
 	init_WinStats();
 	init_Navigation();
-	init_Reputation();
 	init_SkillList();
 	init_Quest$1();
 	init_Achievement$1();
 	init_BasicInfoV5$2();
 	init_BasicInfoV5$1();
-	BasicInfoV5 = new UIComponent("BasicInfoV5", BasicInfoV5_default$2, BasicInfoV5_default$1);
+	BasicInfoV5 = new GUIComponent("BasicInfoV5", BasicInfoV5_default$1);
 	/**
 	* Stored data
 	*/
@@ -208130,7 +207929,8 @@ var init_BasicInfoV5 = __esmMin((() => {
 	BasicInfoV5.job_exp_next = -1;
 	BasicInfoV5.weight = 0;
 	BasicInfoV5.weight_max = 1;
-	_preferences$40 = Preferences.get("BasicInfoV5", {
+	BasicInfoV5.render = () => BasicInfoV5_default$2;
+	_preferences$41 = Preferences.get("BasicInfoV5", {
 		x: 0,
 		y: 0,
 		reduce: true,
@@ -208144,59 +207944,64 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV5.init = function init() {
-		this.ui.find(".topbar div").mousedown(function(event) {
-			event.stopImmediatePropagation();
+		const root = _getRoot$8();
+		root.querySelectorAll(".topbar div").forEach((el) => {
+			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
-		this.ui.find(".topbar .right").click(BasicInfoV5.toggleMode.bind(this));
-		this.ui.find(".toggle_btns").click(BasicInfoV5.toggleButtons.bind(this));
-		this.ui.find(".buttons div").click(function() {
-			switch (this.id) {
-				case "item":
-					InventoryController.getUI().toggle();
-					break;
-				case "info":
-					WinStatsController.getUI().toggle();
-					break;
-				case "equip":
-					EquipmentController.getUI().toggle();
-					break;
-				case "skill":
-					Controller$4.getUI().toggle();
-					break;
-				case "option":
-					Escape_default.ui.toggle();
-					break;
-				case "party":
-					controller.getUI().toggle();
-					break;
-				case "guild":
-					Guild_default.toggle();
-					break;
-				case "quest":
-					Controller$3.getUI().toggle();
-					break;
-				case "map":
-					WorldMap_default.toggle();
-					break;
-				case "bank":
-					Bank_default.toggle();
-					break;
-				case "attendance":
-					if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
-					break;
-				case "mail":
-					Rodex_default.toggle();
-					break;
-				case "navigation":
-					Navigation_default.toggle();
-					break;
-				case "repute":
-					Reputation_default.toggle();
-					break;
-				case "achievment":
-					if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
-					break;
-			}
+		const topbar = root.querySelector(".topbar");
+		if (topbar) topbar.addEventListener("dblclick", () => BasicInfoV5.toggleMode());
+		const rightBtn = root.querySelector(".topbar .right");
+		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV5.toggleMode());
+		root.querySelectorAll(".toggle_btns").forEach((btn) => {
+			btn.addEventListener("click", (e) => BasicInfoV5.toggleButtons(e));
+		});
+		root.querySelectorAll(".buttons button").forEach((btn) => {
+			btn.addEventListener("click", () => {
+				switch (btn.id) {
+					case "item":
+						InventoryController.getUI().toggle();
+						break;
+					case "info":
+						WinStatsController.getUI().toggle();
+						break;
+					case "equip":
+						EquipmentController.getUI().toggle();
+						break;
+					case "skill":
+						Controller$4.getUI().toggle();
+						break;
+					case "option":
+						Escape_default.ui.toggle();
+						break;
+					case "party":
+						controller.getUI().toggle();
+						break;
+					case "guild":
+						Guild_default.toggle();
+						break;
+					case "quest":
+						Controller$3.getUI().toggle();
+						break;
+					case "map":
+						WorldMap_default.toggle();
+						break;
+					case "bank":
+						Bank_default.toggle();
+						break;
+					case "attendance":
+						if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
+						break;
+					case "mail":
+						Rodex_default.toggle();
+						break;
+					case "navigation":
+						Navigation_default.toggle();
+						break;
+					case "achievment":
+						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
+						break;
+				}
+			});
 		});
 		this.draggable();
 	};
@@ -208205,45 +208010,59 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV5.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$40.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$40.x), Renderer.width - this.ui.width())
-		});
-		this.magnet.TOP = _preferences$40.magnet_top;
-		this.magnet.BOTTOM = _preferences$40.magnet_bottom;
-		this.magnet.LEFT = _preferences$40.magnet_left;
-		this.magnet.RIGHT = _preferences$40.magnet_right;
-		this.ui.removeClass("small large");
-		if (_preferences$40.reduce) this.ui.addClass("small");
-		else this.ui.addClass("large");
-		if (_preferences$40.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find(".btn_open").hide();
-			this.ui.find(".btn_close").show();
-		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+		const root = _getRoot$8();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$41.magnet_top;
+		this.magnet.BOTTOM = _preferences$41.magnet_bottom;
+		this.magnet.LEFT = _preferences$41.magnet_left;
+		this.magnet.RIGHT = _preferences$41.magnet_right;
+		const inner = root.querySelector("#BasicInfoV5");
+		if (inner) {
+			inner.classList.remove("small", "large");
+			if (_preferences$41.reduce) inner.classList.add("small");
+			else inner.classList.add("large");
 		}
-		this.ui.find("#battle").hide();
-		this.ui.find("#replay").hide();
-		this.ui.find("#tipbox").hide();
-		this.ui.find("#shortcut").hide();
-		this.ui.find("#agency").hide();
+		const buttons = root.querySelector(".buttons");
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
+		if (_preferences$41.buttons) {
+			if (buttons) buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
+		} else {
+			if (buttons) buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
+		}
+		[
+			"battle",
+			"replay",
+			"tipbox",
+			"shortcut",
+			"agency"
+		].forEach((id) => {
+			const el = root.querySelector(`#${id}`);
+			if (el) el.style.display = "none";
+		});
 	};
 	/**
 	* Once remove, save preferences
 	*/
 	BasicInfoV5.onRemove = function onRemove() {
-		_preferences$40.x = parseInt(this.ui.css("left"), 10);
-		_preferences$40.y = parseInt(this.ui.css("top"), 10);
-		_preferences$40.reduce = this.ui.hasClass("small");
-		_preferences$40.buttons = this.ui.find(".buttons").is(":visible");
-		_preferences$40.magnet_top = this.magnet.TOP;
-		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$40.magnet_left = this.magnet.LEFT;
-		_preferences$40.magnet_right = this.magnet.RIGHT;
-		_preferences$40.save();
+		const root = _getRoot$8();
+		const inner = root.querySelector("#BasicInfoV5");
+		const buttons = root.querySelector(".buttons");
+		_preferences$41.x = parseInt(this._host.style.left, 10);
+		_preferences$41.y = parseInt(this._host.style.top, 10);
+		_preferences$41.reduce = inner ? inner.classList.contains("small") : _preferences$41.reduce;
+		_preferences$41.buttons = buttons ? buttons.style.display !== "none" : _preferences$41.buttons;
+		_preferences$41.magnet_top = this.magnet.TOP;
+		_preferences$41.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$41.magnet_left = this.magnet.LEFT;
+		_preferences$41.magnet_right = this.magnet.RIGHT;
+		_preferences$41.save();
 	};
 	/**
 	* Process shortcut
@@ -208261,30 +208080,42 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV5.toggleMode = function toggleMode() {
-		this.ui.toggleClass("small large");
-		if (_preferences$40.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find("#btn_open").hide();
-			this.ui.find(".btn_close").show();
+		const root = _getRoot$8();
+		const inner = root.querySelector("#BasicInfoV5");
+		if (!inner) return;
+		inner.classList.toggle("small");
+		inner.classList.toggle("large");
+		const buttons = root.querySelector(".buttons");
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
+		if (_preferences$41.buttons) {
+			if (buttons) buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
 		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+			if (buttons) buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
 		}
 	};
 	/**
 	* Toggle the list of buttons
 	*/
 	BasicInfoV5.toggleButtons = function toggleButtons(event) {
-		_preferences$40.buttons = !this.ui.find(".buttons").is(":visible");
-		if (_preferences$40.buttons) {
-			this.ui.find(".buttons").show();
-			this.ui.find("#btn_open").hide();
-			this.ui.find(".btn_close").show();
+		const root = _getRoot$8();
+		const buttons = root.querySelector(".buttons");
+		if (!buttons) return;
+		_preferences$41.buttons = buttons.style.display === "none";
+		const btnOpen = root.querySelector(".btn_open");
+		const btnClose = root.querySelector(".btn_close");
+		if (_preferences$41.buttons) {
+			buttons.style.display = "";
+			if (btnOpen) btnOpen.style.display = "none";
+			if (btnClose) btnClose.style.display = "";
 		} else {
-			this.ui.find(".buttons").hide();
-			this.ui.find(".btn_open").show();
-			this.ui.find(".btn_close").hide();
+			buttons.style.display = "none";
+			if (btnOpen) btnOpen.style.display = "";
+			if (btnClose) btnClose.style.display = "none";
 		}
 		event.stopImmediatePropagation();
 	};
@@ -208296,94 +208127,141 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV5.update = function update(type, val1, val2) {
-		let perc = 100, color = "blue", ap_perc = 100, ap_color = "blue", list, i, count, str;
+		const root = _getRoot$8();
+		if (!root) return;
+		let perc = 100;
+		let color = "blue";
+		let ap_perc = 100;
+		let ap_color = "blue";
 		switch (type) {
 			case "name":
 			case "blvl":
 			case "jlvl":
-				this.ui.find("." + type + "_value").text(val1);
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
 				break;
-			case "zeny":
+			case "zeny": {
 				SessionStorage_default.zeny = val1;
-				list = val1.toString().split("");
-				count = list.length;
-				str = "";
-				for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				this.ui.find("." + type + "_value").text(str);
+				const list = val1.toString().split("");
+				const count = list.length;
+				let str = "";
+				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = str;
+				});
 				break;
+			}
 			case "job":
 				SessionStorage_default.Character.job = val1;
-				this.ui.find(".job_value").text(MonsterTable_default[val1]);
+				root.querySelectorAll(".job_value").forEach((el) => {
+					el.textContent = MonsterTable_default[val1];
+				});
 				break;
 			case "bexp":
-			case "jexp":
+			case "jexp": {
+				const expEl = root.querySelector(`.${type}`);
 				if (!val2) {
-					this.ui.find("." + type).hide();
+					if (expEl) expEl.style.display = "none";
 					break;
 				}
-				this.ui.find("." + type).show();
-				this.ui.find("." + type + " div").css("width", Math.min(100, Math.floor(val1 * 100 / val2)) + "%");
-				this.ui.find("." + type).attr("title", (val1 / val2 * 100).toFixed(1) + "%");
-				this.ui.find("." + type + "_value").text(Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1)) + "%");
+				if (expEl) {
+					expEl.style.display = "";
+					const bar = expEl.querySelector("div");
+					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
+					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				}
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
+				});
 				break;
+			}
 			case "weight":
-				this.ui.find(".weight_value").text(val1 / 10 | 0);
-				this.ui.find(".weight_total").text(val2 / 10 | 0);
-				this.ui.find(".weight").css("color", val1 < val2 / 2 ? "" : "red");
-				this.ui.find(".weight").attr("title", (val1 / val2 * 100).toFixed(1) + "%");
+				root.querySelectorAll(".weight_value").forEach((el) => {
+					el.textContent = val1 / 10 | 0;
+				});
+				root.querySelectorAll(".weight_total").forEach((el) => {
+					el.textContent = val2 / 10 | 0;
+				});
+				root.querySelectorAll(".weight").forEach((el) => {
+					el.style.color = val1 < val2 / 2 ? "" : "red";
+					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
+				});
 				break;
 			case "hp":
 			case "sp":
 				perc = Math.floor(val1 * 100 / val2);
 				color = perc < 25 ? "red" : "blue";
-				this.ui.find("." + type + "_value").text(val1);
-				this.ui.find("." + type + "_max_value").text(val2);
-				this.ui.find("." + type + "_perc").text(perc + "%");
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
+				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+					el.textContent = val2;
+				});
+				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
+					el.textContent = `${perc}%`;
+				});
 				if (perc <= 0) {
-					this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
+					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+						el.style.backgroundImage = "none";
+					});
 					break;
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-					this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-					this.ui.find("." + type + "_bar_middle").css({
-						backgroundImage: "url(" + url + ")",
-						width: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-					this.ui.find("." + type + "_bar_right").css({
-						backgroundImage: "url(" + url + ")",
-						left: Math.floor(Math.min(perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_left`);
+					if (el) el.style.backgroundImage = `url(${url})`;
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_middle`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_right`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
+					}
+				});
 				break;
 			case "ap":
 				ap_perc = Math.floor(val1 * 100 / val2);
 				ap_color = ap_perc === 100 ? "red" : "blue";
-				this.ui.find("." + type + "_value").text(val1);
-				this.ui.find("." + type + "_max_value").text(val2);
-				this.ui.find("." + type + "_perc").text(ap_perc + "%");
+				root.querySelectorAll(`.${type}_value`).forEach((el) => {
+					el.textContent = val1;
+				});
+				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+					el.textContent = val2;
+				});
+				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
+					el.textContent = `${ap_perc}%`;
+				});
 				if (ap_perc <= 0) {
-					this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
+					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+						el.style.backgroundImage = "none";
+					});
 					break;
 				}
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + ap_color + "_left.bmp", function(url) {
-					this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + ap_color + "_mid.bmp", function(url) {
-					this.ui.find("." + type + "_bar_middle").css({
-						backgroundImage: "url(" + url + ")",
-						width: Math.floor(Math.min(ap_perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + ap_color + "_right.bmp", function(url) {
-					this.ui.find("." + type + "_bar_right").css({
-						backgroundImage: "url(" + url + ")",
-						left: Math.floor(Math.min(ap_perc, 100) * 1.27) + "px"
-					});
-				}.bind(this));
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${ap_color}_left.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_left`);
+					if (el) el.style.backgroundImage = `url(${url})`;
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${ap_color}_mid.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_middle`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.width = `${Math.floor(Math.min(ap_perc, 100) * 1.27)}px`;
+					}
+				});
+				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${ap_color}_right.bmp`, (url) => {
+					const el = root.querySelector(`.${type}_bar_right`);
+					if (el) {
+						el.style.backgroundImage = `url(${url})`;
+						el.style.left = `${Math.floor(Math.min(ap_perc, 100) * 1.27)}px`;
+					}
+				});
 				break;
 		}
 	};
@@ -208528,7 +208406,7 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$25(event) {
+function stopPropagation$24(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208653,7 +208531,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$25);
+		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$24);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -208769,7 +208647,7 @@ function getItemTab$3(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$24(event) {
+function stopPropagation$23(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208807,7 +208685,7 @@ function onResize$10() {
 */
 function onSwitchTab$3() {
 	const idx = jquery_default(this).index();
-	_preferences$39.tab = parseInt(idx, 10);
+	_preferences$40.tab = parseInt(idx, 10);
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", function(data) {
 		InventoryV0.ui.find(".tab-sprite").css("backgroundImage", "url(" + data + ")");
 		requestFilter$3();
@@ -209010,7 +208888,7 @@ function onItemClick$3(event) {
 	}
 	return false;
 }
-var InventoryV0, _realSize$4, _preferences$39, InventoryV0_default;
+var InventoryV0, _realSize$4, _preferences$40, InventoryV0_default;
 var init_InventoryV0 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -209052,7 +208930,7 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.newItems = [];
 	InventoryV0.equippedItems = [];
 	_realSize$4 = 0;
-	_preferences$39 = Preferences.get("InventoryV0", {
+	_preferences$40 = Preferences.get("InventoryV0", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -209069,14 +208947,14 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$24);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$3);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$3);
 		this.ui.find(".footer .extend").mousedown(onResize$10);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV0.ui.hide();
 		});
-		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$24).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
+		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$23).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
 		this.ui.find(".ncnt").text(0);
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
@@ -209085,20 +208963,20 @@ var init_InventoryV0 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV0.onAppend = function OnAppend() {
-		if (!_preferences$39.show) this.ui.hide();
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$39.tab + 1) + ".bmp", function(data) {
+		if (!_preferences$40.show) this.ui.hide();
+		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$40.tab + 1) + ".bmp", function(data) {
 			InventoryV0.ui.find(".tab-sprite").css("backgroundImage", "url(\"" + data + "\")");
 		});
-		this.resize(_preferences$39.width, _preferences$39.height);
+		this.resize(_preferences$40.width, _preferences$40.height);
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$39.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$39.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$40.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$40.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$39.magnet_top;
-		this.magnet.BOTTOM = _preferences$39.magnet_bottom;
-		this.magnet.LEFT = _preferences$39.magnet_left;
-		this.magnet.RIGHT = _preferences$39.magnet_right;
-		_realSize$4 = _preferences$39.reduce ? 0 : this.ui.height();
+		this.magnet.TOP = _preferences$40.magnet_top;
+		this.magnet.BOTTOM = _preferences$40.magnet_bottom;
+		this.magnet.LEFT = _preferences$40.magnet_left;
+		this.magnet.RIGHT = _preferences$40.magnet_right;
+		_realSize$4 = _preferences$40.reduce ? 0 : this.ui.height();
 		this.ui.find(".titlebar .mini").trigger("mousedown");
 	};
 	/**
@@ -209109,17 +208987,17 @@ var init_InventoryV0 = __esmMin((() => {
 		this.list.length = 0;
 		InventoryV0.newItems.length = 0;
 		jquery_default(".ItemInfo").remove();
-		_preferences$39.show = this.ui.is(":visible");
-		_preferences$39.reduce = !!_realSize$4;
-		_preferences$39.y = parseInt(this.ui.css("top"), 10);
-		_preferences$39.x = parseInt(this.ui.css("left"), 10);
-		_preferences$39.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$39.height = Math.floor((this.ui.height() - 20) / 32);
-		_preferences$39.magnet_top = this.magnet.TOP;
-		_preferences$39.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$39.magnet_left = this.magnet.LEFT;
-		_preferences$39.magnet_right = this.magnet.RIGHT;
-		_preferences$39.save();
+		_preferences$40.show = this.ui.is(":visible");
+		_preferences$40.reduce = !!_realSize$4;
+		_preferences$40.y = parseInt(this.ui.css("top"), 10);
+		_preferences$40.x = parseInt(this.ui.css("left"), 10);
+		_preferences$40.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$40.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$40.magnet_top = this.magnet.TOP;
+		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$40.magnet_left = this.magnet.LEFT;
+		_preferences$40.magnet_right = this.magnet.RIGHT;
+		_preferences$40.save();
 	};
 	/**
 	* Process shortcut
@@ -209262,7 +209140,7 @@ var init_InventoryV0 = __esmMin((() => {
 			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV0.newItems.indexOf(item.index) === -1) InventoryV0.newItems.push(item.index);
-			if (getItemTab$3(item) === _preferences$39.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
+			if (getItemTab$3(item) === _preferences$40.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
 				InventoryV0.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
 			});
 			return;
@@ -209294,7 +209172,7 @@ var init_InventoryV0 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$39.tab) {
+		if (tab === _preferences$40.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const content = this.ui.find(".container .content");
 			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
@@ -209428,7 +209306,7 @@ function getItemTab$2(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$23(event) {
+function stopPropagation$22(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -209458,18 +209336,18 @@ function onResize$9() {
 */
 function onSwitchTab$2() {
 	const idx = jquery_default(this).index();
-	_preferences$38.tab = parseInt(idx, 10);
+	_preferences$39.tab = parseInt(idx, 10);
 	requestFilter$2();
 	jquery_default(".tabs button").removeClass("selected");
 	jquery_default(this).addClass("selected");
-	if (_preferences$38.tab !== InventoryV1.TAB.FAV) {
+	if (_preferences$39.tab !== InventoryV1.TAB.FAV) {
 		InventoryV1.ui.find(".deallock_on").hide();
 		InventoryV1.ui.find(".deallock_off").hide();
 		InventoryV1.ui.find(".lockoverlay").hide();
 		InventoryV1.ui.find(".lockoverlaymsg").hide();
 		InventoryV1.ui.find(".sort").hide();
 	} else {
-		if (_preferences$38.npcsalelock) {
+		if (_preferences$39.npcsalelock) {
 			InventoryV1.ui.find(".deallock_on").show();
 			InventoryV1.ui.find(".lockoverlay").show();
 			InventoryV1.ui.find(".deallock_off").hide();
@@ -209712,9 +209590,9 @@ function onTabDrop$2(event) {
 * Toggle the item drop lock preference and update the UI accordingly.
 */
 function onItemLock$2() {
-	_preferences$38.itemlock = !_preferences$38.itemlock;
-	InventoryV1.itemlock = _preferences$38.itemlock;
-	const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$39.itemlock = !_preferences$39.itemlock;
+	InventoryV1.itemlock = _preferences$39.itemlock;
+	const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
 		InventoryV1.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
 	});
@@ -209724,9 +209602,9 @@ function onItemLock$2() {
 * and updates the UI accordingly.
 */
 function onItemCompare$2() {
-	_preferences$38.itemcomp = !_preferences$38.itemcomp;
-	InventoryV1.itemcomp = _preferences$38.itemcomp;
-	const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$39.itemcomp = !_preferences$39.itemcomp;
+	InventoryV1.itemcomp = _preferences$39.itemcomp;
+	const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
 		InventoryV1.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
 	});
@@ -209736,9 +209614,9 @@ function onItemCompare$2() {
 * and updates the UI accordingly.
 */
 function onNPCLock$2() {
-	_preferences$38.npcsalelock = !_preferences$38.npcsalelock;
-	InventoryV1.npcsalelock = _preferences$38.npcsalelock;
-	if (_preferences$38.npcsalelock) {
+	_preferences$39.npcsalelock = !_preferences$39.npcsalelock;
+	InventoryV1.npcsalelock = _preferences$39.npcsalelock;
+	if (_preferences$39.npcsalelock) {
 		InventoryV1.ui.find(".deallock_on").show();
 		InventoryV1.ui.find(".lockoverlay").show();
 		InventoryV1.ui.find(".lockoverlaymsg").show();
@@ -209753,7 +209631,7 @@ function onNPCLock$2() {
 		InventoryV1.ui.find(".deallock_off").show();
 	}
 }
-var InventoryV1, _realSize$3, _preferences$38, lockOverlayTimeout$2, InventoryV1_default;
+var InventoryV1, _realSize$3, _preferences$39, lockOverlayTimeout$2, InventoryV1_default;
 var init_InventoryV1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -209799,7 +209677,7 @@ var init_InventoryV1 = __esmMin((() => {
 	InventoryV1.newItems = [];
 	InventoryV1.equippedItems = [];
 	_realSize$3 = 0;
-	_preferences$38 = Preferences.get("InventoryV1", {
+	_preferences$39 = Preferences.get("InventoryV1", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -209818,37 +209696,37 @@ var init_InventoryV1 = __esmMin((() => {
 	/**
 	* Store variables from preferences
 	*/
-	InventoryV1.itemlock = _preferences$38.itemlock;
-	InventoryV1.itemcomp = _preferences$38.itemcomp;
-	InventoryV1.npcsalelock = _preferences$38.npcsalelock;
+	InventoryV1.itemlock = _preferences$39.itemlock;
+	InventoryV1.itemcomp = _preferences$39.itemcomp;
+	InventoryV1.npcsalelock = _preferences$39.npcsalelock;
 	/**
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$23);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$2);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$2);
 		this.ui.find(".footer .extend").mousedown(onResize$9);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV1.ui.hide();
 		});
-		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$23).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
+		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$22).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$23).on("drop", onTabDrop$2);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$22).on("drop", onTabDrop$2);
 		jquery_default(".tabs button").removeClass("selected");
-		this.ui.find(".tabs button").eq(_preferences$38.tab).addClass("selected");
-		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		this.ui.find(".tabs button").eq(_preferences$39.tab).addClass("selected");
+		const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
 			InventoryV1.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
 		});
-		const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
 			InventoryV1.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
 		});
-		const lockSale = _preferences$38.npcsalelock ? InventoryV1.ui.find(".deallock_on") : InventoryV1.ui.find(".deallock_off");
-		if (_preferences$38.tab != InventoryV1.TAB.FAV) {
+		const lockSale = _preferences$39.npcsalelock ? InventoryV1.ui.find(".deallock_on") : InventoryV1.ui.find(".deallock_off");
+		if (_preferences$39.tab != InventoryV1.TAB.FAV) {
 			lockSale.hide();
 			InventoryV1.ui.find(".sort").hide();
 		} else {
@@ -209870,17 +209748,17 @@ var init_InventoryV1 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV1.onAppend = function OnAppend() {
-		if (!_preferences$38.show) this.ui.hide();
-		this.resize(_preferences$38.width, _preferences$38.height);
+		if (!_preferences$39.show) this.ui.hide();
+		this.resize(_preferences$39.width, _preferences$39.height);
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$38.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$38.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$39.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$39.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$38.magnet_top;
-		this.magnet.BOTTOM = _preferences$38.magnet_bottom;
-		this.magnet.LEFT = _preferences$38.magnet_left;
-		this.magnet.RIGHT = _preferences$38.magnet_right;
-		_realSize$3 = _preferences$38.reduce ? 0 : this.ui.height();
+		this.magnet.TOP = _preferences$39.magnet_top;
+		this.magnet.BOTTOM = _preferences$39.magnet_bottom;
+		this.magnet.LEFT = _preferences$39.magnet_left;
+		this.magnet.RIGHT = _preferences$39.magnet_right;
+		_realSize$3 = _preferences$39.reduce ? 0 : this.ui.height();
 		this.ui.find(".titlebar .mini").trigger("mousedown");
 	};
 	/**
@@ -209891,16 +209769,16 @@ var init_InventoryV1 = __esmMin((() => {
 		this.list.length = 0;
 		InventoryV1.newItems.length = 0;
 		jquery_default(".ItemInfo").remove();
-		_preferences$38.show = this.ui.is(":visible");
-		_preferences$38.reduce = !!_realSize$3;
-		_preferences$38.y = parseInt(this.ui.css("top"), 10);
-		_preferences$38.x = parseInt(this.ui.css("left"), 10);
-		_preferences$38.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$38.magnet_top = this.magnet.TOP;
-		_preferences$38.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$38.magnet_left = this.magnet.LEFT;
-		_preferences$38.magnet_right = this.magnet.RIGHT;
-		_preferences$38.save();
+		_preferences$39.show = this.ui.is(":visible");
+		_preferences$39.reduce = !!_realSize$3;
+		_preferences$39.y = parseInt(this.ui.css("top"), 10);
+		_preferences$39.x = parseInt(this.ui.css("left"), 10);
+		_preferences$39.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$39.magnet_top = this.magnet.TOP;
+		_preferences$39.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$39.magnet_left = this.magnet.LEFT;
+		_preferences$39.magnet_right = this.magnet.RIGHT;
+		_preferences$39.save();
 	};
 	/**
 	* Process shortcut
@@ -210039,7 +209917,7 @@ var init_InventoryV1 = __esmMin((() => {
 			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV1.newItems.indexOf(item.index) === -1) InventoryV1.newItems.push(item.index);
-			if (getItemTab$2(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
+			if (getItemTab$2(item) === _preferences$39.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
 				InventoryV1.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
 			});
 			return;
@@ -210072,7 +209950,7 @@ var init_InventoryV1 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$38.tab) {
+		if (tab === _preferences$39.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const content = this.ui.find(".container .content");
 			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
@@ -210640,7 +210518,7 @@ function getItemTab$1(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$22(event) {
+function stopPropagation$21(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -210670,18 +210548,18 @@ function onResize$8() {
 */
 function onSwitchTab$1() {
 	const idx = jquery_default(this).index();
-	_preferences$37.tab = parseInt(idx, 10);
+	_preferences$38.tab = parseInt(idx, 10);
 	requestFilter$1();
 	jquery_default(".tabs button").removeClass("selected");
 	jquery_default(this).addClass("selected");
-	if (_preferences$37.tab !== InventoryV2.TAB.FAV) {
+	if (_preferences$38.tab !== InventoryV2.TAB.FAV) {
 		InventoryV2.ui.find(".deallock_on").hide();
 		InventoryV2.ui.find(".deallock_off").hide();
 		InventoryV2.ui.find(".lockoverlay").hide();
 		InventoryV2.ui.find(".lockoverlaymsg").hide();
 		InventoryV2.ui.find(".sort").hide();
 	} else {
-		if (_preferences$37.npcsalelock) {
+		if (_preferences$38.npcsalelock) {
 			InventoryV2.ui.find(".deallock_on").show();
 			InventoryV2.ui.find(".lockoverlay").show();
 			InventoryV2.ui.find(".deallock_off").hide();
@@ -210924,9 +210802,9 @@ function onTabDrop$1(event) {
 * Toggle the item drop lock preference and update the UI accordingly.
 */
 function onItemLock$1() {
-	_preferences$37.itemlock = !_preferences$37.itemlock;
-	InventoryV2.itemlock = _preferences$37.itemlock;
-	const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$38.itemlock = !_preferences$38.itemlock;
+	InventoryV2.itemlock = _preferences$38.itemlock;
+	const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
 		InventoryV2.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
 	});
@@ -210936,9 +210814,9 @@ function onItemLock$1() {
 * and updates the UI accordingly.
 */
 function onItemCompare$1() {
-	_preferences$37.itemcomp = !_preferences$37.itemcomp;
-	InventoryV2.itemcomp = _preferences$37.itemcomp;
-	const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$38.itemcomp = !_preferences$38.itemcomp;
+	InventoryV2.itemcomp = _preferences$38.itemcomp;
+	const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
 		InventoryV2.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
 	});
@@ -210948,9 +210826,9 @@ function onItemCompare$1() {
 * and updates the UI accordingly.
 */
 function onNPCLock$1() {
-	_preferences$37.npcsalelock = !_preferences$37.npcsalelock;
-	InventoryV2.npcsalelock = _preferences$37.npcsalelock;
-	if (_preferences$37.npcsalelock) {
+	_preferences$38.npcsalelock = !_preferences$38.npcsalelock;
+	InventoryV2.npcsalelock = _preferences$38.npcsalelock;
+	if (_preferences$38.npcsalelock) {
 		InventoryV2.ui.find(".deallock_on").show();
 		InventoryV2.ui.find(".lockoverlay").show();
 		InventoryV2.ui.find(".lockoverlaymsg").show();
@@ -210965,7 +210843,7 @@ function onNPCLock$1() {
 		InventoryV2.ui.find(".deallock_off").show();
 	}
 }
-var InventoryV2, _realSize$2, _preferences$37, lockOverlayTimeout$1, InventoryV2_default;
+var InventoryV2, _realSize$2, _preferences$38, lockOverlayTimeout$1, InventoryV2_default;
 var init_InventoryV2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -211016,7 +210894,7 @@ var init_InventoryV2 = __esmMin((() => {
 	InventoryV2.newItems = [];
 	InventoryV2.equippedItems = [];
 	_realSize$2 = 0;
-	_preferences$37 = Preferences.get("InventoryV2", {
+	_preferences$38 = Preferences.get("InventoryV2", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -211035,37 +210913,37 @@ var init_InventoryV2 = __esmMin((() => {
 	/**
 	* Store variables from preferences
 	*/
-	InventoryV2.itemlock = _preferences$37.itemlock;
-	InventoryV2.itemcomp = _preferences$37.itemcomp;
-	InventoryV2.npcsalelock = _preferences$37.npcsalelock;
+	InventoryV2.itemlock = _preferences$38.itemlock;
+	InventoryV2.itemcomp = _preferences$38.itemcomp;
+	InventoryV2.npcsalelock = _preferences$38.npcsalelock;
 	/**
 	* Initialize UI
 	*/
 	InventoryV2.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
 		this.ui.find(".titlebar .mini").click(onToggleReduction$1);
 		this.ui.find(".tabs button").mousedown(onSwitchTab$1);
 		this.ui.find(".footer .extend").mousedown(onResize$8);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV2.ui.hide();
 		});
-		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$22).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
+		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$21).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$22).on("drop", onTabDrop$1);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$21).on("drop", onTabDrop$1);
 		jquery_default(".tabs button").removeClass("selected");
-		this.ui.find(".tabs button").eq(_preferences$37.tab).addClass("selected");
-		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		this.ui.find(".tabs button").eq(_preferences$38.tab).addClass("selected");
+		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
 			InventoryV2.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
 		});
-		const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
 			InventoryV2.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
 		});
-		const lockSale = _preferences$37.npcsalelock ? InventoryV2.ui.find(".deallock_on") : InventoryV2.ui.find(".deallock_off");
-		if (_preferences$37.tab != InventoryV2.TAB.FAV) {
+		const lockSale = _preferences$38.npcsalelock ? InventoryV2.ui.find(".deallock_on") : InventoryV2.ui.find(".deallock_off");
+		if (_preferences$38.tab != InventoryV2.TAB.FAV) {
 			lockSale.hide();
 			InventoryV2.ui.find(".sort").hide();
 		} else {
@@ -211087,17 +210965,17 @@ var init_InventoryV2 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV2.onAppend = function OnAppend() {
-		if (!_preferences$37.show) this.ui.hide();
-		this.resize(_preferences$37.width, _preferences$37.height);
+		if (!_preferences$38.show) this.ui.hide();
+		this.resize(_preferences$38.width, _preferences$38.height);
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$37.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$37.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$38.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$38.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$37.magnet_top;
-		this.magnet.BOTTOM = _preferences$37.magnet_bottom;
-		this.magnet.LEFT = _preferences$37.magnet_left;
-		this.magnet.RIGHT = _preferences$37.magnet_right;
-		_realSize$2 = _preferences$37.reduce ? 0 : this.ui.height();
+		this.magnet.TOP = _preferences$38.magnet_top;
+		this.magnet.BOTTOM = _preferences$38.magnet_bottom;
+		this.magnet.LEFT = _preferences$38.magnet_left;
+		this.magnet.RIGHT = _preferences$38.magnet_right;
+		_realSize$2 = _preferences$38.reduce ? 0 : this.ui.height();
 		this.ui.find(".titlebar .mini").trigger("mousedown");
 	};
 	/**
@@ -211109,16 +210987,16 @@ var init_InventoryV2 = __esmMin((() => {
 		this.equipswitchlist.length = 0;
 		InventoryV2.newItems.length = 0;
 		jquery_default(".ItemInfo").remove();
-		_preferences$37.show = this.ui.is(":visible");
-		_preferences$37.reduce = !!_realSize$2;
-		_preferences$37.y = parseInt(this.ui.css("top"), 10);
-		_preferences$37.x = parseInt(this.ui.css("left"), 10);
-		_preferences$37.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$37.magnet_top = this.magnet.TOP;
-		_preferences$37.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$37.magnet_left = this.magnet.LEFT;
-		_preferences$37.magnet_right = this.magnet.RIGHT;
-		_preferences$37.save();
+		_preferences$38.show = this.ui.is(":visible");
+		_preferences$38.reduce = !!_realSize$2;
+		_preferences$38.y = parseInt(this.ui.css("top"), 10);
+		_preferences$38.x = parseInt(this.ui.css("left"), 10);
+		_preferences$38.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$38.magnet_top = this.magnet.TOP;
+		_preferences$38.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$38.magnet_left = this.magnet.LEFT;
+		_preferences$38.magnet_right = this.magnet.RIGHT;
+		_preferences$38.save();
 	};
 	/**
 	* Process shortcut
@@ -211257,7 +211135,7 @@ var init_InventoryV2 = __esmMin((() => {
 			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV2.newItems.indexOf(item.index) === -1) InventoryV2.newItems.push(item.index);
-			if (getItemTab$1(item) === _preferences$37.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
+			if (getItemTab$1(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
 				InventoryV2.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
 			});
 			return;
@@ -211294,7 +211172,7 @@ var init_InventoryV2 = __esmMin((() => {
 			return equipItem.index === item.index;
 		});
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$37.tab) {
+		if (tab === _preferences$38.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const content = this.ui.find(".container .content");
 			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"switch1\"></div><div class=\"switch2\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
@@ -211557,7 +211435,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$21(event) {
+function stopPropagation$20(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -211744,12 +211622,12 @@ function onPopulateMaterials$1() {
 		const bsbDiv = Refine.ui.find(".bsb_overlay .bsb");
 		const bsbItem = DB.getItemInfo(BSB_ITID);
 		const item = InventoryController.getUI().getItemById(BSB_ITID);
-		bsbDiv.append("<div class=\"item\" data-index=\"" + BSB_ITID + "\" draggable=\"false\"><div class=\"icon\"></div><div class=\"mat_count\"></div>");
+		bsbDiv.append("<div class=\"item\" data-index=\"6635\" draggable=\"false\"><div class=\"icon\"></div><div class=\"mat_count\"></div>");
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (bsbItem.IsIdentified ? bsbItem.identifiedResourceName : bsbItem.unidentifiedResourceName) + ".bmp", function(data) {
-			bsbDiv.find(".item[data-index=\"" + BSB_ITID + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			bsbDiv.find(".item[data-index=\"6635\"] .icon").css("backgroundImage", "url(" + data + ")");
 		});
 		const bsbCountOuter = item ? item.count : 0;
-		const bsbcountmsg = bsbDiv.find(".item[data-index=\"" + BSB_ITID + "\"] .mat_count");
+		const bsbcountmsg = bsbDiv.find(".item[data-index=\"6635\"] .mat_count");
 		if (bsbCountOuter === 0) bsbcountmsg.html("<span style=\"color: #ce1029;\">" + bsbCountOuter + "</span>/" + blacksmithBlessing);
 		else bsbcountmsg.text(bsbCountOuter + "/" + blacksmithBlessing);
 		bsbDiv.find(".icon").click(function() {
@@ -212309,14 +212187,14 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$21).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$20).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
 		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
 		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
 		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
@@ -212438,7 +212316,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$20(event) {
+function stopPropagation$19(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -212963,7 +212841,7 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$20);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$19);
 		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
 		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
@@ -214673,7 +214551,7 @@ function getItemTab(item) {
 /**
 * Stop event propagation
 */
-function stopPropagation$19(event) {
+function stopPropagation$18(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -214703,18 +214581,18 @@ function onResize$7() {
 */
 function onSwitchTab() {
 	const idx = jquery_default(this).index();
-	_preferences$36.tab = parseInt(idx, 10);
+	_preferences$37.tab = parseInt(idx, 10);
 	requestFilter();
 	jquery_default(".tabs button").removeClass("selected");
 	jquery_default(this).addClass("selected");
-	if (_preferences$36.tab !== InventoryV3.TAB.FAV) {
+	if (_preferences$37.tab !== InventoryV3.TAB.FAV) {
 		InventoryV3.ui.find(".deallock_on").hide();
 		InventoryV3.ui.find(".deallock_off").hide();
 		InventoryV3.ui.find(".lockoverlay").hide();
 		InventoryV3.ui.find(".lockoverlaymsg").hide();
 		InventoryV3.ui.find(".sort").hide();
 	} else {
-		if (_preferences$36.npcsalelock) {
+		if (_preferences$37.npcsalelock) {
 			InventoryV3.ui.find(".deallock_on").show();
 			InventoryV3.ui.find(".lockoverlay").show();
 			InventoryV3.ui.find(".deallock_off").hide();
@@ -215045,9 +214923,9 @@ function onFinalReqInventoryExpandResult(pkt) {
 * Toggle the item drop lock preference and update the UI accordingly.
 */
 function onItemLock() {
-	_preferences$36.itemlock = !_preferences$36.itemlock;
-	InventoryV3.itemlock = _preferences$36.itemlock;
-	const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$37.itemlock = !_preferences$37.itemlock;
+	InventoryV3.itemlock = _preferences$37.itemlock;
+	const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
 		InventoryV3.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
 	});
@@ -215057,9 +214935,9 @@ function onItemLock() {
 * and updates the UI accordingly.
 */
 function onItemCompare() {
-	_preferences$36.itemcomp = !_preferences$36.itemcomp;
-	InventoryV3.itemcomp = _preferences$36.itemcomp;
-	const compImg = _preferences$36.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$37.itemcomp = !_preferences$37.itemcomp;
+	InventoryV3.itemcomp = _preferences$37.itemcomp;
+	const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
 		InventoryV3.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
 	});
@@ -215069,9 +214947,9 @@ function onItemCompare() {
 * and updates the UI accordingly.
 */
 function onNPCLock() {
-	_preferences$36.npcsalelock = !_preferences$36.npcsalelock;
-	InventoryV3.npcsalelock = _preferences$36.npcsalelock;
-	if (_preferences$36.npcsalelock) {
+	_preferences$37.npcsalelock = !_preferences$37.npcsalelock;
+	InventoryV3.npcsalelock = _preferences$37.npcsalelock;
+	if (_preferences$37.npcsalelock) {
 		InventoryV3.ui.find(".deallock_on").show();
 		InventoryV3.ui.find(".lockoverlay").show();
 		InventoryV3.ui.find(".lockoverlaymsg").show();
@@ -215086,7 +214964,7 @@ function onNPCLock() {
 		InventoryV3.ui.find(".deallock_off").show();
 	}
 }
-var InventoryV3, _realSize$1, _preferences$36, lockOverlayTimeout, InventoryV3_default;
+var InventoryV3, _realSize$1, _preferences$37, lockOverlayTimeout, InventoryV3_default;
 var init_InventoryV3 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -215142,7 +215020,7 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.newItems = [];
 	InventoryV3.equippedItems = [];
 	_realSize$1 = 0;
-	_preferences$36 = Preferences.get("InventoryV3", {
+	_preferences$37 = Preferences.get("InventoryV3", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -215161,37 +215039,37 @@ var init_InventoryV3 = __esmMin((() => {
 	/**
 	* Store variables from preferences
 	*/
-	InventoryV3.itemlock = _preferences$36.itemlock;
-	InventoryV3.itemcomp = _preferences$36.itemcomp;
-	InventoryV3.npcsalelock = _preferences$36.npcsalelock;
+	InventoryV3.itemlock = _preferences$37.itemlock;
+	InventoryV3.itemcomp = _preferences$37.itemcomp;
+	InventoryV3.npcsalelock = _preferences$37.npcsalelock;
 	/**
 	* Initialize UI
 	*/
 	InventoryV3.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
 		this.ui.find(".titlebar .mini").click(onToggleReduction);
 		this.ui.find(".tabs button").mousedown(onSwitchTab);
 		this.ui.find(".footer .extend").mousedown(onResize$7);
 		this.ui.find(".titlebar .close").click(function() {
 			InventoryV3.ui.hide();
 		});
-		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$19).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
+		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$18).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
 		this.ui.find(".ncnt").text("0 / ");
 		this.ui.find(".mcnt").text(100);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$19).on("drop", onTabDrop);
+		this.ui.find(".tabs button").on("dragover", stopPropagation$18).on("drop", onTabDrop);
 		jquery_default(".tabs button").removeClass("selected");
-		this.ui.find(".tabs button").eq(_preferences$36.tab).addClass("selected");
-		const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		this.ui.find(".tabs button").eq(_preferences$37.tab).addClass("selected");
+		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
 			InventoryV3.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
 		});
-		const compImg = _preferences$36.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
 			InventoryV3.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
 		});
-		const lockSale = _preferences$36.npcsalelock ? InventoryV3.ui.find(".deallock_on") : InventoryV3.ui.find(".deallock_off");
-		if (_preferences$36.tab != InventoryV3.TAB.FAV) {
+		const lockSale = _preferences$37.npcsalelock ? InventoryV3.ui.find(".deallock_on") : InventoryV3.ui.find(".deallock_off");
+		if (_preferences$37.tab != InventoryV3.TAB.FAV) {
 			lockSale.hide();
 			InventoryV3.ui.find(".sort").hide();
 		} else {
@@ -215214,17 +215092,17 @@ var init_InventoryV3 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV3.onAppend = function OnAppend() {
-		if (!_preferences$36.show) this.ui.hide();
-		this.resize(_preferences$36.width, _preferences$36.height);
+		if (!_preferences$37.show) this.ui.hide();
+		this.resize(_preferences$37.width, _preferences$37.height);
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$36.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$36.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$37.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$37.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$36.magnet_top;
-		this.magnet.BOTTOM = _preferences$36.magnet_bottom;
-		this.magnet.LEFT = _preferences$36.magnet_left;
-		this.magnet.RIGHT = _preferences$36.magnet_right;
-		_realSize$1 = _preferences$36.reduce ? 0 : this.ui.height();
+		this.magnet.TOP = _preferences$37.magnet_top;
+		this.magnet.BOTTOM = _preferences$37.magnet_bottom;
+		this.magnet.LEFT = _preferences$37.magnet_left;
+		this.magnet.RIGHT = _preferences$37.magnet_right;
+		_realSize$1 = _preferences$37.reduce ? 0 : this.ui.height();
 		this.ui.find(".titlebar .mini").trigger("mousedown");
 	};
 	/**
@@ -215236,16 +215114,16 @@ var init_InventoryV3 = __esmMin((() => {
 		this.equipswitchlist.length = 0;
 		InventoryV3.newItems.length = 0;
 		jquery_default(".ItemInfo").remove();
-		_preferences$36.show = this.ui.is(":visible");
-		_preferences$36.reduce = !!_realSize$1;
-		_preferences$36.y = parseInt(this.ui.css("top"), 10);
-		_preferences$36.x = parseInt(this.ui.css("left"), 10);
-		_preferences$36.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$36.magnet_top = this.magnet.TOP;
-		_preferences$36.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$36.magnet_left = this.magnet.LEFT;
-		_preferences$36.magnet_right = this.magnet.RIGHT;
-		_preferences$36.save();
+		_preferences$37.show = this.ui.is(":visible");
+		_preferences$37.reduce = !!_realSize$1;
+		_preferences$37.y = parseInt(this.ui.css("top"), 10);
+		_preferences$37.x = parseInt(this.ui.css("left"), 10);
+		_preferences$37.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$37.magnet_top = this.magnet.TOP;
+		_preferences$37.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$37.magnet_left = this.magnet.LEFT;
+		_preferences$37.magnet_right = this.magnet.RIGHT;
+		_preferences$37.save();
 	};
 	/**
 	* Process shortcut
@@ -215391,7 +215269,7 @@ var init_InventoryV3 = __esmMin((() => {
 			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV3.newItems.indexOf(item.index) === -1) InventoryV3.newItems.push(item.index);
-			if (getItemTab(item) === _preferences$36.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
+			if (getItemTab(item) === _preferences$37.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
 				InventoryV3.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
 			});
 			return;
@@ -215428,7 +215306,7 @@ var init_InventoryV3 = __esmMin((() => {
 			return equipItem.index === item.index;
 		});
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$36.tab) {
+		if (tab === _preferences$37.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const content = this.ui.find(".container .content");
 			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"switch1\"></div><div class=\"switch2\"></div><div class=\"grade\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
@@ -216197,7 +216075,7 @@ function onRemoveOption$5() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$18(event) {
+function stopPropagation$17(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216218,10 +216096,10 @@ function toggleStatus$5() {
 	const state = isVisible ? "on" : "off";
 	if (isVisible) {
 		winStats.unembed();
-		_preferences$35.stats = false;
+		_preferences$36.stats = false;
 	} else {
 		winStats.embed(EquipmentV0.ui[0]);
-		_preferences$35.stats = true;
+		_preferences$36.stats = true;
 	}
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
 		self.css("backgroundImage", "url(" + data + ")");
@@ -216347,7 +216225,7 @@ function onEquipmentOver$4() {
 function onEquipmentOut$4() {
 	EquipmentV0.ui.find(".overlay").hide();
 }
-var EquipmentV0, _preferences$35, _list$11, _ctx$9, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
+var EquipmentV0, _preferences$36, _list$11, _ctx$9, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
 var init_EquipmentV0 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -216372,7 +216250,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	init_EquipmentV0$1();
 	init_Inventory();
 	EquipmentV0 = new UIComponent("EquipmentV0", EquipmentV0_default$2, EquipmentV0_default$1);
-	_preferences$35 = Preferences.get("EquipmentV0", {
+	_preferences$36 = Preferences.get("EquipmentV0", {
 		x: 480,
 		y: 200,
 		show: false,
@@ -216386,7 +216264,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	*/
 	EquipmentV0.init = function init() {
 		_ctx$9 = this.ui.find("canvas")[0].getContext("2d");
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$18).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(function() {
 			_btnLevelUp$4.detach();
 			EquipmentV0.ui.show();
 			EquipmentV0.ui.parent().append(EquipmentV0.ui);
@@ -216397,7 +216275,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$18);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV0.ui.find(".panel").toggle();
 		});
@@ -216421,12 +216299,12 @@ var init_EquipmentV0 = __esmMin((() => {
 	*/
 	EquipmentV0.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$35.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$35.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$36.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$36.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$35.show) this.ui.hide();
-		if (_preferences$35.reduce) this.ui.find(".panel").hide();
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$35.stats && _preferences$35.show) WinStatsController.getUI().embed(EquipmentV0.ui[0]);
+		if (!_preferences$36.show) this.ui.hide();
+		if (_preferences$36.reduce) this.ui.find(".panel").hide();
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$36.stats && _preferences$36.show) WinStatsController.getUI().embed(EquipmentV0.ui[0]);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
 			this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
 		}.bind(this));
@@ -216440,13 +216318,13 @@ var init_EquipmentV0 = __esmMin((() => {
 		Renderer.stop(renderCharacter$4);
 		_list$11 = {};
 		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$35.show = this.ui.is(":visible");
-		_preferences$35.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$35.stats = WinStatsController.getUI().isEmbedded();
+		_preferences$36.show = this.ui.is(":visible");
+		_preferences$36.reduce = this.ui.find(".panel").css("display") === "none";
+		_preferences$36.stats = WinStatsController.getUI().isEmbedded();
 		hideStatus$2();
-		_preferences$35.y = parseInt(this.ui.css("top"), 10);
-		_preferences$35.x = parseInt(this.ui.css("left"), 10);
-		_preferences$35.save();
+		_preferences$36.y = parseInt(this.ui.css("top"), 10);
+		_preferences$36.x = parseInt(this.ui.css("left"), 10);
+		_preferences$36.save();
 	};
 	/**
 	* Start/stop rendering character in UI
@@ -216457,7 +216335,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			Renderer.render(renderCharacter$4);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
 				_btnLevelUp$4.detach();
-				if (_preferences$35.stats) WinStatsController.getUI().embed(EquipmentV0.ui[0]);
+				if (_preferences$36.stats) WinStatsController.getUI().embed(EquipmentV0.ui[0]);
 			}
 			this.focus();
 		} else {
@@ -216676,7 +216554,7 @@ function onRemoveOption$4() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$17(event) {
+function stopPropagation$16(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -216697,10 +216575,10 @@ function toggleStatus$4() {
 	const state = isVisible ? "on" : "off";
 	if (isVisible) {
 		winStats.unembed();
-		_preferences$34.stats = false;
+		_preferences$35.stats = false;
 	} else {
 		winStats.embed(EquipmentV1.ui[0]);
-		_preferences$34.stats = true;
+		_preferences$35.stats = true;
 	}
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
 		self.css("backgroundImage", "url(" + data + ")");
@@ -216836,7 +216714,7 @@ function onEquipmentOver$3() {
 function onEquipmentOut$3() {
 	EquipmentV1.ui.find(".overlay").hide();
 }
-var EquipmentV1, _preferences$34, _list$10, _ctx$8, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
+var EquipmentV1, _preferences$35, _list$10, _ctx$8, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
 var init_EquipmentV1 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -216862,7 +216740,7 @@ var init_EquipmentV1 = __esmMin((() => {
 	init_Inventory();
 	init_Entity$1();
 	EquipmentV1 = new UIComponent("EquipmentV1", EquipmentV1_default$2, EquipmentV1_default$1);
-	_preferences$34 = Preferences.get("EquipmentV1", {
+	_preferences$35 = Preferences.get("EquipmentV1", {
 		x: 480,
 		y: 200,
 		show: false,
@@ -216903,7 +216781,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (i != 0) contentDivs$3[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$17).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(function() {
 			_btnLevelUp$3.detach();
 			EquipmentV1.ui.show();
 			EquipmentV1.ui.parent().append(EquipmentV1.ui);
@@ -216914,7 +216792,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV1.ui.find(".panel").toggle();
 		});
@@ -216946,12 +216824,12 @@ var init_EquipmentV1 = __esmMin((() => {
 	*/
 	EquipmentV1.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$34.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$34.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$35.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$35.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$34.show) this.ui.hide();
-		if (_preferences$34.reduce) this.ui.find(".panel").hide();
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV1.ui[0]);
+		if (!_preferences$35.show) this.ui.hide();
+		if (_preferences$35.reduce) this.ui.find(".panel").hide();
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$35.stats && _preferences$35.show) WinStatsController.getUI().embed(EquipmentV1.ui[0]);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
 			this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
 		}.bind(this));
@@ -216965,13 +216843,13 @@ var init_EquipmentV1 = __esmMin((() => {
 		Renderer.stop(renderCharacter$3);
 		_list$10 = {};
 		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$34.show = this.ui.is(":visible");
-		_preferences$34.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$34.stats = WinStatsController.getUI().isEmbedded();
+		_preferences$35.show = this.ui.is(":visible");
+		_preferences$35.reduce = this.ui.find(".panel").css("display") === "none";
+		_preferences$35.stats = WinStatsController.getUI().isEmbedded();
 		hideStatus$1();
-		_preferences$34.y = parseInt(this.ui.css("top"), 10);
-		_preferences$34.x = parseInt(this.ui.css("left"), 10);
-		_preferences$34.save();
+		_preferences$35.y = parseInt(this.ui.css("top"), 10);
+		_preferences$35.x = parseInt(this.ui.css("left"), 10);
+		_preferences$35.save();
 	};
 	/**
 	* Start/stop rendering character in UI
@@ -216982,7 +216860,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			Renderer.render(renderCharacter$3);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
 				_btnLevelUp$3.detach();
-				if (_preferences$34.stats) WinStatsController.getUI().embed(EquipmentV1.ui[0]);
+				if (_preferences$35.stats) WinStatsController.getUI().embed(EquipmentV1.ui[0]);
 			}
 			this.focus();
 		} else {
@@ -217219,7 +217097,7 @@ function onRemoveOption$3() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$16(event) {
+function stopPropagation$15(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -217240,10 +217118,10 @@ function toggleStatus$3() {
 	const state = isVisible ? "on" : "off";
 	if (isVisible) {
 		winStats.unembed();
-		_preferences$33.stats = false;
+		_preferences$34.stats = false;
 	} else {
 		winStats.embed(EquipmentV2.ui[0]);
-		_preferences$33.stats = true;
+		_preferences$34.stats = true;
 	}
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
 		self.css("backgroundImage", "url(" + data + ")");
@@ -217379,7 +217257,7 @@ function onEquipmentOver$2() {
 function onEquipmentOut$2() {
 	EquipmentV2.ui.find(".overlay").hide();
 }
-var EquipmentV2, _preferences$33, _list$9, _ctx$7, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
+var EquipmentV2, _preferences$34, _list$9, _ctx$7, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
 var init_EquipmentV2 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -217405,7 +217283,7 @@ var init_EquipmentV2 = __esmMin((() => {
 	init_Inventory();
 	init_Entity$1();
 	EquipmentV2 = new UIComponent("EquipmentV2", EquipmentV2_default$2, EquipmentV2_default$1);
-	_preferences$33 = Preferences.get("EquipmentV2", {
+	_preferences$34 = Preferences.get("EquipmentV2", {
 		x: 480,
 		y: 200,
 		show: false,
@@ -217446,7 +217324,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (i != 0) contentDivs$2[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(function() {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$15).click(function() {
 			_btnLevelUp$2.detach();
 			EquipmentV2.ui.show();
 			EquipmentV2.ui.parent().append(EquipmentV2.ui);
@@ -217457,7 +217335,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$15);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV2.ui.find(".panel").toggle();
 		});
@@ -217489,12 +217367,12 @@ var init_EquipmentV2 = __esmMin((() => {
 	*/
 	EquipmentV2.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$33.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$33.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$34.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$34.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$33.show) this.ui.hide();
-		if (_preferences$33.reduce) this.ui.find(".panel").hide();
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$33.stats && _preferences$33.show) WinStatsController.getUI().embed(EquipmentV2.ui[0]);
+		if (!_preferences$34.show) this.ui.hide();
+		if (_preferences$34.reduce) this.ui.find(".panel").hide();
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV2.ui[0]);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
 			this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
 		}.bind(this));
@@ -217508,13 +217386,13 @@ var init_EquipmentV2 = __esmMin((() => {
 		Renderer.stop(renderCharacter$2);
 		_list$9 = {};
 		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$33.show = this.ui.is(":visible");
-		_preferences$33.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$33.stats = WinStatsController.getUI().isEmbedded();
+		_preferences$34.show = this.ui.is(":visible");
+		_preferences$34.reduce = this.ui.find(".panel").css("display") === "none";
+		_preferences$34.stats = WinStatsController.getUI().isEmbedded();
 		hideStatus();
-		_preferences$33.y = parseInt(this.ui.css("top"), 10);
-		_preferences$33.x = parseInt(this.ui.css("left"), 10);
-		_preferences$33.save();
+		_preferences$34.y = parseInt(this.ui.css("top"), 10);
+		_preferences$34.x = parseInt(this.ui.css("left"), 10);
+		_preferences$34.save();
 	};
 	/**
 	* Start/stop rendering character in UI
@@ -217525,7 +217403,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			Renderer.render(renderCharacter$2);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
 				_btnLevelUp$2.detach();
-				if (_preferences$33.stats) WinStatsController.getUI().embed(EquipmentV2.ui[0]);
+				if (_preferences$34.stats) WinStatsController.getUI().embed(EquipmentV2.ui[0]);
 			}
 			this.focus();
 		} else {
@@ -217795,7 +217673,7 @@ function onRemoveOption$2() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$15(event) {
+function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -217953,7 +217831,7 @@ function onSwtichEquip$1() {
 		zIndex: 100
 	});
 }
-var EquipmentV3, _preferences$32, _ctx$6, _showEquip$1, _btnLevelUp$1, tabLinks$1, contentDivs$1, currentTabId$1, switchappend$1, switchUIopen$1, _currentTitleId$1, renderCharacter$1, EquipmentV3_default;
+var EquipmentV3, _preferences$33, _ctx$6, _showEquip$1, _btnLevelUp$1, tabLinks$1, contentDivs$1, currentTabId$1, switchappend$1, switchUIopen$1, _currentTitleId$1, renderCharacter$1, EquipmentV3_default;
 var init_EquipmentV3 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -217981,7 +217859,7 @@ var init_EquipmentV3 = __esmMin((() => {
 	init_Inventory();
 	init_Entity$1();
 	EquipmentV3 = new UIComponent("EquipmentV3", EquipmentV3_default$2, EquipmentV3_default$1);
-	_preferences$32 = Preferences.get("EquipmentV3", {
+	_preferences$33 = Preferences.get("EquipmentV3", {
 		x: 480,
 		y: 200,
 		show: false,
@@ -218026,7 +217904,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (i != 0) contentDivs$1[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$15).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$14).click(() => {
 			_btnLevelUp$1.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -218035,7 +217913,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$15);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$14);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV3.ui.find(".panel").toggle();
 		});
@@ -218069,13 +217947,13 @@ var init_EquipmentV3 = __esmMin((() => {
 	*/
 	EquipmentV3.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$32.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$32.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$33.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$33.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$32.show) this.ui.hide();
-		if (_preferences$32.reduce) this.ui.find(".panel").hide();
+		if (!_preferences$33.show) this.ui.hide();
+		if (_preferences$33.reduce) this.ui.find(".panel").hide();
 		if (UIVersionManager.getEquipmentVersion() > 0) {
-			if (!_preferences$32.stats) {
+			if (!_preferences$33.stats) {
 				this.ui.find(".status_component").hide();
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
 					this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
@@ -218094,12 +217972,12 @@ var init_EquipmentV3 = __esmMin((() => {
 		Renderer.stop(renderCharacter$1);
 		EquipmentV3._itemlist = {};
 		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$32.show = this.ui.is(":visible");
-		_preferences$32.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$32.stats = this.ui.find(".status_component").css("display") !== "none";
-		_preferences$32.y = parseInt(this.ui.css("top"), 10);
-		_preferences$32.x = parseInt(this.ui.css("left"), 10);
-		_preferences$32.save();
+		_preferences$33.show = this.ui.is(":visible");
+		_preferences$33.reduce = this.ui.find(".panel").css("display") === "none";
+		_preferences$33.stats = this.ui.find(".status_component").css("display") !== "none";
+		_preferences$33.y = parseInt(this.ui.css("top"), 10);
+		_preferences$33.x = parseInt(this.ui.css("left"), 10);
+		_preferences$33.save();
 	};
 	/**
 	* Start/stop rendering character in UI
@@ -218448,7 +218326,7 @@ function onRemoveOption$1() {
 /**
 * Stop an event to propagate
 */
-function stopPropagation$14(event) {
+function stopPropagation$13(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -218612,7 +218490,7 @@ function onSwtichEquip() {
 		zIndex: 100
 	});
 }
-var EquipmentV4, _preferences$31, _ctx$5, _showEquip, _hideCostume, _currentTitleId, _btnLevelUp, tabLinks, contentDivs, currentTabId, switchappend, switchUIopen, renderCharacter, EquipmentV4_default;
+var EquipmentV4, _preferences$32, _ctx$5, _showEquip, _hideCostume, _currentTitleId, _btnLevelUp, tabLinks, contentDivs, currentTabId, switchappend, switchUIopen, renderCharacter, EquipmentV4_default;
 var init_EquipmentV4 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -218641,7 +218519,7 @@ var init_EquipmentV4 = __esmMin((() => {
 	init_Inventory();
 	init_Entity$1();
 	EquipmentV4 = new UIComponent("EquipmentV4", EquipmentV4_default$2, EquipmentV4_default$1);
-	_preferences$31 = Preferences.get("EquipmentV4", {
+	_preferences$32 = Preferences.get("EquipmentV4", {
 		x: 480,
 		y: 200,
 		show: false,
@@ -218687,7 +218565,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (i != 0) contentDivs[id].classList.add("content", "hide");
 			i++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$14).click(() => {
+		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$13).click(() => {
 			_btnLevelUp.detach();
 			WinStatsController.getUI().ui.show();
 		});
@@ -218696,7 +218574,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			this.ui.addClass("equipmentV0");
 			this.ui.find("#lvlup_base").remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$14);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$13);
 		this.ui.find(".titlebar .mini").click(function() {
 			EquipmentV4.ui.find(".panel").toggle();
 		});
@@ -218787,13 +218665,13 @@ var init_EquipmentV4 = __esmMin((() => {
 	*/
 	EquipmentV4.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$31.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$31.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$32.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$32.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$31.show) this.ui.hide();
-		if (_preferences$31.reduce) this.ui.find(".panel").hide();
+		if (!_preferences$32.show) this.ui.hide();
+		if (_preferences$32.reduce) this.ui.find(".panel").hide();
 		if (UIVersionManager.getEquipmentVersion() > 0) {
-			if (!_preferences$31.stats) {
+			if (!_preferences$32.stats) {
 				this.ui.find(".status_component").hide();
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
 					this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
@@ -218812,12 +218690,12 @@ var init_EquipmentV4 = __esmMin((() => {
 		Renderer.stop(renderCharacter);
 		EquipmentV4._itemlist = {};
 		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$31.show = this.ui.is(":visible");
-		_preferences$31.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$31.stats = this.ui.find(".status_component").css("display") !== "none";
-		_preferences$31.y = parseInt(this.ui.css("top"), 10);
-		_preferences$31.x = parseInt(this.ui.css("left"), 10);
-		_preferences$31.save();
+		_preferences$32.show = this.ui.is(":visible");
+		_preferences$32.reduce = this.ui.find(".panel").css("display") === "none";
+		_preferences$32.stats = this.ui.find(".status_component").css("display") !== "none";
+		_preferences$32.y = parseInt(this.ui.css("top"), 10);
+		_preferences$32.x = parseInt(this.ui.css("left"), 10);
+		_preferences$32.save();
 	};
 	/**
 	* Start/stop rendering character in UI
@@ -219242,7 +219120,7 @@ function resize$3(width, height) {
 		if (inner) ChatRoom._host.style.height = inner.offsetHeight + "px";
 	}
 }
-var ChatRoom, _gridWidth, _gridHeight, _preferences$30, ChatRoom_default;
+var ChatRoom, _gridWidth, _gridHeight, _preferences$31, ChatRoom_default;
 var init_ChatRoom$1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -219296,7 +219174,7 @@ var init_ChatRoom$1 = __esmMin((() => {
 	ChatRoom.isOpen = false;
 	_gridWidth = 7;
 	_gridHeight = 3;
-	_preferences$30 = Preferences.get("ChatRoom", {
+	_preferences$31 = Preferences.get("ChatRoom", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -219325,11 +219203,11 @@ var init_ChatRoom$1 = __esmMin((() => {
 	ChatRoom.onAppend = function onAppend() {
 		const root = this._shadow || this._host;
 		this.isOpen = true;
-		_gridWidth = _preferences$30.width;
-		_gridHeight = _preferences$30.height;
+		_gridWidth = _preferences$31.width;
+		_gridHeight = _preferences$31.height;
 		resize$3(_gridWidth, _gridHeight);
-		this._host.style.top = Math.min(Math.max(0, _preferences$30.y), Renderer.height - this._host.getBoundingClientRect().height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$30.x), Renderer.width - this._host.getBoundingClientRect().width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$31.y), Renderer.height - this._host.getBoundingClientRect().height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$31.x), Renderer.width - this._host.getBoundingClientRect().width) + "px";
 		root.querySelector(".sendmsg").focus();
 		this.updateChat();
 	};
@@ -219346,11 +219224,11 @@ var init_ChatRoom$1 = __esmMin((() => {
 		this.isOpen = false;
 		const messages = (this._shadow || this._host).querySelector(".messages");
 		if (messages) messages.innerHTML = "";
-		_preferences$30.y = parseInt(this._host.style.top, 10);
-		_preferences$30.x = parseInt(this._host.style.left, 10);
-		_preferences$30.width = _gridWidth;
-		_preferences$30.height = _gridHeight;
-		_preferences$30.save();
+		_preferences$31.y = parseInt(this._host.style.top, 10);
+		_preferences$31.x = parseInt(this._host.style.left, 10);
+		_preferences$31.width = _gridWidth;
+		_preferences$31.height = _gridHeight;
+		_preferences$31.save();
 		this.exitRoom();
 	};
 	/**
@@ -221403,70 +221281,68 @@ var init_Guild = __esmMin((() => {
 //#region src/UI/Components/SkillListMH/SkillListMH.html?raw
 var SkillListMH_default$2;
 var init_SkillListMH$2 = __esmMin((() => {
-	SkillListMH_default$2 = "<div class=\"SkillListMH\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\">Skill List</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\">\r\n			<table>\r\n				<!-- Just to get reference, will be removed -->\r\n				<button\r\n					class=\"btn levelup\"\r\n					data-background=\"basic_interface/skill_up_a.bmp\"\r\n					data-hover=\"basic_interface/skill_up_b.bmp\"\r\n					data-down=\"basic_interface/skill_up_c.bmp\"\r\n				></button>\r\n			</table>\r\n		</div>\r\n\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n			<button\r\n				class=\"btn apply\"\r\n				data-background=\"btn_apply.bmp\"\r\n				data-hover=\"btn_apply_a.bmp\"\r\n				data-down=\"btn_apply_b.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"btn reset\"\r\n				data-background=\"btn_reset.bmp\"\r\n				data-hover=\"btn_reset_a.bmp\"\r\n				data-down=\"btn_reset_b.bmp\"\r\n			></button>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_job\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-down=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+	SkillListMH_default$2 = "<div class=\"SkillListMH\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text\">Skill List</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\">\r\n			<table>\r\n				<!-- Just to get reference, will be removed -->\r\n				<ui-button\r\n					class=\"btn levelup\"\r\n					bg=\"basic_interface/skill_up_a.bmp\"\r\n					hover=\"basic_interface/skill_up_b.bmp\"\r\n					down=\"basic_interface/skill_up_c.bmp\"\r\n				></ui-button>\r\n			</table>\r\n		</div>\r\n\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n			<ui-button class=\"btn apply\" bg=\"btn_apply.bmp\" hover=\"btn_apply_a.bmp\" down=\"btn_apply_b.bmp\"></ui-button>\r\n			<ui-button class=\"btn reset\" bg=\"btn_reset.bmp\" hover=\"btn_reset_a.bmp\" down=\"btn_reset_b.bmp\"></ui-button>\r\n			<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillListMH/SkillListMH.css?raw
 var SkillListMH_default$1;
 var init_SkillListMH$1 = __esmMin((() => {
-	SkillListMH_default$1 = ".SkillListMH {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n.SkillListMH .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n.SkillListMH .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n.SkillListMH .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n.SkillListMH .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n.SkillListMH .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n.SkillListMH .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n.SkillListMH .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n.SkillListMH .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n.SkillListMH .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n.SkillListMH .content td,\r\n.SkillListMH .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n.SkillListMH .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.SkillListMH td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n.SkillListMH .content .icon {\r\n	padding-left: 15px;\r\n}\r\n.SkillListMH .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n.SkillListMH .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n.SkillListMH .disabled .icon,\r\n.SkillListMH .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n.SkillListMH .disabled .consume,\r\n.SkillListMH .disabled .level {\r\n	display: none;\r\n}\r\n.SkillListMH .currentDown,\r\n.SkillListMH .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.SkillListMH .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n.SkillListMH .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n.SkillListMH .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n.SkillListMH .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n.SkillListMH .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n.SkillListMH .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n.SkillListMH .footer .apply {\r\n	right: 70px;\r\n}\r\n.SkillListMH .footer .reset {\r\n	right: 20px;\r\n}\r\n.SkillListMH .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+	SkillListMH_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.SkillListMH {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n.SkillListMH .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n.SkillListMH .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n.SkillListMH .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n.SkillListMH .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n.SkillListMH .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n.SkillListMH .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n.SkillListMH .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n.SkillListMH .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n.SkillListMH .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n.SkillListMH .content td,\r\n.SkillListMH .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n.SkillListMH .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.SkillListMH td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n.SkillListMH .content .icon {\r\n	padding-left: 15px;\r\n}\r\n.SkillListMH .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n.SkillListMH .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n.SkillListMH .disabled .icon,\r\n.SkillListMH .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n.SkillListMH .disabled .consume,\r\n.SkillListMH .disabled .level {\r\n	display: none;\r\n}\r\n.SkillListMH .currentDown,\r\n.SkillListMH .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.SkillListMH .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n.SkillListMH .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n.SkillListMH .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n.SkillListMH .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n.SkillListMH .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n.SkillListMH .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n.SkillListMH .footer .apply {\r\n	right: 70px;\r\n}\r\n.SkillListMH .footer .reset {\r\n	right: 20px;\r\n}\r\n.SkillListMH .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/SkillListMH/SkillListMH.js
 /**
-* Create Component base class
+* Helper: query inside shadow root
 */
-function SkillListMH(type) {
-	const name = "SkillList" + (type === "homunculus" ? "HOM" : "MER");
-	UIComponent.call(this, name, SkillListMH_default$2, SkillListMH_default$1);
-	this.type = type;
-	this.list = [];
-	this._rowCount = Math.min(4, Math.floor(this.list.length / 9));
-	this.points = 0;
-	this._preferences = Preferences.get(name, {
+function _root(comp) {
+	return comp._shadow || comp._host;
+}
+/**
+* Helper: escape HTML
+*/
+function _escapeHTML(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+/**
+* Factory to create a SkillListMH GUIComponent instance
+*/
+function createSkillListMH(type) {
+	const name = `SkillList${type === "homunculus" ? "HOM" : "MER"}`;
+	const comp = new GUIComponent(name, SkillListMH_default$1);
+	comp.render = () => SkillListMH_default$2;
+	const _preferences = Preferences.get(name, {
 		x: 100,
 		y: 200,
 		width: 8,
 		height: 5,
 		show: false
 	}, 1);
-}
-var homSkills, merSkills, SkillListMH_default;
-var init_SkillListMH = __esmMin((() => {
-	init_DBManager();
-	init_SkillInfo();
-	init_jquery();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_UIComponent();
-	init_SkillTargetSelection();
-	init_SkillDescription();
-	init_SkillListMH$2();
-	init_SkillListMH$1();
-	SkillListMH.prototype = Object.create(UIComponent.prototype);
-	SkillListMH.prototype.constructor = SkillListMH;
-	/**
-	* Initialize UI
-	*/
-	SkillListMH.prototype.init = function init() {
-		const self = this;
-		this.ui.find(".titlebar .text").text(this.type === "homunculus" ? "Homunculus Skills" : "Mercenary Skills");
-		this.ui.find(".titlebar .base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
+	comp._skillType = type;
+	comp.list = [];
+	comp._rowCount = 0;
+	comp.points = 0;
+	comp._btnIncSkill = null;
+	comp._btnLevelUp = null;
+	comp._lArrow = null;
+	comp._rArrow = null;
+	comp.init = function init() {
+		const root = _root(this);
+		root.querySelector(".titlebar .text").textContent = this._skillType === "homunculus" ? "Homunculus Skills" : "Mercenary Skills";
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
 		});
-		this.ui.find(".footer .extend").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			const ui = self.ui;
-			const top = ui.position().top;
-			const left = ui.position().left;
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
+			const hostStyle = this._host.style;
+			const top = parseInt(hostStyle.top, 10) || 0;
+			const left = parseInt(hostStyle.left, 10) || 0;
 			let lastWidth = 0;
 			let lastHeight = 0;
-			function resizing() {
+			const resizing = () => {
 				const extraX = -6;
 				const extraY = 32;
 				let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
@@ -221474,181 +221350,208 @@ var init_SkillListMH = __esmMin((() => {
 				w = Math.min(Math.max(w, 8), 8);
 				h = Math.min(Math.max(h, 4), 10);
 				if (w === lastWidth && h === lastHeight) return;
-				self.ui.find(".content").css({
-					width: w * 32,
-					height: h * 32
-				});
+				const content = root.querySelector(".content");
+				if (content) {
+					content.style.width = `${w * 32}px`;
+					content.style.height = `${h * 32}px`;
+				}
 				lastWidth = w;
 				lastHeight = h;
-			}
-			const _Interval = setInterval(resizing, 30);
-			jquery_default(window).on("mouseup.resize", function(_event) {
+			};
+			const interval = setInterval(resizing, 30);
+			const onMouseUp = (_event) => {
 				if (_event.which === 1) {
-					clearInterval(_Interval);
-					jquery_default(window).off("mouseup.resize");
+					clearInterval(interval);
+					window.removeEventListener("mouseup", onMouseUp);
 				}
+			};
+			window.addEventListener("mouseup", onMouseUp);
+		});
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			this.ui.hide();
+		});
+		const levelupBtn = root.querySelector(".btn.levelup");
+		if (levelupBtn) {
+			this._btnIncSkill = levelupBtn.cloneNode(true);
+			levelupBtn.remove();
+			this._btnIncSkill.addEventListener("click", function() {
+				const index = this.parentNode.parentNode.getAttribute("data-index");
+				comp.onIncreaseSkill(parseInt(index, 10));
 			});
-		});
-		this.ui.find(".titlebar .close").click(function() {
-			self.ui.hide();
-		});
-		this.btnIncSkill = this.ui.find(".btn.levelup").detach();
-		this.btnIncSkill.click(function() {
-			const index = this.parentNode.parentNode.getAttribute("data-index");
-			self.onIncreaseSkill(parseInt(index, 10));
-		});
-		this.btnLevelUp = jquery_default("#lvlup_job").detach();
-		this.btnLevelUp.click(function() {
-			self.btnLevelUp.detach();
-			self.ui.show();
-			self.ui.parent().append(self.ui);
-		}).mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.on("dblclick", ".skill .icon, .skill .name", function() {
-			let main = jquery_default(this).parent();
-			if (!main.hasClass("skill")) main = main.parent();
-			self.useSkillID(parseInt(main.data("index"), 10));
-		}).on("contextmenu", ".skill .icon, .skill .name", function() {
-			let main = jquery_default(this).parent();
-			if (!main.hasClass("skill")) main = main.parent();
-			const skill = self.getSkillById(parseInt(main.data("index"), 10));
-			if (SkillDescription_default.uid === skill.SKID) {
-				SkillDescription_default.remove();
-				return false;
+		}
+		const lvlupBtn = root.querySelector("#lvlup_job");
+		if (lvlupBtn) {
+			this._btnLevelUp = lvlupBtn;
+			this._btnLevelUp.remove();
+			this._btnLevelUp.addEventListener("click", () => {
+				if (this._btnLevelUp.parentNode) this._btnLevelUp.remove();
+				this.ui.show();
+			});
+			this._btnLevelUp.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+			});
+		}
+		const container = root.querySelector(".SkillListMH") || root;
+		container.addEventListener("dblclick", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				this.useSkillID(parseInt(main.getAttribute("data-index"), 10));
 			}
-			SkillDescription_default.append();
-			SkillDescription_default.setSkill(skill.SKID);
-			return false;
-		}).on("mousedown", ".selectable", function() {
-			let main = jquery_default(this).parent();
-			if (!main.hasClass("skill")) main = main.parent();
-			self.ui.find(".skill").removeClass("selected");
-			main.addClass("selected");
-		}).on("dragstart", ".skill", function(event) {
-			const index = parseInt(this.getAttribute("data-index"), 10);
-			const skill = self.getSkillById(index);
+		});
+		container.addEventListener("contextmenu", (e) => {
+			const target = e.target.closest(".skill .icon, .skill .name");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				const skill = this.getSkillById(parseInt(main.getAttribute("data-index"), 10));
+				if (SkillDescription_default.uid === skill.SKID) {
+					SkillDescription_default.remove();
+					return;
+				}
+				SkillDescription_default.append();
+				SkillDescription_default.setSkill(skill.SKID);
+			}
+		});
+		container.addEventListener("mousedown", (e) => {
+			const target = e.target.closest(".selectable");
+			if (target) {
+				let main = target.parentElement;
+				if (!main.classList.contains("skill")) main = main.parentElement;
+				for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
+				main.classList.add("selected");
+			}
+		});
+		container.addEventListener("dragstart", (e) => {
+			const skillEl = e.target.closest(".skill");
+			if (!skillEl) return;
+			const index = parseInt(skillEl.getAttribute("data-index"), 10);
+			const skill = this.getSkillById(index);
 			if (!skill || !skill.level || !skill.type) {
-				event.stopImmediatePropagation();
-				return false;
+				e.stopImmediatePropagation();
+				e.preventDefault();
+				return;
 			}
 			const img = new Image();
 			img.decoding = "async";
-			img.src = this.firstChild.firstChild.src;
-			event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-			event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+			img.src = skillEl.querySelector(".icon img")?.src || "";
+			e.dataTransfer.setDragImage(img, 12, 12);
+			e.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 				type: "skill",
 				from: "SkillListMH",
 				data: skill
 			}));
-		}).on("dragend", ".skill", function() {
-			delete window._OBJ_DRAG_;
-			this.classList.remove("hide");
 		});
-		this.draggable(this.ui.find(".titlebar"));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_right.bmp", function(data) {
-			this.rArrow = "url(" + data + ")";
-		}.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/arw_left.bmp", function(data) {
-			this.lArrow = "url(" + data + ")";
-		}.bind(this));
-	};
-	/**
-	* Apply preferences once append to body
-	*/
-	SkillListMH.prototype.onAppend = function onAppend() {
-		if (!this._preferences.show) this.ui.hide();
-		this.setSize(this._preferences.width, this._preferences.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, this._preferences.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, this._preferences.x), Renderer.width - this.ui.width())
+		container.addEventListener("dragend", (e) => {
+			const skillEl = e.target.closest(".skill");
+			if (skillEl) {
+				delete window._OBJ_DRAG_;
+				skillEl.classList.remove("hide");
+			}
+		});
+		this.draggable(".titlebar");
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
+			this._rArrow = `url(${data})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
+			this._lArrow = `url(${data})`;
 		});
 	};
-	/**
-	* Extend window size
-	*/
-	SkillListMH.prototype.setSize = function setSize(width, height) {
+	comp.onAppend = function onAppend() {
+		if (!_preferences.show) this.ui.hide();
+		this.setSize(_preferences.width, _preferences.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - 100)}px`;
+	};
+	comp.setSize = function setSize(width, height) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
-		this.ui.find(".content").css({
-			width: width * 32,
-			height: height * 32
-		});
-	};
-	/**
-	* Remove Skill window from DOM
-	*/
-	SkillListMH.prototype.onRemove = function onRemove() {
-		this.btnLevelUp.detach();
-		this._preferences.show = this.ui.is(":visible");
-		this._preferences.y = parseInt(this.ui.css("top"), 10);
-		this._preferences.x = parseInt(this.ui.css("left"), 10);
-		this._preferences.width = Math.floor(this.ui.find(".content").width() / 32);
-		this._preferences.height = Math.floor(this.ui.find(".content").height() / 32);
-		this._preferences.save();
-	};
-	/**
-	* Show/Hide UI
-	*/
-	SkillListMH.prototype.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) {
-			this.focus();
-			this.btnLevelUp.detach();
+		const content = _root(this).querySelector(".content");
+		if (content) {
+			content.style.width = `${width * 32}px`;
+			content.style.height = `${height * 32}px`;
 		}
 	};
-	SkillListMH.prototype.onKeyDown = function onKeyDown(event) {
+	comp.onRemove = function onRemove() {
+		if (this._btnLevelUp && this._btnLevelUp.parentNode) this._btnLevelUp.remove();
+		_preferences.show = this.ui.is(":visible");
+		_preferences.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences.x = parseInt(this._host.style.left, 10) || 0;
+		const content = _root(this).querySelector(".content");
+		if (content) {
+			_preferences.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences.height = Math.floor(parseInt(content.style.height, 10) / 32) || 5;
+		}
+		_preferences.save();
+	};
+	comp.toggle = function toggle() {
+		if (this.ui.is(":visible")) {
+			this.ui.hide();
+			if (this._btnLevelUp && this._btnLevelUp.parentNode) this._btnLevelUp.remove();
+		} else {
+			this.ui.show();
+			this.focus();
+		}
+	};
+	comp.onKeyDown = function onKeyDown(event) {
 		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.toggle();
 	};
-	/**
-	* Add skills to the list
-	*/
-	SkillListMH.prototype.setSkills = function setSkills(skills) {
-		let i, count;
-		for (i = 0, count = this.list.length; i < count; ++i) this.onUpdateSkill(this.list[i].SKID, 0);
+	comp.setSkills = function setSkills(skills) {
+		for (let i = 0, count = this.list.length; i < count; ++i) this.onUpdateSkill(this.list[i].SKID, 0);
 		this.list.length = 0;
-		this.ui.find(".content table").empty();
-		for (i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
+		const table = _root(this).querySelector(".content table");
+		if (table) table.innerHTML = "";
+		for (let i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
 	};
-	/**
-	* Insert skill to list
-	*/
-	SkillListMH.prototype.addSkill = function addSkill(skill) {
+	comp.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (this.ui.find(".skill.id" + skill.SKID + ":first").length) {
+		const root = _root(this);
+		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
 		const sk = SkillInfo[skill.SKID];
-		const levelup = this.btnIncSkill.clone(true);
+		const levelup = this._btnIncSkill.cloneNode(true);
+		levelup.addEventListener("click", function() {
+			const index = this.parentNode.parentNode.getAttribute("data-index");
+			comp.onIncreaseSkill(parseInt(index, 10));
+		});
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = jquery_default("<tr class=\"skill id" + skill.SKID + " " + className + "\" data-index=\"" + skill.SKID + "\" draggable=\"true\"><td class=\"icon\"><img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==\" width=\"24\" height=\"24\" /></td><td class=\"levelupcontainer\"></td><td class=selectable><div class=\"name\">" + jquery_default.escape(sk.SkillName) + "<br/><span class=\"level\">" + (sk.bSeperateLv ? "<button class=\"currentDown\"></button>Lv : <span class=\"current\">" + skill.level + "</span> / <span class=\"max\">" + skill.level + "</span><button class=\"currentUp\"></button>" : "Lv : <span class=\"current\">" + skill.level + "</span>") + "</span></div></td><td class=\"selectable type\"><div class=\"consume\">" + (skill.type ? "Sp : <span class=\"spcost\">" + skill.spcost + "</span>" : "Passive") + "</div></td></tr>");
-		if (!skill.upgradable || !this.points) levelup.hide();
-		element.find(".levelupcontainer").append(levelup);
-		if (this.rArrow) element.find(".level .currentUp").css("background-image", this.rArrow);
-		if (this.lArrow) element.find(".level .currentDown").css("background-image", this.lArrow);
-		element.find(".level .currentUp").click(() => {
-			this.skillLevelSelectUp(skill);
-		});
-		element.find(".level .currentDown").click(() => {
-			this.skillLevelSelectDown(skill);
-		});
-		this.ui.find(".content table").append(element);
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + sk.Name + ".bmp", function(data) {
-			element.find(".icon img").attr("src", data);
+		const tr = document.createElement("tr");
+		tr.className = `skill id${skill.SKID} ${className}`;
+		tr.setAttribute("data-index", skill.SKID);
+		tr.setAttribute("draggable", "true");
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		if (!skill.upgradable || !this.points) levelup.style.display = "none";
+		tr.querySelector(".levelupcontainer").appendChild(levelup);
+		const currentUp = tr.querySelector(".level .currentUp");
+		if (currentUp) {
+			if (this._rArrow) currentUp.style.backgroundImage = this._rArrow;
+			currentUp.addEventListener("click", () => {
+				this.skillLevelSelectUp(skill);
+			});
+		}
+		const currentDown = tr.querySelector(".level .currentDown");
+		if (currentDown) {
+			if (this._lArrow) currentDown.style.backgroundImage = this._lArrow;
+			currentDown.addEventListener("click", () => {
+				this.skillLevelSelectDown(skill);
+			});
+		}
+		const table = root.querySelector(".content table");
+		if (table) table.appendChild(tr);
+		this.parseHTML.call(levelup);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+			const img = tr.querySelector(".icon img");
+			if (img) img.src = data;
 		});
 		this.list.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Remove skill from list
-	*/
-	SkillListMH.prototype.removeSkill = function removeSkill() {};
-	/**
-	* Update skill
-	*/
-	SkillListMH.prototype.updateSkill = function updateSkill(skill) {
+	comp.removeSkill = function removeSkill() {};
+	comp.updateSkill = function updateSkill(skill) {
 		const target = this.getSkillById(skill.SKID);
 		if (!target) return;
 		target.level = skill.level;
@@ -221656,28 +221559,27 @@ var init_SkillListMH = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = this.ui.find(".skill.id" + skill.SKID + ":first");
-		element.find(".level .current, .level .max").text(skill.level);
-		if (skill.selectedLevel) element.find(".level .current").text(skill.selectedLevel);
-		element.find(".spcost").text(skill.spcost);
-		element.removeClass("active passive disabled");
-		element.addClass(!skill.level ? "disabled" : skill.type ? "active" : "passive");
-		if (skill.upgradable && this.points) element.find(".levelup").show();
-		else element.find(".levelup").hide();
+		const element = _root(this).querySelector(`.skill.id${skill.SKID}`);
+		if (!element) return;
+		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
+		if (skill.selectedLevel) {
+			const current = element.querySelector(".level .current");
+			if (current) current.textContent = skill.selectedLevel;
+		}
+		const spcost = element.querySelector(".spcost");
+		if (spcost) spcost.textContent = skill.spcost;
+		element.classList.remove("active", "passive", "disabled");
+		element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
+		const levelupEl = element.querySelector(".levelup");
+		if (levelupEl) levelupEl.style.display = skill.upgradable && this.points ? "" : "none";
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	/**
-	* Use a skill by its id
-	*/
-	SkillListMH.prototype.useSkillID = function useSkillID(id, level) {
+	comp.useSkillID = function useSkillID(id, level) {
 		const skill = this.getSkillById(id);
 		if (!skill || !skill.level || !skill.type) return;
 		this.useSkill(skill, level ? level : skill.selectedLevel);
 	};
-	/**
-	* Use a skill
-	*/
-	SkillListMH.prototype.useSkill = function useSkill(skill, level) {
+	comp.useSkill = function useSkill(skill, level) {
 		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
 		skill.useLevel = level;
 		if (skill.type & SkillTargetSelection_default.TYPE.TARGET) {
@@ -221685,123 +221587,74 @@ var init_SkillListMH = __esmMin((() => {
 			SkillTargetSelection_default.set(skill, skill.type);
 		}
 	};
-	/**
-	* Set skill points amount
-	*/
-	SkillListMH.prototype.setPoints = function setPoints(amount) {
-		this.ui.find(".skpoints_count").text(amount);
+	comp.setPoints = function setPoints(amount) {
+		const root = _root(this);
+		const el = root.querySelector(".skpoints_count");
+		if (el) el.textContent = amount;
 		if (!this.points === !amount) {
 			this.points = amount;
 			return;
 		}
 		this.points = amount;
 		const count = this.list.length;
-		for (let i = 0; i < count; ++i) if (this.list[i].upgradable && amount) this.ui.find(".skill.id" + this.list[i].SKID + " .levelup").show();
-		else this.ui.find(".skill.id" + this.list[i].SKID + " .levelup").hide();
+		for (let i = 0; i < count; ++i) {
+			const levelupEl = root.querySelector(`.skill.id${this.list[i].SKID} .levelup`);
+			if (levelupEl) levelupEl.style.display = this.list[i].upgradable && amount ? "" : "none";
+		}
 	};
-	/**
-	* Add the button when leveling up
-	*/
-	SkillListMH.prototype.onLevelUp = function onLevelUp() {
-		this.btnLevelUp.appendTo("body");
+	comp.onLevelUp = function onLevelUp() {
+		if (this._btnLevelUp) document.body.appendChild(this._btnLevelUp);
 	};
-	/**
-	* Find a skill by it's id
-	*/
-	SkillListMH.prototype.getSkillById = function getSkillById(id) {
+	comp.getSkillById = function getSkillById(id) {
 		const count = this.list.length;
 		for (let i = 0; i < count; ++i) if (this.list[i].SKID === id) return this.list[i];
 		return null;
 	};
-	/**
-	* Closing window
-	*/
-	SkillListMH.prototype.onClose = function onClose() {
-		this.ui.hide();
-	};
-	/**
-	* Request to upgrade a skill
-	*/
-	SkillListMH.prototype.onRequestSkillUp = function onRequestSkillUp() {
-		const index = this.parentNode.parentNode.getAttribute("data-index");
-		this.onIncreaseSkill(parseInt(index, 10));
-	};
-	/**
-	* Request to use a skill
-	*/
-	SkillListMH.prototype.onRequestUseSkill = function onRequestUseSkill() {
-		let main = jquery_default(this).parent();
-		if (!main.hasClass("skill")) main = main.parent();
-		this.useSkillID(parseInt(main.data("index"), 10));
-	};
-	/**
-	* Request to get skill info
-	*/
-	SkillListMH.prototype.onRequestSkillInfo = function onRequestSkillInfo() {
-		let main = jquery_default(this).parent();
-		if (!main.hasClass("skill")) main = main.parent();
-		const skill = this.getSkillById(parseInt(main.data("index"), 10));
-		if (SkillDescription_default.uid === skill.SKID) {
-			SkillDescription_default.remove();
-			return;
-		}
-		SkillDescription_default.append();
-		SkillDescription_default.setSkill(skill.SKID);
-	};
-	/**
-	* Focus a skill
-	*/
-	SkillListMH.prototype.onSkillFocus = function onSkillFocus() {
-		let main = jquery_default(this).parent();
-		if (!main.hasClass("skill")) main = main.parent();
-		this.ui.find(".skill").removeClass("selected");
-		main.addClass("selected");
-	};
-	/**
-	* Start to drag a skill
-	*/
-	SkillListMH.prototype.onSkillDragStart = function onSkillDragStart(event) {
-		const index = parseInt(this.getAttribute("data-index"), 10);
-		const skill = this.getSkillById(index);
-		if (!skill || !skill.level || !skill.type) return event.stopImmediatePropagation();
-		const img = new Image();
-		img.decoding = "async";
-		img.src = this.firstChild.firstChild.src;
-		event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-		event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-			type: "skill",
-			from: "SkillListMH",
-			data: skill
-		}));
-	};
-	/**
-	* Stop the drag drop action
-	*/
-	SkillListMH.prototype.onSkillDragEnd = function onSkillDragEnd() {
-		delete window._OBJ_DRAG_;
-	};
-	SkillListMH.prototype.skillLevelSelectUp = function skillLevelSelectUp(skill) {
+	comp.skillLevelSelectUp = function skillLevelSelectUp(skill) {
 		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 		if (level < skill.level) {
 			skill.selectedLevel = level + 1;
-			this.ui.find(".skill.id" + skill.SKID + ":first").find(".level .current").text(skill.selectedLevel);
+			const element = _root(this).querySelector(`.skill.id${skill.SKID}`);
+			if (element) {
+				const current = element.querySelector(".level .current");
+				if (current) current.textContent = skill.selectedLevel;
+			}
 		}
 	};
-	SkillListMH.prototype.skillLevelSelectDown = function skillLevelSelectDown(skill) {
+	comp.skillLevelSelectDown = function skillLevelSelectDown(skill) {
 		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 		if (level > 1) {
 			skill.selectedLevel = level - 1;
-			this.ui.find(".skill.id" + skill.SKID + ":first").find(".level .current").text(skill.selectedLevel);
+			const element = _root(this).querySelector(`.skill.id${skill.SKID}`);
+			if (element) {
+				const current = element.querySelector(".level .current");
+				if (current) current.textContent = skill.selectedLevel;
+			}
 		}
 	};
-	/**
-	* Abstract function to define
-	*/
-	SkillListMH.prototype.onUseSkill = function onUseItem() {};
-	SkillListMH.prototype.onIncreaseSkill = function onIncreaseSkill() {};
-	SkillListMH.prototype.onUpdateSkill = function onUpdateSkill() {};
-	homSkills = new SkillListMH("homunculus");
-	merSkills = new SkillListMH("mercenary");
+	comp.onUseSkill = function onUseItem() {};
+	comp.onIncreaseSkill = function onIncreaseSkill() {};
+	comp.onUpdateSkill = function onUpdateSkill() {};
+	return comp;
+}
+var homSkills, merSkills, SkillListMH_default;
+var init_SkillListMH = __esmMin((() => {
+	init_DBManager();
+	init_SkillInfo();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_MouseEventHandler();
+	init_KeyEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_SkillTargetSelection();
+	init_SkillDescription();
+	init_SkillListMH$2();
+	init_SkillListMH$1();
+	homSkills = createSkillListMH("homunculus");
+	merSkills = createSkillListMH("mercenary");
 	SkillListMH_default = {
 		homunculus: UIManager.addComponent(homSkills),
 		mercenary: UIManager.addComponent(merSkills)
@@ -222203,7 +222056,7 @@ var init_AIDriver = __esmMin((() => {
 * @return {void}
 */
 function autoFeedCheck() {
-	if (_preferences$29.autoFeed != 1) return;
+	if (_preferences$30.autoFeed != 1) return;
 	const player = SessionStorage_default.Entity;
 	if (!player) return;
 	if (player.life.hp <= 0) return;
@@ -222231,9 +222084,9 @@ function onDelete$1() {
 * Toggle AutoFeed
 */
 function homunToggleAutoFeed() {
-	HomunInformations.setFeedConfig(_preferences$29.autoFeed == 1 ? 0 : 1);
+	HomunInformations.setFeedConfig(_preferences$30.autoFeed == 1 ? 0 : 1);
 	if (PacketVerManager_default.value < 20170920) return;
-	HomunInformations.onConfigUpdate(3, _preferences$29.autoFeed ? 1 : 0);
+	HomunInformations.onConfigUpdate(3, _preferences$30.autoFeed ? 1 : 0);
 }
 /**
 * Request to modify homun's name
@@ -222245,18 +222098,18 @@ function onChangeName() {
 /**
 * Closing window
 */
-function onClose$7() {
+function onClose$8() {
 	HomunInformations.ui.hide();
 	SkillListMH_default.homunculus.ui.hide();
 }
 /**
 * Stop event propagation
 */
-function stopPropagation$13(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$29, HomunInformations_default;
+var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$30, HomunInformations_default;
 var init_HomunInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -222276,7 +222129,7 @@ var init_HomunInformations = __esmMin((() => {
 	autoFeedIntervalMs = 1e3 * 60 * 1;
 	autoFeedPercent = 30;
 	HomunInformations = new UIComponent("HomunInformations", HomunInformations_default$2, HomunInformations_default$1);
-	_preferences$29 = Preferences.get("HomunInformations", {
+	_preferences$30 = Preferences.get("HomunInformations", {
 		x: 100,
 		y: 200,
 		show: false,
@@ -222289,16 +222142,16 @@ var init_HomunInformations = __esmMin((() => {
 	*/
 	HomunInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".base").mousedown(stopPropagation$13);
-		this.ui.find(".close").click(onClose$7);
+		this.ui.find(".base").mousedown(stopPropagation$12);
+		this.ui.find(".close").click(onClose$8);
 		this.ui.find(".modify").click(onChangeName);
 		this.ui.find(".feed").click(onFeed);
 		this.ui.find(".del").click(onDelete$1);
 		this.ui.find(".homun_auto_feed").click(homunToggleAutoFeed);
-		if (!_preferences$29.show) this.ui.hide();
+		if (!_preferences$30.show) this.ui.hide();
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$29.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$29.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$30.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$30.x), Renderer.width - this.ui.width())
 		});
 		this.ui.find(".skill").mousedown(function() {
 			SkillListMH_default.homunculus.toggle();
@@ -222307,7 +222160,7 @@ var init_HomunInformations = __esmMin((() => {
 		this.toggleAggressive();
 	};
 	HomunInformations.onAppend = function onAppend() {
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$29.autoFeed ? "1" : "0") + ".bmp", function(data) {
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$30.autoFeed ? "1" : "0") + ".bmp", function(data) {
 			HomunInformations.ui.find(".homun_auto_feed").css("backgroundImage", "url(" + data + ")");
 		});
 		if (PacketVerManager_default.value < 20170920) if (Configs.get("enableHomunAutoFeed", false)) HomunInformations.startAutoFeed();
@@ -222325,10 +222178,10 @@ var init_HomunInformations = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	HomunInformations.onRemove = function onRemove() {
-		_preferences$29.show = this.ui.is(":visible");
-		_preferences$29.y = parseInt(this.ui.css("top"), 10);
-		_preferences$29.x = parseInt(this.ui.css("left"), 10);
-		_preferences$29.save();
+		_preferences$30.show = this.ui.is(":visible");
+		_preferences$30.y = parseInt(this.ui.css("top"), 10);
+		_preferences$30.x = parseInt(this.ui.css("left"), 10);
+		_preferences$30.save();
 		HomunInformations.stopAutoFeed();
 		this.stopAI();
 	};
@@ -222488,9 +222341,9 @@ var init_HomunInformations = __esmMin((() => {
 		this.startAI();
 	};
 	HomunInformations.setFeedConfig = function setFeedConfig(flag) {
-		_preferences$29.autoFeed = flag;
-		_preferences$29.save();
-		if (HomunInformations.ui) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$29.autoFeed ? "1" : "0") + ".bmp", function(data) {
+		_preferences$30.autoFeed = flag;
+		_preferences$30.save();
+		if (HomunInformations.ui) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$30.autoFeed ? "1" : "0") + ".bmp", function(data) {
 			HomunInformations.ui.find(".homun_auto_feed").css("backgroundImage", "url(" + data + ")");
 		});
 		autoFeedCheck();
@@ -222524,14 +222377,14 @@ var init_MercenaryInformations$1 = __esmMin((() => {
 /**
 * Stop event propagation
 */
-function stopPropagation$12(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Closing window
 */
-function onClose$6() {
+function onClose$7() {
 	MercenaryInformations.ui.hide();
 	SkillListMH_default.mercenary.ui.hide();
 }
@@ -222541,7 +222394,7 @@ function onClose$6() {
 function onDelete() {
 	MercenaryInformations.reqDeleteMercenary();
 }
-var MercenaryInformations, _preferences$28, MercenaryInformations_default;
+var MercenaryInformations, _preferences$29, MercenaryInformations_default;
 var init_MercenaryInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -222557,7 +222410,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	init_MercenaryInformations$2();
 	init_MercenaryInformations$1();
 	MercenaryInformations = new UIComponent("MercenaryInformations", MercenaryInformations_default$2, MercenaryInformations_default$1);
-	_preferences$28 = Preferences.get("MercenaryInformations", {
+	_preferences$29 = Preferences.get("MercenaryInformations", {
 		x: 100,
 		y: 100,
 		show: false,
@@ -222568,14 +222421,14 @@ var init_MercenaryInformations = __esmMin((() => {
 	*/
 	MercenaryInformations.init = function init() {
 		this.draggable(this.ui.find(".content"));
-		this.ui.find(".content").mousedown(stopPropagation$12);
-		this.ui.find(".content .base").mousedown(stopPropagation$12);
-		this.ui.find(".close").click(onClose$6);
+		this.ui.find(".content").mousedown(stopPropagation$11);
+		this.ui.find(".content .base").mousedown(stopPropagation$11);
+		this.ui.find(".close").click(onClose$7);
 		this.ui.find(".dismiss").click(onDelete);
-		if (!_preferences$28.show) this.ui.hide();
+		if (!_preferences$29.show) this.ui.hide();
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$28.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$28.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$29.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$29.x), Renderer.width - this.ui.width())
 		});
 		this.ui.find(".skill").mousedown(function() {
 			SkillListMH_default.mercenary.toggle();
@@ -222587,16 +222440,16 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Once append to body
 	*/
 	MercenaryInformations.onAppend = function onAppend() {
-		if (!_preferences$28.show) this.ui.hide();
+		if (!_preferences$29.show) this.ui.hide();
 	};
 	/**
 	* Once remove from body
 	*/
 	MercenaryInformations.onRemove = function onRemove() {
-		_preferences$28.show = this.ui.is(":visible");
-		_preferences$28.y = parseInt(this.ui.css("top"), 10);
-		_preferences$28.x = parseInt(this.ui.css("left"), 10);
-		_preferences$28.save();
+		_preferences$29.show = this.ui.is(":visible");
+		_preferences$29.y = parseInt(this.ui.css("top"), 10);
+		_preferences$29.x = parseInt(this.ui.css("left"), 10);
+		_preferences$29.save();
 		this.stopAI();
 	};
 	/**
@@ -222797,7 +222650,7 @@ var init_CaptchaUpload$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaUpload.js
-var CaptchaUpload, _preferences$27, CaptchaUpload_default;
+var CaptchaUpload, _preferences$28, CaptchaUpload_default;
 var init_CaptchaUpload = __esmMin((() => {
 	init_jquery();
 	init_UIManager();
@@ -222808,7 +222661,7 @@ var init_CaptchaUpload = __esmMin((() => {
 	init_CaptchaUpload$2();
 	init_CaptchaUpload$1();
 	CaptchaUpload = new UIComponent("CaptchaUpload", CaptchaUpload_default$2, CaptchaUpload_default$1);
-	_preferences$27 = Preferences.get("CaptchaUpload", {
+	_preferences$28 = Preferences.get("CaptchaUpload", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -222861,17 +222714,17 @@ var init_CaptchaUpload = __esmMin((() => {
 	*/
 	CaptchaUpload.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$27.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$27.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$28.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$28.x), Renderer.width - this.ui.width())
 		});
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaUpload.onRemove = function OnRemove() {
-		_preferences$27.y = parseInt(this.ui.css("top"), 10);
-		_preferences$27.x = parseInt(this.ui.css("left"), 10);
-		_preferences$27.save();
+		_preferences$28.y = parseInt(this.ui.css("top"), 10);
+		_preferences$28.x = parseInt(this.ui.css("left"), 10);
+		_preferences$28.save();
 		this.ui.find(".preview_box").empty();
 		this.ui.find("input").val("");
 		this.answer = null;
@@ -222905,7 +222758,7 @@ var init_CaptchaSelector$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaSelector.js
-var CaptchaSelector, _preferences$26, _aidList, _aidInformation, _range, _active, CaptchaSelector_default;
+var CaptchaSelector, _preferences$27, _aidList, _aidInformation, _range, _active, CaptchaSelector_default;
 var init_CaptchaSelector = __esmMin((() => {
 	init_jquery();
 	init_UIManager();
@@ -222919,7 +222772,7 @@ var init_CaptchaSelector = __esmMin((() => {
 	init_DBManager();
 	init_MonsterTable();
 	CaptchaSelector = new UIComponent("CaptchaSelector", CaptchaSelector_default$2, CaptchaSelector_default$1);
-	_preferences$26 = Preferences.get("CaptchaSelector", {
+	_preferences$27 = Preferences.get("CaptchaSelector", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -222968,17 +222821,17 @@ var init_CaptchaSelector = __esmMin((() => {
 	*/
 	CaptchaSelector.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$26.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$26.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$27.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$27.x), Renderer.width - this.ui.width())
 		});
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaSelector.onRemove = function OnRemove() {
-		_preferences$26.y = parseInt(this.ui.css("top"), 10);
-		_preferences$26.x = parseInt(this.ui.css("left"), 10);
-		_preferences$26.save();
+		_preferences$27.y = parseInt(this.ui.css("top"), 10);
+		_preferences$27.x = parseInt(this.ui.css("left"), 10);
+		_preferences$27.save();
 		this.ui.find(".character_info").hide();
 		this.cleanUIList();
 		_aidList = [];
@@ -224155,10 +224008,10 @@ function resize$2(height) {
 	if (list) list.style.height = height * 32 - 31 + "px";
 	const inner = root.querySelector("#ChatBoxSettings");
 	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$25.height = height;
-	_preferences$25.save();
+	_preferences$26.height = height;
+	_preferences$26.save();
 }
-var ChatBoxSettings, _preferences$25, ChatBoxSettings_default;
+var ChatBoxSettings, _preferences$26, ChatBoxSettings_default;
 var init_ChatBoxSettings = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -224180,7 +224033,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.isOpen = false;
 	ChatBoxSettings.tabOption = [];
 	ChatBoxSettings.activeTab = 0;
-	_preferences$25 = Preferences.get("ChatBoxSettings", {
+	_preferences$26 = Preferences.get("ChatBoxSettings", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -224208,10 +224061,10 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Once in HTML
 	*/
 	ChatBoxSettings.onAppend = function onAppend() {
-		resize$2(_preferences$25.height);
+		resize$2(_preferences$26.height);
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$25.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$25.x), Renderer.width - rect.width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$26.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$26.x), Renderer.width - rect.width) + "px";
 		this._host.style.display = "none";
 	};
 	/**
@@ -224245,9 +224098,9 @@ var init_ChatBoxSettings = __esmMin((() => {
 		});
 	};
 	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$25.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$25.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$25.save();
+		_preferences$26.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$26.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$26.save();
 	};
 	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
 	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
@@ -224397,7 +224250,7 @@ function onDropText$1(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$11(event) {
+function stopPropagation$10(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -224429,8 +224282,8 @@ function onChangeTargetMessage(type) {
 }
 function setChatFontScale(scale) {
 	return function setChatFontScaleClosure() {
-		_preferences$24.fontScale = clampChatFontScale(scale);
-		_preferences$24.save();
+		_preferences$25.fontScale = clampChatFontScale(scale);
+		_preferences$25.save();
 		ChatBox.applyFontScale();
 	};
 }
@@ -224492,7 +224345,7 @@ function makeResizableDiv() {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$24, ChatBox, ChatBox_default;
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$25, ChatBox, ChatBox_default;
 var init_ChatBox = __esmMin((() => {
 	init_DBManager();
 	init_jquery();
@@ -224522,7 +224375,7 @@ var init_ChatBox = __esmMin((() => {
 	_heightIndex = 2;
 	_messageBuffer = [];
 	_rafScheduled = false;
-	_preferences$24 = Preferences.get("ChatBox", {
+	_preferences$25 = Preferences.get("ChatBox", {
 		x: 0,
 		y: Infinity,
 		height: 2,
@@ -224598,17 +224451,17 @@ var init_ChatBox = __esmMin((() => {
 	*/
 	ChatBox.init = function init() {
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$24.height - 1;
+		_heightIndex = _preferences$25.height - 1;
 		ChatBox.updateHeight();
 		ChatBox.applyFontScale();
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$24.y - this.ui.height()), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$24.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$25.y - this.ui.height()), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$25.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$24.magnet_top;
-		this.magnet.BOTTOM = _preferences$24.magnet_bottom;
-		this.magnet.LEFT = _preferences$24.magnet_left;
-		this.magnet.RIGHT = _preferences$24.magnet_right;
+		this.magnet.TOP = _preferences$25.magnet_top;
+		this.magnet.BOTTOM = _preferences$25.magnet_bottom;
+		this.magnet.LEFT = _preferences$25.magnet_left;
+		this.magnet.RIGHT = _preferences$25.magnet_right;
 		this.draggable(this.ui.find(".input"));
 		this.draggable(this.ui.find(".battlemode"));
 		this.__mouseStopBlock = this.ui.find(".input, .chat-function, .battlemode, .event_add_cursor");
@@ -224697,7 +224550,7 @@ var init_ChatBox = __esmMin((() => {
 				if (!movedInsideChatbox && !isTextInput && !isChatMessage) this.ui.find(".input .username").focus();
 			}.bind(this), 1e3);
 		}.bind(this));
-		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$11);
+		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$10);
 		this.ui.find(".header input").dblclick(function() {
 			this.type = "text";
 			this.select();
@@ -224829,9 +224682,9 @@ var init_ChatBox = __esmMin((() => {
 			ChatBox.toggleChatBattleOption();
 		});
 		ChatBoxSettings_default.append();
-		if (_preferences$24.tabs.length > 0 && _preferences$24.tabs.length == _preferences$24.tabOption.length) {
-			for (let i = 0; i < _preferences$24.tabs.length; i++) if (_preferences$24.tabs[i] && _preferences$24.tabOption[i]) ChatBox.addNewTab(_preferences$24.tabs[i].name, _preferences$24.tabOption[i]);
-			if (ChatBox.tabs[_preferences$24.activeTab]) this.switchTab(_preferences$24.activeTab);
+		if (_preferences$25.tabs.length > 0 && _preferences$25.tabs.length == _preferences$25.tabOption.length) {
+			for (let i = 0; i < _preferences$25.tabs.length; i++) if (_preferences$25.tabs[i] && _preferences$25.tabOption[i]) ChatBox.addNewTab(_preferences$25.tabs[i].name, _preferences$25.tabOption[i]);
+			if (ChatBox.tabs[_preferences$25.activeTab]) this.switchTab(_preferences$25.activeTab);
 		} else {
 			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
 				ChatBox.FILTER.PUBLIC_LOG,
@@ -224967,17 +224820,17 @@ var init_ChatBox = __esmMin((() => {
 	*/
 	ChatBox.onRemove = function OnRemove() {
 		this.ui.find(".content.active").off("scroll");
-		_preferences$24.y = parseInt(this.ui.css("top"), 10) + this.ui.height();
-		_preferences$24.x = parseInt(this.ui.css("left"), 10);
-		_preferences$24.height = _heightIndex;
-		_preferences$24.magnet_top = this.magnet.TOP;
-		_preferences$24.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$24.magnet_left = this.magnet.LEFT;
-		_preferences$24.magnet_right = this.magnet.RIGHT;
-		_preferences$24.tabs = this.tabs;
-		_preferences$24.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$24.activeTab = this.activeTab;
-		_preferences$24.save();
+		_preferences$25.y = parseInt(this.ui.css("top"), 10) + this.ui.height();
+		_preferences$25.x = parseInt(this.ui.css("left"), 10);
+		_preferences$25.height = _heightIndex;
+		_preferences$25.magnet_top = this.magnet.TOP;
+		_preferences$25.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$25.magnet_left = this.magnet.LEFT;
+		_preferences$25.magnet_right = this.magnet.RIGHT;
+		_preferences$25.tabs = this.tabs;
+		_preferences$25.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$25.activeTab = this.activeTab;
+		_preferences$25.save();
 		this.lastTabID = -1;
 		this.activeTab = 0;
 	};
@@ -225284,14 +225137,14 @@ var init_ChatBox = __esmMin((() => {
 		ChatBox.addText("Chat History [" + ChatBox.tabs[ChatBox.activeTab].name + "] " + date + " can be saved by <a style=\"color:#F88\" download=\"ChatHistory [" + ChatBox.tabs[ChatBox.activeTab].name + "] (" + date.replace("/", "-") + ").html\" href=\"" + url + "\" target=\"_blank\">clicking here</a>.", ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, null, true);
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
-		const scale = clampChatFontScale(_preferences$24.fontScale || 1);
+		const scale = clampChatFontScale(_preferences$25.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
 		const baseInputLineHeight = 18;
 		const fontSize = Math.max(10, Math.round(baseFont * scale));
 		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
 		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$24.fontScale = scale;
+		_preferences$25.fontScale = scale;
 		this.ui.find(".content").css({
 			fontSize: fontSize + "px",
 			lineHeight: lineHeight + "px"
@@ -244665,31 +244518,25 @@ var init_ShortCut$2 = __esmMin((() => {
 //#region src/UI/Components/ShortCut/ShortCut.css?raw
 var ShortCut_default$1;
 var init_ShortCut$1 = __esmMin((() => {
-	ShortCut_default$1 = "#ShortCut {\r\n	position: absolute;\r\n	overflow: hidden;\r\n	width: 280px;\r\n	background-repeat: repeat-y;\r\n}\r\n#ShortCut .close {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 2px;\r\n	border: none;\r\n	background-color: transparent;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n#ShortCut .resize {\r\n	position: absolute;\r\n	bottom: 1px;\r\n	right: 1px;\r\n	border: none;\r\n	background-color: transparent;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n\r\n#ShortCut .row {\r\n	position: relative;\r\n}\r\n#ShortCut .row .container {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 5px;\r\n	margin-left: 5px;\r\n	margin-bottom: 6px;\r\n}\r\n#ShortCut .row .container:hover {\r\n	background-color: #b5ffb5;\r\n}\r\n#ShortCut .row .index {\r\n	float: left;\r\n	position: relative;\r\n	top: 13px;\r\n	left: 5px;\r\n}\r\n#ShortCut .row .clear {\r\n}\r\n\r\n#ShortCut .icon {\r\n	position: relative;\r\n}\r\n#ShortCut .icon .img {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n	background-color: transparent;\r\n}\r\n#ShortCut .icon .name {\r\n	display: none;\r\n	z-index: 1;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n}\r\n#ShortCut .icon:hover .name {\r\n	display: block;\r\n}\r\n#ShortCut .icon.hide .name {\r\n	display: none;\r\n}\r\n#ShortCut .icon .amount {\r\n	position: absolute;\r\n	right: 1px;\r\n	top: 20px;\r\n	text-shadow: 1px 1px 0px white;\r\n	text-align: right;\r\n	font-weight: bold;\r\n}\r\n\r\n.shortcut-tooltip {\r\n	display: none;\r\n	position: fixed;\r\n	background-color: rgba(0, 0, 0, 0.8);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 2px 6px;\r\n	white-space: nowrap;\r\n	z-index: 10000;\r\n	border-radius: 2px;\r\n	pointer-events: none;\r\n	line-height: 1.2;\r\n}\r\n.shortcut-tooltip.show {\r\n	display: block;\r\n}\r\n\r\n#ShortCut .cooldown-overlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	pointer-events: none;\r\n	border-radius: 2px;\r\n	z-index: 999;\r\n	background: conic-gradient(rgba(0, 0, 0, 0.75) 0deg, transparent 0deg);\r\n}\r\n";
+	ShortCut_default$1 = ":host {\r\n	width: 280px;\r\n	top: 0px;\r\n	left: 480px;\r\n	overflow: hidden;\r\n}\r\n\r\n#ShortCut {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 100%;\r\n	background-repeat: repeat-y;\r\n}\r\n#ShortCut .close {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 2px;\r\n	border: none;\r\n	background-color: transparent;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n#ShortCut .resize {\r\n	position: absolute;\r\n	bottom: 1px;\r\n	right: 1px;\r\n	border: none;\r\n	background-color: transparent;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n\r\n#ShortCut .row {\r\n	position: relative;\r\n}\r\n#ShortCut .row .container {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 5px;\r\n	margin-left: 5px;\r\n	margin-bottom: 6px;\r\n}\r\n#ShortCut .row .container:hover {\r\n	background-color: #b5ffb5;\r\n}\r\n#ShortCut .row .index {\r\n	float: left;\r\n	position: relative;\r\n	top: 13px;\r\n	left: 5px;\r\n}\r\n#ShortCut .row .clear {\r\n}\r\n\r\n#ShortCut .icon {\r\n	position: relative;\r\n}\r\n#ShortCut .icon .img {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n	background-color: transparent;\r\n}\r\n#ShortCut .icon .name {\r\n	display: none;\r\n	z-index: 1;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n}\r\n#ShortCut .icon:hover .name {\r\n	display: block;\r\n}\r\n#ShortCut .icon.hide .name {\r\n	display: none;\r\n}\r\n#ShortCut .icon .amount {\r\n	position: absolute;\r\n	right: 1px;\r\n	top: 20px;\r\n	text-shadow: 1px 1px 0px white;\r\n	text-align: right;\r\n	font-weight: bold;\r\n}\r\n\r\n.shortcut-tooltip {\r\n	display: none;\r\n	position: fixed;\r\n	background-color: rgba(0, 0, 0, 0.8);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 2px 6px;\r\n	white-space: nowrap;\r\n	z-index: 10000;\r\n	border-radius: 2px;\r\n	pointer-events: none;\r\n	line-height: 1.2;\r\n}\r\n.shortcut-tooltip.show {\r\n	display: block;\r\n}\r\n\r\n#ShortCut .cooldown-overlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	pointer-events: none;\r\n	border-radius: 2px;\r\n	z-index: 999;\r\n	background: conic-gradient(rgba(0, 0, 0, 0.75) 0deg, transparent 0deg);\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ShortCut/ShortCut.js
 var ShortCut_exports = /* @__PURE__ */ __exportAll({ default: () => ShortCut_default });
 /**
-* Set element data
-*
-* @param {boolean} is a skill ?
-* @param {number} id
-* @param {number} count
+* Helper to get the shadow root
 */
+function _getRoot$7() {
+	return ShortCut._shadow || ShortCut._host;
+}
 /**
 * Update tooltip for empty slots with hotkey only
 */
 function updateEmptySlotTooltips() {
-	let i;
-	const containers = ShortCut.ui.find(".container");
-	const size = containers.length;
-	for (i = 0; i < size; ++i) {
-		const ui = containers.eq(i);
-		if (!_list$5[i] || !_list$5[i].isSkill && !_list$5[i].ID) {
-			const hotkey = getHotKeyString(i);
-			if (hotkey) ui.attr("data-tooltip", hotkey);
-		}
+	const containers = _getRoot$7().querySelectorAll(".container");
+	for (let i = 0; i < containers.length; ++i) if (!_list$5[i] || !_list$5[i].isSkill && !_list$5[i].ID) {
+		const hotkey = getHotKeyString(i);
+		if (hotkey) containers[i].setAttribute("data-tooltip", hotkey);
 	}
 }
 /**
@@ -244757,68 +244604,58 @@ function getHotKeyString(index) {
 * Show fixed tooltip on container hover
 */
 function onContainerMouseEnter(event) {
-	const tooltipText = jquery_default(this).attr("data-tooltip");
+	const tooltipText = event.currentTarget.getAttribute("data-tooltip");
 	if (tooltipText) {
-		const tooltip = jquery_default(".shortcut-tooltip");
-		const shortcutUI = ShortCut.ui;
-		const shortcutPos = shortcutUI.offset();
-		const shortcutWidth = shortcutUI.outerWidth();
-		const shortcutHeight = shortcutUI.outerHeight();
-		tooltip.text(tooltipText);
-		tooltip.addClass("show");
-		const tooltipWidth = tooltip.outerWidth();
-		const tooltipHeight = tooltip.outerHeight();
-		const showAbove = jquery_default(window).height() - (shortcutPos.top + shortcutHeight) < tooltipHeight + 10;
-		const left = shortcutPos.left + shortcutWidth / 2 - tooltipWidth / 2;
+		const tooltip = _getRoot$7().querySelector(".shortcut-tooltip");
+		const hostRect = ShortCut._host.getBoundingClientRect();
+		tooltip.textContent = tooltipText;
+		tooltip.classList.add("show");
+		const tooltipRect = tooltip.getBoundingClientRect();
+		const showAbove = window.innerHeight - (hostRect.top + hostRect.height) < tooltipRect.height + 10;
+		const left = hostRect.left + hostRect.width / 2 - tooltipRect.width / 2;
 		let top;
-		if (showAbove) top = shortcutPos.top - tooltipHeight - 2;
-		else top = shortcutPos.top + shortcutHeight + 2;
-		tooltip.css({
-			left: left + "px",
-			top: top + "px"
-		});
+		if (showAbove) top = hostRect.top - tooltipRect.height - 2;
+		else top = hostRect.top + hostRect.height + 2;
+		tooltip.style.left = `${left}px`;
+		tooltip.style.top = `${top}px`;
 	}
 }
 /**
 * Hide fixed tooltip on container leave
 */
-function onContainerMouseLeave(event) {
-	jquery_default(".shortcut-tooltip").removeClass("show");
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$10(event) {
-	event.stopImmediatePropagation();
-	return false;
+function onContainerMouseLeave() {
+	const tooltip = _getRoot$7().querySelector(".shortcut-tooltip");
+	if (tooltip) tooltip.classList.remove("show");
 }
 /**
 * Resizing hotkey window
 */
 function onResize$3(event) {
-	const ui = ShortCut.ui;
-	const top = ui.position().top;
+	const host = ShortCut._host;
+	const top = host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		let h = Math.floor((Mouse.screen.y - top) / 34 + 1);
 		h = Math.min(Math.max(h, 1), _rowCount);
 		if (h === lastHeight) return;
-		ui.css("height", h * 34);
-		_preferences$23.size = h;
-		_preferences$23.save();
+		host.style.height = `${h * 34}px`;
+		_preferences$24.size = h;
+		_preferences$24.save();
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(_event) {
+	const mouseUpHandler = (_event) => {
 		if (_event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", mouseUpHandler);
 		}
-	});
-	return stopPropagation$10(event);
+	};
+	window.addEventListener("mouseup", mouseUpHandler);
+	event.stopImmediatePropagation();
+	event.preventDefault();
 }
 /**
-* Displays the cat hand over an icon
+* Displays the cooldown overlay on an icon
 *
 * @param {number} index of the icon
 * @param {number} delay in ms
@@ -244826,11 +244663,17 @@ function onResize$3(event) {
 function setDelayOnIndex(index, delay) {
 	if (_list$5[index].Delay && _list$5[index].Delay >= Renderer.tick + delay) return;
 	_list$5[index].Delay = Renderer.tick + delay;
-	const ui = ShortCut.ui.find(".container:eq(" + index + ")");
-	ui.find(".cooldown-overlay").remove();
-	const overlay = jquery_default("<div class=\"cooldown-overlay\"></div>");
-	ui.find(".icon").append(overlay);
-	ui.find(".img").css("filter", "none");
+	const ui = _getRoot$7().querySelector(`.container[data-index="${index}"]`);
+	const existing = ui.querySelector(".cooldown-overlay");
+	if (existing) existing.remove();
+	const overlay = document.createElement("div");
+	overlay.className = "cooldown-overlay";
+	const icon = ui.querySelector(".icon");
+	if (icon) {
+		icon.appendChild(overlay);
+		const img = icon.querySelector(".img");
+		if (img) img.style.filter = "none";
+	}
 	let animationId;
 	function updateCooldown() {
 		const now = Renderer.tick;
@@ -244842,7 +244685,7 @@ function setDelayOnIndex(index, delay) {
 			return;
 		}
 		const degrees = (1 - remaining / delay) * 360;
-		overlay.css("background", "conic-gradient(transparent 0deg, transparent " + degrees + "deg, rgba(0,0,0,0.75) " + degrees + "deg)");
+		overlay.style.background = `conic-gradient(transparent 0deg, transparent ${degrees}deg, rgba(0,0,0,0.75) ${degrees}deg)`;
 		animationId = requestAnimationFrame(updateCooldown);
 	}
 	animationId = requestAnimationFrame(updateCooldown);
@@ -244852,18 +244695,19 @@ function setDelayOnIndex(index, delay) {
 * Does the client allow other source than shortcut, inventory
 * and skill window to save to shortcut ?
 */
-function onDrop$8(event) {
+function onDrop$8(event, target) {
 	let data, element;
-	const index = parseInt(this.getAttribute("data-index"), 10);
+	const index = parseInt(target.getAttribute("data-index"), 10);
 	const row = Math.floor(index / 9);
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		element = data.data;
 	} catch (_e) {
-		return false;
+		return;
 	}
-	if (data.type !== "item" && data.type !== "skill") return false;
+	if (data.type !== "item" && data.type !== "skill") return;
 	switch (data.from) {
 		case "SkillList":
 		case "Guild":
@@ -244883,27 +244727,26 @@ function onDrop$8(event) {
 			ShortCut.onChange(index, element.isSkill, element.ID, element.count);
 			break;
 	}
-	return false;
 }
 /**
 * Stop the drag and drop
 */
-function onDragEnd() {
+function onDragEnd(icon) {
 	delete window._OBJ_DRAG_;
-	this.classList.remove("hide");
+	icon.classList.remove("hide");
 }
 /**
-* Prepare data to be store in the dragged element
-* to change prosition in the shortcut.
+* Prepare data to be stored in the dragged element
+* to change position in the shortcut.
 */
-function onDragStart$2(event) {
-	const index = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	this.classList.add("hide");
+function onDragStart$2(event, icon) {
+	const index = parseInt(icon.parentNode.getAttribute("data-index"), 10);
+	icon.classList.add("hide");
 	const img = new Image();
 	img.decoding = "async";
-	img.src = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1].replace(/"/g, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = icon.querySelector(".img").style.backgroundImage.match(/\(([^)]+)/)[1].replace(/"/g, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: _list$5[index].isSkill ? "skill" : "item",
 		from: "ShortCut",
 		data: _list$5[index]
@@ -244913,10 +244756,11 @@ function onDragStart$2(event) {
 * Get informations from a skill/item when
 * using right click on it.
 */
-function onElementInfo(event) {
-	const index = parseInt(this.parentNode.getAttribute("data-index"), 10);
+function onElementInfo(event, icon) {
+	const index = parseInt(icon.parentNode.getAttribute("data-index"), 10);
 	const element = _list$5[index];
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	if (element.isSkill) if (SkillDescription_default.uid === _list$5[index].ID) SkillDescription_default.remove();
 	else {
 		SkillDescription_default.append();
@@ -244925,19 +244769,18 @@ function onElementInfo(event) {
 	else {
 		if (ItemInfo_default.uid === _list$5[index].ID) {
 			ItemInfo_default.remove();
-			return false;
+			return;
 		}
 		ItemInfo_default.append();
 		ItemInfo_default.uid = _list$5[index].ID;
 		ItemInfo_default.setItem(InventoryController.getUI().getItemById(_list$5[index].ID));
 	}
-	return false;
 }
 /**
-* Click on a shortcut
+* Double-click on a shortcut
 */
-function onUseShortCut() {
-	clickElement(parseInt(this.parentNode.getAttribute("data-index"), 10));
+function onUseShortCut(icon) {
+	clickElement(parseInt(icon.parentNode.getAttribute("data-index"), 10));
 }
 /**
 * Clicking on a shortcut
@@ -244957,10 +244800,10 @@ function clickElement(index) {
 /**
 * Closing the window
 */
-function onClose$5() {
-	ShortCut.ui.css("height", 0);
-	_preferences$23.size = 0;
-	_preferences$23.save();
+function onClose$6() {
+	ShortCut._host.style.height = "0px";
+	_preferences$24.size = 0;
+	_preferences$24.save();
 }
 /**
 * Hook Inventory, get informations when there is a change
@@ -245004,7 +244847,7 @@ function convertHotkeysToServerFormat() {
 		"Macro8",
 		"Macro9",
 		"Macro10"
-	].forEach(function(key, index) {
+	].forEach((key, index) => {
 		const shortcut = ShortCutControls_default.ShortCuts[key];
 		if (shortcut && shortcut.cust && shortcut.cust.emotion) serverData.data.EmotionHotkey[index] = shortcut.cust.emotion;
 	});
@@ -245045,12 +244888,12 @@ function convertHotkeysToServerFormat() {
 		"F4_7",
 		"F4_8",
 		"F4_9"
-	].forEach(function(key, index) {
+	].forEach((key, index) => {
 		const shortcut = ShortCutControls_default.ShortCuts[key];
 		if (shortcut) {
 			const keyData = shortcut.cust || shortcut.init;
 			serverData.data.UserHotkey_V2.SkillBar_1Tab.push({
-				desc: "Skill " + (index + 1),
+				desc: `Skill ${index + 1}`,
 				index,
 				key1: keyData.key || 0,
 				key2: 0
@@ -245074,7 +244917,7 @@ function convertHotkeysFromServerFormat(serverData) {
 			"Macro9",
 			"Macro10"
 		];
-		serverData.data.EmotionHotkey.forEach(function(emotion, index) {
+		serverData.data.EmotionHotkey.forEach((emotion, index) => {
 			if (emotion && emotionKeys[index]) {
 				if (!ShortCutControls_default.ShortCuts[emotionKeys[index]].cust) ShortCutControls_default.ShortCuts[emotionKeys[index]].cust = {};
 				ShortCutControls_default.ShortCuts[emotionKeys[index]].cust.emotion = emotion;
@@ -245120,7 +244963,7 @@ function convertHotkeysFromServerFormat(serverData) {
 			"F4_8",
 			"F4_9"
 		];
-		serverData.data.UserHotkey_V2.SkillBar_1Tab.forEach(function(skillData) {
+		serverData.data.UserHotkey_V2.SkillBar_1Tab.forEach((skillData) => {
 			if (skillData && skillData.index < shortcutKeys.length) {
 				const key = shortcutKeys[skillData.index];
 				if (key && skillData.key1) {
@@ -245135,19 +244978,18 @@ function haveHotkeysChanged(currentData) {
 	if (!_lastServerHotkeys) return true;
 	return JSON.stringify(currentData) !== JSON.stringify(_lastServerHotkeys);
 }
-var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _preferences$23, ShortCut_default;
+var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _preferences$24, ShortCut_default;
 var init_ShortCut = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
 	init_SkillInfo();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_SessionStorage();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_ItemInfo();
 	init_Inventory();
 	init_SkillListMH();
@@ -245161,11 +245003,12 @@ var init_ShortCut = __esmMin((() => {
 	init_SkillList();
 	init_ShortCut$2();
 	init_ShortCut$1();
-	ShortCut = new UIComponent("ShortCut", ShortCut_default$2, ShortCut_default$1);
+	ShortCut = new GUIComponent("ShortCut", ShortCut_default$1);
+	ShortCut.render = () => ShortCut_default$2;
 	_list$5 = [];
 	_rowCount = 0;
 	_lastServerHotkeys = null;
-	_preferences$23 = Preferences.get("ShortCut", {
+	_preferences$24 = Preferences.get("ShortCut", {
 		x: 480,
 		y: 0,
 		size: 1,
@@ -245178,14 +245021,51 @@ var init_ShortCut = __esmMin((() => {
 	* Initialize UI
 	*/
 	ShortCut.init = function init() {
-		this.ui.find(".resize").mousedown(onResize$3);
-		this.ui.find(".close").mousedown(stopPropagation$10).click(onClose$5);
-		this.ui.on("drop", ".container", onDrop$8).on("dragover", ".container", stopPropagation$10).on("dragstart", ".icon", onDragStart$2).on("dragend", ".icon", onDragEnd).on("dblclick", ".icon", onUseShortCut).on("contextmenu", ".icon", onElementInfo).on("mousedown", ".icon", function(event) {
-			event.stopImmediatePropagation();
+		const root = _getRoot$7();
+		const resizeBtn = root.querySelector(".resize");
+		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$3);
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			});
+			closeBtn.addEventListener("click", onClose$6);
+		}
+		const container = root.querySelector("#ShortCut");
+		container.addEventListener("drop", (e) => {
+			const target = e.target.closest(".container");
+			if (target) onDrop$8(e, target);
+		});
+		container.addEventListener("dragover", (e) => {
+			if (e.target.closest(".container")) {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			}
+		});
+		container.addEventListener("dragstart", (e) => {
+			const icon = e.target.closest(".icon");
+			if (icon) onDragStart$2(e, icon);
+		});
+		container.addEventListener("dragend", (e) => {
+			const icon = e.target.closest(".icon");
+			if (icon) onDragEnd(icon);
+		});
+		container.addEventListener("dblclick", (e) => {
+			const icon = e.target.closest(".icon");
+			if (icon) onUseShortCut(icon);
+		});
+		container.addEventListener("contextmenu", (e) => {
+			const icon = e.target.closest(".icon");
+			if (icon) onElementInfo(e, icon);
+		});
+		container.addEventListener("mousedown", (e) => {
+			if (e.target.closest(".icon")) e.stopImmediatePropagation();
 		});
 		this.draggable();
-		this.ui.find(".container").each(function() {
-			jquery_default(this).on("mouseenter", onContainerMouseEnter).on("mouseleave", onContainerMouseLeave);
+		root.querySelectorAll(".container").forEach((el) => {
+			el.addEventListener("mouseenter", onContainerMouseEnter);
+			el.addEventListener("mouseleave", onContainerMouseLeave);
 		});
 		DB.UpdateOwnerName.ShortCut = onUpdateOwnerName$1;
 		InventoryController.getUI().onUpdateItem = onUpdateItem;
@@ -245194,15 +245074,14 @@ var init_ShortCut = __esmMin((() => {
 	* Append to body
 	*/
 	ShortCut.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$23.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$23.x), Renderer.width - this.ui.width()),
-			height: 34 * _preferences$23.size
-		});
-		this.magnet.TOP = _preferences$23.magnet_top;
-		this.magnet.BOTTOM = _preferences$23.magnet_bottom;
-		this.magnet.LEFT = _preferences$23.magnet_left;
-		this.magnet.RIGHT = _preferences$23.magnet_right;
+		this._host.style.height = `${34 * _preferences$24.size}px`;
+		const rect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$24.y), Renderer.height - rect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$24.x), Renderer.width - rect.width)}px`;
+		this.magnet.TOP = _preferences$24.magnet_top;
+		this.magnet.BOTTOM = _preferences$24.magnet_bottom;
+		this.magnet.LEFT = _preferences$24.magnet_left;
+		this.magnet.RIGHT = _preferences$24.magnet_right;
 		Controller$4.getUI().onUpdateSkill = onUpdateSkill;
 		updateEmptySlotTooltips();
 	};
@@ -245210,16 +245089,16 @@ var init_ShortCut = __esmMin((() => {
 	* When removed, clean up
 	*/
 	ShortCut.onRemove = function onRemove() {
-		jquery_default(".shortcut-tooltip").removeClass("show");
-		this.ui.find(".container").off("mouseenter", onContainerMouseEnter).off("mouseleave", onContainerMouseLeave);
-		_preferences$23.y = parseInt(this.ui.css("top"), 10);
-		_preferences$23.x = parseInt(this.ui.css("left"), 10);
-		_preferences$23.size = Math.floor(parseInt(this.ui.css("height"), 10) / 34);
-		_preferences$23.magnet_top = this.magnet.TOP;
-		_preferences$23.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$23.magnet_left = this.magnet.LEFT;
-		_preferences$23.magnet_right = this.magnet.RIGHT;
-		_preferences$23.save();
+		const tooltip = _getRoot$7().querySelector(".shortcut-tooltip");
+		if (tooltip) tooltip.classList.remove("show");
+		_preferences$24.y = parseInt(this._host.style.top, 10);
+		_preferences$24.x = parseInt(this._host.style.left, 10);
+		_preferences$24.size = Math.floor(parseInt(this._host.style.height, 10) / 34);
+		_preferences$24.magnet_top = this.magnet.TOP;
+		_preferences$24.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$24.magnet_left = this.magnet.LEFT;
+		_preferences$24.magnet_right = this.magnet.RIGHT;
+		_preferences$24.save();
 	};
 	/**
 	* Request to clean the list
@@ -245227,22 +245106,24 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.clean = function clean() {
 		_list$5.length = 0;
-		this.ui.find(".container").empty();
+		_getRoot$7().querySelectorAll(".container").forEach((el) => {
+			el.innerHTML = "";
+		});
 	};
 	/**
 	* Process shortcut
 	*
 	* @param {object} key
 	*/
-	ShortCut.onShortCut = function onShurtCut(key) {
+	ShortCut.onShortCut = function onShortCut(key) {
 		switch (key.cmd.replace(/\d+$/, "")) {
 			case "EXECUTE":
 				clickElement(parseInt(key.cmd.match(/\d+$/).toString(), 10));
 				break;
 			case "EXTEND":
-				_preferences$23.size = (_preferences$23.size + 1) % (_rowCount + 1);
-				_preferences$23.save();
-				this.ui.css("height", _preferences$23.size * 34);
+				_preferences$24.size = (_preferences$24.size + 1) % (_rowCount + 1);
+				_preferences$24.save();
+				this._host.style.height = `${_preferences$24.size * 34}px`;
 				break;
 		}
 	};
@@ -245268,12 +245149,13 @@ var init_ShortCut = __esmMin((() => {
 	* @param {Array} shortcut list
 	*/
 	ShortCut.setList = function setList(list) {
-		let i, count;
 		let skill;
-		this.ui.find(".container").empty();
+		_getRoot$7().querySelectorAll(".container").forEach((el) => {
+			el.innerHTML = "";
+		});
 		_list$5.length = list.length;
 		_rowCount = Math.min(4, Math.floor(list.length / 9));
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].isSkill) {
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].isSkill) {
 			skill = ShortCut.getSkillById(list[i].ID);
 			if (skill && skill.level) ShortCut.addElement(i, true, list[i].ID, list[i].count || skill.level);
 			else {
@@ -245289,12 +245171,13 @@ var init_ShortCut = __esmMin((() => {
 	* Called when hotkey settings change
 	*/
 	ShortCut.updateAllTooltips = function updateAllTooltips() {
-		let i, size;
-		for (i = 0, size = _list$5.length; i < size; ++i) {
-			const ui = ShortCut.ui.find(".container:eq(" + i + ")");
+		const root = _getRoot$7();
+		for (let i = 0, size = _list$5.length; i < size; ++i) {
+			const container = root.querySelector(`.container[data-index="${i}"]`);
+			if (!container) continue;
 			const hotkey = getHotKeyString(i);
 			if (!_list$5[i] || !_list$5[i].isSkill && !_list$5[i].ID) {
-				if (hotkey) ui.attr("data-tooltip", hotkey);
+				if (hotkey) container.setAttribute("data-tooltip", hotkey);
 			} else if (_list$5[i] && (_list$5[i].isSkill || _list$5[i].ID)) {
 				let name = "";
 				if (_list$5[i].isSkill && SkillInfo[_list$5[i].ID]) name = SkillInfo[_list$5[i].ID].SkillName;
@@ -245303,15 +245186,14 @@ var init_ShortCut = __esmMin((() => {
 					if (item) name = DB.getItemName(item);
 				}
 				if (name) {
-					const tooltipText = hotkey ? "[ " + hotkey + " ] " + name : name;
-					ui.attr("data-tooltip", tooltipText);
+					const tooltipText = hotkey ? `[ ${hotkey} ] ${name}` : name;
+					container.setAttribute("data-tooltip", tooltipText);
 				}
 			}
 		}
 	};
 	ShortCut.setElement = function setElement(isSkill, ID, count) {
-		let i, size;
-		for (i = 0, size = _list$5.length; i < size; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID) if (isSkill && _list$5[i].count && _list$5[i].count <= count) ShortCut.addElement(i, isSkill, ID, _list$5[i].count);
+		for (let i = 0, size = _list$5.length; i < size; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID) if (isSkill && _list$5[i].count && _list$5[i].count <= count) ShortCut.addElement(i, isSkill, ID, _list$5[i].count);
 		else ShortCut.addElement(i, isSkill, ID, count);
 	};
 	/**
@@ -245324,7 +245206,8 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.addElement = function addElement(index, isSkill, ID, count) {
 		let file, name;
-		const ui = ShortCut.ui.find(".container:eq(" + index + ")").empty();
+		const ui = _getRoot$7().querySelector(`.container[data-index="${index}"]`);
+		ui.innerHTML = "";
 		if (!_list$5[index]) _list$5[index] = {};
 		_list$5[index].isSkill = isSkill;
 		_list$5[index].ID = ID;
@@ -245346,32 +245229,32 @@ var init_ShortCut = __esmMin((() => {
 			if (!count) return;
 		}
 		const hotkey = getHotKeyString(index);
-		const tooltipText = hotkey ? "[ " + hotkey + " ] " + name : name;
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + file + ".bmp", function(url) {
-			ui.html("<div draggable=\"true\" class=\"icon\"><div class=\"img\"></div><div class=\"amount\"></div></div>");
-			ui.find(".img").css("backgroundImage", "url(" + url + ")");
-			ui.find(".amount").text(count);
-			ui.attr("data-tooltip", tooltipText);
+		const tooltipText = hotkey ? `[ ${hotkey} ] ${name}` : name;
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${file}.bmp`, (url) => {
+			ui.innerHTML = "<div draggable=\"true\" class=\"icon\"><div class=\"img\"></div><div class=\"amount\"></div></div>";
+			ui.querySelector(".img").style.backgroundImage = `url(${url})`;
+			ui.querySelector(".amount").textContent = count;
+			ui.setAttribute("data-tooltip", tooltipText);
 		});
 	};
 	/**
-	* Displays the cat hand over every skill
+	* Displays the cooldown over every skill
 	*
 	* @param {number} delay in ms
 	*/
 	ShortCut.setGlobalSkillDelay = function setGlobalSkillDelay(delay) {
-		_list$5.forEach(function(element, index) {
+		_list$5.forEach((element, index) => {
 			if (element.isSkill) setDelayOnIndex(index, delay);
 		});
 	};
 	/**
-	* Displays the cat hand over a skingle skill
+	* Displays the cooldown over a single skill
 	*
 	* @param {number} ID of the skill
 	* @param {number} delay in ms
 	*/
-	ShortCut.setSkillDelay = function setGlobalSkillDelay(ID, delay) {
-		_list$5.forEach(function(element, index) {
+	ShortCut.setSkillDelay = function setSkillDelay(ID, delay) {
+		_list$5.forEach((element, index) => {
 			if (element.isSkill && element.ID == ID) setDelayOnIndex(index, delay);
 		});
 	};
@@ -245384,35 +245267,24 @@ var init_ShortCut = __esmMin((() => {
 	* @param {number} amount (optional)
 	*/
 	ShortCut.removeElement = function removeElement(isSkill, ID, row, amount) {
-		let i, count;
 		if (!ID) return;
-		for (i = row * 9, count = Math.min(_list$5.length, row * 9 + 9); i < count; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID && (!isSkill || _list$5[i].count == amount)) {
-			ShortCut.ui.find(".container:eq(" + i + ")").empty();
+		const root = _getRoot$7();
+		for (let i = row * 9, count = Math.min(_list$5.length, row * 9 + 9); i < count; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID && (!isSkill || _list$5[i].count == amount)) {
+			const container = root.querySelector(`.container[data-index="${i}"]`);
+			if (container) container.innerHTML = "";
 			_list$5[i].isSkill = 0;
 			_list$5[i].ID = 0;
 			_list$5[i].count = 0;
 			ShortCut.onChange(i, 0, 0, 0);
 		}
 	};
-	/**
-	* @param id
-	* @param level
-	*/
-	Guild_default.onUpdateSkill = function(id, level) {
+	Guild_default.onUpdateSkill = (id, level) => {
 		ShortCut.setElement(true, id, level);
 	};
-	/**
-	* @param id
-	* @param level
-	*/
-	SkillListMH_default.mercenary.onUpdateSkill = function(id, level) {
+	SkillListMH_default.mercenary.onUpdateSkill = (id, level) => {
 		ShortCut.setElement(true, id, level);
 	};
-	/**
-	* @param id
-	* @param level
-	*/
-	SkillListMH_default.homunculus.onUpdateSkill = function(id, level) {
+	SkillListMH_default.homunculus.onUpdateSkill = (id, level) => {
 		ShortCut.setElement(true, id, level);
 	};
 	/**
@@ -245423,8 +245295,8 @@ var init_ShortCut = __esmMin((() => {
 	* @param {number} id
 	* @param {number} count
 	*/
-	ShortCut.onChange = function OnConfigUpdate() {};
-	ShortCut.saveToServer = function() {
+	ShortCut.onChange = function onChange() {};
+	ShortCut.saveToServer = function saveToServer() {
 		if (PacketVerManager_default.value >= 20170315 && SessionStorage_default.WebToken) {
 			const hotkeys = JSON.stringify(convertHotkeysToServerFormat());
 			if (!haveHotkeysChanged(hotkeys)) return;
@@ -245436,14 +245308,14 @@ var init_ShortCut = __esmMin((() => {
 			const xhr = new XMLHttpRequest();
 			let webserverAddress = "";
 			if (window.location.protocol !== "http:" && window.location.protocol !== "https:") webserverAddress = Configs.get("webserverAddress", "http://127.0.0.1:8888");
-			xhr.open("POST", webserverAddress + "/userconfig/save", true);
-			xhr.onload = function() {
+			xhr.open("POST", `${webserverAddress}/userconfig/save`, true);
+			xhr.onload = () => {
 				if (xhr.status === 200) console.log("Hotkeys saved to server successfully");
 			};
 			xhr.send(formData);
 		}
 	};
-	ShortCut.loadFromServer = function(callback) {
+	ShortCut.loadFromServer = function loadFromServer(callback) {
 		if (PacketVerManager_default.value >= 20170315 && SessionStorage_default.WebToken) {
 			const formData = new FormData();
 			formData.append("AID", SessionStorage_default.AID);
@@ -245452,8 +245324,8 @@ var init_ShortCut = __esmMin((() => {
 			const xhr = new XMLHttpRequest();
 			let webserverAddress = "";
 			if (window.location.protocol !== "http:" && window.location.protocol !== "https:") webserverAddress = Configs.get("webserverAddress", "http://127.0.0.1:8888");
-			xhr.open("POST", webserverAddress + "/userconfig/load", true);
-			xhr.onload = function() {
+			xhr.open("POST", `${webserverAddress}/userconfig/load`, true);
+			xhr.onload = () => {
 				if (xhr.status === 200) try {
 					const serverData = JSON.parse(xhr.responseText);
 					_lastServerHotkeys = JSON.parse(JSON.stringify(serverData));
@@ -248130,10 +248002,10 @@ var init_PetInformations$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$5() {
+function _getRoot$6() {
 	return PetInformations._shadow || PetInformations._host;
 }
-var PetInformations, _preferences$22, petAutoFeeding, PetInformations_default;
+var PetInformations, _preferences$23, petAutoFeeding, PetInformations_default;
 var init_PetInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -248148,7 +248020,7 @@ var init_PetInformations = __esmMin((() => {
 	PetInformations = new GUIComponent("PetInformations", PetInformations_default$1);
 	PetInformations.render = () => PetInformations_default$2;
 	PetInformations.captureKeyEvents = true;
-	_preferences$22 = Preferences.get("PetInformations", {
+	_preferences$23 = Preferences.get("PetInformations", {
 		x: 100,
 		y: 200,
 		show: true
@@ -248159,7 +248031,7 @@ var init_PetInformations = __esmMin((() => {
 	*/
 	PetInformations.init = function init() {
 		this.draggable(".titlebar");
-		const root = _getRoot$5();
+		const root = _getRoot$6();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -248204,7 +248076,7 @@ var init_PetInformations = __esmMin((() => {
 		});
 	};
 	PetInformations.onAppend = function onAppend() {
-		const root = _getRoot$5();
+		const root = _getRoot$6();
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
 			const el = root.querySelector(".pet_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -248213,17 +248085,17 @@ var init_PetInformations = __esmMin((() => {
 			const feeding = root.querySelector(".feeding");
 			if (feeding) feeding.style.display = "none";
 		}
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$22.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$22.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$23.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$23.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body, save user preferences
 	*/
 	PetInformations.onRemove = function onRemove() {
-		_preferences$22.show = this._host.style.display !== "none";
-		_preferences$22.y = parseInt(this._host.style.top, 10);
-		_preferences$22.x = parseInt(this._host.style.left, 10);
-		_preferences$22.save();
+		_preferences$23.show = this._host.style.display !== "none";
+		_preferences$23.y = parseInt(this._host.style.top, 10);
+		_preferences$23.x = parseInt(this._host.style.left, 10);
+		_preferences$23.save();
 	};
 	/**
 	* Process shortcut
@@ -248246,7 +248118,7 @@ var init_PetInformations = __esmMin((() => {
 	* @param {object} pet info
 	*/
 	PetInformations.setInformations = function setInformations(info) {
-		const root = _getRoot$5();
+		const root = _getRoot$6();
 		const nameInput = root.querySelector(".name");
 		if (nameInput) nameInput.value = info.szName;
 		const levelEl = root.querySelector(".level");
@@ -248302,12 +248174,12 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} intimacy
 	*/
 	PetInformations.setIntimacy = function setIntimacy(val) {
-		const el = _getRoot$5().querySelector(".intimacy");
+		const el = _getRoot$6().querySelector(".intimacy");
 		if (el) el.textContent = DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675);
 	};
 	PetInformations.setFeedConfig = function setFeedConfig(flag) {
 		petAutoFeeding = flag;
-		const root = _getRoot$5();
+		const root = _getRoot$6();
 		if (root) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
 			const el = root.querySelector(".pet_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -248319,7 +248191,7 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} hunger
 	*/
 	PetInformations.setHunger = function setHunger(val) {
-		const el = _getRoot$5().querySelector(".hunger");
+		const el = _getRoot$6().querySelector(".hunger");
 		if (el) el.textContent = DB.getMessage(val < 10 ? 667 : val < 25 ? 668 : val < 75 ? 669 : val < 90 ? 670 : 671);
 	};
 	/**
@@ -249973,7 +249845,7 @@ var init_EntityDisplay = __esmMin((() => {
 				multiShadow(ctx, lines[1], start_x, fontSize * 1.2 + paddingTop, 1, 0, 0);
 				ctx.fillStyle = color;
 				ctx.strokeStyle = "black";
-				ctx.strokeText(lines[0], start_x, 0 + paddingTop);
+				ctx.strokeText(lines[0], start_x, 5);
 				ctx.fillText(lines[0], start_x, paddingTop);
 				ctx.strokeText(lines[1], start_x, fontSize * 1.2 + paddingTop);
 				ctx.fillText(lines[1], start_x, fontSize * 1.2 + paddingTop);
@@ -250088,12 +249960,11 @@ var init_EntityDialog = __esmMin((() => {
 			this.display = true;
 			const ctx = this.ctx;
 			const max_width = 250;
-			const fontSize = 12;
 			const lines = [];
 			let width = 0, i, j;
 			let result;
 			const color = fontColor || "white";
-			ctx.font = fontSize + "px Arial";
+			ctx.font = "12px Arial";
 			while (text.length) {
 				i = text.length;
 				while (ctx.measureText(text.substr(0, i)).width > max_width) i--;
@@ -250107,8 +249978,8 @@ var init_EntityDialog = __esmMin((() => {
 				text = text.substr(lines[lines.length - 1].length, text.length);
 			}
 			ctx.canvas.width = 14 + width;
-			ctx.canvas.height = 8 + (fontSize + 5) * lines.length;
-			ctx.font = fontSize + "px Arial";
+			ctx.canvas.height = 8 + 17 * lines.length;
+			ctx.font = "12px Arial";
 			ctx.fillStyle = "rgba(0,0,0,0.4)";
 			ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 			ctx.strokeStyle = "#525252";
@@ -250116,9 +249987,9 @@ var init_EntityDialog = __esmMin((() => {
 			ctx.stroke();
 			for (i = 0, j = lines.length; i < j; ++i) {
 				ctx.fillStyle = "black";
-				ctx.fillText(lines[i], 8, 5 + fontSize + (fontSize + 5) * i);
+				ctx.fillText(lines[i], 8, 17 + 17 * i);
 				ctx.fillStyle = color;
-				ctx.fillText(lines[i], 7, 4 + fontSize + (fontSize + 5) * i);
+				ctx.fillText(lines[i], 7, 16 + 17 * i);
 			}
 			if (this.timeout) Events.clearTimeout(this.timeout);
 			this.timeout = Events.setTimeout(function() {
@@ -255293,8 +255164,8 @@ var init_UIComponent = __esmMin((() => {
 					const lockY = component.magnet && (component.magnet.TOP || component.magnet.BOTTOM);
 					snapX = null;
 					snapY = null;
-					snapXD = SNAP_DISTANCE + 1;
-					snapYD = SNAP_DISTANCE + 1;
+					snapXD = 11;
+					snapYD = 11;
 					currentX = x_;
 					currentY = y_;
 					const len = _snapCache.length;
@@ -298054,7 +297925,7 @@ var init_bson = __esmMin((() => {
 				if (value < 0) return Long.UZERO;
 				if (value >= TWO_PWR_64_DBL) return Long.MAX_UNSIGNED_VALUE;
 			} else {
-				if (value <= -TWO_PWR_63_DBL) return Long.MIN_VALUE;
+				if (value <= -0x8000000000000000) return Long.MIN_VALUE;
 				if (value + 1 >= TWO_PWR_63_DBL) return Long.MAX_VALUE;
 			}
 			if (value < 0) return Long.fromNumber(-value, unsigned).neg();
@@ -312488,7 +312359,7 @@ function isFreeCell$2(x, y) {
 	});
 	return free;
 }
-var vec2, mat2, direction, rotate, targetPos, movementTimer, MobileUI, _preferences$21, showButtons, C_AUTOTARGET_DELAY, centerX, centerY, maxDistance, normalizedX, normalizedY, MobileUI_default;
+var vec2, mat2, direction, rotate, targetPos, movementTimer, MobileUI, _preferences$22, showButtons, C_AUTOTARGET_DELAY, centerX, centerY, maxDistance, normalizedX, normalizedY, MobileUI_default;
 var init_MobileUI = __esmMin((() => {
 	init_jquery();
 	init_Context();
@@ -312516,7 +312387,7 @@ var init_MobileUI = __esmMin((() => {
 	targetPos = [0, 0];
 	movementTimer = null;
 	MobileUI = new UIComponent("MobileUI", MobileUI_default$2, MobileUI_default$1);
-	_preferences$21 = Preferences.get("MobileUI", {
+	_preferences$22 = Preferences.get("MobileUI", {
 		x: 0,
 		y: 0,
 		zIndex: 1e3,
@@ -312789,12 +312660,12 @@ var init_MobileUI = __esmMin((() => {
 	* Removes MobileUI
 	*/
 	MobileUI.onRemove = function onRemove() {
-		_preferences$21.y = 0;
-		_preferences$21.x = 0;
-		_preferences$21.zIndex = 1e3;
-		_preferences$21.width = Renderer.width;
-		_preferences$21.height = Renderer.height;
-		_preferences$21.save();
+		_preferences$22.y = 0;
+		_preferences$22.x = 0;
+		_preferences$22.zIndex = 1e3;
+		_preferences$22.width = Renderer.width;
+		_preferences$22.height = Renderer.height;
+		_preferences$22.save();
 		if (SessionStorage_default.AutoTargeting) toggleAutoTargeting();
 	};
 	/**
@@ -315055,7 +314926,7 @@ var init_Vending$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.js
-function _getRoot$4() {
+function _getRoot$5() {
 	return Vending._shadow || Vending._host;
 }
 function escapeHtml(text) {
@@ -315122,7 +314993,7 @@ function addItem$1(content, item, isinput) {
 		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
 		itemObj = container;
 		if (_type$3 === Vending.Type.BUYING_STORE) {
-			const limitInput = _getRoot$4().querySelector(".limitZeny");
+			const limitInput = _getRoot$5().querySelector(".limitZeny");
 			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
 			limitInput.value = limit;
@@ -315193,7 +315064,7 @@ function onDrop$5(event) {
 		return;
 	}
 	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return;
-	const fromContent = _getRoot$4().querySelector(`.${data.container} .content`);
+	const fromContent = _getRoot$5().querySelector(`.${data.container} .content`);
 	const toContent = this.querySelector(".content");
 	requestMoveItem$1(data.index, fromContent, toContent, this.className === "OutputWindow");
 }
@@ -315212,7 +315083,7 @@ function onItemInfo$11(event) {
 }
 function onItemSelected$1() {
 	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
-	const root = _getRoot$4();
+	const root = _getRoot$5();
 	const inputWin = root.querySelector(".InputWindow");
 	let from, to;
 	if (inputWin.contains(this)) {
@@ -315225,7 +315096,7 @@ function onItemSelected$1() {
 	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.querySelector(".content"), to.querySelector(".content"), from === inputWin);
 }
 function onItemFocus$1() {
-	_getRoot$4().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	_getRoot$5().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
 	this.classList.add("selected");
 }
 function onScroll$4(event) {
@@ -315238,7 +315109,7 @@ function onScroll$4(event) {
 	event.preventDefault();
 }
 function onDragStart$1(event) {
-	const root = _getRoot$4();
+	const root = _getRoot$5();
 	const inputWin = root.querySelector(".InputWindow");
 	const outputWin = root.querySelector(".OutputWindow");
 	const container = (inputWin.contains(this) ? inputWin : outputWin).className;
@@ -315255,7 +315126,7 @@ function onDragStart$1(event) {
 	}));
 }
 function onResizeInput() {
-	const inputWin = _getRoot$4().querySelector(".InputWindow");
+	const inputWin = _getRoot$5().querySelector(".InputWindow");
 	const content = inputWin.querySelector(".container .content");
 	const top = inputWin.offsetTop;
 	let lastHeight = 0;
@@ -315290,17 +315161,17 @@ function onItemOver$8() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const overlay = _getRoot$4().querySelector(".overlay");
+	const overlay = _getRoot$5().querySelector(".overlay");
 	overlay.style.display = "";
 	overlay.style.top = `${this.offsetTop - 20}px`;
 	overlay.style.left = `${this.offsetLeft - 10}px`;
 	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
 }
 function onItemOut$9() {
-	const overlay = _getRoot$4().querySelector(".overlay");
+	const overlay = _getRoot$5().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
+var Vending, _preferences$21, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
 var init_Vending = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -315330,7 +315201,7 @@ var init_Vending = __esmMin((() => {
 		VENDING_STORE: 0,
 		BUYING_STORE: 1
 	};
-	_preferences$20 = Preferences.get("Vending", {
+	_preferences$21 = Preferences.get("Vending", {
 		inputWindow: {
 			x: 100,
 			y: 100,
@@ -315348,7 +315219,7 @@ var init_Vending = __esmMin((() => {
 	_slots$4 = 0;
 	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		const sellBtn = root.querySelector(".btn.sell");
 		if (sellBtn) {
 			sellBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -315438,21 +315309,21 @@ var init_Vending = __esmMin((() => {
 		});
 	};
 	Vending.onAppend = function onAppend() {
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		const inputContent = inputWin.querySelector(".content");
 		const outputContent = outputWin.querySelector(".content");
-		inputWin.style.top = `${Math.min(Math.max(0, _preferences$20.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
-		inputWin.style.left = `${Math.min(Math.max(0, _preferences$20.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
-		outputWin.style.top = `${Math.min(Math.max(0, _preferences$20.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
-		outputWin.style.left = `${Math.min(Math.max(0, _preferences$20.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
-		resize$1(inputContent, _preferences$20.inputWindow.height);
-		resize$1(outputContent, _preferences$20.outputWindow.height);
+		inputWin.style.top = `${Math.min(Math.max(0, _preferences$21.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
+		inputWin.style.left = `${Math.min(Math.max(0, _preferences$21.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
+		outputWin.style.top = `${Math.min(Math.max(0, _preferences$21.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
+		outputWin.style.left = `${Math.min(Math.max(0, _preferences$21.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
+		resize$1(inputContent, _preferences$21.inputWindow.height);
+		resize$1(outputContent, _preferences$21.outputWindow.height);
 		this._host.style.display = "none";
 	};
 	Vending.setType = function setType(type) {
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		const winBuyEls = root.querySelectorAll(".WinBuy");
 		const winSellEls = root.querySelectorAll(".WinSell");
 		switch (type) {
@@ -315480,18 +315351,18 @@ var init_Vending = __esmMin((() => {
 	};
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
 		_output$1.length = 0;
-		_preferences$20.inputWindow.x = parseInt(inputWin.style.left, 10);
-		_preferences$20.inputWindow.y = parseInt(inputWin.style.top, 10);
-		_preferences$20.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$20.outputWindow.x = parseInt(outputWin.style.left, 10);
-		_preferences$20.outputWindow.y = parseInt(outputWin.style.top, 10);
-		_preferences$20.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$20.save();
+		_preferences$21.inputWindow.x = parseInt(inputWin.style.left, 10);
+		_preferences$21.inputWindow.y = parseInt(inputWin.style.top, 10);
+		_preferences$21.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$21.outputWindow.x = parseInt(outputWin.style.left, 10);
+		_preferences$21.outputWindow.y = parseInt(outputWin.style.top, 10);
+		_preferences$21.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$21.save();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -315513,7 +315384,7 @@ var init_Vending = __esmMin((() => {
 		return true;
 	};
 	Vending.setList = function setList(items) {
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -315560,7 +315431,7 @@ var init_Vending = __esmMin((() => {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
 		this.setList(CartItems_default.list);
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315576,7 +315447,7 @@ var init_Vending = __esmMin((() => {
 			if (isItemStackable(item) && DB.isBuyable(item.ITID)) buyable.push(item);
 		}
 		this.setList(buyable);
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -315590,7 +315461,7 @@ var init_Vending = __esmMin((() => {
 	Vending.onSubmit = function onSubmit() {
 		const output = [];
 		const count = _output$1.length;
-		const root = _getRoot$4();
+		const root = _getRoot$5();
 		const shopname = root.querySelector(".shopname").value;
 		let limitZeny;
 		let ctr = 0;
@@ -315762,7 +315633,7 @@ function onItemUsed(event, itemEl) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-var VendingShop, _realSize, _type$2, _preferences$19, VendingShop_default;
+var VendingShop, _realSize, _type$2, _preferences$20, VendingShop_default;
 var init_VendingShop = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -315794,7 +315665,7 @@ var init_VendingShop = __esmMin((() => {
 	*/
 	VendingShop.list = [];
 	_realSize = 0;
-	_preferences$19 = Preferences.get("VendingShop", {
+	_preferences$20 = Preferences.get("VendingShop", {
 		x: 200,
 		y: 200,
 		width: 8,
@@ -315848,11 +315719,11 @@ var init_VendingShop = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	VendingShop.onAppend = function onAppend() {
-		this.resize(_preferences$19.width, _preferences$19.height);
+		this.resize(_preferences$20.width, _preferences$20.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$19.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$19.x), Renderer.width - hostRect.width)}px`;
-		_realSize = _preferences$19.reduce ? 0 : hostRect.height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$20.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$20.x), Renderer.width - hostRect.width)}px`;
+		_realSize = _preferences$20.reduce ? 0 : hostRect.height;
 		const messageText = DB.getMessage(226);
 		const titleShop = Vending_default._shopname.length > 25 ? `${Vending_default._shopname.substring(0, 25)}...` : Vending_default._shopname;
 		const shopnameEl = (this._shadow || this._host).querySelector(".text.shopname");
@@ -315875,12 +315746,12 @@ var init_VendingShop = __esmMin((() => {
 		this.list.length = 0;
 		const itemInfoEl = document.querySelector(".ItemInfo");
 		if (itemInfoEl) itemInfoEl.remove();
-		_preferences$19.reduce = !!_realSize;
-		_preferences$19.y = parseInt(this._host.style.top, 10);
-		_preferences$19.x = parseInt(this._host.style.left, 10);
-		_preferences$19.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
-		_preferences$19.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$19.save();
+		_preferences$20.reduce = !!_realSize;
+		_preferences$20.y = parseInt(this._host.style.top, 10);
+		_preferences$20.x = parseInt(this._host.style.left, 10);
+		_preferences$20.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
+		_preferences$20.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$20.save();
 		this._host.style.display = "none";
 	};
 	/**
@@ -316168,7 +316039,7 @@ function formatUnixDate(unixTimestamp) {
 	const d = /* @__PURE__ */ new Date(unixTimestamp * 1e3);
 	return String(d.getMonth() + 1).padStart(2, "0") + "/" + String(d.getDate()).padStart(2, "0") + " - " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + ":" + String(d.getSeconds()).padStart(2, "0");
 }
-var VendingReport, VendingReportTable, _preferences$18, VendingReport_default;
+var VendingReport, VendingReportTable, _preferences$19, VendingReport_default;
 var init_VendingReport = __esmMin((() => {
 	init_DBManager();
 	init_jquery();
@@ -316192,7 +316063,7 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport._resizing = false;
 	VendingReport._startY = 0;
 	VendingReport._startHeight = 0;
-	_preferences$18 = Preferences.get("VendingReport", {
+	_preferences$19 = Preferences.get("VendingReport", {
 		x: 200,
 		y: 200,
 		width: 400,
@@ -316228,9 +316099,9 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport.onRemove = function OnRemove() {
 		VendingReport.reset();
 		jquery_default(".ItemInfo").remove();
-		_preferences$18.y = parseInt(this.ui.css("top"), 10);
-		_preferences$18.x = parseInt(this.ui.css("left"), 10);
-		_preferences$18.save();
+		_preferences$19.y = parseInt(this.ui.css("top"), 10);
+		_preferences$19.x = parseInt(this.ui.css("left"), 10);
+		_preferences$19.save();
 		this.ui.hide();
 	};
 	VendingReport.reset = function reset() {
@@ -316742,7 +316613,7 @@ function refreshList(contentEl) {
 		index++;
 	}
 }
-var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$17, Emoticons_default;
+var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$18, Emoticons_default;
 var init_Emoticons = __esmMin((() => {
 	init_Emotions();
 	init_Client();
@@ -316766,7 +316637,7 @@ var init_Emoticons = __esmMin((() => {
 	TOTAL_PAGES = 0;
 	EMOTICONS_COUNT = Object.keys(Emotions_default.order).length;
 	_entity$1 = new Entity();
-	_preferences$17 = Preferences.get("Emoticons", {
+	_preferences$18 = Preferences.get("Emoticons", {
 		x: 600,
 		y: 200,
 		show: false
@@ -316812,18 +316683,18 @@ var init_Emoticons = __esmMin((() => {
 	* Appending to html
 	*/
 	Emoticons.onAppend = function onAppend() {
-		if (!_preferences$17.show) this._host.style.display = "none";
-		this._host.style.top = Math.min(Math.max(0, _preferences$17.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$17.x), Renderer.width - this._host.offsetWidth) + "px";
+		if (!_preferences$18.show) this._host.style.display = "none";
+		this._host.style.top = Math.min(Math.max(0, _preferences$18.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$18.x), Renderer.width - this._host.offsetWidth) + "px";
 	};
 	/**
 	* Once removed from DOM, save preferences
 	*/
 	Emoticons.onRemove = function onRemove() {
-		_preferences$17.show = this._host.style.display !== "none";
-		_preferences$17.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$17.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$17.save();
+		_preferences$18.show = this._host.style.display !== "none";
+		_preferences$18.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$18.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$18.save();
 	};
 	/**
 	* Update page
@@ -316877,20 +316748,26 @@ var init_ShortCuts$2 = __esmMin((() => {
 //#region src/UI/Components/ShortCuts/ShortCuts.css?raw
 var ShortCuts_default$1;
 var init_ShortCuts$1 = __esmMin((() => {
-	ShortCuts_default$1 = "#ShortCuts {\r\n	width: 380px;\r\n	height: 270px;\r\n	position: absolute;\r\n}\r\n\r\n#ShortCuts .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#ShortCuts .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ShortCuts .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ShortCuts .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#ShortCuts .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ShortCuts .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ShortCuts .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#ShortCuts .tabs button {\r\n	width: 20px;\r\n	height: 27px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n\r\n#ShortCuts .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#ShortCuts .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#ShortCuts .hide {\r\n	height: 100%;\r\n	width: 16px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#ShortCuts .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n}\r\n\r\n#ShortCuts .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#ShortCuts .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#ShortCuts .panel {\r\n	height: 230px;\r\n	background-color: white;\r\n}\r\n#ShortCuts .footer {\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	border-right: 1px solid #ccc;\r\n	border-left: 1px solid #ccc;\r\n	border-radius: 0px 0px 5px 5px;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 378px;\r\n	height: 25px;\r\n}\r\n#ShortCuts .emoticons {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	right: 4px;\r\n	top: 10%;\r\n}\r\n#ShortCuts .macro {\r\n	text-align: center;\r\n}\r\n\r\n#ShortCuts .macro_ {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 75%;\r\n	height: 15px;\r\n	margin-left: 5%;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#ShortCuts .input_macro_focus {\r\n	background-color: rgb(205, 224, 255) !important;\r\n}\r\n";
+	ShortCuts_default$1 = ":host {\r\n	top: 172px;\r\n	left: 0px;\r\n}\r\n\r\n#ShortCuts {\r\n	width: 380px;\r\n	height: 270px;\r\n	position: absolute;\r\n}\r\n\r\n#ShortCuts .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#ShortCuts .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ShortCuts .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ShortCuts .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#ShortCuts .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ShortCuts .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ShortCuts .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#ShortCuts .tabs button {\r\n	width: 20px;\r\n	height: 27px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n\r\n#ShortCuts .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#ShortCuts .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#ShortCuts .hide {\r\n	height: 100%;\r\n	width: 16px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#ShortCuts .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n}\r\n\r\n#ShortCuts .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#ShortCuts .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#ShortCuts .panel {\r\n	height: 230px;\r\n	background-color: white;\r\n}\r\n#ShortCuts .footer {\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	border-right: 1px solid #ccc;\r\n	border-left: 1px solid #ccc;\r\n	border-radius: 0px 0px 5px 5px;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 378px;\r\n	height: 25px;\r\n}\r\n#ShortCuts .emoticons {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	right: 4px;\r\n	top: 10%;\r\n}\r\n#ShortCuts .macro {\r\n	text-align: center;\r\n}\r\n\r\n#ShortCuts .macro_ {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 75%;\r\n	height: 15px;\r\n	margin-left: 5%;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#ShortCuts .input_macro_focus {\r\n	background-color: rgb(205, 224, 255) !important;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ShortCuts/ShortCuts.js
 /**
+* Helper to get the shadow root
+*/
+function _getRoot$4() {
+	return ShortCuts._shadow || ShortCuts._host;
+}
+/**
 * Exit window
 */
-function onClose$4() {
-	ShortCuts.ui.hide();
+function onClose$5() {
+	ShortCuts._host.style.display = "none";
 }
 function executeCmd(value) {
 	const command = _MACRO_INIT[`Num_${value}`];
-	if (command.length < 1 || command == "/hide") return;
-	if (command[0] == "/") {
+	if (command.length < 1 || command === "/hide") return;
+	if (command[0] === "/") {
 		ProcessCommand_default.processCommand.call(ChatBox_default, command.substr(1));
 		return;
 	}
@@ -316904,17 +316781,21 @@ function executeFlag(value) {
 	Network.sendPacket(pkt);
 }
 function loadValuesAlt() {
+	const root = _getRoot$4();
 	const length = Object.keys(_MACRO_INIT).length - 3;
 	for (let index = 0; index < length; index++) {
 		const element = _MACRO_INIT[`Num_${index}`];
-		jquery_default(`#macro_${index}`).val(element);
+		const input = root.querySelector(`#macro_${index}`);
+		if (input) input.value = element;
 	}
 }
-function addValuesAlt(element) {
-	element.ui.find(".macro input").blur(function() {
-		const index = jquery_default(this).attr("id").split("macro_")[1];
-		_MACRO_INIT[`Num_${index}`] = this.value;
-		_MACRO_INIT.save();
+function addValuesAlt() {
+	_getRoot$4().querySelectorAll(".macro input").forEach((input) => {
+		input.addEventListener("blur", () => {
+			const index = input.id.split("macro_")[1];
+			_MACRO_INIT[`Num_${index}`] = input.value;
+			_MACRO_INIT.save();
+		});
 	});
 }
 /**
@@ -316922,31 +316803,23 @@ function addValuesAlt(element) {
 */
 function onDropText(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	let data;
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (e) {
-		return false;
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return;
 	}
-	if (data.type == "item") return false;
-	jquery_default(event.currentTarget).val(data);
-	return false;
+	if (data.type === "item") return;
+	event.currentTarget.value = data;
 }
-/**
-* Stop event propagation
-*/
-function stopPropagation$8(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-var ShortCuts, _MACRO_INIT, _FLAG_INIT, _preferences$16, ShortCuts_default;
+var ShortCuts, _MACRO_INIT, _FLAG_INIT, _preferences$17, ShortCuts_default;
 var init_ShortCuts = __esmMin((() => {
-	init_jquery();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Emoticons();
 	init_ShortCuts$2();
 	init_ShortCuts$1();
@@ -316954,7 +316827,9 @@ var init_ShortCuts = __esmMin((() => {
 	init_NetworkManager();
 	init_PacketStructure();
 	init_ProcessCommand();
-	ShortCuts = new UIComponent("ShortCuts", ShortCuts_default$2, ShortCuts_default$1);
+	init_KeyEventHandler();
+	ShortCuts = new GUIComponent("ShortCuts", ShortCuts_default$1);
+	ShortCuts.render = () => ShortCuts_default$2;
 	_MACRO_INIT = Preferences.get("_MACRO_CMD", {
 		Num_1: "/hide",
 		Num_2: "/?",
@@ -316982,7 +316857,7 @@ var init_ShortCuts = __esmMin((() => {
 	* Store ShortCuts items
 	*/
 	ShortCuts.list = [];
-	_preferences$16 = Preferences.get("ShortCuts", {
+	_preferences$17 = Preferences.get("ShortCuts", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -316995,63 +316870,99 @@ var init_ShortCuts = __esmMin((() => {
 		magnet_right: false
 	}, 1);
 	/**
+	* Capture key events so text inputs inside Shadow DOM work correctly
+	*/
+	ShortCuts.captureKeyEvents = true;
+	/**
+	* Key handler: let typing work in macro inputs, handle Enter/Escape
+	*/
+	ShortCuts.onKeyDown = function onKeyDown(event) {
+		const focused = (this._shadow || this._host).activeElement;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				focused.blur();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
+	};
+	/**
 	* Initialize UI
 	*/
-	ShortCuts.init = function Init() {
-		this.ui.find(".footer button").mousedown(function() {
-			if (this.className == "emoticons") Emoticons_default.onShortCut({ cmd: "TOGGLE" });
+	ShortCuts.init = function init() {
+		const root = _getRoot$4();
+		root.querySelectorAll(".footer button").forEach((btn) => {
+			btn.addEventListener("mousedown", () => {
+				if (btn.classList.contains("emoticons")) Emoticons_default.onShortCut({ cmd: "TOGGLE" });
+			});
 		});
-		this.ui.find(".close").click(onClose$4);
-		this.ui.find(".macro input").mousedown(function() {
-			jquery_default(".macro_").removeClass("input_macro_focus");
-			jquery_default(this).addClass("input_macro_focus");
-			jquery_default(this).select();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", onClose$5);
+		root.querySelectorAll(".macro input").forEach((input) => {
+			input.addEventListener("mousedown", () => {
+				root.querySelectorAll(".macro_").forEach((el) => el.classList.remove("input_macro_focus"));
+				input.classList.add("input_macro_focus");
+				input.select();
+			});
 		});
-		this.ui.find("input[type=text]").on("drop", onDropText).on("dragover", stopPropagation$8);
-		addValuesAlt(this);
+		root.querySelectorAll("input[type=text]").forEach((input) => {
+			input.addEventListener("drop", onDropText);
+			input.addEventListener("dragover", (e) => {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			});
+		});
+		addValuesAlt();
 		loadValuesAlt();
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(".titlebar");
 	};
 	/**
 	* Apply preferences once append to body
 	*/
-	ShortCuts.onAppend = function OnAppend() {
-		if (!_preferences$16.show) this.ui.hide();
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$16.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$16.x), Renderer.width - this.ui.width())
-		});
+	ShortCuts.onAppend = function onAppend() {
+		if (!_preferences$17.show) this._host.style.display = "none";
+		const rect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$17.y), Renderer.height - rect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$17.x), Renderer.width - rect.width)}px`;
 	};
 	/**
 	* Remove ShortCuts from window (and so clean up items)
 	*/
-	ShortCuts.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+	ShortCuts.onRemove = function onRemove() {
+		const content = _getRoot$4().querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
-		jquery_default(".ItemInfo").remove();
-		_preferences$16.show = this.ui.is(":visible");
-		_preferences$16.reduce = false;
-		_preferences$16.y = parseInt(this.ui.css("top"), 10);
-		_preferences$16.x = parseInt(this.ui.css("left"), 10);
-		_preferences$16.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$16.height = Math.floor((this.ui.height() - 20) / 32);
-		_preferences$16.magnet_top = this.magnet.TOP;
-		_preferences$16.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$16.magnet_left = this.magnet.LEFT;
-		_preferences$16.magnet_right = this.magnet.RIGHT;
-		_preferences$16.save();
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$17.show = this._host.style.display !== "none";
+		_preferences$17.reduce = false;
+		_preferences$17.y = parseInt(this._host.style.top, 10);
+		_preferences$17.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$17.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$17.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$17.magnet_top = this.magnet.TOP;
+		_preferences$17.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$17.magnet_left = this.magnet.LEFT;
+		_preferences$17.magnet_right = this.magnet.RIGHT;
+		_preferences$17.save();
 	};
 	/**
 	* Process shortcut
 	*
 	* @param {object} key
 	*/
-	ShortCuts.onShortCut = function onShurtCut(key) {
+	ShortCuts.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				jquery_default(".macro_").removeClass("input_macro_focus");
-				if (this.ui.is(":visible")) this.focus();
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this._fixPositionOverflow();
+				} else this._host.style.display = "none";
+				_getRoot$4().querySelectorAll(".macro_").forEach((el) => el.classList.remove("input_macro_focus"));
+				if (this._host.style.display !== "none") this.focus();
 				break;
 			case "EXECUTE_MACRO_1":
 				executeCmd(1);
@@ -317118,17 +317029,16 @@ var init_ShortCuts = __esmMin((() => {
 	* @param {number} width
 	* @param {number} height
 	*/
-	ShortCuts.resize = function Resize(width, height) {
+	ShortCuts.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		this.ui.find(".container .content").css({
-			width: width * 32 + 13,
-			height: height * 32
-		});
-		this.ui.css({
-			width: 55 + width * 32,
-			height: 50 + height * 32
-		});
+		const content = _getRoot$4().querySelector(".container .content");
+		if (content) {
+			content.style.width = `${width * 32 + 13}px`;
+			content.style.height = `${height * 32}px`;
+		}
+		this._host.style.width = `${55 + width * 32}px`;
+		this._host.style.height = `${50 + height * 32}px`;
 	};
 	ShortCuts_default = UIManager.addComponent(ShortCuts);
 }));
@@ -317700,11 +317610,11 @@ function onItemInfo$8(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$7(event) {
+function stopPropagation$8(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-var CashShop, _preferences$15, CashShop_default;
+var CashShop, _preferences$16, CashShop_default;
 var init_CashShop$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -317727,7 +317637,7 @@ var init_CashShop$1 = __esmMin((() => {
 	* Store cash shop items
 	*/
 	CashShop.list = [];
-	_preferences$15 = Preferences.get("CashShop", {
+	_preferences$16 = Preferences.get("CashShop", {
 		x: 80,
 		y: 100,
 		magnet_top: false,
@@ -317788,7 +317698,7 @@ var init_CashShop$1 = __esmMin((() => {
 	CashShop.currentBannerIndex = 0;
 	CashShop.bannerRotationTime = 5e3;
 	CashShop.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$7);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$8);
 		this.ui.find(".titlebar .close").click(function() {
 			const pkt = new PACKET.CZ.CASH_SHOP_CLOSE();
 			Network.sendPacket(pkt);
@@ -317806,7 +317716,7 @@ var init_CashShop$1 = __esmMin((() => {
 		this.ui.on("click", "#cart-list .items .item .counter-btn", onClickActionCounterButtonCart);
 		this.ui.on("click", "#cart-list .items .item .delete-item", onClickDeleteItemInCart);
 		if (this.ui.find("#cart-list items").length > 0) CashShop.onResetCartListCashShop();
-		this.ui.on("dragover", stopPropagation$7).find(".panel-cart-body").on("drop", onDropToCart).on("dragover", stopPropagation$7).end().on("click", ".banner-dot", function(e) {
+		this.ui.on("dragover", stopPropagation$8).find(".panel-cart-body").on("drop", onDropToCart).on("dragover", stopPropagation$8).end().on("click", ".banner-dot", function(e) {
 			const index = parseInt(this.getAttribute("data-index"), 10);
 			CashShop.goToBanner(index);
 		}).on("click", ".banner-slide", function() {
@@ -317820,26 +317730,26 @@ var init_CashShop$1 = __esmMin((() => {
 	};
 	CashShop.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$15.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$15.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$16.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$16.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$15.magnet_top;
-		this.magnet.BOTTOM = _preferences$15.magnet_bottom;
-		this.magnet.LEFT = _preferences$15.magnet_left;
-		this.magnet.RIGHT = _preferences$15.magnet_right;
+		this.magnet.TOP = _preferences$16.magnet_top;
+		this.magnet.BOTTOM = _preferences$16.magnet_bottom;
+		this.magnet.LEFT = _preferences$16.magnet_left;
+		this.magnet.RIGHT = _preferences$16.magnet_right;
 		CashShop.loadComponentCashShop();
 	};
 	/**
 	* Remove Cash shop
 	*/
 	CashShop.onRemove = function onRemove() {
-		_preferences$15.x = parseInt(this.ui.css("left"), 10);
-		_preferences$15.y = parseInt(this.ui.css("top"), 10);
-		_preferences$15.magnet_top = this.magnet.TOP;
-		_preferences$15.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$15.magnet_left = this.magnet.LEFT;
-		_preferences$15.magnet_right = this.magnet.RIGHT;
-		_preferences$15.save();
+		_preferences$16.x = parseInt(this.ui.css("left"), 10);
+		_preferences$16.y = parseInt(this.ui.css("top"), 10);
+		_preferences$16.magnet_top = this.magnet.TOP;
+		_preferences$16.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$16.magnet_left = this.magnet.LEFT;
+		_preferences$16.magnet_right = this.magnet.RIGHT;
+		_preferences$16.save();
 		CashShop.stopBannerRotation();
 		CashShop.csListItemSearchResult = [];
 		CashShop.cashShopBannerTable = [];
@@ -318813,7 +318723,7 @@ function onItemOut$4() {
 /**
 * Stop event propagation
 */
-function stopPropagation$6(event) {
+function stopPropagation$7(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -318991,7 +318901,7 @@ var init_LaphineSys = __esmMin((() => {
 		});
 		this.draggable(this.ui.find(".titlebar"));
 		this.ui.find(".close, .cancel").click(onRequestLaphineClose);
-		this.ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$6).on("dragstart", ".item", onItemDragStart$3).on("dragend", ".item", onItemDragEnd$3);
+		this.ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$7).on("dragstart", ".item", onItemDragStart$3).on("dragend", ".item", onItemDragEnd$3);
 		this.ui.find(".submit_button_enabled").click(onSubmitItem$1);
 		this.ui.find(".available_mat_list").on("click", ".item", onItemSelect$1).on("drop", onRemoveSubmitDrop$1);
 		this.ui.find(".left_panel").on("drop", onSubmitItemDrop$1);
@@ -319324,7 +319234,7 @@ function onItemOut$3() {
 /**
 * Stop event propagation
 */
-function stopPropagation$5(event) {
+function stopPropagation$6(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -319489,7 +319399,7 @@ var init_LaphineUpg = __esmMin((() => {
 		});
 		this.draggable(ui.find(".titlebar"));
 		ui.find(".close, .cancel").click(onRequestLaphineUpgClose);
-		ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$5).on("dragstart", ".item", onItemDragStart$2).on("dragend", ".item", onItemDragEnd$2);
+		ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$6).on("dragstart", ".item", onItemDragStart$2).on("dragend", ".item", onItemDragEnd$2);
 		ui.find(".submit_button_enabled").click(onSubmitItem);
 		ui.find(".available_mat_list").on("click", ".item", onItemSelect).on("drop", onRemoveSubmitDrop);
 		ui.find(".left_panel").on("drop", onSubmitItemDrop);
@@ -319623,7 +319533,7 @@ function addButtonToMiniMap(miniMapUI) {
 		console.error("[Roulette] Failed to add button:", e);
 	}
 }
-var Roulette, _preferences$14, _rouletteInfo, _isSpinning, _responseTimeout, Roulette_default;
+var Roulette, _preferences$15, _rouletteInfo, _isSpinning, _responseTimeout, Roulette_default;
 var init_Roulette$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -319639,7 +319549,7 @@ var init_Roulette$1 = __esmMin((() => {
 	init_Roulette$3();
 	init_Roulette$2();
 	Roulette = new UIComponent("Roulette", Roulette_default$2, Roulette_default$1);
-	_preferences$14 = Preferences.get("Roulette", {
+	_preferences$15 = Preferences.get("Roulette", {
 		x: 200,
 		y: 200,
 		show: false
@@ -319678,10 +319588,10 @@ var init_Roulette$1 = __esmMin((() => {
 	*/
 	Roulette.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$14.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$14.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$15.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$15.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$14.show) this.ui.hide();
+		if (!_preferences$15.show) this.ui.hide();
 		if (ROConfig.enableRoulette === false) return;
 		if (PacketVerManager_default.value < 20141008) return;
 		let attempts = 0;
@@ -319700,10 +319610,10 @@ var init_Roulette$1 = __esmMin((() => {
 	* Remove from DOM
 	*/
 	Roulette.onRemove = function onRemove() {
-		_preferences$14.show = this.ui.is(":visible");
-		_preferences$14.x = parseInt(this.ui.css("left"), 10);
-		_preferences$14.y = parseInt(this.ui.css("top"), 10);
-		_preferences$14.save();
+		_preferences$15.show = this.ui.is(":visible");
+		_preferences$15.x = parseInt(this.ui.css("left"), 10);
+		_preferences$15.y = parseInt(this.ui.css("top"), 10);
+		_preferences$15.save();
 	};
 	/**
 	* Open Roulette Window
@@ -319953,6 +319863,480 @@ var init_PCGoldTimer$1 = __esmMin((() => {
 	};
 	PCGoldTimer.needFocus = false;
 	PCGoldTimer_default = UIManager.addComponent(PCGoldTimer);
+}));
+//#endregion
+//#region src/UI/Components/Reputation/Reputation.html?raw
+var Reputation_default$2;
+var init_Reputation$2 = __esmMin((() => {
+	Reputation_default$2 = "<div id=\"Reputation\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"3827\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overall_container\">\r\n		<div class=\"header\">\r\n			<div class=\"select-wrapper\">\r\n				<select id=\"repute_groups\" class=\"rep_group_selector\">\r\n					<option value=\"all\" data-text=\"3829\"></option>\r\n				</select>\r\n				<button\r\n					type=\"button\"\r\n					class=\"select-arrow\"\r\n					data-background=\"basic_interface/txtbox_btn_a.bmp\"\r\n					data-hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n					data-down=\"basic_interface/txtbox_btn_c.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"search_wrapper\">\r\n				<input class=\"rep_group_searchbar\" type=\"text\" />\r\n				<button\r\n					class=\"search\"\r\n					data-background=\"reputation/btn_search.bmp\"\r\n					data-hover=\"reputation/btn_search_over.bmp\"\r\n					data-down=\"reputation/btn_search_press.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"rep_group_total_points_wrapper\">\r\n				<div class=\"rep_group_text\">GROUP:</div>\r\n				<div class=\"rep_indicator\"></div>\r\n				<div class=\"rep_group_total_points_value\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"content\"></div>\r\n		<div class=\"paginator\">\r\n			<button class=\"page_prev\" data-background=\"reputation/arrow_prev.bmp\"></button>\r\n			<span class=\"page_text\">1 / 1</span>\r\n			<button class=\"page_next\" data-background=\"reputation/arrow_next.bmp\"></button>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button\r\n				class=\"big_btn_close\"\r\n				data-background=\"basic_interface/btn_close.bmp\"\r\n				data-hover=\"basic_interface/btn_close_a.bmp\"\r\n				data-down=\"basic_interface/btn_close_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Reputation/Reputation.css?raw
+var Reputation_default$1;
+var init_Reputation$1 = __esmMin((() => {
+	Reputation_default$1 = "#Reputation {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 665px;\r\n	height: 450px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Reputation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Reputation .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Reputation .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Reputation .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Reputation .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Reputation .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Reputation .overall_container {\r\n	display: flex;\r\n	flex-direction: column;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Reputation .header {\r\n	display: flex;\r\n	gap: 6px;\r\n}\r\n\r\n#Reputation .select-wrapper {\r\n	position: relative;\r\n	display: inline-block;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_selector {\r\n	width: 140px;\r\n	padding-right: 36px;\r\n	height: 18px;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .select-arrow {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 18px;\r\n	height: 18px;\r\n	border: none;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n#Reputation .search_wrapper {\r\n	height: 18px;\r\n	width: 235px;\r\n	margin-top: 5px;\r\n	display: inline-block;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_searchbar {\r\n	height: 14px;\r\n	width: 196px;\r\n	border: 1px solid black;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .search {\r\n	height: 18px;\r\n	width: 33px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#Reputation .rep_group_total_points_wrapper {\r\n	width: 245px;\r\n	border: 1px solid black;\r\n	margin-top: 5px;\r\n	background-color: #eeeeef;\r\n	align-items: center;\r\n	display: flex;\r\n}\r\n\r\n#Reputation .rep_group_text {\r\n	width: 50px;\r\n}\r\n\r\n#Reputation .rep_indicator {\r\n	width: 40px;\r\n	height: 100%;\r\n	background: no-repeat center;\r\n}\r\n\r\n#Reputation .rep_group_total_points_value {\r\n	margin-left: 5px;\r\n	margin-right: 5px;\r\n	width: 100%;\r\n	text-align: right;\r\n}\r\n\r\n#Reputation .content {\r\n	min-height: 350px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-wrap: wrap;\r\n	flex-basis: content;\r\n	align-content: flex-start;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Reputation .rep_group_wrapper {\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	width: 313px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_name {\r\n	margin-left: 5px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_indicator_wrapper {\r\n	display: flex;\r\n	height: 17px;\r\n	gap: 2px;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n\r\n#Reputation .rep_group_indicator {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#Reputation .rep_group_progess_bar {\r\n	height: 8px;\r\n	margin-top: 10px;\r\n	margin-left: 3px;\r\n	width: 97%;\r\n}\r\n\r\n#Reputation .rep_id_points {\r\n	width: 80px;\r\n	height: 20px;\r\n	margin-top: 5px;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n	text-align: center;\r\n}\r\n\r\n#Reputation .paginator {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	gap: 8px;\r\n	height: 30px;\r\n	margin-right: 25px;\r\n}\r\n\r\n#Reputation .paginator button {\r\n	width: 7px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .footer {\r\n	height: 28px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 3px 3px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n}\r\n\r\n#Reputation .big_btn_close {\r\n	height: 20px;\r\n	width: 42px;\r\n	border: none;\r\n	margin-top: 5px;\r\n	margin-right: 10px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Reputation/Reputation.js
+/**
+* Build the group selector based on the ReputeGroupTable in DB
+* Append a new <option> element for each group in the table
+* The option element will have the class 'repute_group_<groupIndex>'
+* The option element will have the value '<groupIndex>'
+* The option element will have the text content '<group.Name>'
+*/
+function buildGroupSelector() {
+	const groupSelector = Reputation.ui.find("#repute_groups");
+	const ReputeGroupTable = DB.getReputeGroup();
+	Object.entries(ReputeGroupTable).forEach(([groupIndex, group]) => {
+		const option = document.createElement("option");
+		option.className = "repute_group_" + groupIndex;
+		option.value = groupIndex;
+		option.textContent = group.Name;
+		groupSelector.append(option);
+	});
+}
+/**
+* Bind the group selector with the reputation page
+*
+* When the group selector changes, it will update the total points display
+* and re-render the reputation entries for the selected group
+*/
+function bindGroupSelector() {
+	Reputation.ui.find("#repute_groups").on("change", function() {
+		const selectedGroup = this.value;
+		updateGroupTotalPoints(selectedGroup);
+		Reputation.ui.find(".rep_group_searchbar").val("");
+		filterByGroup(selectedGroup);
+	});
+}
+/**
+* Bind search functionality to the input field and button
+*
+* Listens for the enter key on the search input field and performs a search
+* when the enter key is pressed. Listens for a click on the search button and
+* performs a search when the button is clicked.
+*
+*/
+function bindSearch() {
+	const input = Reputation.ui.find(".rep_group_searchbar");
+	const button = Reputation.ui.find(".search");
+	input.on("keydown", function(e) {
+		if (e.key === "Enter") performSearch(this.value.trim());
+	});
+	button.on("click", function() {
+		performSearch(input.val().trim());
+	});
+}
+/**
+* Build all reputation entries once
+*
+* Empties the content container and re-renders all reputation entries
+* using the createReputationEntry function. It also updates the UI state
+* of each entry with the current points value.
+*
+* @return {void}
+*/
+function buildAllReputeEntries() {
+	const content = Reputation.ui.find(".content");
+	const reputeIds = Object.keys(DB.getReputeInfo()).map(Number);
+	Reputation.page.reputeIds = reputeIds;
+	content.empty();
+	reputeIds.forEach((reputeId) => {
+		const info = DB.getReputeData(reputeId);
+		if (!info) return;
+		const points = Reputation.reputeState?.[reputeId] || 0;
+		const entry = createReputeEntry(reputeId, info);
+		entry.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
+		content.append(entry);
+		updateReputeUI(reputeId, points);
+	});
+}
+/**
+* Update the total points display for a given group id
+* @param {string} groupId - The ID of the group to update (or 'all' for all entries)
+*/
+function updateGroupTotalPoints(groupId) {
+	const wrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	const indicator = wrapper.find(".rep_indicator");
+	const pointsValue = wrapper.find(".rep_group_total_points_value");
+	if (groupId === "all") {
+		wrapper.hide();
+		return;
+	}
+	wrapper.show();
+	let reputeIds = DB.getReputeGroupList(groupId);
+	if (reputeIds && typeof reputeIds === "object") reputeIds = Object.values(reputeIds);
+	if (!reputeIds || !reputeIds.length) {
+		indicator.css("background-image", `url(${indicator_empty})`);
+		pointsValue.text("0");
+		return;
+	}
+	let totalPoints = 0;
+	reputeIds.forEach((reputeId) => {
+		totalPoints += Reputation.reputeState?.[reputeId] || 0;
+	});
+	if (totalPoints > 0) indicator.css("background-image", `url(${indicator_blue})`);
+	else if (totalPoints < 0) indicator.css("background-image", `url(${indicator_red})`);
+	else indicator.css("background-image", `url(${indicator_empty})`);
+	pointsValue.text(`${totalPoints} P`);
+}
+/**
+* Checks if a reputation entry is visible based on the info.Invisible value and the current points value
+* @param {object} info - The reputation entry info object
+* @param {number} points - The current points value of the reputation entry
+* @returns {boolean} True if the reputation entry is visible, false otherwise
+*/
+function isReputeVisible(info, points) {
+	switch (info.Invisible) {
+		case "VISIBLE_FALSE": return false;
+		case "VISIBLE_EXIST": return points !== 0;
+		default: return true;
+	}
+}
+/**
+* Filters the reputation entries based on the given group ID
+* If the group ID is 'all', shows all entries
+* If the group ID is not 'all', shows only the entries that belong to the group and updates the total points wrapper
+* @param {string} groupId - The ID of the group to filter by
+*/
+function filterByGroup(groupId) {
+	const items = Reputation.ui.find(".rep_group_wrapper");
+	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	if (groupId === "all") {
+		items.each(function() {
+			const el = this;
+			const reputeId = Number(el.dataset.reputeId);
+			const info = DB.getReputeData(reputeId);
+			const points = Reputation.reputeState?.[reputeId] || 0;
+			el.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
+		});
+		totalWrapper.hide();
+	} else {
+		const groupList = Object.values(DB.getReputeGroupList(groupId) || {});
+		items.each(function() {
+			const el = this;
+			const reputeId = Number(el.dataset.reputeId);
+			const info = DB.getReputeData(reputeId);
+			const points = Reputation.reputeState?.[reputeId] || 0;
+			el.dataset.visible = groupList.includes(reputeId) && isReputeVisible(info, points) ? "true" : "false";
+		});
+		updateGroupTotalPoints(groupId);
+		totalWrapper.show();
+	}
+	const visibleIds = items.filter((i, el) => el.dataset.visible === "true").map((i, el) => Number(el.dataset.reputeId)).get();
+	Reputation.page.reputeIds = visibleIds;
+	Reputation.page.current = 0;
+	renderReputePage(0);
+}
+/**
+* Update the reputation pager UI.
+*
+* This function is called after the reputation entries have been updated.
+* It updates the pager UI to reflect the current page and total number of pages.
+*/
+function updateReputePager() {
+	const total = Reputation.page.reputeIds.length;
+	const perPage = Reputation.page.perPage;
+	const totalPages = Math.max(1, Math.ceil(total / perPage));
+	const current = Reputation.page.current + 1;
+	const paginator = Reputation.ui.find(".paginator");
+	const prevBtn = paginator.find(".page_prev");
+	const nextBtn = paginator.find(".page_next");
+	paginator.find(".page_text").text(`${current} / ${totalPages}`);
+	prevBtn.css("visibility", current === 1 ? "hidden" : "visible");
+	nextBtn.css("visibility", current === totalPages ? "hidden" : "visible");
+	if (totalPages === 1) prevBtn.add(nextBtn).css("visibility", "hidden");
+}
+/**
+* Render a page of reputation entries based on current page index.
+*
+* Hides all entries first, then shows only visible entries within the current page.
+* Updates the pager afterwards.
+*
+* @param {number} pageIndex - current page index (starts from 0)
+*/
+function renderReputePage(pageIndex) {
+	const { perPage } = Reputation.page;
+	const items = Reputation.ui.find(".rep_group_wrapper");
+	Reputation.page.current = pageIndex;
+	items.hide();
+	const visibleItems = items.filter((i, el) => el.dataset.visible === "true");
+	const start = pageIndex * perPage;
+	const end = start + perPage;
+	const pageItems = visibleItems.slice(start, end);
+	pageItems.show();
+	if (Reputation.highlight.active && !Reputation.highlight.consumed) pageItems.each(function() {
+		const el = this;
+		if (Number(el.dataset.reputeId) === Reputation.highlight.reputeId) {
+			el.style.backgroundImage = `url(${bg_highlight})`;
+			Reputation.highlight.consumed = true;
+			Reputation.highlight.active = false;
+		}
+	});
+	else clearHighlights();
+	updateReputePager();
+}
+/**
+* Create a reputation entry element from given info
+* @param {number} reputeId - reputation id
+* @param {object} info - reputation info
+* @returns {HTMLDivElement} created element
+*/
+function createReputeEntry(reputeId, info) {
+	const wrapper = document.createElement("div");
+	wrapper.className = "rep_group_wrapper";
+	wrapper.dataset.reputeId = reputeId;
+	wrapper.style.backgroundImage = "url(" + bg + ")";
+	const name = document.createElement("div");
+	name.className = "rep_group_name";
+	name.textContent = info.Name;
+	wrapper.appendChild(name);
+	const indicatorWrapper = document.createElement("div");
+	indicatorWrapper.className = "rep_group_indicator_wrapper";
+	const indicatorCount = info.MaxPoint_Positive / 1e3;
+	for (let i = 1; i <= indicatorCount; i++) {
+		const indicator = document.createElement("div");
+		indicator.className = `rep_group_indicator indicator_${i}`;
+		indicator.dataset.index = i;
+		indicator.style.backgroundImage = `url(${indicator_empty})`;
+		indicatorWrapper.appendChild(indicator);
+	}
+	wrapper.appendChild(indicatorWrapper);
+	const progress = document.createElement("div");
+	progress.className = "rep_group_progess_bar";
+	wrapper.appendChild(progress);
+	const points = document.createElement("div");
+	points.className = "rep_id_points";
+	points.textContent = "0 / 1000";
+	wrapper.appendChild(points);
+	return wrapper;
+}
+/**
+* Update the UI of a specific Repute entry
+* @param {string} reputeId - The ID of the Repute entry to update
+* @param {number} points - The points to update the UI with
+*/
+function updateReputeUI(reputeId, points) {
+	const wrapper = Reputation.ui.find(`.rep_group_wrapper[data-repute-id="${reputeId}"]`);
+	if (!wrapper.length) return;
+	const indicators = wrapper.find(".rep_group_indicator");
+	const absPoints = Math.abs(points);
+	const fullIndicators = Math.floor(absPoints / 1e3);
+	const remainder = absPoints % 1e3;
+	indicators.each(function(index) {
+		this.style.backgroundImage = index < fullIndicators ? points >= 0 ? `url(${indicator_blue})` : `url(${indicator_red})` : `url(${indicator_empty})`;
+	});
+	wrapper.find(".rep_id_points").text(`${remainder} / 1000`);
+	const progress = wrapper.find(".rep_group_progess_bar");
+	const percent = remainder / 1e3 * 100;
+	const fillColor = points >= 0 ? "#7b95ce" : "#f60206";
+	progress.css("background-image", `linear-gradient(
+				to right,
+				${fillColor} 0%,
+				${fillColor} ${percent}%,
+				transparent ${percent}%
+			)`);
+}
+/**
+* Perform search on the reputation entries based on the given query.
+* If the query is empty, reset the search and show all entries.
+* Otherwise, filter the entries based on whether the entry name matches the query (case-insensitive) and whether the entry is visible.
+* @param {string} query - The search query to filter the reputation entries with
+*/
+function performSearch(query) {
+	const items = Reputation.ui.find(".rep_group_wrapper");
+	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	const groupSelector = Reputation.ui.find("#repute_groups");
+	if (!query) {
+		groupSelector.val("all");
+		totalWrapper.hide();
+		filterByGroup("all");
+		return;
+	}
+	const lowerQuery = query.toLowerCase();
+	const visibleIds = [];
+	items.each(function() {
+		const el = this;
+		const reputeId = Number(el.dataset.reputeId);
+		const info = DB.getReputeData(reputeId);
+		const points = Reputation.reputeState?.[reputeId] || 0;
+		const show = info?.Name.toLowerCase().includes(lowerQuery) && isReputeVisible(info, points);
+		el.dataset.visible = show ? "true" : "false";
+		if (show) visibleIds.push(reputeId);
+	});
+	Reputation.page.reputeIds = visibleIds;
+	Reputation.page.current = 0;
+	renderReputePage(0);
+}
+/**
+* Closing window
+*/
+function onClose$4() {
+	Reputation.ui.hide();
+}
+/**
+* Stop event propagation
+*/
+function stopPropagation$5(event) {
+	event.stopImmediatePropagation();
+	return false;
+}
+/**
+* Packet received from server
+* Initializes the Reputation UI
+* Store the initial values received from the server and update UI
+* If UI is open, update UI
+* @param {object} pkt - PACKET.ZC.REPUTE_INFO
+*/
+function onReputeInfo(pkt) {
+	if (!Reputation.__active) {
+		Reputation.append();
+		Reputation.ui.hide();
+	}
+	const selectedGroup = Reputation.ui.find("#repute_groups").val();
+	let updateSelectedGroup = false;
+	pkt.reputeInfo.forEach((entry) => {
+		Reputation.reputeState[entry.type] = entry.points;
+		updateReputeUI(entry.type, entry.points);
+		if (selectedGroup && selectedGroup !== "all") {
+			if (Object.values(DB.getReputeGroupList(selectedGroup) || {}).includes(entry.type)) updateSelectedGroup = true;
+		}
+	});
+	if (updateSelectedGroup) updateGroupTotalPoints(selectedGroup);
+}
+/**
+* Sets up Highlight, selects the given group,
+* and filters the reputation entries normally
+*
+* @param {object} pkt - PACKET.ZC.REPUTE_OPEN
+*/
+function onReputeOpen(pkt) {
+	const groupId = pkt.table === 0 ? "all" : pkt.table;
+	const highlightId = pkt.type || null;
+	Reputation.highlight.reputeId = highlightId;
+	Reputation.highlight.active = !!highlightId;
+	Reputation.highlight.consumed = false;
+	Reputation.ui.find("#repute_groups").val(groupId);
+	filterByGroup(groupId);
+	Reputation.ui.show();
+}
+/**
+* Clears all highlight effects from the reputation entries.
+* This function is called when the reputation window is opened.
+* It resets the background image and removes the highlight property from all entries.
+*/
+function clearHighlights() {
+	Reputation.ui.find(".rep_group_wrapper").each(function() {
+		this.style.backgroundImage = `url(${bg})`;
+		this.dataset.highlight = "false";
+	});
+}
+var Reputation, _preferences$14, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
+var init_Reputation = __esmMin((() => {
+	init_DBManager();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_Client();
+	init_Preferences$1();
+	init_UIManager();
+	init_UIComponent();
+	init_Reputation$2();
+	init_Reputation$1();
+	Reputation = new UIComponent("Reputation", Reputation_default$2, Reputation_default$1);
+	_preferences$14 = Preferences.get("Reputation", {
+		x: 400,
+		y: 200,
+		show: true
+	}, 1);
+	/**
+	* @var Reputation UI
+	* Store Pagination Data
+	*/
+	Reputation.page = {
+		current: 0,
+		perPage: 8,
+		reputeIds: []
+	};
+	/**
+	* @var Reputation UI
+	* Store ReputeID and Points
+	*/
+	Reputation.reputeState = {};
+	/**
+	* @var Reputation UI
+	* Store Variables for Highlighted ReputeID
+	*/
+	Reputation.highlight = {
+		reputeId: null,
+		active: false,
+		consumed: false
+	};
+	/**
+	* Initialize component
+	*/
+	Reputation.init = function init() {
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_info.bmp", (d) => bg = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_highlight.bmp", (d) => bg_highlight = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_empty.bmp", (d) => indicator_empty = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
+		this.draggable(this.ui);
+		this.ui.find(".base").mousedown(stopPropagation$5);
+		this.ui.find(".close").click(onClose$4);
+		this.ui.find(".big_btn_close").click(onClose$4);
+		const paginator = Reputation.ui.find(".paginator");
+		paginator.find(".page_prev").on("click", () => {
+			if (Reputation.page.current > 0) renderReputePage(Reputation.page.current - 1);
+		});
+		paginator.find(".page_next").on("click", () => {
+			const maxPage = Math.ceil(Reputation.page.reputeIds.length / Reputation.page.perPage);
+			if (Reputation.page.current < maxPage - 1) renderReputePage(Reputation.page.current + 1);
+		});
+	};
+	/**
+	* Called when the component is appended to the body.
+	* Initializes the reputation system by building the group selector,
+	* binding group selector events and rendering the default view.
+	*/
+	Reputation.onAppend = function onAppend() {
+		buildGroupSelector();
+		bindGroupSelector();
+		bindSearch();
+		buildAllReputeEntries();
+		filterByGroup("all");
+	};
+	/**
+	* Once remove from body, save user preferences
+	*/
+	Reputation.onRemove = function onRemove() {
+		_preferences$14.show = this.ui.is(":visible");
+		_preferences$14.y = parseInt(this.ui.css("top"), 10);
+		_preferences$14.x = parseInt(this.ui.css("left"), 10);
+		_preferences$14.save();
+	};
+	/**
+	* Request to toggle open/close reputation
+	*/
+	Reputation.toggle = function toggle() {
+		const selector = Reputation.ui.find("#repute_groups");
+		const searchInput = Reputation.ui.find(".rep_group_searchbar");
+		if (Reputation.ui.is(":visible")) {
+			Reputation.ui.hide();
+			return;
+		}
+		selector.val("all");
+		searchInput.val("");
+		filterByGroup("all");
+		Reputation.page.current = 0;
+		Reputation.ui.show();
+	};
+	/**
+	* Packet Hooks to functions
+	*/
+	Network.hookPacket(PACKET.ZC.REPUTE_INFO, onReputeInfo);
+	Network.hookPacket(PACKET.ZC_REPUTE_OPEN, onReputeOpen);
+	Reputation_default = UIManager.addComponent(Reputation);
 }));
 //#endregion
 //#region src/UI/Components/MapName/MapName.html?raw
@@ -320491,7 +320875,7 @@ function playTimeAttackBanner() {
 	const count = action.animations.length;
 	function run() {
 		_taCtx.clearRect(0, 0, TA_W, TA_H);
-		drawActionToCanvas$1(_taCtx, _timeAtkAct, _timeAtkSpr, 0, (TA_W >> 1) - 100, TA_Y, frame);
+		drawActionToCanvas$1(_taCtx, _timeAtkAct, _timeAtkSpr, 0, 80, TA_Y, frame);
 		frame++;
 		if (frame < count) _taHideTimer = setTimeout(run, 100);
 		else _taHideTimer = setTimeout(() => {
@@ -320644,7 +321028,7 @@ function renderRankText(text) {
 	for (i = 0; i < totalStr.length; i++) {
 		a = rankCharToAction(totalStr[i]);
 		if (!isNaN(a)) {
-			drawActionToCanvas(_rankCtx, _rankfontAct, _rankfontSpr, a, x, RANK_Y + 6);
+			drawActionToCanvas(_rankCtx, _rankfontAct, _rankfontSpr, a, x, 58);
 			x += step;
 		}
 	}
