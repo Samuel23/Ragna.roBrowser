@@ -148342,7 +148342,7 @@ function close() {
 		const s = _socket;
 		_socket = null;
 		s.close();
-		if (s.izZone) PacketCrypt_default.reset();
+		if (s.isZone) PacketCrypt_default.reset();
 		if (s.ping) clearInterval(s.ping);
 		idx = _sockets.indexOf(s);
 		if (idx !== -1) _sockets.splice(idx, 1);
