@@ -333488,7 +333488,7 @@ var init_MapEngine = __esmMin((() => {
 				pkt.Sex = SessionStorage_default.Sex;
 				Network.sendPacket(pkt);
 				Network.read((fp) => {
-					if (fp.length === 4) SessionStorage_default.Character.GID = fp.readLong();
+					if (PacketVerManager_default.value < 20070521) SessionStorage_default.Character.GID = fp.readLong();
 				});
 				const hbt = new PACKET.CZ.HBT();
 				const is_sec_hbt = Configs.get("sec_HBT", null);
