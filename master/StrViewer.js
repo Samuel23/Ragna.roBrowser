@@ -220360,6 +220360,15 @@ function Process(view) {
 		view.setInt16(0, cmd, true);
 	}
 }
+/**
+* Reset encryption state when disconnecting from zone server
+*/
+function Reset() {
+	_keys[0] = 0;
+	_keys[1] = 0;
+	_keys[2] = 0;
+	_available = false;
+}
 var _keys, _available, KeysTable, imul, PacketCrypt_default;
 var init_PacketCrypt = __esmMin((() => {
 	init_Configs();
@@ -222622,7 +222631,8 @@ var init_PacketCrypt = __esmMin((() => {
 	};
 	PacketCrypt_default = {
 		init: Init$12,
-		process: Process
+		process: Process,
+		reset: Reset
 	};
 }));
 //#endregion
@@ -236118,7 +236128,11 @@ async function _loadHeavyDeps$1() {
 	_EntityManager$1 = EntityManagerMod.default;
 	_ScrollBar$1 = ScrollBarMod.default;
 }
-var _Cursor$1, _DB$1, _Client$1, _Renderer$1, _EntityManager$1, _ScrollBar$1, _snapCache$1, MouseMode, CSS_NUMBER, GUIComponent;
+function _ensureDeps$1() {
+	if (!_depsPromise$1) _depsPromise$1 = _loadHeavyDeps$1();
+	return _depsPromise$1;
+}
+var _Cursor$1, _DB$1, _Client$1, _Renderer$1, _EntityManager$1, _ScrollBar$1, _depsPromise$1, _snapCache$1, MouseMode, CSS_NUMBER, GUIComponent;
 var init_GUIComponent = __esmMin((() => {
 	init_Common$1();
 	init_MouseEventHandler();
@@ -236132,6 +236146,7 @@ var init_GUIComponent = __esmMin((() => {
 	_Renderer$1 = null;
 	_EntityManager$1 = null;
 	_ScrollBar$1 = null;
+	_depsPromise$1 = null;
 	_snapCache$1 = [];
 	MouseMode = Object.freeze({
 		CROSS: 0,
@@ -236186,7 +236201,7 @@ var init_GUIComponent = __esmMin((() => {
 		*/
 		prepare() {
 			if (this.__loaded) return;
-			_loadHeavyDeps$1();
+			_ensureDeps$1();
 			this._host = document.createElement("div");
 			this._host.id = this.name;
 			this._host.style.zIndex = "50";
@@ -236718,6 +236733,10 @@ var init_GUIComponent = __esmMin((() => {
 		* Static so it can be called from anywhere (e.g. dynamically created buttons).
 		*/
 		static processDataAttrs(node) {
+			if (!_Client$1 || !_DB$1) {
+				_ensureDeps$1().then(() => GUIComponent.processDataAttrs(node));
+				return;
+			}
 			const background = node.dataset.background;
 			const hover = node.dataset.hover;
 			const down = node.dataset.down;
@@ -238683,7 +238702,7 @@ function onDropText$2(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$27(event) {
+function stopPropagation$17(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -238983,7 +239002,7 @@ var init_ChatBox = __esmMin((() => {
 				if (!movedInsideChatbox && !isTextInput && !isChatMessage) this.ui.find(".input .username").focus();
 			}.bind(this), 1e3);
 		}.bind(this));
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$27);
+		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$17);
 		this.ui.find(".header input").dblclick(function() {
 			this.type = "text";
 			this.select();
@@ -239740,6 +239759,179 @@ var init_UIVersionManager = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/Elements/UIButton.js
+var UIButton;
+var init_UIButton = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIButton = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const bg = this.getAttribute("bg");
+			const hover = this.getAttribute("hover");
+			const down = this.getAttribute("down");
+			let bgUri = null, hoverUri = null, downUri = null;
+			const state = {
+				hover: false,
+				down: false
+			};
+			const update = () => {
+				if (this.disabled) {
+					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+					this.style.opacity = "0.5";
+					this.style.cursor = "default";
+					return;
+				}
+				this.style.opacity = "";
+				this.style.cursor = "";
+				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
+				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
+				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+				else this.style.backgroundImage = "";
+			};
+			this._update = update;
+			const loadBmp = (path, cb) => {
+				if (!path) return;
+				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+					if (dataURI instanceof ArrayBuffer) try {
+						const tga = new Targa();
+						tga.load(new Uint8Array(dataURI));
+						cb(tga.getDataURL());
+					} catch (e) {
+						console.error(e.message);
+					}
+					else cb(dataURI);
+				});
+			};
+			loadBmp(bg, (uri) => {
+				bgUri = uri;
+				update();
+			});
+			loadBmp(hover, (uri) => {
+				hoverUri = uri;
+			});
+			loadBmp(down, (uri) => {
+				downUri = uri;
+			});
+			this.addEventListener("mouseover", () => {
+				if (this.disabled) return;
+				state.hover = true;
+				update();
+			});
+			this.addEventListener("mouseout", () => {
+				state.hover = false;
+				state.down = false;
+				update();
+			});
+			this.addEventListener("mousedown", () => {
+				if (this.disabled) return;
+				state.down = true;
+				update();
+			});
+			this.addEventListener("mouseup", () => {
+				state.down = false;
+				update();
+			});
+			this.addEventListener("click", (e) => {
+				if (this.disabled) {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				}
+			}, true);
+		}
+		get disabled() {
+			return this.hasAttribute("disabled");
+		}
+		set disabled(val) {
+			if (val) this.setAttribute("disabled", "");
+			else this.removeAttribute("disabled");
+		}
+		static get observedAttributes() {
+			return ["disabled"];
+		}
+		attributeChangedCallback(name) {
+			if (name === "disabled" && this._initialized) {
+				if (this._update) this._update();
+			}
+		}
+	};
+	customElements.define("ui-button", UIButton);
+}));
+//#endregion
+//#region src/UI/Elements/UIText.js
+var UIText;
+var init_UIText = __esmMin((() => {
+	init_DBManager();
+	UIText = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const msgId = this.getAttribute("msg");
+			if (msgId) {
+				const text = DB.getMessage(msgId, "");
+				if (text) this.textContent = text;
+			}
+		}
+		static get observedAttributes() {
+			return ["msg"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "msg" && newVal) {
+				const text = DB.getMessage(newVal, "");
+				if (text) this.textContent = text;
+			}
+		}
+	};
+	customElements.define("ui-text", UIText);
+}));
+//#endregion
+//#region src/UI/Elements/UIImage.js
+var UIImage;
+var init_UIImage = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIImage = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			this.style.display = "none";
+			this._loadSrc(this.getAttribute("src"));
+		}
+		static get observedAttributes() {
+			return ["src"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "src") this._loadSrc(newVal);
+		}
+		_loadSrc(path) {
+			if (!path) return;
+			const target = this.parentElement;
+			if (!target) return;
+			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+				if (dataURI instanceof ArrayBuffer) try {
+					const tga = new Targa();
+					tga.load(new Uint8Array(dataURI));
+					target.style.backgroundImage = `url(${tga.getDataURL()})`;
+				} catch (e) {
+					console.error(e.message);
+				}
+				else target.style.backgroundImage = `url(${dataURI})`;
+			});
+		}
+	};
+	customElements.define("ui-image", UIImage);
+}));
+//#endregion
+//#region src/UI/Elements/Elements.js
+var init_Elements = __esmMin((() => {
+	init_UIButton();
+	init_UIText();
+	init_UIImage();
+}));
+//#endregion
 //#region src/UI/Components/CardIllustration/CardIllustration.html?raw
 var CardIllustration_default$2;
 var init_CardIllustration$2 = __esmMin((() => {
@@ -239817,7 +240009,7 @@ var init_Announce$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Announce/Announce.js
-function _getRoot$16() {
+function _getRoot$27() {
 	return Announce._shadow || Announce._host;
 }
 var Announce, _timer$2, _life$1, Announce_default;
@@ -239844,7 +240036,7 @@ var init_Announce = __esmMin((() => {
 	* Initialize component
 	*/
 	Announce.init = function init() {
-		const root = _getRoot$16();
+		const root = _getRoot$27();
 		this.canvas = root.querySelector("canvas");
 		this.ctx = this.canvas.getContext("2d");
 	};
@@ -240743,7 +240935,7 @@ var init_ItemInfo$2 = __esmMin((() => {
 //#region src/UI/Components/ItemInfo/ItemInfo.css?raw
 var ItemInfo_default$1;
 var init_ItemInfo$1 = __esmMin((() => {
-	ItemInfo_default$1 = ".ItemInfo {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 280px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemInfo .container {\r\n	height: 140px;\r\n	position: relative;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .event_view {\r\n	position: absolute;\r\n}\r\n.ItemInfo .event_view .view {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	top: 6px;\r\n	left: 6px;\r\n}\r\n.ItemInfo .collection {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 10px;\r\n	width: 75px;\r\n	height: 100px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemInfo .title {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 86px;\r\n	width: 185px;\r\n	height: 14px;\r\n	padding-left: 4px;\r\n	padding-top: 6px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n.ItemInfo .close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	display: block;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n.ItemInfo .description {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 100px;\r\n	line-height: 18px;\r\n	width: 170px;\r\n	height: 75px;\r\n	overflow-y: auto;\r\n}\r\n.ItemInfo .description .description-inner {\r\n	width: 150px;\r\n}\r\n.ItemInfo .extend {\r\n	position: absolute;\r\n	right: 4px;\r\n	bottom: 3px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.ItemInfo .cardlist {\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemInfo .cardlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .cardlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemInfo .cardlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemInfo .cardlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemInfo .cardlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemInfo .book_open {\r\n	margin-top: 6px;\r\n	margin-left: 7px;\r\n}\r\n.ItemInfo .book_read {\r\n	position: absolute;\r\n	margin-top: 7px;\r\n}\r\n\r\n.ItemInfo .overlay_open {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 7px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n.ItemInfo .overlay_read {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 27px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n\r\n.ItemInfo .optionlist {\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemInfo .optionlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .optionlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemInfo .optionlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemInfo .optionlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemInfo .optionlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemInfo .title.damaged {\r\n	text-shadow: red 1px 1px 0px;\r\n}\r\n\r\n.ItemInfo .preview-action {\r\n	padding-top: 115px;\r\n	padding-left: 9px;\r\n}\r\n\r\n.moveinfo-label {\r\n	color: #000000;\r\n	display: block;\r\n	text-decoration: underline;\r\n}\r\n\r\n#moveinfo-tooltip {\r\n	position: absolute;\r\n	display: none;\r\n	pointer-events: none;\r\n	z-index: 9999;\r\n	background: #e6e7ef;\r\n	border: 2px solid #bdbdee;\r\n	padding: 6px 8px;\r\n	color: #183984;\r\n	white-space: nowrap;\r\n	border-radius: 8px;\r\n}\r\n\r\n.ItemInfo .btn_mounting {\r\n	border: 0;\r\n	width: 80px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+	ItemInfo_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n.ItemInfo {\r\n	position: relative;\r\n	width: 280px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemInfo .container {\r\n	height: 140px;\r\n	position: relative;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .event_view {\r\n	position: absolute;\r\n}\r\n.ItemInfo .event_view .view {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	top: 6px;\r\n	left: 6px;\r\n}\r\n.ItemInfo .collection {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 10px;\r\n	width: 75px;\r\n	height: 100px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemInfo .title {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 86px;\r\n	width: 185px;\r\n	height: 14px;\r\n	padding-left: 4px;\r\n	padding-top: 6px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n.ItemInfo .close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	display: block;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n.ItemInfo .description {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 100px;\r\n	line-height: 18px;\r\n	width: 170px;\r\n	height: 75px;\r\n	overflow-y: auto;\r\n}\r\n.ItemInfo .description .description-inner {\r\n	width: 150px;\r\n}\r\n.ItemInfo .extend {\r\n	position: absolute;\r\n	right: 4px;\r\n	bottom: 3px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.ItemInfo .cardlist {\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemInfo .cardlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .cardlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemInfo .cardlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemInfo .cardlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemInfo .cardlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemInfo .book_open {\r\n	margin-top: 6px;\r\n	margin-left: 7px;\r\n}\r\n.ItemInfo .book_read {\r\n	position: absolute;\r\n	margin-top: 7px;\r\n}\r\n\r\n.ItemInfo .overlay_open {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 7px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n.ItemInfo .overlay_read {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 27px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n\r\n.ItemInfo .optionlist {\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemInfo .optionlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .optionlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemInfo .optionlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemInfo .optionlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemInfo .optionlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemInfo .title.damaged {\r\n	text-shadow: red 1px 1px 0px;\r\n}\r\n\r\n.ItemInfo .preview-action {\r\n	padding-top: 115px;\r\n	padding-left: 9px;\r\n}\r\n\r\n.moveinfo-label {\r\n	color: #000000;\r\n	display: block;\r\n	text-decoration: underline;\r\n}\r\n\r\n#moveinfo-tooltip {\r\n	position: absolute;\r\n	display: none;\r\n	pointer-events: none;\r\n	z-index: 9999;\r\n	background: #e6e7ef;\r\n	border: 2px solid #bdbdee;\r\n	padding: 6px 8px;\r\n	color: #183984;\r\n	white-space: nowrap;\r\n	border-radius: 8px;\r\n}\r\n\r\n.ItemInfo .btn_mounting {\r\n	border: 0;\r\n	width: 80px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/InputBox/InputBox.html?raw
@@ -240906,180 +241098,7 @@ var init_CartItems$2 = __esmMin((() => {
 //#region src/UI/Components/CartItems/CartItems.css?raw
 var CartItems_default$1;
 var init_CartItems$1 = __esmMin((() => {
-	CartItems_default$1 = "#cartitems {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n#cartitems table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#cartitems .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#cartitems .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#cartitems .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#cartitems .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#cartitems .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#cartitems .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#cartitems .container {\r\n	padding-left: 40px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#cartitems .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#cartitems .hide {\r\n	height: 100%;\r\n	width: 13px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#cartitems .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n	background-attachment: local;\r\n}\r\n\r\n#cartitems .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#cartitems .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#cartitems .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#cartitems .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#cartitems .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#cartitems .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#cartitems .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#cartitems .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n#cartitems .footer .wt {\r\n	position: absolute;\r\n	left: 80px;\r\n	bottom: 6px;\r\n}\r\n\r\n#cartitems .content .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Elements/UIButton.js
-var UIButton;
-var init_UIButton = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIButton = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const bg = this.getAttribute("bg");
-			const hover = this.getAttribute("hover");
-			const down = this.getAttribute("down");
-			let bgUri = null, hoverUri = null, downUri = null;
-			const state = {
-				hover: false,
-				down: false
-			};
-			const update = () => {
-				if (this.disabled) {
-					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-					this.style.opacity = "0.5";
-					this.style.cursor = "default";
-					return;
-				}
-				this.style.opacity = "";
-				this.style.cursor = "";
-				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
-				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
-				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-				else this.style.backgroundImage = "";
-			};
-			this._update = update;
-			const loadBmp = (path, cb) => {
-				if (!path) return;
-				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-					if (dataURI instanceof ArrayBuffer) try {
-						const tga = new Targa();
-						tga.load(new Uint8Array(dataURI));
-						cb(tga.getDataURL());
-					} catch (e) {
-						console.error(e.message);
-					}
-					else cb(dataURI);
-				});
-			};
-			loadBmp(bg, (uri) => {
-				bgUri = uri;
-				update();
-			});
-			loadBmp(hover, (uri) => {
-				hoverUri = uri;
-			});
-			loadBmp(down, (uri) => {
-				downUri = uri;
-			});
-			this.addEventListener("mouseover", () => {
-				if (this.disabled) return;
-				state.hover = true;
-				update();
-			});
-			this.addEventListener("mouseout", () => {
-				state.hover = false;
-				state.down = false;
-				update();
-			});
-			this.addEventListener("mousedown", () => {
-				if (this.disabled) return;
-				state.down = true;
-				update();
-			});
-			this.addEventListener("mouseup", () => {
-				state.down = false;
-				update();
-			});
-			this.addEventListener("click", (e) => {
-				if (this.disabled) {
-					e.stopImmediatePropagation();
-					e.preventDefault();
-				}
-			}, true);
-		}
-		get disabled() {
-			return this.hasAttribute("disabled");
-		}
-		set disabled(val) {
-			if (val) this.setAttribute("disabled", "");
-			else this.removeAttribute("disabled");
-		}
-		static get observedAttributes() {
-			return ["disabled"];
-		}
-		attributeChangedCallback(name) {
-			if (name === "disabled" && this._initialized) {
-				if (this._update) this._update();
-			}
-		}
-	};
-	customElements.define("ui-button", UIButton);
-}));
-//#endregion
-//#region src/UI/Elements/UIText.js
-var UIText;
-var init_UIText = __esmMin((() => {
-	init_DBManager();
-	UIText = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const msgId = this.getAttribute("msg");
-			if (msgId) {
-				const text = DB.getMessage(msgId, "");
-				if (text) this.textContent = text;
-			}
-		}
-		static get observedAttributes() {
-			return ["msg"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "msg" && newVal) {
-				const text = DB.getMessage(newVal, "");
-				if (text) this.textContent = text;
-			}
-		}
-	};
-	customElements.define("ui-text", UIText);
-}));
-//#endregion
-//#region src/UI/Elements/UIImage.js
-var UIImage;
-var init_UIImage = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIImage = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			this.style.display = "none";
-			this._loadSrc(this.getAttribute("src"));
-		}
-		static get observedAttributes() {
-			return ["src"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "src") this._loadSrc(newVal);
-		}
-		_loadSrc(path) {
-			if (!path) return;
-			const target = this.parentElement;
-			if (!target) return;
-			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-				if (dataURI instanceof ArrayBuffer) try {
-					const tga = new Targa();
-					tga.load(new Uint8Array(dataURI));
-					target.style.backgroundImage = `url(${tga.getDataURL()})`;
-				} catch (e) {
-					console.error(e.message);
-				}
-				else target.style.backgroundImage = `url(${dataURI})`;
-			});
-		}
-	};
-	customElements.define("ui-image", UIImage);
-}));
-//#endregion
-//#region src/UI/Elements/Elements.js
-var init_Elements = __esmMin((() => {
-	init_UIButton();
-	init_UIText();
-	init_UIImage();
+	CartItems_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#cartitems {\r\n	position: relative;\r\n}\r\n#cartitems table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#cartitems .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#cartitems .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#cartitems .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#cartitems .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#cartitems .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#cartitems .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#cartitems .container {\r\n	padding-left: 40px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#cartitems .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#cartitems .hide {\r\n	height: 100%;\r\n	width: 13px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#cartitems .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n	background-attachment: local;\r\n}\r\n\r\n#cartitems .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#cartitems .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#cartitems .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#cartitems .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#cartitems .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#cartitems .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#cartitems .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#cartitems .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n#cartitems .footer .wt {\r\n	position: absolute;\r\n	left: 80px;\r\n	bottom: 6px;\r\n}\r\n\r\n#cartitems .content .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV0/Storage.html?raw
@@ -242272,22 +242291,17 @@ var init_Storage$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/CartItems/CartItems.js
-/**
-* Stop event propagation
-*/
-function stopPropagation$26(event) {
-	event.stopImmediatePropagation();
-	return false;
+function _getRoot$26() {
+	return CartItems._shadow || CartItems._host;
 }
 /**
 * Extend inventory window size
 */
 function onResize$14() {
-	const ui = CartItems.ui;
-	const content = ui.find(".container .content");
-	const hide = ui.find(".hide");
-	const top = ui.position().top;
-	const left = ui.position().left;
+	const content = _getRoot$26().querySelector(".container .content");
+	const hideEl = _getRoot$26().querySelector(".hide");
+	const top = CartItems._host.offsetTop;
+	const left = CartItems._host.offsetLeft;
 	let lastWidth = 0;
 	let lastHeight = 0;
 	function resizing() {
@@ -242301,35 +242315,33 @@ function onResize$14() {
 		CartItems.resize(w, h);
 		lastWidth = w;
 		lastHeight = h;
-		if (content.height() === content[0].scrollHeight) hide.show();
-		else hide.hide();
+		if (content && hideEl) if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
+		else hideEl.style.display = "none";
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Hide/show inventory's content
 */
 function onToggleReduction$4() {
-	const ui = CartItems.ui;
+	const panel = _getRoot$26().querySelector(".panel");
 	if (_realSize$5) {
-		ui.find(".panel").show();
-		ui.height(_realSize$5);
+		if (panel) panel.style.display = "block";
+		CartItems._host.style.height = `${_realSize$5}px`;
 		_realSize$5 = 0;
 	} else {
-		_realSize$5 = ui.height();
-		ui.height(17);
-		ui.find(".panel").hide();
+		_realSize$5 = CartItems._host.getBoundingClientRect().height;
+		CartItems._host.style.height = "17px";
+		if (panel) panel.style.display = "none";
 	}
 }
-/**
-* Update tab, reset inventory content
-*/
 /**
 * Drop an item from storage to inventory
 *
@@ -242339,9 +242351,9 @@ function onDrop$21(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item" || data.from !== "Storage" && data.from !== "Inventory") return false;
@@ -242375,40 +242387,42 @@ function onDrop$21(event) {
 * Block the scroll to move 32px at each move
 */
 function onScroll$5(event) {
-	let delta;
-	if (event.originalEvent.wheelDelta) {
-		delta = event.originalEvent.wheelDelta / 120;
-		if (window.opera) delta = -delta;
-	} else if (event.originalEvent.detail) delta = -event.originalEvent.detail;
-	this.scrollTop = Math.floor(this.scrollTop / 32) * 32 - delta * 32;
+	const delta = event.deltaY > 0 ? -1 : 1;
+	const el = event.currentTarget;
+	el.scrollTop = Math.floor(el.scrollTop / 32) * 32 - delta * 32;
+	if (el._roScrollbarRestart) el._roScrollbarRestart();
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$17() {
+function onItemOver$17(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = CartItems.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.Options && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const pos = jquery_default(this).position();
-	const overlay = CartItems.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + ": " + (item.count || 1) + quantity);
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _getRoot$26();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#cartitems") || root;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${itemRect.top - rootRect.top}px`;
+		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
 /**
 * Hide the item name
 */
 function onItemOut$18() {
-	CartItems.ui.find(".overlay").hide();
+	const overlay = _getRoot$26().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
@@ -242418,11 +242432,12 @@ function onItemDragStart$13(event) {
 	const item = CartItems.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1];
+	const iconEl = this.querySelector(".icon");
+	const url = iconEl ? iconEl.style.backgroundImage.match(/\(([^)]+)/)?.[1] : "";
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url ? url.replace(/^["']/, "").replace(/["']$/, "") : "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "CartItems",
 		data: item
@@ -242471,8 +242486,10 @@ function onItemInfo$21(event) {
 * Alt Right Click Request Transfer
 */
 function transferItemToOtherUI$4(item) {
-	const isStorageOpen = StorageController.getUI().ui ? StorageController.getUI().ui.is(":visible") : false;
-	const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
+	const storageUI = StorageController.getUI();
+	const inventoryUI = InventoryController.getUI();
+	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+	const isInventoryOpen = inventoryUI._host ? inventoryUI._host.style.display !== "none" : false;
 	if (!item) return false;
 	const count = item.count || 1;
 	if (isStorageOpen) StorageController.reqAddItemFromCart(item.index, count);
@@ -242490,20 +242507,20 @@ function onItemUsed$5(event) {
 		onItemOut$18();
 	}
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 var CartItems, _realSize$5, _preferences$66, CartItems_default;
 var init_CartItems = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_InputBox();
 	init_ItemInfo();
 	init_ItemCompare();
@@ -242513,7 +242530,8 @@ var init_CartItems = __esmMin((() => {
 	init_Storage$1();
 	init_Inventory();
 	init_Equipment();
-	CartItems = new UIComponent("CartItems", CartItems_default$2, CartItems_default$1);
+	CartItems = new GUIComponent("CartItems", CartItems_default$1);
+	CartItems.render = () => CartItems_default$2;
 	/**
 	* Store inventory items
 	*/
@@ -242531,42 +242549,77 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$26);
-		this.ui.find(".titlebar .mini").click(onToggleReduction$4);
-		this.ui.find(".footer .extend").mousedown(onResize$14);
-		this.ui.find(".titlebar .close").click(function() {
-			CartItems.ui.hide();
+		const root = _getRoot$26();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$4);
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$14);
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			CartItems._host.style.display = "none";
 		});
-		this.ui.on("drop", onDrop$21).on("dragover", stopPropagation$26).find(".container .content").on("mousewheel DOMMouseScroll", onScroll$5).on("mouseover", ".item", onItemOver$17).on("mouseout", ".item", onItemOut$18).on("dragstart", ".item", onItemDragStart$13).on("dragend", ".item", onItemDragEnd$14).on("contextmenu", ".item", onItemInfo$21).on("dblclick", ".item", onItemUsed$5);
-		this.draggable(this.ui.find(".titlebar"));
+		this._host.addEventListener("drop", onDrop$21);
+		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", onScroll$5);
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$17.call(item, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$18();
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$13.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$14();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$21.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemUsed$5.call(item, e);
+			});
+		}
+		this.draggable(".titlebar");
 	};
 	/**
 	* Apply preferences once append to body
 	*/
 	CartItems.onAppend = function OnAppend() {
-		if (SessionStorage_default.Entity.hasCart == false) this.ui.hide();
-		if (!_preferences$66.show) this.ui.hide();
+		if (SessionStorage_default.Entity.hasCart === false) this._host.style.display = "none";
+		if (!_preferences$66.show) this._host.style.display = "none";
 		this.resize(_preferences$66.width, _preferences$66.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$66.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$66.x), Renderer.width - this.ui.width())
-		});
-		_realSize$5 = _preferences$66.reduce ? 0 : this.ui.height();
-		this.ui.find(".titlebar .mini").trigger("mousedown");
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$66.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$66.x), Renderer.width - hostRect.width)}px`;
+		_realSize$5 = _preferences$66.reduce ? 0 : hostRect.height;
+		const miniBtn = _getRoot$26().querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	CartItems.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+		const content = _getRoot$26().querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
-		jquery_default(".ItemInfo").remove();
-		_preferences$66.show = this.ui.is(":visible");
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$66.show = this._host.style.display !== "none";
 		_preferences$66.reduce = !!_realSize$5;
-		_preferences$66.y = parseInt(this.ui.css("top"), 10);
-		_preferences$66.x = parseInt(this.ui.css("left"), 10);
-		_preferences$66.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$66.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$66.y = parseInt(this._host.style.top, 10);
+		_preferences$66.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$66.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$66.height = Math.floor((hostRect.height - 20) / 32);
 		_preferences$66.save();
 	};
 	/**
@@ -242575,17 +242628,21 @@ var init_CartItems = __esmMin((() => {
 	* @param {object} key
 	*/
 	CartItems.onShortCut = function onShurtCut(key) {
-		if (SessionStorage_default.Entity.hasCart == false) return;
+		if (SessionStorage_default.Entity.hasCart === false) return;
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
-				else this.ui.trigger("mouseleave");
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else {
+					this._host.style.display = "none";
+					this._host.dispatchEvent(new Event("mouseleave"));
+				}
 				break;
 		}
 	};
 	CartItems.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.ui.toggle();
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this._host.style.display = this._host.style.display === "none" ? "" : "none";
 	};
 	/**
 	* Extend inventory window size
@@ -242596,14 +242653,13 @@ var init_CartItems = __esmMin((() => {
 	CartItems.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		this.ui.find(".container .content").css({
-			width: width * 32 + 13,
-			height: height * 32
-		});
-		this.ui.css({
-			width: 55 + width * 32,
-			height: 50 + height * 32
-		});
+		const content = _getRoot$26().querySelector(".container .content");
+		if (content) {
+			content.style.width = `${width * 32 + 13}px`;
+			content.style.height = `${height * 32}px`;
+		}
+		this._host.style.width = `${55 + width * 32}px`;
+		this._host.style.height = `${50 + height * 32}px`;
 	};
 	/**
 	* Get item object
@@ -242612,9 +242668,8 @@ var init_CartItems = __esmMin((() => {
 	* @returns {Item}
 	*/
 	CartItems.getItemById = function GetItemById(id) {
-		let i, count;
 		const list = CartItems.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
 	/**
@@ -242624,9 +242679,8 @@ var init_CartItems = __esmMin((() => {
 	* @returns {Item}
 	*/
 	CartItems.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = CartItems.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
 	/**
@@ -242634,18 +242688,22 @@ var init_CartItems = __esmMin((() => {
 	* if the item index is exist you should clear it;[skybook888]
 	*/
 	CartItems.setItems = function SetItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) {
+		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
 			if (this.addItemSub(items[i])) this.list.push(items[i]);
 		}
 	};
 	CartItems.setCartInfo = function SetCartInfo(curCount, maxCount, curWeight, maxWeight) {
-		this.ui.find(".ncnt").text(curCount);
-		this.ui.find(".mcnt").text(maxCount);
-		this.ui.find(".nwt").text(curWeight / 10);
-		this.ui.find(".mwt").text(maxWeight / 10);
+		const root = _getRoot$26();
+		const ncnt = root.querySelector(".ncnt");
+		const mcnt = root.querySelector(".mcnt");
+		const nwt = root.querySelector(".nwt");
+		const mwt = root.querySelector(".mwt");
+		if (ncnt) ncnt.textContent = curCount;
+		if (mcnt) mcnt.textContent = maxCount;
+		if (nwt) nwt.textContent = curWeight / 10;
+		if (mwt) mwt.textContent = maxWeight / 10;
 	};
 	/**
 	* Insert Item to inventory
@@ -242656,10 +242714,11 @@ var init_CartItems = __esmMin((() => {
 		let object = this.getItemByIndex(item.index);
 		if (object) {
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = _getRoot$26().querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		if (this.addItemSub(object)) this.list.push(object);
 	};
 	/**
@@ -242670,15 +242729,20 @@ var init_CartItems = __esmMin((() => {
 	CartItems.addItemSub = function AddItemSub(item) {
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
-		const content = this.ui.find(".container .content");
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"grade\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-		if (content.height() < content[0].scrollHeight) this.ui.find(".hide").hide();
-		else this.ui.find(".hide").show();
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$26();
+		const content = root.querySelector(".container .content");
+		if (!content) return true;
+		content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		const hideEl = root.querySelector(".hide");
+		if (hideEl) if (content.offsetHeight < content.scrollHeight) hideEl.style.display = "none";
+		else hideEl.style.display = "block";
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .grade").css("backgroundImage", "url(" + data + ")");
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+			const grade = root.querySelector(`.item[data-index="${item.index}"] .grade`);
+			if (grade) grade.style.backgroundImage = `url(${data})`;
 		});
 		return true;
 	};
@@ -242694,14 +242758,20 @@ var init_CartItems = __esmMin((() => {
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = _getRoot$26().querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		const content = this.ui.find(".container .content");
-		if (content.height() === content[0].scrollHeight) this.ui.find(".hide").show();
+		const root = _getRoot$26();
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const content = root.querySelector(".container .content");
+		const hideEl = root.querySelector(".hide");
+		if (content && hideEl) {
+			if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
+		}
 		return item;
 	};
 	/**
@@ -242714,16 +242784,23 @@ var init_CartItems = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
+		const root = _getRoot$26();
 		if (item.count > 0) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
 			return;
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		const content = this.ui.find(".container .content");
-		if (content.height() === content[0].scrollHeight) this.ui.find(".hide").show();
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const content = root.querySelector(".container .content");
+		const hideEl = root.querySelector(".hide");
+		if (content && hideEl) {
+			if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
+		}
 	};
 	CartItems.reqRemoveItem = function reqRemoveItem() {};
+	CartItems.mouseMode = GUIComponent.MouseMode.STOP;
 	CartItems_default = UIManager.addComponent(CartItems);
 }));
 //#endregion
@@ -242736,7 +242813,7 @@ var init_InventoryV0$2 = __esmMin((() => {
 //#region src/UI/Components/Inventory/InventoryV0/InventoryV0.css?raw
 var InventoryV0_default$1;
 var init_InventoryV0$1 = __esmMin((() => {
-	InventoryV0_default$1 = "#InventoryV0 {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n#InventoryV0 table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#InventoryV0 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#InventoryV0 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#InventoryV0 .tabs {\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 3px;\r\n}\r\n\r\n#InventoryV0 .tab-sprite {\r\n	width: 20px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	background-position: top left;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex-shrink: 0;\r\n	align-self: flex-end;\r\n	border-left: 1px solid white;\r\n}\r\n\r\n#InventoryV0 .tab-sprite button {\r\n	flex: 1;\r\n	width: 20px;\r\n	border: none;\r\n	background: transparent;\r\n	cursor: pointer;\r\n	padding: 0;\r\n}\r\n\r\n#InventoryV0 .container {\r\n	flex: 1;\r\n	padding-left: 17px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV0 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV0 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV0 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 90%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#InventoryV0 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV0 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#InventoryV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV0 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#InventoryV0 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#InventoryV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n	border-right: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n}\r\n\r\n#InventoryV0 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV0 .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n";
+	InventoryV0_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#InventoryV0 {\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n#InventoryV0 table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#InventoryV0 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#InventoryV0 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#InventoryV0 .tabs {\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 3px;\r\n}\r\n\r\n#InventoryV0 .tab-sprite {\r\n	width: 20px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	background-position: top left;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex-shrink: 0;\r\n	align-self: flex-end;\r\n	border-left: 1px solid white;\r\n}\r\n\r\n#InventoryV0 .tab-sprite button {\r\n	flex: 1;\r\n	width: 20px;\r\n	border: none;\r\n	background: transparent;\r\n	cursor: pointer;\r\n	padding: 0;\r\n}\r\n\r\n#InventoryV0 .container {\r\n	flex: 1;\r\n	padding-left: 17px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV0 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV0 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV0 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 90%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#InventoryV0 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV0 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#InventoryV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV0 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#InventoryV0 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#InventoryV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n	border-right: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n}\r\n\r\n#InventoryV0 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV0 .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.html?raw
@@ -243684,7 +243761,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$25(event) {
+function stopPropagation$16(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -243893,9 +243970,9 @@ var init_Mail$1 = __esmMin((() => {
 		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
 		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$25).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$25);
-		this.ui.find("textarea").on("drop", onDropText$1).on("dragover", stopPropagation$25);
+		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$16).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
+		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$16);
+		this.ui.find("textarea").on("drop", onDropText$1).on("dragover", stopPropagation$16);
 		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
 		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
 		onWindowMailbox();
@@ -244077,7 +244154,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$15() {
+function _getRoot$25() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -244226,7 +244303,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$15();
+		const root = _getRoot$25();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -246792,7 +246869,7 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$24(event) {
+function stopPropagation$15(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -246839,7 +246916,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this._shadow || this._host;
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$24));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$15));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -249036,7 +249113,7 @@ function _formatROText(value) {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$14() {
+function _getRoot$24() {
 	return SkillDescription$1._shadow || SkillDescription$1._host;
 }
 var _allowedTags, SkillDescription$1, SkillDescription_default;
@@ -249076,7 +249153,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$14().querySelector(".close");
+		const closeBtn = _getRoot$24().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -249090,7 +249167,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$14().querySelector(".content");
+		const content = _getRoot$24().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -249531,7 +249608,7 @@ function _root$3(comp) {
 /**
 * Helper: escape HTML (replace jQuery.escape)
 */
-function _escapeHTML$3(text) {
+function _escapeHTML$4(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -250048,7 +250125,7 @@ var init_Guild$1 = __esmMin((() => {
 			if (SessionStorage_default.isGuildMaster && member.GPositionID !== 0) {
 				let selectHTML = `<select class="changePosition member_${member.AID}_${member.GID}">`;
 				_positions.forEach((position, key) => {
-					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$3(position.posName)}</option>`;
+					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$4(position.posName)}</option>`;
 				});
 				selectHTML += "</select>";
 				positionCell.innerHTML = selectHTML;
@@ -250196,7 +250273,7 @@ var init_Guild$1 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$4(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_skpoints) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const currentUp = tr.querySelector(".level .currentUp");
@@ -251475,7 +251552,7 @@ var init_SkillList$2 = __esmMin((() => {
 function _root$2(comp) {
 	return comp._shadow || comp._host;
 }
-function _escapeHTML$2(text) {
+function _escapeHTML$3(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -252105,7 +252182,7 @@ var init_SkillList$1 = __esmMin((() => {
 				element.className = `skill id${key} ${className}`;
 				element.setAttribute("data-index", key);
 				element.setAttribute("draggable", "true");
-				element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				element.innerHTML = `<div class="name">${_escapeHTML$3(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
 				const upBtn = element.querySelector(".level .currentUp");
 				if (upBtn) {
 					if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
@@ -252126,7 +252203,7 @@ var init_SkillList$1 = __esmMin((() => {
 							const miniTr = document.createElement("tr");
 							miniTr.className = `skill id${key} disabled`;
 							miniTr.setAttribute("data-index", key);
-							miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
+							miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
 							miniBox.appendChild(miniTr);
 							Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
 								const img = miniTr.querySelector(".icon img");
@@ -252150,7 +252227,7 @@ var init_SkillList$1 = __esmMin((() => {
 		element.className = `skill id${skill.SKID} ${className}`;
 		element.setAttribute("data-index", skill.SKID);
 		element.setAttribute("draggable", "true");
-		element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		element.innerHTML = `<div class="name">${_escapeHTML$3(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
 		const upBtn = element.querySelector(".level .currentUp");
 		if (upBtn) {
 			if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
@@ -252231,7 +252308,7 @@ var init_SkillList$1 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_points$1) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const upBtn = tr.querySelector(".level .currentUp");
@@ -252352,7 +252429,7 @@ var init_SkillListV0$1 = __esmMin((() => {
 function _root$1(comp) {
 	return comp._shadow || comp._host;
 }
-function _escapeHTML$1(text) {
+function _escapeHTML$2(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -252863,7 +252940,7 @@ var init_SkillListV0 = __esmMin((() => {
 				element.className = `skill id${key} ${className}`;
 				element.setAttribute("data-index", key);
 				element.setAttribute("draggable", "true");
-				element.innerHTML = `<div class="name">${_escapeHTML$1(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
 				const upBtn = element.querySelector(".level .currentUp");
 				if (upBtn) {
 					if (_rArrow) upBtn.style.backgroundImage = _rArrow;
@@ -252896,7 +252973,7 @@ var init_SkillListV0 = __esmMin((() => {
 		element.className = `skill id${skill.SKID} ${className}`;
 		element.setAttribute("data-index", skill.SKID);
 		element.setAttribute("draggable", "true");
-		element.innerHTML = `<div class="name">${_escapeHTML$1(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
 		const upBtn = element.querySelector(".level .currentUp");
 		if (upBtn) {
 			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
@@ -252935,7 +253012,7 @@ var init_SkillListV0 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$1(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_points) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const upBtn = tr.querySelector(".level .currentUp");
@@ -254153,7 +254230,7 @@ var init_BasicInfo$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.js
-function _getRoot$13() {
+function _getRoot$23() {
 	return BasicInfo._shadow || BasicInfo._host;
 }
 var BasicInfo, _preferences$46, BasicInfo_default;
@@ -254201,7 +254278,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfo.init = function init() {
-		const root = _getRoot$13();
+		const root = _getRoot$23();
 		root.querySelectorAll(".topbar button").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -254246,7 +254323,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfo.onAppend = function onAppend() {
-		const root = _getRoot$13();
+		const root = _getRoot$23();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$46.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$46.x), Renderer.width - hostRect.width)}px`;
@@ -254268,7 +254345,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfo.onRemove = function onRemove() {
-		const root = _getRoot$13();
+		const root = _getRoot$23();
 		const inner = root.querySelector("#basicinfo");
 		_preferences$46.x = parseInt(this._host.style.left, 10);
 		_preferences$46.y = parseInt(this._host.style.top, 10);
@@ -254297,7 +254374,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfo.toggleMode = function toggleMode() {
-		const root = _getRoot$13();
+		const root = _getRoot$23();
 		const inner = root.querySelector("#basicinfo");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -254321,7 +254398,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfo.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$13();
+		const root = _getRoot$23();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$46.buttons = buttons.style.display === "none";
@@ -254342,7 +254419,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfo.update = function update(type, val1, val2) {
-		const root = _getRoot$13();
+		const root = _getRoot$23();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -254457,7 +254534,7 @@ var init_BasicInfoV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.js
-function _getRoot$12() {
+function _getRoot$22() {
 	return BasicInfoV0._shadow || BasicInfoV0._host;
 }
 var BasicInfoV0, _preferences$45, BasicInfoV0_default;
@@ -254507,7 +254584,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV0.init = function init() {
-		const root = _getRoot$12();
+		const root = _getRoot$22();
 		root.querySelectorAll(".topbar button").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -254558,7 +254635,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV0.onAppend = function onAppend() {
-		const root = _getRoot$12();
+		const root = _getRoot$22();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$45.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - hostRect.width)}px`;
@@ -254588,7 +254665,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV0.onRemove = function onRemove() {
-		const root = _getRoot$12();
+		const root = _getRoot$22();
 		const inner = root.querySelector("#BasicInfoV0");
 		_preferences$45.x = parseInt(this._host.style.left, 10);
 		_preferences$45.y = parseInt(this._host.style.top, 10);
@@ -254617,7 +254694,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV0.toggleMode = function toggleMode() {
-		const root = _getRoot$12();
+		const root = _getRoot$22();
 		const inner = root.querySelector("#BasicInfoV0");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -254642,7 +254719,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV0.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$12();
+		const root = _getRoot$22();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$45.buttons = buttons.style.display === "none";
@@ -254663,7 +254740,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV0.update = function update(type, val1, val2) {
-		const root = _getRoot$12();
+		const root = _getRoot$22();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -255658,7 +255735,7 @@ var init_BasicInfoV3$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
-function _getRoot$11() {
+function _getRoot$21() {
 	return BasicInfoV3._shadow || BasicInfoV3._host;
 }
 var BasicInfoV3, _preferences$42, BasicInfoV3_default;
@@ -255713,7 +255790,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV3.init = function init() {
-		const root = _getRoot$11();
+		const root = _getRoot$21();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -255774,7 +255851,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV3.onAppend = function onAppend() {
-		const root = _getRoot$11();
+		const root = _getRoot$21();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - hostRect.width)}px`;
@@ -255809,7 +255886,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV3.onRemove = function onRemove() {
-		const root = _getRoot$11();
+		const root = _getRoot$21();
 		const inner = root.querySelector("#BasicInfoV3");
 		const buttons = root.querySelector(".buttons");
 		_preferences$42.x = parseInt(this._host.style.left, 10);
@@ -255838,7 +255915,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV3.toggleMode = function toggleMode() {
-		const root = _getRoot$11();
+		const root = _getRoot$21();
 		const inner = root.querySelector("#BasicInfoV3");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -255860,7 +255937,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV3.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$11();
+		const root = _getRoot$21();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$42.buttons = buttons.style.display === "none";
@@ -255885,7 +255962,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV3.update = function update(type, val1, val2) {
-		const root = _getRoot$11();
+		const root = _getRoot$21();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -256155,7 +256232,7 @@ var init_BasicInfoV4$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
-function _getRoot$10() {
+function _getRoot$20() {
 	return BasicInfoV4._shadow || BasicInfoV4._host;
 }
 var BasicInfoV4, _preferences$40, BasicInfoV4_default;
@@ -256211,7 +256288,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV4.init = function init() {
-		const root = _getRoot$10();
+		const root = _getRoot$20();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -256277,7 +256354,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV4.onAppend = function onAppend() {
-		const root = _getRoot$10();
+		const root = _getRoot$20();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - hostRect.width)}px`;
@@ -256318,7 +256395,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV4.onRemove = function onRemove() {
-		const root = _getRoot$10();
+		const root = _getRoot$20();
 		const inner = root.querySelector("#BasicInfoV4");
 		const buttons = root.querySelector(".buttons");
 		_preferences$40.x = parseInt(this._host.style.left, 10);
@@ -256347,7 +256424,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV4.toggleMode = function toggleMode() {
-		const root = _getRoot$10();
+		const root = _getRoot$20();
 		const inner = root.querySelector("#BasicInfoV4");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -256369,7 +256446,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV4.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$10();
+		const root = _getRoot$20();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$40.buttons = buttons.style.display === "none";
@@ -256394,7 +256471,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV4.update = function update(type, val1, val2) {
-		const root = _getRoot$10();
+		const root = _getRoot$20();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -256509,7 +256586,7 @@ var init_BasicInfoV5$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
-function _getRoot$9() {
+function _getRoot$19() {
 	return BasicInfoV5._shadow || BasicInfoV5._host;
 }
 var BasicInfoV5, _preferences$39, BasicInfoV5_default;
@@ -256565,7 +256642,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV5.init = function init() {
-		const root = _getRoot$9();
+		const root = _getRoot$19();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -256631,7 +256708,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV5.onAppend = function onAppend() {
-		const root = _getRoot$9();
+		const root = _getRoot$19();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x), Renderer.width - hostRect.width)}px`;
@@ -256672,7 +256749,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV5.onRemove = function onRemove() {
-		const root = _getRoot$9();
+		const root = _getRoot$19();
 		const inner = root.querySelector("#BasicInfoV5");
 		const buttons = root.querySelector(".buttons");
 		_preferences$39.x = parseInt(this._host.style.left, 10);
@@ -256701,7 +256778,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV5.toggleMode = function toggleMode() {
-		const root = _getRoot$9();
+		const root = _getRoot$19();
 		const inner = root.querySelector("#BasicInfoV5");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -256723,7 +256800,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV5.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$9();
+		const root = _getRoot$19();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$39.buttons = buttons.style.display === "none";
@@ -256748,7 +256825,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV5.update = function update(type, val1, val2) {
-		const root = _getRoot$9();
+		const root = _getRoot$19();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -257027,7 +257104,7 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$23(event) {
+function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -257152,7 +257229,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$23);
+		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$14);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -257242,6 +257319,12 @@ var init_WriteRodex = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV0/InventoryV0.js
+function _getRoot$18() {
+	return InventoryV0._shadow || InventoryV0._host;
+}
+function _getBasicInfoRoot$3(ui) {
+	return ui._shadow || ui._host || document;
+}
 /**
 * Get the TAB constant for a given item based on its type.
 *
@@ -257266,19 +257349,11 @@ function getItemTab$3(item) {
 	}
 }
 /**
-* Stop event propagation
-*/
-function stopPropagation$22(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
 * Extend inventory window size
 */
 function onResize$9() {
-	const ui = InventoryV0.ui;
-	const top = ui.position().top;
-	const left = ui.position().left;
+	const top = InventoryV0._host.offsetTop;
+	const left = InventoryV0._host.offsetLeft;
 	let lastWidth = 0;
 	let lastHeight = 0;
 	function resizing() {
@@ -257294,21 +257369,25 @@ function onResize$9() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Modify tab, filter display entries
 */
 function onSwitchTab$3() {
-	const idx = jquery_default(this).index();
+	const root = _getRoot$18();
+	const buttons = root.querySelectorAll(".tabs button");
+	const idx = Array.from(buttons).indexOf(this);
 	_preferences$38.tab = parseInt(idx, 10);
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", function(data) {
-		InventoryV0.ui.find(".tab-sprite").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", (data) => {
+		const tabSprite = root.querySelector(".tab-sprite");
+		if (tabSprite) tabSprite.style.backgroundImage = `url(${data})`;
 		requestFilter$3();
 	});
 }
@@ -257316,26 +257395,28 @@ function onSwitchTab$3() {
 * Hide/show inventory's content
 */
 function onToggleReduction$3() {
-	const ui = InventoryV0.ui;
+	const panel = _getRoot$18().querySelector(".panel");
 	if (_realSize$4) {
-		ui.find(".panel").show();
-		ui.height(_realSize$4);
+		if (panel) panel.style.display = "flex";
+		InventoryV0._host.style.height = `${_realSize$4}px`;
 		_realSize$4 = 0;
 	} else {
-		_realSize$4 = ui.height();
-		ui.height(17);
-		ui.find(".panel").hide();
+		_realSize$4 = InventoryV0._host.getBoundingClientRect().height;
+		InventoryV0._host.style.height = "17px";
+		if (panel) panel.style.display = "none";
 	}
 }
 /**
 * Update tab, reset inventory content
 */
 function requestFilter$3() {
-	InventoryV0.ui.find(".scroll-host").scrollTop(0);
-	InventoryV0.ui.find(".container .content").empty();
+	const root = _getRoot$18();
+	const host = root.querySelector(".scroll-host");
+	if (host) host.scrollTop = 0;
+	const content = root.querySelector(".container .content");
+	if (content) content.innerHTML = "";
 	const list = InventoryV0.list;
-	let i, count;
-	for (i = 0, count = list.length; i < count; ++i) InventoryV0.addItemSub(list[i]);
+	for (let i = 0, count = list.length; i < count; ++i) InventoryV0.addItemSub(list[i]);
 	InventoryV0.updateScroll();
 }
 /**
@@ -257347,9 +257428,9 @@ function onDrop$18(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
@@ -257394,28 +257475,32 @@ function onDrop$18(event) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$14() {
+function onItemOver$14(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV0.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const pos = jquery_default(this).position();
-	const overlay = InventoryV0.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + ": " + (item.count || 1) + quantity);
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _getRoot$18();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#InventoryV0") || root;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${itemRect.top - rootRect.top}px`;
+		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
 /**
 * Hide the item name
 */
 function onItemOut$15() {
-	InventoryV0.ui.find(".overlay").hide();
+	const overlay = _getRoot$18().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
@@ -257425,11 +257510,12 @@ function onItemDragStart$10(event) {
 	const item = InventoryV0.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".icon").style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, "");
+	const iconEl = this.querySelector(".icon");
+	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url || "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Inventory",
 		data: item
@@ -257438,7 +257524,6 @@ function onItemDragStart$10(event) {
 }
 /**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$11() {
 	delete window._OBJ_DRAG_;
@@ -257469,8 +257554,9 @@ function onItemInfo$18(event) {
 * Alt Right Click Request Transfer
 */
 function transferItemToOtherUI$3(item) {
-	const isStorageOpen = StorageController.getUI().ui ? StorageController.getUI().ui.is(":visible") : false;
-	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+	const storageUI = StorageController.getUI();
+	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
 	if (!item) return false;
 	const count = item.count || 1;
 	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
@@ -257488,19 +257574,19 @@ function onItemUsed$4(event) {
 		onItemOut$15();
 	}
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Handle click event on an item
 */
 function onItemClick$3(event) {
 	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(jquery_default(this).attr("data-index"), 10);
+		const idx = parseInt(this.getAttribute("data-index"), 10);
 		const item = InventoryV0.getItemByIndex(idx);
 		if (!item) return false;
 		item.name = DB.getItemName(item);
 		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = ChatBox_default.ui.find(".input-chatbox")[0];
+		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
 		if (msgBox) {
 			msgBox.innerHTML += link + " ";
 			msgBox.focus();
@@ -257513,13 +257599,13 @@ var InventoryV0, _realSize$4, _preferences$38, InventoryV0_default;
 var init_InventoryV0 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_CartItems();
 	init_InputBox();
 	init_ItemInfo();
@@ -257532,7 +257618,8 @@ var init_InventoryV0 = __esmMin((() => {
 	init_Mail$1();
 	init_WriteRodex();
 	init_ChatBox();
-	InventoryV0 = new UIComponent("InventoryV0", InventoryV0_default$2, InventoryV0_default$1);
+	InventoryV0 = new GUIComponent("InventoryV0", InventoryV0_default$1);
+	InventoryV0.render = () => InventoryV0_default$2;
 	/**
 	* Tab constant
 	*/
@@ -257568,52 +257655,96 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$22);
-		this.ui.find(".titlebar .mini").click(onToggleReduction$3);
-		this.ui.find(".tabs button").mousedown(onSwitchTab$3);
-		this.ui.find(".footer .extend").mousedown(onResize$9);
-		this.ui.find(".titlebar .close").click(function() {
-			InventoryV0.ui.hide();
+		const root = _getRoot$18();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$3);
+		root.querySelectorAll(".tabs button").forEach((btn) => {
+			btn.addEventListener("mousedown", onSwitchTab$3);
 		});
-		this.ui.on("drop", onDrop$18).on("dragover", stopPropagation$22).find(".container .content").on("mouseover", ".item", onItemOver$14).on("mouseout", ".item", onItemOut$15).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11).on("contextmenu", ".item", onItemInfo$18).on("dblclick", ".item", onItemUsed$4).on("click", ".item", onItemClick$3);
-		this.ui.find(".ncnt").text(0);
-		this.ui.find(".mcnt").text(100);
-		this.draggable(this.ui.find(".titlebar"));
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$9);
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			InventoryV0._host.style.display = "none";
+		});
+		this._host.addEventListener("drop", onDrop$18);
+		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$14.call(item, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$15();
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$10.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$11();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$18.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemUsed$4.call(item, e);
+			});
+			content.addEventListener("click", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemClick$3.call(item, e);
+			});
+		}
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = "0";
+		const mcnt = root.querySelector(".mcnt");
+		if (mcnt) mcnt.textContent = "100";
+		this.draggable(".titlebar");
 	};
 	/**
 	* Apply preferences once append to body
 	*/
 	InventoryV0.onAppend = function OnAppend() {
-		if (!_preferences$38.show) this.ui.hide();
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$38.tab + 1) + ".bmp", function(data) {
-			InventoryV0.ui.find(".tab-sprite").css("backgroundImage", "url(\"" + data + "\")");
+		const root = _getRoot$18();
+		if (!_preferences$38.show) this._host.style.display = "none";
+		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$38.tab + 1) + ".bmp", (data) => {
+			const tabSprite = root.querySelector(".tab-sprite");
+			if (tabSprite) tabSprite.style.backgroundImage = `url("${data}")`;
 		});
 		this.resize(_preferences$38.width, _preferences$38.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$38.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$38.x), Renderer.width - this.ui.width())
-		});
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$38.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$38.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$38.magnet_top;
 		this.magnet.BOTTOM = _preferences$38.magnet_bottom;
 		this.magnet.LEFT = _preferences$38.magnet_left;
 		this.magnet.RIGHT = _preferences$38.magnet_right;
-		_realSize$4 = _preferences$38.reduce ? 0 : this.ui.height();
-		this.ui.find(".titlebar .mini").trigger("mousedown");
+		_realSize$4 = _preferences$38.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = root.querySelector(".titlebar .mini");
+		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	InventoryV0.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+		const content = _getRoot$18().querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		InventoryV0.newItems.length = 0;
-		jquery_default(".ItemInfo").remove();
-		_preferences$38.show = this.ui.is(":visible");
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$38.show = this._host.style.display !== "none";
 		_preferences$38.reduce = !!_realSize$4;
-		_preferences$38.y = parseInt(this.ui.css("top"), 10);
-		_preferences$38.x = parseInt(this.ui.css("left"), 10);
-		_preferences$38.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$38.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$38.y = parseInt(this._host.style.top, 10);
+		_preferences$38.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$38.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$38.height = Math.floor((hostRect.height - 20) / 32);
 		_preferences$38.magnet_top = this.magnet.TOP;
 		_preferences$38.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$38.magnet_left = this.magnet.LEFT;
@@ -257628,31 +257759,45 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
-				else {
-					this.ui.trigger("mouseleave");
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else {
+					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					this.ui.find(".new_item").css("backgroundImage", "");
+					_getRoot$18().querySelectorAll(".new_item").forEach((el) => {
+						el.style.backgroundImage = "";
+					});
+					this._host.style.display = "none";
 				}
 				break;
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot$3(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
+		}
 	};
 	/**
 	* Show/Hide UI
 	*/
 	InventoryV0.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) this.focus();
-		else {
-			this.ui.trigger("mouseleave");
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			this.focus();
+		} else {
+			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			this.ui.find(".new_item").css("backgroundImage", "");
+			_getRoot$18().querySelectorAll(".new_item").forEach((el) => {
+				el.style.backgroundImage = "";
+			});
+			this._host.style.display = "none";
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot$3(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
+		}
 	};
 	/**
 	* Clear newItems array
@@ -257669,36 +257814,34 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 8);
 		height = Math.min(Math.max(height, 2), 5);
-		this.ui.find(".container .content").css({ width: width * 32 });
-		this.ui.css({
-			width: 59 + width * 32,
-			height: 62 + height * 32
-		});
+		const content = _getRoot$18().querySelector(".container .content");
+		if (content) content.style.width = `${width * 32}px`;
+		this._host.style.width = `${59 + width * 32}px`;
+		this._host.style.height = `${62 + height * 32}px`;
 		this.updateScroll();
 	};
 	/**
 	* Force scroll clamping
 	*/
 	InventoryV0.updateScroll = function updateScroll() {
-		const host = this.ui.find(".scroll-host");
-		if (host.length) {
-			const node = host[0];
-			const content = host.find(".content");
-			let ticker = 0;
-			const clamp = function() {
-				const maxScroll = Math.max(0, node.scrollHeight - node.clientHeight);
-				const lastItem = content.find(".item:last");
-				if (lastItem.length) {
-					const itemRect = lastItem[0].getBoundingClientRect();
-					const hostRect = node.getBoundingClientRect();
-					if (itemRect.bottom < hostRect.bottom && node.scrollTop > 0) node.scrollTop = Math.max(0, node.scrollTop - (hostRect.bottom - itemRect.bottom));
-				}
-				if (node.scrollTop > maxScroll) node.scrollTop = maxScroll;
-				if (node._roScrollbarRestart) node._roScrollbarRestart();
-				if (ticker++ < 20) requestAnimationFrame(clamp);
-			};
-			clamp();
-		}
+		const root = _getRoot$18();
+		const hostEl = root.querySelector(".scroll-host");
+		if (!hostEl) return;
+		const contentEl = root.querySelector(".content");
+		let ticker = 0;
+		const clamp = () => {
+			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
+			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
+			if (lastItem) {
+				const itemRect = lastItem.getBoundingClientRect();
+				const hostRect = hostEl.getBoundingClientRect();
+				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
+			}
+			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
+			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
+			if (ticker++ < 20) requestAnimationFrame(clamp);
+		};
+		clamp();
 	};
 	/**
 	* Get item object
@@ -257707,9 +257850,8 @@ var init_InventoryV0 = __esmMin((() => {
 	* @returns {Item}
 	*/
 	InventoryV0.getItemById = function GetItemById(id) {
-		let i, count;
 		const list = InventoryV0.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
 	/**
@@ -257719,9 +257861,8 @@ var init_InventoryV0 = __esmMin((() => {
 	* @returns {Item}
 	*/
 	InventoryV0.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = InventoryV0.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
 	/**
@@ -257729,13 +257870,14 @@ var init_InventoryV0 = __esmMin((() => {
 	* if the item index is exist you should clear it;[skybook888]
 	*/
 	InventoryV0.setItems = function SetItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) {
+		const root = _getRoot$18();
+		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
 			if (this.addItemSub(items[i])) {
 				this.list.push(items[i]);
-				this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber());
+				const ncnt = root.querySelector(".ncnt");
+				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
 				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
 			}
 		}
@@ -257747,37 +257889,41 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
+		const root = _getRoot$18();
 		const equippedIndex = InventoryV0.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV0.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV0.newItems.push(item.index);
-			const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-			if (changeUI) changeUI.show();
+			const basicInfoUI = BasicInfoController.getUI();
+			if (basicInfoUI._host) {
+				const changeUI = _getBasicInfoRoot$3(basicInfoUI).querySelector("#item .btn_overlay");
+				if (changeUI) changeUI.style.display = "block";
+			}
 		}
 		if (object) {
 			if (isNaN(object.count)) object.count = 1;
 			if (isNaN(item.count)) item.count = 1;
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV0.newItems.indexOf(item.index) === -1) InventoryV0.newItems.push(item.index);
-			if (getItemTab$3(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				InventoryV0.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (getItemTab$3(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		if (this.addItemSub(object)) {
 			this.list.push(object);
-			this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber());
+			const ncnt = root.querySelector(".ncnt");
+			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
 			this.onUpdateItem(object.ITID, object.count);
 		}
 	};
 	/**
 	* Check if item index is in newItems list
-	*
-	* @param {number} index - Item index to check
-	* @returns {boolean} - True if item index is in newItems list, false otherwise
 	*/
 	InventoryV0.isNewItem = function isNewItem(index) {
 		return InventoryV0.newItems.includes(index);
@@ -257795,15 +257941,22 @@ var init_InventoryV0 = __esmMin((() => {
 		}
 		if (tab === _preferences$38.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const content = this.ui.find(".container .content");
-			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const root = _getRoot$18();
+			const content = root.querySelector(".container .content");
+			if (!content) return true;
+			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
 			});
-			if (InventoryV0.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (InventoryV0.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
-			else content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "");
+			else {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = "";
+			}
 		}
 		return true;
 	};
@@ -257815,20 +257968,25 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
+		const root = _getRoot$18();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				this.onUpdateItem(item.ITID, item.count);
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber());
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
 		this.onUpdateItem(item.ITID, 0);
-		InventoryV0.ui.find(".overlay").hide();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 		return item;
 	};
 	/**
@@ -257841,14 +257999,18 @@ var init_InventoryV0 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
+		const root = _getRoot$18();
 		if (item.count > 0) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
 			this.onUpdateItem(item.ITID, item.count);
 			return;
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber());
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
 		this.onUpdateItem(item.ITID, 0);
 		this.updateScroll();
 	};
@@ -257897,15 +258059,18 @@ var init_InventoryV1$2 = __esmMin((() => {
 //#region src/UI/Components/Inventory/InventoryV1/InventoryV1.css?raw
 var InventoryV1_default$1;
 var init_InventoryV1$1 = __esmMin((() => {
-	InventoryV1_default$1 = "/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV1 {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV1 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV1 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV1 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV1 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV1 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV1 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV1 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV1 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV1 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV1 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV1 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV1 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV1 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV1 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV1 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV1 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV1 .expand,\r\n#InventoryV1 .droplock,\r\n#InventoryV1 .compare,\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off,\r\n#InventoryV1 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV1 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV1 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV1 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV1 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV1 button.item_deal_lock_on,\r\n#InventoryV1 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV1 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV1 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV1 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV1 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV1 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV1 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV1 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
+	InventoryV1_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV1 {\r\n	position: relative;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV1 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV1 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV1 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV1 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV1 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV1 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV1 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV1 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV1 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV1 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV1 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV1 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV1 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV1 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV1 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV1 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV1 .expand,\r\n#InventoryV1 .droplock,\r\n#InventoryV1 .compare,\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off,\r\n#InventoryV1 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV1 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV1 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV1 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV1 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV1 button.item_deal_lock_on,\r\n#InventoryV1 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV1 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV1 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV1 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV1 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV1 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV1 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV1 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV1/InventoryV1.js
+function _getRoot$17() {
+	return InventoryV1._shadow || InventoryV1._host;
+}
+function _getBasicInfoRoot$2(ui) {
+	return ui._shadow || ui._host || document;
+}
 /**
 * Get the TAB constant for a given item based on its type.
-*
-* @param {object} item
-* @returns {number} TAB constant
 */
 function getItemTab$2(item) {
 	switch (item.type) {
@@ -257925,17 +258090,10 @@ function getItemTab$2(item) {
 	}
 }
 /**
-* Stop event propagation
-*/
-function stopPropagation$21(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
 * Extend inventory window size
 */
 function onResize$8() {
-	const left = InventoryV1.ui.position().left;
+	const left = InventoryV1._host.offsetLeft;
 	let lastWidth = 0;
 	function resizing() {
 		let w = Math.floor((Mouse.screen.x - left - 25) / 32);
@@ -257945,80 +258103,96 @@ function onResize$8() {
 		lastWidth = w;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Modify tab, filter display entries
 */
 function onSwitchTab$2() {
-	const idx = jquery_default(this).index();
+	const root = _getRoot$17();
+	const buttons = root.querySelectorAll(".tabs button");
+	const idx = Array.from(buttons).indexOf(this);
 	_preferences$37.tab = parseInt(idx, 10);
 	requestFilter$2();
-	jquery_default(".tabs button").removeClass("selected");
-	jquery_default(this).addClass("selected");
+	buttons.forEach((b) => b.classList.remove("selected"));
+	this.classList.add("selected");
 	if (_preferences$37.tab !== InventoryV1.TAB.FAV) {
-		InventoryV1.ui.find(".deallock_on").hide();
-		InventoryV1.ui.find(".deallock_off").hide();
-		InventoryV1.ui.find(".lockoverlay").hide();
-		InventoryV1.ui.find(".lockoverlaymsg").hide();
-		InventoryV1.ui.find(".sort").hide();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "none";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "none";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "none";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "none";
+		const sort = root.querySelector(".sort");
+		if (sort) sort.style.display = "none";
 	} else {
 		if (_preferences$37.npcsalelock) {
-			InventoryV1.ui.find(".deallock_on").show();
-			InventoryV1.ui.find(".lockoverlay").show();
-			InventoryV1.ui.find(".deallock_off").hide();
+			const dealOn = root.querySelector(".deallock_on");
+			if (dealOn) dealOn.style.display = "";
+			const lockOverlay = root.querySelector(".lockoverlay");
+			if (lockOverlay) lockOverlay.style.display = "";
+			const dealOff = root.querySelector(".deallock_off");
+			if (dealOff) dealOff.style.display = "none";
 		} else {
-			InventoryV1.ui.find(".deallock_on").hide();
-			InventoryV1.ui.find(".lockoverlay").hide();
-			InventoryV1.ui.find(".lockoverlaymsg").hide();
-			InventoryV1.ui.find(".deallock_off").show();
+			const dealOn = root.querySelector(".deallock_on");
+			if (dealOn) dealOn.style.display = "none";
+			const lockOverlay = root.querySelector(".lockoverlay");
+			if (lockOverlay) lockOverlay.style.display = "none";
+			const lockMsg = root.querySelector(".lockoverlaymsg");
+			if (lockMsg) lockMsg.style.display = "none";
+			const dealOff = root.querySelector(".deallock_off");
+			if (dealOff) dealOff.style.display = "";
 		}
-		InventoryV1.ui.find(".sort").show();
+		const sort = root.querySelector(".sort");
+		if (sort) sort.style.display = "";
 	}
 }
 /**
 * Hide/show inventory's content
 */
 function onToggleReduction$2() {
-	const ui = InventoryV1.ui;
+	const panel = _getRoot$17().querySelector(".panel");
 	if (_realSize$3) {
-		ui.find(".panel").show();
-		ui.height(_realSize$3);
+		if (panel) panel.style.display = "flex";
+		InventoryV1._host.style.height = `${_realSize$3}px`;
 		_realSize$3 = 0;
 	} else {
-		_realSize$3 = ui.height();
-		ui.height(17);
-		ui.find(".panel").hide();
+		_realSize$3 = InventoryV1._host.getBoundingClientRect().height;
+		InventoryV1._host.style.height = "17px";
+		if (panel) panel.style.display = "none";
 	}
 }
 /**
 * Update tab, reset inventory content
 */
 function requestFilter$2() {
-	InventoryV1.ui.find(".scroll-host").scrollTop(0);
-	InventoryV1.ui.find(".container .content").empty();
+	const root = _getRoot$17();
+	const host = root.querySelector(".scroll-host");
+	if (host) host.scrollTop = 0;
+	const content = root.querySelector(".container .content");
+	if (content) content.innerHTML = "";
 	const list = InventoryV1.list;
-	let i, count;
-	for (i = 0, count = list.length; i < count; ++i) InventoryV1.addItemSub(list[i]);
+	for (let i = 0, count = list.length; i < count; ++i) InventoryV1.addItemSub(list[i]);
 	InventoryV1.updateScroll();
 }
 /**
 * Drop an item from storage to inventory
-*
-* @param {event}
 */
 function onDrop$17(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
@@ -258063,28 +258237,32 @@ function onDrop$17(event) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$13() {
+function onItemOver$13(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV1.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const pos = jquery_default(this).position();
-	const overlay = InventoryV1.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + ": " + (item.count || 1) + quantity);
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _getRoot$17();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#InventoryV1") || root;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${itemRect.top - rootRect.top}px`;
+		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
 /**
 * Hide the item name
 */
 function onItemOut$14() {
-	InventoryV1.ui.find(".overlay").hide();
+	const overlay = _getRoot$17().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
@@ -258094,11 +258272,12 @@ function onItemDragStart$9(event) {
 	const item = InventoryV1.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".icon").style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, "");
+	const iconEl = this.querySelector(".icon");
+	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url || "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Inventory",
 		data: item
@@ -258107,7 +258286,6 @@ function onItemDragStart$9(event) {
 }
 /**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$10() {
 	delete window._OBJ_DRAG_;
@@ -258147,8 +258325,9 @@ function onItemInfo$17(event) {
 * Alt Right Click Request Transfer
 */
 function transferItemToOtherUI$2(item) {
-	const isStorageOpen = StorageController.getUI().ui ? StorageController.getUI().ui.is(":visible") : false;
-	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+	const storageUI = StorageController.getUI();
+	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
 	if (!item) return false;
 	const count = item.count || 1;
 	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
@@ -258166,19 +258345,19 @@ function onItemUsed$3(event) {
 		onItemOut$14();
 	}
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Handle click event on an item
 */
 function onItemClick$2(event) {
 	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(jquery_default(this).attr("data-index"), 10);
+		const idx = parseInt(this.getAttribute("data-index"), 10);
 		const item = InventoryV1.getItemByIndex(idx);
 		if (!item) return false;
 		item.name = DB.getItemName(item);
 		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = ChatBox_default.ui.find(".input-chatbox")[0];
+		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
 		if (msgBox) {
 			msgBox.innerHTML += link + " ";
 			msgBox.focus();
@@ -258194,9 +258373,9 @@ function onTabDrop$2(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item") return false;
@@ -258208,48 +258387,58 @@ function onTabDrop$2(event) {
 	Network.sendPacket(pkt);
 }
 /**
-* Toggle the item drop lock preference and update the UI accordingly.
+* Toggle the item drop lock preference
 */
 function onItemLock$2() {
 	_preferences$37.itemlock = !_preferences$37.itemlock;
 	InventoryV1.itemlock = _preferences$37.itemlock;
 	const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
-		InventoryV1.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+		const lockBtn = _getRoot$17().querySelector(".item_drop_lock");
+		if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
 * Toggles the value of Item Compare
-* and updates the UI accordingly.
 */
 function onItemCompare$2() {
 	_preferences$37.itemcomp = !_preferences$37.itemcomp;
 	InventoryV1.itemcomp = _preferences$37.itemcomp;
 	const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
-		InventoryV1.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+		const compBtn = _getRoot$17().querySelector(".item_compare");
+		if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
 * Toggles the value of Item Lock NPCSale
-* and updates the UI accordingly.
 */
 function onNPCLock$2() {
 	_preferences$37.npcsalelock = !_preferences$37.npcsalelock;
 	InventoryV1.npcsalelock = _preferences$37.npcsalelock;
+	const root = _getRoot$17();
 	if (_preferences$37.npcsalelock) {
-		InventoryV1.ui.find(".deallock_on").show();
-		InventoryV1.ui.find(".lockoverlay").show();
-		InventoryV1.ui.find(".lockoverlaymsg").show();
-		InventoryV1.ui.find(".deallock_off").hide();
-		lockOverlayTimeout$2 = setTimeout(function() {
-			InventoryV1.ui.find(".lockoverlaymsg").fadeOut();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "none";
+		lockOverlayTimeout$2 = setTimeout(() => {
+			const msg = root.querySelector(".lockoverlaymsg");
+			if (msg) msg.style.display = "none";
 		}, 3e3);
 	} else {
-		InventoryV1.ui.find(".deallock_on").hide();
-		InventoryV1.ui.find(".lockoverlay").hide();
-		InventoryV1.ui.find(".lockoverlaymsg").hide();
-		InventoryV1.ui.find(".deallock_off").show();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "none";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "none";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "none";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "";
 	}
 }
 var InventoryV1, _realSize$3, _preferences$37, lockOverlayTimeout$2, InventoryV1_default;
@@ -258258,13 +258447,13 @@ var init_InventoryV1 = __esmMin((() => {
 	init_ItemType();
 	init_NetworkManager();
 	init_PacketStructure();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_CartItems();
 	init_InputBox();
 	init_ItemCompare();
@@ -258278,7 +258467,8 @@ var init_InventoryV1 = __esmMin((() => {
 	init_Mail$1();
 	init_WriteRodex();
 	init_ChatBox();
-	InventoryV1 = new UIComponent("InventoryV1", InventoryV1_default$2, InventoryV1_default$1);
+	InventoryV1 = new GUIComponent("InventoryV1", InventoryV1_default$1);
+	InventoryV1.render = () => InventoryV1_default$2;
 	/**
 	* Tab constant
 	*/
@@ -258324,44 +258514,98 @@ var init_InventoryV1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$21);
-		this.ui.find(".titlebar .mini").click(onToggleReduction$2);
-		this.ui.find(".tabs button").mousedown(onSwitchTab$2);
-		this.ui.find(".footer .extend").mousedown(onResize$8);
-		this.ui.find(".titlebar .close").click(function() {
-			InventoryV1.ui.hide();
+		const root = _getRoot$17();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$2);
+		const tabButtons = root.querySelectorAll(".tabs button");
+		tabButtons.forEach((btn) => {
+			btn.addEventListener("mousedown", onSwitchTab$2);
 		});
-		this.ui.on("drop", onDrop$17).on("dragover", stopPropagation$21).find(".container .content").on("mouseover", ".item", onItemOver$13).on("mouseout", ".item", onItemOut$14).on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10).on("contextmenu", ".item", onItemInfo$17).on("dblclick", ".item", onItemUsed$3).on("click", ".item", onItemClick$2);
-		this.ui.find(".ncnt").text("0 / ");
-		this.ui.find(".mcnt").text(100);
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$21).on("drop", onTabDrop$2);
-		jquery_default(".tabs button").removeClass("selected");
-		this.ui.find(".tabs button").eq(_preferences$37.tab).addClass("selected");
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$8);
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			InventoryV1._host.style.display = "none";
+		});
+		this._host.addEventListener("drop", onDrop$17);
+		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$13.call(item, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$14();
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$9.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$10();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$17.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemUsed$3.call(item, e);
+			});
+			content.addEventListener("click", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemClick$2.call(item, e);
+			});
+		}
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = "0 / ";
+		const mcnt = root.querySelector(".mcnt");
+		if (mcnt) mcnt.textContent = "100";
+		this.draggable(".titlebar");
+		tabButtons.forEach((btn) => {
+			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+			btn.addEventListener("drop", onTabDrop$2);
+		});
+		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
+		const allTabs = root.querySelectorAll(".tabs button");
+		if (allTabs[_preferences$37.tab]) allTabs[_preferences$37.tab].classList.add("selected");
 		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
-			InventoryV1.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+			const lockBtn = root.querySelector(".item_drop_lock");
+			if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 		});
 		const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
-			InventoryV1.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+			const compBtn = root.querySelector(".item_compare");
+			if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$37.npcsalelock ? InventoryV1.ui.find(".deallock_on") : InventoryV1.ui.find(".deallock_off");
-		if (_preferences$37.tab != InventoryV1.TAB.FAV) {
-			lockSale.hide();
-			InventoryV1.ui.find(".sort").hide();
+		const lockSale = _preferences$37.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$37.tab !== InventoryV1.TAB.FAV) {
+			if (lockSale) lockSale.style.display = "none";
+			const sortEl = root.querySelector(".sort");
+			if (sortEl) sortEl.style.display = "none";
 		} else {
-			lockSale.show();
-			InventoryV1.ui.find(".sort").show();
+			if (lockSale) lockSale.style.display = "";
+			const sortEl = root.querySelector(".sort");
+			if (sortEl) sortEl.style.display = "";
 		}
-		InventoryV1.ui.find(".item_drop_lock").click(onItemLock$2);
-		InventoryV1.ui.find(".item_compare").click(onItemCompare$2);
-		InventoryV1.ui.find(".deal_lock").click(onNPCLock$2);
-		InventoryV1.ui.find(".lockoverlayclose").click(function() {
-			InventoryV1.ui.find(".lockoverlaymsg").hide();
+		const itemDropLock = root.querySelector(".item_drop_lock");
+		if (itemDropLock) itemDropLock.addEventListener("click", onItemLock$2);
+		const itemCompare = root.querySelector(".item_compare");
+		if (itemCompare) itemCompare.addEventListener("click", onItemCompare$2);
+		root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock$2));
+		const overlayClose = root.querySelector(".lockoverlayclose");
+		if (overlayClose) overlayClose.addEventListener("click", () => {
+			const msg = root.querySelector(".lockoverlaymsg");
+			if (msg) msg.style.display = "none";
 			clearTimeout(lockOverlayTimeout$2);
 		});
-		InventoryV1.ui.find(".sort").click(function() {
+		const sortBtn = root.querySelector(".sort");
+		if (sortBtn) sortBtn.addEventListener("click", () => {
 			requestFilter$2();
 		});
 	};
@@ -258369,32 +258613,34 @@ var init_InventoryV1 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV1.onAppend = function OnAppend() {
-		if (!_preferences$37.show) this.ui.hide();
+		if (!_preferences$37.show) this._host.style.display = "none";
 		this.resize(_preferences$37.width, _preferences$37.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$37.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$37.x), Renderer.width - this.ui.width())
-		});
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$37.magnet_top;
 		this.magnet.BOTTOM = _preferences$37.magnet_bottom;
 		this.magnet.LEFT = _preferences$37.magnet_left;
 		this.magnet.RIGHT = _preferences$37.magnet_right;
-		_realSize$3 = _preferences$37.reduce ? 0 : this.ui.height();
-		this.ui.find(".titlebar .mini").trigger("mousedown");
+		_realSize$3 = _preferences$37.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = _getRoot$17().querySelector(".titlebar .mini");
+		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	InventoryV1.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+		const content = _getRoot$17().querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		InventoryV1.newItems.length = 0;
-		jquery_default(".ItemInfo").remove();
-		_preferences$37.show = this.ui.is(":visible");
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$37.show = this._host.style.display !== "none";
 		_preferences$37.reduce = !!_realSize$3;
-		_preferences$37.y = parseInt(this.ui.css("top"), 10);
-		_preferences$37.x = parseInt(this.ui.css("left"), 10);
-		_preferences$37.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$37.width = Math.floor((hostRect.width - 25) / 32);
 		_preferences$37.magnet_top = this.magnet.TOP;
 		_preferences$37.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$37.magnet_left = this.magnet.LEFT;
@@ -258409,31 +258655,45 @@ var init_InventoryV1 = __esmMin((() => {
 	InventoryV1.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
-				else {
-					this.ui.trigger("mouseleave");
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else {
+					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					this.ui.find(".new_item").css("backgroundImage", "");
+					_getRoot$17().querySelectorAll(".new_item").forEach((el) => {
+						el.style.backgroundImage = "";
+					});
+					this._host.style.display = "none";
 				}
 				break;
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot$2(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
+		}
 	};
 	/**
 	* Show/Hide UI
 	*/
 	InventoryV1.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) this.focus();
-		else {
-			this.ui.trigger("mouseleave");
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			this.focus();
+		} else {
+			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			this.ui.find(".new_item").css("backgroundImage", "");
+			_getRoot$17().querySelectorAll(".new_item").forEach((el) => {
+				el.style.backgroundImage = "";
+			});
+			this._host.style.display = "none";
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot$2(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
+		}
 	};
 	/**
 	* Clear newItems array
@@ -258445,37 +258705,36 @@ var init_InventoryV1 = __esmMin((() => {
 	* Extend inventory window size
 	*
 	* @param {number} width
-	* @param {number} height
 	*/
 	InventoryV1.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		this.ui.find(".container .content").css({ width: width * 32 });
-		this.ui.css({ width: 55 + width * 32 });
+		const content = _getRoot$17().querySelector(".container .content");
+		if (content) content.style.width = `${width * 32}px`;
+		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
 	/**
 	* Force scroll clamping
 	*/
 	InventoryV1.updateScroll = function updateScroll() {
-		const host = this.ui.find(".scroll-host");
-		if (host.length) {
-			const node = host[0];
-			const content = host.find(".content");
-			let ticker = 0;
-			const clamp = function() {
-				const maxScroll = Math.max(0, node.scrollHeight - node.clientHeight);
-				const lastItem = content.find(".item:last");
-				if (lastItem.length) {
-					const itemRect = lastItem[0].getBoundingClientRect();
-					const hostRect = node.getBoundingClientRect();
-					if (itemRect.bottom < hostRect.bottom && node.scrollTop > 0) node.scrollTop = Math.max(0, node.scrollTop - (hostRect.bottom - itemRect.bottom));
-				}
-				if (node.scrollTop > maxScroll) node.scrollTop = maxScroll;
-				if (node._roScrollbarRestart) node._roScrollbarRestart();
-				if (ticker++ < 20) requestAnimationFrame(clamp);
-			};
-			clamp();
-		}
+		const root = _getRoot$17();
+		const hostEl = root.querySelector(".scroll-host");
+		if (!hostEl) return;
+		const contentEl = root.querySelector(".content");
+		let ticker = 0;
+		const clamp = () => {
+			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
+			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
+			if (lastItem) {
+				const itemRect = lastItem.getBoundingClientRect();
+				const hostRect = hostEl.getBoundingClientRect();
+				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
+			}
+			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
+			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
+			if (ticker++ < 20) requestAnimationFrame(clamp);
+		};
+		clamp();
 	};
 	/**
 	* Get item object
@@ -258484,9 +258743,8 @@ var init_InventoryV1 = __esmMin((() => {
 	* @returns {Item}
 	*/
 	InventoryV1.getItemById = function GetItemById(id) {
-		let i, count;
 		const list = InventoryV1.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
 	/**
@@ -258496,73 +258754,72 @@ var init_InventoryV1 = __esmMin((() => {
 	* @returns {Item}
 	*/
 	InventoryV1.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = InventoryV1.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
 	/**
 	* Add items to the list
-	* if the item index is exist you should clear it;[skybook888]
 	*/
 	InventoryV1.setItems = function SetItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) {
+		const root = _getRoot$17();
+		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
 			if (this.addItemSub(items[i])) {
 				this.list.push(items[i]);
-				this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+				const ncnt = root.querySelector(".ncnt");
+				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
 			}
 		}
 	};
 	/**
 	* Insert Item to inventory
-	*
-	* @param {object} Item
 	*/
 	InventoryV1.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
+		const root = _getRoot$17();
 		const equippedIndex = InventoryV1.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV1.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV1.newItems.push(item.index);
-			const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-			if (changeUI) changeUI.show();
+			const basicInfoUI = BasicInfoController.getUI();
+			if (basicInfoUI._host) {
+				const changeUI = _getBasicInfoRoot$2(basicInfoUI).querySelector("#item .btn_overlay");
+				if (changeUI) changeUI.style.display = "block";
+			}
 		}
 		if (object) {
 			if (isNaN(object.count)) object.count = 1;
 			if (isNaN(item.count)) item.count = 1;
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV1.newItems.indexOf(item.index) === -1) InventoryV1.newItems.push(item.index);
-			if (getItemTab$2(item) === _preferences$37.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				InventoryV1.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (getItemTab$2(item) === _preferences$37.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		if (this.addItemSub(object)) {
 			this.list.push(object);
-			this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+			const ncnt = root.querySelector(".ncnt");
+			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 			this.onUpdateItem(object.ITID, object.count);
 		}
 	};
 	/**
 	* Check if item index is in newItems list
-	*
-	* @param {number} index - Item index to check
-	* @returns {boolean} - True if item index is in newItems list, false otherwise
 	*/
 	InventoryV1.isNewItem = function isNewItem(index) {
 		return InventoryV1.newItems.includes(index);
 	};
 	/**
 	* Add item to inventory
-	*
-	* @param {object} Item
 	*/
 	InventoryV1.addItemSub = function AddItemSub(item) {
 		let tab = getItemTab$2(item);
@@ -258573,67 +258830,75 @@ var init_InventoryV1 = __esmMin((() => {
 		}
 		if (tab === _preferences$37.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const content = this.ui.find(".container .content");
-			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const root = _getRoot$17();
+			const content = root.querySelector(".container .content");
+			if (!content) return true;
+			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
 			});
-			if (InventoryV1.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (InventoryV1.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
-			else content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "");
+			else {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = "";
+			}
 		}
 		return true;
 	};
 	/**
 	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
 	*/
 	InventoryV1.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
+		const root = _getRoot$17();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				this.onUpdateItem(item.ITID, item.count);
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 		this.onUpdateItem(item.ITID, 0);
-		InventoryV1.ui.find(".overlay").hide();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 		return item;
 	};
 	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
+	* Update item in inventory
 	*/
 	InventoryV1.updateItem = function UpdateItem(index, count) {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
+		const root = _getRoot$17();
 		if (item.count > 0) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
 			this.onUpdateItem(item.ITID, item.count);
 			return;
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 		this.onUpdateItem(item.ITID, 0);
 		this.updateScroll();
 	};
 	/**
 	* Use an item
-	*
-	* @param {Item} item
 	*/
 	InventoryV1.useItem = function UseItem(item) {
 		switch (item.type) {
@@ -258657,8 +258922,6 @@ var init_InventoryV1 = __esmMin((() => {
 	};
 	/**
 	* Update PlaceETCTab of an item in the inventory
-	* @param {number} itemIndex - The index of the item to update
-	* @param {number} newValue - boolean for PlaceETCTab (1 or 0)
 	*/
 	InventoryV1.updatePlaceETCTab = function(itemIndex, newValue) {
 		const item = InventoryV1.getItemByIndex(itemIndex);
@@ -259109,16 +259372,16 @@ var init_InventoryV2$2 = __esmMin((() => {
 //#region src/UI/Components/Inventory/InventoryV2/InventoryV2.css?raw
 var InventoryV2_default$1;
 var init_InventoryV2$1 = __esmMin((() => {
-	InventoryV2_default$1 = "/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV2 {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV2 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV2 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV2 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV2 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV2 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV2 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV2 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV2 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV2 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV2 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV2 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV2 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV2 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV2 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV2 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV2 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV2 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV2 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV2 .expand,\r\n#InventoryV2 .droplock,\r\n#InventoryV2 .compare,\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off,\r\n#InventoryV2 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV2 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV2 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV2 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV2 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV2 button.item_deal_lock_on,\r\n#InventoryV2 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV2 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV2 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV2 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV2 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV2 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV2 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV2 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
+	InventoryV2_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV2 {\r\n	position: relative;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV2 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV2 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV2 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV2 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV2 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV2 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV2 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV2 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV2 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV2 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV2 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV2 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV2 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV2 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV2 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV2 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV2 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV2 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV2 .expand,\r\n#InventoryV2 .droplock,\r\n#InventoryV2 .compare,\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off,\r\n#InventoryV2 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV2 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV2 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV2 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV2 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV2 button.item_deal_lock_on,\r\n#InventoryV2 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV2 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV2 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV2 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV2 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV2 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV2 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV2 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV2/InventoryV2.js
-/**
-* Get the TAB constant for a given item based on its type.
-*
-* @param {object} item
-* @returns {number} TAB constant
-*/
+function _getRoot$16() {
+	return InventoryV2._shadow || InventoryV2._host;
+}
+function _getBasicInfoRoot$1(ui) {
+	return ui._shadow || ui._host || document;
+}
 function getItemTab$1(item) {
 	switch (item.type) {
 		case ItemType_default.HEALING:
@@ -259136,18 +259399,8 @@ function getItemTab$1(item) {
 		case ItemType_default.AMMO: return InventoryV2.TAB.ETC;
 	}
 }
-/**
-* Stop event propagation
-*/
-function stopPropagation$20(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Extend inventory window size
-*/
 function onResize$7() {
-	const left = InventoryV2.ui.position().left;
+	const left = InventoryV2._host.offsetLeft;
 	let lastWidth = 0;
 	function resizing() {
 		let w = Math.floor((Mouse.screen.x - left - 25) / 32);
@@ -259157,80 +259410,84 @@ function onResize$7() {
 		lastWidth = w;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
-/**
-* Modify tab, filter display entries
-*/
 function onSwitchTab$1() {
-	const idx = jquery_default(this).index();
+	const root = _getRoot$16();
+	const buttons = root.querySelectorAll(".tabs button");
+	const idx = Array.from(buttons).indexOf(this);
 	_preferences$36.tab = parseInt(idx, 10);
 	requestFilter$1();
-	jquery_default(".tabs button").removeClass("selected");
-	jquery_default(this).addClass("selected");
+	buttons.forEach((b) => b.classList.remove("selected"));
+	this.classList.add("selected");
 	if (_preferences$36.tab !== InventoryV2.TAB.FAV) {
-		InventoryV2.ui.find(".deallock_on").hide();
-		InventoryV2.ui.find(".deallock_off").hide();
-		InventoryV2.ui.find(".lockoverlay").hide();
-		InventoryV2.ui.find(".lockoverlaymsg").hide();
-		InventoryV2.ui.find(".sort").hide();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "none";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "none";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "none";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "none";
+		const sort = root.querySelector(".sort");
+		if (sort) sort.style.display = "none";
 	} else {
 		if (_preferences$36.npcsalelock) {
-			InventoryV2.ui.find(".deallock_on").show();
-			InventoryV2.ui.find(".lockoverlay").show();
-			InventoryV2.ui.find(".deallock_off").hide();
+			const dealOn = root.querySelector(".deallock_on");
+			if (dealOn) dealOn.style.display = "";
+			const lockOverlay = root.querySelector(".lockoverlay");
+			if (lockOverlay) lockOverlay.style.display = "";
+			const dealOff = root.querySelector(".deallock_off");
+			if (dealOff) dealOff.style.display = "none";
 		} else {
-			InventoryV2.ui.find(".deallock_on").hide();
-			InventoryV2.ui.find(".lockoverlay").hide();
-			InventoryV2.ui.find(".lockoverlaymsg").hide();
-			InventoryV2.ui.find(".deallock_off").show();
+			const dealOn = root.querySelector(".deallock_on");
+			if (dealOn) dealOn.style.display = "none";
+			const lockOverlay = root.querySelector(".lockoverlay");
+			if (lockOverlay) lockOverlay.style.display = "none";
+			const lockMsg = root.querySelector(".lockoverlaymsg");
+			if (lockMsg) lockMsg.style.display = "none";
+			const dealOff = root.querySelector(".deallock_off");
+			if (dealOff) dealOff.style.display = "";
 		}
-		InventoryV2.ui.find(".sort").show();
+		const sort = root.querySelector(".sort");
+		if (sort) sort.style.display = "";
 	}
 }
-/**
-* Hide/show inventory's content
-*/
 function onToggleReduction$1() {
-	const ui = InventoryV2.ui;
+	const panel = _getRoot$16().querySelector(".panel");
 	if (_realSize$2) {
-		ui.find(".panel").show();
-		ui.height(_realSize$2);
+		if (panel) panel.style.display = "flex";
+		InventoryV2._host.style.height = `${_realSize$2}px`;
 		_realSize$2 = 0;
 	} else {
-		_realSize$2 = ui.height();
-		ui.height(17);
-		ui.find(".panel").hide();
+		_realSize$2 = InventoryV2._host.getBoundingClientRect().height;
+		InventoryV2._host.style.height = "17px";
+		if (panel) panel.style.display = "none";
 	}
 }
-/**
-* Update tab, reset inventory content
-*/
 function requestFilter$1() {
-	InventoryV2.ui.find(".scroll-host").scrollTop(0);
-	InventoryV2.ui.find(".container .content").empty();
+	const root = _getRoot$16();
+	const host = root.querySelector(".scroll-host");
+	if (host) host.scrollTop = 0;
+	const content = root.querySelector(".container .content");
+	if (content) content.innerHTML = "";
 	const list = InventoryV2.list;
-	let i, count;
-	for (i = 0, count = list.length; i < count; ++i) InventoryV2.addItemSub(list[i]);
+	for (let i = 0, count = list.length; i < count; ++i) InventoryV2.addItemSub(list[i]);
 	InventoryV2.updateScroll();
 }
-/**
-* Drop an item from storage to inventory
-*
-* @param {event}
-*/
 function onDrop$15(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
@@ -259272,61 +259529,50 @@ function onDrop$15(event) {
 	}
 	return false;
 }
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$12() {
+function onItemOver$12(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const pos = jquery_default(this).position();
-	const overlay = InventoryV2.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + ": " + (item.count || 1) + quantity);
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _getRoot$16();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#InventoryV2") || root;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${itemRect.top - rootRect.top}px`;
+		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
-/**
-* Hide the item name
-*/
 function onItemOut$13() {
-	InventoryV2.ui.find(".overlay").hide();
+	const overlay = _getRoot$16().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* Start dragging an item
-*/
 function onItemDragStart$8(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".icon").style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, "");
+	const iconEl = this.querySelector(".icon");
+	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url || "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Inventory",
 		data: item
 	}));
 	onItemOut$13();
 }
-/**
-* Stop dragging an item
-*
-*/
 function onItemDragEnd$9() {
 	delete window._OBJ_DRAG_;
 }
-/**
-* Get item info (open description window)
-*/
 function onItemInfo$16(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
@@ -259342,10 +259588,10 @@ function onItemInfo$16(event) {
 		if (ItemCompare_default.ui) ItemCompare_default.remove();
 		return false;
 	}
-	if (ItemCompare_default.ui) ItemCompare_default.remove();
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
+	if (ItemCompare_default.ui) ItemCompare_default.remove();
 	const compareItem = EquipmentController.getUI().isInEquipList(item.location);
 	if (compareItem && InventoryV2.itemcomp) {
 		ItemCompare_default.prepare();
@@ -259355,21 +259601,16 @@ function onItemInfo$16(event) {
 	}
 	return false;
 }
-/**
-* Alt Right Click Request Transfer
-*/
 function transferItemToOtherUI$1(item) {
-	const isStorageOpen = StorageController.getUI().ui ? StorageController.getUI().ui.is(":visible") : false;
-	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+	const storageUI = StorageController.getUI();
+	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
 	if (!item) return false;
 	const count = item.count || 1;
 	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
 	else if (isCartOpen) InventoryV2.reqMoveItemToCart(item.index, count);
 	return true;
 }
-/**
-* Ask to use an item
-*/
 function onItemUsed$2(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(index);
@@ -259378,19 +259619,16 @@ function onItemUsed$2(event) {
 		onItemOut$13();
 	}
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
-/**
-* Handle click event on an item
-*/
 function onItemClick$1(event) {
 	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(jquery_default(this).attr("data-index"), 10);
+		const idx = parseInt(this.getAttribute("data-index"), 10);
 		const item = InventoryV2.getItemByIndex(idx);
 		if (!item) return false;
 		item.name = DB.getItemName(item);
 		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = ChatBox_default.ui.find(".input-chatbox")[0];
+		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
 		if (msgBox) {
 			msgBox.innerHTML += link + " ";
 			msgBox.focus();
@@ -259399,16 +259637,13 @@ function onItemClick$1(event) {
 	}
 	return false;
 }
-/**
-* Handle drop event on tabs
-*/
 function onTabDrop$1(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item") return false;
@@ -259419,49 +259654,50 @@ function onTabDrop$1(event) {
 	pkt.favorite = itemfav;
 	Network.sendPacket(pkt);
 }
-/**
-* Toggle the item drop lock preference and update the UI accordingly.
-*/
 function onItemLock$1() {
 	_preferences$36.itemlock = !_preferences$36.itemlock;
 	InventoryV2.itemlock = _preferences$36.itemlock;
 	const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
-		InventoryV2.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+		const btn = _getRoot$16().querySelector(".item_drop_lock");
+		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Toggles the value of Item Compare
-* and updates the UI accordingly.
-*/
 function onItemCompare$1() {
 	_preferences$36.itemcomp = !_preferences$36.itemcomp;
 	InventoryV2.itemcomp = _preferences$36.itemcomp;
 	const compImg = _preferences$36.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
-		InventoryV2.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+		const btn = _getRoot$16().querySelector(".item_compare");
+		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Toggles the value of Item Lock NPCSale
-* and updates the UI accordingly.
-*/
 function onNPCLock$1() {
 	_preferences$36.npcsalelock = !_preferences$36.npcsalelock;
 	InventoryV2.npcsalelock = _preferences$36.npcsalelock;
+	const root = _getRoot$16();
 	if (_preferences$36.npcsalelock) {
-		InventoryV2.ui.find(".deallock_on").show();
-		InventoryV2.ui.find(".lockoverlay").show();
-		InventoryV2.ui.find(".lockoverlaymsg").show();
-		InventoryV2.ui.find(".deallock_off").hide();
-		lockOverlayTimeout$1 = setTimeout(function() {
-			InventoryV2.ui.find(".lockoverlaymsg").fadeOut();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "none";
+		lockOverlayTimeout$1 = setTimeout(() => {
+			const msg = root.querySelector(".lockoverlaymsg");
+			if (msg) msg.style.display = "none";
 		}, 3e3);
 	} else {
-		InventoryV2.ui.find(".deallock_on").hide();
-		InventoryV2.ui.find(".lockoverlay").hide();
-		InventoryV2.ui.find(".lockoverlaymsg").hide();
-		InventoryV2.ui.find(".deallock_off").show();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "none";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "none";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "none";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "";
 	}
 }
 var InventoryV2, _realSize$2, _preferences$36, lockOverlayTimeout$1, InventoryV2_default;
@@ -259470,13 +259706,13 @@ var init_InventoryV2 = __esmMin((() => {
 	init_ItemType();
 	init_NetworkManager();
 	init_PacketStructure();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_CartItems();
 	init_InputBox();
 	init_ItemCompare();
@@ -259491,27 +259727,16 @@ var init_InventoryV2 = __esmMin((() => {
 	init_BasicInfo();
 	init_Mail$1();
 	init_WriteRodex();
-	InventoryV2 = new UIComponent("InventoryV2", InventoryV2_default$2, InventoryV2_default$1);
-	/**
-	* Tab constant
-	*/
+	InventoryV2 = new GUIComponent("InventoryV2", InventoryV2_default$1);
+	InventoryV2.render = () => InventoryV2_default$2;
 	InventoryV2.TAB = {
 		USABLE: 0,
 		EQUIP: 1,
 		ETC: 2,
 		FAV: 3
 	};
-	/**
-	* Store inventory items
-	*/
 	InventoryV2.list = [];
-	/**
-	* Store switch equip items
-	*/
 	InventoryV2.equipswitchlist = [];
-	/**
-	* Store new items
-	*/
 	InventoryV2.newItems = [];
 	InventoryV2.equippedItems = [];
 	_realSize$2 = 0;
@@ -259531,257 +259756,264 @@ var init_InventoryV2 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	/**
-	* Store variables from preferences
-	*/
 	InventoryV2.itemlock = _preferences$36.itemlock;
 	InventoryV2.itemcomp = _preferences$36.itemcomp;
 	InventoryV2.npcsalelock = _preferences$36.npcsalelock;
-	/**
-	* Initialize UI
-	*/
 	InventoryV2.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$20);
-		this.ui.find(".titlebar .mini").click(onToggleReduction$1);
-		this.ui.find(".tabs button").mousedown(onSwitchTab$1);
-		this.ui.find(".footer .extend").mousedown(onResize$7);
-		this.ui.find(".titlebar .close").click(function() {
-			InventoryV2.ui.hide();
+		const root = _getRoot$16();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$1);
+		root.querySelectorAll(".tabs button").forEach((btn) => {
+			btn.addEventListener("mousedown", onSwitchTab$1);
+			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+			btn.addEventListener("drop", onTabDrop$1);
 		});
-		this.ui.on("drop", onDrop$15).on("dragover", stopPropagation$20).find(".container .content").on("mouseover", ".item", onItemOver$12).on("mouseout", ".item", onItemOut$13).on("dragstart", ".item", onItemDragStart$8).on("dragend", ".item", onItemDragEnd$9).on("contextmenu", ".item", onItemInfo$16).on("dblclick", ".item", onItemUsed$2).on("click", ".item", onItemClick$1);
-		this.ui.find(".ncnt").text("0 / ");
-		this.ui.find(".mcnt").text(100);
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$20).on("drop", onTabDrop$1);
-		jquery_default(".tabs button").removeClass("selected");
-		this.ui.find(".tabs button").eq(_preferences$36.tab).addClass("selected");
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$7);
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			InventoryV2._host.style.display = "none";
+		});
+		this._host.addEventListener("drop", onDrop$15);
+		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$12.call(item, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$13();
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$8.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$9();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$16.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemUsed$2.call(item, e);
+			});
+			content.addEventListener("click", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemClick$1.call(item, e);
+			});
+		}
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = "0 / ";
+		const mcnt = root.querySelector(".mcnt");
+		if (mcnt) mcnt.textContent = "100";
+		this.draggable(".titlebar");
+		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
+		const allTabs = root.querySelectorAll(".tabs button");
+		if (allTabs[_preferences$36.tab]) allTabs[_preferences$36.tab].classList.add("selected");
 		const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
-			InventoryV2.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+			const btn = root.querySelector(".item_drop_lock");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 		const compImg = _preferences$36.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
-			InventoryV2.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+			const btn = root.querySelector(".item_compare");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$36.npcsalelock ? InventoryV2.ui.find(".deallock_on") : InventoryV2.ui.find(".deallock_off");
-		if (_preferences$36.tab != InventoryV2.TAB.FAV) {
-			lockSale.hide();
-			InventoryV2.ui.find(".sort").hide();
+		const lockSale = _preferences$36.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$36.tab !== InventoryV2.TAB.FAV) {
+			if (lockSale) lockSale.style.display = "none";
+			const sortEl = root.querySelector(".sort");
+			if (sortEl) sortEl.style.display = "none";
 		} else {
-			lockSale.show();
-			InventoryV2.ui.find(".sort").show();
+			if (lockSale) lockSale.style.display = "";
+			const sortEl = root.querySelector(".sort");
+			if (sortEl) sortEl.style.display = "";
 		}
-		InventoryV2.ui.find(".item_drop_lock").click(onItemLock$1);
-		InventoryV2.ui.find(".item_compare").click(onItemCompare$1);
-		InventoryV2.ui.find(".deal_lock").click(onNPCLock$1);
-		InventoryV2.ui.find(".lockoverlayclose").click(function() {
-			InventoryV2.ui.find(".lockoverlaymsg").hide();
+		const itemDropLock = root.querySelector(".item_drop_lock");
+		if (itemDropLock) itemDropLock.addEventListener("click", onItemLock$1);
+		const itemCompare = root.querySelector(".item_compare");
+		if (itemCompare) itemCompare.addEventListener("click", onItemCompare$1);
+		root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock$1));
+		const overlayClose = root.querySelector(".lockoverlayclose");
+		if (overlayClose) overlayClose.addEventListener("click", () => {
+			const msg = root.querySelector(".lockoverlaymsg");
+			if (msg) msg.style.display = "none";
 			clearTimeout(lockOverlayTimeout$1);
 		});
-		InventoryV2.ui.find(".sort").click(function() {
-			requestFilter$1();
-		});
+		const sortBtn = root.querySelector(".sort");
+		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$1());
 	};
-	/**
-	* Apply preferences once append to body
-	*/
 	InventoryV2.onAppend = function OnAppend() {
-		if (!_preferences$36.show) this.ui.hide();
+		if (!_preferences$36.show) this._host.style.display = "none";
 		this.resize(_preferences$36.width, _preferences$36.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$36.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$36.x), Renderer.width - this.ui.width())
-		});
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$36.magnet_top;
 		this.magnet.BOTTOM = _preferences$36.magnet_bottom;
 		this.magnet.LEFT = _preferences$36.magnet_left;
 		this.magnet.RIGHT = _preferences$36.magnet_right;
-		_realSize$2 = _preferences$36.reduce ? 0 : this.ui.height();
-		this.ui.find(".titlebar .mini").trigger("mousedown");
+		_realSize$2 = _preferences$36.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = _getRoot$16().querySelector(".titlebar .mini");
+		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	InventoryV2.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+		const content = _getRoot$16().querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		this.equipswitchlist.length = 0;
 		InventoryV2.newItems.length = 0;
-		jquery_default(".ItemInfo").remove();
-		_preferences$36.show = this.ui.is(":visible");
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$36.show = this._host.style.display !== "none";
 		_preferences$36.reduce = !!_realSize$2;
-		_preferences$36.y = parseInt(this.ui.css("top"), 10);
-		_preferences$36.x = parseInt(this.ui.css("left"), 10);
-		_preferences$36.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$36.y = parseInt(this._host.style.top, 10);
+		_preferences$36.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$36.width = Math.floor((hostRect.width - 25) / 32);
 		_preferences$36.magnet_top = this.magnet.TOP;
 		_preferences$36.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$36.magnet_left = this.magnet.LEFT;
 		_preferences$36.magnet_right = this.magnet.RIGHT;
 		_preferences$36.save();
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	InventoryV2.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
-				else {
-					this.ui.trigger("mouseleave");
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else {
+					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					this.ui.find(".new_item").css("backgroundImage", "");
+					_getRoot$16().querySelectorAll(".new_item").forEach((el) => {
+						el.style.backgroundImage = "";
+					});
+					this._host.style.display = "none";
 				}
 				break;
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
-	};
-	/**
-	* Show/Hide UI
-	*/
-	InventoryV2.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) this.focus();
-		else {
-			this.ui.trigger("mouseleave");
-			this.clearNewItems();
-			this.ui.find(".new_item").css("backgroundImage", "");
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot$1(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
 	};
-	/**
-	* Clear newItems array
-	*/
+	InventoryV2.toggle = function toggle() {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			this.focus();
+		} else {
+			this._host.dispatchEvent(new Event("mouseleave"));
+			this.clearNewItems();
+			_getRoot$16().querySelectorAll(".new_item").forEach((el) => {
+				el.style.backgroundImage = "";
+			});
+			this._host.style.display = "none";
+		}
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot$1(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
+		}
+	};
 	InventoryV2.clearNewItems = function clearNewItems() {
 		this.newItems = [];
 	};
-	/**
-	* Extend inventory window size
-	*
-	* @param {number} width
-	* @param {number} height
-	*/
 	InventoryV2.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		this.ui.find(".container .content").css({ width: width * 32 });
-		this.ui.css({ width: 55 + width * 32 });
+		const content = _getRoot$16().querySelector(".container .content");
+		if (content) content.style.width = `${width * 32}px`;
+		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
-	/**
-	* Force scroll clamping
-	*/
 	InventoryV2.updateScroll = function updateScroll() {
-		const host = this.ui.find(".scroll-host");
-		if (host.length) {
-			const node = host[0];
-			const content = host.find(".content");
-			let ticker = 0;
-			const clamp = function() {
-				const maxScroll = Math.max(0, node.scrollHeight - node.clientHeight);
-				const lastItem = content.find(".item:last");
-				if (lastItem.length) {
-					const itemRect = lastItem[0].getBoundingClientRect();
-					const hostRect = node.getBoundingClientRect();
-					if (itemRect.bottom < hostRect.bottom && node.scrollTop > 0) node.scrollTop = Math.max(0, node.scrollTop - (hostRect.bottom - itemRect.bottom));
-				}
-				if (node.scrollTop > maxScroll) node.scrollTop = maxScroll;
-				if (node._roScrollbarRestart) node._roScrollbarRestart();
-				if (ticker++ < 20) requestAnimationFrame(clamp);
-			};
-			clamp();
-		}
+		const root = _getRoot$16();
+		const hostEl = root.querySelector(".scroll-host");
+		if (!hostEl) return;
+		const contentEl = root.querySelector(".content");
+		let ticker = 0;
+		const clamp = () => {
+			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
+			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
+			if (lastItem) {
+				const itemRect = lastItem.getBoundingClientRect();
+				const hostRect = hostEl.getBoundingClientRect();
+				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
+			}
+			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
+			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
+			if (ticker++ < 20) requestAnimationFrame(clamp);
+		};
+		clamp();
 	};
-	/**
-	* Get item object
-	*
-	* @param {number} id
-	* @returns {Item}
-	*/
 	InventoryV2.getItemById = function GetItemById(id) {
-		let i, count;
 		const list = InventoryV2.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
-	/**
-	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {Item}
-	*/
 	InventoryV2.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = InventoryV2.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
-	/**
-	* Add items to the list
-	* if the item index is exist you should clear it;[skybook888]
-	*/
 	InventoryV2.setItems = function SetItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) {
+		const root = _getRoot$16();
+		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
 			if (this.addItemSub(items[i])) {
 				this.list.push(items[i]);
-				this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+				const ncnt = root.querySelector(".ncnt");
+				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
 			}
 		}
 	};
-	/**
-	* Insert Item to inventory
-	*
-	* @param {object} Item
-	*/
 	InventoryV2.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
+		const root = _getRoot$16();
 		const equippedIndex = InventoryV2.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV2.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV2.newItems.push(item.index);
-			const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-			if (changeUI) changeUI.show();
+			const basicInfoUI = BasicInfoController.getUI();
+			if (basicInfoUI._host) {
+				const changeUI = _getBasicInfoRoot$1(basicInfoUI).querySelector("#item .btn_overlay");
+				if (changeUI) changeUI.style.display = "block";
+			}
 		}
 		if (object) {
 			if (isNaN(object.count)) object.count = 1;
 			if (isNaN(item.count)) item.count = 1;
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV2.newItems.indexOf(item.index) === -1) InventoryV2.newItems.push(item.index);
-			if (getItemTab$1(item) === _preferences$36.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				InventoryV2.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (getItemTab$1(item) === _preferences$36.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		if (this.addItemSub(object)) {
 			this.list.push(object);
-			this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+			const ncnt = root.querySelector(".ncnt");
+			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 			this.onUpdateItem(object.ITID, object.count);
 		}
 	};
-	/**
-	* Check if item index is in newItems list
-	*
-	* @param {number} index - Item index to check
-	* @returns {boolean} - True if item index is in newItems list, false otherwise
-	*/
 	InventoryV2.isNewItem = function isNewItem(index) {
 		return InventoryV2.newItems.includes(index);
 	};
-	/**
-	* Add item to inventory
-	*
-	* @param {object} Item
-	*/
 	InventoryV2.addItemSub = function AddItemSub(item) {
 		let tab = getItemTab$1(item);
 		if (item.PlaceETCTab) tab = InventoryV2.TAB.FAV;
@@ -259789,93 +260021,84 @@ var init_InventoryV2 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		const isInSwitchList = InventoryV2.equipswitchlist.some(function(equipItem) {
-			return equipItem.index === item.index;
-		});
+		const isInSwitchList = InventoryV2.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
 		if (tab === _preferences$36.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const content = this.ui.find(".container .content");
-			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"switch1\"></div><div class=\"switch2\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const root = _getRoot$16();
+			const content = root.querySelector(".container .content");
+			if (!content) return true;
+			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
 			});
-			if (InventoryV2.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (InventoryV2.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (el) el.style.backgroundImage = `url(${data})`;
 			});
-			else content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "");
+			else {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (el) el.style.backgroundImage = "";
+			}
 			if (isInSwitchList) {
-				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", function(data) {
-					content.find(".item[data-index=\"" + item.index + "\"] .switch1").css("backgroundImage", "url(" + data + ")");
+				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
+					const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+					if (el) el.style.backgroundImage = `url(${data})`;
 				});
-				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", function(data) {
-					content.find(".item[data-index=\"" + item.index + "\"] .switch2").css("backgroundImage", "url(" + data + ")");
+				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
+					const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+					if (el) el.style.backgroundImage = `url(${data})`;
 				});
 			}
 		}
 		return true;
 	};
-	/**
-	* Check if an item with the given location exists in the equip switch list.
-	*
-	* @param {number} location - The location of the item to check.
-	* @returns {boolean} True if the item exists in the equip switch list, false otherwise.
-	*/
 	InventoryV2.isInEquipSwitchList = function(location) {
-		return this.equipswitchlist.some(function(existingItem) {
-			return (existingItem.location & location) !== 0;
-		});
+		return this.equipswitchlist.some((existingItem) => (existingItem.location & location) !== 0);
 	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
 	InventoryV2.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
+		const root = _getRoot$16();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				this.onUpdateItem(item.ITID, item.count);
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 		this.onUpdateItem(item.ITID, 0);
-		InventoryV2.ui.find(".overlay").hide();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 		return item;
 	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
 	InventoryV2.updateItem = function UpdateItem(index, count) {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
+		const root = _getRoot$16();
 		if (item.count > 0) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
 			this.onUpdateItem(item.ITID, item.count);
 			return;
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 		this.onUpdateItem(item.ITID, 0);
 		this.updateScroll();
 	};
-	/**
-	* Use an item
-	*
-	* @param {Item} item
-	*/
 	InventoryV2.useItem = function UseItem(item) {
 		switch (item.type) {
 			case ItemType_default.HEALING:
@@ -259896,11 +260119,6 @@ var init_InventoryV2 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Update PlaceETCTab of an item in the inventory
-	* @param {number} itemIndex - The index of the item to update
-	* @param {number} newValue - boolean for PlaceETCTab (1 or 0)
-	*/
 	InventoryV2.updatePlaceETCTab = function(itemIndex, newValue) {
 		const item = InventoryV2.getItemByIndex(itemIndex);
 		if (!item) return;
@@ -259929,54 +260147,44 @@ var init_InventoryV2 = __esmMin((() => {
 		} else item.PlaceETCTab = newValue;
 		requestFilter$1();
 	};
-	/**
-	* Add an item to the equip switch list, handling duplicates and updating UI.
-	*
-	* @param {number} index - The index of the item to add
-	*/
 	InventoryV2.addItemtoSwitch = function(index) {
 		const item = this.getItemByIndex(index);
 		if (!item) {
-			console.warn("Item with index " + index + " not found in inventory.");
+			console.warn(`Item with index ${index} not found in inventory.`);
 			return;
 		}
-		const existingItemIndex = this.equipswitchlist.findIndex(function(existingItem) {
-			return existingItem.location === item.location;
-		});
+		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.location === item.location);
 		if (existingItemIndex > -1) {
 			const existingItem = this.equipswitchlist[existingItemIndex];
 			SwitchEquip_default.unEquip(existingItem.index, existingItem.location);
 			this.equipswitchlist.splice(existingItemIndex, 1);
 		}
 		this.equipswitchlist.push(item);
-		const content = this.ui.find(".container .content");
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .switch1").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$16();
+		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
+			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .switch2").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
+			const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
 		SwitchEquip_default.equip(item, item.location, true);
 		ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3143), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
 	};
-	/**
-	* Removes an item from the equip switch list and updates the UI accordingly.
-	*
-	* @param {number} index - The index of the item to remove.
-	*/
 	InventoryV2.removeItemFromSwitch = function(index) {
 		const item = this.getItemByIndex(index);
 		if (!item) {
-			console.warn("Item with index " + index + " not found in inventory.");
+			console.warn(`Item with index ${index} not found in inventory.`);
 			return;
 		}
-		const existingItemIndex = this.equipswitchlist.findIndex(function(existingItem) {
-			return existingItem.index === item.index;
-		});
+		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
 		if (existingItemIndex > -1) {
-			const content = this.ui.find(".container .content");
-			content.find(".item[data-index=\"" + item.index + "\"] .switch1").css("backgroundImage", "none");
-			content.find(".item[data-index=\"" + item.index + "\"] .switch2").css("backgroundImage", "none");
+			const root = _getRoot$16();
+			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+			if (sw1) sw1.style.backgroundImage = "none";
+			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+			if (sw2) sw2.style.backgroundImage = "none";
 			SwitchEquip_default.unEquip(item.index, item.location);
 			this.equipswitchlist.splice(existingItemIndex, 1);
 			ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3144), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
@@ -259984,9 +260192,6 @@ var init_InventoryV2 = __esmMin((() => {
 			InventoryV2.equipAllFromSwitchList();
 		}
 	};
-	/**
-	* Equip all items in the equip switch list
-	*/
 	InventoryV2.equipAllFromSwitchList = function equipAllFromSwitchList() {
 		const equipSwitchList = InventoryV2.equipswitchlist;
 		for (let i = 0; i < equipSwitchList.length; i++) {
@@ -259994,9 +260199,6 @@ var init_InventoryV2 = __esmMin((() => {
 			if (item) SwitchEquip_default.equip(item, item.location, true);
 		}
 	};
-	/**
-	* functions to define
-	*/
 	InventoryV2.onUseItem = function OnUseItem() {};
 	InventoryV2.onUseCard = function onUseCard() {};
 	InventoryV2.onEquipItem = function OnEquipItem() {};
@@ -260014,7 +260216,7 @@ var init_InventoryV3$2 = __esmMin((() => {
 //#region src/UI/Components/Inventory/InventoryV3/InventoryV3.css?raw
 var InventoryV3_default$1;
 var init_InventoryV3$1 = __esmMin((() => {
-	InventoryV3_default$1 = "/* ── Root ────────────────────────────────────────────────── */\r\n#InventoryV3 {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	height: 194px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ── Titlebar ─────────────────────────────────────────────── */\r\n#InventoryV3 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ── Panel / layout ───────────────────────────────────────── */\r\n#InventoryV3 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ── Tabs ─────────────────────────────────────────────────── */\r\n#InventoryV3 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV3 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV3 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV3 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV3 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ── Container / scroll area ──────────────────────────────── */\r\n#InventoryV3 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV3 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ── Items ────────────────────────────────────────────────── */\r\n#InventoryV3 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV3 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV3 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV3 .content .item .grade {\r\n	position: absolute;\r\n	top: 15px;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ── Overlay (tooltip) ────────────────────────────────────── */\r\n#InventoryV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV3 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ── Footer ───────────────────────────────────────────────── */\r\n#InventoryV3 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV3 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV3 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ── Footer buttons (shared position: absolute) ───────────── */\r\n#InventoryV3 .expand,\r\n#InventoryV3 .droplock,\r\n#InventoryV3 .compare,\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off,\r\n#InventoryV3 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV3 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV3 .item_expansion {\r\n	position: absolute;\r\n	height: 14px;\r\n	width: 11px;\r\n}\r\n\r\n#InventoryV3 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV3 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV3 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV3 button.item_deal_lock_on,\r\n#InventoryV3 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV3 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ── Counter labels ───────────────────────────────────────── */\r\n#InventoryV3 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ── Tooltip names on hover ───────────────────────────────── */\r\n#InventoryV3 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV3 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ── NPC lock overlay ─────────────────────────────────────── */\r\n#InventoryV3 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV3 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV3 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
+	InventoryV3_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ── Root ────────────────────────────────────────────────── */\r\n#InventoryV3 {\r\n	position: relative;\r\n	height: 194px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ── Titlebar ─────────────────────────────────────────────── */\r\n#InventoryV3 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ── Panel / layout ───────────────────────────────────────── */\r\n#InventoryV3 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ── Tabs ─────────────────────────────────────────────────── */\r\n#InventoryV3 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV3 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV3 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV3 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV3 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ── Container / scroll area ──────────────────────────────── */\r\n#InventoryV3 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV3 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ── Items ────────────────────────────────────────────────── */\r\n#InventoryV3 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV3 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV3 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV3 .content .item .grade {\r\n	position: absolute;\r\n	top: 15px;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ── Overlay (tooltip) ────────────────────────────────────── */\r\n#InventoryV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV3 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ── Footer ───────────────────────────────────────────────── */\r\n#InventoryV3 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV3 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV3 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ── Footer buttons (shared position: absolute) ───────────── */\r\n#InventoryV3 .expand,\r\n#InventoryV3 .droplock,\r\n#InventoryV3 .compare,\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off,\r\n#InventoryV3 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV3 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV3 .item_expansion {\r\n	position: absolute;\r\n	height: 14px;\r\n	width: 11px;\r\n}\r\n\r\n#InventoryV3 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV3 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV3 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV3 button.item_deal_lock_on,\r\n#InventoryV3 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV3 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ── Counter labels ───────────────────────────────────────── */\r\n#InventoryV3 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ── Tooltip names on hover ───────────────────────────────── */\r\n#InventoryV3 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV3 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ── NPC lock overlay ─────────────────────────────────────── */\r\n#InventoryV3 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV3 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV3 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Refine/Refine.html?raw
@@ -260056,7 +260258,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$19(event) {
+function stopPropagation$13(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -260808,14 +261010,14 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$19);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$13);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$19).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$13).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
 		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
 		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
 		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
@@ -260937,7 +261139,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$18(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -261462,7 +261664,7 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$18);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$12);
 		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
 		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
@@ -263146,12 +263348,12 @@ var init_Enchant = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV3/InventoryV3.js
-/**
-* Get the TAB constant for a given item based on its type.
-*
-* @param {object} item
-* @returns {number} TAB constant
-*/
+function _getRoot$15() {
+	return InventoryV3._shadow || InventoryV3._host;
+}
+function _getBasicInfoRoot(ui) {
+	return ui._shadow || ui._host || document;
+}
 function getItemTab(item) {
 	switch (item.type) {
 		case ItemType_default.HEALING:
@@ -263169,18 +263371,8 @@ function getItemTab(item) {
 		case ItemType_default.AMMO: return InventoryV3.TAB.ETC;
 	}
 }
-/**
-* Stop event propagation
-*/
-function stopPropagation$17(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Extend inventory window size
-*/
 function onResize$6() {
-	const left = InventoryV3.ui.position().left;
+	const left = InventoryV3._host.offsetLeft;
 	let lastWidth = 0;
 	function resizing() {
 		let w = Math.floor((Mouse.screen.x - left - 25) / 32);
@@ -263190,80 +263382,84 @@ function onResize$6() {
 		lastWidth = w;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
-/**
-* Modify tab, filter display entries
-*/
 function onSwitchTab() {
-	const idx = jquery_default(this).index();
+	const root = _getRoot$15();
+	const buttons = root.querySelectorAll(".tabs button");
+	const idx = Array.from(buttons).indexOf(this);
 	_preferences$35.tab = parseInt(idx, 10);
 	requestFilter();
-	jquery_default(".tabs button").removeClass("selected");
-	jquery_default(this).addClass("selected");
+	buttons.forEach((b) => b.classList.remove("selected"));
+	this.classList.add("selected");
 	if (_preferences$35.tab !== InventoryV3.TAB.FAV) {
-		InventoryV3.ui.find(".deallock_on").hide();
-		InventoryV3.ui.find(".deallock_off").hide();
-		InventoryV3.ui.find(".lockoverlay").hide();
-		InventoryV3.ui.find(".lockoverlaymsg").hide();
-		InventoryV3.ui.find(".sort").hide();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "none";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "none";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "none";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "none";
+		const sort = root.querySelector(".sort");
+		if (sort) sort.style.display = "none";
 	} else {
 		if (_preferences$35.npcsalelock) {
-			InventoryV3.ui.find(".deallock_on").show();
-			InventoryV3.ui.find(".lockoverlay").show();
-			InventoryV3.ui.find(".deallock_off").hide();
+			const dealOn = root.querySelector(".deallock_on");
+			if (dealOn) dealOn.style.display = "";
+			const lockOverlay = root.querySelector(".lockoverlay");
+			if (lockOverlay) lockOverlay.style.display = "";
+			const dealOff = root.querySelector(".deallock_off");
+			if (dealOff) dealOff.style.display = "none";
 		} else {
-			InventoryV3.ui.find(".deallock_on").hide();
-			InventoryV3.ui.find(".lockoverlay").hide();
-			InventoryV3.ui.find(".lockoverlaymsg").hide();
-			InventoryV3.ui.find(".deallock_off").show();
+			const dealOn = root.querySelector(".deallock_on");
+			if (dealOn) dealOn.style.display = "none";
+			const lockOverlay = root.querySelector(".lockoverlay");
+			if (lockOverlay) lockOverlay.style.display = "none";
+			const lockMsg = root.querySelector(".lockoverlaymsg");
+			if (lockMsg) lockMsg.style.display = "none";
+			const dealOff = root.querySelector(".deallock_off");
+			if (dealOff) dealOff.style.display = "";
 		}
-		InventoryV3.ui.find(".sort").show();
+		const sort = root.querySelector(".sort");
+		if (sort) sort.style.display = "";
 	}
 }
-/**
-* Hide/show inventory's content
-*/
 function onToggleReduction() {
-	const ui = InventoryV3.ui;
+	const panel = _getRoot$15().querySelector(".panel");
 	if (_realSize$1) {
-		ui.find(".panel").show();
-		ui.height(_realSize$1);
+		if (panel) panel.style.display = "flex";
+		InventoryV3._host.style.height = `${_realSize$1}px`;
 		_realSize$1 = 0;
 	} else {
-		_realSize$1 = ui.height();
-		ui.height(17);
-		ui.find(".panel").hide();
+		_realSize$1 = InventoryV3._host.getBoundingClientRect().height;
+		InventoryV3._host.style.height = "17px";
+		if (panel) panel.style.display = "none";
 	}
 }
-/**
-* Update tab, reset inventory content
-*/
 function requestFilter() {
-	InventoryV3.ui.find(".scroll-host").scrollTop(0);
-	InventoryV3.ui.find(".container .content").empty();
+	const root = _getRoot$15();
+	const host = root.querySelector(".scroll-host");
+	if (host) host.scrollTop = 0;
+	const content = root.querySelector(".container .content");
+	if (content) content.innerHTML = "";
 	const list = InventoryV3.list;
-	let i, count;
-	for (i = 0, count = list.length; i < count; ++i) InventoryV3.addItemSub(list[i]);
+	for (let i = 0, count = list.length; i < count; ++i) InventoryV3.addItemSub(list[i]);
 	InventoryV3.updateScroll();
 }
-/**
-* Drop an item from storage to inventory
-*
-* @param {event}
-*/
 function onDrop$14(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
@@ -263305,61 +263501,50 @@ function onDrop$14(event) {
 	}
 	return false;
 }
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$10() {
+function onItemOver$10(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const pos = jquery_default(this).position();
-	const overlay = InventoryV3.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + ": " + (item.count || 1) + quantity);
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _getRoot$15();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#InventoryV3") || root;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${itemRect.top - rootRect.top}px`;
+		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
-/**
-* Hide the item name
-*/
 function onItemOut$11() {
-	InventoryV3.ui.find(".overlay").hide();
+	const overlay = _getRoot$15().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* Start dragging an item
-*/
 function onItemDragStart$5(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".icon").style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, "");
+	const iconEl = this.querySelector(".icon");
+	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url || "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Inventory",
 		data: item
 	}));
 	onItemOut$11();
 }
-/**
-* Stop dragging an item
-*
-*/
 function onItemDragEnd$6() {
 	delete window._OBJ_DRAG_;
 }
-/**
-* Get item info (open description window)
-*/
 function onItemInfo$13(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
@@ -263388,21 +263573,16 @@ function onItemInfo$13(event) {
 	}
 	return false;
 }
-/**
-* Alt Right Click Request Transfer
-*/
 function transferItemToOtherUI(item) {
-	const isStorageOpen = StorageController.getUI().ui ? StorageController.getUI().ui.is(":visible") : false;
-	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+	const storageUI = StorageController.getUI();
+	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
 	if (!item) return false;
 	const count = item.count || 1;
 	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
 	else if (isCartOpen) InventoryV3.reqMoveItemToCart(item.index, count);
 	return true;
 }
-/**
-* Ask to use an item
-*/
 function onItemUsed$1(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(index);
@@ -263411,19 +263591,16 @@ function onItemUsed$1(event) {
 		onItemOut$11();
 	}
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
-/**
-* Handle click event on an item
-*/
 function onItemClick(event) {
 	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(jquery_default(this).attr("data-index"), 10);
+		const idx = parseInt(this.getAttribute("data-index"), 10);
 		const item = InventoryV3.getItemByIndex(idx);
 		if (!item) return false;
 		item.name = DB.getItemName(item);
 		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = ChatBox_default.ui.find(".input-chatbox")[0];
+		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
 		if (msgBox) {
 			msgBox.innerHTML += link + " ";
 			msgBox.focus();
@@ -263432,16 +263609,13 @@ function onItemClick(event) {
 	}
 	return false;
 }
-/**
-* Handle drop event on tabs
-*/
 function onTabDrop(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type !== "item") return false;
@@ -263470,18 +263644,14 @@ function onInventoryExpand() {
 	const pkt = new PACKET.CZ.REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE();
 	Network.sendPacket(pkt);
 }
-/**
-* Handle the result of a request to expand inventory.
-*
-* @param {type} pkt - PACKET.ZC.ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE
-*/
 function onRequestInventoryExpandResult(pkt) {
 	if (pkt) switch (pkt.result) {
 		case 0: {
 			const item = InventoryV3.getItemById(pkt.itemId);
 			if (!item) return false;
 			const itemname = DB.getItemName(item);
-			const currentlimit = parseInt(InventoryV3.ui.find(".mcnt").text(), 10);
+			const mcntEl = _getRoot$15().querySelector(".mcnt");
+			const currentlimit = mcntEl ? parseInt(mcntEl.textContent, 10) : 100;
 			const newlimit = currentlimit + 10;
 			UIManager.showPromptBox(DB.getMessage(3561).replace("%s", itemname).replace("%d", currentlimit).replace("%d", newlimit), "ok", "cancel", InventoryExpandReq, InventoryExpandCancel);
 			break;
@@ -263501,25 +263671,14 @@ function onRequestInventoryExpandResult(pkt) {
 		default: break;
 	}
 }
-/**
-* Sends a request to expand the inventory size.
-*/
 function InventoryExpandReq() {
 	const pkt = new PACKET.CZ.REQ_EXTEND_BODYITEM_SIZE();
 	Network.sendPacket(pkt);
 }
-/**
-* Cancels the inventory expansion request.
-*/
 function InventoryExpandCancel() {
 	const pkt = new PACKET.CZ.CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE();
 	Network.sendPacket(pkt);
 }
-/**
-* Handles the result of the final request to expand the inventory size
-*
-* @param {Object} pkt - PACKET.ZC.ACK_EXTEND_BODYITEM_SIZE
-*/
 function onFinalReqInventoryExpandResult(pkt) {
 	if (pkt) switch (pkt.result) {
 		case 0:
@@ -263540,49 +263699,50 @@ function onFinalReqInventoryExpandResult(pkt) {
 		default: break;
 	}
 }
-/**
-* Toggle the item drop lock preference and update the UI accordingly.
-*/
 function onItemLock() {
 	_preferences$35.itemlock = !_preferences$35.itemlock;
 	InventoryV3.itemlock = _preferences$35.itemlock;
 	const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
-		InventoryV3.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+		const btn = _getRoot$15().querySelector(".item_drop_lock");
+		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Toggles the value of Item Compare
-* and updates the UI accordingly.
-*/
 function onItemCompare() {
 	_preferences$35.itemcomp = !_preferences$35.itemcomp;
 	InventoryV3.itemcomp = _preferences$35.itemcomp;
 	const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
-		InventoryV3.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+		const btn = _getRoot$15().querySelector(".item_compare");
+		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Toggles the value of Item Lock NPCSale
-* and updates the UI accordingly.
-*/
 function onNPCLock() {
 	_preferences$35.npcsalelock = !_preferences$35.npcsalelock;
 	InventoryV3.npcsalelock = _preferences$35.npcsalelock;
+	const root = _getRoot$15();
 	if (_preferences$35.npcsalelock) {
-		InventoryV3.ui.find(".deallock_on").show();
-		InventoryV3.ui.find(".lockoverlay").show();
-		InventoryV3.ui.find(".lockoverlaymsg").show();
-		InventoryV3.ui.find(".deallock_off").hide();
-		lockOverlayTimeout = setTimeout(function() {
-			InventoryV3.ui.find(".lockoverlaymsg").fadeOut();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "none";
+		lockOverlayTimeout = setTimeout(() => {
+			const msg = root.querySelector(".lockoverlaymsg");
+			if (msg) msg.style.display = "none";
 		}, 3e3);
 	} else {
-		InventoryV3.ui.find(".deallock_on").hide();
-		InventoryV3.ui.find(".lockoverlay").hide();
-		InventoryV3.ui.find(".lockoverlaymsg").hide();
-		InventoryV3.ui.find(".deallock_off").show();
+		const dealOn = root.querySelector(".deallock_on");
+		if (dealOn) dealOn.style.display = "none";
+		const lockOverlay = root.querySelector(".lockoverlay");
+		if (lockOverlay) lockOverlay.style.display = "none";
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		if (lockMsg) lockMsg.style.display = "none";
+		const dealOff = root.querySelector(".deallock_off");
+		if (dealOff) dealOff.style.display = "";
 	}
 }
 var InventoryV3, _realSize$1, _preferences$35, lockOverlayTimeout, InventoryV3_default;
@@ -263591,13 +263751,13 @@ var init_InventoryV3 = __esmMin((() => {
 	init_ItemType();
 	init_NetworkManager();
 	init_PacketStructure();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_MouseEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_CartItems();
 	init_InputBox();
 	init_ItemCompare();
@@ -263617,27 +263777,16 @@ var init_InventoryV3 = __esmMin((() => {
 	init_Enchant();
 	init_Mail$1();
 	init_WriteRodex();
-	InventoryV3 = new UIComponent("InventoryV3", InventoryV3_default$2, InventoryV3_default$1);
-	/**
-	* Tab constant
-	*/
+	InventoryV3 = new GUIComponent("InventoryV3", InventoryV3_default$1);
+	InventoryV3.render = () => InventoryV3_default$2;
 	InventoryV3.TAB = {
 		USABLE: 0,
 		EQUIP: 1,
 		ETC: 2,
 		FAV: 3
 	};
-	/**
-	* Store inventory items
-	*/
 	InventoryV3.list = [];
-	/**
-	* Store switch equip items
-	*/
 	InventoryV3.equipswitchlist = [];
-	/**
-	* Store new items
-	*/
 	InventoryV3.newItems = [];
 	InventoryV3.equippedItems = [];
 	_realSize$1 = 0;
@@ -263657,265 +263806,274 @@ var init_InventoryV3 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	/**
-	* Store variables from preferences
-	*/
 	InventoryV3.itemlock = _preferences$35.itemlock;
 	InventoryV3.itemcomp = _preferences$35.itemcomp;
 	InventoryV3.npcsalelock = _preferences$35.npcsalelock;
-	/**
-	* Initialize UI
-	*/
 	InventoryV3.init = function Init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$17);
-		this.ui.find(".titlebar .mini").click(onToggleReduction);
-		this.ui.find(".tabs button").mousedown(onSwitchTab);
-		this.ui.find(".footer .extend").mousedown(onResize$6);
-		this.ui.find(".titlebar .close").click(function() {
-			InventoryV3.ui.hide();
+		const root = _getRoot$15();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction);
+		root.querySelectorAll(".tabs button").forEach((btn) => {
+			btn.addEventListener("mousedown", onSwitchTab);
+			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+			btn.addEventListener("drop", onTabDrop);
 		});
-		this.ui.on("drop", onDrop$14).on("dragover", stopPropagation$17).find(".container .content").on("mouseover", ".item", onItemOver$10).on("mouseout", ".item", onItemOut$11).on("dragstart", ".item", onItemDragStart$5).on("dragend", ".item", onItemDragEnd$6).on("contextmenu", ".item", onItemInfo$13).on("dblclick", ".item", onItemUsed$1).on("click", ".item", onItemClick);
-		this.ui.find(".ncnt").text("0 / ");
-		this.ui.find(".mcnt").text(100);
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".tabs button").on("dragover", stopPropagation$17).on("drop", onTabDrop);
-		jquery_default(".tabs button").removeClass("selected");
-		this.ui.find(".tabs button").eq(_preferences$35.tab).addClass("selected");
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$6);
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			InventoryV3._host.style.display = "none";
+		});
+		this._host.addEventListener("drop", onDrop$14);
+		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$10.call(item, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$11();
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$5.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$6();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$13.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemUsed$1.call(item, e);
+			});
+			content.addEventListener("click", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemClick.call(item, e);
+			});
+		}
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = "0 / ";
+		const mcnt = root.querySelector(".mcnt");
+		if (mcnt) mcnt.textContent = "100";
+		this.draggable(".titlebar");
+		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
+		const allTabs = root.querySelectorAll(".tabs button");
+		if (allTabs[_preferences$35.tab]) allTabs[_preferences$35.tab].classList.add("selected");
 		const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + lockImg, function(data) {
-			InventoryV3.ui.find(".item_drop_lock").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+			const btn = root.querySelector(".item_drop_lock");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 		const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + compImg, function(data) {
-			InventoryV3.ui.find(".item_compare").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+			const btn = root.querySelector(".item_compare");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$35.npcsalelock ? InventoryV3.ui.find(".deallock_on") : InventoryV3.ui.find(".deallock_off");
-		if (_preferences$35.tab != InventoryV3.TAB.FAV) {
-			lockSale.hide();
-			InventoryV3.ui.find(".sort").hide();
+		const lockSale = _preferences$35.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$35.tab !== InventoryV3.TAB.FAV) {
+			if (lockSale) lockSale.style.display = "none";
+			const sortEl = root.querySelector(".sort");
+			if (sortEl) sortEl.style.display = "none";
 		} else {
-			lockSale.show();
-			InventoryV3.ui.find(".sort").show();
+			if (lockSale) lockSale.style.display = "";
+			const sortEl = root.querySelector(".sort");
+			if (sortEl) sortEl.style.display = "";
 		}
-		InventoryV3.ui.find(".item_expansion").click(onInventoryExpand);
-		InventoryV3.ui.find(".item_drop_lock").click(onItemLock);
-		InventoryV3.ui.find(".item_compare").click(onItemCompare);
-		InventoryV3.ui.find(".deal_lock").click(onNPCLock);
-		InventoryV3.ui.find(".lockoverlayclose").click(function() {
-			InventoryV3.ui.find(".lockoverlaymsg").hide();
+		const itemExpansion = root.querySelector(".item_expansion");
+		if (itemExpansion) itemExpansion.addEventListener("click", onInventoryExpand);
+		const itemDropLock = root.querySelector(".item_drop_lock");
+		if (itemDropLock) itemDropLock.addEventListener("click", onItemLock);
+		const itemCompare = root.querySelector(".item_compare");
+		if (itemCompare) itemCompare.addEventListener("click", onItemCompare);
+		root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock));
+		const overlayClose = root.querySelector(".lockoverlayclose");
+		if (overlayClose) overlayClose.addEventListener("click", () => {
+			const msg = root.querySelector(".lockoverlaymsg");
+			if (msg) msg.style.display = "none";
 			clearTimeout(lockOverlayTimeout);
 		});
-		InventoryV3.ui.find(".sort").click(function() {
-			requestFilter();
-		});
+		const sortBtn = root.querySelector(".sort");
+		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter());
 	};
-	/**
-	* Apply preferences once append to body
-	*/
 	InventoryV3.onAppend = function OnAppend() {
-		if (!_preferences$35.show) this.ui.hide();
+		if (!_preferences$35.show) this._host.style.display = "none";
 		this.resize(_preferences$35.width, _preferences$35.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$35.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$35.x), Renderer.width - this.ui.width())
-		});
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
 		this.magnet.TOP = _preferences$35.magnet_top;
 		this.magnet.BOTTOM = _preferences$35.magnet_bottom;
 		this.magnet.LEFT = _preferences$35.magnet_left;
 		this.magnet.RIGHT = _preferences$35.magnet_right;
-		_realSize$1 = _preferences$35.reduce ? 0 : this.ui.height();
-		this.ui.find(".titlebar .mini").trigger("mousedown");
+		_realSize$1 = _preferences$35.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = _getRoot$15().querySelector(".titlebar .mini");
+		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	InventoryV3.onRemove = function OnRemove() {
-		this.ui.find(".container .content").empty();
+		const content = _getRoot$15().querySelector(".container .content");
+		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		this.equipswitchlist.length = 0;
 		InventoryV3.newItems.length = 0;
-		jquery_default(".ItemInfo").remove();
-		_preferences$35.show = this.ui.is(":visible");
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$35.show = this._host.style.display !== "none";
 		_preferences$35.reduce = !!_realSize$1;
-		_preferences$35.y = parseInt(this.ui.css("top"), 10);
-		_preferences$35.x = parseInt(this.ui.css("left"), 10);
-		_preferences$35.width = Math.floor((this.ui.width() - 25) / 32);
+		_preferences$35.y = parseInt(this._host.style.top, 10);
+		_preferences$35.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$35.width = Math.floor((hostRect.width - 25) / 32);
 		_preferences$35.magnet_top = this.magnet.TOP;
 		_preferences$35.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$35.magnet_left = this.magnet.LEFT;
 		_preferences$35.magnet_right = this.magnet.RIGHT;
 		_preferences$35.save();
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	InventoryV3.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
-				else {
-					this.ui.trigger("mouseleave");
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else {
+					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					this.ui.find(".new_item").css("backgroundImage", "");
+					_getRoot$15().querySelectorAll(".new_item").forEach((el) => {
+						el.style.backgroundImage = "";
+					});
+					this._host.style.display = "none";
 				}
 				break;
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
-	};
-	/**
-	* Show/Hide UI
-	*/
-	InventoryV3.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) this.focus();
-		else {
-			this.ui.trigger("mouseleave");
-			this.clearNewItems();
-			this.ui.find(".new_item").css("backgroundImage", "");
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
 		}
-		const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-		if (changeUI) changeUI.hide();
 	};
-	/**
-	* Clear newItems array
-	*/
+	InventoryV3.toggle = function toggle() {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			this.focus();
+		} else {
+			this._host.dispatchEvent(new Event("mouseleave"));
+			this.clearNewItems();
+			_getRoot$15().querySelectorAll(".new_item").forEach((el) => {
+				el.style.backgroundImage = "";
+			});
+			this._host.style.display = "none";
+		}
+		const basicInfoUI = BasicInfoController.getUI();
+		if (basicInfoUI._host) {
+			const changeUI = _getBasicInfoRoot(basicInfoUI).querySelector("#item .btn_overlay");
+			if (changeUI) changeUI.style.display = "none";
+		}
+	};
 	InventoryV3.clearNewItems = function clearNewItems() {
 		this.newItems = [];
 	};
-	/**
-	* Extend inventory window width
-	*
-	* @param {number} width
-	*/
 	InventoryV3.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		this.ui.find(".container .content").css({ width: width * 32 });
-		this.ui.css({ width: 55 + width * 32 });
+		const content = _getRoot$15().querySelector(".container .content");
+		if (content) content.style.width = `${width * 32}px`;
+		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
-	/**
-	* Force scroll clamping
-	*/
 	InventoryV3.updateScroll = function updateScroll() {
-		const host = this.ui.find(".scroll-host");
-		if (host.length) {
-			const node = host[0];
-			const content = host.find(".content");
-			let ticker = 0;
-			const clamp = function() {
-				const maxScroll = Math.max(0, node.scrollHeight - node.clientHeight);
-				const lastItem = content.find(".item:last");
-				if (lastItem.length) {
-					const itemRect = lastItem[0].getBoundingClientRect();
-					const hostRect = node.getBoundingClientRect();
-					if (itemRect.bottom < hostRect.bottom && node.scrollTop > 0) node.scrollTop = Math.max(0, node.scrollTop - (hostRect.bottom - itemRect.bottom));
-				}
-				if (node.scrollTop > maxScroll) node.scrollTop = maxScroll;
-				if (node._roScrollbarRestart) node._roScrollbarRestart();
-				if (ticker++ < 20) requestAnimationFrame(clamp);
-			};
-			clamp();
-		}
+		const root = _getRoot$15();
+		const hostEl = root.querySelector(".scroll-host");
+		if (!hostEl) return;
+		const contentEl = root.querySelector(".content");
+		let ticker = 0;
+		const clamp = () => {
+			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
+			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
+			if (lastItem) {
+				const itemRect = lastItem.getBoundingClientRect();
+				const hostRect = hostEl.getBoundingClientRect();
+				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
+			}
+			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
+			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
+			if (ticker++ < 20) requestAnimationFrame(clamp);
+		};
+		clamp();
 	};
-	/**
-	* Get item object
-	*
-	* @param {number} id
-	* @returns {Item}
-	*/
 	InventoryV3.getItemById = function GetItemById(id) {
-		let i, count;
 		const list = InventoryV3.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
-	/**
-	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {Item}
-	*/
 	InventoryV3.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = InventoryV3.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
-	/**
-	* Add items to the list
-	* if the item index is exist you should clear it;[skybook888]
-	*/
 	InventoryV3.setItems = function SetItems(items) {
-		let i, count;
-		for (i = 0, count = items.length; i < count; ++i) {
+		const root = _getRoot$15();
+		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
 			if (this.addItemSub(items[i])) {
 				this.list.push(items[i]);
-				this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+				const ncnt = root.querySelector(".ncnt");
+				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
 			}
 		}
 	};
-	/**
-	* Insert Item to inventory
-	*
-	* @param {object} Item
-	*/
 	InventoryV3.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
 		const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
-		if (hasRefineFlag) {}
+		const root = _getRoot$15();
 		const equippedIndex = InventoryV3.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV3.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV3.newItems.push(item.index);
-			const changeUI = BasicInfoController.getUI().ui.find("#item .btn_overlay");
-			if (changeUI) changeUI.show();
+			const basicInfoUI = BasicInfoController.getUI();
+			if (basicInfoUI._host) {
+				const changeUI = _getBasicInfoRoot(basicInfoUI).querySelector("#item .btn_overlay");
+				if (changeUI) changeUI.style.display = "block";
+			}
 		}
 		if (hasRefineFlag && Refine_default.isRefineOpen()) {
-			const refinecount = Refine_default.ui.find(".materials .item[data-index=\"" + item.ITID + "\"] .mat_count");
-			const previousDataText = refinecount.text().split("/")[0];
-			const newCount = parseInt(previousDataText, 10) + item.count;
-			refinecount.empty().text(newCount + "/1");
+			const refineRoot = Refine_default._shadow || Refine_default._host;
+			if (refineRoot) {
+				const refinecount = refineRoot.querySelector(`.materials .item[data-index="${item.ITID}"] .mat_count`);
+				if (refinecount) refinecount.textContent = `${parseInt(refinecount.textContent.split("/")[0], 10) + item.count}/1`;
+			}
 		}
 		if (object) {
 			if (isNaN(object.count)) object.count = 1;
 			if (isNaN(item.count)) item.count = 1;
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV3.newItems.indexOf(item.index) === -1) InventoryV3.newItems.push(item.index);
-			if (getItemTab(item) === _preferences$35.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				InventoryV3.ui.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (getItemTab(item) === _preferences$35.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (el) el.style.backgroundImage = `url(${data})`;
 			});
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		if (this.addItemSub(object)) {
 			this.list.push(object);
-			this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+			const ncnt = root.querySelector(".ncnt");
+			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 			this.onUpdateItem(object.ITID, object.count);
 		}
 	};
-	/**
-	* Check if item index is in newItems list
-	*
-	* @param {number} index - Item index to check
-	* @returns {boolean} - True if item index is in newItems list, false otherwise
-	*/
 	InventoryV3.isNewItem = function isNewItem(index) {
 		return InventoryV3.newItems.includes(index);
 	};
-	/**
-	* Add item to inventory
-	*
-	* @param {object} Item
-	*/
 	InventoryV3.addItemSub = function AddItemSub(item) {
 		let tab = getItemTab(item);
 		if (item.PlaceETCTab) tab = InventoryV3.TAB.FAV;
@@ -263923,103 +264081,92 @@ var init_InventoryV3 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		const isInSwitchList = InventoryV3.equipswitchlist.some(function(equipItem) {
-			return equipItem.index === item.index;
-		});
+		const isInSwitchList = InventoryV3.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
 		if (tab === _preferences$35.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const content = this.ui.find(".container .content");
-			content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"new_item\"></div><div class=\"icon\"></div><div class=\"switch1\"></div><div class=\"switch2\"></div><div class=\"grade\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const root = _getRoot$15();
+			const content = root.querySelector(".container .content");
+			if (!content) return true;
+			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
 			});
-			if (InventoryV3.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "url(" + data + ")");
+			if (InventoryV3.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (el) el.style.backgroundImage = `url(${data})`;
 			});
-			else content.find(".item[data-index=\"" + item.index + "\"] .new_item").css("backgroundImage", "");
+			else {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
+				if (el) el.style.backgroundImage = "";
+			}
 			if (isInSwitchList) {
-				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", function(data) {
-					content.find(".item[data-index=\"" + item.index + "\"] .switch1").css("backgroundImage", "url(" + data + ")");
+				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
+					const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+					if (el) el.style.backgroundImage = `url(${data})`;
 				});
-				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", function(data) {
-					content.find(".item[data-index=\"" + item.index + "\"] .switch2").css("backgroundImage", "url(" + data + ")");
+				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
+					const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+					if (el) el.style.backgroundImage = `url(${data})`;
 				});
 			}
-			if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", function(data) {
-				content.find(".item[data-index=\"" + item.index + "\"] .grade").css("backgroundImage", "url(" + data + ")");
+			if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .grade`);
+				if (el) el.style.backgroundImage = `url(${data})`;
 			});
 		}
 		return true;
 	};
-	/**
-	* Check if an item with the given location exists in the equip switch list.
-	*
-	* @param {number} location - The location of the item to check.
-	* @returns {boolean} True if the item exists in the equip switch list, false otherwise.
-	*/
 	InventoryV3.isInEquipSwitchList = function(location) {
-		return this.equipswitchlist.some(function(existingItem) {
-			return (existingItem.location & location) !== 0;
-		});
+		return this.equipswitchlist.some((existingItem) => (existingItem.location & location) !== 0);
 	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
 	InventoryV3.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
+		const root = _getRoot$15();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				this.onUpdateItem(item.ITID, item.count);
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		InventoryV3.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 		this.onUpdateItem(item.ITID, 0);
-		InventoryV3.ui.find(".overlay").hide();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
 		return item;
 	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
 	InventoryV3.updateItem = function UpdateItem(index, count) {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
+		const root = _getRoot$15();
 		if (item.count > 0) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
 			this.onUpdateItem(item.ITID, item.count);
 			return;
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		this.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
-		this.ui.find(".ncnt").text(this.list.length + EquipmentController.getUI().getNumber() + " / ");
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const ncnt = root.querySelector(".ncnt");
+		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
 		this.onUpdateItem(item.ITID, 0);
 		this.updateScroll();
 	};
-	/**
-	* Use an item
-	*
-	* @param {Item} item
-	*/
 	InventoryV3.useItem = function UseItem(item) {
 		const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
-		if (hasRefineFlag) {}
 		const hasEnchantGradeFlag = PacketVerManager_default.value >= 20200916;
-		if (hasEnchantGradeFlag) {}
 		const hasEnchantFlag = PacketVerManager_default.value >= 20211103;
-		if (hasEnchantFlag) {}
 		switch (item.type) {
 			case ItemType_default.HEALING:
 			case ItemType_default.USABLE:
@@ -264051,11 +264198,6 @@ var init_InventoryV3 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Update PlaceETCTab of an item in the inventory
-	* @param {number} itemIndex - The index of the item to update
-	* @param {number} newValue - boolean for PlaceETCTab (1 or 0)
-	*/
 	InventoryV3.updatePlaceETCTab = function(itemIndex, newValue) {
 		const item = InventoryV3.getItemByIndex(itemIndex);
 		if (!item) return;
@@ -264084,54 +264226,44 @@ var init_InventoryV3 = __esmMin((() => {
 		} else item.PlaceETCTab = newValue;
 		requestFilter();
 	};
-	/**
-	* Add an item to the equip switch list, handling duplicates and updating UI.
-	*
-	* @param {number} index - The index of the item to add
-	*/
 	InventoryV3.addItemtoSwitch = function(index) {
 		const item = this.getItemByIndex(index);
 		if (!item) {
-			console.warn("Item with index " + index + " not found in inventory.");
+			console.warn(`Item with index ${index} not found in inventory.`);
 			return;
 		}
-		const existingItemIndex = this.equipswitchlist.findIndex(function(existingItem) {
-			return existingItem.location === item.location;
-		});
+		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.location === item.location);
 		if (existingItemIndex > -1) {
 			const existingItem = this.equipswitchlist[existingItemIndex];
 			SwitchEquip_default.unEquip(existingItem.index, existingItem.location);
 			this.equipswitchlist.splice(existingItemIndex, 1);
 		}
 		this.equipswitchlist.push(item);
-		const content = this.ui.find(".container .content");
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .switch1").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$15();
+		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
+			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .switch2").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
+			const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
 		SwitchEquip_default.equip(item, item.location, true);
 		ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3143), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
 	};
-	/**
-	* Removes an item from the equip switch list and updates the UI accordingly.
-	*
-	* @param {number} index - The index of the item to remove.
-	*/
 	InventoryV3.removeItemFromSwitch = function(index) {
 		const item = this.getItemByIndex(index);
 		if (!item) {
-			console.warn("Item with index " + index + " not found in inventory.");
+			console.warn(`Item with index ${index} not found in inventory.`);
 			return;
 		}
-		const existingItemIndex = this.equipswitchlist.findIndex(function(existingItem) {
-			return existingItem.index === item.index;
-		});
+		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
 		if (existingItemIndex > -1) {
-			const content = this.ui.find(".container .content");
-			content.find(".item[data-index=\"" + item.index + "\"] .switch1").css("backgroundImage", "none");
-			content.find(".item[data-index=\"" + item.index + "\"] .switch2").css("backgroundImage", "none");
+			const root = _getRoot$15();
+			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+			if (sw1) sw1.style.backgroundImage = "none";
+			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+			if (sw2) sw2.style.backgroundImage = "none";
 			SwitchEquip_default.unEquip(item.index, item.location);
 			this.equipswitchlist.splice(existingItemIndex, 1);
 			ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3144), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
@@ -264139,9 +264271,6 @@ var init_InventoryV3 = __esmMin((() => {
 			InventoryV3.equipAllFromSwitchList();
 		}
 	};
-	/**
-	* Equip all items in the equip switch list
-	*/
 	InventoryV3.equipAllFromSwitchList = function equipAllFromSwitchList() {
 		const equipSwitchList = InventoryV3.equipswitchlist;
 		for (let i = 0; i < equipSwitchList.length; i++) {
@@ -264149,9 +264278,6 @@ var init_InventoryV3 = __esmMin((() => {
 			if (item) SwitchEquip_default.equip(item, item.location, true);
 		}
 	};
-	/**
-	* functions to define
-	*/
 	InventoryV3.onUseItem = function OnUseItem() {};
 	InventoryV3.onUseCard = function onUseCard() {};
 	InventoryV3.onEquipItem = function OnEquipItem() {};
@@ -264199,10 +264325,21 @@ var init_Inventory = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/ItemInfo/ItemInfo.js
 var ItemInfo_exports = /* @__PURE__ */ __exportAll({ default: () => ItemInfo_default });
+function _getRoot$14() {
+	return ItemInfo._shadow || ItemInfo._host;
+}
+/**
+* Helper: escape HTML keeping whitelisted tags
+*/
+function _escapeHTML$1(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
 /**
 * Add a card into a slot
 *
-* @param {object} jquery cart list DOM
+* @param {Element} cardList DOM element
 * @param {number} item id
 * @param {number} index
 * @param {number} slot count
@@ -264212,28 +264349,32 @@ function addCard(cardList, itemId, index, slotCount) {
 	const card = DB.getItemInfo(itemId);
 	if (itemId && card) {
 		file = "item/" + card.identifiedResourceName + ".bmp";
-		name = "<div class=\"name\">" + jquery_default.escape(card.identifiedDisplayName) + "</div>";
+		name = `<div class="name">${_escapeHTML$1(card.identifiedDisplayName)}</div>`;
 	} else if (index < slotCount) file = "empty_card_slot.bmp";
 	else file = "basic_interface/coparison_disable_card_slot.bmp";
-	cardList.append("<div class=\"item\" data-index=\"" + index + "\"><div class=\"icon\"></div>" + name + "</div>");
-	Client.loadFile(DB.INTERFACE_PATH + file, function(data) {
-		const element = cardList.find(".item[data-index=\"" + index + "\"] .icon");
-		element.css("backgroundImage", "url(" + data + ")");
-		if (itemId && card) element.on("contextmenu", function() {
-			ItemInfo.setItem({
-				ITID: itemId,
-				IsIdentified: true,
-				type: 6
+	if (!cardList) return;
+	cardList.insertAdjacentHTML("beforeend", `<div class="item" data-index="${index}"><div class="icon"></div>${name}</div>`);
+	Client.loadFile(DB.INTERFACE_PATH + file, (data) => {
+		const element = _getRoot$14().querySelector(`.cardlist .item[data-index="${index}"] .icon`);
+		if (element) {
+			element.style.backgroundImage = `url(${data})`;
+			if (itemId && card) element.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				ItemInfo.setItem({
+					ITID: itemId,
+					IsIdentified: true,
+					type: 6
+				});
 			});
-			return false;
-		});
+		}
 	});
 }
 /**
 * Extend ItemInfo window size
 */
 function onResize$5() {
-	const top = ItemInfo.ui.position().top;
+	const top = ItemInfo._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		const h = Math.floor(Mouse.screen.y - top);
@@ -264242,12 +264383,13 @@ function onResize$5() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Extend ItemInfo window size
@@ -264255,51 +264397,59 @@ function onResize$5() {
 * @param {number} height
 */
 function resize$3(height) {
-	const container = ItemInfo.ui.find(".container");
-	const description = ItemInfo.ui.find(".description");
-	const descriptionInner = ItemInfo.ui.find(".description-inner");
+	const root = _getRoot$14();
+	const container = root.querySelector(".container");
+	const description = root.querySelector(".description");
+	const descriptionInner = root.querySelector(".description-inner");
 	let containerHeight = height;
 	const minHeight = 140;
-	const maxHeight = descriptionInner.height() + 45 > 140 ? Math.min(descriptionInner.height() + 45, 448) : 140;
+	const innerH = descriptionInner ? descriptionInner.offsetHeight : 0;
+	const maxHeight = innerH + 45 > 140 ? Math.min(innerH + 45, 448) : 140;
 	if (containerHeight <= minHeight) containerHeight = minHeight;
 	if (containerHeight >= maxHeight) containerHeight = maxHeight;
-	container.css({ height: containerHeight });
-	description.css({ height: containerHeight - 45 });
+	if (container) container.style.height = `${containerHeight}px`;
+	if (description) description.style.height = `${containerHeight - 45}px`;
 }
 function addEvent(item) {
-	const event = ItemInfo.ui.find(".event_view");
-	if (!validateFieldsExist(event)) addEvent(item);
-	event.find(".view").hide();
-	event.find("canvas").remove();
+	const root = _getRoot$14();
+	let event = root.querySelector(".event_view");
+	if (!event) {
+		if (!validateFieldsExist(event)) event = root.querySelector(".event_view");
+	}
+	if (!event) return;
+	const viewBtn = event.querySelector(".view");
+	if (viewBtn) viewBtn.style.display = "none";
+	event.querySelectorAll("canvas").forEach((c) => c.remove());
 	Renderer.stop(rendering$2);
 	switch (item.type) {
 		case ItemType_default.CARD:
-			event.find(".view").show();
+			if (viewBtn) viewBtn.style.display = "block";
 			break;
 		case ItemType_default.ETC: {
 			const filenameBook = `data/book/${item.ITID}.txt`;
-			Client.loadFile(filenameBook, function(data) {
+			Client.loadFile(filenameBook, (data) => {
 				MakeReadBook_default.startBook(data, item);
 				eventsBooks();
 			});
 			break;
 		}
 		default:
-			event.find(".view").hide();
-			event.find("canvas").remove();
+			if (viewBtn) viewBtn.style.display = "none";
 			break;
 	}
 }
 function updatePreviewButton(item) {
-	const previewButton = ItemInfo.ui.find(".btn_mounting");
+	const previewButton = _getRoot$14().querySelector(".btn_mounting");
+	if (!previewButton) return;
 	if (!canPreviewItem(item)) {
-		previewButton.hide();
+		previewButton.style.display = "none";
 		return;
 	}
-	previewButton.show();
-	previewButton.off("click");
-	previewButton.on("click", function(event) {
-		event.stopImmediatePropagation();
+	previewButton.style.display = "block";
+	const newBtn = previewButton.cloneNode(true);
+	previewButton.parentNode.replaceChild(newBtn, previewButton);
+	newBtn.addEventListener("click", (e) => {
+		e.stopImmediatePropagation();
 		toggleItemPreview(item);
 	});
 }
@@ -264320,7 +264470,7 @@ function getPreviewSpriteId(item, it) {
 	return 0;
 }
 function toggleItemPreview(item) {
-	if (ItemPreview_default.ui && ItemPreview_default.ui.is(":visible") && ItemPreview_default.uid === item.ITID) {
+	if (ItemPreview_default.ui && ItemPreview_default._host && ItemPreview_default._host.style.display !== "none" && ItemPreview_default.uid === item.ITID) {
 		ItemPreview_default.remove();
 		return;
 	}
@@ -264329,7 +264479,9 @@ function toggleItemPreview(item) {
 	ItemPreview_default.setItem(item);
 }
 function eventsBooks() {
-	const event = ItemInfo.ui.find(".event_view");
+	const root = _getRoot$14();
+	const event = root.querySelector(".event_view");
+	if (!event) return;
 	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
 		try {
 			_sprite$3 = new SPR(spr);
@@ -264338,57 +264490,69 @@ function eventsBooks() {
 			console.error("Book::init() - " + e.message);
 			return;
 		}
-		let canvas;
-		canvas = _sprite$3.getCanvasFromFrame(0);
+		const canvas = _sprite$3.getCanvasFromFrame(0);
 		canvas.className = "book_open event_add_cursor";
-		event.append(canvas);
-		const bookOpen = ItemInfo.ui.find(".book_open");
-		bookOpen.mouseover(function(e) {
-			e.stopImmediatePropagation();
-			ItemInfo.ui.find(".overlay_open").show();
-		}).mouseout(function(e) {
-			e.stopImmediatePropagation();
-			ItemInfo.ui.find(".overlay_open").hide();
-		});
-		bookOpen.click(function(e) {
-			e.stopImmediatePropagation();
-			MakeReadBook_default.openBook();
-		}.bind(this));
-		event.append("<canvas width=\"21\" height=\"15\" class=\"book_read event_add_cursor\"/>");
-		canvas = event.find(".book_read");
-		canvas.width = 21;
-		canvas.height = 15;
-		_ctx$10 = canvas[0].getContext("2d");
-		const bookRead = ItemInfo.ui.find(".book_read");
-		bookRead.mouseover(function(e) {
-			e.stopImmediatePropagation();
-			ItemInfo.ui.find(".overlay_read").show();
-		}).mouseout(function(e) {
-			e.stopImmediatePropagation();
-			ItemInfo.ui.find(".overlay_read").hide();
-		});
-		bookRead.click(function(e) {
-			e.stopImmediatePropagation();
-			MakeReadBook_default.highlighter();
-		}.bind(this));
+		event.appendChild(canvas);
+		const bookOpen = root.querySelector(".book_open");
+		if (bookOpen) {
+			bookOpen.addEventListener("mouseover", (e) => {
+				e.stopImmediatePropagation();
+				const overlayOpen = root.querySelector(".overlay_open");
+				if (overlayOpen) overlayOpen.style.display = "block";
+			});
+			bookOpen.addEventListener("mouseout", (e) => {
+				e.stopImmediatePropagation();
+				const overlayOpen = root.querySelector(".overlay_open");
+				if (overlayOpen) overlayOpen.style.display = "none";
+			});
+			bookOpen.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				MakeReadBook_default.openBook();
+			});
+		}
+		const readCanvas = document.createElement("canvas");
+		readCanvas.width = 21;
+		readCanvas.height = 15;
+		readCanvas.className = "book_read event_add_cursor";
+		event.appendChild(readCanvas);
+		_ctx$10 = readCanvas.getContext("2d");
+		const bookRead = root.querySelector(".book_read");
+		if (bookRead) {
+			bookRead.addEventListener("mouseover", (e) => {
+				e.stopImmediatePropagation();
+				const overlayRead = root.querySelector(".overlay_read");
+				if (overlayRead) overlayRead.style.display = "block";
+			});
+			bookRead.addEventListener("mouseout", (e) => {
+				e.stopImmediatePropagation();
+				const overlayRead = root.querySelector(".overlay_read");
+				if (overlayRead) overlayRead.style.display = "none";
+			});
+			bookRead.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				MakeReadBook_default.highlighter();
+			});
+		}
 		Renderer.render(rendering$2);
-	}.bind(this));
+	});
 }
 function validateFieldsExist(event) {
-	if (event.length === 0) {
-		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\" data-text=\"1294\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\" data-text=\"1295\">" + DB.getMessage(1295) + "</span></div>";
-		ItemInfo.ui.find(".collection").after(validExitElement);
+	const root = _getRoot$14();
+	if (!event) {
+		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span></div>";
+		const collection = root.querySelector(".collection");
+		if (collection) collection.insertAdjacentHTML("afterend", validExitElement);
 		return false;
 	}
-	if (ItemInfo.ui.find(".overlay_open").length == 0 && ItemInfo.ui.find(".overlay_read").length == 0) event.append("<span class=\"overlay_open\" data-text=\"1294\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\" data-text=\"1295\">" + DB.getMessage(1295) + "</span>");
-	if (ItemInfo.ui.find("button").length == 0) event.append("<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
+	if (!root.querySelector(".overlay_open") && !root.querySelector(".overlay_read")) event.insertAdjacentHTML("beforeend", "<span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span>");
+	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
 	return true;
 }
 /**
 * A function that handles previewing an item.
 *
-* @param {type} pkt - The packet containing information about the item
-* @return {type} Indicates success or failure of the preview action
+* @param {object} pkt - The packet containing information about the item
+* @return {boolean} Indicates success or failure of the preview action
 */
 function onItemPreview(pkt) {
 	if (pkt) {
@@ -264424,7 +264588,6 @@ function buildMoveInfoTooltip(moveInfo) {
 }
 var ItemInfo, _sprite$3, _action$3, _ctx$10, _type$5, _start$1, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
 var init_ItemInfo = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_ItemType();
 	init_EquipmentLocation();
@@ -264433,7 +264596,8 @@ var init_ItemInfo = __esmMin((() => {
 	init_CardIllustration();
 	init_UIManager();
 	init_MouseEventHandler();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_CursorManager();
 	init_ItemCompare();
 	init_ItemPreview();
@@ -264449,7 +264613,8 @@ var init_ItemInfo = __esmMin((() => {
 	init_Entity$1();
 	init_Equipment();
 	init_Inventory();
-	ItemInfo = new UIComponent("ItemInfo", ItemInfo_default$2, ItemInfo_default$1);
+	ItemInfo = new GUIComponent("ItemInfo", ItemInfo_default$1);
+	ItemInfo.render = () => ItemInfo_default$2;
 	_type$5 = 0;
 	_start$1 = 0;
 	/**
@@ -264490,7 +264655,7 @@ var init_ItemInfo = __esmMin((() => {
 	* Once append to the DOM
 	*/
 	ItemInfo.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
 			ItemInfo.hideMoveInfoTooltip();
 			ItemInfo.remove();
 			if (ItemCompare_default.ui) ItemCompare_default.remove();
@@ -264501,9 +264666,8 @@ var init_ItemInfo = __esmMin((() => {
 	* Once append
 	*/
 	ItemInfo.onAppend = function onAppend() {
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		resize$3(ItemInfo.ui.find(".description-inner").height() + 45);
+		const descInner = _getRoot$14().querySelector(".description-inner");
+		if (descInner) resize$3(descInner.offsetHeight + 45);
 	};
 	/**
 	* Once removed from html
@@ -264518,23 +264682,27 @@ var init_ItemInfo = __esmMin((() => {
 	* Initialize UI
 	*/
 	ItemInfo.init = function init() {
-		this.ui.css({
-			top: 200,
-			left: 480
-		});
-		this.ui.find(".extend").mousedown(onResize$5);
-		this.ui.find(".close").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		}).click(function() {
-			this.remove();
-			if (ItemCompare_default.ui) ItemCompare_default.remove();
-		}.bind(this));
-		this.ui.find(".view").click(function() {
+		const root = _getRoot$14();
+		this._host.style.top = "200px";
+		this._host.style.left = "480px";
+		const extendBtn = root.querySelector(".extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$5);
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+			});
+			closeBtn.addEventListener("click", () => {
+				this.remove();
+				if (ItemCompare_default.ui) ItemCompare_default.remove();
+			});
+		}
+		const viewBtn = root.querySelector(".view");
+		if (viewBtn) viewBtn.addEventListener("click", () => {
 			CardIllustration_default.append();
 			CardIllustration_default.setCard(this.item);
-		}.bind(this));
-		this.draggable(this.ui.find(".title"));
+		});
+		this.draggable(".title");
 	};
 	/**
 	* Bind component
@@ -264543,62 +264711,80 @@ var init_ItemInfo = __esmMin((() => {
 	*/
 	ItemInfo.setItem = function setItem(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const ui = this.ui;
-		const cardList = ui.find(".cardlist .border");
-		const optionContainer = ui.find(".option-container");
+		const root = _getRoot$14();
+		const cardList = root.querySelector(".cardlist .border");
+		const optionContainer = root.querySelector(".option-container");
 		this.item = it;
-		Client.loadFile(DB.INTERFACE_PATH + "collection/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			ui.find(".collection").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "collection/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+			const collection = root.querySelector(".collection");
+			if (collection) collection.style.backgroundImage = `url(${data})`;
 		});
 		const itemName = DB.getItemName(item, { showItemOptions: false });
-		if (item.IsDamaged) ui.find(".title").addClass("damaged");
-		else ui.find(".title").removeClass("damaged");
-		ui.find(".title").text(itemName);
+		const title = root.querySelector(".title");
+		if (title) {
+			if (item.IsDamaged) title.classList.add("damaged");
+			else title.classList.remove("damaged");
+			title.textContent = itemName;
+		}
 		if (item.Options && item.IsIdentified) {
-			optionContainer.html("");
+			if (optionContainer) optionContainer.innerHTML = "";
 			for (let i = 1; i <= 5; i++) if (item.Options[i].index > 0) {
 				const optionList = "<div class=\"optionlist\"><div class=\"border\">" + DB.getOptionName(item.Options[i].index).replace("%d", item.Options[i].value).replace("%%", "%") + "</div></div>";
-				optionContainer.append(optionList);
+				if (optionContainer) optionContainer.insertAdjacentHTML("beforeend", optionList);
 			}
-			optionContainer.show();
-		} else optionContainer.hide();
-		const container = ui.find(".container");
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg_g" + item.enchantgrade + ".bmp", function(data) {
-			container.css("backgroundImage", "url(" + data + ")");
+			if (optionContainer) optionContainer.style.display = "block";
+		} else if (optionContainer) optionContainer.style.display = "none";
+		const container = root.querySelector(".container");
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg_g" + item.enchantgrade + ".bmp", (data) => {
+			if (container) container.style.backgroundImage = `url(${data})`;
 		});
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg.bmp", function(data) {
-			container.css("backgroundImage", "url(" + data + ")");
+		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg.bmp", (data) => {
+			if (container) container.style.backgroundImage = `url(${data})`;
 		});
-		ui.find(".description-inner").text(item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName);
+		const descInner = root.querySelector(".description-inner");
+		if (descInner) {
+			const rawDesc = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
+			descInner.innerHTML = DB.formatMsgToHtml(_escapeHTML$1(rawDesc));
+		}
 		if (item.HireExpireDate) {
 			const dateText = DB.formatUnixDate(item.HireExpireDate);
 			let msg = DB.getMessage(1255).replace("%s", dateText);
 			msg = DB.formatMsgToHtml(msg);
-			ui.find(".description-inner").prepend(`<div>${msg}</div>`);
+			if (descInner) {
+				const div = document.createElement("div");
+				div.innerHTML = msg;
+				descInner.insertBefore(div, descInner.firstChild);
+			}
 		}
 		if (it.moveInfo) {
 			const tooltipHtml = buildMoveInfoTooltip(it.moveInfo);
-			if (!tooltipHtml) return;
-			const label = document.createElement("span");
-			label.textContent = DB.getMessage(2796);
-			label.className = "moveinfo-label";
-			ui.find(".description-inner").append(label);
-			const tooltip = document.getElementById("moveinfo-tooltip");
-			label.addEventListener("mouseenter", (e) => {
-				Cursor.setType(Cursor.ACTION.CLICK);
-				tooltip.innerHTML = tooltipHtml;
-				tooltip.style.display = "block";
-				tooltip.style.left = e.pageX + 15 + "px";
-				tooltip.style.top = e.pageY + 2 + "px";
-			});
-			label.addEventListener("mouseleave", () => {
-				tooltip.style.display = "none";
-				Cursor.setType(Cursor.ACTION.DEFAULT);
-			});
-			label.addEventListener("mousemove", (e) => {
-				tooltip.style.left = e.pageX + 20 + "px";
-				tooltip.style.top = e.pageY + 2 + "px";
-			});
+			if (tooltipHtml) {
+				const label = document.createElement("span");
+				label.textContent = DB.getMessage(2796);
+				label.className = "moveinfo-label";
+				if (descInner) descInner.appendChild(label);
+				let tooltip = document.getElementById("moveinfo-tooltip");
+				if (!tooltip) {
+					tooltip = document.createElement("div");
+					tooltip.id = "moveinfo-tooltip";
+					document.body.appendChild(tooltip);
+				}
+				label.addEventListener("mouseenter", (e) => {
+					Cursor.setType(Cursor.ACTION.CLICK);
+					tooltip.innerHTML = tooltipHtml;
+					tooltip.style.display = "block";
+					tooltip.style.left = `${e.pageX + 15}px`;
+					tooltip.style.top = `${e.pageY + 2}px`;
+				});
+				label.addEventListener("mouseleave", () => {
+					tooltip.style.display = "none";
+					Cursor.setType(Cursor.ACTION.DEFAULT);
+				});
+				label.addEventListener("mousemove", (e) => {
+					tooltip.style.left = `${e.pageX + 20}px`;
+					tooltip.style.top = `${e.pageY + 2}px`;
+				});
+			}
 		}
 		updatePreviewButton(item);
 		addEvent(item);
@@ -264617,30 +264803,30 @@ var init_ItemInfo = __esmMin((() => {
 					break;
 			}
 		}
+		const cardListParent = cardList ? cardList.parentElement : null;
 		switch (item.type) {
 			default:
-				cardList.parent().hide();
+				if (cardListParent) cardListParent.style.display = "none";
 				break;
 			case ItemType_default.ARMOR: if (DB.isPetEgg(item.ITID)) hideslots = true;
 			case ItemType_default.WEAPON:
 			case ItemType_default.SHADOWGEAR: {
 				if (hideslots) {
-					cardList.parent().hide();
+					if (cardListParent) cardListParent.style.display = "none";
 					break;
 				}
 				const slotCount = it.slotCount || 0;
-				let i;
-				cardList.parent().show();
-				cardList.empty();
-				for (i = 0; i < 4; ++i) addCard(cardList, item.slot && item.slot["card" + (i + 1)] || 0, i, slotCount);
-				if (!item.IsIdentified) cardList.parent().hide();
+				if (cardListParent) cardListParent.style.display = "block";
+				if (cardList) cardList.innerHTML = "";
+				for (let i = 0; i < 4; ++i) addCard(cardList, item.slot && item.slot["card" + (i + 1)] || 0, i, slotCount);
+				if (!item.IsIdentified && cardListParent) cardListParent.style.display = "none";
 				break;
 			}
 			case ItemType_default.PETEGG:
-				cardList.parent().hide();
+				if (cardListParent) cardListParent.style.display = "none";
 				break;
 		}
-		resize$3(ItemInfo.ui.find(".description-inner").height() + 45);
+		if (descInner) resize$3(descInner.offsetHeight + 45);
 	};
 	rendering$2 = (function renderingClosure() {
 		const position = new Uint16Array([0, 0]);
@@ -264681,37 +264867,32 @@ var init_EquipmentV0$2 = __esmMin((() => {
 //#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.css?raw
 var EquipmentV0_default$1;
 var init_EquipmentV0$1 = __esmMin((() => {
-	EquipmentV0_default$1 = "#EquipmentV0 {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV0 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .panel {\r\n	background-color: white;\r\n}\r\n#EquipmentV0.equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV0 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV0 .col1,\r\n#EquipmentV0 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV0 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV0 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV0 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV0 .col3 .item button,\r\n#EquipmentV0 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV0 .col1 .item button,\r\n#EquipmentV0 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV0 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV0 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV0 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV0 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV0 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV0 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV0 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV0 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV0 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV0 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV0 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV0 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+	EquipmentV0_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV0 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV0 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .panel {\r\n	background-color: white;\r\n}\r\n#EquipmentV0.equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV0 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV0 .col1,\r\n#EquipmentV0 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV0 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV0 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV0 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV0 .col3 .item button,\r\n#EquipmentV0 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV0 .col1 .item button,\r\n#EquipmentV0 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV0 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV0 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV0 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV0 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV0 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV0 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV0 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV0 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV0 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV0 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV0 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV0 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.js
+function _getRoot$13() {
+	return EquipmentV0._shadow || EquipmentV0._host;
+}
+function escapeHTML$5(str) {
+	const div = document.createElement("div");
+	div.textContent = str;
+	return div.innerHTML;
+}
 function onCartItems$4() {
-	if (SessionStorage_default.Entity.hasCart == false) return;
-	CartItems_default.ui.toggle();
+	if (SessionStorage_default.Entity.hasCart === false) return;
+	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
 }
 function onRemoveOption$5() {
 	const pkt = new PACKET.CZ.REQ_CARTOFF();
 	Network.sendPacket(pkt);
 }
-/**
-* Stop an event to propagate
-*/
-function stopPropagation$16(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Hide status window
-*/
 function hideStatus$2() {
 	const winStats = WinStatsController.getUI();
 	if (winStats.isEmbedded()) winStats.unembed();
 }
-/**
-* Display or not status window
-*/
 function toggleStatus$5() {
-	const self = EquipmentV0.ui.find(".view_status");
+	const self = _getRoot$13().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -264719,25 +264900,16 @@ function toggleStatus$5() {
 		winStats.unembed();
 		_preferences$34.stats = false;
 	} else {
-		winStats.embed(EquipmentV0.ui[0]);
+		winStats.embed(EquipmentV0._host);
 		_preferences$34.stats = true;
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
-		self.css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
+		if (self) self.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Does player can see your equipment ?
-*/
 function toggleEquip$4() {
 	EquipmentV0.onConfigUpdate(0, !_showEquip$4 ? 1 : 0);
 }
-/**
-* Find elements in html base on item location
-*
-* @param {number} location
-* @returns {string} selector
-*/
 function getSelectorFromLocation$5(location) {
 	const selector = [];
 	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
@@ -264753,20 +264925,18 @@ function getSelectorFromLocation$5(location) {
 	if (location & EquipmentLocation_default.AMMO) selector.push(".ammo");
 	return selector.join(", ");
 }
-/**
-* Drag an item over the equipment, show where to place the item
-*/
 function onDragOver$5(event) {
 	if (window._OBJ_DRAG_) {
 		const data = window._OBJ_DRAG_;
-		let item, selector, ui;
 		if (data.type === "item") {
-			item = data.data;
+			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				selector = getSelectorFromLocation$5("location" in item ? item.location : item.WearLocation);
-				ui = EquipmentV0.ui.find(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", function(_data) {
-					ui.css("backgroundImage", "url(" + _data + ")");
+				const selector = getSelectorFromLocation$5("location" in item ? item.location : item.WearLocation);
+				const cells = _getRoot$13().querySelectorAll(selector);
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+					cells.forEach((c) => {
+						c.style.backgroundImage = `url(${_data})`;
+					});
 				});
 			}
 		}
@@ -264774,35 +264944,32 @@ function onDragOver$5(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drag out the window
-*/
 function onDragLeave$4(event) {
-	EquipmentV0.ui.find("td").css("backgroundImage", "none");
+	_getRoot$13().querySelectorAll("td").forEach((td) => {
+		td.style.backgroundImage = "none";
+	});
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drop an item in the equipment, equip it if possible
-*/
 function onDrop$13(event) {
 	let item, data;
+	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (_e) {}
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return false;
+	}
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV0.ui.find("td").css("backgroundImage", "none");
+			_getRoot$13().querySelectorAll("td").forEach((td) => {
+				td.style.backgroundImage = "none";
+			});
 			EquipmentV0.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
 		}
 	}
-	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Right click on an item
-*/
 function onEquipmentInfo$4(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = _list$11[index];
@@ -264815,36 +264982,34 @@ function onEquipmentInfo$4(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Double click on an equipment to remove it
-*/
 function onEquipmentUnEquip$4() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV0.onUnEquip(index);
-	EquipmentV0.ui.find(".overlay").hide();
+	const overlay = _getRoot$13().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* When mouse is over an equipment, display the item name
-*/
 function onEquipmentOver$4() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$11[idx];
 	if (!item) return;
-	const overlay = EquipmentV0.ui.find(".overlay");
-	const pos = jquery_default(this).position();
-	if (!pos.top && !pos.left) return;
-	overlay.show();
-	overlay.css({
-		top: pos.top - 22,
-		left: pos.left - 22
-	});
-	overlay.text(DB.getItemName(item));
+	const root = _getRoot$13();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#EquipmentV0") || root;
+	const btnRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	const top = btnRect.top - rootRect.top;
+	const left = btnRect.left - rootRect.left;
+	if (!top && !left) return;
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${top - 22}px`;
+		overlay.style.left = `${left - 22}px`;
+		overlay.textContent = DB.getItemName(item);
+	}
 }
-/**
-* Remove the item name
-*/
 function onEquipmentOut$4() {
-	EquipmentV0.ui.find(".overlay").hide();
+	const overlay = _getRoot$13().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 var EquipmentV0, _preferences$34, _list$11, _ctx$9, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
 var init_EquipmentV0 = __esmMin((() => {
@@ -264854,7 +265019,6 @@ var init_EquipmentV0 = __esmMin((() => {
 	init_NetworkManager();
 	init_PacketStructure();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_SessionStorage();
@@ -264863,14 +265027,16 @@ var init_EquipmentV0 = __esmMin((() => {
 	init_SpriteRenderer();
 	init_UIVersionManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_CartItems();
 	init_WinStats();
 	init_EquipmentV0$2();
 	init_EquipmentV0$1();
 	init_Inventory();
-	EquipmentV0 = new UIComponent("EquipmentV0", EquipmentV0_default$2, EquipmentV0_default$1);
+	EquipmentV0 = new GUIComponent("EquipmentV0", EquipmentV0_default$1);
+	EquipmentV0.render = () => EquipmentV0_default$2;
 	_preferences$34 = Preferences.get("EquipmentV0", {
 		x: 480,
 		y: 200,
@@ -264880,95 +265046,124 @@ var init_EquipmentV0 = __esmMin((() => {
 	}, 1);
 	_list$11 = {};
 	_showEquip$4 = false;
-	/**
-	* Initialize UI
-	*/
 	EquipmentV0.init = function init() {
-		_ctx$9 = this.ui.find("canvas")[0].getContext("2d");
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$16).click(function() {
-			_btnLevelUp$4.detach();
-			EquipmentV0.ui.show();
-			EquipmentV0.ui.parent().append(EquipmentV0.ui);
-			if (EquipmentV0.ui.is(":visible")) Renderer.render(renderCharacter$4);
-		});
-		else {
-			this.ui.find("#equipment_footer").remove();
-			this.ui.addClass("equipmentV0");
-			this.ui.find("#lvlup_base").remove();
+		const root = _getRoot$13();
+		const canvas = root.querySelector("canvas");
+		if (canvas) _ctx$9 = canvas.getContext("2d");
+		if (UIVersionManager.getEquipmentVersion() > 0) {
+			const lvlupEl = root.querySelector("#lvlup_base");
+			if (lvlupEl) {
+				_btnLevelUp$4 = lvlupEl;
+				lvlupEl.remove();
+				_btnLevelUp$4.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				_btnLevelUp$4.addEventListener("click", () => {
+					if (_btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
+					EquipmentV0._host.style.display = "";
+					EquipmentV0._host.parentNode.appendChild(EquipmentV0._host);
+					if (EquipmentV0._host.style.display !== "none") Renderer.render(renderCharacter$4);
+				});
+			}
+		} else {
+			const footer = root.querySelector("#equipment_footer");
+			if (footer) footer.remove();
+			const rootEl = root.querySelector("#EquipmentV0");
+			if (rootEl) rootEl.classList.add("equipmentV0");
+			const lvlup = root.querySelector("#lvlup_base");
+			if (lvlup) lvlup.remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$16);
-		this.ui.find(".titlebar .mini").click(function() {
-			EquipmentV0.ui.find(".panel").toggle();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", () => {
+			const panel = root.querySelector(".panel");
+			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
 		});
-		this.ui.find(".titlebar .close").click(function() {
-			EquipmentV0.ui.hide();
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			EquipmentV0._host.style.display = "none";
 			Renderer.stop(renderCharacter$4);
 			hideStatus$2();
 		});
-		this.ui.find(".removeOption").mousedown(onRemoveOption$5);
-		this.ui.find(".view_status").mousedown(toggleStatus$5);
-		this.ui.find(".show_equip").mousedown(toggleEquip$4);
-		this.ui.find(".cartitems").click(onCartItems$4);
-		this.ui.on("dragover", onDragOver$5);
-		this.ui.on("dragleave", onDragLeave$4);
-		this.ui.on("drop", onDrop$13);
-		this.ui.find(".content").on("contextmenu", ".item", onEquipmentInfo$4).on("dblclick", ".item", onEquipmentUnEquip$4).on("mouseover", "button", onEquipmentOver$4).on("mouseout", "button", onEquipmentOut$4);
-		this.draggable(this.ui.find(".titlebar"));
+		const removeOptBtn = root.querySelector(".removeOption");
+		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$5);
+		const viewStatusBtn = root.querySelector(".view_status");
+		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$5);
+		const showEquipBtn = root.querySelector(".show_equip");
+		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$4);
+		const cartBtn = root.querySelector(".cartitems");
+		if (cartBtn) cartBtn.addEventListener("click", onCartItems$4);
+		this._host.addEventListener("dragover", onDragOver$5);
+		this._host.addEventListener("dragleave", onDragLeave$4);
+		this._host.addEventListener("drop", onDrop$13);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onEquipmentInfo$4.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onEquipmentUnEquip$4.call(item, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const btn = e.target.closest("button");
+				if (btn) onEquipmentOver$4.call(btn, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest("button")) onEquipmentOut$4();
+			});
+		}
+		this.draggable(".titlebar");
 	};
-	/**
-	* Append to body
-	*/
 	EquipmentV0.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$34.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$34.x), Renderer.width - this.ui.width())
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$34.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - hostRect.width)}px`;
+		if (!_preferences$34.show) this._host.style.display = "none";
+		if (_preferences$34.reduce) {
+			const panel = _getRoot$13().querySelector(".panel");
+			if (panel) panel.style.display = "none";
+		}
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV0._host);
+		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
+			const btn = _getRoot$13().querySelector(".view_status");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (!_preferences$34.show) this.ui.hide();
-		if (_preferences$34.reduce) this.ui.find(".panel").hide();
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV0.ui[0]);
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
-			this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		if (this.ui.find("canvas").is(":visible")) Renderer.render(renderCharacter$4);
+		if (_getRoot$13().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$4);
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	EquipmentV0.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4.detach();
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$4 && _btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
 		Renderer.stop(renderCharacter$4);
 		_list$11 = {};
-		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$34.show = this.ui.is(":visible");
-		_preferences$34.reduce = this.ui.find(".panel").css("display") === "none";
+		const root = _getRoot$13();
+		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
+			el.innerHTML = "";
+		});
+		_preferences$34.show = this._host.style.display !== "none";
+		const panel = root.querySelector(".panel");
+		_preferences$34.reduce = panel ? panel.style.display === "none" : false;
 		_preferences$34.stats = WinStatsController.getUI().isEmbedded();
 		hideStatus$2();
-		_preferences$34.y = parseInt(this.ui.css("top"), 10);
-		_preferences$34.x = parseInt(this.ui.css("left"), 10);
+		_preferences$34.y = parseInt(this._host.style.top, 10);
+		_preferences$34.x = parseInt(this._host.style.left, 10);
 		_preferences$34.save();
 	};
-	/**
-	* Start/stop rendering character in UI
-	*/
 	EquipmentV0.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
 			Renderer.render(renderCharacter$4);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
-				_btnLevelUp$4.detach();
-				if (_preferences$34.stats) WinStatsController.getUI().embed(EquipmentV0.ui[0]);
+				if (_btnLevelUp$4 && _btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
+				if (_preferences$34.stats) WinStatsController.getUI().embed(EquipmentV0._host);
 			}
 			this.focus();
 		} else {
+			this._host.style.display = "none";
 			Renderer.stop(renderCharacter$4);
 			hideStatus$2();
 		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	EquipmentV0.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
@@ -264976,28 +265171,14 @@ var init_EquipmentV0 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
 	EquipmentV0.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$4 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", function(data) {
-			EquipmentV0.ui.find(".show_equip").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
+			const btn = _getRoot$13().querySelector(".show_equip");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
-	EquipmentV0.setCostumeConfig = function setCostumeConfig(on) {};
-	/**
-	* Add an equipment to the window
-	*
-	* @param {Item} item
-	*/
+	EquipmentV0.setCostumeConfig = function setCostumeConfig(_on) {};
 	EquipmentV0.equip = function equip(item, location) {
 		const it = DB.getItemInfo(item.ITID);
 		_list$11[item.index] = item;
@@ -265015,34 +265196,34 @@ var init_EquipmentV0 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		this.ui.find(getSelectorFromLocation$5(location)).html("<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + jquery_default.escape(add3Dots(DB.getItemName(item, {
-			showItemGrade: false,
-			showItemSlots: false,
-			showItemOptions: false
-		}), 25)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] button").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const root = _getRoot$13();
+		const selector = getSelectorFromLocation$5(location);
+		root.querySelectorAll(selector).forEach((cell) => {
+			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$5(add3Dots(DB.getItemName(item, {
+				showItemGrade: false,
+				showItemSlots: false,
+				showItemOptions: false
+			}), 25)) + "</span></div>";
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
+				btn.style.backgroundImage = `url(${data})`;
+			});
+		});
 		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
 	};
-	/**
-	* Remove equipment from window
-	*
-	* @param {number} item index
-	* @param {number} item location
-	*/
 	EquipmentV0.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$5(location);
+		const root = _getRoot$13();
 		const item = _list$11[index];
-		this.ui.find(selector).empty();
+		root.querySelectorAll(selector).forEach((el) => {
+			el.innerHTML = "";
+		});
 		delete _list$11[index];
 		return item;
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	EquipmentV0.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$4.appendTo("body");
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$4) document.body.appendChild(_btnLevelUp$4);
 	};
 	renderCharacter$4 = (function renderCharacterClosure() {
 		let _lastState = 0;
@@ -265074,10 +265255,15 @@ var init_EquipmentV0 = __esmMin((() => {
 			if (character.effectState !== _lastState || _hasCart !== character.hasCart) {
 				_lastState = character.effectState;
 				_hasCart = character.hasCart;
-				if (_lastState & HasAttachmentState || _hasCart) EquipmentV0.ui.find(".removeOption").show();
-				else EquipmentV0.ui.find(".removeOption").hide();
-				if (_lastState & HasCartState || _hasCart) EquipmentV0.ui.find(".cartitems").show();
-				else EquipmentV0.ui.find(".cartitems").hide();
+				const root = _getRoot$13();
+				const removeOpt = root.querySelector(".removeOption");
+				const cartBtn = root.querySelector(".cartitems");
+				if (_lastState & HasAttachmentState || _hasCart) {
+					if (removeOpt) removeOpt.style.display = "";
+				} else if (removeOpt) removeOpt.style.display = "none";
+				if (_lastState & HasCartState || _hasCart) {
+					if (cartBtn) cartBtn.style.display = "";
+				} else if (cartBtn) cartBtn.style.display = "none";
 			}
 			Camera.direction = 4;
 			character.direction = 4;
@@ -265097,34 +265283,29 @@ var init_EquipmentV0 = __esmMin((() => {
 		};
 	})();
 	EquipmentV0.onUpdateOwnerName = function() {
+		const root = _getRoot$13();
 		for (const index in _list$11) {
 			const item = _list$11[index];
 			if (item.slot && [
 				255,
 				254,
 				65280
-			].includes(item.slot.card1)) EquipmentV0.ui.find(".item[data-index=\"" + index + "\"] .itemName").text(jquery_default.escape(DB.getItemName(item)));
+			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
+				nameEl.textContent = DB.getItemName(item);
+			});
 		}
 	};
 	EquipmentV0.getNumber = function() {
 		let num = 0;
-		for (const key in _list$11) if (_list$11[key].location && _list$11[key].location != EquipmentLocation_default.AMMO) num++;
+		for (const key in _list$11) if (_list$11[key].location && _list$11[key].location !== EquipmentLocation_default.AMMO) num++;
 		return num;
 	};
-	EquipmentV0.checkEquipLoc = function checkEquipLoc(location) {
+	EquipmentV0.checkEquipLoc = function checkEquipLoc(_location) {
 		return 0;
 	};
-	/**
-	* Returns the current tab ID of the EquipmentV0 component.
-	*
-	* @return {string} The current tab ID.
-	*/
 	EquipmentV0.getCurrentTabId = function() {
 		return "general";
 	};
-	/**
-	* Method to define
-	*/
 	EquipmentV0.onUnEquip = function onUnEquip() {};
 	EquipmentV0.onConfigUpdate = function onConfigUpdate() {};
 	EquipmentV0.onEquipItem = function onEquipItem() {};
@@ -265141,56 +265322,51 @@ var init_EquipmentV1$2 = __esmMin((() => {
 //#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.css?raw
 var EquipmentV1_default$1;
 var init_EquipmentV1$1 = __esmMin((() => {
-	EquipmentV1_default$1 = "#EquipmentV1 {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV1 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV1 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV1 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV1 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV1 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV1 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV1 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 .col1,\r\n#EquipmentV1 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV1 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV1 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV1 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV1 .col3 .item button,\r\n#EquipmentV1 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV1 .col1 .item button,\r\n#EquipmentV1 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV1 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV1 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV1 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV1 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV1 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV1 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV1 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV1 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV1 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV1 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV1 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+	EquipmentV1_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV1 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV1 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV1 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV1 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV1 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV1 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV1 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV1 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 .col1,\r\n#EquipmentV1 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV1 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV1 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV1 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV1 .col3 .item button,\r\n#EquipmentV1 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV1 .col1 .item button,\r\n#EquipmentV1 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV1 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV1 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV1 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV1 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV1 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV1 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV1 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV1 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV1 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV1 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV1 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.js
+function _getRoot$12() {
+	return EquipmentV1._shadow || EquipmentV1._host;
+}
+function escapeHTML$4(str) {
+	const div = document.createElement("div");
+	div.textContent = str;
+	return div.innerHTML;
+}
 function showTab$3() {
 	const selectedId = getHash$3(this.getAttribute("href"));
-	for (const id in contentDivs$3) if (id == selectedId) {
+	for (const id in contentDivs$3) if (id === selectedId) {
 		tabLinks$3[id].className = "tab selected";
-		contentDivs$3[id].className = "content";
+		if (contentDivs$3[id]) contentDivs$3[id].className = "content";
 	} else {
 		tabLinks$3[id].className = "tab";
-		contentDivs$3[id].classList.add("content", "hide");
+		if (contentDivs$3[id]) contentDivs$3[id].classList.add("content", "hide");
 	}
 	currentTabId$3 = selectedId;
 	return false;
 }
 function getFirstChildWithTagName$3(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName == tagName.toUpperCase()) return element.childNodes[i];
+	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
 }
 function getHash$3(url) {
 	const hashPos = url.lastIndexOf("#");
 	return url.substring(hashPos + 1);
 }
 function onCartItems$3() {
-	if (SessionStorage_default.Entity.hasCart == false) return;
-	CartItems_default.ui.toggle();
+	if (SessionStorage_default.Entity.hasCart === false) return;
+	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
 }
 function onRemoveOption$4() {
 	const pkt = new PACKET.CZ.REQ_CARTOFF();
 	Network.sendPacket(pkt);
 }
-/**
-* Stop an event to propagate
-*/
-function stopPropagation$15(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Hide status window
-*/
 function hideStatus$1() {
 	const winStats = WinStatsController.getUI();
 	if (winStats.isEmbedded()) winStats.unembed();
 }
-/**
-* Display or not status window
-*/
 function toggleStatus$4() {
-	const self = EquipmentV1.ui.find(".view_status");
+	const self = _getRoot$12().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -265198,25 +265374,16 @@ function toggleStatus$4() {
 		winStats.unembed();
 		_preferences$33.stats = false;
 	} else {
-		winStats.embed(EquipmentV1.ui[0]);
+		winStats.embed(EquipmentV1._host);
 		_preferences$33.stats = true;
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
-		self.css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
+		if (self) self.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Does player can see your equipment ?
-*/
 function toggleEquip$3() {
 	EquipmentV1.onConfigUpdate(0, !_showEquip$3 ? 1 : 0);
 }
-/**
-* Find elements in html base on item location
-*
-* @param {number} location
-* @returns {string} selector
-*/
 function getSelectorFromLocation$4(location) {
 	const selector = [];
 	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
@@ -265242,20 +265409,18 @@ function getSelectorFromLocation$4(location) {
 	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
 	return selector.join(", ");
 }
-/**
-* Drag an item over the equipment, show where to place the item
-*/
 function onDragOver$4(event) {
 	if (window._OBJ_DRAG_) {
 		const data = window._OBJ_DRAG_;
-		let item, selector, ui;
 		if (data.type === "item") {
-			item = data.data;
+			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				selector = getSelectorFromLocation$4("location" in item ? item.location : item.WearLocation);
-				ui = EquipmentV1.ui.find(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", function(_data) {
-					ui.css("backgroundImage", "url(" + _data + ")");
+				const selector = getSelectorFromLocation$4("location" in item ? item.location : item.WearLocation);
+				const cells = _getRoot$12().querySelectorAll(selector);
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+					cells.forEach((c) => {
+						c.style.backgroundImage = `url(${_data})`;
+					});
 				});
 			}
 		}
@@ -265263,35 +265428,32 @@ function onDragOver$4(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drag out the window
-*/
 function onDragLeave$3(event) {
-	EquipmentV1.ui.find("td").css("backgroundImage", "none");
+	_getRoot$12().querySelectorAll("td").forEach((td) => {
+		td.style.backgroundImage = "none";
+	});
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drop an item in the equipment, equip it if possible
-*/
 function onDrop$12(event) {
 	let item, data;
+	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (_e) {}
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return false;
+	}
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV1.ui.find("td").css("backgroundImage", "none");
+			_getRoot$12().querySelectorAll("td").forEach((td) => {
+				td.style.backgroundImage = "none";
+			});
 			EquipmentV1.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
 		}
 	}
-	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Right click on an item
-*/
 function onEquipmentInfo$3(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = _list$10[index];
@@ -265304,36 +265466,34 @@ function onEquipmentInfo$3(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Double click on an equipment to remove it
-*/
 function onEquipmentUnEquip$3() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV1.onUnEquip(index);
-	EquipmentV1.ui.find(".overlay").hide();
+	const overlay = _getRoot$12().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* When mouse is over an equipment, display the item name
-*/
 function onEquipmentOver$3() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$10[idx];
 	if (!item) return;
-	const overlay = EquipmentV1.ui.find(".overlay");
-	const pos = jquery_default(this).position();
-	if (!pos.top && !pos.left) return;
-	overlay.show();
-	overlay.css({
-		top: pos.top - 22,
-		left: pos.left - 22
-	});
-	overlay.text(DB.getItemName(item));
+	const root = _getRoot$12();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#EquipmentV1") || root;
+	const btnRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	const top = btnRect.top - rootRect.top;
+	const left = btnRect.left - rootRect.left;
+	if (!top && !left) return;
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${top - 22}px`;
+		overlay.style.left = `${left - 22}px`;
+		overlay.textContent = DB.getItemName(item);
+	}
 }
-/**
-* Remove the item name
-*/
 function onEquipmentOut$3() {
-	EquipmentV1.ui.find(".overlay").hide();
+	const overlay = _getRoot$12().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 var EquipmentV1, _preferences$33, _list$10, _ctx$8, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
 var init_EquipmentV1 = __esmMin((() => {
@@ -265343,7 +265503,6 @@ var init_EquipmentV1 = __esmMin((() => {
 	init_NetworkManager();
 	init_PacketStructure();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_SessionStorage();
@@ -265352,7 +265511,8 @@ var init_EquipmentV1 = __esmMin((() => {
 	init_SpriteRenderer();
 	init_UIVersionManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_CartItems();
 	init_WinStats();
@@ -265360,7 +265520,8 @@ var init_EquipmentV1 = __esmMin((() => {
 	init_EquipmentV1$1();
 	init_Inventory();
 	init_Entity$1();
-	EquipmentV1 = new UIComponent("EquipmentV1", EquipmentV1_default$2, EquipmentV1_default$1);
+	EquipmentV1 = new GUIComponent("EquipmentV1", EquipmentV1_default$1);
+	EquipmentV1.render = () => EquipmentV1_default$2;
 	_preferences$33 = Preferences.get("EquipmentV1", {
 		x: 480,
 		y: 200,
@@ -265371,129 +265532,157 @@ var init_EquipmentV1 = __esmMin((() => {
 	_list$10 = {};
 	_ctx$8 = [];
 	_showEquip$3 = false;
-	tabLinks$3 = new Array();
-	contentDivs$3 = new Array();
+	tabLinks$3 = {};
+	contentDivs$3 = {};
 	currentTabId$3 = "general";
-	/**
-	* Initialize UI
-	*/
 	EquipmentV1.init = function init() {
-		_ctx$8.push(this.ui.find("canvas")[0].getContext("2d"));
-		_ctx$8.push(this.ui.find("canvas")[1].getContext("2d"));
-		const tabListItems = document.getElementById("tabs").childNodes;
-		let i;
-		for (i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName == "DIV") {
-			const tabLink = getFirstChildWithTagName$3(tabListItems[i], "A");
-			const id = getHash$3(tabLink.getAttribute("href"));
-			tabLinks$3[id] = tabLink;
-			contentDivs$3[id] = document.getElementById(id);
+		const root = _getRoot$12();
+		const canvases = root.querySelectorAll("canvas");
+		if (canvases[0]) _ctx$8.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$8.push(canvases[1].getContext("2d"));
+		const tabsEl = root.querySelector("#tabs");
+		if (tabsEl) {
+			const tabListItems = tabsEl.childNodes;
+			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
+				const tabLink = getFirstChildWithTagName$3(tabListItems[i], "A");
+				if (tabLink) {
+					const id = getHash$3(tabLink.getAttribute("href"));
+					tabLinks$3[id] = tabLink;
+					contentDivs$3[id] = root.querySelector(`#${id}`);
+				}
+			}
 		}
-		i = 0;
+		let idx = 0;
 		for (const id in tabLinks$3) {
 			tabLinks$3[id].onclick = showTab$3;
 			tabLinks$3[id].onfocus = function() {
 				this.blur();
 			};
-			if (i == 0) tabLinks$3[id].className = "tab selected";
-			i++;
+			if (idx === 0) tabLinks$3[id].className = "tab selected";
+			idx++;
 		}
-		i = 0;
+		idx = 0;
 		for (const id in contentDivs$3) if (contentDivs$3[id]) {
-			if (i != 0) contentDivs$3[id].classList.add("content", "hide");
-			i++;
+			if (idx !== 0) contentDivs$3[id].classList.add("content", "hide");
+			idx++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$15).click(function() {
-			_btnLevelUp$3.detach();
-			EquipmentV1.ui.show();
-			EquipmentV1.ui.parent().append(EquipmentV1.ui);
-			if (EquipmentV1.ui.is(":visible")) Renderer.render(renderCharacter$3);
-		});
-		else {
-			this.ui.find("#equipment_footer").remove();
-			this.ui.addClass("equipmentV0");
-			this.ui.find("#lvlup_base").remove();
+		if (UIVersionManager.getEquipmentVersion() > 0) {
+			const lvlupEl = root.querySelector("#lvlup_base");
+			if (lvlupEl) {
+				_btnLevelUp$3 = lvlupEl;
+				lvlupEl.remove();
+				_btnLevelUp$3.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				_btnLevelUp$3.addEventListener("click", () => {
+					if (_btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
+					EquipmentV1._host.style.display = "";
+					EquipmentV1._host.parentNode.appendChild(EquipmentV1._host);
+					if (EquipmentV1._host.style.display !== "none") Renderer.render(renderCharacter$3);
+				});
+			}
+		} else {
+			const footer = root.querySelector("#equipment_footer");
+			if (footer) footer.remove();
+			const rootEl = root.querySelector("#EquipmentV1");
+			if (rootEl) rootEl.classList.add("equipmentV0");
+			const lvlup = root.querySelector("#lvlup_base");
+			if (lvlup) lvlup.remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$15);
-		this.ui.find(".titlebar .mini").click(function() {
-			EquipmentV1.ui.find(".panel").toggle();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", () => {
+			const panel = root.querySelector(".panel");
+			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
 		});
-		this.ui.find(".titlebar .close").click(function() {
-			EquipmentV1.ui.hide();
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			EquipmentV1._host.style.display = "none";
 			Renderer.stop(renderCharacter$3);
 			hideStatus$1();
 		});
-		this.ui.find(".removeOption").mousedown(onRemoveOption$4);
-		this.ui.find(".view_status").mousedown(toggleStatus$4);
-		this.ui.find(".show_equip").mousedown(toggleEquip$3);
-		this.ui.find(".cartitems").click(onCartItems$3);
-		this.ui.on("dragover", onDragOver$4);
-		this.ui.on("dragleave", onDragLeave$3);
-		this.ui.on("drop", onDrop$12);
-		this.ui.find(".content").on("contextmenu", ".item", onEquipmentInfo$3).on("dblclick", ".item", onEquipmentUnEquip$3).on("mouseover", "button", onEquipmentOver$3).on("mouseout", "button", onEquipmentOut$3);
-		this.draggable(this.ui.find(".titlebar"));
+		const removeOptBtn = root.querySelector(".removeOption");
+		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$4);
+		const viewStatusBtn = root.querySelector(".view_status");
+		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$4);
+		const showEquipBtn = root.querySelector(".show_equip");
+		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$3);
+		const cartBtn = root.querySelector(".cartitems");
+		if (cartBtn) cartBtn.addEventListener("click", onCartItems$3);
+		this._host.addEventListener("dragover", onDragOver$4);
+		this._host.addEventListener("dragleave", onDragLeave$3);
+		this._host.addEventListener("drop", onDrop$12);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onEquipmentInfo$3.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onEquipmentUnEquip$3.call(item, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const btn = e.target.closest("button");
+				if (btn) onEquipmentOver$3.call(btn, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest("button")) onEquipmentOut$3();
+			});
+		}
+		this.draggable(".titlebar");
 	};
-	/**
-	* Returns the current tab ID of the EquipmentV1 component.
-	*
-	* @return {string} The current tab ID.
-	*/
 	EquipmentV1.getCurrentTabId = function() {
 		return currentTabId$3;
 	};
-	/**
-	* Append to body
-	*/
 	EquipmentV1.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$33.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$33.x), Renderer.width - this.ui.width())
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - hostRect.width)}px`;
+		if (!_preferences$33.show) this._host.style.display = "none";
+		if (_preferences$33.reduce) {
+			const panel = _getRoot$12().querySelector(".panel");
+			if (panel) panel.style.display = "none";
+		}
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$33.stats && _preferences$33.show) WinStatsController.getUI().embed(EquipmentV1._host);
+		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
+			const btn = _getRoot$12().querySelector(".view_status");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (!_preferences$33.show) this.ui.hide();
-		if (_preferences$33.reduce) this.ui.find(".panel").hide();
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$33.stats && _preferences$33.show) WinStatsController.getUI().embed(EquipmentV1.ui[0]);
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
-			this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		if (this.ui.find("canvas").is(":visible")) Renderer.render(renderCharacter$3);
+		if (_getRoot$12().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$3);
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	EquipmentV1.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3.detach();
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$3 && _btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
 		Renderer.stop(renderCharacter$3);
 		_list$10 = {};
-		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$33.show = this.ui.is(":visible");
-		_preferences$33.reduce = this.ui.find(".panel").css("display") === "none";
+		const root = _getRoot$12();
+		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
+			el.innerHTML = "";
+		});
+		_preferences$33.show = this._host.style.display !== "none";
+		const panel = root.querySelector(".panel");
+		_preferences$33.reduce = panel ? panel.style.display === "none" : false;
 		_preferences$33.stats = WinStatsController.getUI().isEmbedded();
 		hideStatus$1();
-		_preferences$33.y = parseInt(this.ui.css("top"), 10);
-		_preferences$33.x = parseInt(this.ui.css("left"), 10);
+		_preferences$33.y = parseInt(this._host.style.top, 10);
+		_preferences$33.x = parseInt(this._host.style.left, 10);
 		_preferences$33.save();
 	};
-	/**
-	* Start/stop rendering character in UI
-	*/
 	EquipmentV1.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
 			Renderer.render(renderCharacter$3);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
-				_btnLevelUp$3.detach();
-				if (_preferences$33.stats) WinStatsController.getUI().embed(EquipmentV1.ui[0]);
+				if (_btnLevelUp$3 && _btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
+				if (_preferences$33.stats) WinStatsController.getUI().embed(EquipmentV1._host);
 			}
 			this.focus();
 		} else {
+			this._host.style.display = "none";
 			Renderer.stop(renderCharacter$3);
 			hideStatus$1();
 		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	EquipmentV1.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
@@ -265501,28 +265690,14 @@ var init_EquipmentV1 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
 	EquipmentV1.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$3 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", function(data) {
-			EquipmentV1.ui.find(".show_equip").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
+			const btn = _getRoot$12().querySelector(".show_equip");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
-	EquipmentV1.setCostumeConfig = function setCostumeConfig(on) {};
-	/**
-	* Add an equipment to the window
-	*
-	* @param {Item} item
-	*/
+	EquipmentV1.setCostumeConfig = function setCostumeConfig(_on) {};
 	EquipmentV1.equip = function equip(item, location) {
 		const it = DB.getItemInfo(item.ITID);
 		item.equipped = location;
@@ -265537,41 +265712,36 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		this.ui.find(getSelectorFromLocation$4(location)).html("<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + jquery_default.escape(add3Dots(DB.getItemName(item, {
-			showItemGrade: false,
-			showItemSlots: false,
-			showItemOptions: false
-		}), 25)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] button").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const root = _getRoot$12();
+		const selector = getSelectorFromLocation$4(location);
+		root.querySelectorAll(selector).forEach((cell) => {
+			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$4(add3Dots(DB.getItemName(item, {
+				showItemGrade: false,
+				showItemSlots: false,
+				showItemOptions: false
+			}), 25)) + "</span></div>";
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
+				btn.style.backgroundImage = `url(${data})`;
+			});
+		});
 		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
 	};
-	/**
-	* Remove equipment from window
-	*
-	* @param {number} item index
-	* @param {number} item location
-	*/
 	EquipmentV1.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$4(location);
+		const root = _getRoot$12();
 		const item = _list$10[index];
 		item.equipped = 0;
-		this.ui.find(selector).empty();
+		root.querySelectorAll(selector).forEach((el) => {
+			el.innerHTML = "";
+		});
 		delete _list$10[index];
 		return item;
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	EquipmentV1.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$3.appendTo("body");
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$3) document.body.appendChild(_btnLevelUp$3);
 	};
-	/**
-	* Check equipment location for item
-	* @param {number} location - The equipment location to check
-	* @returns {item.wItemSpriteNumber} Object with { item }
-	*/
 	EquipmentV1.checkEquipLoc = function checkEquipLoc(location) {
 		for (const key in _list$10) if (_list$10[key].equipped & location) return _list$10[key].wItemSpriteNumber;
 		return 0;
@@ -265613,10 +265783,15 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				if (_lastState & HasAttachmentState || _hasCart) EquipmentV1.ui.find(".removeOption").show();
-				else EquipmentV1.ui.find(".removeOption").hide();
-				if (_lastState & HasCartState || _hasCart) EquipmentV1.ui.find(".cartitems").show();
-				else EquipmentV1.ui.find(".cartitems").hide();
+				const root = _getRoot$12();
+				const removeOpt = root.querySelector(".removeOption");
+				const cartBtn = root.querySelector(".cartitems");
+				if (_lastState & HasAttachmentState || _hasCart) {
+					if (removeOpt) removeOpt.style.display = "";
+				} else if (removeOpt) removeOpt.style.display = "none";
+				if (_lastState & HasCartState || _hasCart) {
+					if (cartBtn) cartBtn.style.display = "";
+				} else if (cartBtn) cartBtn.style.display = "none";
 			}
 			if (currentTabId$3 === "general") {
 				equip_character.accessory = EquipmentV1.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
@@ -265645,29 +265820,26 @@ var init_EquipmentV1 = __esmMin((() => {
 		};
 	})();
 	EquipmentV1.onUpdateOwnerName = function() {
+		const root = _getRoot$12();
 		for (const index in _list$10) {
 			const item = _list$10[index];
 			if (item.slot && [
 				255,
 				254,
 				65280
-			].includes(item.slot.card1)) EquipmentV1.ui.find(".item[data-index=\"" + index + "\"] .itemName").text(jquery_default.escape(DB.getItemName(item)));
+			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
+				nameEl.textContent = DB.getItemName(item);
+			});
 		}
 	};
 	EquipmentV1.getNumber = function() {
 		let num = 0;
-		for (const key in _list$10) if (_list$10[key].location && _list$10[key].location != EquipmentLocation_default.AMMO) num++;
+		for (const key in _list$10) if (_list$10[key].location && _list$10[key].location !== EquipmentLocation_default.AMMO) num++;
 		return num;
 	};
-	/**
-	* EquipmentV3 has the supported function. This is for compatibility with EquipmentV1
-	*/
 	EquipmentV1.isInEquipList = function() {
 		return 0;
 	};
-	/**
-	* Method to define
-	*/
 	EquipmentV1.onUnEquip = function onUnEquip() {};
 	EquipmentV1.onConfigUpdate = function onConfigUpdate() {};
 	EquipmentV1.onEquipItem = function onEquipItem() {};
@@ -265684,56 +265856,51 @@ var init_EquipmentV2$2 = __esmMin((() => {
 //#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.css?raw
 var EquipmentV2_default$1;
 var init_EquipmentV2$1 = __esmMin((() => {
-	EquipmentV2_default$1 = "#EquipmentV2 {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV2 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV2 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV2 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV2 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV2 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV2 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV2 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 .col1,\r\n#EquipmentV2 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV2 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV2 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV2 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV2 .col3 .item button,\r\n#EquipmentV2 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV2 .col1 .item button,\r\n#EquipmentV2 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV2 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV2 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV2 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV2 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV2 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV2 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV2 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV2 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV2 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV2 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV2 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+	EquipmentV2_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV2 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV2 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV2 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV2 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV2 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV2 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV2 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV2 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 .col1,\r\n#EquipmentV2 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV2 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV2 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV2 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV2 .col3 .item button,\r\n#EquipmentV2 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV2 .col1 .item button,\r\n#EquipmentV2 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV2 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV2 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV2 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV2 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV2 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV2 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV2 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV2 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV2 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV2 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV2 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.js
+function _getRoot$11() {
+	return EquipmentV2._shadow || EquipmentV2._host;
+}
+function escapeHTML$3(str) {
+	const div = document.createElement("div");
+	div.textContent = str;
+	return div.innerHTML;
+}
 function showTab$2() {
 	const selectedId = getHash$2(this.getAttribute("href"));
-	for (const id in contentDivs$2) if (id == selectedId) {
+	for (const id in contentDivs$2) if (id === selectedId) {
 		tabLinks$2[id].className = "tab selected";
-		contentDivs$2[id].className = "content";
+		if (contentDivs$2[id]) contentDivs$2[id].className = "content";
 	} else {
 		tabLinks$2[id].className = "tab";
-		contentDivs$2[id].classList.add("content", "hide");
+		if (contentDivs$2[id]) contentDivs$2[id].classList.add("content", "hide");
 	}
 	currentTabId$2 = selectedId;
 	return false;
 }
 function getFirstChildWithTagName$2(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName == tagName.toUpperCase()) return element.childNodes[i];
+	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
 }
 function getHash$2(url) {
 	const hashPos = url.lastIndexOf("#");
 	return url.substring(hashPos + 1);
 }
 function onCartItems$2() {
-	if (SessionStorage_default.Entity.hasCart == false) return;
-	CartItems_default.ui.toggle();
+	if (SessionStorage_default.Entity.hasCart === false) return;
+	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
 }
 function onRemoveOption$3() {
 	const pkt = new PACKET.CZ.REQ_CARTOFF();
 	Network.sendPacket(pkt);
 }
-/**
-* Stop an event to propagate
-*/
-function stopPropagation$14(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Hide status window
-*/
 function hideStatus() {
 	const winStats = WinStatsController.getUI();
 	if (winStats.isEmbedded()) winStats.unembed();
 }
-/**
-* Display or not status window
-*/
 function toggleStatus$3() {
-	const self = EquipmentV2.ui.find(".view_status");
+	const self = _getRoot$11().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -265741,25 +265908,16 @@ function toggleStatus$3() {
 		winStats.unembed();
 		_preferences$32.stats = false;
 	} else {
-		winStats.embed(EquipmentV2.ui[0]);
+		winStats.embed(EquipmentV2._host);
 		_preferences$32.stats = true;
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
-		self.css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
+		if (self) self.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Does player can see your equipment ?
-*/
 function toggleEquip$2() {
 	EquipmentV2.onConfigUpdate(0, !_showEquip$2 ? 1 : 0);
 }
-/**
-* Find elements in html base on item location
-*
-* @param {number} location
-* @returns {string} selector
-*/
 function getSelectorFromLocation$3(location) {
 	const selector = [];
 	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
@@ -265785,20 +265943,18 @@ function getSelectorFromLocation$3(location) {
 	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
 	return selector.join(", ");
 }
-/**
-* Drag an item over the equipment, show where to place the item
-*/
 function onDragOver$3(event) {
 	if (window._OBJ_DRAG_) {
 		const data = window._OBJ_DRAG_;
-		let item, selector, ui;
 		if (data.type === "item") {
-			item = data.data;
+			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				selector = getSelectorFromLocation$3("location" in item ? item.location : item.WearLocation);
-				ui = EquipmentV2.ui.find(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", function(_data) {
-					ui.css("backgroundImage", "url(" + _data + ")");
+				const selector = getSelectorFromLocation$3("location" in item ? item.location : item.WearLocation);
+				const cells = _getRoot$11().querySelectorAll(selector);
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+					cells.forEach((c) => {
+						c.style.backgroundImage = `url(${_data})`;
+					});
 				});
 			}
 		}
@@ -265806,35 +265962,32 @@ function onDragOver$3(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drag out the window
-*/
 function onDragLeave$2(event) {
-	EquipmentV2.ui.find("td").css("backgroundImage", "none");
+	_getRoot$11().querySelectorAll("td").forEach((td) => {
+		td.style.backgroundImage = "none";
+	});
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drop an item in the equipment, equip it if possible
-*/
 function onDrop$11(event) {
 	let item, data;
+	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (_e) {}
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return false;
+	}
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV2.ui.find("td").css("backgroundImage", "none");
+			_getRoot$11().querySelectorAll("td").forEach((td) => {
+				td.style.backgroundImage = "none";
+			});
 			EquipmentV2.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
 		}
 	}
-	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Right click on an item
-*/
 function onEquipmentInfo$2(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = _list$9[index];
@@ -265847,36 +266000,34 @@ function onEquipmentInfo$2(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Double click on an equipment to remove it
-*/
 function onEquipmentUnEquip$2() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV2.onUnEquip(index);
-	EquipmentV2.ui.find(".overlay").hide();
+	const overlay = _getRoot$11().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* When mouse is over an equipment, display the item name
-*/
 function onEquipmentOver$2() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$9[idx];
 	if (!item) return;
-	const overlay = EquipmentV2.ui.find(".overlay");
-	const pos = jquery_default(this).position();
-	if (!pos.top && !pos.left) return;
-	overlay.show();
-	overlay.css({
-		top: pos.top - 22,
-		left: pos.left - 22
-	});
-	overlay.text(DB.getItemName(item));
+	const root = _getRoot$11();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#EquipmentV2") || root;
+	const btnRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	const top = btnRect.top - rootRect.top;
+	const left = btnRect.left - rootRect.left;
+	if (!top && !left) return;
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${top - 22}px`;
+		overlay.style.left = `${left - 22}px`;
+		overlay.textContent = DB.getItemName(item);
+	}
 }
-/**
-* Remove the item name
-*/
 function onEquipmentOut$2() {
-	EquipmentV2.ui.find(".overlay").hide();
+	const overlay = _getRoot$11().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 var EquipmentV2, _preferences$32, _list$9, _ctx$7, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
 var init_EquipmentV2 = __esmMin((() => {
@@ -265886,7 +266037,6 @@ var init_EquipmentV2 = __esmMin((() => {
 	init_NetworkManager();
 	init_PacketStructure();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_SessionStorage();
@@ -265895,7 +266045,8 @@ var init_EquipmentV2 = __esmMin((() => {
 	init_SpriteRenderer();
 	init_UIVersionManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_CartItems();
 	init_WinStats();
@@ -265903,7 +266054,8 @@ var init_EquipmentV2 = __esmMin((() => {
 	init_EquipmentV2$1();
 	init_Inventory();
 	init_Entity$1();
-	EquipmentV2 = new UIComponent("EquipmentV2", EquipmentV2_default$2, EquipmentV2_default$1);
+	EquipmentV2 = new GUIComponent("EquipmentV2", EquipmentV2_default$1);
+	EquipmentV2.render = () => EquipmentV2_default$2;
 	_preferences$32 = Preferences.get("EquipmentV2", {
 		x: 480,
 		y: 200,
@@ -265914,129 +266066,157 @@ var init_EquipmentV2 = __esmMin((() => {
 	_list$9 = {};
 	_ctx$7 = [];
 	_showEquip$2 = false;
-	tabLinks$2 = new Array();
-	contentDivs$2 = new Array();
+	tabLinks$2 = {};
+	contentDivs$2 = {};
 	currentTabId$2 = "general";
-	/**
-	* Initialize UI
-	*/
 	EquipmentV2.init = function init() {
-		_ctx$7.push(this.ui.find("canvas")[0].getContext("2d"));
-		_ctx$7.push(this.ui.find("canvas")[1].getContext("2d"));
-		const tabListItems = document.getElementById("tabs").childNodes;
-		let i;
-		for (i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName == "DIV") {
-			const tabLink = getFirstChildWithTagName$2(tabListItems[i], "A");
-			const id = getHash$2(tabLink.getAttribute("href"));
-			tabLinks$2[id] = tabLink;
-			contentDivs$2[id] = document.getElementById(id);
+		const root = _getRoot$11();
+		const canvases = root.querySelectorAll("canvas");
+		if (canvases[0]) _ctx$7.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$7.push(canvases[1].getContext("2d"));
+		const tabsEl = root.querySelector("#tabs");
+		if (tabsEl) {
+			const tabListItems = tabsEl.childNodes;
+			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
+				const tabLink = getFirstChildWithTagName$2(tabListItems[i], "A");
+				if (tabLink) {
+					const id = getHash$2(tabLink.getAttribute("href"));
+					tabLinks$2[id] = tabLink;
+					contentDivs$2[id] = root.querySelector(`#${id}`);
+				}
+			}
 		}
-		i = 0;
+		let idx = 0;
 		for (const id in tabLinks$2) {
 			tabLinks$2[id].onclick = showTab$2;
 			tabLinks$2[id].onfocus = function() {
 				this.blur();
 			};
-			if (i == 0) tabLinks$2[id].className = "tab selected";
-			i++;
+			if (idx === 0) tabLinks$2[id].className = "tab selected";
+			idx++;
 		}
-		i = 0;
+		idx = 0;
 		for (const id in contentDivs$2) if (contentDivs$2[id]) {
-			if (i != 0) contentDivs$2[id].classList.add("content", "hide");
-			i++;
+			if (idx !== 0) contentDivs$2[id].classList.add("content", "hide");
+			idx++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$14).click(function() {
-			_btnLevelUp$2.detach();
-			EquipmentV2.ui.show();
-			EquipmentV2.ui.parent().append(EquipmentV2.ui);
-			if (EquipmentV2.ui.is(":visible")) Renderer.render(renderCharacter$2);
-		});
-		else {
-			this.ui.find("#equipment_footer").remove();
-			this.ui.addClass("equipmentV0");
-			this.ui.find("#lvlup_base").remove();
+		if (UIVersionManager.getEquipmentVersion() > 0) {
+			const lvlupEl = root.querySelector("#lvlup_base");
+			if (lvlupEl) {
+				_btnLevelUp$2 = lvlupEl;
+				lvlupEl.remove();
+				_btnLevelUp$2.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				_btnLevelUp$2.addEventListener("click", () => {
+					if (_btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
+					EquipmentV2._host.style.display = "";
+					EquipmentV2._host.parentNode.appendChild(EquipmentV2._host);
+					if (EquipmentV2._host.style.display !== "none") Renderer.render(renderCharacter$2);
+				});
+			}
+		} else {
+			const footer = root.querySelector("#equipment_footer");
+			if (footer) footer.remove();
+			const rootEl = root.querySelector("#EquipmentV2");
+			if (rootEl) rootEl.classList.add("equipmentV0");
+			const lvlup = root.querySelector("#lvlup_base");
+			if (lvlup) lvlup.remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$14);
-		this.ui.find(".titlebar .mini").click(function() {
-			EquipmentV2.ui.find(".panel").toggle();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", () => {
+			const panel = root.querySelector(".panel");
+			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
 		});
-		this.ui.find(".titlebar .close").click(function() {
-			EquipmentV2.ui.hide();
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			EquipmentV2._host.style.display = "none";
 			Renderer.stop(renderCharacter$2);
 			hideStatus();
 		});
-		this.ui.find(".removeOption").mousedown(onRemoveOption$3);
-		this.ui.find(".view_status").mousedown(toggleStatus$3);
-		this.ui.find(".show_equip").mousedown(toggleEquip$2);
-		this.ui.find(".cartitems").click(onCartItems$2);
-		this.ui.on("dragover", onDragOver$3);
-		this.ui.on("dragleave", onDragLeave$2);
-		this.ui.on("drop", onDrop$11);
-		this.ui.find(".content").on("contextmenu", ".item", onEquipmentInfo$2).on("dblclick", ".item", onEquipmentUnEquip$2).on("mouseover", "button", onEquipmentOver$2).on("mouseout", "button", onEquipmentOut$2);
-		this.draggable(this.ui.find(".titlebar"));
+		const removeOptBtn = root.querySelector(".removeOption");
+		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$3);
+		const viewStatusBtn = root.querySelector(".view_status");
+		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$3);
+		const showEquipBtn = root.querySelector(".show_equip");
+		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$2);
+		const cartBtn = root.querySelector(".cartitems");
+		if (cartBtn) cartBtn.addEventListener("click", onCartItems$2);
+		this._host.addEventListener("dragover", onDragOver$3);
+		this._host.addEventListener("dragleave", onDragLeave$2);
+		this._host.addEventListener("drop", onDrop$11);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onEquipmentInfo$2.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onEquipmentUnEquip$2.call(item, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const btn = e.target.closest("button");
+				if (btn) onEquipmentOver$2.call(btn, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest("button")) onEquipmentOut$2();
+			});
+		}
+		this.draggable(".titlebar");
 	};
-	/**
-	* Returns the current tab ID of the EquipmentV2 component.
-	*
-	* @return {string} The current tab ID.
-	*/
 	EquipmentV2.getCurrentTabId = function() {
 		return currentTabId$2;
 	};
-	/**
-	* Append to body
-	*/
 	EquipmentV2.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$32.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$32.x), Renderer.width - this.ui.width())
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - hostRect.width)}px`;
+		if (!_preferences$32.show) this._host.style.display = "none";
+		if (_preferences$32.reduce) {
+			const panel = _getRoot$11().querySelector(".panel");
+			if (panel) panel.style.display = "none";
+		}
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$32.stats && _preferences$32.show) WinStatsController.getUI().embed(EquipmentV2._host);
+		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
+			const btn = _getRoot$11().querySelector(".view_status");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (!_preferences$32.show) this.ui.hide();
-		if (_preferences$32.reduce) this.ui.find(".panel").hide();
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$32.stats && _preferences$32.show) WinStatsController.getUI().embed(EquipmentV2.ui[0]);
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
-			this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		if (this.ui.find("canvas").is(":visible")) Renderer.render(renderCharacter$2);
+		if (_getRoot$11().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$2);
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	EquipmentV2.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2.detach();
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
 		Renderer.stop(renderCharacter$2);
 		_list$9 = {};
-		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$32.show = this.ui.is(":visible");
-		_preferences$32.reduce = this.ui.find(".panel").css("display") === "none";
+		const root = _getRoot$11();
+		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
+			el.innerHTML = "";
+		});
+		_preferences$32.show = this._host.style.display !== "none";
+		const panel = root.querySelector(".panel");
+		_preferences$32.reduce = panel ? panel.style.display === "none" : false;
 		_preferences$32.stats = WinStatsController.getUI().isEmbedded();
 		hideStatus();
-		_preferences$32.y = parseInt(this.ui.css("top"), 10);
-		_preferences$32.x = parseInt(this.ui.css("left"), 10);
+		_preferences$32.y = parseInt(this._host.style.top, 10);
+		_preferences$32.x = parseInt(this._host.style.left, 10);
 		_preferences$32.save();
 	};
-	/**
-	* Start/stop rendering character in UI
-	*/
 	EquipmentV2.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
 			Renderer.render(renderCharacter$2);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
-				_btnLevelUp$2.detach();
-				if (_preferences$32.stats) WinStatsController.getUI().embed(EquipmentV2.ui[0]);
+				if (_btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
+				if (_preferences$32.stats) WinStatsController.getUI().embed(EquipmentV2._host);
 			}
 			this.focus();
 		} else {
+			this._host.style.display = "none";
 			Renderer.stop(renderCharacter$2);
 			hideStatus();
 		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	EquipmentV2.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
@@ -266044,28 +266224,14 @@ var init_EquipmentV2 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
 	EquipmentV2.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$2 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", function(data) {
-			EquipmentV2.ui.find(".show_equip").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
+			const btn = _getRoot$11().querySelector(".show_equip");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
-	EquipmentV2.setCostumeConfig = function setCostumeConfig(on) {};
-	/**
-	* Add an equipment to the window
-	*
-	* @param {Item} item
-	*/
+	EquipmentV2.setCostumeConfig = function setCostumeConfig(_on) {};
 	EquipmentV2.equip = function equip(item, location) {
 		const it = DB.getItemInfo(item.ITID);
 		item.equipped = location;
@@ -266080,41 +266246,36 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		this.ui.find(getSelectorFromLocation$3(location)).html("<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + jquery_default.escape(add3Dots(DB.getItemName(item, {
-			showItemGrade: false,
-			showItemSlots: false,
-			showItemOptions: false
-		}), 25)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] button").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const root = _getRoot$11();
+		const selector = getSelectorFromLocation$3(location);
+		root.querySelectorAll(selector).forEach((cell) => {
+			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$3(add3Dots(DB.getItemName(item, {
+				showItemGrade: false,
+				showItemSlots: false,
+				showItemOptions: false
+			}), 25)) + "</span></div>";
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
+				btn.style.backgroundImage = `url(${data})`;
+			});
+		});
 		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
 	};
-	/**
-	* Remove equipment from window
-	*
-	* @param {number} item index
-	* @param {number} item location
-	*/
 	EquipmentV2.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$3(location);
+		const root = _getRoot$11();
 		const item = _list$9[index];
 		item.equipped = 0;
-		this.ui.find(selector).empty();
+		root.querySelectorAll(selector).forEach((el) => {
+			el.innerHTML = "";
+		});
 		delete _list$9[index];
 		return item;
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	EquipmentV2.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$2.appendTo("body");
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$2) document.body.appendChild(_btnLevelUp$2);
 	};
-	/**
-	* Check equipment location for item
-	* @param {number} location - The equipment location to check
-	* @returns {item.wItemSpriteNumber} Object with { item }
-	*/
 	EquipmentV2.checkEquipLoc = function checkEquipLoc(location) {
 		for (const key in _list$9) if (_list$9[key].equipped & location) return _list$9[key].wItemSpriteNumber;
 		return 0;
@@ -266156,10 +266317,15 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				if (_lastState & HasAttachmentState || _hasCart) EquipmentV2.ui.find(".removeOption").show();
-				else EquipmentV2.ui.find(".removeOption").hide();
-				if (_lastState & HasCartState || _hasCart) EquipmentV2.ui.find(".cartitems").show();
-				else EquipmentV2.ui.find(".cartitems").hide();
+				const root = _getRoot$11();
+				const removeOpt = root.querySelector(".removeOption");
+				const cartBtn = root.querySelector(".cartitems");
+				if (_lastState & HasAttachmentState || _hasCart) {
+					if (removeOpt) removeOpt.style.display = "";
+				} else if (removeOpt) removeOpt.style.display = "none";
+				if (_lastState & HasCartState || _hasCart) {
+					if (cartBtn) cartBtn.style.display = "";
+				} else if (cartBtn) cartBtn.style.display = "none";
 			}
 			if (currentTabId$2 === "general") {
 				equip_character.accessory = EquipmentV2.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
@@ -266188,29 +266354,26 @@ var init_EquipmentV2 = __esmMin((() => {
 		};
 	})();
 	EquipmentV2.onUpdateOwnerName = function() {
+		const root = _getRoot$11();
 		for (const index in _list$9) {
 			const item = _list$9[index];
 			if (item.slot && [
 				255,
 				254,
 				65280
-			].includes(item.slot.card1)) EquipmentV2.ui.find(".item[data-index=\"" + index + "\"] .itemName").text(jquery_default.escape(DB.getItemName(item)));
+			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
+				nameEl.textContent = DB.getItemName(item);
+			});
 		}
 	};
 	EquipmentV2.getNumber = function() {
 		let num = 0;
-		for (const key in _list$9) if (_list$9[key].location && _list$9[key].location != EquipmentLocation_default.AMMO) num++;
+		for (const key in _list$9) if (_list$9[key].location && _list$9[key].location !== EquipmentLocation_default.AMMO) num++;
 		return num;
 	};
-	/**
-	* EquipmentV3 has the supported function. This is for compatibility with EquipmentV2
-	*/
 	EquipmentV2.isInEquipList = function() {
 		return 0;
 	};
-	/**
-	* Method to define
-	*/
 	EquipmentV2.onUnEquip = function onUnEquip() {};
 	EquipmentV2.onConfigUpdate = function onConfigUpdate() {};
 	EquipmentV2.onEquipItem = function onEquipItem() {};
@@ -266227,101 +266390,77 @@ var init_EquipmentV3$2 = __esmMin((() => {
 //#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.css?raw
 var EquipmentV3_default$1;
 var init_EquipmentV3$1 = __esmMin((() => {
-	EquipmentV3_default$1 = "#EquipmentV3 {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV3 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV3 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV3 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV3 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV3 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV3 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV3 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 .col1,\r\n#EquipmentV3 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV3 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV3 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV3 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV3 .col3 .item button,\r\n#EquipmentV3 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV3 .col1 .item button,\r\n#EquipmentV3 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV3 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV3 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV3 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV3 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV3 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV3 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV3 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV3 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV3 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV3 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV3 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV3 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV3 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
+	EquipmentV3_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV3 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV3 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV3 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV3 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV3 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV3 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV3 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV3 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 .col1,\r\n#EquipmentV3 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV3 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV3 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV3 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV3 .col3 .item button,\r\n#EquipmentV3 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV3 .col1 .item button,\r\n#EquipmentV3 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV3 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV3 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV3 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV3 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV3 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV3 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV3 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV3 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV3 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV3 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV3 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV3 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV3 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.js
-/**
-* Function to show the selected tab and update the current tab ID.
-*
-* @return {boolean} false to stop the browser from following the link
-*/
+function _getRoot$10() {
+	return EquipmentV3._shadow || EquipmentV3._host;
+}
+function escapeHTML$2(str) {
+	const div = document.createElement("div");
+	div.textContent = str;
+	return div.innerHTML;
+}
 function showTab$1() {
 	const selectedId = getHash$1(this.getAttribute("href"));
-	for (const id in contentDivs$1) if (id == selectedId) {
+	const root = _getRoot$10();
+	for (const id in contentDivs$1) if (id === selectedId) {
 		tabLinks$1[id].className = "tab selected";
-		contentDivs$1[id].className = "content";
+		if (contentDivs$1[id]) contentDivs$1[id].className = "content";
 	} else {
 		tabLinks$1[id].className = "tab";
-		contentDivs$1[id].classList.add("content", "hide");
+		if (contentDivs$1[id]) contentDivs$1[id].classList.add("content", "hide");
 	}
 	currentTabId$1 = selectedId;
 	if (SwitchEquip_default.ui) SwitchEquip_default.showSwapTab(currentTabId$1);
 	if (currentTabId$1 === "title") {
 		if (SwitchEquip_default.ui) {
-			switchUIopen$1 = SwitchEquip_default.ui.is(":visible");
-			SwitchEquip_default.ui.hide();
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			switchUIopen$1 = switchHost.style ? switchHost.style.display !== "none" : false;
+			if (switchHost.style) switchHost.style.display = "none";
 		}
-		EquipmentV3.ui.find(".switch_equip").hide();
+		const switchBtn = root.querySelector(".switch_equip");
+		if (switchBtn) switchBtn.style.display = "none";
 	} else {
-		if (SwitchEquip_default.ui && switchUIopen$1) SwitchEquip_default.ui.show();
-		EquipmentV3.ui.find(".switch_equip").show();
+		if (SwitchEquip_default.ui && switchUIopen$1) {
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			if (switchHost.style) switchHost.style.display = "";
+		}
+		const switchBtn = root.querySelector(".switch_equip");
+		if (switchBtn) switchBtn.style.display = "";
 	}
 	return false;
 }
-/**
-* Returns the first child element of the given parent element with the specified tag name.
-*
-* @param {Element} element - The parent element.
-* @param {string} tagName - The tag name of the child element to find.
-*/
 function getFirstChildWithTagName$1(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName == tagName.toUpperCase()) return element.childNodes[i];
+	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
 }
-/**
-* Returns the hash part of a URL.
-*
-* @param {string} url - The URL from which to extract the hash.
-* @return {string} The hash part of the URL.
-*/
 function getHash$1(url) {
 	const hashPos = url.lastIndexOf("#");
 	return url.substring(hashPos + 1);
 }
-/**
-* Toggles the visibility of the CartItems UI if the Session.Entity has a cart.
-*
-* @return {void} This function does not return anything.
-*/
 function onCartItems$1() {
-	if (SessionStorage_default.Entity.hasCart == false) return;
-	CartItems_default.ui.toggle();
+	if (SessionStorage_default.Entity.hasCart === false) return;
+	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
 }
 function onRemoveOption$2() {
 	const pkt = new PACKET.CZ.REQ_CARTOFF();
 	Network.sendPacket(pkt);
 }
-/**
-* Stop an event to propagate
-*/
-function stopPropagation$13(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Display or not status window
-*/
 function toggleStatus$2() {
-	const self = EquipmentV3.ui.find(".view_status");
-	const status = WinStatsController.getUI().ui;
-	const state = status.is(":visible") ? "on" : "off";
-	status.toggle();
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
-		self.css("backgroundImage", "url(" + data + ")");
+	const self = _getRoot$10().querySelector(".view_status");
+	const winStatsUI = WinStatsController.getUI();
+	const statusHost = winStatsUI._host || winStatsUI.ui;
+	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
+	const state = isVisible ? "on" : "off";
+	if (statusHost && statusHost.style) statusHost.style.display = isVisible ? "none" : "";
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
+		if (self) self.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Does player can see your equipment ?
-*/
 function toggleEquip$1() {
 	EquipmentV3.onConfigUpdate(0, !_showEquip$1 ? 1 : 0);
 }
-/**
-* Find elements in html base on item location
-*
-* @param {number} location
-* @returns {string} selector
-*/
 function getSelectorFromLocation$2(location) {
 	const selector = [];
 	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
@@ -266347,20 +266486,18 @@ function getSelectorFromLocation$2(location) {
 	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
 	return selector.join(", ");
 }
-/**
-* Drag an item over the equipment, show where to place the item
-*/
 function onDragOver$2(event) {
 	if (window._OBJ_DRAG_) {
 		const data = window._OBJ_DRAG_;
-		let item, selector, ui;
 		if (data.type === "item") {
-			item = data.data;
+			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
-				ui = EquipmentV3.ui.find(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", function(_data) {
-					ui.css("backgroundImage", "url(" + _data + ")");
+				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
+				const cells = _getRoot$10().querySelectorAll(selector);
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+					cells.forEach((c) => {
+						c.style.backgroundImage = `url(${_data})`;
+					});
 				});
 			}
 		}
@@ -266368,35 +266505,32 @@ function onDragOver$2(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drag out the window
-*/
 function onDragLeave$1(event) {
-	EquipmentV3.ui.find("td").css("backgroundImage", "none");
+	_getRoot$10().querySelectorAll("td").forEach((td) => {
+		td.style.backgroundImage = "none";
+	});
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drop an item in the equipment, equip it if possible
-*/
 function onDrop$10(event) {
 	let item, data;
+	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (_e) {}
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return false;
+	}
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV3.ui.find("td").css("backgroundImage", "none");
+			_getRoot$10().querySelectorAll("td").forEach((td) => {
+				td.style.backgroundImage = "none";
+			});
 			EquipmentV3.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
 		}
 	}
-	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Right click on an item
-*/
 function onEquipmentInfo$1(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = EquipmentV3._itemlist[index];
@@ -266409,48 +266543,46 @@ function onEquipmentInfo$1(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Double click on an equipment to remove it
-*/
 function onEquipmentUnEquip$1() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV3.onUnEquip(index);
-	EquipmentV3.ui.find(".overlay").hide();
+	const overlay = _getRoot$10().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* When mouse is over an equipment, display the item name
-*/
 function onEquipmentOver$1() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = EquipmentV3._itemlist[idx];
 	if (!item) return;
-	const overlay = EquipmentV3.ui.find(".overlay");
-	const pos = jquery_default(this).position();
-	if (!pos.top && !pos.left) return;
-	overlay.show();
-	overlay.css({
-		top: pos.top - 22,
-		left: pos.left - 22
-	});
-	overlay.text(DB.getItemName(item));
+	const root = _getRoot$10();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#EquipmentV3") || root;
+	const btnRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	const top = btnRect.top - rootRect.top;
+	const left = btnRect.left - rootRect.left;
+	if (!top && !left) return;
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${top - 22}px`;
+		overlay.style.left = `${left - 22}px`;
+		overlay.textContent = DB.getItemName(item);
+	}
 }
-/**
-* Remove the item name
-*/
 function onEquipmentOut$1() {
-	EquipmentV3.ui.find(".overlay").hide();
+	const overlay = _getRoot$10().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* Toggles the SwitchEquip UI and positions it absolutely to overlap with the footer.
-*/
 function onSwtichEquip$1() {
 	SwitchEquip_default.toggle();
-	SwitchEquip_default.ui.css({
-		position: "absolute",
-		top: 0,
-		left: 0,
-		zIndex: 100
-	});
+	if (SwitchEquip_default.ui) {
+		const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+		if (switchHost.style) {
+			switchHost.style.position = "absolute";
+			switchHost.style.top = "0";
+			switchHost.style.left = "0";
+			switchHost.style.zIndex = "100";
+		}
+	}
 }
 var EquipmentV3, _preferences$31, _ctx$6, _showEquip$1, _btnLevelUp$1, tabLinks$1, contentDivs$1, currentTabId$1, switchappend$1, switchUIopen$1, _currentTitleId$1, renderCharacter$1, EquipmentV3_default;
 var init_EquipmentV3 = __esmMin((() => {
@@ -266461,7 +266593,6 @@ var init_EquipmentV3 = __esmMin((() => {
 	init_PacketVerManager();
 	init_PacketStructure();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_SessionStorage();
@@ -266470,7 +266601,8 @@ var init_EquipmentV3 = __esmMin((() => {
 	init_SpriteRenderer();
 	init_UIVersionManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_CartItems();
 	init_SwitchEquip();
@@ -266479,7 +266611,8 @@ var init_EquipmentV3 = __esmMin((() => {
 	init_EquipmentV3$1();
 	init_Inventory();
 	init_Entity$1();
-	EquipmentV3 = new UIComponent("EquipmentV3", EquipmentV3_default$2, EquipmentV3_default$1);
+	EquipmentV3 = new GUIComponent("EquipmentV3", EquipmentV3_default$1);
+	EquipmentV3.render = () => EquipmentV3_default$2;
 	_preferences$31 = Preferences.get("EquipmentV3", {
 		x: 480,
 		y: 200,
@@ -266487,135 +266620,171 @@ var init_EquipmentV3 = __esmMin((() => {
 		reduce: false,
 		stats: true
 	}, 1);
-	/**
-	* @var {Array} equipment list
-	*/
 	EquipmentV3._itemlist = {};
 	_ctx$6 = [];
 	_showEquip$1 = false;
-	tabLinks$1 = new Array();
-	contentDivs$1 = new Array();
+	tabLinks$1 = {};
+	contentDivs$1 = {};
 	currentTabId$1 = "general";
 	_currentTitleId$1 = 0;
-	/**
-	* Initialize UI
-	*/
 	EquipmentV3.init = function init() {
-		_ctx$6.push(this.ui.find("canvas")[0].getContext("2d"));
-		_ctx$6.push(this.ui.find("canvas")[1].getContext("2d"));
-		const tabListItems = document.getElementById("tabs").childNodes;
-		let i;
-		for (i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName == "DIV") {
-			const tabLink = getFirstChildWithTagName$1(tabListItems[i], "A");
-			const id = getHash$1(tabLink.getAttribute("href"));
-			tabLinks$1[id] = tabLink;
-			contentDivs$1[id] = document.getElementById(id);
+		const root = _getRoot$10();
+		const canvases = root.querySelectorAll("canvas");
+		if (canvases[0]) _ctx$6.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$6.push(canvases[1].getContext("2d"));
+		const tabsEl = root.querySelector("#tabs");
+		if (tabsEl) {
+			const tabListItems = tabsEl.childNodes;
+			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
+				const tabLink = getFirstChildWithTagName$1(tabListItems[i], "A");
+				if (tabLink) {
+					const id = getHash$1(tabLink.getAttribute("href"));
+					tabLinks$1[id] = tabLink;
+					contentDivs$1[id] = root.querySelector(`#${id}`);
+				}
+			}
 		}
-		i = 0;
+		let idx = 0;
 		for (const id in tabLinks$1) {
 			tabLinks$1[id].onclick = showTab$1;
 			tabLinks$1[id].onfocus = function() {
 				this.blur();
 			};
-			if (i == 0) tabLinks$1[id].className = "tab selected";
-			i++;
+			if (idx === 0) tabLinks$1[id].className = "tab selected";
+			idx++;
 		}
-		i = 0;
+		idx = 0;
 		for (const id in contentDivs$1) if (contentDivs$1[id]) {
-			if (i != 0) contentDivs$1[id].classList.add("content", "hide");
-			i++;
+			if (idx !== 0) contentDivs$1[id].classList.add("content", "hide");
+			idx++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1 = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$13).click(() => {
-			_btnLevelUp$1.detach();
-			WinStatsController.getUI().ui.show();
-		});
-		else {
-			this.ui.find("#equipment_footer").remove();
-			this.ui.addClass("equipmentV0");
-			this.ui.find("#lvlup_base").remove();
+		if (UIVersionManager.getEquipmentVersion() > 0) {
+			const lvlupEl = root.querySelector("#lvlup_base");
+			if (lvlupEl) {
+				_btnLevelUp$1 = lvlupEl;
+				lvlupEl.remove();
+				_btnLevelUp$1.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				_btnLevelUp$1.addEventListener("click", () => {
+					if (_btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
+					const winStatsUI = WinStatsController.getUI();
+					if (winStatsUI._host) winStatsUI._host.style.display = "";
+				});
+			}
+		} else {
+			const footer = root.querySelector("#equipment_footer");
+			if (footer) footer.remove();
+			const rootEl = root.querySelector("#EquipmentV3");
+			if (rootEl) rootEl.classList.add("equipmentV0");
+			const lvlup = root.querySelector("#lvlup_base");
+			if (lvlup) lvlup.remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$13);
-		this.ui.find(".titlebar .mini").click(function() {
-			EquipmentV3.ui.find(".panel").toggle();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", () => {
+			const panel = root.querySelector(".panel");
+			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
 		});
-		this.ui.find(".titlebar .close").click(function() {
-			EquipmentV3.ui.hide();
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			EquipmentV3._host.style.display = "none";
 			Renderer.stop(renderCharacter$1);
 		});
-		this.ui.find(".removeOption").mousedown(onRemoveOption$2);
-		this.ui.find(".view_status").mousedown(toggleStatus$2);
-		this.ui.find(".show_equip").mousedown(toggleEquip$1);
-		this.ui.find(".cartitems").click(onCartItems$1);
-		this.ui.find(".switch_equip").click(onSwtichEquip$1);
+		const removeOptBtn = root.querySelector(".removeOption");
+		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$2);
+		const viewStatusBtn = root.querySelector(".view_status");
+		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$2);
+		const showEquipBtn = root.querySelector(".show_equip");
+		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$1);
+		const cartBtn = root.querySelector(".cartitems");
+		if (cartBtn) cartBtn.addEventListener("click", onCartItems$1);
+		const switchEquipBtn = root.querySelector(".switch_equip");
+		if (switchEquipBtn) switchEquipBtn.addEventListener("click", onSwtichEquip$1);
 		this.loadTitles();
-		this.ui.on("dragover", onDragOver$2);
-		this.ui.on("dragleave", onDragLeave$1);
-		this.ui.on("drop", onDrop$10);
-		this.ui.find(".content").on("contextmenu", ".item", onEquipmentInfo$1).on("dblclick", ".item", onEquipmentUnEquip$1).on("mouseover", "button", onEquipmentOver$1).on("mouseout", "button", onEquipmentOut$1);
-		this.draggable(this.ui.find(".titlebar"));
-		switchappend$1 = this.ui.find(".footer");
+		this._host.addEventListener("dragover", onDragOver$2);
+		this._host.addEventListener("dragleave", onDragLeave$1);
+		this._host.addEventListener("drop", onDrop$10);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onEquipmentInfo$1.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onEquipmentUnEquip$1.call(item, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const btn = e.target.closest("button");
+				if (btn) onEquipmentOver$1.call(btn, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest("button")) onEquipmentOut$1();
+			});
+		}
+		this.draggable(".titlebar");
+		switchappend$1 = root.querySelector(".footer");
 	};
-	/**
-	* Returns the current tab ID of the EquipmentV3 component.
-	*
-	* @return {string} The current tab ID.
-	*/
 	EquipmentV3.getCurrentTabId = function() {
 		return currentTabId$1;
 	};
-	/**
-	* Append to body
-	*/
 	EquipmentV3.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$31.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$31.x), Renderer.width - this.ui.width())
-		});
-		if (!_preferences$31.show) this.ui.hide();
-		if (_preferences$31.reduce) this.ui.find(".panel").hide();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$31.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - hostRect.width)}px`;
+		if (!_preferences$31.show) this._host.style.display = "none";
+		if (_preferences$31.reduce) {
+			const panel = _getRoot$10().querySelector(".panel");
+			if (panel) panel.style.display = "none";
+		}
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			if (!_preferences$31.stats) {
-				this.ui.find(".status_component").hide();
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
-					this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
-				}.bind(this));
+				const statusComp = _getRoot$10().querySelector(".status_component");
+				if (statusComp) statusComp.style.display = "none";
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
+					const btn = _getRoot$10().querySelector(".view_status");
+					if (btn) btn.style.backgroundImage = `url(${data})`;
+				});
 			}
 		}
-		if (this.ui.find("canvas").is(":visible")) Renderer.render(renderCharacter$1);
+		if (_getRoot$10().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$1);
 		SwitchEquip_default.append(switchappend$1);
-		SwitchEquip_default.ui.hide();
+		if (SwitchEquip_default.ui) {
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			if (switchHost.style) switchHost.style.display = "none";
+		}
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	EquipmentV3.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1.detach();
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
 		Renderer.stop(renderCharacter$1);
 		EquipmentV3._itemlist = {};
-		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$31.show = this.ui.is(":visible");
-		_preferences$31.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$31.stats = this.ui.find(".status_component").css("display") !== "none";
-		_preferences$31.y = parseInt(this.ui.css("top"), 10);
-		_preferences$31.x = parseInt(this.ui.css("left"), 10);
+		const root = _getRoot$10();
+		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
+			el.innerHTML = "";
+		});
+		_preferences$31.show = this._host.style.display !== "none";
+		const panel = root.querySelector(".panel");
+		_preferences$31.reduce = panel ? panel.style.display === "none" : false;
+		const statusComp = root.querySelector(".status_component");
+		_preferences$31.stats = statusComp ? statusComp.style.display !== "none" : false;
+		_preferences$31.y = parseInt(this._host.style.top, 10);
+		_preferences$31.x = parseInt(this._host.style.left, 10);
 		_preferences$31.save();
 	};
-	/**
-	* Start/stop rendering character in UI
-	*/
 	EquipmentV3.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
 			Renderer.render(renderCharacter$1);
-			if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1.detach();
+			if (UIVersionManager.getEquipmentVersion() > 0) {
+				if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
+			}
 			this.focus();
-		} else Renderer.stop(renderCharacter$1);
+		} else {
+			this._host.style.display = "none";
+			Renderer.stop(renderCharacter$1);
+		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	EquipmentV3.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
@@ -266623,28 +266792,14 @@ var init_EquipmentV3 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
 	EquipmentV3.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$1 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", function(data) {
-			EquipmentV3.ui.find(".show_equip").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
+			const btn = _getRoot$10().querySelector(".show_equip");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
-	EquipmentV3.setCostumeConfig = function setCostumeConfig(on) {};
-	/**
-	* Add an equipment to the window
-	*
-	* @param {Item} item
-	*/
+	EquipmentV3.setCostumeConfig = function setCostumeConfig(_on) {};
 	EquipmentV3.equip = function equip(item, location) {
 		const it = DB.getItemInfo(item.ITID);
 		item.equipped = location;
@@ -266659,47 +266814,44 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		this.ui.find(getSelectorFromLocation$2(location)).html("<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + jquery_default.escape(add3Dots(DB.getItemName(item, {
-			showItemGrade: false,
-			showItemSlots: false,
-			showItemOptions: false
-		}), 25)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] button").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .grade").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const root = _getRoot$10();
+		const selector = getSelectorFromLocation$2(location);
+		root.querySelectorAll(selector).forEach((cell) => {
+			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$2(add3Dots(DB.getItemName(item, {
+				showItemGrade: false,
+				showItemSlots: false,
+				showItemOptions: false
+			}), 25)) + "</span></div>";
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
+				btn.style.backgroundImage = `url(${data})`;
+			});
+		});
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] .grade`).forEach((el) => {
+				el.style.backgroundImage = `url(${data})`;
+			});
+		});
 		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
 		if (PacketVerManager_default.value >= 20170621) {
 			if (!InventoryController.getUI().isInEquipSwitchList(location)) SwitchEquip_default.equip(item, location, false);
 		}
 	};
-	/**
-	* Remove equipment from window
-	*
-	* @param {number} item index
-	* @param {number} item location
-	*/
 	EquipmentV3.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$2(location);
+		const root = _getRoot$10();
 		const item = EquipmentV3._itemlist[index];
 		item.equipped = 0;
-		this.ui.find(selector).empty();
+		root.querySelectorAll(selector).forEach((el) => {
+			el.innerHTML = "";
+		});
 		delete EquipmentV3._itemlist[index];
 		return item;
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	EquipmentV3.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp$1.appendTo("body");
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$1) document.body.appendChild(_btnLevelUp$1);
 	};
-	/**
-	* Check equipment location for item
-	* @param {number} location - The equipment location to check
-	* @returns {item.wItemSpriteNumber} Object with { item }
-	*/
 	EquipmentV3.checkEquipLoc = function checkEquipLoc(location) {
 		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location & location) return EquipmentV3._itemlist[key].wItemSpriteNumber;
 		return 0;
@@ -266741,10 +266893,15 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				if (_lastState & HasAttachmentState || _hasCart) EquipmentV3.ui.find(".removeOption").show();
-				else EquipmentV3.ui.find(".removeOption").hide();
-				if (_lastState & HasCartState || _hasCart) EquipmentV3.ui.find(".cartitems").show();
-				else EquipmentV3.ui.find(".cartitems").hide();
+				const root = _getRoot$10();
+				const removeOpt = root.querySelector(".removeOption");
+				const cartBtn = root.querySelector(".cartitems");
+				if (_lastState & HasAttachmentState || _hasCart) {
+					if (removeOpt) removeOpt.style.display = "";
+				} else if (removeOpt) removeOpt.style.display = "none";
+				if (_lastState & HasCartState || _hasCart) {
+					if (cartBtn) cartBtn.style.display = "";
+				} else if (cartBtn) cartBtn.style.display = "none";
 			}
 			if (currentTabId$1 === "general") {
 				equip_character.accessory = EquipmentV3.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
@@ -266772,50 +266929,53 @@ var init_EquipmentV3 = __esmMin((() => {
 			}
 		};
 	})();
-	/**
-	* Updates the owner name of items in the Equipment window.
-	*/
 	EquipmentV3.onUpdateOwnerName = function() {
+		const root = _getRoot$10();
 		for (const index in EquipmentV3._itemlist) {
 			const item = EquipmentV3._itemlist[index];
 			if (item.slot && [
 				255,
 				254,
 				65280
-			].includes(item.slot.card1)) EquipmentV3.ui.find(".item[data-index=\"" + index + "\"] .itemName").text(jquery_default.escape(DB.getItemName(item)));
+			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
+				nameEl.textContent = DB.getItemName(item);
+			});
 		}
 	};
-	/**
-	* Returns the number of equipped items in the Equipment window, excluding ammo.
-	*
-	* @return {number} The number of equipped items.
-	*/
 	EquipmentV3.getNumber = function() {
 		let num = 0;
-		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location && EquipmentV3._itemlist[key].location != EquipmentLocation_default.AMMO) num++;
+		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location && EquipmentV3._itemlist[key].location !== EquipmentLocation_default.AMMO) num++;
 		return num;
 	};
-	/**
-	* Title Functions.
-	*/
 	EquipmentV3.loadTitles = function() {
-		const titleList = this.ui.find("#title_list");
-		titleList.empty();
+		const titleList = _getRoot$10().querySelector("#title_list");
+		if (!titleList) return;
+		titleList.innerHTML = "";
 		const removeTitleText = DB.getMessage(2686) || "Remove Title";
-		const removeElement = jquery_default("<div class=\"title-option" + (_currentTitleId$1 === 0 ? " selected" : "") + "\" data-title=\"0\">" + removeTitleText + "</div>");
-		titleList.append(removeElement);
+		const removeSelectedClass = _currentTitleId$1 === 0 ? " selected" : "";
+		const removeEl = document.createElement("div");
+		removeEl.className = `title-option${removeSelectedClass}`;
+		removeEl.setAttribute("data-title", "0");
+		removeEl.textContent = removeTitleText;
+		titleList.appendChild(removeEl);
 		const allTitles = DB.getAllTitles();
 		for (const titleId in allTitles) if (allTitles.hasOwnProperty(titleId)) {
 			const titleName = allTitles[titleId];
-			const titleElement = jquery_default("<div class=\"title-option" + (parseInt(titleId) === _currentTitleId$1 ? " selected" : "") + "\" data-title=\"" + titleId + "\">" + titleName + "</div>");
-			titleList.append(titleElement);
+			const selectedClass = parseInt(titleId) === _currentTitleId$1 ? " selected" : "";
+			const titleEl = document.createElement("div");
+			titleEl.className = `title-option${selectedClass}`;
+			titleEl.setAttribute("data-title", titleId);
+			titleEl.textContent = titleName;
+			titleList.appendChild(titleEl);
 		}
-		titleList.off("click", ".title-option");
-		titleList.on("click", ".title-option", function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			const titleId = parseInt(this.getAttribute("data-title"));
-			EquipmentV3.selectTitle(titleId);
+		titleList.addEventListener("click", (e) => {
+			const option = e.target.closest(".title-option");
+			if (option) {
+				e.preventDefault();
+				e.stopPropagation();
+				const titleId = parseInt(option.getAttribute("data-title"));
+				EquipmentV3.selectTitle(titleId);
+			}
 		});
 	};
 	EquipmentV3.selectTitle = function(titleId) {
@@ -266827,19 +266987,10 @@ var init_EquipmentV3 = __esmMin((() => {
 		_currentTitleId$1 = titleId;
 		EquipmentV3.loadTitles();
 	};
-	/**
-	* Function to check if an item with a given location exists in the equip switch list
-	*
-	* @param {data} data - The data to be checked against
-	* @return {Object} The item in the equip switch list if found, otherwise 0
-	*/
 	EquipmentV3.isInEquipList = function(data) {
 		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location & data) return EquipmentV3._itemlist[key];
 		return 0;
 	};
-	/**
-	* Equips all items in _itemlist to SwitchEquip.
-	*/
 	EquipmentV3.equipItemsToSwitch = function() {
 		const equipmentKeys = Object.keys(EquipmentV3._itemlist);
 		for (let i = 0; i < equipmentKeys.length; i++) {
@@ -266848,9 +266999,6 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (equipmentItem.location) SwitchEquip_default.equip(equipmentItem, equipmentItem.location, false);
 		}
 	};
-	/**
-	* Method to define
-	*/
 	EquipmentV3.onUnEquip = function onUnEquip() {};
 	EquipmentV3.onConfigUpdate = function onConfigUpdate() {};
 	EquipmentV3.onEquipItem = function onEquipItem() {};
@@ -266867,120 +267015,103 @@ var init_EquipmentV4$2 = __esmMin((() => {
 //#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.css?raw
 var EquipmentV4_default$1;
 var init_EquipmentV4$1 = __esmMin((() => {
-	EquipmentV4_default$1 = "#EquipmentV4 {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV4 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV4 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV4 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV4 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV4 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV4 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV4 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV4 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV4 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV4 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV4 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 .col1,\r\n#EquipmentV4 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV4 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV4 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV4 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV4 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV4 .col3 .item button,\r\n#EquipmentV4 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV4 .col1 .item button,\r\n#EquipmentV4 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV4 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV4 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV4 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV4 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV4 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV4 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV4 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV4 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV4 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV4 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_costume {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 #damageskin .damageskin-selector {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	width: 280px;\r\n	margin: 0 auto;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option {\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	width: 64px;\r\n	height: 92px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	margin-top: 3px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option span {\r\n	position: relative;\r\n	top: -9px;\r\n	font-weight: bold;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option .icon {\r\n	width: 36px;\r\n	height: 36px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper {\r\n	width: 64px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n	gap: 0;\r\n	padding: 0;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper > div:first-child {\r\n	margin-top: 8px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper .label {\r\n	margin-top: 6px;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 .motion-check {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n	cursor: pointer;\r\n	width: 10px;\r\n	height: 12px;\r\n	margin-right: 4px;\r\n}\r\n\r\n#EquipmentV4 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV4 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV4 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV4 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
+	EquipmentV4_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV4 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV4 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV4 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV4 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV4 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV4 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV4 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV4 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV4 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV4 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV4 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV4 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 .col1,\r\n#EquipmentV4 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV4 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV4 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV4 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV4 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV4 .col3 .item button,\r\n#EquipmentV4 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV4 .col1 .item button,\r\n#EquipmentV4 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV4 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV4 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV4 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV4 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV4 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV4 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV4 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV4 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV4 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV4 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_costume {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 #damageskin .damageskin-selector {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	width: 280px;\r\n	margin: 0 auto;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option {\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	width: 64px;\r\n	height: 92px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	margin-top: 3px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option span {\r\n	position: relative;\r\n	top: -9px;\r\n	font-weight: bold;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option .icon {\r\n	width: 36px;\r\n	height: 36px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper {\r\n	width: 64px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n	gap: 0;\r\n	padding: 0;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper > div:first-child {\r\n	margin-top: 8px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper .label {\r\n	margin-top: 6px;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 .motion-check {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n	cursor: pointer;\r\n	width: 10px;\r\n	height: 12px;\r\n	margin-right: 4px;\r\n}\r\n\r\n#EquipmentV4 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV4 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV4 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV4 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.js
-/**
-* Function to show the selected tab and update the current tab ID.
-*
-* @return {boolean} false to stop the browser from following the link
-*/
+function _getRoot$9() {
+	return EquipmentV4._shadow || EquipmentV4._host;
+}
+function escapeHTML$1(str) {
+	const div = document.createElement("div");
+	div.textContent = str;
+	return div.innerHTML;
+}
 function showTab() {
 	const selectedId = getHash(this.getAttribute("href"));
-	for (const id in contentDivs) if (id == selectedId) {
+	const root = _getRoot$9();
+	for (const id in contentDivs) if (id === selectedId) {
 		tabLinks[id].className = "tab selected";
-		contentDivs[id].className = "content";
+		if (contentDivs[id]) contentDivs[id].className = "content";
 	} else {
 		tabLinks[id].className = "tab";
-		contentDivs[id].classList.add("content", "hide");
+		if (contentDivs[id]) contentDivs[id].classList.add("content", "hide");
 	}
 	currentTabId = selectedId;
 	if (SwitchEquip_default.ui) SwitchEquip_default.showSwapTab(currentTabId);
 	if (currentTabId !== "general") {
 		if (SwitchEquip_default.ui) {
-			switchUIopen = SwitchEquip_default.ui.is(":visible");
-			SwitchEquip_default.ui.hide();
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			switchUIopen = switchHost.style ? switchHost.style.display !== "none" : false;
+			if (switchHost.style) switchHost.style.display = "none";
 		}
-		EquipmentV4.ui.find(".switch_equip").hide();
-		EquipmentV4.ui.find(".show_equip").hide();
-		EquipmentV4.ui.find(".show_equip").next("span").hide();
+		const switchBtn = root.querySelector(".switch_equip");
+		if (switchBtn) switchBtn.style.display = "none";
+		const showEquipEl = root.querySelector(".show_equip");
+		if (showEquipEl) showEquipEl.style.display = "none";
+		const showEquipSpan = showEquipEl ? showEquipEl.nextElementSibling : null;
+		if (showEquipSpan && showEquipSpan.tagName === "SPAN") showEquipSpan.style.display = "none";
 		if (currentTabId === "costume") {
-			EquipmentV4.ui.find(".show_costume").show();
-			EquipmentV4.ui.find(".show_costume").next("span").show();
+			const costumeEl = root.querySelector(".show_costume");
+			if (costumeEl) costumeEl.style.display = "";
+			const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
+			if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "";
 		} else {
-			EquipmentV4.ui.find(".show_costume").hide();
-			EquipmentV4.ui.find(".show_costume").next("span").hide();
+			const costumeEl = root.querySelector(".show_costume");
+			if (costumeEl) costumeEl.style.display = "none";
+			const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
+			if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
 		}
 	} else {
-		EquipmentV4.ui.find(".show_equip").show();
-		EquipmentV4.ui.find(".show_equip").next("span").show();
-		EquipmentV4.ui.find(".show_costume").hide();
-		EquipmentV4.ui.find(".show_costume").next("span").hide();
-		if (SwitchEquip_default.ui && switchUIopen) SwitchEquip_default.ui.show();
-		EquipmentV4.ui.find(".switch_equip").show();
+		const showEquipEl = root.querySelector(".show_equip");
+		if (showEquipEl) showEquipEl.style.display = "";
+		const showEquipSpan = showEquipEl ? showEquipEl.nextElementSibling : null;
+		if (showEquipSpan && showEquipSpan.tagName === "SPAN") showEquipSpan.style.display = "";
+		const costumeEl = root.querySelector(".show_costume");
+		if (costumeEl) costumeEl.style.display = "none";
+		const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
+		if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
+		if (SwitchEquip_default.ui && switchUIopen) {
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			if (switchHost.style) switchHost.style.display = "";
+		}
+		const switchBtn = root.querySelector(".switch_equip");
+		if (switchBtn) switchBtn.style.display = "";
 	}
 	return false;
 }
-/**
-* Returns the first child element of the given parent element with the specified tag name.
-*
-* @param {Element} element - The parent element.
-* @param {string} tagName - The tag name of the child element to find.
-*/
 function getFirstChildWithTagName(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName == tagName.toUpperCase()) return element.childNodes[i];
+	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
 }
-/**
-* Returns the hash part of a URL.
-*
-* @param {string} url - The URL from which to extract the hash.
-* @return {string} The hash part of the URL.
-*/
 function getHash(url) {
 	const hashPos = url.lastIndexOf("#");
 	return url.substring(hashPos + 1);
 }
-/**
-* Toggles the visibility of the CartItems UI if the Session.Entity has a cart.
-*
-* @return {void} This function does not return anything.
-*/
 function onCartItems() {
-	if (SessionStorage_default.Entity.hasCart == false) return;
-	CartItems_default.ui.toggle();
+	if (SessionStorage_default.Entity.hasCart === false) return;
+	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
 }
 function onRemoveOption$1() {
 	const pkt = new PACKET.CZ.REQ_CARTOFF();
 	Network.sendPacket(pkt);
 }
-/**
-* Stop an event to propagate
-*/
-function stopPropagation$12(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Display or not status window
-*/
 function toggleStatus$1() {
-	const self = EquipmentV4.ui.find(".view_status");
-	const status = WinStatsController.getUI().ui;
-	const state = status.is(":visible") ? "on" : "off";
-	status.toggle();
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", function(data) {
-		self.css("backgroundImage", "url(" + data + ")");
+	const self = _getRoot$9().querySelector(".view_status");
+	const winStatsUI = WinStatsController.getUI();
+	const statusHost = winStatsUI._host || winStatsUI.ui;
+	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
+	const state = isVisible ? "on" : "off";
+	if (statusHost && statusHost.style) statusHost.style.display = isVisible ? "none" : "";
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
+		if (self) self.style.backgroundImage = `url(${data})`;
 	});
 }
-/**
-* Does player can see your equipment ?
-*/
 function toggleEquip() {
 	EquipmentV4.onConfigUpdate(0, !_showEquip ? 1 : 0);
 }
-/**
-* Show Costume ?
-*/
 function toggleCostume() {
 	EquipmentV4.onConfigUpdate(5, !_hideCostume ? 1 : 0);
 }
-/**
-* Find elements in html base on item location
-*
-* @param {number} location
-* @returns {string} selector
-*/
 function getSelectorFromLocation$1(location) {
 	const selector = [];
 	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
@@ -267006,20 +267137,18 @@ function getSelectorFromLocation$1(location) {
 	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
 	return selector.join(", ");
 }
-/**
-* Drag an item over the equipment, show where to place the item
-*/
 function onDragOver$1(event) {
 	if (window._OBJ_DRAG_) {
 		const data = window._OBJ_DRAG_;
-		let item, selector, ui;
 		if (data.type === "item") {
-			item = data.data;
+			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				selector = getSelectorFromLocation$1("location" in item ? item.location : item.WearLocation);
-				ui = EquipmentV4.ui.find(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", function(_data) {
-					ui.css("backgroundImage", "url(" + _data + ")");
+				const selector = getSelectorFromLocation$1("location" in item ? item.location : item.WearLocation);
+				const cells = _getRoot$9().querySelectorAll(selector);
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+					cells.forEach((c) => {
+						c.style.backgroundImage = `url(${_data})`;
+					});
 				});
 			}
 		}
@@ -267027,35 +267156,32 @@ function onDragOver$1(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drag out the window
-*/
 function onDragLeave(event) {
-	EquipmentV4.ui.find("td").css("backgroundImage", "none");
+	_getRoot$9().querySelectorAll("td").forEach((td) => {
+		td.style.backgroundImage = "none";
+	});
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Drop an item in the equipment, equip it if possible
-*/
 function onDrop$9(event) {
 	let item, data;
+	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (_e) {}
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return false;
+	}
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV4.ui.find("td").css("backgroundImage", "none");
+			_getRoot$9().querySelectorAll("td").forEach((td) => {
+				td.style.backgroundImage = "none";
+			});
 			EquipmentV4.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
 		}
 	}
-	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Right click on an item
-*/
 function onEquipmentInfo(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = EquipmentV4._itemlist[index];
@@ -267068,48 +267194,46 @@ function onEquipmentInfo(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-/**
-* Double click on an equipment to remove it
-*/
 function onEquipmentUnEquip() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV4.onUnEquip(index);
-	EquipmentV4.ui.find(".overlay").hide();
+	const overlay = _getRoot$9().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* When mouse is over an equipment, display the item name
-*/
 function onEquipmentOver() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = EquipmentV4._itemlist[idx];
 	if (!item) return;
-	const overlay = EquipmentV4.ui.find(".overlay");
-	const pos = jquery_default(this).position();
-	if (!pos.top && !pos.left) return;
-	overlay.show();
-	overlay.css({
-		top: pos.top - 22,
-		left: pos.left - 22
-	});
-	overlay.text(DB.getItemName(item));
+	const root = _getRoot$9();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#EquipmentV4") || root;
+	const btnRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	const top = btnRect.top - rootRect.top;
+	const left = btnRect.left - rootRect.left;
+	if (!top && !left) return;
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${top - 22}px`;
+		overlay.style.left = `${left - 22}px`;
+		overlay.textContent = DB.getItemName(item);
+	}
 }
-/**
-* Remove the item name
-*/
 function onEquipmentOut() {
-	EquipmentV4.ui.find(".overlay").hide();
+	const overlay = _getRoot$9().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-/**
-* Toggles the SwitchEquip UI and positions it absolutely to overlap with the footer.
-*/
 function onSwtichEquip() {
 	SwitchEquip_default.toggle();
-	SwitchEquip_default.ui.css({
-		position: "absolute",
-		top: 0,
-		left: 0,
-		zIndex: 100
-	});
+	if (SwitchEquip_default.ui) {
+		const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+		if (switchHost.style) {
+			switchHost.style.position = "absolute";
+			switchHost.style.top = "0";
+			switchHost.style.left = "0";
+			switchHost.style.zIndex = "100";
+		}
+	}
 }
 var EquipmentV4, _preferences$30, _ctx$5, _showEquip, _hideCostume, _currentTitleId, _btnLevelUp, tabLinks, contentDivs, currentTabId, switchappend, switchUIopen, renderCharacter, EquipmentV4_default;
 var init_EquipmentV4 = __esmMin((() => {
@@ -267120,7 +267244,6 @@ var init_EquipmentV4 = __esmMin((() => {
 	init_PacketVerManager();
 	init_PacketStructure();
 	init_ItemType();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_SessionStorage();
@@ -267129,7 +267252,8 @@ var init_EquipmentV4 = __esmMin((() => {
 	init_SpriteRenderer();
 	init_UIVersionManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_CartItems();
 	init_SwitchEquip();
@@ -267139,7 +267263,8 @@ var init_EquipmentV4 = __esmMin((() => {
 	init_EquipmentV4$1();
 	init_Inventory();
 	init_Entity$1();
-	EquipmentV4 = new UIComponent("EquipmentV4", EquipmentV4_default$2, EquipmentV4_default$1);
+	EquipmentV4 = new GUIComponent("EquipmentV4", EquipmentV4_default$1);
+	EquipmentV4.render = () => EquipmentV4_default$2;
 	_preferences$30 = Preferences.get("EquipmentV4", {
 		x: 480,
 		y: 200,
@@ -267147,121 +267272,179 @@ var init_EquipmentV4 = __esmMin((() => {
 		reduce: false,
 		stats: true
 	}, 1);
-	/**
-	* @var {Array} equipment list
-	*/
 	EquipmentV4._itemlist = {};
 	_ctx$5 = [];
 	_showEquip = false;
 	_hideCostume = false;
 	_currentTitleId = 0;
-	tabLinks = new Array();
-	contentDivs = new Array();
+	tabLinks = {};
+	contentDivs = {};
 	currentTabId = "general";
-	/**
-	* Initialize UI
-	*/
 	EquipmentV4.init = function init() {
-		_ctx$5.push(this.ui.find("canvas")[0].getContext("2d"));
-		_ctx$5.push(this.ui.find("canvas")[1].getContext("2d"));
-		const tabListItems = document.getElementById("tabs").childNodes;
-		let i;
-		for (i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName == "DIV") {
-			const tabLink = getFirstChildWithTagName(tabListItems[i], "A");
-			const id = getHash(tabLink.getAttribute("href"));
-			tabLinks[id] = tabLink;
-			contentDivs[id] = document.getElementById(id);
+		const root = _getRoot$9();
+		const canvases = root.querySelectorAll("canvas");
+		if (canvases[0]) _ctx$5.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$5.push(canvases[1].getContext("2d"));
+		const tabsEl = root.querySelector("#tabs");
+		if (tabsEl) {
+			const tabListItems = tabsEl.childNodes;
+			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
+				const tabLink = getFirstChildWithTagName(tabListItems[i], "A");
+				if (tabLink) {
+					const id = getHash(tabLink.getAttribute("href"));
+					tabLinks[id] = tabLink;
+					contentDivs[id] = root.querySelector(`#${id}`);
+				}
+			}
 		}
-		i = 0;
+		let idx = 0;
 		for (const id in tabLinks) {
 			tabLinks[id].onclick = showTab;
 			tabLinks[id].onfocus = function() {
 				this.blur();
 			};
-			if (i == 0) tabLinks[id].className = "tab selected";
-			i++;
+			if (idx === 0) tabLinks[id].className = "tab selected";
+			idx++;
 		}
-		i = 0;
+		idx = 0;
 		for (const id in contentDivs) if (contentDivs[id]) {
-			if (i != 0) contentDivs[id].classList.add("content", "hide");
-			i++;
+			if (idx !== 0) contentDivs[id].classList.add("content", "hide");
+			idx++;
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp = jquery_default("#lvlup_base").detach().mousedown(stopPropagation$12).click(() => {
-			_btnLevelUp.detach();
-			WinStatsController.getUI().ui.show();
-		});
-		else {
-			this.ui.find("#equipment_footer").remove();
-			this.ui.addClass("equipmentV0");
-			this.ui.find("#lvlup_base").remove();
+		if (UIVersionManager.getEquipmentVersion() > 0) {
+			const lvlupEl = root.querySelector("#lvlup_base");
+			if (lvlupEl) {
+				_btnLevelUp = lvlupEl;
+				lvlupEl.remove();
+				_btnLevelUp.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				_btnLevelUp.addEventListener("click", () => {
+					if (_btnLevelUp.parentNode) _btnLevelUp.remove();
+					const winStatsUI = WinStatsController.getUI();
+					if (winStatsUI._host) winStatsUI._host.style.display = "";
+				});
+			}
+		} else {
+			const footer = root.querySelector("#equipment_footer");
+			if (footer) footer.remove();
+			const rootEl = root.querySelector("#EquipmentV4");
+			if (rootEl) rootEl.classList.add("equipmentV0");
+			const lvlup = root.querySelector("#lvlup_base");
+			if (lvlup) lvlup.remove();
 		}
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$12);
-		this.ui.find(".titlebar .mini").click(function() {
-			EquipmentV4.ui.find(".panel").toggle();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", () => {
+			const panel = root.querySelector(".panel");
+			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
 		});
-		this.ui.find(".titlebar .close").click(function() {
-			EquipmentV4.ui.hide();
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			EquipmentV4._host.style.display = "none";
 			Renderer.stop(renderCharacter);
 		});
-		this.ui.find(".removeOption").mousedown(onRemoveOption$1);
-		this.ui.find(".view_status").mousedown(toggleStatus$1);
-		this.ui.find(".show_equip").mousedown(toggleEquip);
-		this.ui.find(".show_costume").mousedown(toggleCostume);
-		this.ui.find(".cartitems").click(onCartItems);
-		this.ui.find(".switch_equip").click(onSwtichEquip);
+		const removeOptBtn = root.querySelector(".removeOption");
+		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$1);
+		const viewStatusBtn = root.querySelector(".view_status");
+		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$1);
+		const showEquipBtn = root.querySelector(".show_equip");
+		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip);
+		const showCostumeBtn = root.querySelector(".show_costume");
+		if (showCostumeBtn) showCostumeBtn.addEventListener("mousedown", toggleCostume);
+		const cartBtn = root.querySelector(".cartitems");
+		if (cartBtn) cartBtn.addEventListener("click", onCartItems);
+		const switchEquipBtn = root.querySelector(".switch_equip");
+		if (switchEquipBtn) switchEquipBtn.addEventListener("click", onSwtichEquip);
 		this.loadTitles();
-		this.ui.on("dragover", onDragOver$1);
-		this.ui.on("dragleave", onDragLeave);
-		this.ui.on("drop", onDrop$9);
-		this.ui.find(".content").on("contextmenu", ".item", onEquipmentInfo).on("dblclick", ".item", onEquipmentUnEquip).on("mouseover", "button", onEquipmentOver).on("mouseout", "button", onEquipmentOut);
-		this.draggable(this.ui.find(".titlebar"));
-		switchappend = this.ui.find(".footer");
-		EquipmentV4.ui.find(".show_costume").hide();
-		EquipmentV4.ui.find(".show_costume").next("span").hide();
-		const buttons = this.ui.find("#damageskin .skin-option");
-		buttons.each(function() {
-			jquery_default(this).attr("data-background", "showdamage/btn_damage.bmp").attr("data-hover", "showdamage/btn_damage_press.bmp").attr("data-down", "showdamage/btn_damage_pick.bmp");
+		this._host.addEventListener("dragover", onDragOver$1);
+		this._host.addEventListener("dragleave", onDragLeave);
+		this._host.addEventListener("drop", onDrop$9);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onEquipmentInfo.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onEquipmentUnEquip.call(item, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const btn = e.target.closest("button");
+				if (btn) onEquipmentOver.call(btn, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest("button")) onEquipmentOut();
+			});
+		}
+		this.draggable(".titlebar");
+		switchappend = root.querySelector(".footer");
+		const costumeBtn2 = root.querySelector(".show_costume");
+		if (costumeBtn2) costumeBtn2.style.display = "none";
+		const costumeSpan = costumeBtn2 ? costumeBtn2.nextElementSibling : null;
+		if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
+		const skinButtons = root.querySelectorAll("#damageskin .skin-option");
+		skinButtons.forEach((btn) => {
+			btn.setAttribute("data-background", "showdamage/btn_damage.bmp");
+			btn.setAttribute("data-hover", "showdamage/btn_damage_press.bmp");
+			btn.setAttribute("data-down", "showdamage/btn_damage_pick.bmp");
 		});
-		buttons.each(this.parseHTML);
-		buttons.off("mouseup");
-		buttons.on("mousedown", function(event) {
-			const skinId = parseInt(this.getAttribute("data-skin"), 10);
-			EquipmentV4.setDamageSkin(skinId);
+		if (this.parseHTML) skinButtons.forEach((btn) => {
+			this.parseHTML.call(btn);
+		});
+		skinButtons.forEach((btn) => {
+			btn.addEventListener("mousedown", function() {
+				const skinId = parseInt(this.getAttribute("data-skin"), 10);
+				EquipmentV4.setDamageSkin(skinId);
+			});
 		});
 		let savedSkin = GraphicsSettings.damageSkin;
 		savedSkin = savedSkin !== void 0 && savedSkin !== null ? savedSkin : 0;
 		EquipmentV4.setDamageSkin(savedSkin);
-		const motionChecks = this.ui.find(".motion-check");
-		motionChecks.each(this.parseHTML);
-		motionChecks.on("mousedown", function() {
-			const motionId = parseInt(this.getAttribute("data-motion"), 10);
-			EquipmentV4.setDamageMotion(motionId);
+		const motionChecks = root.querySelectorAll(".motion-check");
+		if (this.parseHTML) motionChecks.forEach((btn) => {
+			this.parseHTML.call(btn);
+		});
+		motionChecks.forEach((btn) => {
+			btn.addEventListener("mousedown", function() {
+				const motionId = parseInt(this.getAttribute("data-motion"), 10);
+				EquipmentV4.setDamageMotion(motionId);
+			});
 		});
 		let savedMotion = GraphicsSettings.damageMotion;
 		savedMotion = savedMotion !== void 0 && savedMotion !== null ? savedMotion : 0;
 		EquipmentV4.setDamageMotion(savedMotion);
 	};
-	/**
-	* Title Functions.
-	*/
 	EquipmentV4.loadTitles = function() {
-		const titleList = this.ui.find("#title_list");
-		titleList.empty();
+		const titleList = _getRoot$9().querySelector("#title_list");
+		if (!titleList) return;
+		titleList.innerHTML = "";
 		const removeTitleText = DB.getMessage(2686) || "Remove Title";
-		const removeElement = jquery_default("<div class=\"title-option" + (_currentTitleId === 0 ? " selected" : "") + "\" data-title=\"0\">" + removeTitleText + "</div>");
-		titleList.append(removeElement);
+		const removeSelectedClass = _currentTitleId === 0 ? " selected" : "";
+		const removeEl = document.createElement("div");
+		removeEl.className = `title-option${removeSelectedClass}`;
+		removeEl.setAttribute("data-title", "0");
+		removeEl.textContent = removeTitleText;
+		titleList.appendChild(removeEl);
 		const allTitles = DB.getAllTitles();
 		for (const titleId in allTitles) if (allTitles.hasOwnProperty(titleId)) {
 			const titleName = allTitles[titleId];
-			const titleElement = jquery_default("<div class=\"title-option" + (parseInt(titleId) === _currentTitleId ? " selected" : "") + "\" data-title=\"" + titleId + "\">" + titleName + "</div>");
-			titleList.append(titleElement);
+			const selectedClass = parseInt(titleId) === _currentTitleId ? " selected" : "";
+			const titleEl = document.createElement("div");
+			titleEl.className = `title-option${selectedClass}`;
+			titleEl.setAttribute("data-title", titleId);
+			titleEl.textContent = titleName;
+			titleList.appendChild(titleEl);
 		}
-		titleList.off("click", ".title-option");
-		titleList.on("click", ".title-option", function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			const titleId = parseInt(this.getAttribute("data-title"));
-			EquipmentV4.selectTitle(titleId);
+		titleList.addEventListener("click", (e) => {
+			const option = e.target.closest(".title-option");
+			if (option) {
+				e.preventDefault();
+				e.stopPropagation();
+				const titleId = parseInt(option.getAttribute("data-title"));
+				EquipmentV4.selectTitle(titleId);
+			}
 		});
 	};
 	EquipmentV4.selectTitle = function(titleId) {
@@ -267273,67 +267456,65 @@ var init_EquipmentV4 = __esmMin((() => {
 		_currentTitleId = titleId;
 		EquipmentV4.loadTitles();
 	};
-	/**
-	* Returns the current tab ID of the EquipmentV4 component.
-	*
-	* @return {string} The current tab ID.
-	*/
 	EquipmentV4.getCurrentTabId = function() {
 		return currentTabId;
 	};
-	/**
-	* Append to body
-	*/
 	EquipmentV4.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$30.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$30.x), Renderer.width - this.ui.width())
-		});
-		if (!_preferences$30.show) this.ui.hide();
-		if (_preferences$30.reduce) this.ui.find(".panel").hide();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
+		if (!_preferences$30.show) this._host.style.display = "none";
+		if (_preferences$30.reduce) {
+			const panel = _getRoot$9().querySelector(".panel");
+			if (panel) panel.style.display = "none";
+		}
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			if (!_preferences$30.stats) {
-				this.ui.find(".status_component").hide();
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", function(data) {
-					this.ui.find(".view_status").css("backgroundImage", "url(" + data + ")");
-				}.bind(this));
+				const statusComp = _getRoot$9().querySelector(".status_component");
+				if (statusComp) statusComp.style.display = "none";
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
+					const btn = _getRoot$9().querySelector(".view_status");
+					if (btn) btn.style.backgroundImage = `url(${data})`;
+				});
 			}
 		}
-		if (this.ui.find("canvas").is(":visible")) Renderer.render(renderCharacter);
+		if (_getRoot$9().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
 		SwitchEquip_default.append(switchappend);
-		SwitchEquip_default.ui.hide();
+		if (SwitchEquip_default.ui) {
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			if (switchHost.style) switchHost.style.display = "none";
+		}
 	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
 	EquipmentV4.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp.detach();
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		Renderer.stop(renderCharacter);
 		EquipmentV4._itemlist = {};
-		this.ui.find(".col1, .col3, .ammo").empty();
-		_preferences$30.show = this.ui.is(":visible");
-		_preferences$30.reduce = this.ui.find(".panel").css("display") === "none";
-		_preferences$30.stats = this.ui.find(".status_component").css("display") !== "none";
-		_preferences$30.y = parseInt(this.ui.css("top"), 10);
-		_preferences$30.x = parseInt(this.ui.css("left"), 10);
+		const root = _getRoot$9();
+		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
+			el.innerHTML = "";
+		});
+		_preferences$30.show = this._host.style.display !== "none";
+		const panel = root.querySelector(".panel");
+		_preferences$30.reduce = panel ? panel.style.display === "none" : false;
+		const statusComp = root.querySelector(".status_component");
+		_preferences$30.stats = statusComp ? statusComp.style.display !== "none" : false;
+		_preferences$30.y = parseInt(this._host.style.top, 10);
+		_preferences$30.x = parseInt(this._host.style.left, 10);
 		_preferences$30.save();
 	};
-	/**
-	* Start/stop rendering character in UI
-	*/
 	EquipmentV4.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
 			Renderer.render(renderCharacter);
-			if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp.detach();
+			if (UIVersionManager.getEquipmentVersion() > 0) {
+				if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
+			}
 			this.focus();
-		} else Renderer.stop(renderCharacter);
+		} else {
+			this._host.style.display = "none";
+			Renderer.stop(renderCharacter);
+		}
 	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
 	EquipmentV4.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
@@ -267341,33 +267522,20 @@ var init_EquipmentV4 = __esmMin((() => {
 				break;
 		}
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
 	EquipmentV4.setEquipConfig = function setEquipConfig(on) {
 		_showEquip = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", function(data) {
-			EquipmentV4.ui.find(".show_equip").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
+			const btn = _getRoot$9().querySelector(".show_equip");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	/**
-	* Show or hide equipment
-	*
-	* @param {boolean} on
-	*/
 	EquipmentV4.setCostumeConfig = function setCostumeConfig(on) {
 		_hideCostume = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "0" : "1") + ".bmp", function(data) {
-			EquipmentV4.ui.find(".show_costume").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "0" : "1") + ".bmp", (data) => {
+			const btn = _getRoot$9().querySelector(".show_costume");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	/**
-	* Add an equipment to the window
-	*
-	* @param {Item} item
-	*/
 	EquipmentV4.equip = function equip(item, location) {
 		const it = DB.getItemInfo(item.ITID);
 		item.equipped = location;
@@ -267382,47 +267550,44 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		this.ui.find(getSelectorFromLocation$1(location)).html("<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + jquery_default.escape(add3Dots(DB.getItemName(item, {
-			showItemGrade: false,
-			showItemSlots: false,
-			showItemOptions: false
-		}), 25)) + "</span></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] button").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", function(data) {
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .grade").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		const root = _getRoot$9();
+		const selector = getSelectorFromLocation$1(location);
+		root.querySelectorAll(selector).forEach((cell) => {
+			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$1(add3Dots(DB.getItemName(item, {
+				showItemGrade: false,
+				showItemSlots: false,
+				showItemOptions: false
+			}), 25)) + "</span></div>";
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
+				btn.style.backgroundImage = `url(${data})`;
+			});
+		});
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+			root.querySelectorAll(`.item[data-index="${item.index}"] .grade`).forEach((el) => {
+				el.style.backgroundImage = `url(${data})`;
+			});
+		});
 		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
 		if (PacketVerManager_default.value >= 20170621) {
 			if (!InventoryController.getUI().isInEquipSwitchList(location)) SwitchEquip_default.equip(item, location, false);
 		}
 	};
-	/**
-	* Remove equipment from window
-	*
-	* @param {number} item index
-	* @param {number} item location
-	*/
 	EquipmentV4.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$1(location);
+		const root = _getRoot$9();
 		const item = EquipmentV4._itemlist[index];
 		item.equipped = 0;
-		this.ui.find(selector).empty();
+		root.querySelectorAll(selector).forEach((el) => {
+			el.innerHTML = "";
+		});
 		delete EquipmentV4._itemlist[index];
 		return item;
 	};
-	/**
-	* Add the button when leveling up
-	*/
 	EquipmentV4.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0) _btnLevelUp.appendTo("body");
+		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp) document.body.appendChild(_btnLevelUp);
 	};
-	/**
-	* Check equipment location for item
-	* @param {number} location - The equipment location to check
-	* @returns {item.wItemSpriteNumber} Object with { item }
-	*/
 	EquipmentV4.checkEquipLoc = function checkEquipLoc(location) {
 		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location & location) return EquipmentV4._itemlist[key].wItemSpriteNumber;
 		return 0;
@@ -267464,10 +267629,15 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				if (_lastState & HasAttachmentState || _hasCart) EquipmentV4.ui.find(".removeOption").show();
-				else EquipmentV4.ui.find(".removeOption").hide();
-				if (_lastState & HasCartState || _hasCart) EquipmentV4.ui.find(".cartitems").show();
-				else EquipmentV4.ui.find(".cartitems").hide();
+				const root = _getRoot$9();
+				const removeOpt = root.querySelector(".removeOption");
+				const cartBtn = root.querySelector(".cartitems");
+				if (_lastState & HasAttachmentState || _hasCart) {
+					if (removeOpt) removeOpt.style.display = "";
+				} else if (removeOpt) removeOpt.style.display = "none";
+				if (_lastState & HasCartState || _hasCart) {
+					if (cartBtn) cartBtn.style.display = "";
+				} else if (cartBtn) cartBtn.style.display = "none";
 			}
 			if (currentTabId === "general") {
 				equip_character.accessory = EquipmentV4.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
@@ -267495,77 +267665,65 @@ var init_EquipmentV4 = __esmMin((() => {
 			}
 		};
 	})();
-	/**
-	* Updates the owner name of items in the Equipment window.
-	*/
 	EquipmentV4.onUpdateOwnerName = function() {
+		const root = _getRoot$9();
 		for (const index in EquipmentV4._itemlist) {
 			const item = EquipmentV4._itemlist[index];
 			if (item.slot && [
 				255,
 				254,
 				65280
-			].includes(item.slot.card1)) EquipmentV4.ui.find(".item[data-index=\"" + index + "\"] .itemName").text(jquery_default.escape(DB.getItemName(item)));
+			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
+				nameEl.textContent = DB.getItemName(item);
+			});
 		}
 	};
-	/**
-	* Returns the number of equipped items in the Equipment window, excluding ammo.
-	*
-	* @return {number} The number of equipped items.
-	*/
 	EquipmentV4.getNumber = function() {
 		let num = 0;
-		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location && EquipmentV4._itemlist[key].location != EquipmentLocation_default.AMMO) num++;
+		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location && EquipmentV4._itemlist[key].location !== EquipmentLocation_default.AMMO) num++;
 		return num;
 	};
-	/**
-	* Parse Damage Skin Selector.
-	*/
 	EquipmentV4.setDamageSkin = function setDamageSkin(skinId) {
-		const buttons = this.ui.find("#damageskin .skin-option");
-		const buttonSelected = this.ui.find("#damageskin .skin-option[data-skin=" + skinId + "]");
+		const root = _getRoot$9();
+		const buttons = root.querySelectorAll("#damageskin .skin-option");
+		const buttonSelected = root.querySelector(`#damageskin .skin-option[data-skin="${skinId}"]`);
 		GraphicsSettings.damageSkin = skinId;
 		GraphicsSettings.save();
-		buttons.each(function() {
-			jquery_default(this).attr("data-background", "showdamage/btn_damage.bmp").attr("data-hover", "showdamage/btn_damage_press.bmp").attr("data-down", "showdamage/btn_damage_pick.bmp");
+		buttons.forEach((btn) => {
+			btn.setAttribute("data-background", "showdamage/btn_damage.bmp");
+			btn.setAttribute("data-hover", "showdamage/btn_damage_press.bmp");
+			btn.setAttribute("data-down", "showdamage/btn_damage_pick.bmp");
 		});
-		buttons.each(this.parseHTML);
-		buttons.off("mouseup");
-		Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage.bmp", function(data) {
-			buttons.css("backgroundImage", "url(" + data + ")");
+		if (this.parseHTML) buttons.forEach((btn) => {
+			this.parseHTML.call(btn);
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage_pick.bmp", function(data) {
-			buttonSelected.css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage.bmp", (data) => {
+			buttons.forEach((btn) => {
+				btn.style.backgroundImage = `url(${data})`;
+			});
 		});
-		buttonSelected.off("mouseover mouseout");
+		if (buttonSelected) {
+			Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage_pick.bmp", (data) => {
+				buttonSelected.style.backgroundImage = `url(${data})`;
+			});
+			buttonSelected.onmouseover = null;
+			buttonSelected.onmouseout = null;
+		}
 	};
-	/**
-	* Parse Damage Drawing Preference.
-	*/
 	EquipmentV4.setDamageMotion = function setDamageMotion(motionId) {
 		GraphicsSettings.damageMotion = motionId;
 		GraphicsSettings.save();
-		this.ui.find(".motion-check").each(function() {
-			const btn = jquery_default(this);
-			const bgImage = parseInt(btn.attr("data-motion"), 10) === motionId ? "checkbox_1.bmp" : "checkbox_0.bmp";
-			Client.loadFile(DB.INTERFACE_PATH + bgImage, function(data) {
-				btn.css("backgroundImage", "url(" + data + ")");
+		_getRoot$9().querySelectorAll(".motion-check").forEach((btn) => {
+			const bgImage = parseInt(btn.getAttribute("data-motion"), 10) === motionId ? "checkbox_1.bmp" : "checkbox_0.bmp";
+			Client.loadFile(DB.INTERFACE_PATH + bgImage, (data) => {
+				btn.style.backgroundImage = `url(${data})`;
 			});
 		});
 	};
-	/**
-	* Function to check if an item with a given location exists in the equip switch list
-	*
-	* @param {data} data - The data to be checked against
-	* @return {Object} The item in the equip switch list if found, otherwise 0
-	*/
 	EquipmentV4.isInEquipList = function(data) {
 		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location & data) return EquipmentV4._itemlist[key];
 		return 0;
 	};
-	/**
-	* Equips all items in _itemlist to SwitchEquip.
-	*/
 	EquipmentV4.equipItemsToSwitch = function() {
 		const equipmentKeys = Object.keys(EquipmentV4._itemlist);
 		for (let i = 0; i < equipmentKeys.length; i++) {
@@ -267574,9 +267732,6 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (equipmentItem.location) SwitchEquip_default.equip(equipmentItem, equipmentItem.location, false);
 		}
 	};
-	/**
-	* Method to define
-	*/
 	EquipmentV4.onUnEquip = function onUnEquip() {};
 	EquipmentV4.onConfigUpdate = function onConfigUpdate() {};
 	EquipmentV4.onEquipItem = function onEquipItem() {};
@@ -278847,6 +279002,7 @@ function setDelayOnIndex(index, delay) {
 	if (_list$5[index].Delay && _list$5[index].Delay >= Renderer.tick + delay) return;
 	_list$5[index].Delay = Renderer.tick + delay;
 	const ui = _getRoot$8().querySelector(`.container[data-index="${index}"]`);
+	if (!ui) return;
 	const existing = ui.querySelector(".cooldown-overlay");
 	if (existing) existing.remove();
 	const overlay = document.createElement("div");
@@ -279390,6 +279546,7 @@ var init_ShortCut = __esmMin((() => {
 	ShortCut.addElement = function addElement(index, isSkill, ID, count) {
 		let file, name;
 		const ui = _getRoot$8().querySelector(`.container[data-index="${index}"]`);
+		if (!ui) return;
 		ui.innerHTML = "";
 		if (!_list$5[index]) _list$5[index] = {};
 		_list$5[index].isSkill = isSkill;
@@ -310521,6 +310678,10 @@ async function _loadHeavyDeps() {
 	_EntityManager = EntityManagerMod.default;
 	_ScrollBar = ScrollBarMod.default;
 }
+function _ensureDeps() {
+	if (!_depsPromise) _depsPromise = _loadHeavyDeps();
+	return _depsPromise;
+}
 /**
 * Create a component
 *
@@ -310548,7 +310709,7 @@ function setComponentZIndex(comp, value) {
 	if (comp._host) comp._host.style.zIndex = value;
 	else if (comp.ui) comp.ui.css("zIndex", value);
 }
-var _Cursor, _DB, _Client, _Renderer, _EntityManager, _ScrollBar, _style, _snapCache;
+var _Cursor, _DB, _Client, _Renderer, _EntityManager, _ScrollBar, _depsPromise, _style, _snapCache;
 var init_UIComponent = __esmMin((() => {
 	init_Common$1();
 	init_jquery();
@@ -310563,6 +310724,7 @@ var init_UIComponent = __esmMin((() => {
 	_Renderer = null;
 	_EntityManager = null;
 	_ScrollBar = null;
+	_depsPromise = null;
 	_style = jquery_default("style:first");
 	if (!_style.length) _style = jquery_default("<style type=\"text/css\"></style>").appendTo("head");
 	_style.append(Common_default$1);
@@ -310595,7 +310757,7 @@ var init_UIComponent = __esmMin((() => {
 	* Prepare the component to be used
 	*/
 	UIComponent.prototype.prepare = function prepare() {
-		_loadHeavyDeps();
+		_ensureDeps();
 		if (this.__loaded) return;
 		if (this._htmlText) {
 			this.ui = jquery_default(this._htmlText);
@@ -311010,7 +311172,12 @@ var init_UIComponent = __esmMin((() => {
 	* Parse a component html view (data-* attributes)
 	*/
 	UIComponent.prototype.parseHTML = function parseHTML() {
-		const $node = jquery_default(this);
+		const node = this;
+		if (!_Client || !_DB) {
+			_ensureDeps().then(() => parseHTML.call(node));
+			return;
+		}
+		const $node = jquery_default(node);
 		const background = $node.data("background");
 		const preload = $node.data("preload");
 		const hover = $node.data("hover");
@@ -342296,7 +342463,7 @@ var init_Intro = __esmMin((() => {
 			else msg = (used / 1024).toFixed(2) + " KiB saved";
 			const msgEl = root.querySelector(".msg");
 			if (msgEl) msgEl.textContent = msg;
-			if (cleanBtn) cleanBtn.style.display = "";
+			if (cleanBtn) cleanBtn.style.display = "inline-block";
 		});
 		const introEl = root.querySelector(".intro");
 		_resizeHandler = () => {
