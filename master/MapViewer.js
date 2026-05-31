@@ -185178,6 +185178,16 @@ var init_PacketStructure = __esmMin((() => {
 		this.castle_list = fp.readString(end - fp.tell());
 	};
 	PACKET.ZC.GUILD_AGIT_INFO.size = -1;
+	PACKET.ZC.ADD_SKILL2 = function PACKET_ZC_ADD_SKILL2(fp, end) {
+		this.data = {};
+		this.data.SKID = fp.readUShort();
+		this.data.type = fp.readLong();
+		this.data.level = fp.readShort();
+		this.data.spcost = fp.readShort();
+		this.data.attackRange = fp.readShort();
+		this.data.upgradable = fp.readUChar();
+	};
+	PACKET.ZC.ADD_SKILL2.size = 15;
 	PACKET.ZC.PROPERTY_HOMUN3 = function PACKET_ZC_PROPERTY_HOMUN3(fp, end) {
 		this.szName = fp.readString(NAME_LENGTH);
 		this.bModified = fp.readUChar();
@@ -185202,6 +185212,17 @@ var init_PacketStructure = __esmMin((() => {
 		this.ATKRange = fp.readShort();
 	};
 	PACKET.ZC.PROPERTY_HOMUN3.size = 73;
+	PACKET.ZC.ADD_SKILL3 = function PACKET_ZC_ADD_SKILL3(fp, end) {
+		this.data = {};
+		this.data.SKID = fp.readUShort();
+		this.data.type = fp.readLong();
+		this.data.level = fp.readShort();
+		this.data.spcost = fp.readShort();
+		this.data.attackRange = fp.readShort();
+		this.data.upgradable = fp.readUChar();
+		this.data.level2 = fp.readShort();
+	};
+	PACKET.ZC.ADD_SKILL3.size = 17;
 	PACKET.ZC.SKILLINFO_LIST2 = function PACKET_ZC_SKILLINFO_LIST2(fp, end) {
 		this.skillList = (function() {
 			const count = (end - fp.tell()) / 15 | 0;
@@ -185220,6 +185241,16 @@ var init_PacketStructure = __esmMin((() => {
 		})();
 	};
 	PACKET.ZC.SKILLINFO_LIST2.size = -1;
+	PACKET.ZC.SKILLINFO_UPDATE3 = function PACKET_ZC_SKILLINFO_UPDATE3(fp, end) {
+		this.SKID = fp.readShort();
+		this.type = fp.readLong();
+		this.level = fp.readShort();
+		this.spcost = fp.readShort();
+		this.attackRange = fp.readShort();
+		this.upgradable = fp.readChar();
+		this.level2 = fp.readShort();
+	};
+	PACKET.ZC.SKILLINFO_UPDATE3.size = 17;
 	PACKET.ZC.EQUIPWIN_MICROSCOPE_V7 = function PACKET_ZC_EQUIPWIN_MICROSCOPE_V7(fp, end) {
 		this.characterName = fp.readString(NAME_LENGTH);
 		this.job = fp.readShort();
@@ -220292,8 +220323,11 @@ var init_PacketRegister = __esmMin((() => {
 		2853: PACKET.ZC.PAR_4JOB_CHANGE,
 		2855: PACKET.ZC.GUILD_AGIT_INFO,
 		2849: PACKET.CZ.SHORTCUT_KEY_CHANGE2,
+		2858: PACKET.ZC.ADD_SKILL2,
 		2863: PACKET.ZC.PROPERTY_HOMUN3,
+		2865: PACKET.ZC.ADD_SKILL3,
 		2866: PACKET.ZC.SKILLINFO_LIST2,
+		2867: PACKET.ZC.SKILLINFO_UPDATE3,
 		2871: PACKET.ZC.EQUIPWIN_MICROSCOPE_V7,
 		2873: PACKET.ZC.SPLIT_SEND_ITEMLIST_EQUIP2,
 		2877: PACKET.ZC.PC_PURCHASE_ITEMLIST_FROMMC3,
@@ -328672,7 +328706,10 @@ function SkillEngine() {
 	Network.hookPacket(PACKET.ZC.SKILLINFO_LIST2, onSkillList$2);
 	Network.hookPacket(PACKET.ZC.SKILLINFO_UPDATE, onSkillUpdate$2);
 	Network.hookPacket(PACKET.ZC.SKILLINFO_UPDATE2, onSkillUpdate$2);
+	Network.hookPacket(PACKET.ZC.SKILLINFO_UPDATE3, onSkillUpdate$2);
 	Network.hookPacket(PACKET.ZC.ADD_SKILL, onSkillAdded);
+	Network.hookPacket(PACKET.ZC.ADD_SKILL2, onSkillAdded);
+	Network.hookPacket(PACKET.ZC.ADD_SKILL3, onSkillAdded);
 	Network.hookPacket(PACKET.ZC.SHORTCUT_KEY_LIST, onShortCutList);
 	Network.hookPacket(PACKET.ZC.SHORTCUT_KEY_LIST_V2, onShortCutList);
 	Network.hookPacket(PACKET.ZC.SHORTCUT_KEY_LIST_V3, onShortCutList);
