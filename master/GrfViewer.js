@@ -97203,7 +97203,7 @@ var init_wasmoon_lua5_1 = __esmMin((() => {
 	import_lodash = /* @__PURE__ */ __toESM(require_lodash(), 1);
 	exports$3 = {};
 	_documentCurrentScript = typeof document !== "undefined" ? document.currentScript : null;
-	lodash__namespace = /* @__PURE__ */ _interopNamespaceDefault(import_lodash.default);
+	lodash__namespace = /*#__PURE__*/ _interopNamespaceDefault(import_lodash.default);
 	JsType = class JsType {
 		static create(name, is) {
 			return new JsType(name, is);
@@ -166283,7 +166283,7 @@ var init_bson = __esmMin((() => {
 	Object.freeze(onDemand);
 	MAXSIZE = 1024 * 1024 * 17;
 	buffer = ByteUtils.allocate(MAXSIZE);
-	bson = /* @__PURE__ */ Object.freeze({
+	bson = /*#__PURE__*/ Object.freeze({
 		__proto__: null,
 		BSONError,
 		BSONOffsetError,
@@ -344016,7 +344016,7 @@ function renderFiles(list) {
 		let html = "";
 		for (j = 0; j < 200 && i + j < count; ++j) {
 			const type = getFileIcon(list[j + i]);
-			html += `<div class="icon ${type}" data-path="${list[j + i]}">	<img src="${new URL((/* @__PURE__ */ Object.assign({
+			html += `<div class="icon ${type}" data-path="${list[j + i]}">	<img src="${new URL((/* #__PURE__ */ Object.assign({
 				"./Icons/3d.png": _3d_default,
 				"./Icons/arw-left.png": arw_left_default,
 				"./Icons/arw-right.png": arw_right_default,

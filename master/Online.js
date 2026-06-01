@@ -271081,7 +271081,7 @@ var init_wasmoon_lua5_1 = __esmMin((() => {
 	import_lodash = /* @__PURE__ */ __toESM(require_lodash(), 1);
 	exports$2 = {};
 	_documentCurrentScript = typeof document !== "undefined" ? document.currentScript : null;
-	lodash__namespace = /* @__PURE__ */ _interopNamespaceDefault(import_lodash.default);
+	lodash__namespace = /*#__PURE__*/ _interopNamespaceDefault(import_lodash.default);
 	JsType = class JsType {
 		static create(name, is) {
 			return new JsType(name, is);
@@ -299531,7 +299531,7 @@ var init_bson = __esmMin((() => {
 	Object.freeze(onDemand);
 	MAXSIZE = 1024 * 1024 * 17;
 	buffer = ByteUtils.allocate(MAXSIZE);
-	bson = /* @__PURE__ */ Object.freeze({
+	bson = /*#__PURE__*/ Object.freeze({
 		__proto__: null,
 		BSONError,
 		BSONOffsetError,
