@@ -98,6 +98,152 @@ Clan.mouseMode = GUIComponent.MouseMode.STOP;
 
 ---
 
+## Comprehensive Migration Checklist
+
+Use this checklist to ensure nothing is missed during a migration. Each item references the detailed section (§) where the full explanation lives.
+
+### Phase 1: Pre-Migration Analysis
+
+Read the original component (JS, CSS, HTML) and answer these questions:
+
+- [ ] **Mouse mode?** — CROSS (transparent overlay), STOP (standard window), FREEZE (modal dialog). See [Mouse Modes](#mouse-modes).
+- [ ] **Toggle-style or on-demand?** — Toggle = appended at startup, shown/hidden via `toggle()`. On-demand = appended only when needed (e.g., NPC dialog). On-demand components must NOT hide in `init()` (§24).
+- [ ] **Has text inputs (`<input>`, `<select>`, `<textarea>`)?** → Must set `captureKeyEvents = true` and guard `onKeyDown` with `shadowRoot.activeElement` check (§8).
+- [ ] **Displays game text with `^rrggbb` color codes?** → Must use `DB.formatMsgToHtml()` + `innerHTML`, not `.textContent` (§13, §30).
+- [ ] **Has right-click handling?** → Must add explicit `contextmenu` listener with `preventDefault()` (§26).
+- [ ] **Fixed-size or dynamic-size?** → Affects `:host` CSS and inner element positioning strategy (§4a, §4b, §25).
+- [ ] **Full-viewport overlay?** → `:host { width: 100%; height: 100% }` (§16).
+- [ ] **Has multiple draggable sub-windows?** → `draggable()` only works on `_host`; need custom `_makeDraggable()` helper (§32).
+- [ ] **Has toggleable background images (checkboxes, state indicators)?** → Do NOT use `<ui-button>` — use `<button>` or `<div>` instead (§33).
+- [ ] **Needs hand cursor on hover?** → Element must match GUIComponent's `CLICKABLE_SELECTOR` list (§34).
+- [ ] **FREEZE mode covering full viewport?** → Do NOT use `pointer-events: none` on `:host` (§35).
+- [ ] **Uses `<ui-image>` in HTML template?** → Aware of lifecycle race; `attributeChangedCallback` fires before `connectedCallback` (§36).
+- [ ] **Full-viewport overlay (CROSS mode)?** → Inner div must use `position: absolute`, not `position: relative` to bypass `.ui-component-root` (§37, §38).
+- [ ] **Has tiling background textures (window frames)?** → Do NOT add `background-repeat: no-repeat` to center/body elements (§39).
+- [ ] **Mobile-facing component?** → Use `vmin` units for sizes, `%` for positions (§40).
+- [ ] **Embeds another UIComponent?** → Must migrate inner component too; UIComponent cannot query inside Shadow DOM (§42).
+
+### Phase 2: Create Files
+
+- [ ] Create `ComponentName.js`, `ComponentName.html`, `ComponentName.css`
+- [ ] JS: `new GUIComponent('Name', cssText)`, `render = () => htmlText`
+- [ ] JS: `import 'UI/Elements/Elements.js'` if using Custom Elements
+- [ ] JS: Set `mouseMode` (CROSS/STOP/FREEZE)
+
+### Phase 3: Convert JS
+
+- [ ] Replace jQuery DOM queries with `this._shadow.querySelector()` / `querySelectorAll()` (§5)
+- [ ] Use `_getRoot()` helper for module-level singletons (§5)
+- [ ] Replace jQuery event binding with `addEventListener` (§6)
+- [ ] Bind events in `init()`, restore state in `onAppend()`, save in `onRemove()` — never bind in `onAppend()`
+- [ ] Replace `.text(value)` → `.textContent` (plain text) or `DB.formatMsgToHtml()` + `.innerHTML` (game text with `^rrggbb`) (§13, §30)
+- [ ] Replace `.show()`/`.hide()` → `style.display = 'block'` / `'none'` (§1, §10, §18)
+- [ ] Replace `$.extend()` → `Object.assign()` / spread operator
+- [ ] Replace `jQuery.escape()` → local `_escapeHTML()` helper
+- [ ] Replace `return false` in event handlers → explicit `stopImmediatePropagation()` + `preventDefault()` (§12)
+- [ ] Remove `event.isTrigger` checks (§21)
+- [ ] Keep `function()` (not arrow) for callbacks relying on dynamic `this` via `.call()`/`.apply()` (§9)
+- [ ] Null-guard `querySelector` results for dynamic indices from server packets (§31)
+- [ ] Use `querySelectorAll` + `forEach` when selector may match multiple elements (§28)
+- [ ] Call `element._roScrollbarRestart()` after programmatic `scrollTop` changes (§29)
+- [ ] Add `contextmenu` listener with `e.preventDefault()` on right-click areas (§26)
+- [ ] Use `getBoundingClientRect()` relative to root for overlay/tooltip positioning (§27)
+- [ ] For elements moved outside shadow root: apply inline styles BEFORE `remove()` (§19)
+- [ ] Guard `onKeyDown` with `shadowRoot.activeElement` check if component has text inputs (§8)
+- [ ] Use capture-phase listeners to replace jQuery event queue reordering (§12)
+
+### Phase 4: Convert HTML
+
+- [ ] Replace `data-background`/`data-hover`/`data-down` → `<ui-button bg="..." hover="..." down="...">` (optional — `data-*` still works)
+- [ ] Replace `data-text` → `<ui-text msg="...">` (optional)
+- [ ] Replace `data-background` (non-button) → `<ui-image src="...">` (optional)
+- [ ] For clickable elements needing hand cursor: use `<button>`, `<ui-button>`, `<a>`, `<input>`, `<label>`, or `.item-link`/`.draggable` class — plain `<div>` is NOT recognized by cursor system (§34)
+- [ ] Do NOT use `<ui-button>` for elements whose `backgroundImage` changes at runtime (checkboxes, toggles) — use `<button>` instead (§33)
+
+### Phase 5: Convert CSS
+
+- [ ] Move `top`/`left`/`width`/`height` to `:host` (§4a)
+- [ ] Do NOT set `position: absolute` or `z-index` on `:host` (set by JS in `prepare()`)
+- [ ] Inner element: `position: absolute` (fixed-size with `:host` dimensions) or `position: relative` (auto-size without `:host` dimensions) (§4a, §25)
+- [ ] Dynamic-size components: no `position: absolute` on inner div (§4b)
+- [ ] FREEZE mode full-viewport: `:host { width: 100%; height: 100% }` WITHOUT `pointer-events: none` (§35)
+- [ ] CROSS mode overlay: `:host { pointer-events: none }` + `pointer-events: auto` on interactive children (§11)
+- [ ] Remove `body {}` rules — apply via JS in `onAppend()` (§15)
+- [ ] Use explicit `display: 'block'`/`'none'` when CSS declares `display: none` on toggled elements (§10)
+- [ ] Add `height: 100%` to inner element if `:host` has `overflow: hidden` with `bottom`-anchored children (§23)
+- [ ] Escape CSS selectors starting with digit: `.3d` → `.\\33 d` (§14)
+- [ ] Avoid duplicate dimensions on `:host` and inner element — causes scrollbars (§20)
+- [ ] Do NOT add `background-repeat: no-repeat` to tiling texture elements (window frame centers) (§39)
+- [ ] Use `vmin` for sizes on mobile-facing components, not fixed `px` (§40)
+
+### Phase 6: Post-Migration Verification
+
+- [ ] ESLint: 0 errors
+- [ ] Prettier: all files pass
+- [ ] Visual: no unexpected scrollbars (§20)
+- [ ] Visual: sprite cursor shows hand on clickable elements (§34)
+- [ ] Visual: toggle/checkbox elements maintain visual state after click (§33)
+- [ ] Functional: FREEZE mode blocks all clicks to game world (§35)
+- [ ] Functional: text with `^rrggbb` renders as colored spans
+- [ ] Functional: keyboard input works in text fields (not stolen by global handlers)
+- [ ] Functional: drag-and-drop works (sub-windows, items)
+- [ ] Functional: right-click does NOT show browser context menu (§26)
+- [ ] Functional: ESC / Enter / arrow keys work as expected
+- [ ] Functional: scrollbars sync with mouse wheel (§29)
+
+### Pitfall Classification
+
+Not all pitfalls require action from the migrator. Some are already handled by the GUIComponent framework.
+
+**Automatic (no action needed):**
+
+- §2: Global CSS penetration → Common.css `:host-context` rule
+- §3: Scrollbar CSS injection → `applyDOMScrollbar()` auto-detects shadow
+- §4 (closest body): `isConnected` fix in Scrollbar.js
+- §5 (mouse events): `_setupShadowCursorEvents()` handles retargeting
+- §6 (offsetParent): `ui` proxy mimics jQuery behavior
+- §7 (css proxy): Both proxy syntaxes work
+
+**Manual (you must handle):**
+
+- §1: jQuery `.show()` → explicit display values
+- §8: `captureKeyEvents` + `onKeyDown` guard for text inputs
+- §9: Keep `function()` for dynamic `this` callbacks
+- §10: CSS `display: none` fallback trap
+- §11: `pointer-events: none` inheritance from `:host`
+- §12: Capture-phase events replacing jQuery queue reordering
+- §13/§30: RO text `^rrggbb` color codes via `DB.formatMsgToHtml()`
+- §14: CSS selectors starting with digit
+- §15: Body styles in shadow CSS
+- §16: Full-viewport `:host` sizing
+- §17: Asset path constants → use `DB.INTERFACE_PATH`
+- §18: jQuery `.show()` on child elements
+- §19: Elements moved outside shadow lose CSS
+- §20: Duplicate `:host` / inner dimensions causing scrollbars
+- §21: Remove `event.isTrigger` checks
+- §22: `getComputedStyle()` for visible element detection
+- §23: Inner element `height: 100%` for `bottom`-anchored children
+- §24: Don't hide on-demand components in `init()`
+- §25: `position: relative` for auto-sizing inner root
+- §26: Explicit `contextmenu` prevention
+- §27: `getBoundingClientRect()` for overlay positioning
+- §28: `querySelectorAll` for multi-match updates
+- §29: Scrollbar sync after programmatic `scrollTop`
+- §31: Null-guard `querySelector` for server packet indices
+- §32: Sub-window dragging via custom `_makeDraggable()` helper
+- §33: `<ui-button>` overrides `backgroundImage` — don't use for toggleable elements
+- §34: Sprite cursor `CLICKABLE_SELECTOR` — use recognized elements for hand cursor
+- §35: FREEZE mode + `pointer-events: none` conflict on `:host`
+- §36: `<ui-image>` lifecycle race (already fixed in UIImage.js, but aware when creating new Custom Elements)
+- §37: `.ui-component-root` has no dimensions — full-viewport inner div must use `position: absolute`
+- §38: CROSS-mode selective `pointer-events` pattern
+- §39: `background-repeat` defaults for tiling window frame textures
+- §40: Use `vmin` units for mobile-responsive sizing
+- §41: `touch-action: manipulation` must target `:host` (already applied in Common.css)
+- §42: UIComponent cannot be embedded inside GUIComponent Shadow DOM
+
+---
+
 ## Step-by-Step Migration Checklist
 
 ### 1. Create the component files
@@ -992,145 +1138,6 @@ Use `'block'` (or the appropriate display value) to override CSS `display: none`
 
 ---
 
-## Reference: Clan Component (first GUIComponent migration)
-
-### Files
-
-- `src/UI/Components/Clan/Clan.js` — Component logic
-- `src/UI/Components/Clan/Clan.html` — HTML template using `<ui-button>`, `<ui-text>`
-- `src/UI/Components/Clan/Clan.css` — Styles with `:host` for dimensions/position
-
-> **Note**: The Clan component was the first GUIComponent migration and still uses some `this.ui` proxy calls (`this.ui.hide()`, `this.ui.show()`, `this.ui.is(':visible')`). New components should use native DOM equivalents as described in this guide. But use proxy on `this.ui.hide()`, `this.ui.show()` because it calls fix overflow.
-
-### CSS Pattern
-
-```css
-:host {
-	width: 400px;
-	height: 317px;
-	top: 150px;
-	left: 150px;
-}
-
-#Clan {
-	position: absolute;
-	width: 400px;
-	height: 317px;
-}
-```
-
----
-
-## Reference: StatusIcons Component (dynamic-size, no fixed dimensions)
-
-### Files
-
-- `src/UI/Components/StatusIcons/StatusIcons.js` — Component logic (module-level singleton with `_getRoot()` helper)
-- `src/UI/Components/StatusIcons/StatusIcons.html` — Minimal template (`<div id="StatusIcons"></div>`)
-- `src/UI/Components/StatusIcons/StatusIcons.css` — Dynamic-size CSS pattern (no `position: absolute` on inner div)
-
-### Key Patterns
-
-- **No fixed dimensions on `:host`**: The host has no `width`/`height` — children are absolutely positioned and extend outward. `overflow: visible` on `:host` prevents clipping.
-- **No `position: absolute` on inner div**: The inner `#StatusIcons` is `display: block` only. `.state` children use `_host` as their containing block.
-- **`_getRoot()` helper**: Module-level functions use `_getRoot()` instead of `this._shadow` since they're not methods on the component instance.
-- **Mixed arrow/regular callbacks**: `Client.loadFile` callback is an arrow function, but `Texture.load` callback is a regular `function()` because it relies on `.apply(canvas)` for `this` binding.
-- **`null` HTML original**: The original UIComponent used `null` HTML and created its root in `init()`. The GUIComponent version uses a minimal `.html` template instead.
-
-### CSS Pattern
-
-```css
-:host {
-	top: 166px;
-	right: 20px;
-	overflow: visible;
-}
-
-#StatusIcons {
-	display: block;
-}
-```
-
----
-
-## Reference: SkillTargetSelection Component (overlay, CROSS mouse mode, capture-phase events)
-
-### Files
-
-- `src/UI/Components/SkillTargetSelection/SkillTargetSelection.js` — Component logic (module-level singleton with `_getRoot()` helper)
-- `src/UI/Components/SkillTargetSelection/SkillTargetSelection.html` — Minimal template (3 canvas elements)
-- `src/UI/Components/SkillTargetSelection/SkillTargetSelection.css` — Overlay CSS pattern (`:host` with `pointer-events: none`, children with `position: fixed`)
-
-### Key Patterns
-
-- **CROSS mouse mode**: The host has `pointer-events: none` and `overflow: visible`. Mouse events pass through to the 3D scene behind the UI.
-- **`pointer-events: auto` on children**: Canvas elements override inherited `pointer-events: none` from `:host` (see §11).
-- **`position: fixed` inside Shadow DOM**: Canvas elements use `position: fixed` for viewport-relative positioning, independent of the host's `position: absolute`. Works correctly as long as no ancestor has `transform`, `perspective`, or `filter`.
-- **Capture-phase mousedown**: Replaces jQuery queue reordering (`events.unshift(events.pop())`) with `addEventListener('mousedown', handler, true)` (see §12). Ensures skill targeting handler fires before MapControl.
-- **Inline visibility management**: Canvas visibility toggled via `style.display = 'block'` / `'none'` in JS, not via CSS `display: none` (see §10).
-- **`captureKeyEvents = true`**: Ensures ESCAPE key handler fires in capture phase, before other keydown handlers.
-- **`needFocus = false`**: Overlay does not steal focus from other components.
-- **Original appended canvases to `document.body`**: The legacy UIComponent created canvas elements dynamically and appended them directly to `document.body`. The GUIComponent version keeps them inside the Shadow DOM with `position: fixed` instead.
-
-### CSS Pattern
-
-```css
-:host {
-	top: 0;
-	left: 0;
-	overflow: visible;
-	pointer-events: none;
-}
-
-#SkillTargetSelection {
-	display: block;
-}
-
-.skill-level {
-	position: fixed;
-	left: 0;
-	top: 0;
-	z-index: 100;
-	pointer-events: auto;
-}
-```
-
----
-
-## Reference: SkillDescription Component (tooltip, dynamic position, RO text formatting)
-
-### Files
-
-- `src/UI/Components/SkillDescription/SkillDescription.js` — Component logic (module-level singleton with `_getRoot()` helper)
-- `src/UI/Components/SkillDescription/SkillDescription.html` — Minimal template (close button + content div, uses `data-background`/`data-hover`)
-- `src/UI/Components/SkillDescription/SkillDescription.css` — Tooltip CSS pattern (no fixed width/height on `:host`)
-
-### Key Patterns
-
-- **No fixed dimensions on `:host`**: The component sizes to its content. Only `top`/`left` are set on `:host` as defaults — actual position is set dynamically in `setSkill()` relative to the mouse cursor.
-- **`_formatROText()` for RO text**: Skill descriptions contain `^rrggbb` color codes. Uses a local helper to sanitize HTML, convert color codes to `<span>` tags, substitute item IDs, and convert newlines (see §13).
-- **`data-background`/`data-hover` on HTML**: The close button uses legacy `data-*` attributes which are processed by `GUIComponent._processAllDataAttrs()` — no Custom Element conversion needed.
-- **Dynamic positioning via `getBoundingClientRect()`**: `setSkill()` measures the host's rendered size and positions it near the mouse, clamped to screen bounds.
-- **Removed `onAppend` jQuery event reordering**: The original used `jQuery._data(window, 'events').keydown.unshift()` — unnecessary with GUIComponent's built-in key handling.
-
-### CSS Pattern
-
-```css
-:host {
-	top: 0px;
-	left: 0px;
-}
-
-#SkillDescription {
-	position: absolute;
-	border-radius: 5px;
-	padding: 1px;
-	border: 1px solid #c5c5c5;
-}
-```
-
----
-
 ## Quick Reference: What NOT to do
 
 | Don't                                                                    | Do instead                                                        | Why                                                                                                                 |
@@ -1168,6 +1175,10 @@ Use `'block'` (or the appropriate display value) to override CSS `display: none`
 | Setting `scrollTop` without syncing custom scrollbar                     | Call `element._roScrollbarRestart()` after (see §29)              | Scrollbar poller runs on 300ms interval; thumb jumps until it catches up                                            |
 | Custom `_formatROText()` when `DB.formatMsgToHtml()` exists              | Use `DB.formatMsgToHtml(text)` (see §30)                          | Centralized utility already handles `^rrggbb`, item substitution, newlines                                          |
 | `querySelector` on slot index without null check                         | Always null-guard: `if (!el) return;` (see §31)                   | Server packets may reference slot indices beyond what the HTML template provides                                    |
+| `<ui-button>` for toggleable elements (checkboxes, state indicators)     | Use `<button>` or `<div>` and manage `backgroundImage` yourself   | `<ui-button>` resets `backgroundImage` on `mouseup` to the `bg` attribute value (see §33)                           |
+| `pointer-events: none` on `:host` for FREEZE mode full-viewport          | Omit `pointer-events: none` — FREEZE mode needs the host to block | Clicks pass through to the game canvas behind the UI (see §35)                                                      |
+| `draggable()` for sub-windows inside a component                         | Write a custom `_makeDraggable(element, handle)` helper (see §32) | `draggable()` operates on `_host` only — cannot drag sub-elements independently                                     |
+| Plain `<div>` for clickable elements expecting hand cursor               | Use `<button>`, `<ui-button>`, `<a>`, or `.item-link` class       | Game's sprite cursor only shows hand for elements in `CLICKABLE_SELECTOR` (see §34)                                 |
 
 ---
 
@@ -1367,194 +1378,6 @@ Announce.init = function init() {
 
 **RULE**: Only hide in `init()` for toggle-style components whose `show()`/`toggle()` explicitly sets `display`. On-demand components (appended only when needed, never toggled) must NOT hide in `init()`.
 
----
-
-## Reference: Guild Component (tabbed window, 6 content sections)
-
-### Files
-
-- `src/UI/Components/Guild/Guild.js` — Component logic (~1375 lines, 6 tabs: Info, Members, Positions, Skills, History, Notice)
-- `src/UI/Components/Guild/Guild.html` — HTML template with tab buttons and content sections
-- `src/UI/Components/Guild/Guild.css` — Styles with `:host` for position only (no dimensions — see §15)
-
-### Key Patterns
-
-- **Tab switching with `display: 'block'`/`'none'`**: CSS sets `display: none` on non-default content sections. Tab switching uses explicit `display = 'block'` to override CSS (see §10). Default visible tab has no inline style.
-- **`onValidate()` uses `getComputedStyle()`**: Finds the visible content section using both inline and computed display checks (see §22).
-- **No `event.isTrigger`**: Removed jQuery-only guard from tab click handler (see §21).
-- **No dimensions on `:host`**: Removed to fix scrollbar caused by dual-constraint with inner `#Guild` element (see §20).
-- **Entity rendering in member list**: Uses `Renderer.render()` callback to draw member face sprites on canvas.
-- **Access control via bitfield**: Guild tab access controlled by `_guildAccess & AccessTypeBit[tab]`.
-
-### CSS Pattern
-
-```css
-:host {
-	top: 100px;
-	left: 100px;
-}
-
-#Guild {
-	position: absolute;
-	width: 400px;
-	height: 317px;
-}
-```
-
----
-
-## Reference: SkillList / SkillListV0 Components (dual-view skill window)
-
-### Files
-
-- `src/UI/Components/SkillList/SkillList.js` — Version router (wraps SkillList + SkillListV0 via UIVersionManager)
-- `src/UI/Components/SkillList/SkillList/SkillList.js` — Main skill window (~1293 lines, post-2009 version)
-- `src/UI/Components/SkillList/SkillList/SkillList.html` — HTML template with mini/big view containers
-- `src/UI/Components/SkillList/SkillList/SkillList.css` — Styles (no dimensions on `:host`)
-- `src/UI/Components/SkillList/SkillListV0/SkillListV0.js` — Pre-2009 variant (~995 lines)
-- `src/UI/Components/SkillList/SkillListV0/SkillListV0.html` — HTML template
-- `src/UI/Components/SkillList/SkillListV0/SkillListV0.css` — Styles
-
-### Key Patterns
-
-- **Level up button moved outside Shadow DOM**: `_btnLevelUp` is styled inside shadow CSS, but removed from shadow root and appended to `document.body` for global visibility. All CSS properties are applied as inline styles before `remove()` (see §24).
-- **Dual-view system**: Mini view (table-based) and big/grid view (positional grid). The `resize()` function toggles between them and must use `display = 'block'` for footer buttons (see §10).
-- **Remember-choice allocation**: Players allocate multiple skill points before applying. Footer Apply/Reset buttons shown with explicit `display = 'block'`.
-- **Skill dependency tree**: Recursive dependency calculation for job-based skill progression.
-- **No dimensions on `:host`**: Both SkillList and SkillListV0 dynamically resize based on skill count; dimensions set on inner element only.
-- **Version routing**: `SkillList.js` wrapper uses `UIVersionManager` to select between SkillList (≥2009-06-01) and SkillListV0 (older).
-
-### CSS Pattern
-
-```css
-:host {
-	top: 100px;
-	left: 100px;
-}
-
-#SkillList {
-	position: absolute;
-	border-radius: 5px;
-	background: white;
-}
-```
-
----
-
-## Reference: SkillListMH Component (factory pattern, dual instances)
-
-### Files
-
-- `src/UI/Components/SkillListMH/SkillListMH.js` — Factory-based component (~575 lines, creates Homunculus + Mercenary instances)
-- `src/UI/Components/SkillListMH/SkillListMH.html` — Shared HTML template
-- `src/UI/Components/SkillListMH/SkillListMH.css` — Shared styles
-
-### Key Patterns
-
-- **Factory pattern**: A `createSkillListMH(type)` function creates separate GUIComponent instances (`SkillListHOM` and `SkillListMER`) from the same template/CSS. Each has its own preferences, state, and lifecycle.
-- **Shared CSS via class selector**: Uses `.SkillListMH` instead of `#SkillListMH` since two instances share the same CSS — IDs would conflict.
-- **Resize via mouse tracking**: Extend button uses `Mouse.screen.x/y` relative to host position. The resize loop runs on `Renderer.render()` callbacks.
-- **Drag-to-shortcut**: Skills can be dragged to the shortcut bar. The drag data uses `from: 'SkillListMH'` identifier that `ShortCut.js` recognizes.
-- **No dimensions on `:host`**: The window is dynamically resizable; only position is set on `:host`.
-
-### CSS Pattern
-
-```css
-:host {
-	top: 100px;
-	left: 100px;
-}
-
-.SkillListMH {
-	position: absolute;
-	border-radius: 5px;
-	background: white;
-}
-```
-
----
-
-## Reference: ShortCut / ShortCuts Components (hotkey bar + macro panel)
-
-### Files
-
-- `src/UI/Components/ShortCut/ShortCut.js` — Hotkey bar component (~680 lines, 4×9 slots for skills/items)
-- `src/UI/Components/ShortCut/ShortCut.html` — 4 rows of 9 slot containers with `data-background` styling
-- `src/UI/Components/ShortCut/ShortCut.css` — `:host` with `overflow: hidden` for dynamic row clipping, `#ShortCut` with `height: 100%`
-- `src/UI/Components/ShortCuts/ShortCuts.js` — Macro panel component (~460 lines, 10 text inputs + emoticons)
-- `src/UI/Components/ShortCuts/ShortCuts.html` — Titlebar, macro inputs, emoticons button with `data-background`/`data-hover`
-- `src/UI/Components/ShortCuts/ShortCuts.css` — `:host` with position only (no dimensions — see §15)
-
-### Key Patterns
-
-- **Dynamic height clipping with `overflow: hidden`**: ShortCut shows 1–4 rows controlled by `this._host.style.height`. The `:host` uses `overflow: hidden` to clip rows; inner `#ShortCut` uses `height: 100%` to keep the resize handle visible (see §23).
-- **Event delegation in Shadow DOM**: Delegated handlers use `e.target.closest('.icon')` and `e.target.closest('.container')` instead of jQuery's `.on(selector, handler)` pattern.
-- **Native drag-and-drop**: Uses `event.dataTransfer` directly (not `event.originalEvent.dataTransfer` as in jQuery). `dragover` must call `preventDefault()` to allow drops.
-- **`captureKeyEvents` for text inputs**: ShortCuts sets `captureKeyEvents = true` and implements `onKeyDown` to guard against global shortcut handlers stealing keystrokes from macro text inputs (see §8).
-- **Tooltip inside Shadow DOM**: ShortCut's tooltip uses `position: fixed` inside the shadow tree. Since `position: fixed` positions relative to the viewport (not the `overflow: hidden` host), the tooltip is not clipped.
-- **No dimensions on `:host` for ShortCuts**: Macro panel has static dimensions on `#ShortCuts` only, avoiding scrollbar conflicts (see §20).
-
-### CSS Patterns
-
-```css
-/* ShortCut — dynamic-height with overflow clipping */
-:host {
-	width: 280px;
-	top: 0px;
-	left: 480px;
-	overflow: hidden;
-}
-#ShortCut {
-	position: absolute;
-	width: 280px;
-	height: 100%;
-}
-
-/* ShortCuts — position only on :host */
-:host {
-	top: 172px;
-	left: 0px;
-}
-#ShortCuts {
-	position: absolute;
-	width: 380px;
-	height: 270px;
-}
-```
-
----
-
-## Reference: Announce Component (canvas-based, on-demand overlay)
-
-### Files
-
-- `src/UI/Components/Announce/Announce.js` — Component logic (canvas-based text overlay)
-- `src/UI/Components/Announce/Announce.html` — Minimal template (`<div id="Announce"><canvas></canvas></div>`)
-- `src/UI/Components/Announce/Announce.css` — Overlay CSS (no fixed dimensions on `:host`)
-
-### Key Patterns
-
-- **On-demand append**: Engine code calls `Announce.append()` then `Announce.set(text, color, options)`. The component is NOT permanently in the DOM — it is appended only when an announcement arrives and removed after a timer expires. Do NOT hide in `init()` (see §24).
-- **Canvas-based rendering**: Text is drawn on a `<canvas>` element via `CanvasRenderingContext2D`. The canvas dimensions are set dynamically in `set()` based on text content.
-- **CROSS mouse mode**: The overlay is transparent to mouse events (`mouseMode = GUIComponent.MouseMode.CROSS`). Players can click through the announcement.
-- **`needFocus = false`**: The announcement does not steal focus from other UI components.
-- **No fixed dimensions on `:host`**: The host auto-sizes from the canvas content. Only `top` and `left` are set on `:host`. The inner `#Announce` div has no `position: absolute` — it is in normal flow so the host sizes correctly.
-- **Dynamic host positioning**: `set()` updates `this._host.style.left` to center the announcement horizontally based on canvas width and renderer width.
-- **Original had no HTML template**: The legacy UIComponent created its canvas via `document.createElement('canvas')` and set `this.ui = jQuery(this.canvas)`. The GUIComponent version uses a minimal `.html` template with the canvas pre-declared.
-
-### CSS Pattern
-
-```css
-:host {
-	top: 40px;
-	left: 0px;
-}
-
-#Announce canvas {
-	display: block;
-}
-```
-
 ### 25. Inner root `position: relative` vs `position: absolute` for host auto-sizing
 
 **Bug**: The migration guide (§4a) recommends `position: absolute` on the inner root element for fixed-size components. However, when the host element should derive its width from the inner content (i.e., no explicit `width` on `:host`), `position: absolute` takes the inner element out of normal flow — the host collapses to 0×0 and the component appears too narrow.
@@ -1735,106 +1558,398 @@ ui.innerHTML = '';
 
 **RULE**: Always null-check `querySelector` results when the query selector includes dynamic values from server data. Add an early `return` or `continue` if the element is not found.
 
----
+### 32. Sub-window dragging requires a custom helper — `draggable()` only operates on `_host`
 
-## Reference: Inventory / Equipment / CartItems / ItemInfo Components (item management group)
+**Bug**: GUIComponent's `draggable(handleSelector)` method makes the entire `_host` element draggable by a handle inside the shadow. For components with multiple independently draggable sub-windows (e.g., NpcStore has InputWindow, OutputWindow, AvailableItemsWindow, PurchaseResult), `draggable()` cannot be used — it always moves `_host`.
 
-### Files
+**Fix**: Write a local `_makeDraggable(element, handle)` helper that attaches mousedown/mousemove/mouseup listeners to implement dragging on arbitrary elements inside the shadow:
 
-**Inventory** (4 variants via UIVersionManager):
+```javascript
+function _makeDraggable(element, handle) {
+	handle.addEventListener('mousedown', e => {
+		if (e.which !== 1) return;
+		const offsetX = element.offsetLeft - e.pageX;
+		const offsetY = element.offsetTop - e.pageY;
 
-- `src/UI/Components/Inventory/InventoryV0/` — Pre-2009 variant (280×317)
-- `src/UI/Components/Inventory/InventoryV1/` — 2009-2012 variant with tabs
-- `src/UI/Components/Inventory/InventoryV2/` — 2012-2020 variant with favorites
-- `src/UI/Components/Inventory/InventoryV3/` — 2020+ variant with expanded features
-
-**Equipment** (5 variants via UIVersionManager):
-
-- `src/UI/Components/Equipment/EquipmentV0/` — Pre-2009 variant
-- `src/UI/Components/Equipment/EquipmentV1/` — 2009-2010 variant
-- `src/UI/Components/Equipment/EquipmentV2/` — 2010-2012 variant
-- `src/UI/Components/Equipment/EquipmentV3/` — 2012-2017 variant
-- `src/UI/Components/Equipment/EquipmentV4/` — 2017+ variant with costume slots
-
-**CartItems**:
-
-- `src/UI/Components/CartItems/CartItems.js` — Cart inventory (~700 lines)
-- `src/UI/Components/CartItems/CartItems.html` — Template with scrollable item list
-- `src/UI/Components/CartItems/CartItems.css` — Styles
-
-**ItemInfo**:
-
-- `src/UI/Components/ItemInfo/ItemInfo.js` — Item tooltip/detail popup (~530 lines)
-- `src/UI/Components/ItemInfo/ItemInfo.html` — Template with item details sections
-- `src/UI/Components/ItemInfo/ItemInfo.css` — Styles
-
-### Key Patterns
-
-- **`position: relative` on inner root**: All 11 CSS files use `position: relative` (not `absolute`) on the inner root element because `:host` has no explicit `width`/`height` — the host auto-sizes from inner content (see §25). This also provides a positioning context for absolute children (tabs, resize handles, overlays).
-- **`contextmenu` prevention**: All components add explicit `contextmenu` event listeners with `e.preventDefault()` on item areas (see §26). Equipment adds it on equipment slot buttons; Inventory on item list containers.
-- **`getBoundingClientRect()` for hover labels**: Equipment's `onEquipmentOver()` and CartItems/Inventory's `onItemOver()` use `getBoundingClientRect()` relative to the component root for hover label positioning (see §27).
-- **`querySelectorAll` for multi-slot items**: Equipment `equip()` uses `querySelectorAll` + `forEach` to update icon, name, and grade in ALL matching slots (see §28). A headgear occupying Head_Top + Head_Mid creates HTML in multiple slots.
-- **Custom scrollbar sync**: CartItems calls `container._roScrollbarRestart()` after wheel-scroll changes `scrollTop` (see §29).
-- **`DB.formatMsgToHtml()` for color codes**: ItemInfo uses `DB.formatMsgToHtml()` for item descriptions containing `^rrggbb` color codes (see §30).
-- **Event delegation with `.closest()`**: Item click/right-click handlers use `e.target.closest('.item')` or `e.target.closest('button')` for delegation, replacing jQuery's `.on(event, selector, handler)`.
-- **Preference save/restore via `_host.style`**: All variants save `left`/`top` from `this._host.style.left` in `onRemove()` and restore in `onAppend()`.
-
-### CSS Pattern
-
-```css
-/* Inventory / Equipment / CartItems / ItemInfo — host auto-sizes from content */
-:host {
-	top: 100px;
-	left: 100px;
+		const onMove = ev => {
+			element.style.left = `${ev.pageX + offsetX}px`;
+			element.style.top = `${ev.pageY + offsetY}px`;
+		};
+		const onUp = ev => {
+			if (ev.which === 1) {
+				document.removeEventListener('mousemove', onMove);
+				document.removeEventListener('mouseup', onUp);
+			}
+		};
+		document.addEventListener('mousemove', onMove);
+		document.addEventListener('mouseup', onUp);
+		e.stopImmediatePropagation();
+	});
 }
 
-#InventoryV0 {
-	position: relative; /* ← NOT absolute — host auto-sizes; still provides position context */
+// Usage in init():
+_makeDraggable(InputWindow, InputWindow.querySelector('.titlebar'));
+_makeDraggable(OutputWindow, OutputWindow.querySelector('.titlebar'));
+```
+
+**How to detect**: Any component where the original UIComponent uses multiple jQuery UI `.draggable()` calls on different child elements, or implements custom drag logic on sub-windows.
+
+**RULE**: `GUIComponent.draggable()` only moves `_host`. For independently draggable sub-windows, write a local `_makeDraggable()` helper. Attach `mousemove`/`mouseup` to `document` (not the shadow root) so dragging works when the cursor leaves the element bounds.
+
+### 33. `<ui-button>` overrides `backgroundImage` — don't use for toggleable elements
+
+**Bug**: The `<ui-button>` Custom Element (defined in `src/UI/Elements/UIButton.js`) manages `style.backgroundImage` internally. On `connectedCallback`, it stores the `bg`, `hover`, and `down` attribute values as URIs. Its `mouseup` and `mouseout` handlers call `update()` which resets `style.backgroundImage` back to the original `bgUri` value.
+
+If you use `<ui-button>` for a checkbox/toggle and set `style.backgroundImage` in your toggle handler (e.g., switching between `checkbox_0.bmp` and `checkbox_1.bmp`), the button's `mouseup` handler fires immediately after and overwrites your change back to the original `bg` attribute value. The checkbox appears to flicker — the checked image appears briefly then reverts to unchecked.
+
+```javascript
+// WRONG — ui-button's mouseup resets backgroundImage after your handler runs
+// <ui-button class="selectall" bg="checkbox_0.bmp"></ui-button>
+selectAll.style.backgroundImage = `url(${checkedImageData})`;
+// → mouseup fires → backgroundImage reset to checkbox_0.bmp
+
+// CORRECT — use <button> (native element, no background management)
+// <button class="selectall"></button>
+selectAll.style.backgroundImage = `url(${checkedImageData})`;
+// → stays as set
+```
+
+**When to use `<ui-button>`**: Standard buttons where the background should follow mouse states (normal → hover → pressed → normal). The button manages these transitions automatically.
+
+**When NOT to use `<ui-button>`**: Any element where your code needs to control `backgroundImage` at runtime (checkboxes, toggles, state indicators, progress elements). Use a native `<button>` or `<div>` instead and manage the background yourself.
+
+**CSS for replacement element**: When replacing `<ui-button>` with `<button>`, add these CSS properties to replicate the visual behavior:
+
+```css
+.selectall {
+	display: inline-block;
+	border: none;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	cursor: pointer;
 }
 ```
 
----
+**RULE**: Never use `<ui-button>` for elements whose `backgroundImage` is set dynamically at runtime. Use `<button>` or `<div>` and manage the background image in your own handler.
 
-## Reference: BasicInfo Component (UIVersionManager multi-variant)
+### 34. Sprite cursor `CLICKABLE_SELECTOR` — use recognized elements for hand cursor
 
-### Files
+**Bug**: The game uses a custom sprite cursor (not CSS `cursor`). GUIComponent's `_setupShadowCursorEvents()` registers `mouseover`/`mouseout` listeners inside the shadow that detect when the mouse is over a "clickable" element and switch the sprite cursor to the hand/click state via `_Cursor.setType(CLICK)`.
 
-- `src/UI/Components/BasicInfo/BasicInfo.js` — Version router (wraps 5 variants via UIVersionManager)
-- `src/UI/Components/BasicInfo/BasicInfo/` — Default post-2009 variant (220×135)
-- `src/UI/Components/BasicInfo/BasicInfoV0/` — Pre-2009 variant (280×120)
-- `src/UI/Components/BasicInfo/BasicInfoV3/` — 2016+ variant with Achievement, Bank, Navigation, Rodex
-- `src/UI/Components/BasicInfo/BasicInfoV4/` — 2018+ variant with CheckAttendance
-- `src/UI/Components/BasicInfo/BasicInfoV5/` — 2020+/4th job variant with AP bar (220×150)
+The detection uses a hardcoded `CLICKABLE_SELECTOR`:
 
-### Key Patterns
+```javascript
+const CLICKABLE_SELECTOR = [
+	'a',
+	'button',
+	'ui-button',
+	'input',
+	'label',
+	'select',
+	'textarea',
+	'.item-link',
+	'.draggable',
+	'.ro-custom-scrollbar',
+	'.ro-custom-scrollbar *'
+].join(',');
+```
 
-- **UIVersionManager routing**: The wrapper `BasicInfo.js` uses `UIVersionManager.getUIController()` with date ranges and job-class overrides. It requires NO changes during migration — only the individual variant JS/CSS files need conversion.
-- **Consistent variant structure**: All 5 variants follow the same migration pattern: `GUIComponent` constructor, `render()` method, `_getRoot()` helper, `init()` for event binding, `onAppend()` for position restore, `onRemove()` for preferences save.
-- **Small/large toggle**: All variants support a compact "small" mode and expanded "large" mode via CSS classes. `toggleMode()` uses `classList.toggle('small')` / `classList.toggle('large')` on the inner div.
-- **Button panel toggle**: A collapsible button toolbar below the main info window. Visibility tracked in preferences.
-- **HP/SP/AP bar rendering**: Bars are built from three `data-background` images (left cap, middle fill, right cap). The middle section's width and right cap's position are calculated from the percentage. V5 adds an AP bar for 4th job classes.
-- **Version-specific button sets**: Each variant binds different UI toggles depending on available features (e.g., V3+ adds Rodex, Achievement, Navigation; V4+ adds CheckAttendance with PACKETVER check).
-- **Hidden buttons**: Some button IDs (battle, replay, tipbox, shortcut, agency) are hidden in `onAppend()` as they are not implemented in the web client.
+A plain `<div>` is NOT in this list. If you replace `<ui-button>` with `<div>` for a checkbox (§33), the sprite cursor will not show the hand on hover. Use `<button>` instead, which is in the selector list.
 
-### CSS Pattern
+**Elements recognized for hand cursor**: `a`, `button`, `ui-button`, `input`, `label`, `select`, `textarea`, `.item-link`, `.draggable`, `.ro-custom-scrollbar`.
+
+**RULE**: When choosing a replacement element for `<ui-button>`, prefer `<button>` over `<div>` so the game's sprite cursor shows the hand on hover. If `<div>` is required, add one of the recognized classes (e.g., `.item-link`) or consider extending `CLICKABLE_SELECTOR` in GUIComponent.js.
+
+### 35. FREEZE mode + `pointer-events: none` on `:host` = clicks pass through to game
+
+**Bug**: §11 explains that `:host { pointer-events: none }` is used for CROSS mode overlays, with `pointer-events: auto` on interactive children. This is correct for CROSS mode. However, applying the same pattern to FREEZE mode full-viewport components (like NpcStore) breaks modal behavior — clicks pass through the transparent areas of `:host` to the game canvas behind it, allowing the player to move or interact with NPCs while the store window is open.
+
+FREEZE mode sets `Mouse.intersect = false` at the engine level, but `pointer-events: none` on `:host` means the browser delivers click events directly to elements behind the host (the game canvas), bypassing the shadow DOM entirely. The engine's mouse intersection flag doesn't prevent the browser from dispatching native DOM events.
 
 ```css
-/* Fixed-size variant (BasicInfo, V0, V3, V4) */
+/* WRONG — FREEZE mode with pointer-events: none on :host */
+/* Clicks pass through to game canvas */
 :host {
-	width: 220px;
-	height: 135px;
-	top: 0px;
-	left: 0px;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none; /* ← BUG: defeats FREEZE */
 }
 
-#basicinfo {
+/* CORRECT — FREEZE mode without pointer-events: none */
+/* Host blocks all clicks, sub-windows are interactive */
+:host {
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+```
+
+**When to use `pointer-events: none` on `:host`**: Only for CROSS mode components (transparent overlays, HUD elements) where mouse events should pass through to the game.
+
+**When NOT to use**: STOP and FREEZE mode components. STOP components have fixed dimensions (host naturally blocks only its own area). FREEZE components cover the full viewport and must block ALL clicks.
+
+**RULE**: Never use `pointer-events: none` on `:host` for FREEZE mode components. The full-viewport host must block clicks to implement modal behavior. Only CROSS mode components should use `pointer-events: none` on `:host`.
+
+### 36. `<ui-image>` lifecycle race: `attributeChangedCallback` fires before `connectedCallback`
+
+**Bug**: When a GUIComponent's `render()` returns HTML containing `<ui-image src="...">`, the browser parses it via `innerHTML`. During parsing, `attributeChangedCallback('src', ...)` fires immediately when the parser encounters the `src` attribute — but `connectedCallback` has not run yet, so `this.parentElement` is `null`. The image load silently fails because there is no parent to apply the background to.
+
+```
+innerHTML parsing timeline:
+  1. <ui-image> element created
+  2. attributeChangedCallback('src', null, 'path.bmp')  ← parentElement is null!
+  3. Element inserted into DOM tree
+  4. connectedCallback()                                  ← parentElement is now available
+```
+
+**Fix applied in `src/UI/Elements/UIImage.js`**: Defer the initial image load to `connectedCallback`. Skip `attributeChangedCallback` until `_initialized = true` (set in `connectedCallback`). If `parentElement` is still null in `connectedCallback` (possible during complex DOM operations), retry with `requestAnimationFrame`.
+
+```javascript
+class UIImage extends HTMLElement {
+	connectedCallback() {
+		if (this._initialized) return;
+		this._initialized = true;
+		this.style.display = 'none';
+		this._applyBackground();
+	}
+
+	attributeChangedCallback(name, oldVal, newVal) {
+		// Only reload on dynamic src changes AFTER initial setup.
+		if (name === 'src' && this._initialized) {
+			this._applyBackground();
+		}
+	}
+
+	_applyBackground() {
+		const target = this.parentElement;
+		if (!target) {
+			requestAnimationFrame(() => {
+				if (this.parentElement) this._loadImage(path, this.parentElement);
+			});
+			return;
+		}
+		this._loadImage(path, target);
+	}
+}
+```
+
+**RULE**: Custom Elements that need `parentElement` must defer work to `connectedCallback`, not `attributeChangedCallback`. This applies to `<ui-image>` and any future Custom Elements that modify their parent.
+
+### 37. `.ui-component-root` wrapper has no dimensions — full-viewport inner divs must use `position: absolute`
+
+**Bug**: GUIComponent wraps all `render()` output in a `<div class="ui-component-root">` (see DOM Structure above). This wrapper has no CSS dimensions — it is an unstyled block element that collapses to its content height. For full-viewport overlay components (like MobileUI), setting `position: relative; width: 100%; height: 100%` on the inner `#ComponentName` div does NOT work because `100%` resolves relative to the parent `.ui-component-root`, which has zero explicit height.
+
+```
+<host>  (position: absolute; width: 100%; height: 100%)
+  #shadow-root
+    <div class="ui-component-root">      ← NO dimensions! Collapses to content height.
+      <div id="MobileUI"                 ← position: relative; height: 100% → 100% of 0 = 0
+          style="width:100%; height:100%">
+        <button style="position:absolute; bottom:10%">  ← positioned in 0-height box!
+```
+
+**Fix**: Use `position: absolute` on the inner div instead of `position: relative`. This takes it out of normal flow and positions it relative to `:host` (the nearest positioned ancestor), bypassing the unstyled `.ui-component-root` wrapper entirely.
+
+```css
+/* WRONG — collapses to zero because .ui-component-root has no height */
+#MobileUI {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+/* CORRECT — positions relative to :host, ignoring .ui-component-root */
+#MobileUI {
 	position: absolute;
-	width: 220px;
-	height: 135px;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+```
+
+**RULE**: For full-viewport overlays, use `position: absolute; top: 0; left: 0; width: 100%; height: 100%` on the inner `#ComponentName` div. Do NOT use `position: relative` — it makes the element's size depend on `.ui-component-root`, which has no explicit dimensions.
+
+### 38. CROSS-mode full-viewport overlay: selective `pointer-events` pattern
+
+For CROSS-mode components that cover the full viewport (like MobileUI), you need transparent areas to pass clicks through to the game while keeping interactive elements clickable. This combines §11 and §16 into a specific pattern:
+
+```css
+/* :host covers entire viewport, passes all clicks through */
+:host {
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
 }
 
-/* Small mode reduces height */
-#basicinfo.small {
-	height: 53px;
+/* Inner container also passes clicks through */
+#MobileUI {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
 }
+
+/* Only interactive elements receive clicks */
+#MobileUI button,
+#MobileUI .joystick-base {
+	pointer-events: auto;
+}
+```
+
+**Key difference from FREEZE mode (§35)**: FREEZE components block ALL clicks by omitting `pointer-events: none` on `:host`. CROSS overlays must explicitly opt-in interactive children with `pointer-events: auto`.
+
+**Also set `mouseMode = GUIComponent.MouseMode.CROSS`** — this tells the engine not to block 3D scene mouse intersection when the cursor is over the host.
+
+### 39. `background-repeat` defaults matter for asset-driven window frames
+
+**Bug**: When migrating components with tiled background textures (window frame headers, footers, content areas), do NOT add `background-repeat: no-repeat` or `background-color: transparent` to center/body elements. The original UIComponent CSS often had no explicit `background-repeat`, relying on the browser default (`repeat`) so that center bar textures tile horizontally to fill the window width.
+
+Window frames use a 9-patch (3×3 slice) pattern:
+
+- **Corner pieces** (e.g., `titlebar_left.bmp`, `titlebar_right.bmp`): fixed size, sized so only one tile is visible — repeating doesn't matter
+- **Center pieces** (e.g., `titlebar_mid.bmp`, `btnbar_mid2.bmp`): variable width, designed to tile with `repeat-x` to fill the window
+
+```css
+/* WRONG — center texture shows only once, leaving empty space */
+.header .center {
+	background-repeat: no-repeat;
+	background-color: transparent;
+}
+
+/* CORRECT — omit background-repeat so center tiles horizontally (browser default: repeat) */
+.header .center {
+	/* No background-repeat rule — defaults to repeat */
+}
+```
+
+**RULE**: When migrating, do not add `background-repeat: no-repeat` unless the original CSS explicitly had it. For window frames, center/body sections must tile. Corner sections can be either way since they're sized to show exactly one tile.
+
+### 40. Use viewport units (`vmin`) for mobile-responsive component sizing
+
+Components intended for mobile use (like MobileUI) should use viewport-relative units instead of fixed `px` for element sizes. Fixed pixel sizes don't scale with screen dimensions, making buttons too small on high-DPI mobile devices or too large on small screens.
+
+```css
+/* WRONG — fixed sizes don't adapt to screen */
+.primary {
+	width: 45px;
+	height: 45px;
+}
+.joystick-container {
+	width: 100px;
+	height: 100px;
+}
+
+/* CORRECT — scales proportionally with viewport */
+.primary {
+	width: 11vmin;
+	height: 11vmin;
+}
+.joystick-container {
+	width: 25vmin;
+	height: 25vmin;
+}
+```
+
+**Unit choice**: `vmin` (the smaller of `vw` and `vh`) keeps elements at a consistent physical proportion regardless of landscape/portrait orientation. Use `%` for positions (already common) and `vmin` for sizes.
+
+**Don't set pixel-based dimensions in `onAppend`** for viewport-sized components. Let CSS `width: 100%; height: 100%` handle it — pixel dimensions set once in `onAppend` become stale when the screen resizes or rotates.
+
+### 41. `touch-action: manipulation` must target `:host` explicitly inside Shadow DOM
+
+**Bug**: `Common.css` contains `html, body { touch-action: manipulation; }` to prevent double-tap zoom. Inside Shadow DOM, there is no `html` or `body` element — this rule matches nothing. Mobile browsers will still trigger double-tap zoom and input-focus zoom on elements inside Shadow DOM.
+
+**Fix applied in `Common.css`**: Add explicit rules targeting Shadow DOM elements:
+
+```css
+:host {
+	touch-action: manipulation;
+}
+
+input,
+textarea,
+select {
+	touch-action: manipulation;
+}
+```
+
+**Note**: `touch-action: manipulation` prevents double-tap zoom but does NOT prevent iOS Safari's input-focus zoom (which triggers when `font-size < 16px`). The only CSS-only fix for input-focus zoom is setting `font-size: 16px` on inputs — but this may break the asset-driven UI layout. As a mitigation, the Renderer listens to `visualViewport` resize events to keep the canvas in sync if the browser does zoom.
+
+### 42. UIComponent inside GUIComponent Shadow DOM — migrate or use `_getRoot()`
+
+**Bug**: If a legacy `UIComponent` is appended inside a `GUIComponent`'s Shadow DOM (e.g., SwitchEquip inside EquipmentV4), it breaks because `UIComponent` uses `document.getElementById()` and `document.querySelector()` to find its elements. These global DOM queries cannot see into Shadow DOM.
+
+```javascript
+// UIComponent.parseHTML() uses:
+document.getElementById('SwitchEquip'); // → null (element is inside shadow DOM)
+```
+
+**Fix**: Migrate the inner component to GUIComponent as well, using `_getRoot()` to query within the correct shadow root. If migration is impractical, ensure the UIComponent's root element is appended to `document.body` (not inside another component's shadow DOM).
+
+**RULE**: Do not embed a `UIComponent` inside a `GUIComponent`'s Shadow DOM. Either migrate the inner component to GUIComponent, or keep it as a sibling in `document.body`.
+
+---
+
+## Migrated Component Reference
+
+Compact reference for all migrated components. Each row lists the component, its CSS strategy, mouse mode, and which pitfalls are most relevant.
+
+| Component                   | CSS Strategy                                                                     | Mouse Mode | Key Pitfalls       | Notes                                                                                             |
+| --------------------------- | -------------------------------------------------------------------------------- | ---------- | ------------------ | ------------------------------------------------------------------------------------------------- |
+| **Clan**                    | Fixed-size: `:host { width; height }`, inner `position: absolute`                | STOP       | §4a, §20           | First migration; still uses some `this.ui` proxy calls                                            |
+| **StatusIcons**             | Dynamic-size: no dims on `:host`, `overflow: visible`, inner `display: block`    | CROSS      | §4b, §9, §11       | `_getRoot()` helper; mixed arrow/regular callbacks for `Texture.load`                             |
+| **SkillTargetSelection**    | Overlay: `:host { pointer-events: none }`, children `position: fixed`            | CROSS      | §10, §11, §12      | Capture-phase mousedown; `needFocus = false`                                                      |
+| **SkillDescription**        | Tooltip: no fixed dims, dynamic positioning                                      | STOP       | §13, §30           | `DB.formatMsgToHtml()` for skill descriptions                                                     |
+| **Guild**                   | No dims on `:host` (avoids scrollbar §20), inner `position: absolute`            | STOP       | §10, §20, §21, §22 | 6 tabs; `getComputedStyle()` for visible tab detection                                            |
+| **SkillList / SkillListV0** | No dims on `:host`, inner `position: absolute`                                   | STOP       | §10, §19           | Level up button moved outside shadow with inline styles                                           |
+| **SkillListMH**             | No dims on `:host`, class selector `.SkillListMH` (not ID)                       | STOP       | —                  | Factory pattern: `createSkillListMH(type)` creates two instances                                  |
+| **ShortCut**                | `:host { overflow: hidden }`, inner `height: 100%`                               | STOP       | §23, §31           | Dynamic row clipping; null-guard for server slots                                                 |
+| **ShortCuts**               | Position only on `:host`, dims on inner                                          | STOP       | §8, §20            | `captureKeyEvents` for macro text inputs                                                          |
+| **Announce**                | No dims on `:host`, inner no `position: absolute`                                | CROSS      | §24                | On-demand; do NOT hide in `init()`                                                                |
+| **Inventory V0–V3**         | No dims on `:host`, inner `position: relative`                                   | STOP       | §25, §26, §27      | `contextmenu` prevention; `getBoundingClientRect()` for hover labels                              |
+| **Equipment V0–V4**         | No dims on `:host`, inner `position: relative`                                   | STOP       | §25, §26, §27, §28 | `querySelectorAll` for multi-slot items                                                           |
+| **CartItems**               | No dims on `:host`, inner `position: relative`                                   | STOP       | §25, §26, §29      | Scrollbar sync after wheel scroll                                                                 |
+| **ItemInfo**                | No dims on `:host`, inner `position: relative`                                   | STOP       | §25, §30           | `DB.formatMsgToHtml()` for item descriptions                                                      |
+| **BasicInfo V0–V5**         | Fixed-size: `:host { width; height }`, inner `position: absolute`                | STOP       | —                  | UIVersionManager routing; small/large toggle via `classList`                                      |
+| **NpcBox**                  | Fixed-size: `:host { width; height }`                                            | FREEZE     | §13, §30           | `DB.formatMsgToHtml()` for NPC dialog with color codes                                            |
+| **NpcMenu**                 | Dynamic-size                                                                     | FREEZE     | §13, §30, §8       | `DB.formatMsgToHtml()` for menu items; keyboard nav (UP/DOWN/ENTER/ESC)                           |
+| **NpcStore**                | Full-viewport: `:host { width: 100%; height: 100% }`                             | FREEZE     | §32, §33, §34, §35 | Custom `_makeDraggable()` for sub-windows; `<button>` for checkbox (not `<ui-button>`)            |
+| **InputBox**                | Fixed-size                                                                       | FREEZE     | §8                 | `captureKeyEvents` for text input; modal overlay                                                  |
+| **CharCreate V0–V4**        | Fixed-size: `:host { width; height }`, inner `position: absolute`                | STOP       | §36, §39           | `<ui-image>` for backgrounds; center textures must tile (`repeat-x`); `data-background` on inputs |
+| **CharSelect V1–V4**        | Fixed-size: `:host { width; height }`, inner `position: absolute`                | STOP       | §36, §39           | `<ui-image>` for `box_select` border; page ball click handlers; animated backgrounds (V4)         |
+| **MobileUI**                | Full-viewport CROSS: `:host { width: 100%; height: 100%; pointer-events: none }` | CROSS      | §37, §38, §40, §41 | `position: absolute` on inner div; `vmin` sizing; selective `pointer-events: auto`                |
+| **SwitchEquip**             | Fixed-size                                                                       | STOP       | §42                | Migrated from UIComponent because it was embedded inside EquipmentV4 Shadow DOM                   |
+| **Error**                   | Full-page fatal error                                                            | —          | —                  | Not a GUIComponent (standalone; uses native DOM only)                                             |
+
+### CSS Pattern Decision Guide
+
+```
+Does :host have explicit width/height?
+├── YES (fixed-size) → inner: position: absolute; width: X; height: Y
+│   Example: Clan, BasicInfo, InputBox
+│
+└── NO (auto-size / dynamic)
+    ├── Does inner element need to be a positioning context for absolute children?
+    │   ├── YES → inner: position: relative
+    │   │   Example: Inventory, Equipment, CartItems, ItemInfo
+    │   └── NO → inner: display: block
+    │       Example: StatusIcons, Announce
+    │
+    └── Is it a full-viewport overlay?
+        ├── FREEZE mode → :host { width: 100%; height: 100% } (NO pointer-events: none)
+        │   Example: NpcStore
+        └── CROSS mode
+            ├── Fixed children (no absolute positioning needed)
+            │   → :host { pointer-events: none; overflow: visible }
+            │   Example: SkillTargetSelection, StatusIcons
+            └── Absolute children filling viewport (§37, §38)
+                → :host { width: 100%; height: 100%; pointer-events: none }
+                → inner: position: absolute; top:0; left:0; width:100%; height:100%
+                → buttons/interactive: pointer-events: auto
+                Example: MobileUI
 ```
