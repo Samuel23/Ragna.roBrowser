@@ -148228,7 +148228,7 @@ function Packets(name, Struct, size) {
 function connect$4(host, port, callback, isZone) {
 	const socket = _socketFactory ? _socketFactory(host, port) : defaultSocketFactory(host, port);
 	socket.isZone = !!isZone;
-	socket.onClose = onClose$17;
+	socket.onClose = onClose$15;
 	socket.onComplete = function onComplete(success) {
 		let msg = "Fail";
 		let color = "red";
@@ -148365,7 +148365,7 @@ function receive(buf) {
 * Communication end
 * Server ask to close the socket
 */
-function onClose$17() {
+function onClose$15() {
 	const idx = _sockets.indexOf(this);
 	if (this === _socket) {
 		console.warn("[Network] Disconnect from server");
@@ -153083,7 +153083,7 @@ var init_Announce$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Announce/Announce.js
-function _getRoot$50() {
+function _getRoot$52() {
 	return Announce._shadow || Announce._host;
 }
 var Announce, _timer$2, _life$1, Announce_default;
@@ -153110,7 +153110,7 @@ var init_Announce = __esmMin((() => {
 	* Initialize component
 	*/
 	Announce.init = function init() {
-		const root = _getRoot$50();
+		const root = _getRoot$52();
 		this.canvas = root.querySelector("canvas");
 		this.ctx = this.canvas.getContext("2d");
 	};
@@ -153203,7 +153203,7 @@ var init_Announce = __esmMin((() => {
 /**
 * Helper to get shadow root
 */
-function _getRoot$49() {
+function _getRoot$51() {
 	return MakeReadBook._shadow || MakeReadBook._host;
 }
 async function repeatedGreetingsLoop(book_information) {
@@ -153247,7 +153247,7 @@ function cleanTextColor(text) {
 /**
 * Exit window
 */
-function onClose$16(e) {
+function onClose$14(e) {
 	try {
 		if (e) e.stopImmediatePropagation();
 	} catch (_error) {}
@@ -153256,7 +153256,7 @@ function onClose$16(e) {
 	if (_preferences$71.show) MakeReadBook.onRemove();
 }
 function page() {
-	const root = _getRoot$49();
+	const root = _getRoot$51();
 	const textBook = root.querySelector("#textBook");
 	if (textBook) textBook.innerHTML = "";
 	for (let i = _BOOK_INFORMATION["page"] * 1; i < _BOOK_INFORMATION["pagesize"] && i < (_BOOK_INFORMATION["page"] + 1) * 1; i++) if (textBook) {
@@ -153267,7 +153267,7 @@ function page() {
 	if (pageBook) pageBook.textContent = `(${_BOOK_INFORMATION["page"] + 1}/${Math.ceil(_BOOK_INFORMATION["pagesize"] / 1)})`;
 }
 function adjustButtons$1() {
-	const root = _getRoot$49();
+	const root = _getRoot$51();
 	const nextBtn = root.querySelector(".next_btn");
 	if (nextBtn) nextBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] > _BOOK_INFORMATION["pagesize"] / 1 - 1;
 	const prevBtn = root.querySelector(".previous_btn");
@@ -153354,7 +153354,7 @@ var init_MakeReadBook = __esmMin((() => {
 	};
 	MakeReadBook.openBook = function openBook() {
 		MakeReadBook.append();
-		const root = _getRoot$49();
+		const root = _getRoot$51();
 		const panel = root.querySelector(".panel");
 		if (panel) panel.style.backgroundColor = `#${_BOOK_INFORMATION["color"]}`;
 		const footer = root.querySelector(".footer");
@@ -153367,13 +153367,13 @@ var init_MakeReadBook = __esmMin((() => {
 			"data/sprite/book/Ã¥¿ÞÂÊ.spr",
 			"data/sprite/book/Ã¥¿À¸¥ÂÊ.spr"
 		], (spr_close, spr_highlighter, spr_previous, spr_next) => {
-			const innerRoot = _getRoot$49();
+			const innerRoot = _getRoot$51();
 			const canvas = new SPR(spr_close).getCanvasFromFrame(0);
 			canvas.className = "clone_book event_add_cursor";
 			const footerEl = innerRoot.querySelector(".footer");
 			footerEl.querySelectorAll("canvas").forEach((c) => c.remove());
 			footerEl.appendChild(canvas);
-			canvas.addEventListener("click", onClose$16);
+			canvas.addEventListener("click", onClose$14);
 			const canvas2 = new SPR(spr_highlighter).getCanvasFromFrame(0);
 			canvas2.className = "highlighter event_add_cursor";
 			const highlighterEl = innerRoot.querySelector("#highlighter");
@@ -153446,7 +153446,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$71.show) onClose$16();
+		if (_preferences$71.show) onClose$14();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -153463,7 +153463,7 @@ var init_MakeReadBook = __esmMin((() => {
 		_BOOK_INFORMATION.save();
 		_preferences$71.show = true;
 		_preferences$71.save();
-		const root = _getRoot$49();
+		const root = _getRoot$51();
 		this.draggable(root.querySelector(".titlebar"));
 	};
 	/**
@@ -154055,14 +154055,14 @@ var init_InputBox$1 = __esmMin((() => {
 /**
 * Helper to get shadow root
 */
-function _getRoot$48() {
+function _getRoot$50() {
 	return InputBox._shadow || InputBox._host;
 }
 /**
 * Validate input
 */
 function validate$1() {
-	const root = _getRoot$48();
+	const root = _getRoot$50();
 	const input = root.querySelector("input");
 	let text = input ? input.value : "";
 	if (!InputBox.isPersistent || text.length) {
@@ -154098,7 +154098,7 @@ var init_InputBox = __esmMin((() => {
 		this.draggable();
 		this._host.style.top = `${(Renderer.height - 120) / 1.5 - 49}px`;
 		this._host.style.left = `${(Renderer.width - 280) / 2 + 1}px`;
-		const root = _getRoot$48();
+		const root = _getRoot$50();
 		const btn = root.querySelector("ui-button");
 		if (btn) btn.addEventListener("click", () => validate$1());
 		const input = root.querySelector("input");
@@ -154119,7 +154119,7 @@ var init_InputBox = __esmMin((() => {
 	* Input Post-Render callback
 	*/
 	InputBox.onAppend = function onAppend() {
-		const input = _getRoot$48().querySelector("input");
+		const input = _getRoot$50().querySelector("input");
 		if (input) {
 			input.focus();
 			if (input.value) input.select();
@@ -154129,7 +154129,7 @@ var init_InputBox = __esmMin((() => {
 	* Remove data from UI
 	*/
 	InputBox.onRemove = function onRemove() {
-		const root = _getRoot$48();
+		const root = _getRoot$50();
 		const input = root.querySelector("input");
 		if (input) {
 			input.value = "";
@@ -154173,7 +154173,7 @@ var init_InputBox = __esmMin((() => {
 	*/
 	InputBox.setType = function setType(type, isPersistent, defaultVal, itemId = null) {
 		this.isPersistent = !!isPersistent;
-		const root = _getRoot$48();
+		const root = _getRoot$50();
 		const innerRoot = root.querySelector("#inputbox");
 		const textEl = root.querySelector(".text");
 		const input = root.querySelector("input");
@@ -155437,15 +155437,15 @@ var init_Storage$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/CartItems/CartItems.js
-function _getRoot$47() {
+function _getRoot$49() {
 	return CartItems._shadow || CartItems._host;
 }
 /**
 * Extend inventory window size
 */
 function onResize$15() {
-	const content = _getRoot$47().querySelector(".container .content");
-	const hideEl = _getRoot$47().querySelector(".hide");
+	const content = _getRoot$49().querySelector(".container .content");
+	const hideEl = _getRoot$49().querySelector(".hide");
 	const top = CartItems._host.offsetTop;
 	const left = CartItems._host.offsetLeft;
 	let lastWidth = 0;
@@ -155477,7 +155477,7 @@ function onResize$15() {
 * Hide/show inventory's content
 */
 function onToggleReduction$4() {
-	const panel = _getRoot$47().querySelector(".panel");
+	const panel = _getRoot$49().querySelector(".panel");
 	if (_realSize$5) {
 		if (panel) panel.style.display = "block";
 		CartItems._host.style.height = `${_realSize$5}px`;
@@ -155549,7 +155549,7 @@ function onItemOver$17(_e) {
 	if (!item) return;
 	let quantity = " ea";
 	if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.Options && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$47();
+	const root = _getRoot$49();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#cartitems") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -155567,7 +155567,7 @@ function onItemOver$17(_e) {
 * Hide the item name
 */
 function onItemOut$18() {
-	const overlay = _getRoot$47().querySelector(".overlay");
+	const overlay = _getRoot$49().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -155695,7 +155695,7 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		const root = _getRoot$47();
+		const root = _getRoot$49();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
@@ -155748,14 +155748,14 @@ var init_CartItems = __esmMin((() => {
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$68.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$68.x), Renderer.width - hostRect.width)}px`;
 		_realSize$5 = _preferences$68.reduce ? 0 : hostRect.height;
-		const miniBtn = _getRoot$47().querySelector(".titlebar .mini");
+		const miniBtn = _getRoot$49().querySelector(".titlebar .mini");
 		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	CartItems.onRemove = function OnRemove() {
-		const content = _getRoot$47().querySelector(".container .content");
+		const content = _getRoot$49().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
@@ -155799,7 +155799,7 @@ var init_CartItems = __esmMin((() => {
 	CartItems.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		const content = _getRoot$47().querySelector(".container .content");
+		const content = _getRoot$49().querySelector(".container .content");
 		if (content) {
 			content.style.width = `${width * 32 + 13}px`;
 			content.style.height = `${height * 32}px`;
@@ -155841,7 +155841,7 @@ var init_CartItems = __esmMin((() => {
 		}
 	};
 	CartItems.setCartInfo = function SetCartInfo(curCount, maxCount, curWeight, maxWeight) {
-		const root = _getRoot$47();
+		const root = _getRoot$49();
 		const ncnt = root.querySelector(".ncnt");
 		const mcnt = root.querySelector(".mcnt");
 		const nwt = root.querySelector(".nwt");
@@ -155860,7 +155860,7 @@ var init_CartItems = __esmMin((() => {
 		let object = this.getItemByIndex(item.index);
 		if (object) {
 			object.count += item.count;
-			const countEl = _getRoot$47().querySelector(`.item[data-index="${item.index}"] .count`);
+			const countEl = _getRoot$49().querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = object.count;
 			return;
 		}
@@ -155875,7 +155875,7 @@ var init_CartItems = __esmMin((() => {
 	CartItems.addItemSub = function AddItemSub(item) {
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
-		const root = _getRoot$47();
+		const root = _getRoot$49();
 		const content = root.querySelector(".container .content");
 		if (!content) return true;
 		content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -155904,13 +155904,13 @@ var init_CartItems = __esmMin((() => {
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				const countEl = _getRoot$47().querySelector(`.item[data-index="${item.index}"] .count`);
+				const countEl = _getRoot$49().querySelector(`.item[data-index="${item.index}"] .count`);
 				if (countEl) countEl.textContent = item.count;
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		const root = _getRoot$47();
+		const root = _getRoot$49();
 		const el = root.querySelector(`.item[data-index="${item.index}"]`);
 		if (el) el.remove();
 		const content = root.querySelector(".container .content");
@@ -155930,7 +155930,7 @@ var init_CartItems = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$47();
+		const root = _getRoot$49();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -160723,7 +160723,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$17(event) {
+function stopPropagation$15(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -160932,9 +160932,9 @@ var init_Mail$1 = __esmMin((() => {
 		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
 		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$17).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$17);
-		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$17);
+		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$15).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
+		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$15);
+		this.ui.find("textarea").on("drop", onDropText$2).on("dragover", stopPropagation$15);
 		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
 		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
 		onWindowMailbox();
@@ -190910,7 +190910,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$46() {
+function _getRoot$48() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -191059,7 +191059,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$46();
+		const root = _getRoot$48();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -191222,7 +191222,7 @@ function onResize$14() {
 /**
 * Close the window
 */
-function onClose$15() {
+function onClose$13() {
 	PartyFriendsV0.ui.hide();
 	PartyHelper_default.remove();
 }
@@ -191449,7 +191449,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$15);
+		this.ui.find(".close").click(onClose$13);
 		this.ui.find(".lock").mousedown(onToggleLock$1);
 		this.ui.find(".switchtab.off").mousedown(onChangeTab$2);
 		this.ui.find(".remove").mousedown(onRequestRemoveSelection$1);
@@ -195734,14 +195734,14 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$16(event) {
+function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Closing window
 */
-function onClose$14() {
+function onClose$12() {
 	WorldMap._host.style.display = "none";
 }
 var WorldMap, _preferences$63, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
@@ -195781,7 +195781,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this._shadow || this._host;
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$16));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$14));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -195789,7 +195789,7 @@ var init_WorldMap = __esmMin((() => {
 		const showLvlBtn = root.querySelector(".titlebar .showlvl");
 		if (showLvlBtn) showLvlBtn.addEventListener("click", onShowLVL);
 		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$14);
+		if (closeBtn) closeBtn.addEventListener("click", onClose$12);
 		const content = root.querySelector(".map .content");
 		if (content) {
 			content.addEventListener("click", onWorldMapSectionClick);
@@ -197140,7 +197140,7 @@ function onResize$13() {
 /**
 * Close the window
 */
-function onClose$13() {
+function onClose$11() {
 	PartyFriendsV1.ui.hide();
 	PartyHelper_default.remove();
 }
@@ -197420,7 +197420,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$13);
+		this.ui.find(".close").click(onClose$11);
 		this.ui.find(".lock").mousedown(onToggleLock);
 		this.ui.find(".switchtab.off").mousedown(onChangeTab$1);
 		this.ui.find(".remove").mousedown(onRequestRemoveSelection);
@@ -197978,7 +197978,7 @@ function _formatROText(value) {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$45() {
+function _getRoot$47() {
 	return SkillDescription$1._shadow || SkillDescription$1._host;
 }
 var _allowedTags, SkillDescription$1, SkillDescription_default;
@@ -198018,7 +198018,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$45().querySelector(".close");
+		const closeBtn = _getRoot$47().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -198032,7 +198032,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$45().querySelector(".content");
+		const content = _getRoot$47().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -204708,7 +204708,7 @@ function onClickClose$4(e) {
 /**
 * Close the window
 */
-function onClose$12() {
+function onClose$10() {
 	QuestHelper.ui.hide();
 }
 var QuestHelper, _preferences$53, QuestHelper_default;
@@ -204815,7 +204815,7 @@ var init_QuestHelper = __esmMin((() => {
 	*/
 	QuestHelper.clean = function clean() {
 		QuestHelper.ui.hide();
-		onClose$12();
+		onClose$10();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -205018,7 +205018,7 @@ function refreshQuestUI$1() {
 /**
 * Close the window
 */
-function onClose$11() {
+function onClose$9() {
 	Quest.ui.hide();
 }
 var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$51, Quest_default;
@@ -205058,7 +205058,7 @@ var init_Quest$2 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			return false;
 		});
-		this.ui.find(".close").click(onClose$11);
+		this.ui.find(".close").click(onClose$9);
 		this.ui.on("click", ".quest-menu-item", onClickMenu$2);
 		this.ui.on("click", ".close-quest-container-btn", onClickClose$3);
 		this.draggable(this.ui.find(".titlebar"));
@@ -205096,7 +205096,7 @@ var init_Quest$2 = __esmMin((() => {
 		Quest.ClearQuestList();
 		QuestHelper_default.clearQuestDesc();
 		QuestWindow_default.ClearQuestList();
-		onClose$11();
+		onClose$9();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -205318,7 +205318,7 @@ function onClickClose$2(e) {
 /**
 * Close the window
 */
-function onClose$10() {
+function onClose$8() {
 	QuestHelperV1.ui.hide();
 }
 function onSelectMonster(e) {
@@ -205420,7 +205420,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 	*/
 	QuestHelperV1.clean = function clean() {
 		QuestHelperV1.ui.hide();
-		onClose$10();
+		onClose$8();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -205510,7 +205510,7 @@ function refreshQuestUI() {
 /**
 * Close the window
 */
-function onClose$9() {
+function onClose$7() {
 	QuestV1.ui.hide();
 }
 var QuestV1, _index$5, _questList, _active_menu, _preferences$49, QuestV1_default;
@@ -205549,8 +205549,8 @@ var init_QuestV1 = __esmMin((() => {
 			return false;
 		});
 		this.ui.find(".view").click(onClickView);
-		this.ui.find(".close").click(onClose$9);
-		this.ui.find(".btn-right").click(onClose$9);
+		this.ui.find(".close").click(onClose$7);
+		this.ui.find(".btn-right").click(onClose$7);
 		this.ui.on("click", ".quest-menu-item", onClickMenu$1);
 		this.ui.find("#active-quest-list").show();
 		this.draggable(this.ui.find(".titlebar"));
@@ -205583,7 +205583,7 @@ var init_QuestV1 = __esmMin((() => {
 		QuestV1.ui.find("#all-quest-list").hide();
 		QuestV1.ClearQuestList();
 		QuestHelperV1_default.clearQuestDesc();
-		onClose$9();
+		onClose$7();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -205748,7 +205748,7 @@ var init_BasicInfo$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.js
-function _getRoot$44() {
+function _getRoot$46() {
 	return BasicInfo._shadow || BasicInfo._host;
 }
 var BasicInfo, _preferences$48, BasicInfo_default;
@@ -205796,7 +205796,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfo.init = function init() {
-		const root = _getRoot$44();
+		const root = _getRoot$46();
 		root.querySelectorAll(".topbar button").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -205841,7 +205841,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfo.onAppend = function onAppend() {
-		const root = _getRoot$44();
+		const root = _getRoot$46();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$48.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$48.x), Renderer.width - hostRect.width)}px`;
@@ -205863,7 +205863,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfo.onRemove = function onRemove() {
-		const root = _getRoot$44();
+		const root = _getRoot$46();
 		const inner = root.querySelector("#basicinfo");
 		_preferences$48.x = parseInt(this._host.style.left, 10);
 		_preferences$48.y = parseInt(this._host.style.top, 10);
@@ -205892,7 +205892,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfo.toggleMode = function toggleMode() {
-		const root = _getRoot$44();
+		const root = _getRoot$46();
 		const inner = root.querySelector("#basicinfo");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -205916,7 +205916,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfo.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$44();
+		const root = _getRoot$46();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$48.buttons = buttons.style.display === "none";
@@ -205937,7 +205937,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfo.update = function update(type, val1, val2) {
-		const root = _getRoot$44();
+		const root = _getRoot$46();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -206052,7 +206052,7 @@ var init_BasicInfoV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.js
-function _getRoot$43() {
+function _getRoot$45() {
 	return BasicInfoV0._shadow || BasicInfoV0._host;
 }
 var BasicInfoV0, _preferences$47, BasicInfoV0_default;
@@ -206102,7 +206102,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV0.init = function init() {
-		const root = _getRoot$43();
+		const root = _getRoot$45();
 		root.querySelectorAll(".topbar button").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -206153,7 +206153,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV0.onAppend = function onAppend() {
-		const root = _getRoot$43();
+		const root = _getRoot$45();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$47.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$47.x), Renderer.width - hostRect.width)}px`;
@@ -206183,7 +206183,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV0.onRemove = function onRemove() {
-		const root = _getRoot$43();
+		const root = _getRoot$45();
 		const inner = root.querySelector("#BasicInfoV0");
 		_preferences$47.x = parseInt(this._host.style.left, 10);
 		_preferences$47.y = parseInt(this._host.style.top, 10);
@@ -206212,7 +206212,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV0.toggleMode = function toggleMode() {
-		const root = _getRoot$43();
+		const root = _getRoot$45();
 		const inner = root.querySelector("#BasicInfoV0");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -206237,7 +206237,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV0.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$43();
+		const root = _getRoot$45();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$47.buttons = buttons.style.display === "none";
@@ -206258,7 +206258,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV0.update = function update(type, val1, val2) {
-		const root = _getRoot$43();
+		const root = _getRoot$45();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -207253,7 +207253,7 @@ var init_BasicInfoV3$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
-function _getRoot$42() {
+function _getRoot$44() {
 	return BasicInfoV3._shadow || BasicInfoV3._host;
 }
 var BasicInfoV3, _preferences$44, BasicInfoV3_default;
@@ -207308,7 +207308,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV3.init = function init() {
-		const root = _getRoot$42();
+		const root = _getRoot$44();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -207369,7 +207369,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV3.onAppend = function onAppend() {
-		const root = _getRoot$42();
+		const root = _getRoot$44();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - hostRect.width)}px`;
@@ -207404,7 +207404,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV3.onRemove = function onRemove() {
-		const root = _getRoot$42();
+		const root = _getRoot$44();
 		const inner = root.querySelector("#BasicInfoV3");
 		const buttons = root.querySelector(".buttons");
 		_preferences$44.x = parseInt(this._host.style.left, 10);
@@ -207433,7 +207433,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV3.toggleMode = function toggleMode() {
-		const root = _getRoot$42();
+		const root = _getRoot$44();
 		const inner = root.querySelector("#BasicInfoV3");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -207455,7 +207455,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV3.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$42();
+		const root = _getRoot$44();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$44.buttons = buttons.style.display === "none";
@@ -207480,7 +207480,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV3.update = function update(type, val1, val2) {
-		const root = _getRoot$42();
+		const root = _getRoot$44();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -207750,7 +207750,7 @@ var init_BasicInfoV4$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
-function _getRoot$41() {
+function _getRoot$43() {
 	return BasicInfoV4._shadow || BasicInfoV4._host;
 }
 var BasicInfoV4, _preferences$42, BasicInfoV4_default;
@@ -207806,7 +207806,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV4.init = function init() {
-		const root = _getRoot$41();
+		const root = _getRoot$43();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -207872,7 +207872,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV4.onAppend = function onAppend() {
-		const root = _getRoot$41();
+		const root = _getRoot$43();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - hostRect.width)}px`;
@@ -207913,7 +207913,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV4.onRemove = function onRemove() {
-		const root = _getRoot$41();
+		const root = _getRoot$43();
 		const inner = root.querySelector("#BasicInfoV4");
 		const buttons = root.querySelector(".buttons");
 		_preferences$42.x = parseInt(this._host.style.left, 10);
@@ -207942,7 +207942,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV4.toggleMode = function toggleMode() {
-		const root = _getRoot$41();
+		const root = _getRoot$43();
 		const inner = root.querySelector("#BasicInfoV4");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -207964,7 +207964,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV4.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$41();
+		const root = _getRoot$43();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$42.buttons = buttons.style.display === "none";
@@ -207989,7 +207989,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV4.update = function update(type, val1, val2) {
-		const root = _getRoot$41();
+		const root = _getRoot$43();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -208104,7 +208104,7 @@ var init_BasicInfoV5$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
-function _getRoot$40() {
+function _getRoot$42() {
 	return BasicInfoV5._shadow || BasicInfoV5._host;
 }
 var BasicInfoV5, _preferences$41, BasicInfoV5_default;
@@ -208160,7 +208160,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV5.init = function init() {
-		const root = _getRoot$40();
+		const root = _getRoot$42();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -208226,7 +208226,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV5.onAppend = function onAppend() {
-		const root = _getRoot$40();
+		const root = _getRoot$42();
 		const hostRect = this._host.getBoundingClientRect();
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - hostRect.width)}px`;
@@ -208267,7 +208267,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV5.onRemove = function onRemove() {
-		const root = _getRoot$40();
+		const root = _getRoot$42();
 		const inner = root.querySelector("#BasicInfoV5");
 		const buttons = root.querySelector(".buttons");
 		_preferences$41.x = parseInt(this._host.style.left, 10);
@@ -208296,7 +208296,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV5.toggleMode = function toggleMode() {
-		const root = _getRoot$40();
+		const root = _getRoot$42();
 		const inner = root.querySelector("#BasicInfoV5");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -208318,7 +208318,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV5.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$40();
+		const root = _getRoot$42();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
 		_preferences$41.buttons = buttons.style.display === "none";
@@ -208343,7 +208343,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV5.update = function update(type, val1, val2) {
-		const root = _getRoot$40();
+		const root = _getRoot$42();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -208622,7 +208622,7 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$15(event) {
+function stopPropagation$13(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -208747,7 +208747,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$15);
+		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$13);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -208837,7 +208837,7 @@ var init_WriteRodex = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV0/InventoryV0.js
-function _getRoot$39() {
+function _getRoot$41() {
 	return InventoryV0._shadow || InventoryV0._host;
 }
 function _sanitizeHtml$10(str) {
@@ -208912,7 +208912,7 @@ function onResize$10() {
 * Modify tab, filter display entries
 */
 function onSwitchTab$3() {
-	const root = _getRoot$39();
+	const root = _getRoot$41();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
 	_preferences$40.tab = parseInt(idx, 10);
@@ -208926,7 +208926,7 @@ function onSwitchTab$3() {
 * Hide/show inventory's content
 */
 function onToggleReduction$3() {
-	const panel = _getRoot$39().querySelector(".panel");
+	const panel = _getRoot$41().querySelector(".panel");
 	if (_realSize$4) {
 		if (panel) panel.style.display = "flex";
 		InventoryV0._host.style.height = `${_realSize$4}px`;
@@ -208941,7 +208941,7 @@ function onToggleReduction$3() {
 * Update tab, reset inventory content
 */
 function requestFilter$3() {
-	const root = _getRoot$39();
+	const root = _getRoot$41();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -209012,7 +209012,7 @@ function onItemOver$14(_e) {
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$39();
+	const root = _getRoot$41();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV0") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -209030,7 +209030,7 @@ function onItemOver$14(_e) {
 * Hide the item name
 */
 function onItemOut$15() {
-	const overlay = _getRoot$39().querySelector(".overlay");
+	const overlay = _getRoot$41().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -209186,7 +209186,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
@@ -209242,7 +209242,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV0.onAppend = function OnAppend() {
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		if (!_preferences$40.show) this._host.style.display = "none";
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$40.tab + 1) + ".bmp", (data) => {
 			const tabSprite = root.querySelector(".tab-sprite");
@@ -209264,7 +209264,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* Remove Inventory from window (and so clean up items)
 	*/
 	InventoryV0.onRemove = function OnRemove() {
-		const content = _getRoot$39().querySelector(".container .content");
+		const content = _getRoot$41().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		InventoryV0.newItems.length = 0;
@@ -209296,7 +209296,7 @@ var init_InventoryV0 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$39().querySelectorAll(".new_item").forEach((el) => {
+					_getRoot$41().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -209319,7 +209319,7 @@ var init_InventoryV0 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$39().querySelectorAll(".new_item").forEach((el) => {
+			_getRoot$41().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
@@ -209345,7 +209345,7 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 8);
 		height = Math.min(Math.max(height, 2), 5);
-		const content = _getRoot$39().querySelector(".container .content");
+		const content = _getRoot$41().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${59 + width * 32}px`;
 		this._host.style.height = `${62 + height * 32}px`;
@@ -209355,7 +209355,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* Force scroll clamping
 	*/
 	InventoryV0.updateScroll = function updateScroll() {
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -209401,7 +209401,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* if the item index is exist you should clear it;[skybook888]
 	*/
 	InventoryV0.setItems = function SetItems(items) {
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -209420,7 +209420,7 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		const equippedIndex = InventoryV0.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV0.equippedItems.splice(equippedIndex, 1);
 		else {
@@ -209472,7 +209472,7 @@ var init_InventoryV0 = __esmMin((() => {
 		}
 		if (tab === _preferences$40.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$39();
+			const root = _getRoot$41();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -209499,7 +209499,7 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -209530,7 +209530,7 @@ var init_InventoryV0 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$39();
+		const root = _getRoot$41();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -209594,7 +209594,7 @@ var init_InventoryV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV1/InventoryV1.js
-function _getRoot$38() {
+function _getRoot$40() {
 	return InventoryV1._shadow || InventoryV1._host;
 }
 function _sanitizeHtml$9(str) {
@@ -209659,7 +209659,7 @@ function onResize$9() {
 * Modify tab, filter display entries
 */
 function onSwitchTab$2() {
-	const root = _getRoot$38();
+	const root = _getRoot$40();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
 	_preferences$39.tab = parseInt(idx, 10);
@@ -209703,7 +209703,7 @@ function onSwitchTab$2() {
 * Hide/show inventory's content
 */
 function onToggleReduction$2() {
-	const panel = _getRoot$38().querySelector(".panel");
+	const panel = _getRoot$40().querySelector(".panel");
 	if (_realSize$3) {
 		if (panel) panel.style.display = "flex";
 		InventoryV1._host.style.height = `${_realSize$3}px`;
@@ -209718,7 +209718,7 @@ function onToggleReduction$2() {
 * Update tab, reset inventory content
 */
 function requestFilter$2() {
-	const root = _getRoot$38();
+	const root = _getRoot$40();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -209787,7 +209787,7 @@ function onItemOver$13(_e) {
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$38();
+	const root = _getRoot$40();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV1") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -209805,7 +209805,7 @@ function onItemOver$13(_e) {
 * Hide the item name
 */
 function onItemOut$14() {
-	const overlay = _getRoot$38().querySelector(".overlay");
+	const overlay = _getRoot$40().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -209938,7 +209938,7 @@ function onItemLock$2() {
 	InventoryV1.itemlock = _preferences$39.itemlock;
 	const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const lockBtn = _getRoot$38().querySelector(".item_drop_lock");
+		const lockBtn = _getRoot$40().querySelector(".item_drop_lock");
 		if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 	});
 }
@@ -209950,7 +209950,7 @@ function onItemCompare$2() {
 	InventoryV1.itemcomp = _preferences$39.itemcomp;
 	const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const compBtn = _getRoot$38().querySelector(".item_compare");
+		const compBtn = _getRoot$40().querySelector(".item_compare");
 		if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 	});
 }
@@ -209960,7 +209960,7 @@ function onItemCompare$2() {
 function onNPCLock$2() {
 	_preferences$39.npcsalelock = !_preferences$39.npcsalelock;
 	InventoryV1.npcsalelock = _preferences$39.npcsalelock;
-	const root = _getRoot$38();
+	const root = _getRoot$40();
 	if (_preferences$39.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
@@ -210058,7 +210058,7 @@ var init_InventoryV1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		const root = _getRoot$38();
+		const root = _getRoot$40();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
@@ -210167,14 +210167,14 @@ var init_InventoryV1 = __esmMin((() => {
 		this.magnet.LEFT = _preferences$39.magnet_left;
 		this.magnet.RIGHT = _preferences$39.magnet_right;
 		_realSize$3 = _preferences$39.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = _getRoot$38().querySelector(".titlebar .mini");
+		const miniBtnAppend = _getRoot$40().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	InventoryV1.onRemove = function OnRemove() {
-		const content = _getRoot$38().querySelector(".container .content");
+		const content = _getRoot$40().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		InventoryV1.newItems.length = 0;
@@ -210205,7 +210205,7 @@ var init_InventoryV1 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$38().querySelectorAll(".new_item").forEach((el) => {
+					_getRoot$40().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -210228,7 +210228,7 @@ var init_InventoryV1 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$38().querySelectorAll(".new_item").forEach((el) => {
+			_getRoot$40().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
@@ -210252,7 +210252,7 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = _getRoot$38().querySelector(".container .content");
+		const content = _getRoot$40().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
@@ -210261,7 +210261,7 @@ var init_InventoryV1 = __esmMin((() => {
 	* Force scroll clamping
 	*/
 	InventoryV1.updateScroll = function updateScroll() {
-		const root = _getRoot$38();
+		const root = _getRoot$40();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -210306,7 +210306,7 @@ var init_InventoryV1 = __esmMin((() => {
 	* Add items to the list
 	*/
 	InventoryV1.setItems = function SetItems(items) {
-		const root = _getRoot$38();
+		const root = _getRoot$40();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -210323,7 +210323,7 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const root = _getRoot$38();
+		const root = _getRoot$40();
 		const equippedIndex = InventoryV1.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV1.equippedItems.splice(equippedIndex, 1);
 		else {
@@ -210374,7 +210374,7 @@ var init_InventoryV1 = __esmMin((() => {
 		}
 		if (tab === _preferences$39.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$38();
+			const root = _getRoot$40();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -210398,7 +210398,7 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$38();
+		const root = _getRoot$40();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -210426,7 +210426,7 @@ var init_InventoryV1 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$38();
+		const root = _getRoot$40();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -210522,7 +210522,7 @@ var init_SwitchEquip$1 = __esmMin((() => {
 /**
 * Helper to get shadow root
 */
-function _getRoot$37() {
+function _getRoot$39() {
 	return SwitchEquip._shadow || SwitchEquip._host;
 }
 /**
@@ -210574,7 +210574,7 @@ function onDragOver$6(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$6("location" in item ? item.location : item.WearLocation);
-				const el = _getRoot$37().querySelector(selector);
+				const el = _getRoot$39().querySelector(selector);
 				if (el) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					el.style.backgroundImage = `url(${_data})`;
 				});
@@ -210589,7 +210589,7 @@ function onDragOver$6(event) {
 * Drag out the window
 */
 function onDragLeave$5(event) {
-	_getRoot$37().querySelectorAll("td").forEach((td) => {
+	_getRoot$39().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -210606,7 +210606,7 @@ function onDrop$16(event) {
 	if (data && data.type === "item") {
 		const item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$37().querySelectorAll("td").forEach((td) => {
+			_getRoot$39().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			SwitchEquip.onAddSwitchEquip(item.index, "location" in item ? item.location : item.WearState);
@@ -210637,7 +210637,7 @@ function onSwitchEquipInfo(event) {
 function onSwitchEquipUnEquip() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	SwitchEquip.onRemoveSwitchEquip(index);
-	const overlay = _getRoot$37().querySelector(".switchoverlay");
+	const overlay = _getRoot$39().querySelector(".switchoverlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -210647,7 +210647,7 @@ function onSwitchEquipOver() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = SwitchEquip._list[idx];
 	if (!item) return;
-	const overlay = _getRoot$37().querySelector(".switchoverlay");
+	const overlay = _getRoot$39().querySelector(".switchoverlay");
 	if (!overlay) return;
 	const posTop = this.offsetTop;
 	const posLeft = this.offsetLeft;
@@ -210661,7 +210661,7 @@ function onSwitchEquipOver() {
 * Remove the item name
 */
 function onSwitchEquipOut() {
-	const overlay = _getRoot$37().querySelector(".switchoverlay");
+	const overlay = _getRoot$39().querySelector(".switchoverlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -210702,7 +210702,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* Initialize UI
 	*/
 	SwitchEquip.init = function init() {
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		const canvases = root.querySelectorAll("canvas");
 		_swapctx.push(canvases[0].getContext("2d"));
 		_swapctx.push(canvases[1].getContext("2d"));
@@ -210747,7 +210747,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* @param {string} tabId - The ID of the tab to show.
 	*/
 	SwitchEquip.showSwapTab = function showSwapTab(tabId) {
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		if (!root) return;
 		const swapTabId = "swap" + tabId;
 		const swapContentDivs = {
@@ -210763,7 +210763,7 @@ var init_SwitchEquip = __esmMin((() => {
 	SwitchEquip.onAppend = function onAppend() {
 		const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
 		SwitchEquip.showSwapTab(currentEquipTabId);
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		if ((root ? root.querySelector("canvas") : null) && this._host.style.display !== "none") Renderer.render(swaprender);
 	};
 	/**
@@ -210772,7 +210772,7 @@ var init_SwitchEquip = __esmMin((() => {
 	SwitchEquip.onRemove = function onRemove() {
 		Renderer.stop(swaprender);
 		SwitchEquip._list = {};
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		if (root) root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -210818,7 +210818,7 @@ var init_SwitchEquip = __esmMin((() => {
 			if (string.length > limit) return string.substring(0, limit) + "...";
 			return string;
 		};
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		const selector = getSelectorFromLocation$6(location);
 		const el = root.querySelector(selector);
 		if (el) el.innerHTML = `<div class="item" data-index="${item.index}"><button></button><span class="itemName">${add3Dots(_escapeHtml(DB.getItemName(item)), 19)}</span></div>`;
@@ -210837,7 +210837,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* @param {number} item location
 	*/
 	SwitchEquip.unEquip = function unEquip(index, location) {
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		const selector = getSelectorFromLocation$6(location);
 		const item = SwitchEquip._list[index];
 		item.equipped = 0;
@@ -210906,7 +210906,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* Update the owner name for the equipment items
 	*/
 	SwitchEquip.onUpdateOwnerName = function() {
-		const root = _getRoot$37();
+		const root = _getRoot$39();
 		for (const index in SwitchEquip._list) {
 			const item = SwitchEquip._list[index];
 			if (item.slot && [
@@ -210949,7 +210949,7 @@ var init_SwitchEquip = __esmMin((() => {
 	*/
 	SwitchEquip.RequestSwitch = function() {
 		sendEquipSwitchRequest();
-		const button = _getRoot$37().querySelector("#swap-button");
+		const button = _getRoot$39().querySelector("#swap-button");
 		if (!button) return;
 		button.disabled = true;
 		button.classList.add("disabled");
@@ -210985,7 +210985,7 @@ var init_InventoryV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV2/InventoryV2.js
-function _getRoot$36() {
+function _getRoot$38() {
 	return InventoryV2._shadow || InventoryV2._host;
 }
 function _sanitizeHtml$8(str) {
@@ -211041,7 +211041,7 @@ function onResize$8() {
 	window.addEventListener("mouseup", onMouseUp);
 }
 function onSwitchTab$1() {
-	const root = _getRoot$36();
+	const root = _getRoot$38();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
 	_preferences$38.tab = parseInt(idx, 10);
@@ -211082,7 +211082,7 @@ function onSwitchTab$1() {
 	}
 }
 function onToggleReduction$1() {
-	const panel = _getRoot$36().querySelector(".panel");
+	const panel = _getRoot$38().querySelector(".panel");
 	if (_realSize$2) {
 		if (panel) panel.style.display = "flex";
 		InventoryV2._host.style.height = `${_realSize$2}px`;
@@ -211094,7 +211094,7 @@ function onToggleReduction$1() {
 	}
 }
 function requestFilter$1() {
-	const root = _getRoot$36();
+	const root = _getRoot$38();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -211157,7 +211157,7 @@ function onItemOver$12(_e) {
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$36();
+	const root = _getRoot$38();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV2") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -211172,7 +211172,7 @@ function onItemOver$12(_e) {
 	}
 }
 function onItemOut$13() {
-	const overlay = _getRoot$36().querySelector(".overlay");
+	const overlay = _getRoot$38().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onItemDragStart$8(event) {
@@ -211281,7 +211281,7 @@ function onItemLock$1() {
 	InventoryV2.itemlock = _preferences$38.itemlock;
 	const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const btn = _getRoot$36().querySelector(".item_drop_lock");
+		const btn = _getRoot$38().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
@@ -211290,14 +211290,14 @@ function onItemCompare$1() {
 	InventoryV2.itemcomp = _preferences$38.itemcomp;
 	const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const btn = _getRoot$36().querySelector(".item_compare");
+		const btn = _getRoot$38().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock$1() {
 	_preferences$38.npcsalelock = !_preferences$38.npcsalelock;
 	InventoryV2.npcsalelock = _preferences$38.npcsalelock;
-	const root = _getRoot$36();
+	const root = _getRoot$38();
 	if (_preferences$38.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
@@ -211382,7 +211382,7 @@ var init_InventoryV2 = __esmMin((() => {
 	InventoryV2.itemcomp = _preferences$38.itemcomp;
 	InventoryV2.npcsalelock = _preferences$38.npcsalelock;
 	InventoryV2.init = function Init() {
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
@@ -211483,11 +211483,11 @@ var init_InventoryV2 = __esmMin((() => {
 		this.magnet.LEFT = _preferences$38.magnet_left;
 		this.magnet.RIGHT = _preferences$38.magnet_right;
 		_realSize$2 = _preferences$38.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = _getRoot$36().querySelector(".titlebar .mini");
+		const miniBtnAppend = _getRoot$38().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	InventoryV2.onRemove = function OnRemove() {
-		const content = _getRoot$36().querySelector(".container .content");
+		const content = _getRoot$38().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		this.equipswitchlist.length = 0;
@@ -211514,7 +211514,7 @@ var init_InventoryV2 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$36().querySelectorAll(".new_item").forEach((el) => {
+					_getRoot$38().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -211534,7 +211534,7 @@ var init_InventoryV2 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$36().querySelectorAll(".new_item").forEach((el) => {
+			_getRoot$38().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
@@ -211550,13 +211550,13 @@ var init_InventoryV2 = __esmMin((() => {
 	};
 	InventoryV2.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = _getRoot$36().querySelector(".container .content");
+		const content = _getRoot$38().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
 	InventoryV2.updateScroll = function updateScroll() {
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -211586,7 +211586,7 @@ var init_InventoryV2 = __esmMin((() => {
 		return null;
 	};
 	InventoryV2.setItems = function SetItems(items) {
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -211600,7 +211600,7 @@ var init_InventoryV2 = __esmMin((() => {
 	};
 	InventoryV2.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		const equippedIndex = InventoryV2.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV2.equippedItems.splice(equippedIndex, 1);
 		else {
@@ -211647,7 +211647,7 @@ var init_InventoryV2 = __esmMin((() => {
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
 		if (tab === _preferences$38.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$36();
+			const root = _getRoot$38();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -211681,7 +211681,7 @@ var init_InventoryV2 = __esmMin((() => {
 	};
 	InventoryV2.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -211706,7 +211706,7 @@ var init_InventoryV2 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -211782,7 +211782,7 @@ var init_InventoryV2 = __esmMin((() => {
 			this.equipswitchlist.splice(existingItemIndex, 1);
 		}
 		this.equipswitchlist.push(item);
-		const root = _getRoot$36();
+		const root = _getRoot$38();
 		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
 			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -211802,7 +211802,7 @@ var init_InventoryV2 = __esmMin((() => {
 		}
 		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
 		if (existingItemIndex > -1) {
-			const root = _getRoot$36();
+			const root = _getRoot$38();
 			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (sw1) sw1.style.backgroundImage = "none";
 			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
@@ -211880,7 +211880,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$14(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -212632,14 +212632,14 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$14);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$12);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$14).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$12).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
 		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
 		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
 		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
@@ -212761,7 +212761,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$13(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -213286,7 +213286,7 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$13);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$11);
 		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
 		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
 		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
@@ -214970,7 +214970,7 @@ var init_Enchant = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV3/InventoryV3.js
-function _getRoot$35() {
+function _getRoot$37() {
 	return InventoryV3._shadow || InventoryV3._host;
 }
 function _sanitizeHtml$7(str) {
@@ -215026,7 +215026,7 @@ function onResize$7() {
 	window.addEventListener("mouseup", onMouseUp);
 }
 function onSwitchTab() {
-	const root = _getRoot$35();
+	const root = _getRoot$37();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
 	_preferences$37.tab = parseInt(idx, 10);
@@ -215067,7 +215067,7 @@ function onSwitchTab() {
 	}
 }
 function onToggleReduction() {
-	const panel = _getRoot$35().querySelector(".panel");
+	const panel = _getRoot$37().querySelector(".panel");
 	if (_realSize$1) {
 		if (panel) panel.style.display = "flex";
 		InventoryV3._host.style.height = `${_realSize$1}px`;
@@ -215079,7 +215079,7 @@ function onToggleReduction() {
 	}
 }
 function requestFilter() {
-	const root = _getRoot$35();
+	const root = _getRoot$37();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -215142,7 +215142,7 @@ function onItemOver$10(_e) {
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$35();
+	const root = _getRoot$37();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV3") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -215157,7 +215157,7 @@ function onItemOver$10(_e) {
 	}
 }
 function onItemOut$11() {
-	const overlay = _getRoot$35().querySelector(".overlay");
+	const overlay = _getRoot$37().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onItemDragStart$5(event) {
@@ -215285,7 +215285,7 @@ function onRequestInventoryExpandResult(pkt) {
 			const item = InventoryV3.getItemById(pkt.itemId);
 			if (!item) return false;
 			const itemname = DB.getItemName(item);
-			const mcntEl = _getRoot$35().querySelector(".mcnt");
+			const mcntEl = _getRoot$37().querySelector(".mcnt");
 			const currentlimit = mcntEl ? parseInt(mcntEl.textContent, 10) : 100;
 			const newlimit = currentlimit + 10;
 			UIManager.showPromptBox(DB.getMessage(3561).replace("%s", itemname).replace("%d", currentlimit).replace("%d", newlimit), "ok", "cancel", InventoryExpandReq, InventoryExpandCancel);
@@ -215339,7 +215339,7 @@ function onItemLock() {
 	InventoryV3.itemlock = _preferences$37.itemlock;
 	const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const btn = _getRoot$35().querySelector(".item_drop_lock");
+		const btn = _getRoot$37().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
@@ -215348,14 +215348,14 @@ function onItemCompare() {
 	InventoryV3.itemcomp = _preferences$37.itemcomp;
 	const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const btn = _getRoot$35().querySelector(".item_compare");
+		const btn = _getRoot$37().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock() {
 	_preferences$37.npcsalelock = !_preferences$37.npcsalelock;
 	InventoryV3.npcsalelock = _preferences$37.npcsalelock;
-	const root = _getRoot$35();
+	const root = _getRoot$37();
 	if (_preferences$37.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
@@ -215445,7 +215445,7 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.itemcomp = _preferences$37.itemcomp;
 	InventoryV3.npcsalelock = _preferences$37.npcsalelock;
 	InventoryV3.init = function Init() {
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
@@ -215548,11 +215548,11 @@ var init_InventoryV3 = __esmMin((() => {
 		this.magnet.LEFT = _preferences$37.magnet_left;
 		this.magnet.RIGHT = _preferences$37.magnet_right;
 		_realSize$1 = _preferences$37.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = _getRoot$35().querySelector(".titlebar .mini");
+		const miniBtnAppend = _getRoot$37().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	InventoryV3.onRemove = function OnRemove() {
-		const content = _getRoot$35().querySelector(".container .content");
+		const content = _getRoot$37().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		this.equipswitchlist.length = 0;
@@ -215579,7 +215579,7 @@ var init_InventoryV3 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$35().querySelectorAll(".new_item").forEach((el) => {
+					_getRoot$37().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -215599,7 +215599,7 @@ var init_InventoryV3 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$35().querySelectorAll(".new_item").forEach((el) => {
+			_getRoot$37().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
@@ -215615,13 +215615,13 @@ var init_InventoryV3 = __esmMin((() => {
 	};
 	InventoryV3.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = _getRoot$35().querySelector(".container .content");
+		const content = _getRoot$37().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
 	InventoryV3.updateScroll = function updateScroll() {
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -215651,7 +215651,7 @@ var init_InventoryV3 = __esmMin((() => {
 		return null;
 	};
 	InventoryV3.setItems = function SetItems(items) {
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -215666,7 +215666,7 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
 		const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		const equippedIndex = InventoryV3.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV3.equippedItems.splice(equippedIndex, 1);
 		else {
@@ -215720,7 +215720,7 @@ var init_InventoryV3 = __esmMin((() => {
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
 		if (tab === _preferences$37.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$35();
+			const root = _getRoot$37();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -215758,7 +215758,7 @@ var init_InventoryV3 = __esmMin((() => {
 	};
 	InventoryV3.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -215783,7 +215783,7 @@ var init_InventoryV3 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -215874,7 +215874,7 @@ var init_InventoryV3 = __esmMin((() => {
 			this.equipswitchlist.splice(existingItemIndex, 1);
 		}
 		this.equipswitchlist.push(item);
-		const root = _getRoot$35();
+		const root = _getRoot$37();
 		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
 			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -215894,7 +215894,7 @@ var init_InventoryV3 = __esmMin((() => {
 		}
 		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
 		if (existingItemIndex > -1) {
-			const root = _getRoot$35();
+			const root = _getRoot$37();
 			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (sw1) sw1.style.backgroundImage = "none";
 			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
@@ -215960,7 +215960,7 @@ var init_Inventory = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/ItemInfo/ItemInfo.js
 var ItemInfo_exports = /* @__PURE__ */ __exportAll({ default: () => ItemInfo_default });
-function _getRoot$34() {
+function _getRoot$36() {
 	return ItemInfo._shadow || ItemInfo._host;
 }
 /**
@@ -215990,7 +215990,7 @@ function addCard(cardList, itemId, index, slotCount) {
 	if (!cardList) return;
 	cardList.insertAdjacentHTML("beforeend", `<div class="item" data-index="${index}"><div class="icon"></div>${name}</div>`);
 	Client.loadFile(DB.INTERFACE_PATH + file, (data) => {
-		const element = _getRoot$34().querySelector(`.cardlist .item[data-index="${index}"] .icon`);
+		const element = _getRoot$36().querySelector(`.cardlist .item[data-index="${index}"] .icon`);
 		if (element) {
 			element.style.backgroundImage = `url(${data})`;
 			if (itemId && card) element.addEventListener("contextmenu", (e) => {
@@ -216032,7 +216032,7 @@ function onResize$6() {
 * @param {number} height
 */
 function resize$4(height) {
-	const root = _getRoot$34();
+	const root = _getRoot$36();
 	const container = root.querySelector(".container");
 	const description = root.querySelector(".description");
 	const descriptionInner = root.querySelector(".description-inner");
@@ -216046,7 +216046,7 @@ function resize$4(height) {
 	if (description) description.style.height = `${containerHeight - 45}px`;
 }
 function addEvent(item) {
-	const root = _getRoot$34();
+	const root = _getRoot$36();
 	let event = root.querySelector(".event_view");
 	if (!event) {
 		if (!validateFieldsExist(event)) event = root.querySelector(".event_view");
@@ -216078,7 +216078,7 @@ function addEvent(item) {
 	}
 }
 function updatePreviewButton(item) {
-	const previewButton = _getRoot$34().querySelector(".btn_mounting");
+	const previewButton = _getRoot$36().querySelector(".btn_mounting");
 	if (!previewButton) return;
 	if (!canPreviewItem(item)) {
 		previewButton.style.display = "none";
@@ -216118,7 +216118,7 @@ function toggleItemPreview(item) {
 	ItemPreview_default.setItem(item);
 }
 function eventsBooks() {
-	const root = _getRoot$34();
+	const root = _getRoot$36();
 	const event = root.querySelector(".event_view");
 	if (!event) return;
 	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
@@ -216176,7 +216176,7 @@ function eventsBooks() {
 	});
 }
 function validateFieldsExist(event) {
-	const root = _getRoot$34();
+	const root = _getRoot$36();
 	if (!event) {
 		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span></div>";
 		const collection = root.querySelector(".collection");
@@ -216305,7 +216305,7 @@ var init_ItemInfo = __esmMin((() => {
 	* Once append
 	*/
 	ItemInfo.onAppend = function onAppend() {
-		const descInner = _getRoot$34().querySelector(".description-inner");
+		const descInner = _getRoot$36().querySelector(".description-inner");
 		if (descInner) resize$4(descInner.offsetHeight + 45);
 	};
 	/**
@@ -216321,7 +216321,7 @@ var init_ItemInfo = __esmMin((() => {
 	* Initialize UI
 	*/
 	ItemInfo.init = function init() {
-		const root = _getRoot$34();
+		const root = _getRoot$36();
 		this._host.style.top = "200px";
 		this._host.style.left = "480px";
 		const extendBtn = root.querySelector(".extend");
@@ -216350,7 +216350,7 @@ var init_ItemInfo = __esmMin((() => {
 	*/
 	ItemInfo.setItem = function setItem(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const root = _getRoot$34();
+		const root = _getRoot$36();
 		const cardList = root.querySelector(".cardlist .border");
 		const optionContainer = root.querySelector(".option-container");
 		this.item = it;
@@ -216510,7 +216510,7 @@ var init_EquipmentV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.js
-function _getRoot$33() {
+function _getRoot$35() {
 	return EquipmentV0._shadow || EquipmentV0._host;
 }
 function escapeHTML$5(str) {
@@ -216531,7 +216531,7 @@ function hideStatus$2() {
 	if (winStats.isEmbedded()) winStats.unembed();
 }
 function toggleStatus$5() {
-	const self = _getRoot$33().querySelector(".view_status");
+	const self = _getRoot$35().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -216571,7 +216571,7 @@ function onDragOver$5(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$5("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$33().querySelectorAll(selector);
+				const cells = _getRoot$35().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -216584,7 +216584,7 @@ function onDragOver$5(event) {
 	return false;
 }
 function onDragLeave$4(event) {
-	_getRoot$33().querySelectorAll("td").forEach((td) => {
+	_getRoot$35().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -216601,7 +216601,7 @@ function onDrop$13(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$33().querySelectorAll("td").forEach((td) => {
+			_getRoot$35().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV0.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -216624,14 +216624,14 @@ function onEquipmentInfo$4(event) {
 function onEquipmentUnEquip$4() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV0.onUnEquip(index);
-	const overlay = _getRoot$33().querySelector(".overlay");
+	const overlay = _getRoot$35().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$4() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$11[idx];
 	if (!item) return;
-	const root = _getRoot$33();
+	const root = _getRoot$35();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV0") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -216647,7 +216647,7 @@ function onEquipmentOver$4() {
 	}
 }
 function onEquipmentOut$4() {
-	const overlay = _getRoot$33().querySelector(".overlay");
+	const overlay = _getRoot$35().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 var EquipmentV0, _preferences$36, _list$11, _ctx$9, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
@@ -216686,7 +216686,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	_list$11 = {};
 	_showEquip$4 = false;
 	EquipmentV0.init = function init() {
-		const root = _getRoot$33();
+		const root = _getRoot$35();
 		const canvas = root.querySelector("canvas");
 		if (canvas) _ctx$9 = canvas.getContext("2d");
 		if (UIVersionManager.getEquipmentVersion() > 0) {
@@ -216761,21 +216761,21 @@ var init_EquipmentV0 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$36.show) this._host.style.display = "none";
 		if (_preferences$36.reduce) {
-			const panel = _getRoot$33().querySelector(".panel");
+			const panel = _getRoot$35().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$36.stats && _preferences$36.show) WinStatsController.getUI().embed(EquipmentV0._host);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = _getRoot$33().querySelector(".view_status");
+			const btn = _getRoot$35().querySelector(".view_status");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (_getRoot$33().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$4);
+		if (_getRoot$35().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$4);
 	};
 	EquipmentV0.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$4 && _btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
 		Renderer.stop(renderCharacter$4);
 		_list$11 = {};
-		const root = _getRoot$33();
+		const root = _getRoot$35();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -216813,7 +216813,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	EquipmentV0.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$4 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$33().querySelector(".show_equip");
+			const btn = _getRoot$35().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -216835,7 +216835,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$33();
+		const root = _getRoot$35();
 		const selector = getSelectorFromLocation$5(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$5(add3Dots(DB.getItemName(item, {
@@ -216853,7 +216853,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	};
 	EquipmentV0.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$5(location);
-		const root = _getRoot$33();
+		const root = _getRoot$35();
 		const item = _list$11[index];
 		root.querySelectorAll(selector).forEach((el) => {
 			el.innerHTML = "";
@@ -216894,7 +216894,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			if (character.effectState !== _lastState || _hasCart !== character.hasCart) {
 				_lastState = character.effectState;
 				_hasCart = character.hasCart;
-				const root = _getRoot$33();
+				const root = _getRoot$35();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -216922,7 +216922,7 @@ var init_EquipmentV0 = __esmMin((() => {
 		};
 	})();
 	EquipmentV0.onUpdateOwnerName = function() {
-		const root = _getRoot$33();
+		const root = _getRoot$35();
 		for (const index in _list$11) {
 			const item = _list$11[index];
 			if (item.slot && [
@@ -216965,7 +216965,7 @@ var init_EquipmentV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.js
-function _getRoot$32() {
+function _getRoot$34() {
 	return EquipmentV1._shadow || EquipmentV1._host;
 }
 function escapeHTML$4(str) {
@@ -217005,7 +217005,7 @@ function hideStatus$1() {
 	if (winStats.isEmbedded()) winStats.unembed();
 }
 function toggleStatus$4() {
-	const self = _getRoot$32().querySelector(".view_status");
+	const self = _getRoot$34().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -217055,7 +217055,7 @@ function onDragOver$4(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$4("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$32().querySelectorAll(selector);
+				const cells = _getRoot$34().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -217068,7 +217068,7 @@ function onDragOver$4(event) {
 	return false;
 }
 function onDragLeave$3(event) {
-	_getRoot$32().querySelectorAll("td").forEach((td) => {
+	_getRoot$34().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -217085,7 +217085,7 @@ function onDrop$12(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$32().querySelectorAll("td").forEach((td) => {
+			_getRoot$34().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV1.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -217108,14 +217108,14 @@ function onEquipmentInfo$3(event) {
 function onEquipmentUnEquip$3() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV1.onUnEquip(index);
-	const overlay = _getRoot$32().querySelector(".overlay");
+	const overlay = _getRoot$34().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$3() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$10[idx];
 	if (!item) return;
-	const root = _getRoot$32();
+	const root = _getRoot$34();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV1") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -217131,7 +217131,7 @@ function onEquipmentOver$3() {
 	}
 }
 function onEquipmentOut$3() {
-	const overlay = _getRoot$32().querySelector(".overlay");
+	const overlay = _getRoot$34().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 var EquipmentV1, _preferences$35, _list$10, _ctx$8, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
@@ -217175,7 +217175,7 @@ var init_EquipmentV1 = __esmMin((() => {
 	contentDivs$3 = {};
 	currentTabId$3 = "general";
 	EquipmentV1.init = function init() {
-		const root = _getRoot$32();
+		const root = _getRoot$34();
 		const canvases = root.querySelectorAll("canvas");
 		if (canvases[0]) _ctx$8.push(canvases[0].getContext("2d"));
 		if (canvases[1]) _ctx$8.push(canvases[1].getContext("2d"));
@@ -217280,21 +217280,21 @@ var init_EquipmentV1 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$35.show) this._host.style.display = "none";
 		if (_preferences$35.reduce) {
-			const panel = _getRoot$32().querySelector(".panel");
+			const panel = _getRoot$34().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$35.stats && _preferences$35.show) WinStatsController.getUI().embed(EquipmentV1._host);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = _getRoot$32().querySelector(".view_status");
+			const btn = _getRoot$34().querySelector(".view_status");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (_getRoot$32().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$3);
+		if (_getRoot$34().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$3);
 	};
 	EquipmentV1.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$3 && _btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
 		Renderer.stop(renderCharacter$3);
 		_list$10 = {};
-		const root = _getRoot$32();
+		const root = _getRoot$34();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -217332,7 +217332,7 @@ var init_EquipmentV1 = __esmMin((() => {
 	EquipmentV1.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$3 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$32().querySelector(".show_equip");
+			const btn = _getRoot$34().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -217351,7 +217351,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$32();
+		const root = _getRoot$34();
 		const selector = getSelectorFromLocation$4(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$4(add3Dots(DB.getItemName(item, {
@@ -217369,7 +217369,7 @@ var init_EquipmentV1 = __esmMin((() => {
 	};
 	EquipmentV1.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$4(location);
-		const root = _getRoot$32();
+		const root = _getRoot$34();
 		const item = _list$10[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -217422,7 +217422,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$32();
+				const root = _getRoot$34();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -217459,7 +217459,7 @@ var init_EquipmentV1 = __esmMin((() => {
 		};
 	})();
 	EquipmentV1.onUpdateOwnerName = function() {
-		const root = _getRoot$32();
+		const root = _getRoot$34();
 		for (const index in _list$10) {
 			const item = _list$10[index];
 			if (item.slot && [
@@ -217499,7 +217499,7 @@ var init_EquipmentV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.js
-function _getRoot$31() {
+function _getRoot$33() {
 	return EquipmentV2._shadow || EquipmentV2._host;
 }
 function escapeHTML$3(str) {
@@ -217539,7 +217539,7 @@ function hideStatus() {
 	if (winStats.isEmbedded()) winStats.unembed();
 }
 function toggleStatus$3() {
-	const self = _getRoot$31().querySelector(".view_status");
+	const self = _getRoot$33().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -217589,7 +217589,7 @@ function onDragOver$3(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$3("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$31().querySelectorAll(selector);
+				const cells = _getRoot$33().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -217602,7 +217602,7 @@ function onDragOver$3(event) {
 	return false;
 }
 function onDragLeave$2(event) {
-	_getRoot$31().querySelectorAll("td").forEach((td) => {
+	_getRoot$33().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -217619,7 +217619,7 @@ function onDrop$11(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$31().querySelectorAll("td").forEach((td) => {
+			_getRoot$33().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV2.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -217642,14 +217642,14 @@ function onEquipmentInfo$2(event) {
 function onEquipmentUnEquip$2() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV2.onUnEquip(index);
-	const overlay = _getRoot$31().querySelector(".overlay");
+	const overlay = _getRoot$33().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$2() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$9[idx];
 	if (!item) return;
-	const root = _getRoot$31();
+	const root = _getRoot$33();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV2") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -217665,7 +217665,7 @@ function onEquipmentOver$2() {
 	}
 }
 function onEquipmentOut$2() {
-	const overlay = _getRoot$31().querySelector(".overlay");
+	const overlay = _getRoot$33().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 var EquipmentV2, _preferences$34, _list$9, _ctx$7, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
@@ -217709,7 +217709,7 @@ var init_EquipmentV2 = __esmMin((() => {
 	contentDivs$2 = {};
 	currentTabId$2 = "general";
 	EquipmentV2.init = function init() {
-		const root = _getRoot$31();
+		const root = _getRoot$33();
 		const canvases = root.querySelectorAll("canvas");
 		if (canvases[0]) _ctx$7.push(canvases[0].getContext("2d"));
 		if (canvases[1]) _ctx$7.push(canvases[1].getContext("2d"));
@@ -217814,21 +217814,21 @@ var init_EquipmentV2 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$34.show) this._host.style.display = "none";
 		if (_preferences$34.reduce) {
-			const panel = _getRoot$31().querySelector(".panel");
+			const panel = _getRoot$33().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV2._host);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = _getRoot$31().querySelector(".view_status");
+			const btn = _getRoot$33().querySelector(".view_status");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (_getRoot$31().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$2);
+		if (_getRoot$33().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$2);
 	};
 	EquipmentV2.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
 		Renderer.stop(renderCharacter$2);
 		_list$9 = {};
-		const root = _getRoot$31();
+		const root = _getRoot$33();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -217866,7 +217866,7 @@ var init_EquipmentV2 = __esmMin((() => {
 	EquipmentV2.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$2 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$31().querySelector(".show_equip");
+			const btn = _getRoot$33().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -217885,7 +217885,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$31();
+		const root = _getRoot$33();
 		const selector = getSelectorFromLocation$3(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$3(add3Dots(DB.getItemName(item, {
@@ -217903,7 +217903,7 @@ var init_EquipmentV2 = __esmMin((() => {
 	};
 	EquipmentV2.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$3(location);
-		const root = _getRoot$31();
+		const root = _getRoot$33();
 		const item = _list$9[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -217956,7 +217956,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$31();
+				const root = _getRoot$33();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -217993,7 +217993,7 @@ var init_EquipmentV2 = __esmMin((() => {
 		};
 	})();
 	EquipmentV2.onUpdateOwnerName = function() {
-		const root = _getRoot$31();
+		const root = _getRoot$33();
 		for (const index in _list$9) {
 			const item = _list$9[index];
 			if (item.slot && [
@@ -218033,7 +218033,7 @@ var init_EquipmentV3$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.js
-function _getRoot$30() {
+function _getRoot$32() {
 	return EquipmentV3._shadow || EquipmentV3._host;
 }
 function escapeHTML$2(str) {
@@ -218043,7 +218043,7 @@ function escapeHTML$2(str) {
 }
 function showTab$1() {
 	const selectedId = getHash$1(this.getAttribute("href"));
-	const root = _getRoot$30();
+	const root = _getRoot$32();
 	for (const id in contentDivs$1) if (id === selectedId) {
 		tabLinks$1[id].className = "tab selected";
 		if (contentDivs$1[id]) contentDivs$1[id].className = "content";
@@ -218087,7 +218087,7 @@ function onRemoveOption$2() {
 	Network.sendPacket(pkt);
 }
 function toggleStatus$2() {
-	const self = _getRoot$30().querySelector(".view_status");
+	const self = _getRoot$32().querySelector(".view_status");
 	const winStatsUI = WinStatsController.getUI();
 	const statusHost = winStatsUI._host || winStatsUI.ui;
 	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
@@ -218132,7 +218132,7 @@ function onDragOver$2(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$30().querySelectorAll(selector);
+				const cells = _getRoot$32().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -218145,7 +218145,7 @@ function onDragOver$2(event) {
 	return false;
 }
 function onDragLeave$1(event) {
-	_getRoot$30().querySelectorAll("td").forEach((td) => {
+	_getRoot$32().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -218162,7 +218162,7 @@ function onDrop$10(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$30().querySelectorAll("td").forEach((td) => {
+			_getRoot$32().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV3.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -218185,14 +218185,14 @@ function onEquipmentInfo$1(event) {
 function onEquipmentUnEquip$1() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV3.onUnEquip(index);
-	const overlay = _getRoot$30().querySelector(".overlay");
+	const overlay = _getRoot$32().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$1() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = EquipmentV3._itemlist[idx];
 	if (!item) return;
-	const root = _getRoot$30();
+	const root = _getRoot$32();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV3") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -218208,7 +218208,7 @@ function onEquipmentOver$1() {
 	}
 }
 function onEquipmentOut$1() {
-	const overlay = _getRoot$30().querySelector(".overlay");
+	const overlay = _getRoot$32().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onSwtichEquip$1() {
@@ -218267,7 +218267,7 @@ var init_EquipmentV3 = __esmMin((() => {
 	currentTabId$1 = "general";
 	_currentTitleId$1 = 0;
 	EquipmentV3.init = function init() {
-		const root = _getRoot$30();
+		const root = _getRoot$32();
 		const canvases = root.querySelectorAll("canvas");
 		if (canvases[0]) _ctx$6.push(canvases[0].getContext("2d"));
 		if (canvases[1]) _ctx$6.push(canvases[1].getContext("2d"));
@@ -218374,20 +218374,20 @@ var init_EquipmentV3 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$33.show) this._host.style.display = "none";
 		if (_preferences$33.reduce) {
-			const panel = _getRoot$30().querySelector(".panel");
+			const panel = _getRoot$32().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			if (!_preferences$33.stats) {
-				const statusComp = _getRoot$30().querySelector(".status_component");
+				const statusComp = _getRoot$32().querySelector(".status_component");
 				if (statusComp) statusComp.style.display = "none";
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-					const btn = _getRoot$30().querySelector(".view_status");
+					const btn = _getRoot$32().querySelector(".view_status");
 					if (btn) btn.style.backgroundImage = `url(${data})`;
 				});
 			}
 		}
-		if (_getRoot$30().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$1);
+		if (_getRoot$32().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$1);
 		SwitchEquip_default.append(switchappend$1);
 		if (SwitchEquip_default.ui) {
 			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
@@ -218398,7 +218398,7 @@ var init_EquipmentV3 = __esmMin((() => {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
 		Renderer.stop(renderCharacter$1);
 		EquipmentV3._itemlist = {};
-		const root = _getRoot$30();
+		const root = _getRoot$32();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -218434,7 +218434,7 @@ var init_EquipmentV3 = __esmMin((() => {
 	EquipmentV3.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$1 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$30().querySelector(".show_equip");
+			const btn = _getRoot$32().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -218453,7 +218453,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$30();
+		const root = _getRoot$32();
 		const selector = getSelectorFromLocation$2(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$2(add3Dots(DB.getItemName(item, {
@@ -218479,7 +218479,7 @@ var init_EquipmentV3 = __esmMin((() => {
 	};
 	EquipmentV3.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$2(location);
-		const root = _getRoot$30();
+		const root = _getRoot$32();
 		const item = EquipmentV3._itemlist[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -218532,7 +218532,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$30();
+				const root = _getRoot$32();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -218569,7 +218569,7 @@ var init_EquipmentV3 = __esmMin((() => {
 		};
 	})();
 	EquipmentV3.onUpdateOwnerName = function() {
-		const root = _getRoot$30();
+		const root = _getRoot$32();
 		for (const index in EquipmentV3._itemlist) {
 			const item = EquipmentV3._itemlist[index];
 			if (item.slot && [
@@ -218587,7 +218587,7 @@ var init_EquipmentV3 = __esmMin((() => {
 		return num;
 	};
 	EquipmentV3.loadTitles = function() {
-		const titleList = _getRoot$30().querySelector("#title_list");
+		const titleList = _getRoot$32().querySelector("#title_list");
 		if (!titleList) return;
 		titleList.innerHTML = "";
 		const removeTitleText = DB.getMessage(2686) || "Remove Title";
@@ -218658,7 +218658,7 @@ var init_EquipmentV4$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.js
-function _getRoot$29() {
+function _getRoot$31() {
 	return EquipmentV4._shadow || EquipmentV4._host;
 }
 function escapeHTML$1(str) {
@@ -218668,7 +218668,7 @@ function escapeHTML$1(str) {
 }
 function showTab() {
 	const selectedId = getHash(this.getAttribute("href"));
-	const root = _getRoot$29();
+	const root = _getRoot$31();
 	for (const id in contentDivs) if (id === selectedId) {
 		tabLinks[id].className = "tab selected";
 		if (contentDivs[id]) contentDivs[id].className = "content";
@@ -218735,7 +218735,7 @@ function onRemoveOption$1() {
 	Network.sendPacket(pkt);
 }
 function toggleStatus$1() {
-	const self = _getRoot$29().querySelector(".view_status");
+	const self = _getRoot$31().querySelector(".view_status");
 	const winStatsUI = WinStatsController.getUI();
 	const statusHost = winStatsUI._host || winStatsUI.ui;
 	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
@@ -218783,7 +218783,7 @@ function onDragOver$1(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$1("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$29().querySelectorAll(selector);
+				const cells = _getRoot$31().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -218796,7 +218796,7 @@ function onDragOver$1(event) {
 	return false;
 }
 function onDragLeave(event) {
-	_getRoot$29().querySelectorAll("td").forEach((td) => {
+	_getRoot$31().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -218813,7 +218813,7 @@ function onDrop$9(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$29().querySelectorAll("td").forEach((td) => {
+			_getRoot$31().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV4.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -218836,14 +218836,14 @@ function onEquipmentInfo(event) {
 function onEquipmentUnEquip() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV4.onUnEquip(index);
-	const overlay = _getRoot$29().querySelector(".overlay");
+	const overlay = _getRoot$31().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = EquipmentV4._itemlist[idx];
 	if (!item) return;
-	const root = _getRoot$29();
+	const root = _getRoot$31();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV4") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -218859,7 +218859,7 @@ function onEquipmentOver() {
 	}
 }
 function onEquipmentOut() {
-	const overlay = _getRoot$29().querySelector(".overlay");
+	const overlay = _getRoot$31().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onSwtichEquip() {
@@ -218920,7 +218920,7 @@ var init_EquipmentV4 = __esmMin((() => {
 	contentDivs = {};
 	currentTabId = "general";
 	EquipmentV4.init = function init() {
-		const root = _getRoot$29();
+		const root = _getRoot$31();
 		const canvases = root.querySelectorAll("canvas");
 		if (canvases[0]) _ctx$5.push(canvases[0].getContext("2d"));
 		if (canvases[1]) _ctx$5.push(canvases[1].getContext("2d"));
@@ -219056,7 +219056,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		EquipmentV4.setDamageMotion(savedMotion);
 	};
 	EquipmentV4.loadTitles = function() {
-		const titleList = _getRoot$29().querySelector("#title_list");
+		const titleList = _getRoot$31().querySelector("#title_list");
 		if (!titleList) return;
 		titleList.innerHTML = "";
 		const removeTitleText = DB.getMessage(2686) || "Remove Title";
@@ -219104,20 +219104,20 @@ var init_EquipmentV4 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$32.show) this._host.style.display = "none";
 		if (_preferences$32.reduce) {
-			const panel = _getRoot$29().querySelector(".panel");
+			const panel = _getRoot$31().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			if (!_preferences$32.stats) {
-				const statusComp = _getRoot$29().querySelector(".status_component");
+				const statusComp = _getRoot$31().querySelector(".status_component");
 				if (statusComp) statusComp.style.display = "none";
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-					const btn = _getRoot$29().querySelector(".view_status");
+					const btn = _getRoot$31().querySelector(".view_status");
 					if (btn) btn.style.backgroundImage = `url(${data})`;
 				});
 			}
 		}
-		if (_getRoot$29().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
+		if (_getRoot$31().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
 		SwitchEquip_default.append(switchappend);
 		if (SwitchEquip_default.ui) {
 			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
@@ -219128,7 +219128,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		Renderer.stop(renderCharacter);
 		EquipmentV4._itemlist = {};
-		const root = _getRoot$29();
+		const root = _getRoot$31();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -219164,14 +219164,14 @@ var init_EquipmentV4 = __esmMin((() => {
 	EquipmentV4.setEquipConfig = function setEquipConfig(on) {
 		_showEquip = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$29().querySelector(".show_equip");
+			const btn = _getRoot$31().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
 	EquipmentV4.setCostumeConfig = function setCostumeConfig(on) {
 		_hideCostume = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "0" : "1") + ".bmp", (data) => {
-			const btn = _getRoot$29().querySelector(".show_costume");
+			const btn = _getRoot$31().querySelector(".show_costume");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -219189,7 +219189,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$29();
+		const root = _getRoot$31();
 		const selector = getSelectorFromLocation$1(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$1(add3Dots(DB.getItemName(item, {
@@ -219215,7 +219215,7 @@ var init_EquipmentV4 = __esmMin((() => {
 	};
 	EquipmentV4.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$1(location);
-		const root = _getRoot$29();
+		const root = _getRoot$31();
 		const item = EquipmentV4._itemlist[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -219268,7 +219268,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$29();
+				const root = _getRoot$31();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -219305,7 +219305,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		};
 	})();
 	EquipmentV4.onUpdateOwnerName = function() {
-		const root = _getRoot$29();
+		const root = _getRoot$31();
 		for (const index in EquipmentV4._itemlist) {
 			const item = EquipmentV4._itemlist[index];
 			if (item.slot && [
@@ -219323,7 +219323,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		return num;
 	};
 	EquipmentV4.setDamageSkin = function setDamageSkin(skinId) {
-		const root = _getRoot$29();
+		const root = _getRoot$31();
 		const buttons = root.querySelectorAll("#damageskin .skin-option");
 		const buttonSelected = root.querySelector(`#damageskin .skin-option[data-skin="${skinId}"]`);
 		GraphicsSettings.damageSkin = skinId;
@@ -219352,7 +219352,7 @@ var init_EquipmentV4 = __esmMin((() => {
 	EquipmentV4.setDamageMotion = function setDamageMotion(motionId) {
 		GraphicsSettings.damageMotion = motionId;
 		GraphicsSettings.save();
-		_getRoot$29().querySelectorAll(".motion-check").forEach((btn) => {
+		_getRoot$31().querySelectorAll(".motion-check").forEach((btn) => {
 			const bgImage = parseInt(btn.getAttribute("data-motion"), 10) === motionId ? "checkbox_1.bmp" : "checkbox_0.bmp";
 			Client.loadFile(DB.INTERFACE_PATH + bgImage, (data) => {
 				btn.style.backgroundImage = `url(${data})`;
@@ -222076,18 +222076,6 @@ var init_SkillListMH = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Components/HomunInformations/HomunInformations.html?raw
-var HomunInformations_default$2;
-var init_HomunInformations$2 = __esmMin((() => {
-	HomunInformations_default$2 = "<div id=\"HomunInformations\">\r\n	<div class=\"content\" data-background=\"basic_interface/homuninfo_bg.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\">Homunculus Info</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n\r\n		<div class=\"title_name\">Name</div>\r\n		<input type=\"text\" class=\"name\" value=\"\" />\r\n		<div class=\"title_level\">Level</div>\r\n		<div class=\"level\"></div>\r\n\r\n		<button\r\n			class=\"modify\"\r\n			data-background=\"btn_rewrite.bmp\"\r\n			data-hover=\"btn_rewrite_a.bmp\"\r\n			data-down=\"btn_rewrite_b.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"skill\"\r\n			data-background=\"btn_skill.bmp\"\r\n			data-hover=\"btn_skill_a.bmp\"\r\n			data-down=\"btn_skill_b.bmp\"\r\n		></button>\r\n		<button class=\"del\" data-background=\"btn_del.bmp\" data-hover=\"btn_del_a.bmp\" data-down=\"btn_del_b.bmp\"></button>\r\n\r\n		<div class=\"stats\">\r\n			<div class=\"atk\"></div>\r\n			<div class=\"Matk\"></div>\r\n			<div class=\"hit\"></div>\r\n			<div class=\"critical\"></div>\r\n			<div class=\"def\"></div>\r\n			<div class=\"Mdef\"></div>\r\n			<div class=\"flee\"></div>\r\n			<div class=\"aspd\"></div>\r\n		</div>\r\n\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp2\"></div>\r\n\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp2\"></div>\r\n\r\n		<div class=\"block2\">\r\n			<div class=\"title_exp\">\r\n				EXP\r\n				<div class=\"exp\"></div>\r\n			</div>\r\n			<canvas class=\"life title_exp\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_hunger\">\r\n				Hunger\r\n				<div class=\"hunger\"></div>\r\n			</div>\r\n			<canvas class=\"life title_hunger\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_intimacy\">\r\n				Intimacy\r\n				<div class=\"intimacy\"></div>\r\n			</div>\r\n		</div>\r\n\r\n		<button\r\n			class=\"feed\"\r\n			data-background=\"btn_feed.bmp\"\r\n			data-hover=\"btn_feed_a.bmp\"\r\n			data-down=\"btn_feed_b.bmp\"\r\n		></button>\r\n		<div class=\"feeding\">\r\n			<button class=\"homun_auto_feed\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n			<span data-text=\"2577\">Auto Feeding</span>\r\n		</div>\r\n\r\n		<!--		<div class=\"title_accessory\">Accessory</div>-->\r\n		<!--		<div class=\"accessory\">Equipped</div>-->\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/HomunInformations/HomunInformations.css?raw
-var HomunInformations_default$1;
-var init_HomunInformations$1 = __esmMin((() => {
-	HomunInformations_default$1 = "#HomunInformations {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 280px;\r\n	height: 190px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#HomunInformations .content {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#HomunInformations .content .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#HomunInformations .content .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#HomunInformations .content .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#HomunInformations .content .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#HomunInformations .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#HomunInformations .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#HomunInformations .title_name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 100px;\r\n}\r\n#HomunInformations .name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 140px;\r\n	border: none;\r\n	background-color: #eee;\r\n	margin: 0px;\r\n	width: 85px;\r\n	color: black;\r\n}\r\n\r\n#HomunInformations .modify {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 22px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .skill {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 45px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .del {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 45px;\r\n	right: 50px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#HomunInformations .name.disabled {\r\n	color: black;\r\n	text-shadow: 1px 1px 0px #00ff00;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .modify.disabled {\r\n	display: none;\r\n}\r\n\r\n#HomunInformations .title_level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 100px;\r\n}\r\n#HomunInformations .level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 140px;\r\n}\r\n\r\n#HomunInformations .stats {\r\n	position: absolute;\r\n	top: 20px;\r\n	width: 80px;\r\n	height: 160px;\r\n}\r\n#HomunInformations .stats .atk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .Matk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .hit {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .critical {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .def {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .Mdef {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .flee {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .aspd {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n\r\n#HomunInformations .hp {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 150px;\r\n}\r\n#HomunInformations .sp {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 150px;\r\n}\r\n\r\n#HomunInformations .hp_bar {\r\n	position: absolute;\r\n	top: 73px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#HomunInformations .hp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#HomunInformations div.hp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#HomunInformations .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#HomunInformations .hp2 {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 220px;\r\n}\r\n#HomunInformations .sp2 {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 220px;\r\n}\r\n\r\n#HomunInformations .sp_bar {\r\n	position: absolute;\r\n	top: 88px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#HomunInformations .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#HomunInformations div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#HomunInformations .sp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#HomunInformations .block2 {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 100px;\r\n	width: 100px;\r\n	height: 70px;\r\n}\r\n\r\n#HomunInformations .block2 .title_exp {\r\n	width: 100%;\r\n}\r\n#HomunInformations .block2 .exp {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#HomunInformations canvas.life.title_exp {\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#HomunInformations .block2 .title_hunger {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 27px;\r\n}\r\n#HomunInformations .block2 .hunger {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#HomunInformations canvas.life.title_hunger {\r\n	position: relative;\r\n	top: 10px;\r\n}\r\n\r\n#HomunInformations .block2 .title_intimacy {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 55px;\r\n}\r\n#HomunInformations .block2 .intimacy {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n\r\n#HomunInformations .feed {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 155px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 65px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .feeding {\r\n	position: absolute;\r\n	top: 110px;\r\n	right: 0px;\r\n	width: 75px;\r\n}\r\n#HomunInformations .feeding .homun_auto_feed {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	margin-left: 5px;\r\n}\r\n";
-}));
-//#endregion
 //#region src/Core/AIDriver.js
 var AIDriver_exports = /* @__PURE__ */ __exportAll({ default: () => AIDriver });
 var msg, resMsg, AIDriver;
@@ -222461,14 +222449,27 @@ var init_AIDriver = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/Components/HomunInformations/HomunInformations.html?raw
+var HomunInformations_default$2;
+var init_HomunInformations$2 = __esmMin((() => {
+	HomunInformations_default$2 = "<div id=\"HomunInformations\">\r\n	<div class=\"content\" data-background=\"basic_interface/homuninfo_bg.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\">Homunculus Info</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n\r\n		<div class=\"title_name\">Name</div>\r\n		<input type=\"text\" class=\"name\" value=\"\" />\r\n		<div class=\"title_level\">Level</div>\r\n		<div class=\"level\"></div>\r\n\r\n		<ui-button class=\"modify\" bg=\"btn_rewrite.bmp\" hover=\"btn_rewrite_a.bmp\" down=\"btn_rewrite_b.bmp\"></ui-button>\r\n		<ui-button class=\"skill\" bg=\"btn_skill.bmp\" hover=\"btn_skill_a.bmp\" down=\"btn_skill_b.bmp\"></ui-button>\r\n		<ui-button class=\"del\" bg=\"btn_del.bmp\" hover=\"btn_del_a.bmp\" down=\"btn_del_b.bmp\"></ui-button>\r\n\r\n		<div class=\"stats\">\r\n			<div class=\"atk\"></div>\r\n			<div class=\"Matk\"></div>\r\n			<div class=\"hit\"></div>\r\n			<div class=\"critical\"></div>\r\n			<div class=\"def\"></div>\r\n			<div class=\"Mdef\"></div>\r\n			<div class=\"flee\"></div>\r\n			<div class=\"aspd\"></div>\r\n		</div>\r\n\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp2\"></div>\r\n\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp2\"></div>\r\n\r\n		<div class=\"block2\">\r\n			<div class=\"title_exp\">\r\n				EXP\r\n				<div class=\"exp\"></div>\r\n			</div>\r\n			<canvas class=\"life title_exp\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_hunger\">\r\n				Hunger\r\n				<div class=\"hunger\"></div>\r\n			</div>\r\n			<canvas class=\"life title_hunger\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_intimacy\">\r\n				Intimacy\r\n				<div class=\"intimacy\"></div>\r\n			</div>\r\n		</div>\r\n\r\n		<ui-button class=\"feed\" bg=\"btn_feed.bmp\" hover=\"btn_feed_a.bmp\" down=\"btn_feed_b.bmp\"></ui-button>\r\n		<div class=\"feeding\">\r\n			<button class=\"homun_auto_feed\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n			<ui-text msg=\"2577\">Auto Feeding</ui-text>\r\n		</div>\r\n\r\n		<!--		<div class=\"title_accessory\">Accessory</div>-->\r\n		<!--		<div class=\"accessory\">Equipped</div>-->\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/HomunInformations/HomunInformations.css?raw
+var HomunInformations_default$1;
+var init_HomunInformations$1 = __esmMin((() => {
+	HomunInformations_default$1 = ":host {\r\n	width: 280px;\r\n	height: 190px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#HomunInformations {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 190px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#HomunInformations .content {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#HomunInformations .content .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#HomunInformations .content .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#HomunInformations .content .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#HomunInformations .content .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#HomunInformations .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#HomunInformations .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#HomunInformations .title_name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 100px;\r\n}\r\n#HomunInformations .name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 140px;\r\n	border: none;\r\n	background-color: #eee;\r\n	margin: 0px;\r\n	width: 85px;\r\n	color: black;\r\n}\r\n\r\n#HomunInformations .modify {\r\n	position: absolute;\r\n	top: 22px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .skill {\r\n	position: absolute;\r\n	top: 45px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .del {\r\n	position: absolute;\r\n	top: 45px;\r\n	right: 50px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#HomunInformations .name.disabled {\r\n	color: black;\r\n	text-shadow: 1px 1px 0px #00ff00;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .modify.disabled {\r\n	display: none;\r\n}\r\n\r\n#HomunInformations .title_level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 100px;\r\n}\r\n#HomunInformations .level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 140px;\r\n}\r\n\r\n#HomunInformations .stats {\r\n	position: absolute;\r\n	top: 20px;\r\n	width: 80px;\r\n	height: 160px;\r\n}\r\n#HomunInformations .stats .atk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .Matk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .hit {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .critical {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .def {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .Mdef {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .flee {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#HomunInformations .stats .aspd {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n\r\n#HomunInformations .hp {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 150px;\r\n}\r\n#HomunInformations .sp {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 150px;\r\n}\r\n\r\n#HomunInformations .hp_bar {\r\n	position: absolute;\r\n	top: 73px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#HomunInformations .hp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#HomunInformations div.hp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#HomunInformations .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#HomunInformations .hp2 {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 220px;\r\n}\r\n#HomunInformations .sp2 {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 220px;\r\n}\r\n\r\n#HomunInformations .sp_bar {\r\n	position: absolute;\r\n	top: 88px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#HomunInformations .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#HomunInformations div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#HomunInformations .sp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#HomunInformations .block2 {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 100px;\r\n	width: 100px;\r\n	height: 70px;\r\n}\r\n\r\n#HomunInformations .block2 .title_exp {\r\n	width: 100%;\r\n}\r\n#HomunInformations .block2 .exp {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#HomunInformations canvas.life.title_exp {\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#HomunInformations .block2 .title_hunger {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 27px;\r\n}\r\n#HomunInformations .block2 .hunger {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#HomunInformations canvas.life.title_hunger {\r\n	position: relative;\r\n	top: 10px;\r\n}\r\n\r\n#HomunInformations .block2 .title_intimacy {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 55px;\r\n}\r\n#HomunInformations .block2 .intimacy {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n\r\n#HomunInformations .feed {\r\n	position: absolute;\r\n	top: 155px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 65px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#HomunInformations .feeding {\r\n	position: absolute;\r\n	top: 110px;\r\n	right: 0px;\r\n	width: 75px;\r\n}\r\n#HomunInformations .feeding .homun_auto_feed {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	margin-left: 5px;\r\n}\r\n";
+}));
+//#endregion
 //#region src/UI/Components/HomunInformations/HomunInformations.js
 /**
+* Helper to get the shadow root
+*/
+function _getRoot$30() {
+	return HomunInformations._shadow || HomunInformations._host;
+}
+/**
 * Checks if homun should be fed or not
-* - feed when hunger drops below 31 (default value)
-* - feed should restore about 10 hunger
-* - 1 hunger is lost every 60 seconds
-*
-* @return {void}
 */
 function autoFeedCheck() {
 	if (_preferences$30.autoFeed != 1) return;
@@ -222483,46 +222484,12 @@ function autoFeedCheck() {
 	HomunInformations.sendHomunFeed();
 }
 /**
-* feed homunculus
-*/
-function onFeed() {
-	HomunInformations.reqHomunFeed();
-}
-/**
-* delete homunculus
-*/
-function onDelete$1() {
-	HomunInformations.reqDeleteHomun();
-	return true;
-}
-/**
 * Toggle AutoFeed
 */
 function homunToggleAutoFeed() {
 	HomunInformations.setFeedConfig(_preferences$30.autoFeed == 1 ? 0 : 1);
 	if (PacketVerManager_default.value < 20170920) return;
 	HomunInformations.onConfigUpdate(3, _preferences$30.autoFeed ? 1 : 0);
-}
-/**
-* Request to modify homun's name
-*/
-function onChangeName() {
-	const input = HomunInformations.ui.find(".name");
-	HomunInformations.reqNameEdit(input.val());
-}
-/**
-* Closing window
-*/
-function onClose$8() {
-	HomunInformations.ui.hide();
-	SkillListMH_default.homunculus.ui.hide();
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$12(event) {
-	event.stopImmediatePropagation();
-	return false;
 }
 var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$30, HomunInformations_default;
 var init_HomunInformations = __esmMin((() => {
@@ -222533,17 +222500,20 @@ var init_HomunInformations = __esmMin((() => {
 	init_EntityManager();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_SkillListMH();
-	init_HomunInformations$2();
-	init_HomunInformations$1();
 	init_SessionStorage();
 	init_AIDriver();
 	init_Configs();
 	init_PacketVerManager();
+	init_Elements();
+	init_HomunInformations$2();
+	init_HomunInformations$1();
 	autoFeedIntervalMs = 1e3 * 60 * 1;
 	autoFeedPercent = 30;
-	HomunInformations = new UIComponent("HomunInformations", HomunInformations_default$2, HomunInformations_default$1);
+	HomunInformations = new GUIComponent("HomunInformations", HomunInformations_default$1);
+	HomunInformations.render = () => HomunInformations_default$2;
+	HomunInformations.captureKeyEvents = true;
 	_preferences$30 = Preferences.get("HomunInformations", {
 		x: 100,
 		y: 200,
@@ -222556,30 +222526,55 @@ var init_HomunInformations = __esmMin((() => {
 	* Initialize component
 	*/
 	HomunInformations.init = function init() {
-		this.draggable(this.ui.find(".content"));
-		this.ui.find(".base").mousedown(stopPropagation$12);
-		this.ui.find(".close").click(onClose$8);
-		this.ui.find(".modify").click(onChangeName);
-		this.ui.find(".feed").click(onFeed);
-		this.ui.find(".del").click(onDelete$1);
-		this.ui.find(".homun_auto_feed").click(homunToggleAutoFeed);
-		if (!_preferences$30.show) this.ui.hide();
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$30.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$30.x), Renderer.width - this.ui.width())
+		const root = _getRoot$30();
+		this.draggable(".content");
+		const baseEl = root.querySelector(".base");
+		if (baseEl) baseEl.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
 		});
-		this.ui.find(".skill").mousedown(function() {
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			this._host.style.display = "none";
+			SkillListMH_default.homunculus.ui.hide();
+		});
+		const modifyBtn = root.querySelector(".modify");
+		if (modifyBtn) modifyBtn.addEventListener("click", () => {
+			const input = root.querySelector(".name");
+			if (input) HomunInformations.reqNameEdit(input.value);
+		});
+		const feedBtn = root.querySelector(".feed");
+		if (feedBtn) feedBtn.addEventListener("click", () => {
+			HomunInformations.reqHomunFeed();
+		});
+		const delBtn = root.querySelector(".del");
+		if (delBtn) delBtn.addEventListener("click", () => {
+			HomunInformations.reqDeleteHomun();
+		});
+		const autoFeedBtn = root.querySelector(".homun_auto_feed");
+		if (autoFeedBtn) autoFeedBtn.addEventListener("click", () => {
+			homunToggleAutoFeed();
+		});
+		if (!_preferences$30.show) this._host.style.display = "none";
+		const skillBtn = root.querySelector(".skill");
+		if (skillBtn) skillBtn.addEventListener("mousedown", () => {
 			SkillListMH_default.homunculus.toggle();
 		});
 		this.toggleAggressive();
 		this.toggleAggressive();
 	};
 	HomunInformations.onAppend = function onAppend() {
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$30.autoFeed ? "1" : "0") + ".bmp", function(data) {
-			HomunInformations.ui.find(".homun_auto_feed").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$30();
+		Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$30.autoFeed ? "1" : "0"}.bmp`, (data) => {
+			const el = root.querySelector(".homun_auto_feed");
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
 		if (PacketVerManager_default.value < 20170920) if (Configs.get("enableHomunAutoFeed", false)) HomunInformations.startAutoFeed();
-		else HomunInformations.ui.find(".feeding").hide();
+		else {
+			const feeding = root.querySelector(".feeding");
+			if (feeding) feeding.style.display = "none";
+		}
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	HomunInformations.startAutoFeed = function startAutoFeed() {
 		window.clearInterval(autoFeedInterval);
@@ -222593,9 +222588,9 @@ var init_HomunInformations = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	HomunInformations.onRemove = function onRemove() {
-		_preferences$30.show = this.ui.is(":visible");
-		_preferences$30.y = parseInt(this.ui.css("top"), 10);
-		_preferences$30.x = parseInt(this.ui.css("left"), 10);
+		_preferences$30.show = this._host.style.display !== "none";
+		_preferences$30.y = parseInt(this._host.style.top, 10);
+		_preferences$30.x = parseInt(this._host.style.left, 10);
 		_preferences$30.save();
 		HomunInformations.stopAutoFeed();
 		this.stopAI();
@@ -222606,17 +222601,18 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {object} key
 	*/
 	HomunInformations.onShortCut = function onShortCut(key) {
-		if (!this.ui) return;
 		switch (key.cmd) {
 			case "TOGGLE":
-				if (SessionStorage_default.homunId) {
-					this.ui.toggle();
-					if (this.ui.is(":visible")) this.focus();
-					else this.ui.show();
-					if (!this.ui.is(":visible")) SkillListMH_default.homunculus.ui.hide();
+				if (SessionStorage_default.homunId) if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
 				} else {
+					this._host.style.display = "none";
 					SkillListMH_default.homunculus.ui.hide();
-					this.ui.hide();
+				}
+				else {
+					SkillListMH_default.homunculus.ui.hide();
+					this._host.style.display = "none";
 				}
 				break;
 			case "AGGRESSIVE":
@@ -222624,8 +222620,28 @@ var init_HomunInformations = __esmMin((() => {
 				break;
 		}
 	};
+	/**
+	* Handle keyboard events inside shadow DOM
+	* Protects input fields from being consumed by global handlers
+	*/
 	HomunInformations.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.ui.toggle();
+		const focused = (this._shadow || this._host).activeElement;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				focused.blur();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			if (event.which === KEYS.ENTER) {
+				if (focused.classList.contains("name")) HomunInformations.reqNameEdit(focused.value);
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this._host.style.display = "none";
+		return true;
 	};
 	/**
 	* Update UI
@@ -222633,20 +222649,51 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {object} homunculus info
 	*/
 	HomunInformations.setInformations = function setInformations(info) {
+		const root = _getRoot$30();
 		if (!this.__loaded) {
 			this.append();
-			this.ui.hide();
+			this._host.style.display = "none";
 		}
-		if (info.szName) this.ui.find(".name").val(info.szName);
-		if (info.nLevel) this.ui.find(".level").text(info.nLevel);
-		if (info.atk) this.ui.find(".stats .atk").text(info.atk);
-		if (info.Matk) this.ui.find(".stats .Matk").text(info.Matk);
-		if (info.hit) this.ui.find(".stats .hit").text(info.hit);
-		if (info.critical) this.ui.find(".stats .critical").text(info.critical);
-		if (info.def) this.ui.find(".stats .def").text(info.def);
-		if (info.Mdef) this.ui.find(".stats .Mdef").text(info.Mdef);
-		if (info.flee) this.ui.find(".stats .flee").text(info.flee);
-		if (info.aspd) this.ui.find(".stats .aspd").text(Math.floor(200 - info.aspd / 10));
+		if (info.szName) {
+			const nameInput = root.querySelector(".name");
+			if (nameInput) nameInput.value = info.szName;
+		}
+		if (info.nLevel) {
+			const levelEl = root.querySelector(".level");
+			if (levelEl) levelEl.textContent = info.nLevel;
+		}
+		if (info.atk) {
+			const el = root.querySelector(".stats .atk");
+			if (el) el.textContent = info.atk;
+		}
+		if (info.Matk) {
+			const el = root.querySelector(".stats .Matk");
+			if (el) el.textContent = info.Matk;
+		}
+		if (info.hit) {
+			const el = root.querySelector(".stats .hit");
+			if (el) el.textContent = info.hit;
+		}
+		if (info.critical) {
+			const el = root.querySelector(".stats .critical");
+			if (el) el.textContent = info.critical;
+		}
+		if (info.def) {
+			const el = root.querySelector(".stats .def");
+			if (el) el.textContent = info.def;
+		}
+		if (info.Mdef) {
+			const el = root.querySelector(".stats .Mdef");
+			if (el) el.textContent = info.Mdef;
+		}
+		if (info.flee) {
+			const el = root.querySelector(".stats .flee");
+			if (el) el.textContent = info.flee;
+		}
+		if (info.aspd) {
+			const el = root.querySelector(".stats .aspd");
+			if (el) el.textContent = Math.floor(200 - info.aspd / 10);
+		}
 		if (info.hp && info.maxHP) this.setHpSpBar("hp", info.hp, info.maxHP);
 		if (info.sp && info.maxSP) this.setHpSpBar("sp", info.sp, info.maxSP);
 		if (info.exp && info.maxEXP) {
@@ -222656,40 +222703,67 @@ var init_HomunInformations = __esmMin((() => {
 		}
 		if (info.nFullness) this.setHunger(info.nFullness);
 		if (info.nRelationship) this.setIntimacy(info.nRelationship);
-		if (info.bModified < 5) this.ui.find(".name, .modify").removeClass("disabled").attr("disabled", false);
-		else this.ui.find(".name, .modify").addClass("disabled").attr("disabled", true);
+		if (info.bModified < 5) {
+			const nameInput = root.querySelector(".name");
+			if (nameInput) {
+				nameInput.classList.remove("disabled");
+				nameInput.disabled = false;
+			}
+			const modBtn = root.querySelector(".modify");
+			if (modBtn) {
+				modBtn.classList.remove("disabled");
+				modBtn.disabled = false;
+			}
+		} else {
+			const nameInput = root.querySelector(".name");
+			if (nameInput) {
+				nameInput.classList.add("disabled");
+				nameInput.disabled = true;
+			}
+			const modBtn = root.querySelector(".modify");
+			if (modBtn) {
+				modBtn.classList.add("disabled");
+				modBtn.disabled = true;
+			}
+		}
 		if (info.SKPoint) SkillListMH_default.homunculus.setPoints(info.SKPoint);
 	};
 	/**
-	* Set hp and sp bar (menu)
-	*
-	* @param type
-	* @param val
-	* @param val2
+	* Set hp and sp bar
 	*/
 	HomunInformations.setHpSpBar = function setHpSpBar(type, val, val2) {
+		const root = _getRoot$30();
 		const perc = Math.floor(val * 100 / val2);
 		const color = perc < 25 ? "red" : "blue";
-		this.ui.find("." + type + "_value").text(val);
-		this.ui.find("." + type + "_max_value").text(val2);
-		this.ui.find("." + type + "_perc").text(perc + "%");
-		if (perc <= 0) this.ui.find("." + type + "_bar div").css("backgroundImage", "none");
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-			this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-			this.ui.find("." + type + "_bar_middle").css({
-				backgroundImage: "url(" + url + ")",
-				width: Math.floor(Math.min(perc, 100) * .75) + "px"
+		const valueEl = root.querySelector(`.${type}_value`);
+		if (valueEl) valueEl.textContent = val;
+		const maxValueEl = root.querySelector(`.${type}_max_value`);
+		if (maxValueEl) maxValueEl.textContent = val2;
+		const percEl = root.querySelector(`.${type}_perc`);
+		if (percEl) percEl.textContent = `${perc}%`;
+		if (perc <= 0) root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+			el.style.backgroundImage = "none";
+		});
+		Client.loadFile(DB.INTERFACE_PATH + `basic_interface/gze${color}_left.bmp`, function(url) {
+			const el = root.querySelector(`.${type}_bar_left`);
+			if (el) el.style.backgroundImage = `url(${url})`;
+		});
+		Client.loadFile(DB.INTERFACE_PATH + `basic_interface/gze${color}_mid.bmp`, function(url) {
+			const el = root.querySelector(`.${type}_bar_middle`);
+			if (el) Object.assign(el.style, {
+				backgroundImage: `url(${url})`,
+				width: `${Math.floor(Math.min(perc, 100) * .75)}px`
 			});
-		}.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-			this.ui.find("." + type + "_bar_right").css({
-				backgroundImage: "url(" + url + ")",
-				left: Math.floor(Math.min(perc, 100) * 1.27) + "px"
+		});
+		Client.loadFile(DB.INTERFACE_PATH + `basic_interface/gze${color}_right.bmp`, function(url) {
+			const el = root.querySelector(`.${type}_bar_right`);
+			if (el) Object.assign(el.style, {
+				backgroundImage: `url(${url})`,
+				left: `${Math.floor(Math.min(perc, 100) * 1.27)}px`
 			});
-		}.bind(this));
-		this.ui.find("." + type + "2").text(val + "/" + val2);
+		});
+		const summaryEl = root.querySelector(`.${type}2`);
+		if (summaryEl) summaryEl.textContent = `${val}/${val2}`;
 	};
 	/**
 	* Set intimacy
@@ -222697,25 +222771,26 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {number} intimacy
 	*/
 	HomunInformations.setIntimacy = function setIntimacy(val) {
-		if (!this.ui) return;
-		this.ui.find(".intimacy").text(DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675));
+		const el = _getRoot$30().querySelector(".intimacy");
+		if (el) el.textContent = DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675);
 	};
 	/**
 	* Set exp value
-	*
-	* @param exp
-	* @param maxEXP
 	*/
 	HomunInformations.setExp = function setExp(exp, maxEXP) {
-		if (!this.ui) return;
-		const ctx = this.ui.find(".block2 canvas.life.title_exp").get(0).getContext("2d");
+		const root = _getRoot$30();
+		if (!root) return;
+		const canvas = root.querySelector(".block2 canvas.life.title_exp");
+		if (!canvas) return;
+		const ctx = canvas.getContext("2d");
 		const width = 60, height = 5;
 		const exp_per = exp / maxEXP;
 		ctx.fillStyle = "#424242";
 		ctx.fillRect(1, 1, width - 2, height - 2);
 		ctx.fillStyle = "#205cc3";
 		ctx.fillRect(1, 1, Math.round((width - 2) * exp_per), 3);
-		this.ui.find(".exp").text(exp + "/" + maxEXP);
+		const expEl = root.querySelector(".exp");
+		if (expEl) expEl.textContent = `${exp}/${maxEXP}`;
 	};
 	/**
 	* Set hunger value
@@ -222723,15 +222798,19 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {number} hunger
 	*/
 	HomunInformations.setHunger = function setHunger(val) {
-		if (!this.ui) return;
-		const ctx = this.ui.find(".block2 canvas.life.title_hunger").get(0).getContext("2d");
+		const root = _getRoot$30();
+		if (!root) return;
+		const canvas = root.querySelector(".block2 canvas.life.title_hunger");
+		if (!canvas) return;
+		const ctx = canvas.getContext("2d");
 		const width = 60, height = 5;
 		const hunger_per = val / 100;
 		ctx.fillStyle = "#424242";
 		ctx.fillRect(1, 1, width - 2, height - 2);
 		ctx.fillStyle = hunger_per < .25 ? "#ff1e00" : "#205cc3";
 		ctx.fillRect(1, 1, Math.round((width - 2) * hunger_per), 3);
-		this.ui.find(".hunger").text(val + "/100");
+		const hungerEl = root.querySelector(".hunger");
+		if (hungerEl) hungerEl.textContent = `${val}/100`;
 	};
 	HomunInformations.toggleAggressive = function toggleAggressive() {
 		const agr = localStorage.getItem("HOM_AGGRESSIVE") === 0 ? 1 : 0;
@@ -222743,7 +222822,7 @@ var init_HomunInformations = __esmMin((() => {
 			AIDriver.reset();
 			this.AILoop = setInterval(() => {
 				if (SessionStorage_default.homunId) {
-					if (EntityManager.get(SessionStorage_default.homunId)) AIDriver.exec("AI(" + SessionStorage_default.homunId + ")");
+					if (EntityManager.get(SessionStorage_default.homunId)) AIDriver.exec(`AI(${SessionStorage_default.homunId})`);
 				}
 			}, 100);
 		}
@@ -222758,8 +222837,10 @@ var init_HomunInformations = __esmMin((() => {
 	HomunInformations.setFeedConfig = function setFeedConfig(flag) {
 		_preferences$30.autoFeed = flag;
 		_preferences$30.save();
-		if (HomunInformations.ui) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$30.autoFeed ? "1" : "0") + ".bmp", function(data) {
-			HomunInformations.ui.find(".homun_auto_feed").css("backgroundImage", "url(" + data + ")");
+		const root = _getRoot$30();
+		if (root) Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$30.autoFeed ? "1" : "0"}.bmp`, (data) => {
+			const el = root.querySelector(".homun_auto_feed");
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
 		autoFeedCheck();
 	};
@@ -222779,35 +222860,21 @@ var init_HomunInformations = __esmMin((() => {
 //#region src/UI/Components/MercenaryInformations/MercenaryInformations.html?raw
 var MercenaryInformations_default$2;
 var init_MercenaryInformations$2 = __esmMin((() => {
-	MercenaryInformations_default$2 = "<div id=\"MercenaryInformations\">\r\n	<div class=\"content\" data-background=\"basic_interface/homuninfo_bg.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\">Mercenary Info</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n\r\n		<div class=\"title_name\">Name</div>\r\n		<div class=\"name\"></div>\r\n		<div class=\"title_level\">Level</div>\r\n		<div class=\"level\"></div>\r\n\r\n		<button\r\n			class=\"skill\"\r\n			data-background=\"btn_skill.bmp\"\r\n			data-hover=\"btn_skill_a.bmp\"\r\n			data-down=\"btn_skill_b.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"dismiss\"\r\n			data-background=\"btn_del.bmp\"\r\n			data-hover=\"btn_del_a.bmp\"\r\n			data-down=\"btn_del_b.bmp\"\r\n		></button>\r\n\r\n		<div class=\"stats\">\r\n			<div class=\"atk\"></div>\r\n			<div class=\"Matk\"></div>\r\n			<div class=\"hit\"></div>\r\n			<div class=\"critical\"></div>\r\n			<div class=\"def\"></div>\r\n			<div class=\"Mdef\"></div>\r\n			<div class=\"flee\"></div>\r\n			<div class=\"aspd\"></div>\r\n		</div>\r\n\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp2\"></div>\r\n\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp2\"></div>\r\n\r\n		<div class=\"block2\">\r\n			<div class=\"title_timeleft\">\r\n				Time Left\r\n				<div class=\"timeleft\"></div>\r\n			</div>\r\n			<canvas class=\"life title_timeleft\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_kills\">\r\n				Kills\r\n				<div class=\"kills\"></div>\r\n			</div>\r\n			<canvas class=\"life title_kills\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_faith\">\r\n				Faith\r\n				<div class=\"faith\"></div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	MercenaryInformations_default$2 = "<div id=\"MercenaryInformations\">\r\n	<div class=\"content\" data-background=\"basic_interface/homuninfo_bg.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\">Mercenary Info</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n\r\n		<div class=\"title_name\">Name</div>\r\n		<div class=\"name\"></div>\r\n		<div class=\"title_level\">Level</div>\r\n		<div class=\"level\"></div>\r\n\r\n		<ui-button class=\"skill\" bg=\"btn_skill.bmp\" hover=\"btn_skill_a.bmp\" down=\"btn_skill_b.bmp\"></ui-button>\r\n		<ui-button class=\"dismiss\" bg=\"btn_del.bmp\" hover=\"btn_del_a.bmp\" down=\"btn_del_b.bmp\"></ui-button>\r\n\r\n		<div class=\"stats\">\r\n			<div class=\"atk\"></div>\r\n			<div class=\"Matk\"></div>\r\n			<div class=\"hit\"></div>\r\n			<div class=\"critical\"></div>\r\n			<div class=\"def\"></div>\r\n			<div class=\"Mdef\"></div>\r\n			<div class=\"flee\"></div>\r\n			<div class=\"aspd\"></div>\r\n		</div>\r\n\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp2\"></div>\r\n\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp2\"></div>\r\n\r\n		<div class=\"block2\">\r\n			<div class=\"title_timeleft\">\r\n				Time Left\r\n				<div class=\"timeleft\"></div>\r\n			</div>\r\n			<canvas class=\"life title_timeleft\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_kills\">\r\n				Kills\r\n				<div class=\"kills\"></div>\r\n			</div>\r\n			<canvas class=\"life title_kills\" width=\"60\" height=\"5\"></canvas>\r\n\r\n			<div class=\"title_faith\">\r\n				Faith\r\n				<div class=\"faith\"></div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/MercenaryInformations/MercenaryInformations.css?raw
 var MercenaryInformations_default$1;
 var init_MercenaryInformations$1 = __esmMin((() => {
-	MercenaryInformations_default$1 = "#MercenaryInformations {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 280px;\r\n	height: 190px;\r\n	font-size: 12px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#MercenaryInformations .content {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#MercenaryInformations .content .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#MercenaryInformations .content .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#MercenaryInformations .content .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#MercenaryInformations .content .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#MercenaryInformations .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#MercenaryInformations .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#MercenaryInformations .title_name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 100px;\r\n}\r\n#MercenaryInformations .name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 140px;\r\n	border: none;\r\n	background-color: #eee;\r\n	margin: 0px;\r\n	width: 85px;\r\n	color: black;\r\n}\r\n\r\n#MercenaryInformations .title_level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 100px;\r\n}\r\n#MercenaryInformations .level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 140px;\r\n}\r\n\r\n#MercenaryInformations .skill {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 45px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#MercenaryInformations .dismiss {\r\n	position: absolute;\r\n	background-color: grey;\r\n	top: 45px;\r\n	right: 50px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#MercenaryInformations .stats {\r\n	position: absolute;\r\n	top: 20px;\r\n	width: 80px;\r\n	height: 160px;\r\n}\r\n#MercenaryInformations .stats .atk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .Matk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .hit {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .critical {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .def {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .Mdef {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .flee {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .aspd {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n\r\n#MercenaryInformations .hp {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 140px;\r\n}\r\n#MercenaryInformations .sp {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 140px;\r\n}\r\n\r\n#MercenaryInformations .hp_bar {\r\n	position: absolute;\r\n	top: 73px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#MercenaryInformations .hp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#MercenaryInformations div.hp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#MercenaryInformations .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#MercenaryInformations .hp2 {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 210px;\r\n}\r\n#MercenaryInformations .sp2 {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 210px;\r\n}\r\n\r\n#MercenaryInformations .sp_bar {\r\n	position: absolute;\r\n	top: 88px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#MercenaryInformations .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#MercenaryInformations div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#MercenaryInformations .sp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#MercenaryInformations .block2 {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 100px;\r\n	width: 100px;\r\n	height: 70px;\r\n}\r\n\r\n#MercenaryInformations .block2 .title_timeleft {\r\n	width: 100%;\r\n}\r\n#MercenaryInformations .block2 .timeleft {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations canvas.life.title_timeleft {\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#MercenaryInformations .block2 .title_kills {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 27px;\r\n}\r\n#MercenaryInformations .block2 .kills {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations canvas.life.title_kills {\r\n	position: relative;\r\n	top: 10px;\r\n}\r\n\r\n#MercenaryInformations .block2 .title_faith {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 55px;\r\n}\r\n#MercenaryInformations .block2 .faith {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n";
+	MercenaryInformations_default$1 = ":host {\r\n	width: 280px;\r\n	height: 190px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#MercenaryInformations {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 190px;\r\n	font-size: 12px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#MercenaryInformations .content {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#MercenaryInformations .content .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#MercenaryInformations .content .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#MercenaryInformations .content .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#MercenaryInformations .content .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#MercenaryInformations .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#MercenaryInformations .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#MercenaryInformations .title_name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 100px;\r\n}\r\n#MercenaryInformations .name {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 140px;\r\n	border: none;\r\n	background-color: #eee;\r\n	margin: 0px;\r\n	width: 85px;\r\n	color: black;\r\n}\r\n\r\n#MercenaryInformations .title_level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 100px;\r\n}\r\n#MercenaryInformations .level {\r\n	position: absolute;\r\n	top: 47px;\r\n	left: 140px;\r\n}\r\n\r\n#MercenaryInformations .skill {\r\n	position: absolute;\r\n	top: 45px;\r\n	right: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#MercenaryInformations .dismiss {\r\n	position: absolute;\r\n	top: 45px;\r\n	right: 50px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#MercenaryInformations .stats {\r\n	position: absolute;\r\n	top: 20px;\r\n	width: 80px;\r\n	height: 160px;\r\n}\r\n#MercenaryInformations .stats .atk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .Matk {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .hit {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .critical {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .def {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .Mdef {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .flee {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations .stats .aspd {\r\n	margin-top: 4px;\r\n	height: 14px;\r\n	text-align: right;\r\n}\r\n\r\n#MercenaryInformations .hp {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 140px;\r\n}\r\n#MercenaryInformations .sp {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 140px;\r\n}\r\n\r\n#MercenaryInformations .hp_bar {\r\n	position: absolute;\r\n	top: 73px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#MercenaryInformations .hp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#MercenaryInformations div.hp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#MercenaryInformations .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#MercenaryInformations .hp2 {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 210px;\r\n}\r\n#MercenaryInformations .sp2 {\r\n	position: absolute;\r\n	top: 85px;\r\n	left: 210px;\r\n}\r\n\r\n#MercenaryInformations .sp_bar {\r\n	position: absolute;\r\n	top: 88px;\r\n	left: 118px;\r\n	height: 8px;\r\n}\r\n#MercenaryInformations .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#MercenaryInformations div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 80px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#MercenaryInformations .sp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n\r\n#MercenaryInformations .block2 {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 100px;\r\n	width: 170px;\r\n	height: 70px;\r\n}\r\n\r\n#MercenaryInformations .block2 .title_timeleft {\r\n	width: 100%;\r\n}\r\n#MercenaryInformations .block2 .timeleft {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations canvas.life.title_timeleft {\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#MercenaryInformations .block2 .title_kills {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 27px;\r\n}\r\n#MercenaryInformations .block2 .kills {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n#MercenaryInformations canvas.life.title_kills {\r\n	position: relative;\r\n	top: 10px;\r\n}\r\n\r\n#MercenaryInformations .block2 .title_faith {\r\n	width: 100%;\r\n	position: absolute;\r\n	top: 55px;\r\n}\r\n#MercenaryInformations .block2 .faith {\r\n	width: 50px;\r\n	float: right;\r\n	text-align: right;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/MercenaryInformations/MercenaryInformations.js
 /**
-* Stop event propagation
+* Helper to get the shadow root
 */
-function stopPropagation$11(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Closing window
-*/
-function onClose$7() {
-	MercenaryInformations.ui.hide();
-	SkillListMH_default.mercenary.ui.hide();
-}
-/**
-* Delete mercenary
-*/
-function onDelete() {
-	MercenaryInformations.reqDeleteMercenary();
+function _getRoot$29() {
+	return MercenaryInformations._shadow || MercenaryInformations._host;
 }
 var MercenaryInformations, _preferences$29, MercenaryInformations_default;
 var init_MercenaryInformations = __esmMin((() => {
@@ -222819,12 +222886,14 @@ var init_MercenaryInformations = __esmMin((() => {
 	init_KeyEventHandler();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_SkillListMH();
 	init_AIDriver();
+	init_Elements();
 	init_MercenaryInformations$2();
 	init_MercenaryInformations$1();
-	MercenaryInformations = new UIComponent("MercenaryInformations", MercenaryInformations_default$2, MercenaryInformations_default$1);
+	MercenaryInformations = new GUIComponent("MercenaryInformations", MercenaryInformations_default$1);
+	MercenaryInformations.render = () => MercenaryInformations_default$2;
 	_preferences$29 = Preferences.get("MercenaryInformations", {
 		x: 100,
 		y: 100,
@@ -222835,17 +222904,28 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Initialize UI
 	*/
 	MercenaryInformations.init = function init() {
-		this.draggable(this.ui.find(".content"));
-		this.ui.find(".content").mousedown(stopPropagation$11);
-		this.ui.find(".content .base").mousedown(stopPropagation$11);
-		this.ui.find(".close").click(onClose$7);
-		this.ui.find(".dismiss").click(onDelete);
-		if (!_preferences$29.show) this.ui.hide();
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$29.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$29.x), Renderer.width - this.ui.width())
+		const root = _getRoot$29();
+		this.draggable(".content");
+		const contentEl = root.querySelector(".content");
+		if (contentEl) contentEl.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
 		});
-		this.ui.find(".skill").mousedown(function() {
+		const baseEl = root.querySelector(".content .base");
+		if (baseEl) baseEl.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
+		});
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			this._host.style.display = "none";
+			SkillListMH_default.mercenary.ui.hide();
+		});
+		const dismissBtn = root.querySelector(".dismiss");
+		if (dismissBtn) dismissBtn.addEventListener("click", () => {
+			MercenaryInformations.reqDeleteMercenary();
+		});
+		if (!_preferences$29.show) this._host.style.display = "none";
+		const skillBtn = root.querySelector(".skill");
+		if (skillBtn) skillBtn.addEventListener("mousedown", () => {
 			SkillListMH_default.mercenary.toggle();
 		});
 		this.toggleAggressive();
@@ -222855,15 +222935,17 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Once append to body
 	*/
 	MercenaryInformations.onAppend = function onAppend() {
-		if (!_preferences$29.show) this.ui.hide();
+		if (!_preferences$29.show) this._host.style.display = "none";
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$29.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$29.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body
 	*/
 	MercenaryInformations.onRemove = function onRemove() {
-		_preferences$29.show = this.ui.is(":visible");
-		_preferences$29.y = parseInt(this.ui.css("top"), 10);
-		_preferences$29.x = parseInt(this.ui.css("left"), 10);
+		_preferences$29.show = this._host.style.display !== "none";
+		_preferences$29.y = parseInt(this._host.style.top, 10);
+		_preferences$29.x = parseInt(this._host.style.left, 10);
 		_preferences$29.save();
 		this.stopAI();
 	};
@@ -222873,16 +222955,18 @@ var init_MercenaryInformations = __esmMin((() => {
 	* @param {object} key
 	*/
 	MercenaryInformations.onShortCut = function onShortCut(key) {
-		if (!this.ui) return;
 		switch (key.cmd) {
 			case "TOGGLE":
-				if (SessionStorage_default.mercId) {
-					this.ui.toggle();
-					if (this.ui.is(":visible")) this.focus();
-					if (!this.ui.is(":visible")) SkillListMH_default.mercenary.ui.hide();
+				if (SessionStorage_default.mercId) if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
 				} else {
+					this._host.style.display = "none";
 					SkillListMH_default.mercenary.ui.hide();
-					this.ui.hide();
+				}
+				else {
+					SkillListMH_default.mercenary.ui.hide();
+					this._host.style.display = "none";
 				}
 				break;
 			case "AGGRESSIVE":
@@ -222896,7 +222980,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* @param {object} event
 	*/
 	MercenaryInformations.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.ui.toggle();
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this._host.style.display = "none";
 	};
 	/**
 	* Format expire date into readable string
@@ -222907,61 +222991,79 @@ var init_MercenaryInformations = __esmMin((() => {
 		if (!timestamp) return "0";
 		const now = Date.now() / 1e3;
 		const remaining = Math.max(0, timestamp - now);
-		const hours = Math.floor(remaining / 3600);
-		const minutes = Math.floor(remaining % 3600 / 60);
-		return hours + "h " + minutes + "m";
+		return `${Math.floor(remaining / 3600)}h ${Math.floor(remaining % 3600 / 60)}m`;
 	};
 	/**
 	* Set time left bar and value
 	* @param {number} timestamp - Unix timestamp for expiration
 	*/
 	MercenaryInformations.setTimeLeft = function setTimeLeft(timestamp) {
+		const root = _getRoot$29();
 		if (!timestamp) {
-			this.ui.find(".block2 .timeleft").text("0");
+			const timeleftEl = root.querySelector(".block2 .timeleft");
+			if (timeleftEl) timeleftEl.textContent = "0";
 			return;
 		}
 		const now = Date.now() / 1e3;
 		const time_per = Math.max(0, timestamp - now) / 1800;
-		this.ui.find(".block2 .timeleft").text(this.formatExpireDate(timestamp));
-		const ctx = this.ui.find("canvas.life.title_timeleft")[0].getContext("2d");
-		const width = 60, height = 5;
-		ctx.fillStyle = "#424242";
-		ctx.fillRect(1, 1, width - 2, height - 2);
-		ctx.fillStyle = time_per < .25 ? "#ff1e00" : "#205cc3";
-		ctx.fillRect(1, 1, Math.round((width - 2) * time_per), 3);
+		const timeleftEl = root.querySelector(".block2 .timeleft");
+		if (timeleftEl) timeleftEl.textContent = this.formatExpireDate(timestamp);
+		const canvas = root.querySelector("canvas.life.title_timeleft");
+		if (canvas) {
+			const ctx = canvas.getContext("2d");
+			const width = 60, height = 5;
+			ctx.fillStyle = "#424242";
+			ctx.fillRect(1, 1, width - 2, height - 2);
+			ctx.fillStyle = time_per < .25 ? "#ff1e00" : "#205cc3";
+			ctx.fillRect(1, 1, Math.round((width - 2) * time_per), 3);
+		}
 	};
 	/**
 	* Set monster kills bar and value
 	* @param {number} kills - Number of monsters killed
 	*/
 	MercenaryInformations.setKills = function setKills(kills) {
+		const root = _getRoot$29();
 		if (kills === void 0) {
-			this.ui.find(".block2 .kills").text("0");
+			const killsEl = root.querySelector(".block2 .kills");
+			if (killsEl) killsEl.textContent = "0";
 			return;
 		}
-		this.ui.find(".block2 .kills").text(kills);
-		const ctx = this.ui.find("canvas.life.title_kills")[0].getContext("2d");
-		const width = 60, height = 5;
-		const kills_per = kills % 50 / 50;
-		ctx.fillStyle = "#424242";
-		ctx.fillRect(1, 1, width - 2, height - 2);
-		ctx.fillStyle = "#205cc3";
-		ctx.fillRect(1, 1, Math.round((width - 2) * kills_per), 3);
+		const killsEl = root.querySelector(".block2 .kills");
+		if (killsEl) killsEl.textContent = kills;
+		const canvas = root.querySelector("canvas.life.title_kills");
+		if (canvas) {
+			const ctx = canvas.getContext("2d");
+			const width = 60, height = 5;
+			const kills_per = kills % 50 / 50;
+			ctx.fillStyle = "#424242";
+			ctx.fillRect(1, 1, width - 2, height - 2);
+			ctx.fillStyle = "#205cc3";
+			ctx.fillRect(1, 1, Math.round((width - 2) * kills_per), 3);
+		}
 	};
 	/**
-	* Initialize UI
+	* Update UI with mercenary data
 	*/
 	MercenaryInformations.setInformations = function setInformations(info) {
-		this.ui.find(".name").text(info.name || "");
-		this.ui.find(".level").text(info.level || "");
-		this.ui.find(".stats .atk").text(info.atk || 0);
-		this.ui.find(".stats .Matk").text(info.Matk || 0);
-		this.ui.find(".stats .hit").text(info.hit || 0);
-		this.ui.find(".stats .critical").text(info.critical || 0);
-		this.ui.find(".stats .def").text(info.def || 0);
-		this.ui.find(".stats .Mdef").text(info.Mdef || 0);
-		this.ui.find(".stats .flee").text(info.flee || 0);
-		this.ui.find(".stats .aspd").text(info.aspd || 0);
+		const root = _getRoot$29();
+		const nameEl = root.querySelector(".name");
+		if (nameEl) nameEl.textContent = info.name || "";
+		const levelEl = root.querySelector(".level");
+		if (levelEl) levelEl.textContent = info.level || "";
+		for (const field of [
+			"atk",
+			"Matk",
+			"hit",
+			"critical",
+			"def",
+			"Mdef",
+			"flee",
+			"aspd"
+		]) {
+			const el = root.querySelector(`.stats .${field}`);
+			if (el) el.textContent = info[field] || 0;
+		}
 		this.setHpSpBar("hp", info.hp, info.maxHP);
 		this.setHpSpBar("sp", info.sp, info.maxSP);
 		this.setTimeLeft(info.ExpireDate);
@@ -222973,26 +223075,33 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Set hp and sp bar
 	*/
 	MercenaryInformations.setHpSpBar = function setHpSpBar(type, val, val2) {
+		const root = _getRoot$29();
 		const perc = Math.floor(val * 100 / val2);
 		const color = perc < 25 ? "red" : "blue";
-		this.ui.find("." + type + "_bar_perc ." + type + "_value").text(val);
-		this.ui.find("." + type + "_bar_perc ." + type + "_max_value").text(val2);
-		this.ui.find("." + type + "2").text(val + " / " + val2);
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_left.bmp", function(url) {
-			this.ui.find("." + type + "_bar_left").css("backgroundImage", "url(" + url + ")");
-		}.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_mid.bmp", function(url) {
-			this.ui.find("." + type + "_bar_middle").css({
-				backgroundImage: "url(" + url + ")",
-				width: Math.floor(Math.min(perc, 100) * .75) + "px"
+		const valueEl = root.querySelector(`.${type}_bar_perc .${type}_value`);
+		if (valueEl) valueEl.textContent = val;
+		const maxValueEl = root.querySelector(`.${type}_bar_perc .${type}_max_value`);
+		if (maxValueEl) maxValueEl.textContent = val2;
+		const summaryEl = root.querySelector(`.${type}2`);
+		if (summaryEl) summaryEl.textContent = `${val} / ${val2}`;
+		Client.loadFile(DB.INTERFACE_PATH + `basic_interface/gze${color}_left.bmp`, function(url) {
+			const el = root.querySelector(`.${type}_bar_left`);
+			if (el) el.style.backgroundImage = `url(${url})`;
+		});
+		Client.loadFile(DB.INTERFACE_PATH + `basic_interface/gze${color}_mid.bmp`, function(url) {
+			const el = root.querySelector(`.${type}_bar_middle`);
+			if (el) Object.assign(el.style, {
+				backgroundImage: `url(${url})`,
+				width: `${Math.floor(Math.min(perc, 100) * .75)}px`
 			});
-		}.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/gze" + color + "_right.bmp", function(url) {
-			this.ui.find("." + type + "_bar_right").css({
-				backgroundImage: "url(" + url + ")",
-				left: Math.floor(Math.min(perc, 100) * 1.27) + "px"
+		});
+		Client.loadFile(DB.INTERFACE_PATH + `basic_interface/gze${color}_right.bmp`, function(url) {
+			const el = root.querySelector(`.${type}_bar_right`);
+			if (el) Object.assign(el.style, {
+				backgroundImage: `url(${url})`,
+				left: `${Math.floor(Math.min(perc, 100) * 1.27)}px`
 			});
-		}.bind(this));
+		});
 	};
 	/**
 	* Toggle Aggressive
@@ -223010,7 +223119,7 @@ var init_MercenaryInformations = __esmMin((() => {
 			AIDriver.reset();
 			this.AILoop = setInterval(() => {
 				if (SessionStorage_default.mercId) {
-					if (EntityManager.get(SessionStorage_default.mercId)) AIDriver.exec("AI(" + SessionStorage_default.mercId + ")", false);
+					if (EntityManager.get(SessionStorage_default.mercId)) AIDriver.exec(`AI(${SessionStorage_default.mercId})`, false);
 				}
 			}, 100);
 		}
@@ -223040,7 +223149,8 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Set faith value
 	*/
 	MercenaryInformations.setFaith = function setFaith(faith) {
-		this.ui.find(".block2 .faith").text(faith);
+		const el = _getRoot$29().querySelector(".block2 .faith");
+		if (el) el.textContent = faith;
 	};
 	/**
 	* Functions defined in Engine/MapEngine/Mercenary.js
@@ -331381,6 +331491,8 @@ var init_Mercenary = __esmMin((() => {
 			const pkt = new PACKET.CZ.MER_COMMAND();
 			pkt.command = 2;
 			Network.sendPacket(pkt);
+			MercenaryInformations_default.ui.hide();
+			SkillListMH_default.mercenary.ui.hide();
 		});
 	};
 	/**
