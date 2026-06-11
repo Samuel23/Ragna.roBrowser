@@ -229949,6 +229949,22 @@ var init_KeyEventHandler = __esmMin((() => {
 		KEYS.CTRL = false;
 		KEYS.ALT = false;
 	});
+	/**
+	* Get the actual focused element, piercing through Shadow DOM boundaries.
+	* In Light DOM, document.activeElement returns the focused element directly.
+	* In Shadow DOM, it returns the host element; this helper traverses into
+	* shadow roots to find the real focused element (e.g., an <input> inside
+	* a GUIComponent's shadow root).
+	*/
+	Object.defineProperty(KEYS, "getDeepActiveElement", {
+		writable: false,
+		enumerable: false,
+		value: function getDeepActiveElement() {
+			let el = document.activeElement;
+			while (el?.shadowRoot?.activeElement) el = el.shadowRoot.activeElement;
+			return el;
+		}
+	});
 }));
 //#endregion
 //#region src/Preferences/Camera.js
@@ -236252,6 +236268,7 @@ var init_GUIComponent = __esmMin((() => {
 				LEFT: false,
 				RIGHT: false
 			};
+			this._isDraggable = false;
 			this.mouseMode = MouseMode.STOP;
 			this.needFocus = true;
 			this.manager = null;
@@ -236331,9 +236348,12 @@ var init_GUIComponent = __esmMin((() => {
 		* Fix component position after append or screen resize.
 		* Ensures the component stays within the visible viewport
 		* and respects magnet constraints.
+		*
+		* Skipped for non-draggable (fixed-position) components since their
+		* CSS position is intentional and should not be overridden.
 		*/
 		_fixPositionOverflow() {
-			if (!this._host) return;
+			if (!this._host || !this._isDraggable) return;
 			const rect = this._host.getBoundingClientRect();
 			const x = rect.left;
 			const y = rect.top;
@@ -236342,7 +236362,9 @@ var init_GUIComponent = __esmMin((() => {
 			const WIDTH = _Renderer$1?.width ?? window.innerWidth;
 			const HEIGHT = _Renderer$1?.height ?? window.innerHeight;
 			if (y + height > HEIGHT) this._host.style.top = HEIGHT - Math.min(height, HEIGHT) + "px";
+			if (y < 0) this._host.style.top = "0px";
 			if (x + width > WIDTH) this._host.style.left = WIDTH - Math.min(width, WIDTH) + "px";
+			if (x < 0) this._host.style.left = "0px";
 			if (this.magnet.BOTTOM) this._host.style.top = HEIGHT - height + "px";
 			if (this.magnet.RIGHT) this._host.style.left = WIDTH - width + "px";
 		}
@@ -236496,6 +236518,7 @@ var init_GUIComponent = __esmMin((() => {
 			const component = this;
 			const SNAP_DISTANCE = 10;
 			if (!host) return this;
+			this._isDraggable = true;
 			let handleEl;
 			if (!handle) handleEl = host;
 			else if (typeof handle === "string") handleEl = this._shadow.querySelector(handle) || this._container.querySelector(handle);
@@ -239010,7 +239033,7 @@ var init_ChatBox = __esmMin((() => {
 		});
 		if (Configs.get("restoreChatFocus", false)) this.ui.find(".input-chatbox").blur(function() {
 			Events.setTimeout(function() {
-				const active = document.activeElement;
+				const active = KEYS.getDeepActiveElement();
 				const movedInsideChatbox = active && jquery_default(active).closest("#chatbox").length;
 				const isTextInput = active && active.tagName && active.tagName.match(/input|select|textarea/i);
 				if (!movedInsideChatbox && !isTextInput) this.ui.find(".input-chatbox").focus();
@@ -239066,7 +239089,7 @@ var init_ChatBox = __esmMin((() => {
 		}.bind(this));
 		this.ui.find(".input .username").blur(function() {
 			Events.setTimeout(function() {
-				const active = document.activeElement;
+				const active = KEYS.getDeepActiveElement();
 				const movedInsideChatbox = active && jquery_default(active).closest("#chatbox").length;
 				const isTextInput = active && active.tagName && active.tagName.match(/input|select|textarea/i);
 				const isChatMessage = active === this.ui.find(".input-chatbox")[0];
@@ -239379,7 +239402,7 @@ var init_ChatBox = __esmMin((() => {
 		this.ui.find(".header tr td div.on input").on("keyup", function() {
 			ChatBoxSettings_default.updateTab(ChatBox.activeTab, this.value);
 		});
-		const activeElement = document.activeElement;
+		const activeElement = KEYS.getDeepActiveElement();
 		const isChatInputFocused = activeElement === messageBox[0] || activeElement === nickBox[0];
 		if (activeElement && !isChatInputFocused && (activeElement.tagName && activeElement.tagName.match(/input|select|textarea/i) || activeElement.isContentEditable)) return true;
 		switch (event.which) {
@@ -239516,7 +239539,8 @@ var init_ChatBox = __esmMin((() => {
 	};
 	ChatBox.toggleChat = function toggleChat() {
 		const messageBox = this.ui.find(".input-chatbox");
-		if (document.activeElement.tagName === "INPUT" && document.activeElement !== messageBox[0]) return true;
+		const activeElement = KEYS.getDeepActiveElement();
+		if (activeElement.tagName === "INPUT" && activeElement !== messageBox[0]) return true;
 		if (jquery_default("#NpcMenu, #NpcBox").length) return true;
 		messageBox.focus();
 		this.submit();
@@ -240092,7 +240116,7 @@ var init_Announce$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Announce/Announce.js
-function _getRoot$52() {
+function _getRoot$60() {
 	return Announce._shadow || Announce._host;
 }
 var Announce, _timer$2, _life$1, Announce_default;
@@ -240119,7 +240143,7 @@ var init_Announce = __esmMin((() => {
 	* Initialize component
 	*/
 	Announce.init = function init() {
-		const root = _getRoot$52();
+		const root = _getRoot$60();
 		this.canvas = root.querySelector("canvas");
 		this.ctx = this.canvas.getContext("2d");
 	};
@@ -240212,7 +240236,7 @@ var init_Announce = __esmMin((() => {
 /**
 * Helper to get shadow root
 */
-function _getRoot$51() {
+function _getRoot$59() {
 	return MakeReadBook._shadow || MakeReadBook._host;
 }
 async function repeatedGreetingsLoop(book_information) {
@@ -240265,7 +240289,7 @@ function onClose$14(e) {
 	if (_preferences$69.show) MakeReadBook.onRemove();
 }
 function page() {
-	const root = _getRoot$51();
+	const root = _getRoot$59();
 	const textBook = root.querySelector("#textBook");
 	if (textBook) textBook.innerHTML = "";
 	for (let i = _BOOK_INFORMATION["page"] * 1; i < _BOOK_INFORMATION["pagesize"] && i < (_BOOK_INFORMATION["page"] + 1) * 1; i++) if (textBook) {
@@ -240276,7 +240300,7 @@ function page() {
 	if (pageBook) pageBook.textContent = `(${_BOOK_INFORMATION["page"] + 1}/${Math.ceil(_BOOK_INFORMATION["pagesize"] / 1)})`;
 }
 function adjustButtons$1() {
-	const root = _getRoot$51();
+	const root = _getRoot$59();
 	const nextBtn = root.querySelector(".next_btn");
 	if (nextBtn) nextBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] > _BOOK_INFORMATION["pagesize"] / 1 - 1;
 	const prevBtn = root.querySelector(".previous_btn");
@@ -240363,7 +240387,7 @@ var init_MakeReadBook = __esmMin((() => {
 	};
 	MakeReadBook.openBook = function openBook() {
 		MakeReadBook.append();
-		const root = _getRoot$51();
+		const root = _getRoot$59();
 		const panel = root.querySelector(".panel");
 		if (panel) panel.style.backgroundColor = `#${_BOOK_INFORMATION["color"]}`;
 		const footer = root.querySelector(".footer");
@@ -240376,7 +240400,7 @@ var init_MakeReadBook = __esmMin((() => {
 			"data/sprite/book/Ã¥¿ÞÂÊ.spr",
 			"data/sprite/book/Ã¥¿À¸¥ÂÊ.spr"
 		], (spr_close, spr_highlighter, spr_previous, spr_next) => {
-			const innerRoot = _getRoot$51();
+			const innerRoot = _getRoot$59();
 			const canvas = new SPR(spr_close).getCanvasFromFrame(0);
 			canvas.className = "clone_book event_add_cursor";
 			const footerEl = innerRoot.querySelector(".footer");
@@ -240472,7 +240496,7 @@ var init_MakeReadBook = __esmMin((() => {
 		_BOOK_INFORMATION.save();
 		_preferences$69.show = true;
 		_preferences$69.save();
-		const root = _getRoot$51();
+		const root = _getRoot$59();
 		this.draggable(root.querySelector(".titlebar"));
 	};
 	/**
@@ -241064,14 +241088,14 @@ var init_InputBox$1 = __esmMin((() => {
 /**
 * Helper to get shadow root
 */
-function _getRoot$50() {
+function _getRoot$58() {
 	return InputBox._shadow || InputBox._host;
 }
 /**
 * Validate input
 */
 function validate$1() {
-	const root = _getRoot$50();
+	const root = _getRoot$58();
 	const input = root.querySelector("input");
 	let text = input ? input.value : "";
 	if (!InputBox.isPersistent || text.length) {
@@ -241107,7 +241131,7 @@ var init_InputBox = __esmMin((() => {
 		this.draggable();
 		this._host.style.top = `${(Renderer.height - 120) / 1.5 - 49}px`;
 		this._host.style.left = `${(Renderer.width - 280) / 2 + 1}px`;
-		const root = _getRoot$50();
+		const root = _getRoot$58();
 		const btn = root.querySelector("ui-button");
 		if (btn) btn.addEventListener("click", () => validate$1());
 		const input = root.querySelector("input");
@@ -241128,7 +241152,7 @@ var init_InputBox = __esmMin((() => {
 	* Input Post-Render callback
 	*/
 	InputBox.onAppend = function onAppend() {
-		const input = _getRoot$50().querySelector("input");
+		const input = _getRoot$58().querySelector("input");
 		if (input) {
 			input.focus();
 			if (input.value) input.select();
@@ -241138,7 +241162,7 @@ var init_InputBox = __esmMin((() => {
 	* Remove data from UI
 	*/
 	InputBox.onRemove = function onRemove() {
-		const root = _getRoot$50();
+		const root = _getRoot$58();
 		const input = root.querySelector("input");
 		if (input) {
 			input.value = "";
@@ -241182,7 +241206,7 @@ var init_InputBox = __esmMin((() => {
 	*/
 	InputBox.setType = function setType(type, isPersistent, defaultVal, itemId = null) {
 		this.isPersistent = !!isPersistent;
-		const root = _getRoot$50();
+		const root = _getRoot$58();
 		const innerRoot = root.querySelector("#inputbox");
 		const textEl = root.querySelector(".text");
 		const input = root.querySelector("input");
@@ -242446,15 +242470,15 @@ var init_Storage$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/CartItems/CartItems.js
-function _getRoot$49() {
+function _getRoot$57() {
 	return CartItems._shadow || CartItems._host;
 }
 /**
 * Extend inventory window size
 */
 function onResize$14() {
-	const content = _getRoot$49().querySelector(".container .content");
-	const hideEl = _getRoot$49().querySelector(".hide");
+	const content = _getRoot$57().querySelector(".container .content");
+	const hideEl = _getRoot$57().querySelector(".hide");
 	const top = CartItems._host.offsetTop;
 	const left = CartItems._host.offsetLeft;
 	let lastWidth = 0;
@@ -242486,7 +242510,7 @@ function onResize$14() {
 * Hide/show inventory's content
 */
 function onToggleReduction$4() {
-	const panel = _getRoot$49().querySelector(".panel");
+	const panel = _getRoot$57().querySelector(".panel");
 	if (_realSize$5) {
 		if (panel) panel.style.display = "block";
 		CartItems._host.style.height = `${_realSize$5}px`;
@@ -242558,7 +242582,7 @@ function onItemOver$17(_e) {
 	if (!item) return;
 	let quantity = " ea";
 	if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.Options && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$49();
+	const root = _getRoot$57();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#cartitems") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -242576,7 +242600,7 @@ function onItemOver$17(_e) {
 * Hide the item name
 */
 function onItemOut$18() {
-	const overlay = _getRoot$49().querySelector(".overlay");
+	const overlay = _getRoot$57().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -242704,7 +242728,7 @@ var init_CartItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartItems.init = function Init() {
-		const root = _getRoot$49();
+		const root = _getRoot$57();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
@@ -242757,14 +242781,14 @@ var init_CartItems = __esmMin((() => {
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$66.y), Renderer.height - hostRect.height)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$66.x), Renderer.width - hostRect.width)}px`;
 		_realSize$5 = _preferences$66.reduce ? 0 : hostRect.height;
-		const miniBtn = _getRoot$49().querySelector(".titlebar .mini");
+		const miniBtn = _getRoot$57().querySelector(".titlebar .mini");
 		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	CartItems.onRemove = function OnRemove() {
-		const content = _getRoot$49().querySelector(".container .content");
+		const content = _getRoot$57().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
@@ -242808,7 +242832,7 @@ var init_CartItems = __esmMin((() => {
 	CartItems.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		const content = _getRoot$49().querySelector(".container .content");
+		const content = _getRoot$57().querySelector(".container .content");
 		if (content) {
 			content.style.width = `${width * 32 + 13}px`;
 			content.style.height = `${height * 32}px`;
@@ -242850,7 +242874,7 @@ var init_CartItems = __esmMin((() => {
 		}
 	};
 	CartItems.setCartInfo = function SetCartInfo(curCount, maxCount, curWeight, maxWeight) {
-		const root = _getRoot$49();
+		const root = _getRoot$57();
 		const ncnt = root.querySelector(".ncnt");
 		const mcnt = root.querySelector(".mcnt");
 		const nwt = root.querySelector(".nwt");
@@ -242869,7 +242893,7 @@ var init_CartItems = __esmMin((() => {
 		let object = this.getItemByIndex(item.index);
 		if (object) {
 			object.count += item.count;
-			const countEl = _getRoot$49().querySelector(`.item[data-index="${item.index}"] .count`);
+			const countEl = _getRoot$57().querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = object.count;
 			return;
 		}
@@ -242884,7 +242908,7 @@ var init_CartItems = __esmMin((() => {
 	CartItems.addItemSub = function AddItemSub(item) {
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
-		const root = _getRoot$49();
+		const root = _getRoot$57();
 		const content = root.querySelector(".container .content");
 		if (!content) return true;
 		content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -242913,13 +242937,13 @@ var init_CartItems = __esmMin((() => {
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				const countEl = _getRoot$49().querySelector(`.item[data-index="${item.index}"] .count`);
+				const countEl = _getRoot$57().querySelector(`.item[data-index="${item.index}"] .count`);
 				if (countEl) countEl.textContent = item.count;
 				return item;
 			}
 		}
 		this.list.splice(this.list.indexOf(item), 1);
-		const root = _getRoot$49();
+		const root = _getRoot$57();
 		const el = root.querySelector(`.item[data-index="${item.index}"]`);
 		if (el) el.remove();
 		const content = root.querySelector(".container .content");
@@ -242939,7 +242963,7 @@ var init_CartItems = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$49();
+		const root = _getRoot$57();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -244309,7 +244333,7 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$48() {
+function _getRoot$56() {
 	return SkillTargetSelection._shadow || SkillTargetSelection._host;
 }
 /**
@@ -244458,7 +244482,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$48();
+		const root = _getRoot$56();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -245180,16 +245204,19 @@ var init_PartyFriendsV0 = __esmMin((() => {
 //#region src/UI/Components/MiniMap/MiniMap/MiniMap.html?raw
 var MiniMap_default$2;
 var init_MiniMap$3 = __esmMin((() => {
-	MiniMap_default$2 = "<div id=\"minimap\" class=\"MiniMapUI\">\r\n	<button class=\"plus\" type=\"button\" data-background=\"map/map_plus0.bmp\" data-hover=\"map/map_plus1.bmp\"></button>\r\n	<button class=\"minus\" type=\"button\" data-background=\"map/map_minus0.bmp\" data-preload=\"map/map_minus1.bmp\"></button>\r\n	<canvas width=\"128\" height=\"128\"></canvas>\r\n</div>\r\n";
+	MiniMap_default$2 = "<div id=\"minimap\" class=\"MiniMapUI\">\r\n	<ui-button class=\"plus\" bg=\"map/map_plus0.bmp\" hover=\"map/map_plus1.bmp\"></ui-button>\r\n	<ui-button class=\"minus\" bg=\"map/map_minus0.bmp\"></ui-button>\r\n	<canvas width=\"128\" height=\"128\"></canvas>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap/MiniMap.css?raw
 var MiniMap_default$1;
 var init_MiniMap$2 = __esmMin((() => {
-	MiniMap_default$1 = "#minimap {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 2px;\r\n}\r\n#minimap .plus {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n#minimap .minus {\r\n	position: absolute;\r\n	top: 12px;\r\n	right: 0px;\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n\r\n#minimap button.cashshopIcon {\r\n	position: absolute;\r\n	height: 43px;\r\n	width: 43px;\r\n	border: none;\r\n	top: 0px;\r\n	left: -45px;\r\n}\r\n";
+	MiniMap_default$1 = ":host {\r\n	top: 2px;\r\n	right: 2px;\r\n}\r\n\r\n#minimap ui-button.plus {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n\r\n#minimap ui-button.minus {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 18px;\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap/MiniMap.js
+function _getRoot$55() {
+	return MiniMap._shadow || MiniMap._host;
+}
 /**
 * Async image create helper
 */
@@ -245208,18 +245235,20 @@ var init_MiniMap$1 = __esmMin((() => {
 	init_Altitude();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_MiniMap$3();
 	init_MiniMap$2();
-	MiniMap = new UIComponent("MiniMap", MiniMap_default$2, MiniMap_default$1);
+	MiniMap = new GUIComponent("MiniMap", MiniMap_default$1);
 	/**
 	* Mouse cant cross this UI
 	*/
-	MiniMap.mouseMode = UIComponent.MouseMode.STOP;
+	MiniMap.mouseMode = GUIComponent.MouseMode.STOP;
 	/**
 	* @var {boolean} do not focus this UI
 	*/
 	MiniMap.needFocus = false;
+	MiniMap.render = () => MiniMap_default$2;
 	_preferences$62 = Preferences.get("MiniMap", {
 		zoom: 0,
 		opacity: 2
@@ -245249,41 +245278,43 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Initialize minimap
 	*/
 	MiniMap.init = function init() {
-		function genericUpdateZoom(value) {
-			return function(event) {
-				MiniMap.updateZoom(value);
-				event.stopImmediatePropagation();
-				return false;
-			};
-		}
-		_ctx$13 = this.ui.find("canvas")[0].getContext("2d");
+		const root = _getRoot$55();
+		_ctx$13 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
-		Client.loadFile(DB.INTERFACE_PATH + "map/map_arrow.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/store.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/store.bmp`, (dataURI) => {
 			_toolDealer$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/weaponshop.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/weaponshop.bmp`, (dataURI) => {
 			_weaponDealer$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/armorshops.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/armorshops.bmp`, (dataURI) => {
 			_armorDealer$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/smithy.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/smithy.bmp`, (dataURI) => {
 			_blacksmith$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/guide.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/guide.bmp`, (dataURI) => {
 			_guide$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/inn.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/inn.bmp`, (dataURI) => {
 			_inn$2.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/kafra.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/kafra.bmp`, (dataURI) => {
 			_kafra$2.src = dataURI;
 		});
-		this.ui.find(".plus").mousedown(genericUpdateZoom(1));
-		this.ui.find(".minus").mousedown(genericUpdateZoom(-1));
+		root.querySelector(".plus").addEventListener("mousedown", (event) => {
+			MiniMap.updateZoom(1);
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
+		root.querySelector(".minus").addEventListener("mousedown", (event) => {
+			MiniMap.updateZoom(-1);
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
 	};
 	/**
 	* Once append to HTML
@@ -245304,7 +245335,7 @@ var init_MiniMap$1 = __esmMin((() => {
 		let path = DB.INTERFACE_PATH.replace("data/texture/", "") + "map/" + mapname.replace(/\..*/, ".bmp");
 		path = path.replace(/\//g, "\\");
 		path = DB.mapalias[path] || path;
-		Client.loadFile("data/texture/" + path, function(dataURI) {
+		Client.loadFile(`data/texture/${path}`, (dataURI) => {
 			_map$2.src = dataURI;
 		});
 	};
@@ -245338,9 +245369,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} y position
 	*/
 	MiniMap.addPartyMemberMark = function addPartyMemberMark(key, x, y) {
-		let i;
-		const count = _party$2.length;
-		for (i = 0; i < count; ++i) if (_party$2[i].key === key) {
+		for (let i = 0; i < _party$2.length; ++i) if (_party$2[i].key === key) {
 			_party$2[i].x = x;
 			_party$2[i].y = y;
 			_party$2[i].color = this.getMemberColor(key);
@@ -245359,11 +245388,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	MiniMap.getMemberColor = function getMemberColor(key) {
 		if (_memberColors$1[key]) return _memberColors$1[key];
 		const r = Math.random;
-		const color = "rgb(" + [
-			r() * 255 | 0,
-			r() * 255 | 0,
-			r() * 255 | 0
-		] + ")";
+		const color = `rgb(${r() * 255 | 0},${r() * 255 | 0},${r() * 255 | 0})`;
 		_memberColors$1[key] = color;
 		return color;
 	};
@@ -245373,9 +245398,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} key account id
 	*/
 	MiniMap.removePartyMemberMark = function removePartyMemberMark(key) {
-		let i;
-		const count = _party$2.length;
-		for (i = 0; i < count; ++i) if (_party$2[i].key === key) {
+		for (let i = 0; i < _party$2.length; ++i) if (_party$2[i].key === key) {
 			_party$2.splice(i, 1);
 			break;
 		}
@@ -245388,9 +245411,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} y position
 	*/
 	MiniMap.addGuildMemberMark = function addGuildMemberMark(key, x, y) {
-		let i;
-		const count = _guild$1.length;
-		for (i = 0; i < count; ++i) if (_guild$1[i].key === key) {
+		for (let i = 0; i < _guild$1.length; ++i) if (_guild$1[i].key === key) {
 			_guild$1[i].x = x;
 			_guild$1[i].y = y;
 			return;
@@ -245407,9 +245428,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} key account id
 	*/
 	MiniMap.removeGuildMemberMark = function removeGuildMemberMark(key) {
-		let i;
-		const count = _guild$1.length;
-		for (i = 0; i < count; ++i) if (_guild$1[i].key === key) {
+		for (let i = 0; i < _guild$1.length; ++i) if (_guild$1[i].key === key) {
 			_guild$1.splice(i, 1);
 			break;
 		}
@@ -245423,17 +245442,15 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {Array} color
 	*/
 	MiniMap.addNpcMark = function addNPCMark(key, x, y, lcolor, time) {
-		let i;
-		const count = _markers$2.length;
 		const color = [
 			(lcolor & 16711680) >> 16,
 			(lcolor & 65280) >> 8,
 			lcolor & 255
 		];
-		for (i = 0; i < count; ++i) if (_markers$2[i].key === key) {
+		for (let i = 0; i < _markers$2.length; ++i) if (_markers$2[i].key === key) {
 			_markers$2[i].x = x;
 			_markers$2[i].y = y;
-			_markers$2[i].color = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+			_markers$2[i].color = `rgb(${color[0]},${color[1]},${color[2]})`;
 			_markers$2[i].tick = Renderer.tick + time;
 			return;
 		}
@@ -245441,7 +245458,7 @@ var init_MiniMap$1 = __esmMin((() => {
 			key,
 			x,
 			y,
-			color: "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")",
+			color: `rgb(${color[0]},${color[1]},${color[2]})`,
 			tick: Renderer.tick + time
 		});
 	};
@@ -245451,9 +245468,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} key id
 	*/
 	MiniMap.removeNpcMark = function removeNPCMark(key) {
-		let i;
-		const count = _markers$2.length;
-		for (i = 0; i < count; ++i) if (_markers$2[i].key === key) {
+		for (let i = 0; i < _markers$2.length; ++i) if (_markers$2[i].key === key) {
 			_markers$2.splice(i, 1);
 			break;
 		}
@@ -245505,6 +245520,7 @@ var init_MiniMap$1 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$13) return;
 			zoom = _zoomFactor$1[_preferences$62.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
@@ -245514,7 +245530,7 @@ var init_MiniMap$1 = __esmMin((() => {
 			_ctx$13.clearRect(0, 0, 128, 128);
 			if (_map$2.complete && _map$2.width) if (zoom === 1) _ctx$13.drawImage(_map$2, 0, 0, 128, 128);
 			else _ctx$13.drawImage(_map$2, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
-			if (_towninfo$2) {
+			if (_towninfo$2 && _towninfo$2.length) {
 				count = _towninfo$2.length;
 				for (i = 0; i < count; ++i) {
 					dot = _towninfo$2[i];
@@ -245617,13 +245633,13 @@ var init_WorldMap$1 = __esmMin((() => {
 //#region src/UI/Components/Navigation/Navigation.html?raw
 var Navigation_default$2;
 var init_Navigation$2 = __esmMin((() => {
-	Navigation_default$2 = "<div class=\"Navigation\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"left\" data-background=\"basic_interface/titlebar_left.bmp\"></div>\r\n		<div class=\"center\" data-background=\"basic_interface/titlebar_mid.bmp\"></div>\r\n		<div class=\"right\" data-background=\"basic_interface/titlebar_right.bmp\"></div>\r\n		<div class=\"title\">Navigation</div>\r\n		<button\r\n			class=\"close\"\r\n			data-background=\"basic_interface/sys_close_off.bmp\"\r\n			data-hover=\"basic_interface/sys_close_on.bmp\"\r\n		></button>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"search-container\">\r\n			<select class=\"search-type\">\r\n				<option value=\"ALL\">ALL</option>\r\n				<option value=\"NPC\">NPC</option>\r\n				<option value=\"MOB\">MOB</option>\r\n			</select>\r\n			<div class=\"search-left\" data-background=\"basic_interface/txtbox_l.bmp\"></div>\r\n			<div class=\"search-middle\" data-background=\"basic_interface/txtbox_m.bmp\"></div>\r\n			<div class=\"search-right\" data-background=\"basic_interface/txtbox_r.bmp\"></div>\r\n			<input type=\"text\" class=\"search-input\" placeholder=\"Search...\" />\r\n			<button\r\n				class=\"search-button\"\r\n				data-background=\"navigation_interface/navisearch_a.bmp\"\r\n				data-hover=\"navigation_interface/navisearch_b.bmp\"\r\n				data-down=\"navigation_interface/navisearch_c.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"map-container\">\r\n			<div class=\"services-toggle-container\">\r\n				<label class=\"services-checkbox\"> <input type=\"checkbox\" class=\"services-toggle\" /> Services </label>\r\n			</div>\r\n			<div class=\"location-title\"></div>\r\n			<div class=\"map-display\">\r\n				<!-- Map will be displayed here -->\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<div class=\"coordinates-bar\">\r\n			<div class=\"map-name\"></div>\r\n			<div class=\"mouse-info\">\r\n				<span class=\"mouse-label\">Mouse:</span>\r\n				<span class=\"mouse-coordinates\"></span>\r\n			</div>\r\n			<div class=\"target-info\">\r\n				<span class=\"target-label\">Target:</span>\r\n				<span class=\"target-coordinates\"></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	Navigation_default$2 = "<div class=\"Navigation\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"left\" data-background=\"basic_interface/titlebar_left.bmp\"></div>\r\n		<div class=\"center\" data-background=\"basic_interface/titlebar_mid.bmp\"></div>\r\n		<div class=\"right\" data-background=\"basic_interface/titlebar_right.bmp\"></div>\r\n		<div class=\"title\">Navigation</div>\r\n		<ui-button\r\n			class=\"close\"\r\n			bg=\"basic_interface/sys_close_off.bmp\"\r\n			hover=\"basic_interface/sys_close_on.bmp\"\r\n		></ui-button>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"search-container\">\r\n			<select class=\"search-type\">\r\n				<option value=\"ALL\">ALL</option>\r\n				<option value=\"NPC\">NPC</option>\r\n				<option value=\"MOB\">MOB</option>\r\n			</select>\r\n			<div class=\"search-left\" data-background=\"basic_interface/txtbox_l.bmp\"></div>\r\n			<div class=\"search-middle\" data-background=\"basic_interface/txtbox_m.bmp\"></div>\r\n			<div class=\"search-right\" data-background=\"basic_interface/txtbox_r.bmp\"></div>\r\n			<input type=\"text\" class=\"search-input\" placeholder=\"Search...\" />\r\n			<ui-button\r\n				class=\"search-button\"\r\n				bg=\"navigation_interface/navisearch_a.bmp\"\r\n				hover=\"navigation_interface/navisearch_b.bmp\"\r\n				down=\"navigation_interface/navisearch_c.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"map-container\">\r\n			<div class=\"services-toggle-container\">\r\n				<label class=\"services-checkbox\"> <input type=\"checkbox\" class=\"services-toggle\" /> Services </label>\r\n			</div>\r\n			<div class=\"location-title\"></div>\r\n			<div class=\"map-display\">\r\n				<!-- Map will be displayed here -->\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<div class=\"coordinates-bar\">\r\n			<div class=\"map-name\"></div>\r\n			<div class=\"mouse-info\">\r\n				<span class=\"mouse-label\">Mouse:</span>\r\n				<span class=\"mouse-coordinates\"></span>\r\n			</div>\r\n			<div class=\"target-info\">\r\n				<span class=\"target-label\">Target:</span>\r\n				<span class=\"target-coordinates\"></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Navigation/Navigation.css?raw
 var Navigation_default$1;
 var init_Navigation$1 = __esmMin((() => {
-	Navigation_default$1 = ".Navigation {\r\n	position: absolute;\r\n	top: 200px;\r\n	left: 200px;\r\n	width: 300px;\r\n	height: 300px;\r\n	z-index: 50;\r\n	background-repeat: repeat-y;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	position: relative;\r\n	z-index: 2;\r\n	cursor: move;\r\n}\r\n\r\n.Navigation .titlebar .left {\r\n	width: 15px;\r\n	height: 17px;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n.Navigation .titlebar .center {\r\n	width: calc(100% - 20px);\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 12px;\r\n}\r\n\r\n.Navigation .titlebar .right {\r\n	width: 12px;\r\n	height: 17px;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n.Navigation .titlebar .title {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 10px;\r\n	height: 17px;\r\n	line-height: 17px;\r\n	white-space: nowrap;\r\n	text-shadow: 1px 1px white;\r\n	color: #000000;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n.Navigation .titlebar .close {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 2px;\r\n	width: 13px;\r\n	height: 13px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	cursor: pointer;\r\n}\r\n\r\n.Navigation .content {\r\n	width: 100%;\r\n	height: calc(100% - 17px);\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-color: #f7f7f7;\r\n	border: 1px solid #d4d4d4;\r\n	border-top: none;\r\n	box-sizing: border-box;\r\n}\r\n\r\n.Navigation .search-container {\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 5px 10px;\r\n	box-sizing: border-box;\r\n	background-color: #f7f7f7;\r\n}\r\n\r\n.Navigation .services-toggle-container {\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 0;\r\n	margin: 0;\r\n	background-color: #f7f7f7;\r\n	position: absolute;\r\n	left: 6px;\r\n}\r\n\r\n.Navigation .services-checkbox {\r\n	color: #000;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.Navigation .services-toggle {\r\n	margin-right: 4px;\r\n	margin-top: 3px;\r\n}\r\n\r\n.Navigation .search-type {\r\n	top: 3px;\r\n	height: 20px;\r\n	margin-right: 5px;\r\n	border: 1px solid #ccc;\r\n	background-color: #fff;\r\n	padding: 0 2px;\r\n	cursor: pointer;\r\n	width: 50px;\r\n	z-index: 2;\r\n	position: relative;\r\n}\r\n\r\n.Navigation .search-left {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 65px;\r\n	width: 3px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .search-middle {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 68px;\r\n	right: 38px;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .search-right {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 35px;\r\n	width: 3px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .search-input {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 68px;\r\n	right: 38px;\r\n	height: 20px;\r\n	border: none;\r\n	background-color: transparent;\r\n	padding: 0 5px;\r\n	z-index: 1;\r\n}\r\n\r\n.Navigation .search-button {\r\n	position: absolute;\r\n	top: 7px;\r\n	right: 5px;\r\n	width: 33px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	cursor: pointer;\r\n}\r\n\r\n.Navigation .map-container {\r\n	width: 100%;\r\n	flex: 1;\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	padding: 0 10px 10px 10px;\r\n	box-sizing: border-box;\r\n	background-color: #f7f7f7;\r\n}\r\n\r\n.Navigation .location-title {\r\n	width: 100%;\r\n	height: 16px;\r\n	line-height: 16px;\r\n	text-align: center;\r\n	color: #000000;\r\n	text-shadow: none;\r\n	margin-bottom: 2px;\r\n	font-weight: bold;\r\n	background-color: #f7f7f7;\r\n}\r\n\r\n.Navigation .map-display {\r\n	width: 280px;\r\n	height: 230px;\r\n	margin: 0 auto;\r\n	position: relative;\r\n	background-color: #000000;\r\n	border: 1px solid #666666;\r\n	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.Navigation .footer {\r\n	width: 100%;\r\n	position: relative;\r\n	height: 20px;\r\n	background-color: #f7f7f7;\r\n	border-top: 1px solid #d4d4d4;\r\n	box-sizing: border-box;\r\n}\r\n\r\n.Navigation .coordinates-bar {\r\n	position: relative;\r\n	width: 100%;\r\n	padding: 1px 5px;\r\n	box-sizing: border-box;\r\n	display: flex;\r\n	justify-content: space-between;\r\n	align-items: center;\r\n	height: 20px;\r\n	overflow: hidden;\r\n}\r\n\r\n.Navigation .map-name {\r\n	font-weight: bold;\r\n	color: #000;\r\n	flex: 1;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n.Navigation .mouse-info,\r\n.Navigation .target-info {\r\n	display: none; /* Hidden by default, shown via JavaScript when coordinates are available */\r\n	align-items: center;\r\n	color: #000;\r\n	margin-left: 8px;\r\n	white-space: nowrap;\r\n}\r\n\r\n.Navigation .mouse-label,\r\n.Navigation .target-label {\r\n	margin-right: 2px;\r\n}\r\n\r\n/* Path marker styles */\r\n.Navigation .start-marker,\r\n.Navigation .end-marker {\r\n	position: absolute;\r\n	width: 16px;\r\n	height: 16px;\r\n	transform: translate(-50%, -50%);\r\n}\r\n\r\n.Navigation .start-marker {\r\n	background-color: blue;\r\n}\r\n\r\n.Navigation .end-marker {\r\n	background-color: red;\r\n}\r\n\r\n.Navigation .path-line {\r\n	stroke: yellow;\r\n	stroke-width: 2;\r\n	fill: none;\r\n}\r\n\r\n.Navigation .search-results {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 10px;\r\n	right: 10px;\r\n	max-height: 200px;\r\n	background-color: #fff;\r\n	border: 1px solid #ccc;\r\n	z-index: 100;\r\n	overflow-y: auto;\r\n	display: none;\r\n	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.Navigation .no-results {\r\n	padding: 10px;\r\n	text-align: center;\r\n	color: #666;\r\n}\r\n\r\n.Navigation .results-list {\r\n	list-style: none;\r\n	margin: 0;\r\n	padding: 0;\r\n}\r\n\r\n.Navigation .result-item {\r\n	padding: 5px 10px;\r\n	border-bottom: 1px solid #eee;\r\n	cursor: pointer;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.Navigation .result-item:last-child {\r\n	border-bottom: none;\r\n}\r\n\r\n.Navigation .result-item:hover {\r\n	background-color: #f0f0f0;\r\n}\r\n\r\n.Navigation .result-type {\r\n	margin-right: 5px;\r\n	font-weight: bold;\r\n	color: #666;\r\n	width: 30px;\r\n}\r\n\r\n.Navigation .npc_icon {\r\n	color: #0066cc;\r\n}\r\n\r\n.Navigation .mob_icon {\r\n	color: #cc0000;\r\n}\r\n\r\n.Navigation .result-name {\r\n	flex: 1;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n.Navigation .result-map {\r\n	color: #666;\r\n	margin-left: 5px;\r\n}\r\n";
+	Navigation_default$1 = ":host {\r\n	top: 200px;\r\n	left: 200px;\r\n}\r\n\r\n.Navigation {\r\n	width: 300px;\r\n	height: 300px;\r\n	z-index: 50;\r\n	background-repeat: repeat-y;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	position: relative;\r\n	z-index: 2;\r\n	cursor: move;\r\n}\r\n\r\n.Navigation .titlebar .left {\r\n	width: 15px;\r\n	height: 17px;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n.Navigation .titlebar .center {\r\n	width: calc(100% - 20px);\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 12px;\r\n}\r\n\r\n.Navigation .titlebar .right {\r\n	width: 12px;\r\n	height: 17px;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n.Navigation .titlebar .title {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 10px;\r\n	height: 17px;\r\n	line-height: 17px;\r\n	white-space: nowrap;\r\n	text-shadow: 1px 1px white;\r\n	color: #000000;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n.Navigation .titlebar .close {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 2px;\r\n	width: 13px;\r\n	height: 13px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	cursor: pointer;\r\n}\r\n\r\n.Navigation .content {\r\n	width: 100%;\r\n	height: calc(100% - 17px);\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-color: #f7f7f7;\r\n	border: 1px solid #d4d4d4;\r\n	border-top: none;\r\n	box-sizing: border-box;\r\n}\r\n\r\n.Navigation .search-container {\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 5px 10px;\r\n	box-sizing: border-box;\r\n	background-color: #f7f7f7;\r\n}\r\n\r\n.Navigation .services-toggle-container {\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 0;\r\n	margin: 0;\r\n	background-color: #f7f7f7;\r\n	position: absolute;\r\n	left: 6px;\r\n}\r\n\r\n.Navigation .services-checkbox {\r\n	color: #000;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.Navigation .services-toggle {\r\n	margin-right: 4px;\r\n	margin-top: 3px;\r\n}\r\n\r\n.Navigation .search-type {\r\n	top: 3px;\r\n	height: 20px;\r\n	margin-right: 5px;\r\n	border: 1px solid #ccc;\r\n	background-color: #fff;\r\n	padding: 0 2px;\r\n	cursor: pointer;\r\n	width: 50px;\r\n	z-index: 2;\r\n	position: relative;\r\n}\r\n\r\n.Navigation .search-left {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 65px;\r\n	width: 3px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .search-middle {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 68px;\r\n	right: 38px;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .search-right {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 35px;\r\n	width: 3px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.Navigation .search-input {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 68px;\r\n	right: 38px;\r\n	height: 20px;\r\n	border: none;\r\n	background-color: transparent;\r\n	padding: 0 5px;\r\n	z-index: 1;\r\n}\r\n\r\n.Navigation .search-button {\r\n	position: absolute;\r\n	top: 7px;\r\n	right: 5px;\r\n	width: 33px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	cursor: pointer;\r\n}\r\n\r\n.Navigation .map-container {\r\n	width: 100%;\r\n	flex: 1;\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	padding: 0 10px 10px 10px;\r\n	box-sizing: border-box;\r\n	background-color: #f7f7f7;\r\n}\r\n\r\n.Navigation .location-title {\r\n	width: 100%;\r\n	height: 16px;\r\n	line-height: 16px;\r\n	text-align: center;\r\n	color: #000000;\r\n	text-shadow: none;\r\n	margin-bottom: 2px;\r\n	font-weight: bold;\r\n	background-color: #f7f7f7;\r\n}\r\n\r\n.Navigation .map-display {\r\n	width: 280px;\r\n	height: 230px;\r\n	margin: 0 auto;\r\n	position: relative;\r\n	background-color: #000000;\r\n	border: 1px solid #666666;\r\n	box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.Navigation .footer {\r\n	width: 100%;\r\n	position: relative;\r\n	height: 20px;\r\n	background-color: #f7f7f7;\r\n	border-top: 1px solid #d4d4d4;\r\n	box-sizing: border-box;\r\n}\r\n\r\n.Navigation .coordinates-bar {\r\n	position: relative;\r\n	width: 100%;\r\n	padding: 1px 5px;\r\n	box-sizing: border-box;\r\n	display: flex;\r\n	justify-content: space-between;\r\n	align-items: center;\r\n	height: 20px;\r\n	overflow: hidden;\r\n}\r\n\r\n.Navigation .map-name {\r\n	font-weight: bold;\r\n	color: #000;\r\n	flex: 1;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n.Navigation .mouse-info,\r\n.Navigation .target-info {\r\n	display: none;\r\n	align-items: center;\r\n	color: #000;\r\n	margin-left: 8px;\r\n	white-space: nowrap;\r\n}\r\n\r\n.Navigation .mouse-label,\r\n.Navigation .target-label {\r\n	margin-right: 2px;\r\n}\r\n\r\n/* Path marker styles */\r\n.Navigation .start-marker,\r\n.Navigation .end-marker {\r\n	position: absolute;\r\n	width: 16px;\r\n	height: 16px;\r\n	transform: translate(-50%, -50%);\r\n}\r\n\r\n.Navigation .start-marker {\r\n	background-color: blue;\r\n}\r\n\r\n.Navigation .end-marker {\r\n	background-color: red;\r\n}\r\n\r\n.Navigation .path-line {\r\n	stroke: yellow;\r\n	stroke-width: 2;\r\n	fill: none;\r\n}\r\n\r\n.Navigation .search-results {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 10px;\r\n	right: 10px;\r\n	max-height: 200px;\r\n	background-color: #fff;\r\n	border: 1px solid #ccc;\r\n	z-index: 100;\r\n	overflow-y: auto;\r\n	display: none;\r\n	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.Navigation .no-results {\r\n	padding: 10px;\r\n	text-align: center;\r\n	color: #666;\r\n}\r\n\r\n.Navigation .results-list {\r\n	list-style: none;\r\n	margin: 0;\r\n	padding: 0;\r\n}\r\n\r\n.Navigation .result-item {\r\n	padding: 5px 10px;\r\n	border-bottom: 1px solid #eee;\r\n	cursor: pointer;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.Navigation .result-item:last-child {\r\n	border-bottom: none;\r\n}\r\n\r\n.Navigation .result-item:hover {\r\n	background-color: #f0f0f0;\r\n}\r\n\r\n.Navigation .result-type {\r\n	margin-right: 5px;\r\n	font-weight: bold;\r\n	color: #666;\r\n	width: 30px;\r\n}\r\n\r\n.Navigation .npc_icon {\r\n	color: #0066cc;\r\n}\r\n\r\n.Navigation .mob_icon {\r\n	color: #cc0000;\r\n}\r\n\r\n.Navigation .result-name {\r\n	flex: 1;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n.Navigation .result-map {\r\n	color: #666;\r\n	margin-left: 5px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Navigation/MapPathFinder.js
@@ -245793,6 +245809,9 @@ var init_MapPathFinder = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Navigation/Navigation.js
+function _getRoot$54() {
+	return Navigation._shadow || Navigation._host;
+}
 /**
 * Async image create helper
 */
@@ -245806,9 +245825,6 @@ function createAsyncImage$1() {
 */
 /**
 * Normalize a map name (remove .gat extension)
-*
-* @param {string} mapName - Map name to normalize
-* @returns {string} Normalized map name
 */
 function normalizeMapName(mapName) {
 	mapName = mapName.replace(/\.gat$/, "").toLowerCase();
@@ -245817,60 +245833,33 @@ function normalizeMapName(mapName) {
 }
 /**
 * Format coordinates with consistent styling
-*
-* @param {number} x - X coordinate
-* @param {number} y - Y coordinate
-* @param {Object} options - Options for formatting
-* @param {boolean} options.floor - Whether to floor the coordinates (default: true)
-* @returns {string} Formatted coordinates
 */
 function formatCoordinates(x, y, options) {
 	options = options || {};
-	if (options.floor !== false) return Math.floor(x) + "," + Math.floor(y);
-	return x + "," + y;
+	if (options.floor !== false) return `${Math.floor(x)},${Math.floor(y)}`;
+	return `${x},${y}`;
 }
 /**
 * Format target coordinates text with consistent styling
-*
-* @param {number} x - X coordinate
-* @param {number} y - Y coordinate
-* @param {Object} options - Options for formatting
-* @param {string} options.targetMap - Target map name for cross-map paths
-* @param {number} options.warpCount - Number of warps for multi-hop paths
-* @param {boolean} options.noPathFound - Whether no path was found
-* @returns {string} Formatted text
 */
 function formatTargetCoordinates(x, y, options) {
 	options = options || {};
-	let text = Math.floor(x) + "," + Math.floor(y);
+	let text = `${Math.floor(x)},${Math.floor(y)}`;
 	if (options.noPathFound) text += " (no path found)";
-	else if (options.targetMap && options.targetMap !== getCurrentMap()) text += " (" + options.targetMap + ")";
+	else if (options.targetMap && options.targetMap !== getCurrentMap()) text += ` (${options.targetMap})`;
 	return text;
 }
 /**
 * Format location title with consistent styling
-*
-* @param {string} currentMap - Current map name
-* @param {string} targetMap - Target map name (optional)
-* @param {string} displayName - Display name to use instead of map name
-* @returns {string} Formatted title
 */
 function formatLocationTitle(currentMap, targetMap, displayName) {
 	let text;
-	if (!displayName && targetMap && currentMap !== targetMap) {
-		text = "[" + currentMap + " → " + targetMap;
-		text += "]";
-	} else text = "[" + (displayName || currentMap) + "]";
+	if (!displayName && targetMap && currentMap !== targetMap) text = `[${currentMap} → ${targetMap}]`;
+	else text = `[${displayName || currentMap}]`;
 	return text;
 }
 /**
 * Convert map coordinates to screen coordinates
-*
-* @param {number} x - Map X coordinate
-* @param {number} y - Map Y coordinate
-* @param {number} width - Canvas width
-* @param {number} height - Canvas height
-* @returns {Object} Screen coordinates {x, y}
 */
 function mapToScreen(x, y, width, height) {
 	const scaleX = width / _mapData.width;
@@ -245887,18 +245876,18 @@ function mapToScreen(x, y, width, height) {
 }
 /**
 * Get the current map name
-*
-* @returns {string} Current map name
 */
 function getCurrentMap() {
 	if (MapRenderer && MapRenderer.currentMap) return normalizeMapName(MapRenderer.currentMap);
 }
 /**
 * Get the current player position
-*
-* @returns {Object} Current player position {x, y}
 */
 function getPlayerPosition() {
+	if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position) return {
+		x: 0,
+		y: 0
+	};
 	return {
 		x: Math.ceil(SessionStorage_default.Entity.position[0]),
 		y: Math.ceil(SessionStorage_default.Entity.position[1])
@@ -245951,14 +245940,14 @@ function resetPathFindingWorker() {
 	terminatePathFindingWorker();
 	initializePathFindingWorker();
 }
-var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$12, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, Navigation_default;
+var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$12, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
 var init_Navigation = __esmMin((() => {
-	init_jquery();
 	init_KeyEventHandler();
 	init_Renderer();
 	init_MapRenderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Altitude();
 	init_SessionStorage();
 	init_Client();
@@ -245966,7 +245955,8 @@ var init_Navigation = __esmMin((() => {
 	init_Navigation$2();
 	init_Navigation$1();
 	init_MapPathFinder();
-	Navigation = new UIComponent("Navigation", Navigation_default$2, Navigation_default$1);
+	Navigation = new GUIComponent("Navigation", Navigation_default$1);
+	Navigation.render = () => Navigation_default$2;
 	_arrow$1 = createAsyncImage$1();
 	_toolDealer$1 = createAsyncImage$1();
 	_weaponDealer$1 = createAsyncImage$1();
@@ -245988,12 +245978,12 @@ var init_Navigation = __esmMin((() => {
 	_targetData = null;
 	_finalTargetData = null;
 	_isMapClickTarget = false;
+	_blinking = false;
+	_fadeInterval = null;
+	_originalColor = "";
+	_documentClickHandler = null;
 	/**
 	* Convert screen coordinates to map coordinates
-	*
-	* @param {number} screenX - X coordinate on screen
-	* @param {number} screenY - Y coordinate on screen
-	* @returns {Object} Map coordinates {x, y}
 	*/
 	Navigation.screenToMapCoordinates = function screenToMapCoordinates(screenX, screenY) {
 		const width = 280;
@@ -246018,56 +246008,61 @@ var init_Navigation = __esmMin((() => {
 	* Initialize component
 	*/
 	Navigation.init = function init() {
+		const root = _getRoot$54();
 		_mapData = { walkableType: Altitude.TYPE.WALKABLE };
-		this.ui.css({
-			top: Math.max(0, Math.min(Renderer.height - this.ui.height(), 200)),
-			left: Math.max(0, Math.min(Renderer.width - this.ui.width(), 200))
-		});
+		this._host.style.top = `${Math.max(0, Math.min(Renderer.height - 300, 200))}px`;
+		this._host.style.left = `${Math.max(0, Math.min(Renderer.width - 300, 200))}px`;
 		const canvas = document.createElement("canvas");
 		canvas.width = 280;
 		canvas.height = 230;
 		_ctx$12 = canvas.getContext("2d");
-		this.ui.find(".map-display").append(canvas);
-		Client.loadFile(DB.INTERFACE_PATH + "map/map_arrow.bmp", function(dataURI) {
+		const mapDisplay = root.querySelector(".map-display");
+		if (mapDisplay) mapDisplay.appendChild(canvas);
+		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/store.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/store.bmp`, (dataURI) => {
 			_toolDealer$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/weaponshop.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/weaponshop.bmp`, (dataURI) => {
 			_weaponDealer$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/armorshops.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/armorshops.bmp`, (dataURI) => {
 			_armorDealer$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/smithy.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/smithy.bmp`, (dataURI) => {
 			_blacksmith$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/guide.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/guide.bmp`, (dataURI) => {
 			_guide$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/inn.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/inn.bmp`, (dataURI) => {
 			_inn$1.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/kafra.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/kafra.bmp`, (dataURI) => {
 			_kafra$1.src = dataURI;
 		});
-		this.ui.find(".close").click(this.hide.bind(this));
-		this.ui.find(".search-button").click(this.onSearch.bind(this));
-		this.ui.find(".search-input").keypress(function(e) {
+		root.querySelector(".close").addEventListener("click", () => this.hide());
+		root.querySelector(".search-button").addEventListener("click", () => this.onSearch());
+		const searchInput = root.querySelector(".search-input");
+		searchInput.addEventListener("keypress", (e) => {
 			if (e.which === KEYS.ENTER || e.key === "Enter") this.onSearch();
-		}.bind(this));
-		this.ui.find(".search-input").focus(function() {
-			const resultsContainer = this.ui.find(".search-results");
-			if (resultsContainer.length > 0 && resultsContainer.children().length > 0) resultsContainer.show();
-		}.bind(this));
-		jquery_default(document).click(function(e) {
-			if (!jquery_default(e.target).closest(".search-results, .search-input, .search-button, .search-type").length) this.ui.find(".search-results").hide();
-		}.bind(this));
-		this.ui.find(".map-display").click(this.onMapClick.bind(this));
-		this.ui.find(".map-display").mousemove(this.onMapMouseMove.bind(this));
-		this.ui.find(".map-display").mouseleave(this.onMapMouseLeave.bind(this));
-		this.draggable(this.ui.find(".titlebar"));
+		});
+		searchInput.addEventListener("focus", () => {
+			const resultsContainer = root.querySelector(".search-results");
+			if (resultsContainer && resultsContainer.children.length > 0) resultsContainer.style.display = "";
+		});
+		_documentClickHandler = (e) => {
+			if (!e.target.closest(".search-results, .search-input, .search-button, .search-type")) {
+				const resultsContainer = root.querySelector(".search-results");
+				if (resultsContainer) resultsContainer.style.display = "none";
+			}
+		};
+		document.addEventListener("click", _documentClickHandler);
+		root.querySelector(".map-display").addEventListener("click", (e) => this.onMapClick(e));
+		root.querySelector(".map-display").addEventListener("mousemove", (e) => this.onMapMouseMove(e));
+		root.querySelector(".map-display").addEventListener("mouseleave", () => this.onMapMouseLeave());
+		this.draggable(".titlebar");
 		this.ui.hide();
 	};
 	/**
@@ -246075,9 +246070,7 @@ var init_Navigation = __esmMin((() => {
 	*/
 	Navigation.onAppend = function onAppend() {
 		this.clearPath();
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		Renderer.render(this.render.bind(this));
+		Renderer.render(this.renderCanvas.bind(this));
 		initializePathFindingWorker();
 		const mapName = getCurrentMap();
 		this.loadMap(mapName);
@@ -246100,56 +246093,53 @@ var init_Navigation = __esmMin((() => {
 	Navigation.onRemove = function onRemove() {
 		this.clearPath();
 		terminatePathFindingWorker();
+		if (_documentClickHandler) document.removeEventListener("click", _documentClickHandler);
 	};
 	/**
 	* Handle search button click
 	*/
 	Navigation.onSearch = function onSearch() {
-		const query = this.ui.find(".search-input").val().trim();
-		const type = this.ui.find(".search-type").val();
+		const root = _getRoot$54();
+		const query = root.querySelector(".search-input").value.trim();
+		const type = root.querySelector(".search-type").value;
 		if (query.length < 2) return;
 		const results = DB.searchNavigation(query, type);
 		this.displaySearchResults(results);
 	};
 	/**
 	* Display search results
-	*
-	* @param {Array} results - Array of search results
 	*/
 	Navigation.displaySearchResults = function displaySearchResults(results) {
-		let resultsContainer = this.ui.find(".search-results");
-		if (resultsContainer.length === 0) {
-			resultsContainer = jquery_default("<div class=\"search-results\"></div>");
-			this.ui.find(".content").append(resultsContainer);
-		} else resultsContainer.empty();
+		const root = _getRoot$54();
+		let resultsContainer = root.querySelector(".search-results");
+		if (!resultsContainer) {
+			resultsContainer = document.createElement("div");
+			resultsContainer.className = "search-results";
+			root.querySelector(".content").appendChild(resultsContainer);
+		} else resultsContainer.innerHTML = "";
 		if (results.length === 0) {
-			resultsContainer.append("<div class=\"no-results\">No results found</div>");
-			resultsContainer.show();
+			resultsContainer.innerHTML = "<div class=\"no-results\">No results found</div>";
+			resultsContainer.style.display = "";
 			return;
 		}
-		const resultsList = jquery_default("<ul class=\"results-list\"></ul>");
-		resultsContainer.append(resultsList);
+		const resultsList = document.createElement("ul");
+		resultsList.className = "results-list";
+		resultsContainer.appendChild(resultsList);
 		for (let i = 0; i < results.length; i++) {
 			const result = results[i];
-			const resultItem = jquery_default("<li class=\"result-item\"></li>");
-			const typeIcon = result.type === "NPC" ? "npc_icon" : "mob_icon";
-			resultItem.append("<span class=\"result-type " + typeIcon + "\">" + result.type + "</span>");
-			resultItem.append("<span class=\"result-name\">" + result.name + "</span>");
-			resultItem.append("<span class=\"result-map\">" + result.mapName + "</span>");
-			resultItem.data("result", result);
-			(function(self, currentResult) {
-				resultItem.on("click", function() {
-					self.navigateToSearchResult(currentResult);
-				});
-			})(this, result);
-			resultsList.append(resultItem);
+			const resultItem = document.createElement("li");
+			resultItem.className = "result-item";
+			resultItem.innerHTML = `<span class="result-type ${result.type === "NPC" ? "npc_icon" : "mob_icon"}">${result.type}</span><span class="result-name">${result.name}</span><span class="result-map">${result.mapName}</span>`;
+			resultItem._resultData = result;
+			resultItem.addEventListener("click", () => {
+				this.navigateToSearchResult(result);
+			});
+			resultsList.appendChild(resultItem);
 		}
-		resultsContainer.show();
+		resultsContainer.style.display = "";
 	};
 	/**
 	* Navigate to a search result
-	*
-	* @param {Object} result - The search result to navigate to
 	*/
 	Navigation.navigateToSearchResult = function navigateToSearchResult(result) {
 		if (!result || !result.mapName) return;
@@ -246166,15 +246156,11 @@ var init_Navigation = __esmMin((() => {
 			endY: result.y,
 			displayName: result.name
 		});
-		this.ui.find(".search-results").hide();
+		const resultsContainer = _getRoot$54().querySelector(".search-results");
+		if (resultsContainer) resultsContainer.style.display = "none";
 	};
 	/**
 	* Find the closest walkable cell to the given coordinates
-	*
-	* @param {number} x - X coordinate
-	* @param {number} y - Y coordinate
-	* @param {number} maxRadius - Maximum search radius (default: 10)
-	* @returns {Object|null} The closest walkable cell coordinates or null if none found
 	*/
 	Navigation.findClosestWalkableCell = function findClosestWalkableCell(x, y, maxRadius) {
 		if (x >= 0 && x < _mapData.width && y >= 0 && y < _mapData.height) {
@@ -246214,13 +246200,11 @@ var init_Navigation = __esmMin((() => {
 	};
 	/**
 	* Handle map click event
-	*
-	* @param {Object} event - Mouse event
 	*/
 	Navigation.onMapClick = function onMapClick(event) {
-		const offset = this.ui.find(".map-display").offset();
-		const x = Math.floor(event.pageX - offset.left);
-		const y = Math.floor(event.pageY - offset.top);
+		const rect = _getRoot$54().querySelector(".map-display").getBoundingClientRect();
+		const x = Math.floor(event.clientX - rect.left);
+		const y = Math.floor(event.clientY - rect.top);
 		const mapCoords = this.screenToMapCoordinates(x, y);
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
@@ -246237,9 +246221,6 @@ var init_Navigation = __esmMin((() => {
 	};
 	/**
 	* Load a map for display
-	*
-	* @param {string} mapName - The name of the map to load
-	* @param {string} displayName - Optional display name for the map
 	*/
 	Navigation.loadMap = function loadMap(mapName, displayName) {
 		if (_isMapClickTarget && _mapData && _mapData.map && _mapData.map !== mapName) {
@@ -246251,14 +246232,14 @@ var init_Navigation = __esmMin((() => {
 		let bmpPath = DB.INTERFACE_PATH.replace("data/texture/", "") + "map/" + mapBaseName + ".bmp";
 		bmpPath = bmpPath.replace(/\//g, "\\");
 		bmpPath = DB.mapalias[bmpPath] || bmpPath;
-		Client.loadFile("data/texture/" + bmpPath, function(dataURI) {
+		Client.loadFile("data/texture/" + bmpPath, (dataURI) => {
 			if (dataURI) _map$1.src = dataURI;
 			else _map$1.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 		});
 		let gatPath = mapBaseName + ".gat";
 		gatPath = gatPath.replace(/\//g, "\\");
 		gatPath = DB.mapalias[gatPath] || gatPath;
-		Client.loadFile("data/" + gatPath, function(gatData) {
+		Client.loadFile("data/" + gatPath, (gatData) => {
 			if (gatData) {
 				if (gatData.cells && gatData.width && gatData.height) {
 					_mapData.width = gatData.width;
@@ -246274,7 +246255,7 @@ var init_Navigation = __esmMin((() => {
 					_mapData.map = mapBaseName;
 				}
 			}
-		}.bind(this));
+		});
 		this.setMapNameText(mapName);
 	};
 	/**
@@ -246285,7 +246266,8 @@ var init_Navigation = __esmMin((() => {
 		_finalTargetData = null;
 		_targetData = null;
 		_isMapClickTarget = false;
-		this.ui.find(".target-info").hide();
+		const targetInfo = _getRoot$54().querySelector(".target-info");
+		if (targetInfo) targetInfo.style.display = "none";
 		const currentMap = getCurrentMap();
 		if (currentMap) this.setLocationTitle(currentMap, null);
 	};
@@ -246296,11 +246278,6 @@ var init_Navigation = __esmMin((() => {
 	};
 	/**
 	* Add a marker to the map
-	*
-	* @param {number} x - X coordinate
-	* @param {number} y - Y coordinate
-	* @param {string} color - Color of the marker
-	* @param {string} label - Optional label for the marker
 	*/
 	Navigation.addMarker = function addMarker(x, y, color, label) {
 		_markers$1.push({
@@ -246313,11 +246290,12 @@ var init_Navigation = __esmMin((() => {
 	/**
 	* Render the map and markers
 	*/
-	Navigation.render = function render(tick) {
-		if (!this.ui.is(":visible")) return;
+	Navigation.renderCanvas = function renderCanvas(tick) {
+		if ((this._host ? getComputedStyle(this._host).display : "none") === "none") return;
 		const width = 280;
 		const height = 230;
 		const ctx = _ctx$12;
+		if (!ctx) return;
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
 		if (_finalTargetData && tick - _lastPathUpdate > _pathUpdateThrottle && !_pathUpdateLock) {
@@ -246445,11 +246423,10 @@ var init_Navigation = __esmMin((() => {
 	};
 	/**
 	* Update the target coordinates text
-	*
-	* @param {boolean} noPathFound - Whether to show "no path found" message
 	*/
 	Navigation.updateTargetText = function updateTargetText(noPathFound) {
-		this.ui.find(".target-info").show();
+		const targetInfo = _getRoot$54().querySelector(".target-info");
+		if (targetInfo) targetInfo.style.display = "flex";
 		if (_finalTargetData) this.setTargetCoordinatesText(_finalTargetData.x, _finalTargetData.y, {
 			noPathFound,
 			targetMap: _finalTargetData.map
@@ -246457,97 +246434,86 @@ var init_Navigation = __esmMin((() => {
 	};
 	/**
 	* Set target coordinates text with proper formatting
-	*
-	* @param {number} x - X coordinate
-	* @param {number} y - Y coordinate
-	* @param {Object} options - Options for formatting
 	*/
 	Navigation.setTargetCoordinatesText = function setTargetCoordinatesText(x, y, options) {
-		if (!this.ui) return;
+		const root = _getRoot$54();
+		if (!root) return;
 		const text = formatTargetCoordinates(x, y, options);
-		this.ui.find(".target-coordinates").text(text);
-		this.ui.find(".target-coordinates").show();
-		this.ui.find(".target-info").show();
+		const targetCoords = root.querySelector(".target-coordinates");
+		if (targetCoords) {
+			targetCoords.textContent = text;
+			targetCoords.style.display = "";
+		}
+		const targetInfo = root.querySelector(".target-info");
+		if (targetInfo) targetInfo.style.display = "flex";
 	};
 	Navigation.setTargetCoordinatesBlinking = function setTargetCoordinatesBlinking(blinking) {
-		if (!this.ui) return;
-		const targetCoordinates = this.ui.find(".target-coordinates");
+		const root = _getRoot$54();
+		if (!root) return;
+		const targetCoordinates = root.querySelector(".target-coordinates");
+		if (!targetCoordinates) return;
 		if (blinking) {
-			if (!targetCoordinates.data("blinking")) {
-				targetCoordinates.data("blinking", true);
-				const originalColor = targetCoordinates.css("color") || "#ffffff";
-				targetCoordinates.data("originalColor", originalColor);
+			if (!_blinking) {
+				_blinking = true;
+				_originalColor = getComputedStyle(targetCoordinates).color || "#ffffff";
 				let fadeStep = 0;
 				let fadeDirection = -1;
-				const fadeInterval = setInterval(function() {
+				_fadeInterval = setInterval(() => {
 					fadeStep += fadeDirection * .1;
 					if (fadeStep <= .3) fadeDirection = 1;
 					else if (fadeStep >= 1) fadeDirection = -1;
-					targetCoordinates.css("opacity", fadeStep);
+					targetCoordinates.style.opacity = fadeStep;
 				}, 50);
-				targetCoordinates.data("fadeInterval", fadeInterval);
 			}
-		} else if (targetCoordinates.data("blinking")) {
-			clearInterval(targetCoordinates.data("fadeInterval"));
-			targetCoordinates.css("opacity", 1);
-			targetCoordinates.css("color", targetCoordinates.data("originalColor"));
-			targetCoordinates.data("blinking", false);
+		} else if (_blinking) {
+			clearInterval(_fadeInterval);
+			_fadeInterval = null;
+			targetCoordinates.style.opacity = "1";
+			targetCoordinates.style.color = _originalColor;
+			_blinking = false;
 		}
 	};
 	/**
 	* Set location title with proper formatting
-	*
-	* @param {string} currentMap - Current map name
-	* @param {string} targetMap - Target map name (optional)
-	* @param {Object} options - Options for formatting
 	*/
 	Navigation.setLocationTitle = function setLocationTitle(currentMap, targetMap, displayName) {
-		if (!this.ui) return;
+		const root = _getRoot$54();
+		if (!root) return;
 		const title = formatLocationTitle(currentMap, targetMap, displayName);
-		this.ui.find(".location-title").text(title);
+		const locationTitle = root.querySelector(".location-title");
+		if (locationTitle) locationTitle.textContent = title;
 	};
 	/**
 	* Set coordinates text with proper formatting
-	*
-	* @param {number} x - X coordinate
-	* @param {number} y - Y coordinate
-	* @param {Object} options - Options for formatting
 	*/
 	Navigation.setCoordinatesText = function setCoordinatesText(x, y, options) {
-		if (!this.ui) return;
+		const root = _getRoot$54();
+		if (!root) return;
 		const text = formatCoordinates(x, y, options);
-		this.ui.find(".coordinates").text(text);
+		const coords = root.querySelector(".coordinates");
+		if (coords) coords.textContent = text;
 	};
 	/**
 	* Set map name text with proper formatting
-	*
-	* @param {string} mapName - Map name
-	* @param {Object} options - Options for formatting
 	*/
 	Navigation.setMapNameText = function setMapNameText(mapName) {
-		if (!this.ui) return;
-		this.ui.find(".map-name").text(normalizeMapName(mapName));
+		const root = _getRoot$54();
+		if (!root) return;
+		const mapNameEl = root.querySelector(".map-name");
+		if (mapNameEl) mapNameEl.textContent = normalizeMapName(mapName);
 	};
 	/**
 	* Set mouse coordinates text with proper formatting
-	*
-	* @param {number} x - X coordinate
-	* @param {number} y - Y coordinate
-	* @param {Object} options - Options for formatting
 	*/
 	Navigation.setMouseCoordinatesText = function setMouseCoordinatesText(x, y, options) {
-		if (!this.ui) return;
+		const root = _getRoot$54();
+		if (!root) return;
 		const text = formatCoordinates(x, y, options);
-		this.ui.find(".mouse-coordinates").text(text);
+		const mouseCoords = root.querySelector(".mouse-coordinates");
+		if (mouseCoords) mouseCoords.textContent = text;
 	};
 	/**
-	* Find a path between two points using a simplified A* algorithm in a web worker
-	*
-	* @param {number} startX - Start X coordinate
-	* @param {number} startY - Start Y coordinate
-	* @param {number} endX - End X coordinate
-	* @param {number} endY - End Y coordinate
-	* @returns {Array} Array of path points
+	* Find a path between two points using a web worker
 	*/
 	Navigation.findPath = function findPath(startX, startY, endX, endY) {
 		if (_pathFindingWorker && !_pathUpdateLock) {
@@ -246586,17 +246552,20 @@ var init_Navigation = __esmMin((() => {
 	* Toggle the navigation window (show/hide)
 	*/
 	Navigation.toggle = function toggle() {
-		if (this.ui.is(":visible")) this.hide();
+		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.hide();
 		else this.show();
 	};
 	/**
 	* Show the navigation window
 	*/
 	Navigation.show = function show() {
+		const root = _getRoot$54();
 		this.clearPath();
 		initializePathFindingWorker();
-		this.ui.find(".mouse-info").hide();
-		this.ui.find(".target-info").hide();
+		const mouseInfo = root.querySelector(".mouse-info");
+		if (mouseInfo) mouseInfo.style.display = "none";
+		const targetInfo = root.querySelector(".target-info");
+		if (targetInfo) targetInfo.style.display = "none";
 		const mapName = getCurrentMap();
 		const currentPos = getPlayerPosition();
 		if (_finalTargetData) this.navigateTo({
@@ -246609,7 +246578,8 @@ var init_Navigation = __esmMin((() => {
 			displayName: _finalTargetData.displayName
 		});
 		this.setMapNameText(mapName);
-		if (!this.ui.find(".location-title").text()) this.setLocationTitle(mapName, null);
+		const locationTitle = root.querySelector(".location-title");
+		if (locationTitle && !locationTitle.textContent) this.setLocationTitle(mapName, null);
 		this.ui.show();
 	};
 	/**
@@ -246620,34 +246590,33 @@ var init_Navigation = __esmMin((() => {
 		terminatePathFindingWorker();
 	};
 	Navigation.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.hide();
+		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && hostDisplay !== "none") this.hide();
 	};
 	/**
 	* Handle mouse movement over the map to display coordinates
-	*
-	* @param {MouseEvent} event - The mouse event
 	*/
 	Navigation.onMapMouseMove = function onMapMouseMove(event) {
-		const offset = this.ui.find(".map-display").offset();
-		const x = Math.floor(event.pageX - offset.left);
-		const y = Math.floor(event.pageY - offset.top);
+		const root = _getRoot$54();
+		const rect = root.querySelector(".map-display").getBoundingClientRect();
+		const x = Math.floor(event.clientX - rect.left);
+		const y = Math.floor(event.clientY - rect.top);
 		const mapCoords = this.screenToMapCoordinates(x, y);
 		const mapX = Math.floor(mapCoords.x);
 		const mapY = Math.floor(mapCoords.y);
-		this.ui.find(".mouse-info").show();
+		const mouseInfo = root.querySelector(".mouse-info");
+		if (mouseInfo) mouseInfo.style.display = "flex";
 		this.setMouseCoordinatesText(mapX, mapY);
 	};
 	/**
 	* Handle mouse leaving the map area
 	*/
 	Navigation.onMapMouseLeave = function onMapMouseLeave() {
-		this.ui.find(".mouse-info").hide();
+		const mouseInfo = _getRoot$54().querySelector(".mouse-info");
+		if (mouseInfo) mouseInfo.style.display = "none";
 	};
 	/**
 	* Set the content of the navigation window based on NAVI info
-	*
-	* @param {string} naviInfo - The NAVI info string (mapname,x,y,0,000,flag)
-	* @param {string} displayName - Optional display name for the location
 	*/
 	Navigation.setNaviInfo = function setNaviInfo(naviInfo, displayName) {
 		const parts = naviInfo.split(",");
@@ -246655,7 +246624,8 @@ var init_Navigation = __esmMin((() => {
 		const mapName = parts[0];
 		const x = parseInt(parts[1], 10);
 		const y = parseInt(parts[2], 10);
-		this.ui.find(".search-input").val("");
+		const searchInput = _getRoot$54().querySelector(".search-input");
+		if (searchInput) searchInput.value = "";
 		_isMapClickTarget = false;
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
@@ -246671,28 +246641,18 @@ var init_Navigation = __esmMin((() => {
 	};
 	/**
 	* Wait for map data to be loaded
-	*
-	* @param {Function} callback - Callback function to call when map data is loaded
 	*/
 	Navigation.waitForMapData = function waitForMapData(callback) {
-		if (!_mapData || _mapData.map !== getCurrentMap()) setTimeout(function() {
+		if (!_mapData || _mapData.map !== getCurrentMap()) setTimeout(() => {
 			Navigation.waitForMapData(callback);
 		}, 100);
 		else callback.bind(this)();
 	};
 	/**
 	* Unified navigation function that handles both same-map and cross-map navigation
-	*
-	* @param {Object} options - Navigation options
-	* @param {string} options.startMap - Starting map name
-	* @param {number} options.startX - Starting X coordinate
-	* @param {number} options.startY - Starting Y coordinate
-	* @param {string} options.endMap - Destination map name
-	* @param {number} options.endX - Destination X coordinate
-	* @param {number} options.endY - Destination Y coordinate
-	* @param {string} options.displayName - Optional display name for the destination
 	*/
 	Navigation.navigateTo = function navigateTo(options) {
+		const root = _getRoot$54();
 		const startMap = normalizeMapName(options.startMap);
 		const endMap = normalizeMapName(options.endMap);
 		const displayName = options.displayName;
@@ -246709,7 +246669,8 @@ var init_Navigation = __esmMin((() => {
 			displayName
 		};
 		let warpTypes = [200, 201];
-		if (this.ui.find(".services-toggle").is(":checked")) warpTypes = [
+		const servicesToggle = root.querySelector(".services-toggle");
+		if (servicesToggle && servicesToggle.checked) warpTypes = [
 			200,
 			201,
 			202,
@@ -247197,16 +247158,19 @@ var init_WorldMap = __esmMin((() => {
 //#region src/UI/Components/MiniMap/MiniMapV2/MiniMapV2.html?raw
 var MiniMapV2_default$2;
 var init_MiniMapV2$2 = __esmMin((() => {
-	MiniMapV2_default$2 = "<div id=\"MiniMapV2\" class=\"MiniMapUI\">\r\n	<canvas width=\"128\" height=\"128\"></canvas>\r\n	<div class=\"info_container\">\r\n		<button\r\n			class=\"object\"\r\n			type=\"button\"\r\n			data-background=\"minimap/i_object_1.bmp\"\r\n			data-hover=\"minimap/i_object_2.bmp\"\r\n			data-down=\"minimap/i_object_3.bmp\"\r\n		></button>\r\n		<div class=\"coordinates\">\r\n			<span class=\"coord x\">0</span>\r\n			<span class=\"coord y\">0</span>\r\n		</div>\r\n		<button\r\n			class=\"plus\"\r\n			type=\"button\"\r\n			data-background=\"minimap/i_plus_1.bmp\"\r\n			data-hover=\"minimap/i_plus_2.bmp\"\r\n			data-down=\"minimap/i_plus_3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"minus\"\r\n			type=\"button\"\r\n			data-background=\"minimap/i_minus_1.bmp\"\r\n			data-hover=\"minimap/i_minus_2.bmp\"\r\n			data-down=\"minimap/i_minus_3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"mini\"\r\n			type=\"button\"\r\n			data-background=\"minimap/i_mini_1.bmp\"\r\n			data-hover=\"minimap/i_mini_2.bmp\"\r\n			data-down=\"minimap/i_mini_3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"viewon\"\r\n			type=\"button\"\r\n			data-background=\"minimap/i_viewon_1.bmp\"\r\n			data-hover=\"minimap/i_viewon_2.bmp\"\r\n			data-down=\"minimap/i_viewon_3.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
+	MiniMapV2_default$2 = "<div id=\"MiniMapV2\" class=\"MiniMapUI\">\r\n	<canvas width=\"128\" height=\"128\"></canvas>\r\n	<div class=\"info_container\">\r\n		<ui-button\r\n			class=\"object\"\r\n			bg=\"minimap/i_object_1.bmp\"\r\n			hover=\"minimap/i_object_2.bmp\"\r\n			down=\"minimap/i_object_3.bmp\"\r\n		></ui-button>\r\n		<div class=\"coordinates\">\r\n			<span class=\"coord x\">0</span>\r\n			<span class=\"coord y\">0</span>\r\n		</div>\r\n		<ui-button\r\n			class=\"plus\"\r\n			bg=\"minimap/i_plus_1.bmp\"\r\n			hover=\"minimap/i_plus_2.bmp\"\r\n			down=\"minimap/i_plus_3.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"minus\"\r\n			bg=\"minimap/i_minus_1.bmp\"\r\n			hover=\"minimap/i_minus_2.bmp\"\r\n			down=\"minimap/i_minus_3.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"mini\"\r\n			bg=\"minimap/i_mini_1.bmp\"\r\n			hover=\"minimap/i_mini_2.bmp\"\r\n			down=\"minimap/i_mini_3.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"viewon\"\r\n			bg=\"minimap/i_viewon_1.bmp\"\r\n			hover=\"minimap/i_viewon_2.bmp\"\r\n			down=\"minimap/i_viewon_3.bmp\"\r\n		></ui-button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMapV2/MiniMapV2.css?raw
 var MiniMapV2_default$1;
 var init_MiniMapV2$1 = __esmMin((() => {
-	MiniMapV2_default$1 = "#MiniMapV2 {\r\n	position: absolute;\r\n	top: 16px;\r\n	right: 16px;\r\n}\r\n#MiniMapV2 .info_container {\r\n	display: flex;\r\n	justify-content: space-between;\r\n}\r\n#MiniMapV2 .info_container .object {\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n#MiniMapV2 .info_container .plus {\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n#MiniMapV2 .info_container .minus {\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n#MiniMapV2 .info_container .mini {\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n#MiniMapV2 .info_container .viewon {\r\n	width: 12px;\r\n	height: 12px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n#MiniMapV2 .info_container .coordinates {\r\n	color: #fff;\r\n	text-shadow: 1px 1px 1px #000;\r\n	left: 14px;\r\n}\r\n\r\n#MiniMapV2 button.cashshopIcon {\r\n	position: absolute;\r\n	height: 43px;\r\n	width: 43px;\r\n	border: none;\r\n	top: 0px;\r\n	left: -45px;\r\n}\r\n";
+	MiniMapV2_default$1 = ":host {\r\n	top: 16px;\r\n	right: 16px;\r\n}\r\n\r\n#MiniMapV2 .info_container {\r\n	display: flex;\r\n	justify-content: space-between;\r\n}\r\n#MiniMapV2 .info_container .object {\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n#MiniMapV2 .info_container .plus {\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n#MiniMapV2 .info_container .minus {\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n#MiniMapV2 .info_container .mini {\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n#MiniMapV2 .info_container .viewon {\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n#MiniMapV2 .info_container .coordinates {\r\n	color: #fff;\r\n	text-shadow: 1px 1px 1px #000;\r\n	left: 14px;\r\n}\r\n\r\n#MiniMapV2 ui-button.cashshopIcon {\r\n	position: absolute;\r\n	height: 43px;\r\n	width: 43px;\r\n	top: 0px;\r\n	left: -45px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMapV2/MiniMapV2.js
+function _getRoot$53() {
+	return MiniMapV2._shadow || MiniMapV2._host;
+}
 /**
 * Async image create helper
 */
@@ -247225,19 +247189,21 @@ var init_MiniMapV2 = __esmMin((() => {
 	init_Altitude();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_WorldMap();
 	init_MiniMapV2$2();
 	init_MiniMapV2$1();
-	MiniMapV2 = new UIComponent("MiniMapV2", MiniMapV2_default$2, MiniMapV2_default$1);
+	MiniMapV2 = new GUIComponent("MiniMapV2", MiniMapV2_default$1);
 	/**
 	* Mouse cant cross this UI
 	*/
-	MiniMapV2.mouseMode = UIComponent.MouseMode.STOP;
+	MiniMapV2.mouseMode = GUIComponent.MouseMode.STOP;
 	/**
 	* @var {boolean} do not focus this UI
 	*/
 	MiniMapV2.needFocus = false;
+	MiniMapV2.render = () => MiniMapV2_default$2;
 	_preferences$60 = Preferences.get("MiniMapV2", {
 		zoom: 0,
 		opacity: 2,
@@ -247268,53 +247234,51 @@ var init_MiniMapV2 = __esmMin((() => {
 	* Initialize minimap
 	*/
 	MiniMapV2.init = function init() {
-		function genericUpdateZoom(value) {
-			return function(event) {
-				MiniMapV2.updateZoom(value);
-				event.stopImmediatePropagation();
-				return false;
-			};
-		}
-		_ctx$11 = this.ui.find("canvas")[0].getContext("2d");
+		const root = _getRoot$53();
+		_ctx$11 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
-		Client.loadFile(DB.INTERFACE_PATH + "map/map_arrow.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/store.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/store.bmp`, (dataURI) => {
 			_toolDealer.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/weaponshop.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/weaponshop.bmp`, (dataURI) => {
 			_weaponDealer.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/armorshops.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/armorshops.bmp`, (dataURI) => {
 			_armorDealer.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/smithy.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/smithy.bmp`, (dataURI) => {
 			_blacksmith.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/guide.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/guide.bmp`, (dataURI) => {
 			_guide.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/inn.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/inn.bmp`, (dataURI) => {
 			_inn.src = dataURI;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "information/kafra.bmp", function(dataURI) {
+		Client.loadFile(`${DB.INTERFACE_PATH}information/kafra.bmp`, (dataURI) => {
 			_kafra.src = dataURI;
 		});
-		this.ui.find(".plus").mousedown(genericUpdateZoom(1));
-		this.ui.find(".minus").mousedown(genericUpdateZoom(-1));
-		this.ui.find(".info_container button").mousedown(function() {
-			switch (this.className) {
-				case "object":
-					_preferences$60.townInfoShow = !_preferences$60.townInfoShow;
-					_preferences$60.save();
-					break;
-				case "mini": break;
-				case "viewon":
-					WorldMap_default.toggle();
-					break;
-				default:
-			}
+		root.querySelector(".plus").addEventListener("mousedown", (event) => {
+			MiniMapV2.updateZoom(1);
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
+		root.querySelector(".minus").addEventListener("mousedown", (event) => {
+			MiniMapV2.updateZoom(-1);
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
+		const objectBtn = root.querySelector(".object");
+		if (objectBtn) objectBtn.addEventListener("mousedown", () => {
+			_preferences$60.townInfoShow = !_preferences$60.townInfoShow;
+			_preferences$60.save();
+		});
+		const viewonBtn = root.querySelector(".viewon");
+		if (viewonBtn) viewonBtn.addEventListener("mousedown", () => {
+			WorldMap_default.toggle();
 		});
 	};
 	/**
@@ -247336,7 +247300,7 @@ var init_MiniMapV2 = __esmMin((() => {
 		let path = DB.INTERFACE_PATH.replace("data/texture/", "") + "map/" + mapname.replace(/\..*/, ".bmp");
 		path = path.replace(/\//g, "\\");
 		path = DB.mapalias[path] || path;
-		Client.loadFile("data/texture/" + path, function(dataURI) {
+		Client.loadFile(`data/texture/${path}`, (dataURI) => {
 			_map.src = dataURI;
 		});
 	};
@@ -247363,9 +247327,7 @@ var init_MiniMapV2 = __esmMin((() => {
 		_markers.length = 0;
 	};
 	MiniMapV2.addPartyMemberMark = function addPartyMemberMark(key, x, y) {
-		let i;
-		const count = _party$1.length;
-		for (i = 0; i < count; ++i) if (_party$1[i].key === key) {
+		for (let i = 0; i < _party$1.length; ++i) if (_party$1[i].key === key) {
 			_party$1[i].x = x;
 			_party$1[i].y = y;
 			_party$1[i].color = this.getMemberColor(key);
@@ -247384,11 +247346,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	MiniMapV2.getMemberColor = function getMemberColor(key) {
 		if (_memberColors[key]) return _memberColors[key];
 		const r = Math.random;
-		const color = "rgb(" + [
-			r() * 255 | 0,
-			r() * 255 | 0,
-			r() * 255 | 0
-		] + ")";
+		const color = `rgb(${r() * 255 | 0},${r() * 255 | 0},${r() * 255 | 0})`;
 		_memberColors[key] = color;
 		return color;
 	};
@@ -247398,9 +247356,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} key account id
 	*/
 	MiniMapV2.removePartyMemberMark = function removePartyMemberMark(key) {
-		let i;
-		const count = _party$1.length;
-		for (i = 0; i < count; ++i) if (_party$1[i].key === key) {
+		for (let i = 0; i < _party$1.length; ++i) if (_party$1[i].key === key) {
 			_party$1.splice(i, 1);
 			break;
 		}
@@ -247413,9 +247369,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} y position
 	*/
 	MiniMapV2.addGuildMemberMark = function addGuildMemberMark(key, x, y) {
-		let i;
-		const count = _guild.length;
-		for (i = 0; i < count; ++i) if (_guild[i].key === key) {
+		for (let i = 0; i < _guild.length; ++i) if (_guild[i].key === key) {
 			_guild[i].x = x;
 			_guild[i].y = y;
 			return;
@@ -247432,9 +247386,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} key account id
 	*/
 	MiniMapV2.removeGuildMemberMark = function removeGuildMemberMark(key) {
-		let i;
-		const count = _guild.length;
-		for (i = 0; i < count; ++i) if (_guild[i].key === key) {
+		for (let i = 0; i < _guild.length; ++i) if (_guild[i].key === key) {
 			_guild.splice(i, 1);
 			break;
 		}
@@ -247448,17 +247400,15 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {Array} color
 	*/
 	MiniMapV2.addNpcMark = function addNPCMark(key, x, y, lcolor, time) {
-		let i;
-		const count = _markers.length;
 		const color = [
 			(lcolor & 16711680) >> 16,
 			(lcolor & 65280) >> 8,
 			lcolor & 255
 		];
-		for (i = 0; i < count; ++i) if (_markers[i].key === key) {
+		for (let i = 0; i < _markers.length; ++i) if (_markers[i].key === key) {
 			_markers[i].x = x;
 			_markers[i].y = y;
-			_markers[i].color = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")";
+			_markers[i].color = `rgb(${color[0]},${color[1]},${color[2]})`;
 			_markers[i].tick = Renderer.tick + time;
 			return;
 		}
@@ -247466,7 +247416,7 @@ var init_MiniMapV2 = __esmMin((() => {
 			key,
 			x,
 			y,
-			color: "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")",
+			color: `rgb(${color[0]},${color[1]},${color[2]})`,
 			tick: Renderer.tick + time
 		});
 	};
@@ -247476,9 +247426,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} key id
 	*/
 	MiniMapV2.removeNpcMark = function removeNPCMark(key) {
-		let i;
-		const count = _markers.length;
-		for (i = 0; i < count; ++i) if (_markers[i].key === key) {
+		for (let i = 0; i < _markers.length; ++i) if (_markers[i].key === key) {
 			_markers.splice(i, 1);
 			break;
 		}
@@ -247490,8 +247438,11 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} y increment
 	*/
 	MiniMapV2.updateCoordinates = function updateCoordinates(x, y) {
-		MiniMapV2.ui.find(".coordinates .coord.x").html(Math.floor(x));
-		MiniMapV2.ui.find(".coordinates .coord.y").html(Math.floor(y));
+		const root = _getRoot$53();
+		const coordX = root.querySelector(".coordinates .coord.x");
+		const coordY = root.querySelector(".coordinates .coord.y");
+		if (coordX) coordX.textContent = Math.floor(x);
+		if (coordY) coordY.textContent = Math.floor(y);
 	};
 	/**
 	* Change zoom
@@ -247540,6 +247491,7 @@ var init_MiniMapV2 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$11) return;
 			zoom = _zoomFactor[_preferences$60.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
@@ -247682,7 +247634,7 @@ var init_Rodex$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Rodex/Rodex.js
-function onClickClose$5(e) {
+function onClickClose$4(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
@@ -247835,7 +247787,7 @@ var init_Rodex$1 = __esmMin((() => {
 			left: Math.min(Math.max(0, _preferences$59.x), Renderer.width - this.ui.width())
 		});
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".close").on("click", onClickClose$5);
+		this.ui.find(".close").on("click", onClickClose$4);
 		this.ui.find(".refresh").on("click", onClickRefresh);
 		this.ui.find(".write").on("click", onClickWriteMail);
 		this.ui.find(".delete-all").on("click", onClickDeleteAll);
@@ -249268,7 +249220,7 @@ function _formatROText(value) {
 /**
 * Helper to get the shadow root
 */
-function _getRoot$47() {
+function _getRoot$52() {
 	return SkillDescription$1._shadow || SkillDescription$1._host;
 }
 var _allowedTags, SkillDescription$1, SkillDescription_default;
@@ -249308,7 +249260,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$47().querySelector(".close");
+		const closeBtn = _getRoot$52().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -249322,7 +249274,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$47().querySelector(".content");
+		const content = _getRoot$52().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -253281,16 +253233,19 @@ var init_SkillList = __esmMin((() => {
 //#region src/UI/Components/Quest/Quest/QuestHelper.html?raw
 var QuestHelper_default$2;
 var init_QuestHelper$2 = __esmMin((() => {
-	QuestHelper_default$2 = "<div id=\"QuestInfo\">\r\n	<div class=\"titlebar\" data-background=\"renew_questui/bg_questsub.bmp\">\r\n		<div class=\"quest-info-top-panel\">\r\n			<div class=\"quest-info-top-panel-title\">Quest Information</div>\r\n		</div>\r\n		<div class=\"quest-info-mid-panel\">\r\n			<div class=\"quest-info-title-panel\">\r\n				<div class=\"quest-info-title-panel-text\"></div>\r\n			</div>\r\n			<div class=\"quest-info-description-panel\">\r\n				<div class=\"quest-info-description-panel-title\">\r\n					<div class=\"quest-ui-img-poring\" data-background=\"renew_questui/img_poring.bmp\"></div>\r\n					<span class=\"quest-ui-title-span\">Description</span>\r\n				</div>\r\n				<div class=\"quest-info-description-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-monster-panel\">\r\n				<div class=\"quest-info-monster-panel-title\">\r\n					<div class=\"quest-ui-img-poring\" data-background=\"renew_questui/img_poring.bmp\"></div>\r\n					<span class=\"quest-ui-title-span\">Monster</span>\r\n				</div>\r\n				<div class=\"quest-info-monster-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-reward-panel\">\r\n				<div class=\"npc-sprite\"></div>\r\n				<div class=\"quest-info-reward-panel-title\">\r\n					<div class=\"quest-ui-img-poring\" data-background=\"renew_questui/img_poring.bmp\"></div>\r\n					<span class=\"quest-ui-title-span\">Reward</span>\r\n				</div>\r\n				<div class=\"quest-info-reward-panel-text\">\r\n					<span class=\"quest-ui-text-span\">\r\n						<ul class=\"quest-info-reward-ul\">\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>EXP</span><span class=\"quest-info-reward-li-base\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>JEXP</span><span class=\"quest-info-reward-li-job\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>Item</span\r\n								><span class=\"quest-info-reward-li-item\"\r\n									><ul class=\"quest-info-reward-li-item-list\"></ul\r\n								></span>\r\n							</li>\r\n						</ul>\r\n					</span>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"quest-info-bottom-panel\">\r\n			<div class=\"quest-info-bottom-deadline-info\">\r\n				<span class=\"quest-info-bottom-deadline-info-text\"></span>\r\n			</div>\r\n			<div class=\"quest-info-bottom-text\">\r\n				<button class=\"quest-info-bottom-btn\" data-background=\"basic_interface/btn_close.bmp\"></button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	QuestHelper_default$2 = "<div id=\"QuestInfo\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"quest-info-top-panel\">\r\n			<div class=\"quest-info-top-panel-title\">Quest Information</div>\r\n		</div>\r\n		<div class=\"quest-info-mid-panel\">\r\n			<div class=\"quest-info-title-panel\">\r\n				<div class=\"quest-info-title-panel-text\"></div>\r\n			</div>\r\n			<div class=\"quest-info-description-panel\">\r\n				<div class=\"quest-info-description-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Description</span>\r\n				</div>\r\n				<div class=\"quest-info-description-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-monster-panel\">\r\n				<div class=\"quest-info-monster-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Monster</span>\r\n				</div>\r\n				<div class=\"quest-info-monster-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-reward-panel\">\r\n				<div class=\"npc-sprite\"></div>\r\n				<div class=\"quest-info-reward-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Reward</span>\r\n				</div>\r\n				<div class=\"quest-info-reward-panel-text\">\r\n					<span class=\"quest-ui-text-span\">\r\n						<ul class=\"quest-info-reward-ul\">\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>EXP</span><span class=\"quest-info-reward-li-base\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>JEXP</span><span class=\"quest-info-reward-li-job\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>Item</span\r\n								><span class=\"quest-info-reward-li-item\"\r\n									><ul class=\"quest-info-reward-li-item-list\"></ul\r\n								></span>\r\n							</li>\r\n						</ul>\r\n					</span>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"quest-info-bottom-panel\">\r\n			<div class=\"quest-info-bottom-deadline-info\">\r\n				<span class=\"quest-info-bottom-deadline-info-text\"></span>\r\n			</div>\r\n			<div class=\"quest-info-bottom-text\">\r\n				<ui-button class=\"quest-info-bottom-btn\" bg=\"basic_interface/btn_close.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/QuestHelper.css?raw
 var QuestHelper_default$1;
 var init_QuestHelper$1 = __esmMin((() => {
-	QuestHelper_default$1 = "#QuestInfo {\r\n	position: absolute;\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 16px;\r\n	display: flex;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel .quest-info-top-panel-title {\r\n	width: 342px;\r\n	margin-left: 15px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 370px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel {\r\n	display: flex;\r\n	text-align: center;\r\n	align-items: center;\r\n	width: 342px;\r\n	height: 45px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel .quest-info-title-panel-text {\r\n	width: 342px;\r\n	font-weight: bold;\r\n	color: rgb(0, 0, 145);\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel {\r\n	width: 342px;\r\n	height: 110px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-title {\r\n	display: table;\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-text {\r\n	width: 342px;\r\n	margin: 10px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 90px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 100px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .npc-sprite {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 200px;\r\n	height: 200px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 25px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text {\r\n	width: 52px;\r\n	height: 25px;\r\n	float: left;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text .quest-info-bottom-btn {\r\n	margin-top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.quest-ui-img-poring {\r\n	width: 10px;\r\n	height: 9px;\r\n	float: left;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-ui-title-span {\r\n	float: left;\r\n	margin: 5px;\r\n	font-size: 0.65rem;\r\n}\r\n\r\n.quest-ui-text-span {\r\n	margin-top: 10px;\r\n}\r\n\r\n.quest-info-reward-ul {\r\n	list-style: none;\r\n}\r\n\r\n.quest-info-bottom-deadline-info-text {\r\n	color: red;\r\n	font-weight: bold;\r\n	display: table;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-info-bottom-deadline-info {\r\n	width: 290px;\r\n	height: 25px;\r\n	float: left;\r\n	display: flex;\r\n}\r\n\r\n.quest-info-reward-li-base {\r\n	margin-left: 30px;\r\n}\r\n\r\n.quest-info-reward-li-job {\r\n	margin-left: 26px;\r\n}\r\n\r\n.quest-reward-item {\r\n	width: 38px;\r\n	height: 38px;\r\n	float: left;\r\n}\r\n\r\n.quest-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 7px;\r\n}\r\n\r\n.quest-reward-item-li {\r\n	margin-bottom: 5px;\r\n	display: table;\r\n}\r\n\r\n.quest-reward-item-name {\r\n	color: rgb(0, 0, 150);\r\n}\r\n\r\n.quest-reward-item-info {\r\n	float: left;\r\n	margin-left: 5px;\r\n}\r\n\r\n.quest-ui-monster-list {\r\n	list-style: none;\r\n	padding-left: 20px;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
+	QuestHelper_default$1 = ":host {\r\n	top: 200px;\r\n	left: 582px;\r\n}\r\n\r\n#QuestInfo {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 16px;\r\n	display: flex;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel .quest-info-top-panel-title {\r\n	width: 342px;\r\n	margin-left: 15px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 370px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel {\r\n	display: flex;\r\n	text-align: center;\r\n	align-items: center;\r\n	width: 342px;\r\n	height: 45px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel .quest-info-title-panel-text {\r\n	width: 342px;\r\n	font-weight: bold;\r\n	color: rgb(0, 0, 145);\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel {\r\n	width: 342px;\r\n	height: 110px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-title {\r\n	display: table;\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-text {\r\n	width: 342px;\r\n	margin: 10px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 90px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 100px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .npc-sprite {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 200px;\r\n	height: 200px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 25px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text {\r\n	width: 52px;\r\n	height: 25px;\r\n	float: left;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text .quest-info-bottom-btn {\r\n	margin-top: 5px;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n}\r\n\r\n.quest-ui-img-poring {\r\n	width: 10px;\r\n	height: 9px;\r\n	float: left;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-ui-title-span {\r\n	float: left;\r\n	margin: 5px;\r\n	font-size: 0.65rem;\r\n}\r\n\r\n.quest-ui-text-span {\r\n	margin-top: 10px;\r\n}\r\n\r\n.quest-info-reward-ul {\r\n	list-style: none;\r\n}\r\n\r\n.quest-info-bottom-deadline-info-text {\r\n	color: red;\r\n	font-weight: bold;\r\n	display: table;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-info-bottom-deadline-info {\r\n	width: 290px;\r\n	height: 25px;\r\n	float: left;\r\n	display: flex;\r\n}\r\n\r\n.quest-info-reward-li-base {\r\n	margin-left: 30px;\r\n}\r\n\r\n.quest-info-reward-li-job {\r\n	margin-left: 26px;\r\n}\r\n\r\n.quest-reward-item {\r\n	width: 38px;\r\n	height: 38px;\r\n	float: left;\r\n}\r\n\r\n.quest-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 7px;\r\n}\r\n\r\n.quest-reward-item-li {\r\n	margin-bottom: 5px;\r\n	display: table;\r\n}\r\n\r\n.quest-reward-item-name {\r\n	color: rgb(0, 0, 150);\r\n}\r\n\r\n.quest-reward-item-info {\r\n	float: left;\r\n	margin-left: 5px;\r\n}\r\n\r\n.quest-ui-monster-list {\r\n	list-style: none;\r\n	padding-left: 20px;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/QuestHelper.js
+function _getRoot$51() {
+	return QuestHelper._shadow || QuestHelper._host;
+}
 /**
 * Process text with color codes (^RRGGBB)
 * @param {string} text - The text to process
@@ -253299,9 +253254,7 @@ var init_QuestHelper$1 = __esmMin((() => {
 function processColorCodes$2(text) {
 	if (!text) return "";
 	text = String(text);
-	return text.replace(/\^([0-9A-Fa-f]{6})/g, function(match, color) {
-		return "<span style=\"color:#" + color + "\">";
-	}).replace(/\^000000/g, "</span>");
+	return text.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => `<span style="color:#${color}">`).replace(/\^000000/g, "</span>");
 }
 /**
 * Process item tags in text (<ITEM>Name<INFO>ID</INFO></ITEM>)
@@ -253311,8 +253264,8 @@ function processColorCodes$2(text) {
 function processItemTags$2(text) {
 	if (!text) return "";
 	text = String(text);
-	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, function(match, itemName, itemId) {
-		return "<span class=\"item-link\" data-item-id=\"" + itemId + "\">" + itemName + "</span>";
+	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, (match, itemName, itemId) => {
+		return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
 	});
 }
 /**
@@ -253323,8 +253276,8 @@ function processItemTags$2(text) {
 function processNAVITags$2(text) {
 	if (!text) return "";
 	text = String(text);
-	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, function(match, displayName, naviInfo) {
-		return "<span class=\"navi-link\" data-navi-info=\"" + naviInfo + "\" data-navi-name=\"" + displayName + "\">" + displayName + "</span>";
+	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
+		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
 	});
 }
 /**
@@ -253339,7 +253292,7 @@ function processText$2(text) {
 	text = processColorCodes$2(text);
 	return text;
 }
-function onClickClose$4(e) {
+function onClickClose$3() {
 	QuestHelper.ui.hide();
 }
 /**
@@ -253355,13 +253308,14 @@ var init_QuestHelper = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_Navigation();
-	init_jquery();
 	init_QuestHelper$2();
 	init_QuestHelper$1();
-	QuestHelper = new UIComponent("QuestHelper", QuestHelper_default$2, QuestHelper_default$1);
+	QuestHelper = new GUIComponent("QuestHelper", QuestHelper_default$1);
+	QuestHelper.render = () => QuestHelper_default$2;
 	_preferences$51 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
@@ -253371,81 +253325,119 @@ var init_QuestHelper = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	QuestHelper.init = function init() {
-		this.ui.on("click", ".quest-info-bottom-btn", onClickClose$4);
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.on("click", ".item-link", function(event) {
-			const itemId = parseInt(jquery_default(this).data("item-id"), 10);
-			if (!itemId) return;
-			if (ItemInfo_default.uid === itemId) {
-				ItemInfo_default.remove();
+		const root = _getRoot$51();
+		const closeBtn = root.querySelector(".quest-info-bottom-btn");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => onClickClose$3());
+		}
+		root.addEventListener("click", (event) => {
+			const itemLink = event.target.closest(".item-link");
+			if (itemLink) {
+				const itemId = parseInt(itemLink.dataset.itemId, 10);
+				if (!itemId) return;
+				if (ItemInfo_default.uid === itemId) {
+					ItemInfo_default.remove();
+					return;
+				}
+				ItemInfo_default.append();
+				ItemInfo_default.uid = itemId;
+				ItemInfo_default.setItem({
+					ITID: itemId,
+					IsIdentified: true
+				});
 				return;
 			}
-			ItemInfo_default.append();
-			ItemInfo_default.uid = itemId;
-			ItemInfo_default.setItem({
-				ITID: itemId,
-				IsIdentified: true
+			const naviLink = event.target.closest(".navi-link");
+			if (naviLink) {
+				const naviInfo = naviLink.dataset.naviInfo;
+				const displayName = naviLink.dataset.naviName;
+				if (!naviInfo) return;
+				const navHostDisplay = Navigation_default._host ? getComputedStyle(Navigation_default._host).display : "none";
+				if (Navigation_default.uid === naviInfo && navHostDisplay !== "none") {
+					Navigation_default.hide();
+					return;
+				}
+				Navigation_default.show();
+				Navigation_default.uid = naviInfo;
+				Navigation_default.setNaviInfo(naviInfo, displayName);
+			}
+		});
+		this.draggable(".titlebar");
+		root.querySelectorAll(".quest-ui-img-poring").forEach((el) => {
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/img_poring.bmp`, (data) => {
+				el.style.backgroundImage = `url(${data})`;
 			});
 		});
-		this.ui.on("click", ".navi-link", function(event) {
-			const naviInfo = jquery_default(this).data("navi-info");
-			const displayName = jquery_default(this).data("navi-name");
-			if (!naviInfo) return;
-			if (Navigation_default.uid === naviInfo && Navigation_default.ui.is(":visible")) {
-				Navigation_default.hide();
-				return;
-			}
-			Navigation_default.show();
-			Navigation_default.uid = naviInfo;
-			Navigation_default.setNaviInfo(naviInfo, displayName);
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questsub.bmp`, (data) => {
+			const titlebar = root.querySelector(".titlebar");
+			if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
 		});
-		this.draggable(this.ui.find(".titlebar"));
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelper.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$51.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$51.x + 382), Renderer.width - this.ui.width())
-		});
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$51.x + 382), Renderer.width - 342)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$51.y), Renderer.height - 412)}px`;
 	};
 	QuestHelper.setQuestInfo = function setQuestInfo(quest) {
-		QuestHelper.ui.find(".quest-info-title-panel-text").html(processText$2(quest.title));
-		QuestHelper.ui.find(".quest-info-description-panel-text .quest-ui-text-span").html(processText$2(quest.description));
+		const root = _getRoot$51();
+		if (!root) return;
+		const titleEl = root.querySelector(".quest-info-title-panel-text");
+		if (titleEl) titleEl.innerHTML = processText$2(quest.title);
+		const descEl = root.querySelector(".quest-info-description-panel-text .quest-ui-text-span");
+		if (descEl) descEl.innerHTML = processText$2(quest.description);
 		let list = "";
-		for (const huntID in quest.hunt_list) list += "<li>" + processText$2(quest.hunt_list[huntID].mobName) + " ( " + quest.hunt_list[huntID].huntCount + " / " + quest.hunt_list[huntID].maxCount + " )</li>";
-		QuestHelper.ui.find(".quest-info-monster-panel-text .quest-ui-text-span").html("<ul class=\"quest-ui-monster-list\">" + list + "<ul>");
-		if (quest.reward_exp_base > 0) QuestHelper.ui.find(".quest-info-reward-li-base").html(quest.reward_exp_base);
-		if (quest.reward_exp_job > 0) QuestHelper.ui.find(".quest-info-reward-li-job").html(quest.reward_exp_job);
+		for (const huntID in quest.hunt_list) list += `<li>${processText$2(quest.hunt_list[huntID].mobName)} ( ${quest.hunt_list[huntID].huntCount} / ${quest.hunt_list[huntID].maxCount} )</li>`;
+		const monsterEl = root.querySelector(".quest-info-monster-panel-text .quest-ui-text-span");
+		if (monsterEl) monsterEl.innerHTML = `<ul class="quest-ui-monster-list">${list}<ul>`;
+		if (quest.reward_exp_base > 0) {
+			const baseEl = root.querySelector(".quest-info-reward-li-base");
+			if (baseEl) baseEl.textContent = quest.reward_exp_base;
+		}
+		if (quest.reward_exp_job > 0) {
+			const jobEl = root.querySelector(".quest-info-reward-li-job");
+			if (jobEl) jobEl.textContent = quest.reward_exp_job;
+		}
 		for (let i = 0; i < quest.reward_item_list.length; i++) {
 			const it = DB.getItemInfo(quest.reward_item_list[i].ItemID);
-			const item_li = "<li class=\"quest-reward-item-li\"><div class=\"quest-reward-item\" data-index=\"" + quest.reward_item_list[i].ItemID + "\"><div class=\"quest-icon\"></div></div><div class=\"quest-reward-item-info\"><span class=\"quest-reward-item-name\">" + processText$2(it.identifiedDisplayName) + "</span><br><span>" + quest.reward_item_list[i].ItemNum + "</span></div></li>";
-			QuestHelper.ui.find(".quest-info-reward-li-item-list").append(item_li);
-			Client.loadFile(DB.INTERFACE_PATH + "renew_questui/img_questiocn.bmp", function(data) {
-				QuestHelper.ui.find(".quest-reward-item[data-index=\"" + quest.reward_item_list[i].ItemID + "\"]").css("backgroundImage", "url(" + data + ")");
+			const item_li = `<li class="quest-reward-item-li"><div class="quest-reward-item" data-index="${quest.reward_item_list[i].ItemID}"><div class="quest-icon"></div></div><div class="quest-reward-item-info"><span class="quest-reward-item-name">${processText$2(it.identifiedDisplayName)}</span><br><span>${quest.reward_item_list[i].ItemNum}</span></div></li>`;
+			const itemListEl = root.querySelector(".quest-info-reward-li-item-list");
+			if (itemListEl) itemListEl.insertAdjacentHTML("beforeend", item_li);
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/img_questiocn.bmp`, (data) => {
+				const el = root.querySelector(`.quest-reward-item[data-index="${quest.reward_item_list[i].ItemID}"]`);
+				if (el) el.style.backgroundImage = `url(${data})`;
 			});
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-				QuestHelper.ui.find(".quest-reward-item[data-index=\"" + quest.reward_item_list[i].ItemID + "\"] .quest-icon").css("backgroundImage", "url(" + data + ")");
+			Client.loadFile(`${DB.INTERFACE_PATH}item/${it.identifiedResourceName}.bmp`, (data) => {
+				const el = root.querySelector(`.quest-reward-item[data-index="${quest.reward_item_list[i].ItemID}"] .quest-icon`);
+				if (el) el.style.backgroundImage = `url(${data})`;
 			});
 		}
 		if (quest.end_time) {
 			const d = /* @__PURE__ */ new Date(0);
 			d.setUTCSeconds(quest.end_time);
-			QuestHelper.ui.find(".quest-info-bottom-deadline-info-text").html("Deadline [" + d.toLocaleString() + "]");
+			const deadlineEl = root.querySelector(".quest-info-bottom-deadline-info-text");
+			if (deadlineEl) deadlineEl.textContent = `Deadline [${d.toLocaleString()}]`;
 		}
 	};
 	QuestHelper.clearQuestDesc = function clearQuestDesc() {
-		QuestHelper.ui.find(".quest-info-title-panel-text").html("");
-		QuestHelper.ui.find(".quest-info-description-panel-text .quest-ui-text-span").html("");
-		QuestHelper.ui.find(".quest-info-monster-panel-text .quest-ui-text-span").html("<ul class=\"quest-ui-monster-list\"><ul>");
-		QuestHelper.ui.find(".quest-info-reward-li-base").html("");
-		QuestHelper.ui.find(".quest-info-reward-li-job").html("");
-		QuestHelper.ui.find(".quest-info-bottom-deadline-info-text").html("");
-		QuestHelper.ui.find(".quest-info-reward-li-item-list").html("");
+		const root = _getRoot$51();
+		if (!root) return;
+		const titleEl = root.querySelector(".quest-info-title-panel-text");
+		if (titleEl) titleEl.innerHTML = "";
+		const descEl = root.querySelector(".quest-info-description-panel-text .quest-ui-text-span");
+		if (descEl) descEl.innerHTML = "";
+		const monsterEl = root.querySelector(".quest-info-monster-panel-text .quest-ui-text-span");
+		if (monsterEl) monsterEl.innerHTML = "<ul class=\"quest-ui-monster-list\"><ul>";
+		const baseEl = root.querySelector(".quest-info-reward-li-base");
+		if (baseEl) baseEl.textContent = "";
+		const jobEl = root.querySelector(".quest-info-reward-li-job");
+		if (jobEl) jobEl.textContent = "";
+		const deadlineEl = root.querySelector(".quest-info-bottom-deadline-info-text");
+		if (deadlineEl) deadlineEl.textContent = "";
+		const itemListEl = root.querySelector(".quest-info-reward-li-item-list");
+		if (itemListEl) itemListEl.innerHTML = "";
 	};
 	/**
 	* Clean up UI
@@ -253456,14 +253448,13 @@ var init_QuestHelper = __esmMin((() => {
 	};
 	/**
 	* Removing the UI from window, save preferences
-	*
 	*/
 	QuestHelper.onRemove = function onRemove() {};
 	/**
 	* Show/Hide UI
 	*/
 	QuestHelper.toggle = function toggle() {
-		if (this.ui.is(":visible")) this.ui.hide();
+		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
 		else this.ui.show();
 	};
 	QuestHelper_default = UIManager.addComponent(QuestHelper);
@@ -253478,10 +253469,13 @@ var init_QuestWindow$2 = __esmMin((() => {
 //#region src/UI/Components/Quest/Quest/QuestWindow.css?raw
 var QuestWindow_default$1;
 var init_QuestWindow$1 = __esmMin((() => {
-	QuestWindow_default$1 = "#QuestWindow {\r\n	position: absolute;\r\n	right: 50px;\r\n	top: 250px;\r\n	width: 230px;\r\n	display: table;\r\n	font-size: 0.75rem;\r\n}\r\n\r\n#QuestWindow .quest-window-ul {\r\n	list-style: none;\r\n	margin: 5px;\r\n	text-shadow: 1px 1px 1px black;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li {\r\n	list-style: none;\r\n	margin-top: 10px;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-title {\r\n	color: yellow;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-summary {\r\n	color: white;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-monster {\r\n	font-size: 0.65rem;\r\n	color: white;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-monster ul {\r\n	list-style: none;\r\n	padding-left: 20px;\r\n}\r\n";
+	QuestWindow_default$1 = ":host {\r\n	right: 50px;\r\n	top: 250px;\r\n}\r\n\r\n#QuestWindow {\r\n	width: 230px;\r\n	display: table;\r\n	font-size: 0.75rem;\r\n}\r\n\r\n#QuestWindow .quest-window-ul {\r\n	list-style: none;\r\n	margin: 5px;\r\n	text-shadow: 1px 1px 1px black;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li {\r\n	list-style: none;\r\n	margin-top: 10px;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-title {\r\n	color: yellow;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-summary {\r\n	color: white;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-monster {\r\n	font-size: 0.65rem;\r\n	color: white;\r\n}\r\n\r\n#QuestWindow .quest-window-ul .quest-window-li .quest-window-li-monster ul {\r\n	list-style: none;\r\n	padding-left: 20px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/QuestWindow.js
+function _getRoot$50() {
+	return QuestWindow._shadow || QuestWindow._host;
+}
 function isInCooldown(quest) {
 	if (quest.end_time == 0) return false;
 	const epoch_seconds = /* @__PURE__ */ new Date() / 1e3;
@@ -253492,7 +253486,7 @@ var _preferences$50, QuestWindow, QuestWindow_default;
 var init_QuestWindow = __esmMin((() => {
 	init_Preferences$1();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_QuestWindow$2();
 	init_QuestWindow$1();
 	_preferences$50 = Preferences.get("Quest", {
@@ -253501,21 +253495,16 @@ var init_QuestWindow = __esmMin((() => {
 		show: false,
 		showwindow: true
 	}, 1);
-	QuestWindow = new UIComponent("QuestWindow", QuestWindow_default$2, QuestWindow_default$1);
+	QuestWindow = new GUIComponent("QuestWindow", QuestWindow_default$1);
+	QuestWindow.render = () => QuestWindow_default$2;
 	/**
 	* Mouse can cross this UI
 	*/
-	QuestWindow.mouseMode = UIComponent.MouseMode.CROSS;
+	QuestWindow.mouseMode = GUIComponent.MouseMode.CROSS;
 	/**
 	* Initialize the component (event listener, etc.)
 	*/
-	QuestWindow.init = function init() {
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.focus();
-	};
+	QuestWindow.init = function init() {};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
@@ -253527,7 +253516,6 @@ var init_QuestWindow = __esmMin((() => {
 	*/
 	QuestWindow.clean = function clean() {
 		QuestWindow.ui.hide();
-		this.ui.focus();
 	};
 	/**
 	* Set Quest list
@@ -253535,25 +253523,31 @@ var init_QuestWindow = __esmMin((() => {
 	* @param {Array} quests
 	*/
 	QuestWindow.setQuestList = function setQuestList(quests, questNotShowList) {
-		let $already_show = 0;
+		let already_show = 0;
 		for (const questID in quests) if (!questNotShowList.includes(quests[questID].questID)) {
 			if (!isInCooldown(quests[questID])) {
-				if (quests[questID].active == 1 && $already_show < 4) {
+				if (quests[questID].active == 1 && already_show < 4) {
 					QuestWindow.addQuestToUI(quests[questID]);
-					$already_show++;
+					already_show++;
 				}
 			}
 		}
 	};
 	QuestWindow.ClearQuestList = function ClearQuestList() {
-		QuestWindow.ui.find(".quest-window-ul").html("");
+		const root = _getRoot$50();
+		if (!root) return;
+		const ul = root.querySelector(".quest-window-ul");
+		if (ul) ul.innerHTML = "";
 	};
 	QuestWindow.addQuestToUI = function addQuestToUI(quest) {
-		const title = quest.title.length > 25 ? quest.title.substr(0, 25) + "..." : quest.title;
-		const summary = quest.summary.length > 25 ? quest.summary.substr(0, 25) + "..." : quest.summary;
+		const root = _getRoot$50();
+		if (!root) return;
+		const title = quest.title.length > 25 ? `${quest.title.substr(0, 25)}...` : quest.title;
+		const summary = quest.summary.length > 25 ? `${quest.summary.substr(0, 25)}...` : quest.summary;
 		let list = "";
-		for (const huntID in quest.hunt_list) list += "<li>" + quest.hunt_list[huntID].mobName + " ( " + quest.hunt_list[huntID].huntCount + " / " + quest.hunt_list[huntID].maxCount + " )</li>";
-		QuestWindow.ui.find(".quest-window-ul").append("<li class=\"quest-window-li\"> <div class=\"quest-window-li-title\">" + title + "</div> <div class=\"quest-window-li-summary\">" + summary + "</div> <div class=\"quest-window-li-monster\"><ul>" + list + "</ul></div> </li>");
+		for (const huntID in quest.hunt_list) list += `<li>${quest.hunt_list[huntID].mobName} ( ${quest.hunt_list[huntID].huntCount} / ${quest.hunt_list[huntID].maxCount} )</li>`;
+		const ul = root.querySelector(".quest-window-ul");
+		if (ul) ul.insertAdjacentHTML("beforeend", `<li class="quest-window-li"> <div class="quest-window-li-title">${title}</div> <div class="quest-window-li-summary">${summary}</div> <div class="quest-window-li-monster"><ul>${list}</ul></div> </li>`);
 	};
 	QuestWindow_default = UIManager.addComponent(QuestWindow);
 }));
@@ -253561,48 +253555,54 @@ var init_QuestWindow = __esmMin((() => {
 //#region src/UI/Components/Quest/Quest/Quest.html?raw
 var Quest_default$2;
 var init_Quest$4 = __esmMin((() => {
-	Quest_default$2 = "<div id=\"Quest\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"quest-top-panel\">\r\n			<span class=\"quest-top-panel-text\"> Quest Information</span>\r\n		</div>\r\n		<div class=\"quest-left-panel\">\r\n			<ul class=\"quest-menu\">\r\n				<li id=\"active\" class=\"quest-menu-item\"></li>\r\n				<li id=\"feature\" class=\"quest-menu-item\"></li>\r\n				<li id=\"inactive\" class=\"quest-menu-item\"></li>\r\n				<li id=\"cooldown\" class=\"quest-menu-item\"></li>\r\n			</ul>\r\n		</div>\r\n		<div class=\"quest-right-panel\">\r\n			<ul id=\"active-quest-list\" class=\"quest-list\"></ul>\r\n			<ul id=\"feature-quest-list\" class=\"quest-list\"></ul>\r\n			<ul id=\"inactive-quest-list\" class=\"quest-list\"></ul>\r\n			<ul id=\"cooldown-quest-list\" class=\"quest-list\"></ul>\r\n		</div>\r\n		<div class=\"quest-bottom-panel\">\r\n			<div class=\"toggle-quest-list\">\r\n				<button class=\"toggle-quest-image\"></button>\r\n			</div>\r\n			<div class=\"toggle-quest-text\">\r\n				<span>Show Quest</span>\r\n			</div>\r\n			<div class=\"close-quest-container\">\r\n				<button class=\"close-quest-container-btn\" data-background=\"basic_interface/btn_close.bmp\"></button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	Quest_default$2 = "<div id=\"Quest\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"quest-top-panel\"><span class=\"quest-top-panel-text\">Quest Information</span></div>\r\n		<div class=\"quest-left-panel\">\r\n			<ul class=\"quest-menu\">\r\n				<li id=\"active\" class=\"quest-menu-item\"></li>\r\n				<li id=\"feature\" class=\"quest-menu-item\"></li>\r\n				<li id=\"inactive\" class=\"quest-menu-item\"></li>\r\n				<li id=\"cooldown\" class=\"quest-menu-item\"></li>\r\n			</ul>\r\n		</div>\r\n		<div class=\"quest-right-panel\">\r\n			<ul id=\"active-quest-list\" class=\"quest-list\"></ul>\r\n			<ul id=\"feature-quest-list\" class=\"quest-list\"></ul>\r\n			<ul id=\"inactive-quest-list\" class=\"quest-list\"></ul>\r\n			<ul id=\"cooldown-quest-list\" class=\"quest-list\"></ul>\r\n		</div>\r\n		<div class=\"quest-bottom-panel\">\r\n			<div class=\"toggle-quest-list\"><button class=\"toggle-quest-image\"></button></div>\r\n			<div class=\"toggle-quest-text\"><span>Show Quest</span></div>\r\n			<div class=\"close-quest-container\">\r\n				<ui-button class=\"close-quest-container-btn\" bg=\"basic_interface/btn_close.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/Quest.css?raw
 var Quest_default$1;
 var init_Quest$3 = __esmMin((() => {
-	Quest_default$1 = "#Quest {\r\n	position: absolute;\r\n	width: 381px;\r\n	height: 466px;\r\n}\r\n\r\n#Quest .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Quest .quest-top-panel {\r\n	float: left;\r\n	width: 381px;\r\n	height: 18px;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-top-panel .quest-top-panel-text {\r\n	margin-left: 45px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#Quest .quest-left-panel {\r\n	float: left;\r\n	width: 30px;\r\n	height: 420px;\r\n}\r\n\r\n#Quest .quest-left-panel .quest-menu {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n}\r\n\r\n#Quest .quest-left-panel .quest-menu .quest-menu-item {\r\n	height: 100px;\r\n	width: 30px;\r\n}\r\n\r\n#Quest .quest-right-panel {\r\n	float: left;\r\n	width: 341px;\r\n	height: 420px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list {\r\n	list-style: none;\r\n	margin: 10px;\r\n	padding: 0px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item {\r\n	list-style: none;\r\n	width: 330px;\r\n	height: 42px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-icon {\r\n	float: left;\r\n	width: 42px;\r\n	height: 42px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-icon .quest-item-icon-image {\r\n	width: 26px;\r\n	height: 29px;\r\n	margin: 5px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-icon .quest-item-icon-image .quest-item-icon-image-text {\r\n	visibility: hidden;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-title {\r\n	float: left;\r\n	width: 254px;\r\n	height: 21px;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-title .quest-item-title-text {\r\n	margin: 5px;\r\n	font-weight: bold;\r\n	color: rgb(0, 0, 145);\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-toggle {\r\n	float: left;\r\n	width: 30px;\r\n	height: 21px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-toggle .quest-item-toggle-image {\r\n	width: 20px;\r\n	height: 17px;\r\n	margin: 3px;\r\n	border: 0;\r\n}\r\n\r\n#Quest\r\n	.quest-right-panel\r\n	.quest-list\r\n	.quest-item\r\n	.quest-item-toggle\r\n	.quest-item-toggle-image\r\n	.quest-item-toggle-image-text {\r\n	visibility: hidden;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-display {\r\n	float: left;\r\n	width: 30px;\r\n	height: 21px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-display .quest-item-display-image {\r\n	width: 14px;\r\n	height: 14px;\r\n	margin: 3px;\r\n	border: 0;\r\n}\r\n\r\n#Quest\r\n	.quest-right-panel\r\n	.quest-list\r\n	.quest-item\r\n	.quest-item-display\r\n	.quest-item-display-image\r\n	.quest-item-display-image-text {\r\n	visibility: hidden;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-summary {\r\n	float: left;\r\n	width: 254px;\r\n	height: 21px;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-summary .quest-item-summary-text {\r\n	margin: 5px;\r\n}\r\n\r\n#Quest .quest-bottom-panel {\r\n	float: left;\r\n	width: 381px;\r\n	height: 25px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-list {\r\n	float: left;\r\n	width: 50px;\r\n	height: 25px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-list .toggle-quest-image {\r\n	width: 10px;\r\n	height: 10px;\r\n	margin-left: 40px;\r\n	margin-top: 5px;\r\n	border: 0;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-text {\r\n	width: 280px;\r\n	height: 25px;\r\n	float: left;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-text span {\r\n	margin: 4px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .close-quest-container {\r\n	float: left;\r\n	width: 51px;\r\n	height: 25px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .close-quest-container .close-quest-container-btn {\r\n	margin-top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.quest-info-container {\r\n	position: absoluFte;\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#active-quest-list,\r\n#feature-quest-list,\r\n#inactive-quest-list,\r\n#cooldown-quest-list {\r\n	display: none;\r\n}\r\n";
+	Quest_default$1 = ":host {\r\n	top: 200px;\r\n	left: 200px;\r\n}\r\n\r\n#Quest {\r\n	width: 381px;\r\n	height: 466px;\r\n}\r\n\r\n#Quest .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Quest .quest-top-panel {\r\n	float: left;\r\n	width: 381px;\r\n	height: 18px;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-top-panel .quest-top-panel-text {\r\n	margin-left: 45px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#Quest .quest-left-panel {\r\n	float: left;\r\n	width: 30px;\r\n	height: 420px;\r\n}\r\n\r\n#Quest .quest-left-panel .quest-menu {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n}\r\n\r\n#Quest .quest-left-panel .quest-menu .quest-menu-item {\r\n	height: 100px;\r\n	width: 30px;\r\n}\r\n\r\n#Quest .quest-right-panel {\r\n	float: left;\r\n	width: 341px;\r\n	height: 420px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list {\r\n	list-style: none;\r\n	margin: 10px;\r\n	padding: 0px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item {\r\n	list-style: none;\r\n	width: 330px;\r\n	height: 42px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-icon {\r\n	float: left;\r\n	width: 42px;\r\n	height: 42px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-icon .quest-item-icon-image {\r\n	width: 26px;\r\n	height: 29px;\r\n	margin: 5px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-icon .quest-item-icon-image .quest-item-icon-image-text {\r\n	visibility: hidden;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-title {\r\n	float: left;\r\n	width: 254px;\r\n	height: 21px;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-title .quest-item-title-text {\r\n	margin: 5px;\r\n	font-weight: bold;\r\n	color: rgb(0, 0, 145);\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-toggle {\r\n	float: left;\r\n	width: 30px;\r\n	height: 21px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-toggle .quest-item-toggle-image {\r\n	width: 20px;\r\n	height: 17px;\r\n	margin: 3px;\r\n	border: 0;\r\n}\r\n\r\n#Quest\r\n	.quest-right-panel\r\n	.quest-list\r\n	.quest-item\r\n	.quest-item-toggle\r\n	.quest-item-toggle-image\r\n	.quest-item-toggle-image-text {\r\n	visibility: hidden;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-display {\r\n	float: left;\r\n	width: 30px;\r\n	height: 21px;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-display .quest-item-display-image {\r\n	width: 14px;\r\n	height: 14px;\r\n	margin: 3px;\r\n	border: 0;\r\n}\r\n\r\n#Quest\r\n	.quest-right-panel\r\n	.quest-list\r\n	.quest-item\r\n	.quest-item-display\r\n	.quest-item-display-image\r\n	.quest-item-display-image-text {\r\n	visibility: hidden;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-summary {\r\n	float: left;\r\n	width: 254px;\r\n	height: 21px;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-right-panel .quest-list .quest-item .quest-item-summary .quest-item-summary-text {\r\n	margin: 5px;\r\n}\r\n\r\n#Quest .quest-bottom-panel {\r\n	float: left;\r\n	width: 381px;\r\n	height: 25px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-list {\r\n	float: left;\r\n	width: 50px;\r\n	height: 25px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-list .toggle-quest-image {\r\n	width: 10px;\r\n	height: 10px;\r\n	margin-left: 40px;\r\n	margin-top: 5px;\r\n	border: 0;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-text {\r\n	width: 280px;\r\n	height: 25px;\r\n	float: left;\r\n	display: flex;\r\n}\r\n\r\n#Quest .quest-bottom-panel .toggle-quest-text span {\r\n	margin: 4px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .close-quest-container {\r\n	float: left;\r\n	width: 51px;\r\n	height: 25px;\r\n}\r\n\r\n#Quest .quest-bottom-panel .close-quest-container .close-quest-container-btn {\r\n	margin-top: 5px;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n}\r\n\r\n.quest-info-container {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#active-quest-list,\r\n#feature-quest-list,\r\n#inactive-quest-list,\r\n#cooldown-quest-list {\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/Quest.js
+function _getRoot$49() {
+	return Quest._shadow || Quest._host;
+}
 function onClickMenu$2(e) {
-	const quest_element = jquery_default(e.currentTarget);
-	if (_active_menu$1 == quest_element.attr("id")) return;
-	_active_menu$1 = quest_element.attr("id");
+	const root = _getRoot$49();
+	const menuId = e.currentTarget.id;
+	if (_active_menu$1 === menuId) return;
+	_active_menu$1 = menuId;
 	let background_image = "";
-	Quest.ui.find("#active-quest-list").hide();
-	Quest.ui.find("#inactive-quest-list").hide();
-	Quest.ui.find("#feature-quest-list").hide();
-	Quest.ui.find("#cooldown-quest-list").hide();
+	root.querySelector("#active-quest-list").style.display = "none";
+	root.querySelector("#inactive-quest-list").style.display = "none";
+	root.querySelector("#feature-quest-list").style.display = "none";
+	root.querySelector("#cooldown-quest-list").style.display = "none";
 	switch (_active_menu$1) {
 		case "feature":
 			background_image = "bg_quest2";
-			Quest.ui.find("#feature-quest-list").show();
+			root.querySelector("#feature-quest-list").style.display = "";
 			break;
 		case "inactive":
 			background_image = "bg_quest3";
-			Quest.ui.find("#inactive-quest-list").show();
+			root.querySelector("#inactive-quest-list").style.display = "";
 			break;
 		case "cooldown":
 			background_image = "bg_quest4";
-			Quest.ui.find("#cooldown-quest-list").show();
+			root.querySelector("#cooldown-quest-list").style.display = "";
 			break;
 		default:
 			background_image = "bg_quest1";
-			Quest.ui.find("#active-quest-list").show();
+			root.querySelector("#active-quest-list").style.display = "";
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "renew_questui/" + background_image + ".bmp", function(data) {
-		Quest.ui.find(".titlebar").css("backgroundImage", "url(" + data + ")");
-	}.bind(this));
+	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${background_image}.bmp`, (data) => {
+		const titlebar = root.querySelector(".titlebar");
+		if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
+	});
 	QuestHelper_default.clearQuestDesc();
 }
 function onClickQuestCheckbox() {
+	const root = _getRoot$49();
 	let checkbox_background;
 	if (_preferences$49.showwindow) {
 		checkbox_background = "checkbox_off";
@@ -253613,19 +253613,22 @@ function onClickQuestCheckbox() {
 	}
 	_preferences$49.showwindow = !_preferences$49.showwindow;
 	_preferences$49.save();
-	Client.loadFile(DB.INTERFACE_PATH + "renew_questui/" + checkbox_background + ".bmp", function(data) {
-		Quest.ui.find(".toggle-quest-image").css("backgroundImage", "url(" + data + ")");
-	}.bind(this));
+	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
+		const el = root.querySelector(".toggle-quest-image");
+		if (el) el.style.backgroundImage = `url(${data})`;
+	});
 }
 function onClickQuestToggle$1(e) {
-	const id = jquery_default(e.currentTarget).attr("id").replace("qid", "");
+	_getRoot$49();
+	const id = e.currentTarget.id.replace("qid", "");
 	const _pkt = new PACKET.CZ.ACTIVE_QUEST();
 	_pkt.questID = _questList$1[id].questID;
 	_pkt.active = _questList$1[id].active == 1 ? 0 : 1;
 	Network.sendPacket(_pkt);
 }
 function onClickQuestDisplay(e) {
-	const cid = jquery_default(e.currentTarget).attr("id");
+	const root = _getRoot$49();
+	const cid = e.currentTarget.id;
 	const id = cid.replace("sid", "");
 	const iid = parseInt(Number(id));
 	let checkbox_background = "";
@@ -253637,14 +253640,12 @@ function onClickQuestDisplay(e) {
 		_questNotShowList.push(iid);
 		checkbox_background = "bt_check_off";
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "renew_questui/" + checkbox_background + ".bmp", function(data) {
-		Quest.ui.find("#" + cid).css("backgroundImage", "url(" + data + ")");
-	}.bind(this));
+	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
+		const el = root.querySelector(`#${cid}`);
+		if (el) el.style.backgroundImage = `url(${data})`;
+	});
 	QuestWindow_default.ClearQuestList();
 	QuestWindow_default.setQuestList(_questList$1, _questNotShowList);
-}
-function onClickClose$3(e) {
-	Quest.ui.hide();
 }
 function refreshQuestUI$1() {
 	Quest.ClearQuestList();
@@ -253665,17 +253666,18 @@ var init_Quest$2 = __esmMin((() => {
 	init_Client();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_QuestHelper();
 	init_QuestWindow();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_Quest$4();
 	init_Quest$3();
-	init_jquery();
 	init_ChatBox();
 	init_SessionStorage();
-	Quest = new UIComponent("Quest", Quest_default$2, Quest_default$1);
+	Quest = new GUIComponent("Quest", Quest_default$1);
+	Quest.render = () => Quest_default$2;
 	_questList$1 = [];
 	_questNotShowList = [];
 	_active_menu$1 = "active";
@@ -253689,34 +253691,40 @@ var init_Quest$2 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	Quest.init = function init() {
+		const root = _getRoot$49();
 		QuestHelper_default.prepare();
 		QuestWindow_default.prepare();
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
+		this.draggable(".titlebar");
+		const closeBtn = root.querySelector(".close-quest-container-btn");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => onClose$9());
+		}
+		root.querySelectorAll(".quest-menu-item").forEach((item) => {
+			item.addEventListener("click", (e) => onClickMenu$2(e));
 		});
-		this.ui.find(".close").click(onClose$9);
-		this.ui.on("click", ".quest-menu-item", onClickMenu$2);
-		this.ui.on("click", ".close-quest-container-btn", onClickClose$3);
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find("#active-quest-list").show();
-		this.ui.on("click", ".toggle-quest-list", onClickQuestCheckbox);
+		const activeList = root.querySelector("#active-quest-list");
+		if (activeList) activeList.style.display = "";
+		const toggleBtn = root.querySelector(".toggle-quest-list");
+		if (toggleBtn) toggleBtn.addEventListener("click", () => onClickQuestCheckbox());
+		this.ui.hide();
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
 	Quest.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$49.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$49.x), Renderer.width - this.ui.width())
-		});
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$49.x), Renderer.width - 381)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$49.y), Renderer.height - 466)}px`;
+		const root = _getRoot$49();
 		const checkbox_background = _preferences$49.showwindow ? "checkbox_on" : "checkbox_off";
-		Client.loadFile(DB.INTERFACE_PATH + "renew_questui/" + checkbox_background + ".bmp", function(data) {
-			Quest.ui.find(".toggle-quest-image").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		Client.loadFile(DB.INTERFACE_PATH + "renew_questui/bg_quest1.bmp", function(data) {
-			Quest.ui.find(".titlebar").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
+			const el = root.querySelector(".toggle-quest-image");
+			if (el) el.style.backgroundImage = `url(${data})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_quest1.bmp`, (data) => {
+			const el = root.querySelector(".titlebar");
+			if (el) el.style.backgroundImage = `url(${data})`;
+		});
 		if (!_preferences$49.show) this.ui.hide();
 		QuestWindow_default.append();
 	};
@@ -253726,10 +253734,17 @@ var init_Quest$2 = __esmMin((() => {
 	Quest.clean = function clean() {
 		_active_menu$1 = "";
 		_questList$1 = {};
-		Quest.ui.find("#active-quest-list").show();
-		Quest.ui.find("#inactive-quest-list").hide();
-		Quest.ui.find("#feature-quest-list").hide();
-		Quest.ui.find("#cooldown-quest-list").hide();
+		const root = _getRoot$49();
+		if (root) {
+			const activeList = root.querySelector("#active-quest-list");
+			if (activeList) activeList.style.display = "";
+			const inactiveList = root.querySelector("#inactive-quest-list");
+			if (inactiveList) inactiveList.style.display = "none";
+			const featureList = root.querySelector("#feature-quest-list");
+			if (featureList) featureList.style.display = "none";
+			const cooldownList = root.querySelector("#cooldown-quest-list");
+			if (cooldownList) cooldownList.style.display = "none";
+		}
 		Quest.ClearQuestList();
 		QuestHelper_default.clearQuestDesc();
 		QuestWindow_default.ClearQuestList();
@@ -253737,12 +253752,11 @@ var init_Quest$2 = __esmMin((() => {
 	};
 	/**
 	* Removing the UI from window, save preferences
-	*
 	*/
 	Quest.onRemove = function onRemove() {
-		_preferences$49.show = this.ui.is(":visible");
-		_preferences$49.y = parseInt(this.ui.css("top"), 10);
-		_preferences$49.x = parseInt(this.ui.css("left"), 10);
+		_preferences$49.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
+		_preferences$49.y = parseInt(this._host.style.top, 10);
+		_preferences$49.x = parseInt(this._host.style.left, 10);
 		_preferences$49.save();
 	};
 	/**
@@ -253751,8 +253765,11 @@ var init_Quest$2 = __esmMin((() => {
 	Quest.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
+				if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
+				else {
+					this.ui.show();
+					this.focus();
+				}
 				break;
 		}
 	};
@@ -253760,7 +253777,7 @@ var init_Quest$2 = __esmMin((() => {
 	* Show/Hide UI
 	*/
 	Quest.toggle = function toggle() {
-		if (this.ui.is(":visible")) this.ui.hide();
+		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
 		else this.ui.show();
 	};
 	/**
@@ -253846,44 +253863,81 @@ var init_Quest$2 = __esmMin((() => {
 		return typeof _questList$1[questID] !== "undefined" ? true : false;
 	};
 	Quest.addQuestToUI = function addQuest(quest) {
+		const root = _getRoot$49();
+		if (!root) return;
 		let ul_id = "";
-		let li_text = "";
-		const toggle_id = "qid" + quest.questID;
-		const show_id = "sid" + quest.questID;
-		const title = quest.title.length > 30 ? quest.title.substr(0, 30) + "..." : quest.title;
-		const summary = quest.summary.length > 30 ? quest.summary.substr(0, 30) + "..." : quest.summary;
+		const toggle_id = `qid${quest.questID}`;
+		const show_id = `sid${quest.questID}`;
+		const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
+		const summary = quest.summary.length > 30 ? `${quest.summary.substr(0, 30)}...` : quest.summary;
 		const bt_check = _questNotShowList.includes(parseInt(Number(quest.questID))) ? "bt_check_off" : "bt_check_on";
 		const epoch_seconds = /* @__PURE__ */ new Date() / 1e3;
+		let li_text;
 		if (quest.end_time > 0 && quest.end_time > epoch_seconds) {
 			ul_id = "#cooldown-quest-list";
-			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\" data-background=\"renew_questui/" + quest.icon + "\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><div class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></div></div></li>";
+			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><div class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></div></div></li>";
 		} else if (quest.active == 1) {
 			ul_id = "#active-quest-list";
-			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\" data-background=\"renew_questui/" + quest.icon + "\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <button id=\"" + show_id + "\" class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </button></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\" data-background=\"renew_questui/bt_lock_open.bmp\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
+			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <button id=\"" + show_id + "\" class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </button></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
 		} else {
 			ul_id = "#inactive-quest-list";
-			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\" data-background=\"renew_questui/" + quest.icon + "\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\" data-background=\"renew_questui/bt_lock.bmp\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
+			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
 		}
-		this.ui.find(ul_id).append(jquery_default(li_text).addClass("quest-item").data("background", "renew_questui/bg_questlist.bmp").data("hover", "renew_questui/bg_questlist_check.bmp").data("down", "renew_questui/bg_questlist_press.bmp").on("click", function(e) {
-			if (e.target.tagName.toLowerCase() == "button") return;
-			if (jquery_default(e.currentTarget).attr("class") == "quest-item") {
-				QuestHelper_default.clearQuestDesc();
-				QuestHelper_default.setQuestInfo(quest);
-				QuestHelper_default.prepare();
-				QuestHelper_default.append();
-				QuestHelper_default.ui.show();
-				QuestHelper_default.ui.focus();
-			}
-		}).each(this.parseHTML));
-		this.ui.find("#" + toggle_id).on("click", onClickQuestToggle$1);
-		this.ui.find("#" + show_id).on("click", onClickQuestDisplay);
-		Client.loadFile(DB.INTERFACE_PATH + "renew_questui/" + bt_check + ".bmp", function(data) {
-			Quest.ui.find("#" + show_id).css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		this.ui.each(this.parseHTML).find("*").each(this.parseHTML);
+		const ul = root.querySelector(ul_id);
+		if (!ul) return;
+		const li = document.createElement("li");
+		li.className = "quest-item";
+		li.innerHTML = li_text;
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist.bmp`, (data) => {
+			li.style.backgroundImage = `url(${data})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${quest.icon}`, (data) => {
+			const iconEl = li.querySelector(".quest-item-icon-image");
+			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
+		});
+		li.addEventListener("click", (e) => {
+			if (e.target.tagName.toLowerCase() === "button") return;
+			QuestHelper_default.clearQuestDesc();
+			QuestHelper_default.setQuestInfo(quest);
+			QuestHelper_default.prepare();
+			QuestHelper_default.append();
+			QuestHelper_default.ui.show();
+		});
+		li.addEventListener("mouseenter", () => {
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist_check.bmp`, (data) => {
+				li.style.backgroundImage = `url(${data})`;
+			});
+		});
+		li.addEventListener("mouseleave", () => {
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist.bmp`, (data) => {
+				li.style.backgroundImage = `url(${data})`;
+			});
+		});
+		ul.appendChild(li);
+		const toggleBtn = root.querySelector(`#${toggle_id}`);
+		if (toggleBtn) {
+			toggleBtn.addEventListener("click", (e) => onClickQuestToggle$1(e));
+			if (quest.active == 1) Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bt_lock_open.bmp`, (data) => {
+				toggleBtn.style.backgroundImage = `url(${data})`;
+			});
+			else Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bt_lock.bmp`, (data) => {
+				toggleBtn.style.backgroundImage = `url(${data})`;
+			});
+		}
+		const showBtn = root.querySelector(`#${show_id}`);
+		if (showBtn) {
+			showBtn.addEventListener("click", (e) => onClickQuestDisplay(e));
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${bt_check}.bmp`, (data) => {
+				showBtn.style.backgroundImage = `url(${data})`;
+			});
+		}
 	};
 	Quest.ClearQuestList = function ClearQuestList() {
-		Quest.ui.find(".quest-list").html("");
+		const root = _getRoot$49();
+		if (!root) return;
+		root.querySelectorAll(".quest-list").forEach((el) => {
+			el.innerHTML = "";
+		});
 	};
 	Quest_default = UIManager.addComponent(Quest);
 }));
@@ -253891,16 +253945,19 @@ var init_Quest$2 = __esmMin((() => {
 //#region src/UI/Components/Quest/QuestV1/QuestHelperV1.html?raw
 var QuestHelperV1_default$2;
 var init_QuestHelperV1$2 = __esmMin((() => {
-	QuestHelperV1_default$2 = "<div id=\"QuestInfoV1\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/quest_window.bmp\">\r\n		<div class=\"content\">\r\n			<button\r\n				class=\"quest-info-close-btn\"\r\n				data-background=\"basic_interface/sys_close_on.bmp\"\r\n				data-hover=\"basic_interface/sys_close_off.bmp\"\r\n				data-down=\"basic_interface/sys_close_off.bmp\"\r\n			></button>\r\n			<div class=\"title\">title</div>\r\n			<div class=\"summary\">summary</div>\r\n			<div class=\"objective\">objective</div>\r\n			<div class=\"monster\">monster</div>\r\n			<div class=\"killed\">killed</div>\r\n			<div class=\"limited\">limited</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	QuestHelperV1_default$2 = "<div id=\"QuestInfoV1\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"content\">\r\n			<ui-button\r\n				class=\"quest-info-close-btn\"\r\n				bg=\"basic_interface/sys_close_on.bmp\"\r\n				hover=\"basic_interface/sys_close_off.bmp\"\r\n				down=\"basic_interface/sys_close_off.bmp\"\r\n			></ui-button>\r\n			<div class=\"title\">title</div>\r\n			<div class=\"summary\">summary</div>\r\n			<div class=\"objective\">objective</div>\r\n			<div class=\"monster\">monster</div>\r\n			<div class=\"killed\">killed</div>\r\n			<div class=\"limited\">limited</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestHelperV1.css?raw
 var QuestHelperV1_default$1;
 var init_QuestHelperV1$1 = __esmMin((() => {
-	QuestHelperV1_default$1 = "#QuestInfoV1 {\r\n	position: absolute;\r\n	width: 350px;\r\n	height: 375px;\r\n}\r\n\r\n#QuestInfoV1 .titlebar {\r\n	width: 350px;\r\n	height: 375px;\r\n}\r\n\r\n#QuestInfoV1 .titlebar .content {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#QuestInfoV1 .titlebar .content .quest-info-close-btn {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#QuestInfoV1 .titlebar .content .title {\r\n	position: absolute;\r\n	top: 60px;\r\n	left: 120px;\r\n}\r\n#QuestInfoV1 .titlebar .content .summary {\r\n	position: absolute;\r\n	top: 135px;\r\n	left: 25px;\r\n}\r\n#QuestInfoV1 .titlebar .content .objective {\r\n	position: absolute;\r\n	top: 283px;\r\n	left: 25px;\r\n	max-width: 300px;\r\n}\r\n#QuestInfoV1 .titlebar .content .monster {\r\n	position: absolute;\r\n	top: 341px;\r\n	left: 50px;\r\n}\r\n#QuestInfoV1 .titlebar .content .monster .monster-select {\r\n	border: none;\r\n	min-width: 110px;\r\n}\r\n#QuestInfoV1 .titlebar .content .killed {\r\n	position: absolute;\r\n	top: 343px;\r\n	left: 215px;\r\n}\r\n#QuestInfoV1 .titlebar .content .limited {\r\n	position: absolute;\r\n	top: 343px;\r\n	left: 290px;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
+	QuestHelperV1_default$1 = ":host {\r\n	top: 200px;\r\n	left: 582px;\r\n}\r\n\r\n#QuestInfoV1 {\r\n	width: 350px;\r\n	height: 375px;\r\n	overflow: hidden;\r\n}\r\n\r\n#QuestInfoV1 .titlebar {\r\n	width: 350px;\r\n	height: 375px;\r\n}\r\n\r\n#QuestInfoV1 .titlebar .content {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#QuestInfoV1 .titlebar .content .quest-info-close-btn {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n#QuestInfoV1 .titlebar .content .title {\r\n	position: absolute;\r\n	top: 60px;\r\n	left: 120px;\r\n}\r\n#QuestInfoV1 .titlebar .content .summary {\r\n	position: absolute;\r\n	top: 135px;\r\n	left: 25px;\r\n}\r\n#QuestInfoV1 .titlebar .content .objective {\r\n	position: absolute;\r\n	top: 283px;\r\n	left: 25px;\r\n	max-width: 300px;\r\n}\r\n#QuestInfoV1 .titlebar .content .monster {\r\n	position: absolute;\r\n	top: 341px;\r\n	left: 50px;\r\n}\r\n#QuestInfoV1 .titlebar .content .monster .monster-select {\r\n	border: none;\r\n	min-width: 110px;\r\n	max-width: 160px;\r\n}\r\n#QuestInfoV1 .titlebar .content .killed {\r\n	position: absolute;\r\n	top: 343px;\r\n	left: 215px;\r\n}\r\n#QuestInfoV1 .titlebar .content .limited {\r\n	position: absolute;\r\n	top: 343px;\r\n	left: 290px;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestHelperV1.js
+function _getRoot$48() {
+	return QuestHelperV1._shadow || QuestHelperV1._host;
+}
 /**
 * Process text with color codes (^RRGGBB)
 * @param {string} text - The text to process
@@ -253909,9 +253966,7 @@ var init_QuestHelperV1$1 = __esmMin((() => {
 function processColorCodes$1(text) {
 	if (!text) return "";
 	text = String(text);
-	return text.replace(/\^([0-9A-Fa-f]{6})/g, function(match, color) {
-		return "<span style=\"color:#" + color + "\">";
-	}).replace(/\^000000/g, "</span>");
+	return text.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => `<span style="color:#${color}">`).replace(/\^000000/g, "</span>");
 }
 /**
 * Process item tags in text (<ITEM>Name<INFO>ID</INFO></ITEM>)
@@ -253921,8 +253976,8 @@ function processColorCodes$1(text) {
 function processItemTags$1(text) {
 	if (!text) return "";
 	text = String(text);
-	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, function(match, itemName, itemId) {
-		return "<span class=\"item-link\" data-item-id=\"" + itemId + "\">" + itemName + "</span>";
+	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, (match, itemName, itemId) => {
+		return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
 	});
 }
 /**
@@ -253933,8 +253988,8 @@ function processItemTags$1(text) {
 function processNAVITags$1(text) {
 	if (!text) return "";
 	text = String(text);
-	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, function(match, displayName, naviInfo) {
-		return "<span class=\"navi-link\" data-navi-info=\"" + naviInfo + "\" data-navi-name=\"" + displayName + "\">" + displayName + "</span>";
+	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
+		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
 	});
 }
 /**
@@ -253949,7 +254004,7 @@ function processText$1(text) {
 	text = processColorCodes$1(text);
 	return text;
 }
-function onClickClose$2(e) {
+function onClickClose$2() {
 	QuestHelperV1.ui.hide();
 }
 /**
@@ -253959,22 +254014,28 @@ function onClose$8() {
 	QuestHelperV1.ui.hide();
 }
 function onSelectMonster(e) {
-	const selected_monster = jquery_default(e.currentTarget);
-	QuestHelperV1.ui.find(".killed").html(selected_monster.attr("current"));
-	QuestHelperV1.ui.find(".limited").html(selected_monster.attr("max"));
+	const root = _getRoot$48();
+	const selectedOption = e.currentTarget.options[e.currentTarget.selectedIndex];
+	const killedEl = root.querySelector(".killed");
+	if (killedEl) killedEl.textContent = selectedOption.getAttribute("current");
+	const limitedEl = root.querySelector(".limited");
+	if (limitedEl) limitedEl.textContent = selectedOption.getAttribute("max");
 }
 var QuestHelperV1, _preferences$48, QuestHelperV1_default;
 var init_QuestHelperV1 = __esmMin((() => {
 	init_Preferences$1();
+	init_Client();
+	init_DBManager();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemInfo();
 	init_Navigation();
-	init_jquery();
 	init_QuestHelperV1$2();
 	init_QuestHelperV1$1();
-	QuestHelperV1 = new UIComponent("QuestHelperV1", QuestHelperV1_default$2, QuestHelperV1_default$1);
+	QuestHelperV1 = new GUIComponent("QuestHelperV1", QuestHelperV1_default$1);
+	QuestHelperV1.render = () => QuestHelperV1_default$2;
 	_preferences$48 = Preferences.get("QuestHelperV1", {
 		x: 200,
 		y: 200,
@@ -253984,73 +254045,99 @@ var init_QuestHelperV1 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	QuestHelperV1.init = function init() {
-		this.ui.on("click", ".quest-info-close-btn", onClickClose$2);
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.on("click", ".item-link", function(event) {
-			const itemId = parseInt(jquery_default(this).data("item-id"), 10);
-			if (!itemId) return;
-			if (ItemInfo_default.uid === itemId) {
-				ItemInfo_default.remove();
+		const root = _getRoot$48();
+		const closeBtn = root.querySelector(".quest-info-close-btn");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => onClickClose$2());
+		}
+		root.addEventListener("click", (event) => {
+			const itemLink = event.target.closest(".item-link");
+			if (itemLink) {
+				const itemId = parseInt(itemLink.dataset.itemId, 10);
+				if (!itemId) return;
+				if (ItemInfo_default.uid === itemId) {
+					ItemInfo_default.remove();
+					return;
+				}
+				ItemInfo_default.append();
+				ItemInfo_default.uid = itemId;
+				ItemInfo_default.setItem({
+					ITID: itemId,
+					IsIdentified: true
+				});
 				return;
 			}
-			ItemInfo_default.append();
-			ItemInfo_default.uid = itemId;
-			ItemInfo_default.setItem({
-				ITID: itemId,
-				IsIdentified: true
-			});
-		});
-		this.ui.on("click", ".navi-link", function(event) {
-			const naviInfo = jquery_default(this).data("navi-info");
-			const displayName = jquery_default(this).data("navi-name");
-			if (!naviInfo) return;
-			if (Navigation_default.uid === naviInfo && Navigation_default.ui.is(":visible")) {
-				Navigation_default.hide();
-				return;
+			const naviLink = event.target.closest(".navi-link");
+			if (naviLink) {
+				const naviInfo = naviLink.dataset.naviInfo;
+				const displayName = naviLink.dataset.naviName;
+				if (!naviInfo) return;
+				const navHostDisplay = Navigation_default._host ? getComputedStyle(Navigation_default._host).display : "none";
+				if (Navigation_default.uid === naviInfo && navHostDisplay !== "none") {
+					Navigation_default.hide();
+					return;
+				}
+				Navigation_default.show();
+				Navigation_default.uid = naviInfo;
+				Navigation_default.setNaviInfo(naviInfo, displayName);
 			}
-			Navigation_default.show();
-			Navigation_default.uid = naviInfo;
-			Navigation_default.setNaviInfo(naviInfo, displayName);
 		});
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(".titlebar");
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/quest_window.bmp`, (data) => {
+			const titlebar = root.querySelector(".titlebar");
+			if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
+		});
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelperV1.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$48.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$48.x + 382), Renderer.width - this.ui.width())
-		});
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$48.x + 382), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$48.y), Renderer.height - 375)}px`;
 	};
 	QuestHelperV1.setQuestInfo = function setQuestInfo(quest) {
-		QuestHelperV1.ui.find(".title").html(processText$1(quest.title));
-		QuestHelperV1.ui.find(".summary").html(processText$1(quest.summary));
-		QuestHelperV1.ui.find(".objective").html(processText$1(quest.description));
+		const root = _getRoot$48();
+		if (!root) return;
+		const titleEl = root.querySelector(".title");
+		if (titleEl) titleEl.innerHTML = processText$1(quest.title);
+		const summaryEl = root.querySelector(".summary");
+		if (summaryEl) summaryEl.innerHTML = processText$1(quest.summary);
+		const objectiveEl = root.querySelector(".objective");
+		if (objectiveEl) objectiveEl.innerHTML = processText$1(quest.description);
 		let list = "<select class=\"monster-select\">";
 		let first = true;
 		for (const huntID in quest.hunt_list) {
 			if (first) {
-				QuestHelperV1.ui.find(".killed").html(quest.hunt_list[huntID].huntCount);
-				QuestHelperV1.ui.find(".limited").html(quest.hunt_list[huntID].maxCount);
+				const killedEl = root.querySelector(".killed");
+				if (killedEl) killedEl.textContent = quest.hunt_list[huntID].huntCount;
+				const limitedEl = root.querySelector(".limited");
+				if (limitedEl) limitedEl.textContent = quest.hunt_list[huntID].maxCount;
 				first = false;
 			}
-			list += "<option current=\"" + quest.hunt_list[huntID].huntCount + "\" max=\"" + quest.hunt_list[huntID].maxCount + "\">" + processText$1(quest.hunt_list[huntID].mobName) + "</option>";
+			list += `<option current="${quest.hunt_list[huntID].huntCount}" max="${quest.hunt_list[huntID].maxCount}">${processText$1(quest.hunt_list[huntID].mobName)}</option>`;
 		}
 		list += "</select>";
-		QuestHelperV1.ui.find(".monster").html(list);
-		this.ui.find(".monster-select").on("change", onSelectMonster);
+		const monsterEl = root.querySelector(".monster");
+		if (monsterEl) monsterEl.innerHTML = list;
+		const selectEl = root.querySelector(".monster-select");
+		if (selectEl) selectEl.addEventListener("change", (e) => onSelectMonster(e));
 	};
 	QuestHelperV1.clearQuestDesc = function clearQuestDesc() {
-		QuestHelperV1.ui.find(".title").html("");
-		QuestHelperV1.ui.find(".summary").html("");
-		QuestHelperV1.ui.find(".objective").html("");
-		QuestHelperV1.ui.find(".monster").html("");
-		QuestHelperV1.ui.find(".killed").html("");
-		QuestHelperV1.ui.find(".limited").html("");
+		const root = _getRoot$48();
+		if (!root) return;
+		const titleEl = root.querySelector(".title");
+		if (titleEl) titleEl.innerHTML = "";
+		const summaryEl = root.querySelector(".summary");
+		if (summaryEl) summaryEl.innerHTML = "";
+		const objectiveEl = root.querySelector(".objective");
+		if (objectiveEl) objectiveEl.innerHTML = "";
+		const monsterEl = root.querySelector(".monster");
+		if (monsterEl) monsterEl.innerHTML = "";
+		const killedEl = root.querySelector(".killed");
+		if (killedEl) killedEl.textContent = "";
+		const limitedEl = root.querySelector(".limited");
+		if (limitedEl) limitedEl.textContent = "";
 	};
 	/**
 	* Clean up UI
@@ -254061,14 +254148,13 @@ var init_QuestHelperV1 = __esmMin((() => {
 	};
 	/**
 	* Removing the UI from window, save preferences
-	*
 	*/
 	QuestHelperV1.onRemove = function onRemove() {};
 	/**
 	* Show/Hide UI
 	*/
 	QuestHelperV1.toggle = function toggle() {
-		if (this.ui.is(":visible")) this.ui.hide();
+		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
 		else this.ui.show();
 	};
 	QuestHelperV1_default = UIManager.addComponent(QuestHelperV1);
@@ -254077,67 +254163,77 @@ var init_QuestHelperV1 = __esmMin((() => {
 //#region src/UI/Components/Quest/QuestV1/QuestV1.html?raw
 var QuestV1_default$2;
 var init_QuestV1$2 = __esmMin((() => {
-	QuestV1_default$2 = "<div id=\"QuestV1\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"header\">\r\n			<div class=\"corner left\" data-background=\"basic_interface/titlebar_left.bmp\" />\r\n			<div class=\"center\" data-background=\"basic_interface/titlebar_mid.bmp\" />\r\n			<div class=\"corner right\" data-background=\"basic_interface/titlebar_right.bmp\" />\r\n			<div class=\"title\" data-text=\"1317\" />\r\n			<button\r\n				class=\"btn-left\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"btn-right\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"content\">\r\n			<div class=\"quest-left-panel\">\r\n				<ul class=\"quest-menu\">\r\n					<li id=\"active\" class=\"quest-menu-item\"></li>\r\n					<li id=\"inactive\" class=\"quest-menu-item\"></li>\r\n					<li id=\"all\" class=\"quest-menu-item\"></li>\r\n				</ul>\r\n			</div>\r\n			<div class=\"quest-right-panel\">\r\n				<ul id=\"active-quest-list\" class=\"quest-list\"></ul>\r\n				<ul id=\"inactive-quest-list\" class=\"quest-list\"></ul>\r\n				<ul id=\"all-quest-list\" class=\"quest-list\"></ul>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<div class=\"corner left\" data-background=\"basic_interface/btnbar_left2.bmp\" />\r\n			<div class=\"center\" data-background=\"basic_interface/btnbar_mid2.bmp\"></div>\r\n			<div class=\"corner right\" data-background=\"basic_interface/btnbar_right2.bmp\" />\r\n			<div class=\"btns\">\r\n				<button\r\n					class=\"btn view\"\r\n					data-background=\"btn_view.bmp\"\r\n					data-hover=\"btn_view_a.bmp\"\r\n					data-down=\"btn_view_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"btn close\"\r\n					data-background=\"btn_close.bmp\"\r\n					data-hover=\"btn_close_a.bmp\"\r\n					data-down=\"btn_close_b.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	QuestV1_default$2 = "<div id=\"QuestV1\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"header\">\r\n			<div class=\"corner left\" data-background=\"basic_interface/titlebar_left.bmp\"></div>\r\n			<div class=\"center\" data-background=\"basic_interface/titlebar_mid.bmp\"></div>\r\n			<div class=\"corner right\" data-background=\"basic_interface/titlebar_right.bmp\"></div>\r\n			<ui-text class=\"title\" msgid=\"1317\"></ui-text>\r\n			<ui-button\r\n				class=\"btn-left\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"btn-right\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"content\">\r\n			<div class=\"quest-left-panel\">\r\n				<ul class=\"quest-menu\">\r\n					<li id=\"active\" class=\"quest-menu-item\"></li>\r\n					<li id=\"inactive\" class=\"quest-menu-item\"></li>\r\n					<li id=\"all\" class=\"quest-menu-item\"></li>\r\n				</ul>\r\n			</div>\r\n			<div class=\"quest-right-panel\">\r\n				<ul id=\"active-quest-list\" class=\"quest-list\"></ul>\r\n				<ul id=\"inactive-quest-list\" class=\"quest-list\"></ul>\r\n				<ul id=\"all-quest-list\" class=\"quest-list\"></ul>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<div class=\"corner left\" data-background=\"basic_interface/btnbar_left2.bmp\"></div>\r\n			<div class=\"center\" data-background=\"basic_interface/btnbar_mid2.bmp\"></div>\r\n			<div class=\"corner right\" data-background=\"basic_interface/btnbar_right2.bmp\"></div>\r\n			<div class=\"btns\">\r\n				<ui-button class=\"btn view\" bg=\"btn_view.bmp\" hover=\"btn_view_a.bmp\" down=\"btn_view_b.bmp\"></ui-button>\r\n				<ui-button\r\n					class=\"btn close\"\r\n					bg=\"btn_close.bmp\"\r\n					hover=\"btn_close_a.bmp\"\r\n					down=\"btn_close_b.bmp\"\r\n				></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestV1.css?raw
 var QuestV1_default$1;
 var init_QuestV1$1 = __esmMin((() => {
-	QuestV1_default$1 = "#QuestV1 {\r\n	position: absolute;\r\n	width: 350px;\r\n	height: 250px;\r\n}\r\n\r\n#QuestV1 .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n/** Header **/\r\n#QuestV1 .titlebar .header {\r\n	width: 250px;\r\n	height: 17px;\r\n}\r\n#QuestV1 .titlebar .header .corner {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 17px;\r\n}\r\n#QuestV1 .titlebar .header .corner.left {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#QuestV1 .titlebar .header .corner.right {\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n#QuestV1 .titlebar .header .center {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 12px;\r\n	width: 326px;\r\n	height: 17px;\r\n}\r\n#QuestV1 .titlebar .header .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 16px;\r\n	font-size: 13px;\r\n}\r\n#QuestV1 .titlebar .header .btn-left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#QuestV1 .titlebar .header .btn-right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/** Content **/\r\n#QuestV1 .titlebar .content {\r\n	width: 350px;\r\n	height: 204px;\r\n	background-color: white;\r\n}\r\n\r\n/** Select Buttons **/\r\n#QuestV1 .titlebar .quest-left-panel {\r\n	float: left;\r\n	width: 20px;\r\n	height: 204px;\r\n}\r\n#QuestV1 .titlebar .content .quest-left-panel .quest-menu {\r\n	height: 94px;\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n}\r\n#QuestV1 .titlebar .content .quest-left-panel .quest-menu .quest-menu-item {\r\n	height: 31px;\r\n	width: 30px;\r\n}\r\n\r\n/** QuestV1 List **/\r\n#QuestV1 .titlebar .content .quest-right-panel {\r\n	float: left;\r\n	width: 330px;\r\n	height: 204px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list {\r\n	list-style: none;\r\n	margin: 10px;\r\n	padding: 0px;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item {\r\n	float: left;\r\n	list-style: none;\r\n	height: 42px;\r\n	width: 100%;\r\n	margin-top: 2px;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item .quest-item-icon {\r\n	float: left;\r\n	min-height: 100%;\r\n	min-width: 15%;\r\n	position: relative;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item .quest-item-icon .quest-item-icon-image {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 24px;\r\n	top: 6px;\r\n	left: 5px;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item .quest-item-title {\r\n	float: left;\r\n	min-height: 100%;\r\n	min-width: 85%;\r\n}\r\n\r\n/** Footer **/\r\n#QuestV1 .titlebar .footer {\r\n	width: 350px;\r\n	height: 29px;\r\n}\r\n#QuestV1 .titlebar .footer .corner {\r\n	position: absolute;\r\n	width: 21px;\r\n	height: 29px;\r\n}\r\n#QuestV1 .titlebar .footer .corner.left {\r\n	bottom: 0px;\r\n	left: 0px;\r\n}\r\n#QuestV1 .titlebar .footer .corner.right {\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n#QuestV1 .titlebar .footer .center {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	left: 21px;\r\n	width: 326px;\r\n	height: 29px;\r\n}\r\n\r\n/** Buttons **/\r\n#QuestV1 .titlebar .footer .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#QuestV1 .titlebar .footer .btn {\r\n	position: absolute;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#QuestV1 .titlebar .footer .close {\r\n	right: 50px;\r\n}\r\n#QuestV1 .titlebar .footer .view {\r\n	right: 4px;\r\n}\r\n";
+	QuestV1_default$1 = ":host {\r\n	top: 200px;\r\n	left: 200px;\r\n}\r\n\r\n#QuestV1 {\r\n	width: 350px;\r\n	height: 250px;\r\n}\r\n\r\n#QuestV1 .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n/** Header **/\r\n#QuestV1 .titlebar .header {\r\n	width: 250px;\r\n	height: 17px;\r\n}\r\n#QuestV1 .titlebar .header .corner {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 17px;\r\n}\r\n#QuestV1 .titlebar .header .corner.left {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#QuestV1 .titlebar .header .corner.right {\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n#QuestV1 .titlebar .header .center {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 12px;\r\n	width: 326px;\r\n	height: 17px;\r\n}\r\n#QuestV1 .titlebar .header .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 16px;\r\n	font-size: 13px;\r\n}\r\n#QuestV1 .titlebar .header .btn-left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n#QuestV1 .titlebar .header .btn-right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n/** Content **/\r\n#QuestV1 .titlebar .content {\r\n	width: 350px;\r\n	height: 204px;\r\n	background-color: white;\r\n}\r\n\r\n/** Select Buttons **/\r\n#QuestV1 .titlebar .quest-left-panel {\r\n	float: left;\r\n	width: 20px;\r\n	height: 204px;\r\n}\r\n#QuestV1 .titlebar .content .quest-left-panel .quest-menu {\r\n	height: 94px;\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n}\r\n#QuestV1 .titlebar .content .quest-left-panel .quest-menu .quest-menu-item {\r\n	height: 31px;\r\n	width: 30px;\r\n}\r\n\r\n/** QuestV1 List **/\r\n#QuestV1 .titlebar .content .quest-right-panel {\r\n	float: left;\r\n	width: 330px;\r\n	height: 204px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list {\r\n	list-style: none;\r\n	margin: 10px;\r\n	padding: 0px;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item {\r\n	float: left;\r\n	list-style: none;\r\n	height: 42px;\r\n	width: 100%;\r\n	margin-top: 2px;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item .quest-item-icon {\r\n	float: left;\r\n	min-height: 100%;\r\n	min-width: 15%;\r\n	position: relative;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item .quest-item-icon .quest-item-icon-image {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 24px;\r\n	top: 6px;\r\n	left: 5px;\r\n}\r\n#QuestV1 .titlebar .content .quest-right-panel .quest-list .quest-item .quest-item-title {\r\n	float: left;\r\n	min-height: 100%;\r\n	min-width: 85%;\r\n}\r\n\r\n/** Footer **/\r\n#QuestV1 .titlebar .footer {\r\n	width: 350px;\r\n	height: 29px;\r\n}\r\n#QuestV1 .titlebar .footer .corner {\r\n	position: absolute;\r\n	width: 21px;\r\n	height: 29px;\r\n}\r\n#QuestV1 .titlebar .footer .corner.left {\r\n	bottom: 0px;\r\n	left: 0px;\r\n}\r\n#QuestV1 .titlebar .footer .corner.right {\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n#QuestV1 .titlebar .footer .center {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	left: 21px;\r\n	width: 326px;\r\n	height: 29px;\r\n}\r\n\r\n/** Buttons **/\r\n#QuestV1 .titlebar .footer .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#QuestV1 .titlebar .footer .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n#QuestV1 .titlebar .footer .close {\r\n	right: 50px;\r\n}\r\n#QuestV1 .titlebar .footer .view {\r\n	right: 4px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestV1.js
+function _getRoot$47() {
+	return QuestV1._shadow || QuestV1._host;
+}
 function onClickMenu$1(e) {
-	const quest_element = jquery_default(e.currentTarget);
-	if (_active_menu == quest_element.attr("id")) return;
-	_active_menu = quest_element.attr("id");
+	const root = _getRoot$47();
+	const menuId = e.currentTarget.id;
+	if (_active_menu === menuId) return;
+	_active_menu = menuId;
 	let background_image = "";
-	QuestV1.ui.find("#active-quest-list").hide();
-	QuestV1.ui.find("#inactive-quest-list").hide();
-	QuestV1.ui.find("#all-quest-list").hide();
+	root.querySelector("#active-quest-list").style.display = "none";
+	root.querySelector("#inactive-quest-list").style.display = "none";
+	root.querySelector("#all-quest-list").style.display = "none";
 	switch (_active_menu) {
 		case "inactive":
 			background_image = "tab_que_02";
-			QuestV1.ui.find("#inactive-quest-list").show();
+			root.querySelector("#inactive-quest-list").style.display = "";
 			break;
 		case "all":
 			background_image = "tab_que_03";
-			QuestV1.ui.find("#all-quest-list").show();
+			root.querySelector("#all-quest-list").style.display = "";
 			break;
 		default:
 			background_image = "tab_que_01";
-			QuestV1.ui.find("#active-quest-list").show();
+			root.querySelector("#active-quest-list").style.display = "";
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/" + background_image + ".bmp", function(data) {
-		QuestV1.ui.find(".quest-menu").css("backgroundImage", "url(" + data + ")");
-	}.bind(this));
+	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/${background_image}.bmp`, (data) => {
+		const el = root.querySelector(".quest-menu");
+		if (el) el.style.backgroundImage = `url(${data})`;
+	});
 	QuestHelperV1_default.clearQuestDesc();
 }
 function onClickQuest(e) {
-	const toggle_element = jquery_default(e.currentTarget);
-	const id = toggle_element.attr("id").replace("qid", "");
+	const root = _getRoot$47();
+	const toggleEl = e.currentTarget;
+	const tid = toggleEl.id || toggleEl.className.match(/qid(\d+)/)?.[0];
+	const id = tid ? tid.replace("qid", "") : null;
+	if (!id) return;
 	if (_index$5 > -1) {
-		QuestV1.ui.find(".qid" + _index$5).css("background-color", "white");
-		QuestV1.ui.find("#qid" + _index$5).css("background-color", "white");
+		root.querySelectorAll(`.qid${_index$5}`).forEach((el) => {
+			el.style.backgroundColor = "white";
+		});
+		const prevById = root.querySelector(`#qid${_index$5}`);
+		if (prevById) prevById.style.backgroundColor = "white";
 	}
 	_index$5 = id;
-	toggle_element.css("background-color", "lightgray");
+	toggleEl.style.backgroundColor = "lightgray";
 }
 function onClickQuestToggle(e) {
-	const id = jquery_default(e.currentTarget).attr("id").replace("qid", "");
+	const id = e.currentTarget.id.replace("qid", "");
 	const _pkt = new PACKET.CZ.ACTIVE_QUEST();
 	_pkt.questID = _questList[id].questID;
 	_pkt.active = _questList[id].active == 1 ? 0 : 1;
 	Network.sendPacket(_pkt);
 }
-function onClickView(e) {
+function onClickView() {
 	if (_index$5 > -1) {
 		QuestHelperV1_default.clearQuestDesc();
 		QuestHelperV1_default.setQuestInfo(_questList[_index$5]);
 		QuestHelperV1_default.prepare();
 		QuestHelperV1_default.append();
 		QuestHelperV1_default.ui.show();
-		QuestHelperV1_default.ui.focus();
 	}
 }
 function refreshQuestUI() {
@@ -254157,16 +254253,17 @@ var init_QuestV1 = __esmMin((() => {
 	init_Client();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_QuestHelperV1();
 	init_QuestV1$2();
 	init_QuestV1$1();
-	init_jquery();
 	init_ChatBox();
 	init_SessionStorage();
-	QuestV1 = new UIComponent("QuestV1", QuestV1_default$2, QuestV1_default$1);
+	QuestV1 = new GUIComponent("QuestV1", QuestV1_default$1);
+	QuestV1.render = () => QuestV1_default$2;
 	_index$5 = -1;
 	_questList = [];
 	_active_menu = "active";
@@ -254180,33 +254277,33 @@ var init_QuestV1 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	QuestV1.init = function init() {
+		const root = _getRoot$47();
 		QuestHelperV1_default.prepare();
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
+		root.querySelector(".view").addEventListener("click", () => onClickView());
+		root.querySelector(".close").addEventListener("click", () => onClose$7());
+		root.querySelector(".btn-right").addEventListener("click", () => onClose$7());
+		root.querySelectorAll(".quest-menu-item").forEach((item) => {
+			item.addEventListener("click", (e) => onClickMenu$1(e));
 		});
-		this.ui.find(".view").click(onClickView);
-		this.ui.find(".close").click(onClose$7);
-		this.ui.find(".btn-right").click(onClose$7);
-		this.ui.on("click", ".quest-menu-item", onClickMenu$1);
-		this.ui.find("#active-quest-list").show();
-		this.draggable(this.ui.find(".titlebar"));
+		const activeList = root.querySelector("#active-quest-list");
+		if (activeList) activeList.style.display = "";
+		this.draggable(".titlebar");
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestV1.onAppend = function onAppend() {
 		_index$5 = -1;
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$47.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$47.x), Renderer.width - this.ui.width())
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$47.x), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$47.y), Renderer.height - 250)}px`;
+		const root = _getRoot$47();
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_que_01.bmp`, (data) => {
+			const el = root.querySelector(".quest-menu");
+			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_que_01.bmp", function(data) {
-			QuestV1.ui.find(".quest-menu").css("backgroundImage", "url(" + data + ")");
-		}.bind(this));
-		QuestV1.ui.find("#active-quest-list").show();
-		QuestV1.ui.find("#inactive-quest-list").hide();
-		QuestV1.ui.find("#all-quest-list").hide();
+		root.querySelector("#active-quest-list").style.display = "";
+		root.querySelector("#inactive-quest-list").style.display = "none";
+		root.querySelector("#all-quest-list").style.display = "none";
 		if (!_preferences$47.show) this.ui.hide();
 	};
 	/**
@@ -254215,21 +254312,26 @@ var init_QuestV1 = __esmMin((() => {
 	QuestV1.clean = function clean() {
 		_active_menu = "";
 		_questList = {};
-		QuestV1.ui.find("#active-quest-list").hide();
-		QuestV1.ui.find("#inactive-quest-list").hide();
-		QuestV1.ui.find("#all-quest-list").hide();
+		const root = _getRoot$47();
+		if (root) {
+			const activeList = root.querySelector("#active-quest-list");
+			if (activeList) activeList.style.display = "none";
+			const inactiveList = root.querySelector("#inactive-quest-list");
+			if (inactiveList) inactiveList.style.display = "none";
+			const allList = root.querySelector("#all-quest-list");
+			if (allList) allList.style.display = "none";
+		}
 		QuestV1.ClearQuestList();
 		QuestHelperV1_default.clearQuestDesc();
 		onClose$7();
 	};
 	/**
 	* Removing the UI from window, save preferences
-	*
 	*/
 	QuestV1.onRemove = function onRemove() {
-		_preferences$47.show = this.ui.is(":visible");
-		_preferences$47.y = parseInt(this.ui.css("top"), 10);
-		_preferences$47.x = parseInt(this.ui.css("left"), 10);
+		_preferences$47.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
+		_preferences$47.y = parseInt(this._host.style.top, 10);
+		_preferences$47.x = parseInt(this._host.style.left, 10);
 		_preferences$47.save();
 	};
 	/**
@@ -254238,8 +254340,11 @@ var init_QuestV1 = __esmMin((() => {
 	QuestV1.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
+				if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
+				else {
+					this.ui.show();
+					this.focus();
+				}
 				break;
 		}
 	};
@@ -254247,7 +254352,7 @@ var init_QuestV1 = __esmMin((() => {
 	* Show/Hide UI
 	*/
 	QuestV1.toggle = function toggle() {
-		if (this.ui.is(":visible")) this.ui.hide();
+		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
 		else this.ui.show();
 	};
 	/**
@@ -254327,20 +254432,42 @@ var init_QuestV1 = __esmMin((() => {
 		return typeof _questList[questID] !== "undefined" ? true : false;
 	};
 	QuestV1.addQuestToUI = function addQuest(quest) {
-		const toggle_id = "qid" + quest.questID;
-		const title = quest.title.length > 30 ? quest.title.substr(0, 30) + "..." : quest.title;
-		const quest_icon = /^ico\_/.test(quest.icon) ? "SG_FEEL.bmp" : quest.icon;
-		const li_text = "<li id=\"" + toggle_id + "\" class=\"quest-item " + toggle_id + "\"><div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\" data-background=\"item/" + quest_icon + "\"></div> </div> <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span> </div></li>";
+		const root = _getRoot$47();
+		if (!root) return;
+		const toggle_id = `qid${quest.questID}`;
+		const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
+		const quest_icon = /^ico_/.test(quest.icon) ? "SG_FEEL.bmp" : quest.icon;
+		const li_text = `<div class="quest-item-icon"> <div class="quest-item-icon-image"></div> </div> <div class="quest-item-title"> <span class="quest-item-title-text">${title}</span> </div>`;
 		const ul_id = quest.active == 1 ? "#active-quest-list" : "#inactive-quest-list";
-		this.ui.find(ul_id).append(li_text);
-		this.ui.find("#" + toggle_id).on("contextmenu", onClickQuestToggle);
-		this.ui.find("#" + toggle_id).on("click", onClickQuest);
-		this.ui.find("#all-quest-list").append(li_text);
-		this.ui.find("." + toggle_id).on("click", onClickQuest);
-		this.ui.each(this.parseHTML).find("*").each(this.parseHTML);
+		const li = document.createElement("li");
+		li.id = toggle_id;
+		li.className = `quest-item ${toggle_id}`;
+		li.innerHTML = li_text;
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${quest_icon}`, (data) => {
+			const iconEl = li.querySelector(".quest-item-icon-image");
+			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
+		});
+		li.addEventListener("contextmenu", (e) => onClickQuestToggle(e));
+		li.addEventListener("click", (e) => onClickQuest(e));
+		const ul = root.querySelector(ul_id);
+		if (ul) ul.appendChild(li);
+		const liAll = document.createElement("li");
+		liAll.className = `quest-item ${toggle_id}`;
+		liAll.innerHTML = li_text;
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${quest_icon}`, (data) => {
+			const iconEl = liAll.querySelector(".quest-item-icon-image");
+			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
+		});
+		liAll.addEventListener("click", (e) => onClickQuest(e));
+		const allList = root.querySelector("#all-quest-list");
+		if (allList) allList.appendChild(liAll);
 	};
 	QuestV1.ClearQuestList = function ClearQuestList() {
-		QuestV1.ui.find(".quest-list").html("");
+		const root = _getRoot$47();
+		if (!root) return;
+		root.querySelectorAll(".quest-list").forEach((el) => {
+			el.innerHTML = "";
+		});
 	};
 	QuestV1_default = UIManager.addComponent(QuestV1);
 }));
@@ -271062,7 +271189,7 @@ var init_AIDriver = __esmMin((() => {
 				preloadFiles(files, AIDriver.MER_AI);
 				await doFiles(files, AIDriver.MER_AI);
 			} catch (error) {
-				console.error("Error loading AI files:", error);
+				console.warn("[AIDriver] AI files not available, skipping AI initialization:", error.message || error);
 				if (typeof onEnd === "function") onEnd();
 				return;
 			}
@@ -343936,13 +344063,19 @@ var init_UIManager = __esmMin((() => {
 				const component = this.components[keys[i]];
 				const el = component.ui ? component.ui[0] : null;
 				if (!el) continue;
+				if (component._isDraggable !== void 0 && !component._isDraggable) {
+					if (component.onResize) component.onResize();
+					continue;
+				}
 				const rect = el.getBoundingClientRect();
 				const x = rect.left;
 				const y = rect.top;
 				const width = rect.width;
 				const height = rect.height;
 				if (y + height > HEIGHT) el.style.top = `${HEIGHT - Math.min(height, HEIGHT)}px`;
+				if (y < 0) el.style.top = "0px";
 				if (x + width > WIDTH) el.style.left = `${WIDTH - Math.min(width, WIDTH)}px`;
+				if (x < 0) el.style.left = "0px";
 				if (component.magnet.BOTTOM) el.style.top = `${HEIGHT - height}px`;
 				if (component.magnet.RIGHT) el.style.left = `${WIDTH - width}px`;
 				if (component.onResize) component.onResize();
