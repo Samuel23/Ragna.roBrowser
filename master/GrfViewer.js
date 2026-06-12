@@ -238388,1468 +238388,6 @@ var init_History = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Components/ContextMenu/ContextMenu.css?raw
-var ContextMenu_default$1;
-var init_ContextMenu$1 = __esmMin((() => {
-	ContextMenu_default$1 = ":host {\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#ContextMenu {\r\n	position: fixed;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#ContextMenu .menu {\r\n	position: absolute;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n	padding: 2px;\r\n}\r\n\r\n#ContextMenu .menu hr {\r\n	background-color: #cecece;\r\n	height: 1px;\r\n	border: none;\r\n	margin: 2px;\r\n}\r\n\r\n#ContextMenu .menu div {\r\n	color: black;\r\n	white-space: nowrap;\r\n	padding: 1px;\r\n	height: 14px;\r\n}\r\n\r\n#ContextMenu .menu div:hover {\r\n	background-color: #739cef;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ContextMenu/ContextMenu.js
-var ContextMenu, ContextMenu_default;
-var init_ContextMenu = __esmMin((() => {
-	init_Renderer();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_ContextMenu$1();
-	ContextMenu = new GUIComponent("ContextMenu", ContextMenu_default$1);
-	/**
-	* Render HTML
-	*/
-	ContextMenu.render = () => "<div id=\"ContextMenu\"><div class=\"menu\"></div></div>";
-	/**
-	* @var {boolean} focus this UI
-	*/
-	ContextMenu.needFocus = true;
-	/**
-	* Initialize event handler
-	*/
-	ContextMenu.init = function init() {
-		const root = this._shadow || this._host;
-		root.querySelector("#ContextMenu").addEventListener("mousedown", () => {
-			ContextMenu.remove();
-		});
-		root.querySelector(".menu").addEventListener("mousedown", (event) => {
-			event.stopImmediatePropagation();
-		});
-	};
-	/**
-	* Position menu at mouse cursor
-	*/
-	ContextMenu.onAppend = function onAppend() {
-		const menu = (this._shadow || this._host).querySelector(".menu");
-		const width = menu.offsetWidth;
-		const height = menu.offsetHeight;
-		let x = Mouse.screen.x;
-		let y = Mouse.screen.y;
-		if (x + width > Renderer.width) x = x - width;
-		if (y + height > Renderer.height) y = y - height;
-		menu.style.top = y + "px";
-		menu.style.left = x + "px";
-	};
-	/**
-	* Clean up menu contents
-	*/
-	ContextMenu.onRemove = function onRemove() {
-		const root = this._shadow || this._host;
-		root.querySelector(".menu").innerHTML = "";
-	};
-	/**
-	* Add a clickable node to the context menu
-	*
-	* @param {string} text
-	* @param {function} callback once clicked
-	*/
-	ContextMenu.addElement = function addElement(text, callback) {
-		const root = this._shadow || this._host;
-		const item = document.createElement("div");
-		item.textContent = text;
-		item.addEventListener("click", () => {
-			ContextMenu.remove();
-			callback();
-		});
-		root.querySelector(".menu").appendChild(item);
-	};
-	/**
-	* Add a delimiter to the links
-	*/
-	ContextMenu.nextGroup = function nextGroup() {
-		(this._shadow || this._host).querySelector(".menu").appendChild(document.createElement("hr"));
-	};
-	ContextMenu_default = UIManager.addComponent(ContextMenu);
-}));
-//#endregion
-//#region src/UI/Components/ChatBox/ChatBox.html?raw
-var ChatBox_default$2;
-var init_ChatBox$2 = __esmMin((() => {
-	ChatBox_default$2 = "<div id=\"chatbox\" data-preload=\"basic_interface/dialscr_down.bmp;basic_interface/dialscr_up.bmp\">\r\n	<table class=\"header\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\r\n		<tbody>\r\n			<tr>\r\n				<td class=\"opttab\"><div class=\"options\"></div></td>\r\n			</tr>\r\n		</tbody>\r\n	</table>\r\n	<div class=\"chat-function\">\r\n		<button class=\"cfunc chatmode\" data-background=\"basic_interface/chatmode_on.bmp\"></button>\r\n		<button class=\"cfunc battleopt\" data-background=\"basic_interface/battle_option2_a.bmp\"></button>\r\n		<button class=\"cfunc stickfucn\" data-background=\"basic_interface/stickoff.bmp\"></button>\r\n		<button class=\"cfunc battleopt2\" data-background=\"basic_interface/battle_option_a.bmp\"></button>\r\n		<button class=\"cfunc wndminib\" data-background=\"basic_interface/wnd_mini_b.bmp\"></button>\r\n		<button class=\"cfunc lockdragwnd\" data-background=\"basic_interface/lock_dragwnd.bmp\"></button>\r\n	</div>\r\n	<div class=\"body\">\r\n		<div class=\"event_add_cursor draggable\"></div>\r\n		<div class=\"contentwrapper\"></div>\r\n	</div>\r\n\r\n	<div class=\"battlemode\"><button class=\"bmtoggle\">...</button></div>\r\n	<div class=\"input\" data-background=\"basic_interface/dialog_bg.bmp\">\r\n		<input type=\"text\" class=\"username\" />\r\n		<button\r\n			class=\"list\"\r\n			data-background=\"basic_interface/dialog_btn0.bmp\"\r\n			data-hover=\"basic_interface/dialog_btn1.bmp\"\r\n			data-down=\"basic_interface/dialog_btn2.bmp\"\r\n		></button>\r\n		<div class=\"wrapper\"><div contenteditable=\"true\" class=\"message input-chatbox\"></div></div>\r\n		<button\r\n			class=\"filter\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-down=\"basic_interface/sys_base_off.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"size\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-down=\"basic_interface/sys_base_off.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ChatBox/ChatBox.css?raw
-var ChatBox_default$1;
-var init_ChatBox$1 = __esmMin((() => {
-	ChatBox_default$1 = "#chatbox {\r\n	position: absolute;\r\n	left: 5px;\r\n	width: 595px;\r\n	max-width: 95%;\r\n}\r\n\r\n/** Tabs **/\r\n#chatbox .header {\r\n	margin-left: 3px;\r\n	height: 17px;\r\n\r\n	max-width: 100%;\r\n}\r\n\r\n#chatbox .header .tab {\r\n	width: 75px;\r\n	color: white;\r\n	text-align: center;\r\n}\r\n\r\n#chatbox .header input {\r\n	border: none;\r\n	background-color: transparent;\r\n	color: white;\r\n	width: 75px;\r\n	height: 15px;\r\n	text-align: center;\r\n}\r\n\r\n#chatbox .header .tab div {\r\n	padding-top: 2px;\r\n	border-radius: 2px 2px 0px 0px;\r\n	background: rgba(0, 0, 0, 0.75);\r\n	border: 1px solid #959595;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n#chatbox .header .tab div.on {\r\n	background: rgba(0, 0, 0, 0.5);\r\n	border: 1px solid white;\r\n	border-bottom: none;\r\n	border-right: none;\r\n	height: 18px;\r\n}\r\n\r\n#chatbox .header .options {\r\n	border-bottom: 1px solid white;\r\n	height: 18px;\r\n	margin-right: 4px;\r\n}\r\n\r\n/** Content **/\r\n#chatbox .body {\r\n	background: rgba(0, 0, 0, 0.5);\r\n	border-left: 1px solid white;\r\n	border-right: 1px solid white;\r\n	border-radius: 0px 3px 0px 0px;\r\n	padding: 0px 5px 5px 5px;\r\n	margin-left: 3px;\r\n	margin-right: -2px;\r\n	max-width: 100%;\r\n}\r\n#chatbox .contentwrapper {\r\n	height: 42px;\r\n}\r\n#chatbox .content {\r\n	text-shadow: 1px 1px 0px black;\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	line-height: 14px;\r\n	display: none;\r\n}\r\n#chatbox .content.active {\r\n	display: block;\r\n}\r\n#chatbox .content a {\r\n	color: inherit;\r\n	text-decoration: underline;\r\n}\r\n\r\n#chatbox .content a,\r\n#chatbox .content .item-link {\r\n	cursor: pointer;\r\n}\r\n\r\n#chatbox .event_add_cursor {\r\n	height: 14px;\r\n	cursor: ns-resize;\r\n}\r\n\r\n#chatbox .battlemode {\r\n	width: 592px;\r\n	height: 25px;\r\n	position: relative;\r\n	border-left: 1px solid white;\r\n	border-right: 1px solid white;\r\n	border-top: 1px solid grey;\r\n	background-color: rgba(0, 0, 0, 0.5);\r\n	margin-left: 3px;\r\n	display: none;\r\n	max-width: 100%;\r\n}\r\n\r\n/** Input **/\r\n#chatbox .input {\r\n	width: 600px;\r\n	height: 25px;\r\n	position: relative;\r\n	max-width: 100%;\r\n}\r\n\r\n#chatbox .input.fix {\r\n	margin-top: 29px;\r\n}\r\n\r\n#chatbox .input input {\r\n	position: absolute;\r\n	top: 3px;\r\n	height: 18px;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n\r\n#chatbox .input .username {\r\n	left: 4px;\r\n	width: 90px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#chatbox .input .list {\r\n	width: 8px;\r\n	height: 18px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 97px;\r\n	background-repeat: no-repeat;\r\n	padding: 0;\r\n}\r\n#chatbox .input .wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	margin-left: 108px;\r\n	height: 100%;\r\n	overflow: hidden;\r\n	width: calc(100% - 140px);\r\n}\r\n\r\n#chatbox .input .message {\r\n	width: 100%;\r\n	padding-left: 5px;\r\n\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	max-width: 100%;\r\n	vertical-align: middle;\r\n	display: inline-block;\r\n}\r\n#chatbox .input .message.party {\r\n	color: #840084;\r\n}\r\n#chatbox .input .message.guild {\r\n	color: #008484;\r\n}\r\n#chatbox .input .message.clan {\r\n	color: #ffa631;\r\n}\r\n\r\n#chatbox .input .filter,\r\n#chatbox .input .size {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	position: absolute;\r\n	right: 13px;\r\n	top: 8px;\r\n	background-color: transparent;\r\n}\r\n\r\n#chatbox .input .size {\r\n	right: 1px;\r\n}\r\n\r\n#chatbox .battlemode .bmtoggle {\r\n	height: 100%;\r\n}\r\n#chatbox .chat-function {\r\n	position: absolute;\r\n	right: 0px;\r\n	top: 0px;\r\n	/* Expand the \"no-walk\" header zone around buttons (but don't move them visually). */\r\n	padding: 6px;\r\n	margin: -6px;\r\n}\r\n#chatbox .chat-function button {\r\n	background-size: auto;\r\n	border: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#chatbox .chat-function .chatmode {\r\n	width: 15px;\r\n	height: 9px;\r\n}\r\n#chatbox .chat-function .battleopt {\r\n	width: 10px;\r\n	height: 10px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .stickfucn {\r\n	width: 14px;\r\n	height: 10px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .battleopt2 {\r\n	width: 9px;\r\n	height: 9px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .wndminib {\r\n	width: 9px;\r\n	height: 9px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .lockdragwnd {\r\n	width: 15px;\r\n	height: 10px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ChatBoxSettings/ChatBoxSettings.html?raw
-var ChatBoxSettings_default$2;
-var init_ChatBoxSettings$2 = __esmMin((() => {
-	ChatBoxSettings_default$2 = "<div id=\"ChatBoxSettings\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"title\"><span class=\"tabname\"></span> message log settings</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\" data-background=\"basic_interface/chatwin1_mid.bmp\">\r\n		<div class=\"content resize\">\r\n			<div class=\"listoption\">\r\n				<button data-id=\"0\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1291\">\r\n					Public Log\r\n				</button>\r\n				<button data-id=\"1\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1277\">\r\n					Public Chat\r\n				</button>\r\n				<button data-id=\"2\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1278\">Whisper</button>\r\n				<button data-id=\"3\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1279\">Party</button>\r\n				<button data-id=\"4\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1280\">Guild</button>\r\n				<button data-id=\"5\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1281\">Item</button>\r\n				<button data-id=\"6\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1282\">\r\n					Equipment on/off\r\n				</button>\r\n				<button data-id=\"7\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1283\">\r\n					Abnormal Status\r\n				</button>\r\n				<button data-id=\"8\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1284\">\r\n					Party Item\r\n				</button>\r\n				<button data-id=\"9\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1285\">\r\n					Party Status\r\n				</button>\r\n				<button data-id=\"10\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1286\">\r\n					Skill Fail\r\n				</button>\r\n				<button data-id=\"11\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1287\">\r\n					Party Setup\r\n				</button>\r\n				<button data-id=\"12\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1288\">\r\n					Equip Damage\r\n				</button>\r\n				<button data-id=\"13\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1289\">WOE</button>\r\n				<button data-id=\"14\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1549\">\r\n					Party Search\r\n				</button>\r\n				<button data-id=\"15\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1618\">Battle</button>\r\n				<button data-id=\"16\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1619\">\r\n					Party Battle\r\n				</button>\r\n				<button data-id=\"17\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1620\">EXP</button>\r\n				<button data-id=\"18\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1621\">\r\n					Party EXP\r\n				</button>\r\n				<button data-id=\"19\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1622\">Quest</button>\r\n				<button data-id=\"20\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1623\">\r\n					Battlefield\r\n				</button>\r\n				<button data-id=\"21\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"2365\">Clan</button>\r\n				<!--<button data-id=\"22\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"\">Call</button>-->\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n			<div class=\"footer-opt\">All on</div>\r\n		</div>\r\n	</div>\r\n	<button class=\"extend\"></button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ChatBoxSettings/ChatBoxSettings.css?raw
-var ChatBoxSettings_default$1;
-var init_ChatBoxSettings$1 = __esmMin((() => {
-	ChatBoxSettings_default$1 = ":host {\r\n	width: 255px;\r\n	height: 232px;\r\n	top: 50%;\r\n	left: 50%;\r\n}\r\n\r\n#ChatBoxSettings {\r\n	position: absolute;\r\n	width: 255px;\r\n	height: auto;\r\n}\r\n\r\n#ChatBoxSettings table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatBoxSettings .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0px 0px;\r\n}\r\n#ChatBoxSettings .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatBoxSettings .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatBoxSettings .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#ChatBoxSettings .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatBoxSettings .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatBoxSettings .panel {\r\n	background-color: white;\r\n}\r\n#ChatBoxSettings .content {\r\n	height: 197px;\r\n}\r\n#ChatBoxSettings .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatBoxSettings .content .members {\r\n	width: 26%;\r\n	height: 120px;\r\n	float: left;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatBoxSettings .content .owner {\r\n	color: #36716d;\r\n}\r\n\r\n#ChatBoxSettings .send {\r\n	height: 30px;\r\n	position: relative;\r\n	padding-left: 5px;\r\n}\r\n#ChatBoxSettings .send input {\r\n	width: 100%;\r\n	height: 20px;\r\n	padding: 0px;\r\n	border: none;\r\n	border-top: 1px solid #ccc;\r\n}\r\n\r\n#ChatBoxSettings .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ChatBoxSettings .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#ChatBoxSettings .extend {\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n#ChatBoxSettings .listoption {\r\n	width: 231px;\r\n	float: right;\r\n	background: #ffffff;\r\n	height: 166px;\r\n	overflow-y: auto;\r\n	padding-left: 5px;\r\n	padding-bottom: 5px;\r\n	border-left: 1px solid #cfcfcf;\r\n	border-bottom: 1px solid #cfcfcf;\r\n}\r\n#ChatBoxSettings .listoption button {\r\n	width: 100%;\r\n	text-align: left;\r\n	background: #fff;\r\n	border: 0;\r\n	margin-bottom: 3px;\r\n	margin-top: 2px;\r\n	background-repeat: no-repeat;\r\n	padding-left: 19px;\r\n	height: 15px;\r\n	text-overflow: ellipsis;\r\n}\r\n#ChatBoxSettings .listoption button:hover {\r\n	border: 1px solid #000;\r\n}\r\n\r\n#ChatBoxSettings .footer-opt {\r\n	margin-top: 5px;\r\n	width: 231px;\r\n	float: right;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ChatBoxSettings/ChatBoxSettings.js
-/**
-* Handle option button click
-*/
-function onClickOption(btn) {
-	const dataId = parseInt(btn.getAttribute("data-id"), 10);
-	let isOn = btn.classList.contains("on");
-	if (isOn) {
-		btn.classList.remove("on");
-		isOn = false;
-	} else {
-		btn.classList.add("on");
-		isOn = true;
-	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_" + (isOn ? "online" : "offline") + ".bmp", (data) => {
-		btn.style.backgroundImage = "url(" + data + ")";
-	});
-	if (!isNaN(dataId)) {
-		const idsIndex = ChatBoxSettings.tabOption[ChatBoxSettings.activeTab].indexOf(dataId);
-		if (idsIndex > -1) ChatBoxSettings.tabOption[ChatBoxSettings.activeTab].splice(idsIndex, 1);
-		else ChatBoxSettings.tabOption[ChatBoxSettings.activeTab].push(dataId);
-	}
-}
-/**
-* Resize ChatBoxSettings
-*/
-function onResize$18() {
-	const top = ChatBoxSettings._host.getBoundingClientRect().top;
-	let lastHeight = 0;
-	function resizeProcess() {
-		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
-		h = Math.min(Math.max(h, 3), 8);
-		if (h === lastHeight) return;
-		resize$7(h);
-		lastHeight = h;
-	}
-	const interval = setInterval(resizeProcess, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-/**
-* Extend window size
-*/
-function resize$7(height) {
-	height = Math.min(Math.max(height, 3), 8);
-	const root = ChatBoxSettings._shadow || ChatBoxSettings._host;
-	const content = root.querySelector(".content");
-	if (content) content.style.height = height * 32 + "px";
-	const list = root.querySelector(".listoption");
-	if (list) list.style.height = height * 32 - 31 + "px";
-	const inner = root.querySelector("#ChatBoxSettings");
-	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$71.height = height;
-	_preferences$71.save();
-}
-var ChatBoxSettings, _preferences$71, ChatBoxSettings_default;
-var init_ChatBoxSettings = __esmMin((() => {
-	init_DBManager();
-	init_Preferences$1();
-	init_Renderer();
-	init_Client();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_ChatBoxSettings$2();
-	init_ChatBoxSettings$1();
-	ChatBoxSettings = new GUIComponent("ChatBoxSettings", ChatBoxSettings_default$1);
-	/**
-	* Render HTML
-	*/
-	ChatBoxSettings.render = () => ChatBoxSettings_default$2;
-	/**
-	* @var {boolean} is ChatBoxSettings open ? (Temporary fix)
-	*/
-	ChatBoxSettings.isOpen = false;
-	ChatBoxSettings.tabOption = [];
-	ChatBoxSettings.activeTab = 0;
-	_preferences$71 = Preferences.get("ChatBoxSettings", {
-		x: 480,
-		y: 200,
-		width: 7,
-		height: 4
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	ChatBoxSettings.init = function init() {
-		const root = this._shadow || this._host;
-		const extendBtn = root.querySelector(".extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$18);
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			this._host.style.display = "none";
-		});
-		const listOption = root.querySelector(".listoption");
-		if (listOption) listOption.addEventListener("click", (event) => {
-			const btn = event.target.closest("button");
-			if (btn) onClickOption(btn);
-		});
-		this.draggable(".titlebar");
-	};
-	/**
-	* Once in HTML
-	*/
-	ChatBoxSettings.onAppend = function onAppend() {
-		resize$7(_preferences$71.height);
-		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$71.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$71.x), Renderer.width - rect.width) + "px";
-		this._host.style.display = "none";
-	};
-	/**
-	* Key Event Handler
-	*/
-	ChatBoxSettings.onKeyDown = function onKeyDown(event) {};
-	ChatBoxSettings.toggle = function toggle() {
-		if (this._host.style.display === "none") this.ui.show();
-		else this.ui.hide();
-	};
-	ChatBoxSettings.updateTab = function updateTab(tabID, tabName) {
-		const root = this._shadow || this._host;
-		const optList = ChatBoxSettings.tabOption[tabID];
-		const buttons = root.querySelectorAll(".content .listoption button");
-		this.activeTab = tabID;
-		root.querySelector(".tabname").textContent = tabName;
-		buttons.forEach((btn) => {
-			btn.classList.remove("on");
-			Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_offline.bmp", (data) => {
-				btn.style.backgroundImage = "url(" + data + ")";
-			});
-		});
-		buttons.forEach((btn) => {
-			const id = parseInt(btn.getAttribute("data-id"), 10);
-			if (optList && optList.includes(id)) {
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", (data) => {
-					btn.style.backgroundImage = "url(" + data + ")";
-				});
-				btn.classList.add("on");
-			}
-		});
-	};
-	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$71.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$71.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$71.save();
-	};
-	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
-	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
-}));
-//#endregion
-//#region src/UI/Components/ChatBox/ChatBox.js
-/**
-* Extract plain chat text from the contenteditable input while preserving item links.
-* Replaces `.item-link` spans with their `data-item` payload and strips any remaining markup.
-*/
-function extractChatMessage$1($input) {
-	const clone = $input.clone();
-	clone.find("span.item-link").each(function() {
-		const itemData = jquery_default(this).attr("data-item") || jquery_default(this).data("item") || "";
-		jquery_default(this).replaceWith(document.createTextNode(itemData));
-	});
-	let result = clone.text();
-	result = result.replace(/\u00A0/g, " ");
-	return result;
-}
-/**
-* Process all messages in the buffer at once
-*/
-function flushMessageBuffer() {
-	if (_messageBuffer.length === 0) return;
-	const messages = _messageBuffer.slice();
-	_messageBuffer = [];
-	const messagesByTab = {};
-	messages.forEach(function(msg) {
-		ChatBox.tabs.forEach(function(tab, TabNum) {
-			if (!ChatBoxSettings_default.tabOption[TabNum].includes(msg.filterType)) return;
-			if (!messagesByTab[TabNum]) messagesByTab[TabNum] = [];
-			messagesByTab[TabNum].push(msg);
-		});
-	});
-	Object.keys(messagesByTab).forEach(function(TabNum) {
-		const content = ChatBox.ui.find(".content[data-content=\"" + TabNum + "\"]");
-		const fragment = document.createDocumentFragment();
-		const wasAtBottom = shouldScrollDownBeforeAdd(content[0], content.height());
-		messagesByTab[TabNum].forEach(function(msg) {
-			const color = msg.color || getColorForType(msg.colorType);
-			const div = jquery_default("<div/>").css("color", color)[!msg.override ? "text" : "html"](msg.text)[0];
-			fragment.appendChild(div);
-		});
-		content[0].appendChild(fragment);
-		while (content[0].childElementCount > MAX_MSG) {
-			const element = content[0].firstElementChild;
-			const matches = element.innerHTML.match(/(blob:[^"]+)/g);
-			if (matches) for (let i = 0; i < matches.length; i++) window.URL.revokeObjectURL(matches[i]);
-			element.remove();
-		}
-		if (wasAtBottom) content[0].scrollTop = content[0].scrollHeight;
-	});
-}
-/**
-* Determine color based on message type
-* @param {number} colorType
-* @return {string} color hex
-*
-*
-*/
-function getColorForType(colorType) {
-	if (colorType & ChatBox.TYPE.PUBLIC && colorType & ChatBox.TYPE.SELF) return "#00FF00";
-	else if (colorType & ChatBox.TYPE.PARTY) return colorType & ChatBox.TYPE.SELF ? "rgb(200, 200, 100)" : "rgb(230,215,200)";
-	else if (colorType & ChatBox.TYPE.GUILD) return "rgb(180, 255, 180)";
-	else if (colorType & ChatBox.TYPE.PRIVATE) return "#FFFF00";
-	else if (colorType & ChatBox.TYPE.ERROR) return "#FF0000";
-	else if (colorType & ChatBox.TYPE.INFO) return "#FFFF63";
-	else if (colorType & ChatBox.TYPE.BLUE) return "#00FFFF";
-	else if (colorType & ChatBox.TYPE.ADMIN) return "#FFFF00";
-	else if (colorType & ChatBox.TYPE.MAIL) return "#F4D293";
-	return "white";
-}
-/**
-* Validates if the scroll was at the bottom before adding new messages
-* @param {HTMLElement} container
-* @param {number} height
-* @return {boolean}
-*/
-function shouldScrollDownBeforeAdd(container, height) {
-	const atBottom = container.scrollTop + height >= container.scrollHeight - 5;
-	if (height >= container.scrollHeight || atBottom) return true;
-	return false;
-}
-function getChatBottomAnchorPx($ui, fallback) {
-	let bar = $ui.find(".input:visible");
-	if (bar.length) return bar[0].getBoundingClientRect().bottom;
-	bar = $ui.find(".battlemode:visible");
-	if (bar.length) return bar[0].getBoundingClientRect().bottom;
-	if (isFinite(fallback)) return fallback;
-	return NaN;
-}
-function shouldLetChatInputHandleVerticalArrows(inputEl, direction) {
-	if (!inputEl || !window.getSelection) return false;
-	const sel = window.getSelection();
-	if (!sel || sel.rangeCount < 1) return false;
-	const range = sel.getRangeAt(0);
-	if (!range) return false;
-	const anchorNode = sel.anchorNode || range.startContainer;
-	if (!anchorNode) return false;
-	if (anchorNode !== inputEl && !(inputEl.contains && inputEl.contains(anchorNode))) return false;
-	if (!sel.isCollapsed) return true;
-	const hasNewline = extractChatMessage$1(jquery_default(inputEl)).indexOf("\n") > -1;
-	const hasOverflow = inputEl.scrollHeight > inputEl.clientHeight + 1;
-	if (!hasNewline && !hasOverflow) return false;
-	let caretRect;
-	try {
-		caretRect = range.getClientRects && range.getClientRects().length ? range.getClientRects()[0] : range.getBoundingClientRect();
-	} catch (e) {
-		return true;
-	}
-	if (!caretRect) return true;
-	const inputRect = inputEl.getBoundingClientRect ? inputEl.getBoundingClientRect() : null;
-	if (!inputRect) return true;
-	if (direction === "up") return caretRect.top > inputRect.top + 2;
-	if (direction === "down") return caretRect.bottom < inputRect.bottom - 2;
-	return false;
-}
-/**
-* Update scroll by block (14px)
-*/
-function onScroll$8(event) {
-	let delta;
-	if (event.originalEvent.wheelDelta) {
-		delta = event.originalEvent.wheelDelta / 120;
-		if (window.opera) delta = -delta;
-	} else if (event.originalEvent.detail) delta = -event.originalEvent.detail;
-	const lineHeight = getScrollLineHeightPx(this);
-	this.scrollTop = Math.floor(this.scrollTop / lineHeight) * lineHeight - delta * lineHeight;
-	return false;
-}
-/**
-* Validate the type of information being dropped into the text field
-*/
-function onDropText$2(event) {
-	event.stopImmediatePropagation();
-	let data;
-	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (e) {
-		return false;
-	}
-	if (data.type == "item") return false;
-	jquery_default(event.currentTarget).val(data);
-	return true;
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$15(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Change private message nick name
-*
-* @param {string} nick name
-* @return {function} callback closure
-*/
-function onPrivateMessageUserSelection(name) {
-	return function onPrivateMessageUserSelectionClosure() {
-		ChatBox.ui.find(".input .username").val(name);
-	};
-}
-/**
-* Change target of global chat (party, guild)
-*
-* @param {number} type constant
-*/
-function onChangeTargetMessage(type) {
-	return function onChangeTargetMessageClosure() {
-		const $input = ChatBox.ui.find(".input-chatbox");
-		$input.removeClass("guild party");
-		if (type & ChatBox.TYPE.PARTY) $input.addClass("party");
-		else if (type & ChatBox.TYPE.GUILD) $input.addClass("guild");
-		else if (type & ChatBox.TYPE.CLAN) $input.addClass("clan");
-		ChatBox.sendTo = type;
-	};
-}
-function setChatFontScale(scale) {
-	return function setChatFontScaleClosure() {
-		_preferences$70.fontScale = clampChatFontScale(scale);
-		_preferences$70.save();
-		ChatBox.applyFontScale();
-	};
-}
-function clampChatFontScale(scale) {
-	const allowed = [
-		1,
-		1.2,
-		1.4
-	];
-	let i, best = allowed[0], bestDist = Infinity;
-	scale = parseFloat(scale);
-	if (!isFinite(scale) || scale <= 0) return 1;
-	for (i = 0; i < allowed.length; ++i) {
-		const dist = Math.abs(allowed[i] - scale);
-		if (dist < bestDist) {
-			bestDist = dist;
-			best = allowed[i];
-		}
-	}
-	return best;
-}
-function getScrollLineHeightPx(element) {
-	let style, lh;
-	try {
-		style = window.getComputedStyle(element);
-		lh = parseFloat(style.lineHeight);
-		if (isFinite(lh) && lh > 0) return Math.round(lh);
-	} catch (e) {}
-	return 14;
-}
-function makeResizableDiv() {
-	const resizer = ChatBox.ui.find(".event_add_cursor")[0];
-	if (!resizer) return;
-	let originalHeight = 0;
-	let originalAnchorY = 0;
-	let originalMouseY = 0;
-	const fixHeight = function fixHeight(height) {
-		return Math.floor(height / MAGIC_NUMBER) * MAGIC_NUMBER;
-	};
-	const resize = function resize(e) {
-		let height = fixHeight(originalHeight - (e.pageY - originalMouseY));
-		height = Math.max(MAGIC_NUMBER, Math.min(MAGIC_NUMBER * 5, height));
-		ChatBox.ui.css("top", originalAnchorY - height);
-		ChatBox.ui.find(".contentwrapper").height(height);
-		_heightIndex = Math.max(2, Math.min(6, height / MAGIC_NUMBER + 1));
-		const active = ChatBox.ui.find(".content[data-content=\"" + ChatBox.activeTab + "\"]")[0];
-		if (active) active.scrollTop = active.scrollHeight;
-	};
-	const stopResize = function stopResize() {
-		window.removeEventListener("mousemove", resize);
-		window.removeEventListener("mouseup", stopResize);
-	};
-	resizer.addEventListener("mousedown", function(e) {
-		e.preventDefault();
-		originalHeight = ChatBox.ui.find(".contentwrapper").height();
-		originalAnchorY = parseInt(ChatBox.ui.css("top"), 10) + originalHeight;
-		originalMouseY = e.pageY;
-		window.addEventListener("mousemove", resize);
-		window.addEventListener("mouseup", stopResize);
-	});
-}
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$70, ChatBox, ChatBox_default;
-var init_ChatBox = __esmMin((() => {
-	init_DBManager();
-	init_jquery();
-	init_Renderer();
-	init_Client();
-	init_Events();
-	init_Preferences$1();
-	init_KeyEventHandler();
-	init_MouseEventHandler();
-	init_CursorManager();
-	init_BattleMode();
-	init_History();
-	init_UIManager();
-	init_UIComponent();
-	init_ContextMenu();
-	init_ChatBox$2();
-	init_ChatBox$1();
-	init_ProcessCommand();
-	init_ChatBoxSettings();
-	init_Configs();
-	init_EntityManager();
-	MAX_MSG = 400;
-	MAX_LENGTH = 100;
-	MAGIC_NUMBER = 42;
-	_historyMessage = new History();
-	_historyNickName = new History(true);
-	_heightIndex = 2;
-	_messageBuffer = [];
-	_rafScheduled = false;
-	_preferences$70 = Preferences.get("ChatBox", {
-		x: 0,
-		y: Infinity,
-		height: 2,
-		fontScale: 1,
-		magnet_top: false,
-		magnet_bottom: true,
-		magnet_left: true,
-		magnet_right: false,
-		tabs: [],
-		tabOption: [],
-		activeTab: 0
-	}, 1);
-	ChatBox = new UIComponent("ChatBox", ChatBox_default$2, ChatBox_default$1);
-	/**
-	* Constants
-	*/
-	ChatBox.TYPE = {
-		SELF: 1,
-		PUBLIC: 2,
-		PRIVATE: 4,
-		PARTY: 8,
-		GUILD: 16,
-		ANNOUNCE: 32,
-		ERROR: 64,
-		INFO: 128,
-		BLUE: 256,
-		ADMIN: 512,
-		MAIL: 1024,
-		CLAN: 2048
-	};
-	ChatBox.FILTER = {
-		PUBLIC_LOG: 0,
-		PUBLIC_CHAT: 1,
-		WHISPER: 2,
-		PARTY: 3,
-		GUILD: 4,
-		ITEM: 5,
-		EQUIP: 6,
-		STATUS: 7,
-		PARTY_ITEM: 8,
-		PARTY_STATUS: 9,
-		SKILL_FAIL: 10,
-		PARTY_SETUP: 11,
-		EQUIP_DAMAGE: 12,
-		WOE: 13,
-		PARTY_SEARCH: 14,
-		BATTLE: 15,
-		PARTY_BATTLE: 16,
-		EXP: 17,
-		PARTY_EXP: 18,
-		QUEST: 19,
-		BATTLEFIELD: 20,
-		CLAN: 21
-	};
-	/**
-	* @var {number} target message ?
-	*/
-	ChatBox.sendTo = ChatBox.TYPE.PUBLIC;
-	/**
-	* Storage to cache the private messages
-	* Ugly system used by official client, can lead to errors
-	*/
-	ChatBox.PrivateMessageStorage = {
-		nick: "",
-		msg: ""
-	};
-	ChatBox.lastTabID = -1;
-	ChatBox.tabCount = 0;
-	ChatBox.activeTab = 0;
-	ChatBox.tabs = [];
-	/**
-	* Initialize UI
-	*/
-	ChatBox.init = function init() {
-		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$70.height - 1;
-		ChatBox.updateHeight();
-		ChatBox.applyFontScale();
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$70.y - this.ui.height()), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$70.x), Renderer.width - this.ui.width())
-		});
-		this.magnet.TOP = _preferences$70.magnet_top;
-		this.magnet.BOTTOM = _preferences$70.magnet_bottom;
-		this.magnet.LEFT = _preferences$70.magnet_left;
-		this.magnet.RIGHT = _preferences$70.magnet_right;
-		this.draggable(this.ui.find(".input"));
-		this.draggable(this.ui.find(".battlemode"));
-		this.__mouseStopBlock = this.ui.find(".input, .chat-function, .battlemode, .event_add_cursor");
-		Client.loadFiles([DB.INTERFACE_PATH + "basic_interface/dialscr_down.bmp", DB.INTERFACE_PATH + "basic_interface/dialscr_up.bmp"], function(down, up) {
-			jquery_default("style:first").append([
-				"#chatbox .content::-webkit-scrollbar { width: 10px; height: 10px;}",
-				"#chatbox .content::-webkit-scrollbar-button:vertical:start:increment,",
-				"#chatbox .content::-webkit-scrollbar-button:vertical:end:decrement { display: none;}",
-				"#chatbox .content::-webkit-scrollbar-corner:vertical { display:none;}",
-				"#chatbox .content::-webkit-scrollbar-resizer:vertical { display:none;}",
-				"#chatbox .content::-webkit-scrollbar-button:start:decrement,",
-				"#chatbox .content::-webkit-scrollbar-button:end:increment { display: block; border:none;}",
-				"#chatbox .content::-webkit-scrollbar-button:vertical:increment { background: url(" + down + ") no-repeat; height:10px;}",
-				"#chatbox .content::-webkit-scrollbar-button:vertical:decrement { background: url(" + up + ") no-repeat; height:10px;}",
-				"#chatbox .content::-webkit-scrollbar-track-piece:vertical { background:black; border:none;}",
-				"#chatbox .content::-webkit-scrollbar-thumb:vertical { background:grey; -webkit-border-image:none; border-color:transparent;border-width: 0px 0; }"
-			].join("\n"));
-		});
-		this.ui.find(".input input").mousedown(function(event) {
-			this.select();
-			event.stopImmediatePropagation();
-			return false;
-		});
-		if (Configs.get("restoreChatFocus", false)) this.ui.find(".input-chatbox").blur(function() {
-			Events.setTimeout(function() {
-				const active = KEYS.getDeepActiveElement();
-				const movedInsideChatbox = active && jquery_default(active).closest("#chatbox").length;
-				const isTextInput = active && active.tagName && active.tagName.match(/input|select|textarea/i);
-				if (!movedInsideChatbox && !isTextInput) this.ui.find(".input-chatbox").focus();
-			}.bind(this), 1e3);
-		}.bind(this));
-		this.ui.find(".input-chatbox").on("click focus", function() {
-			const element = this;
-			const range = document.createRange();
-			const selection = window.getSelection();
-			range.selectNodeContents(element);
-			range.collapse(false);
-			selection.addRange(range);
-		});
-		this.ui.find(".input-chatbox")[0].maxLength = MAX_LENGTH;
-		this.ui.find(".input-chatbox").on("input", function(event) {
-			if (extractChatMessage$1(jquery_default(this)).length >= MAX_LENGTH) {
-				event.preventDefault();
-				return false;
-			}
-		});
-		this.ui.find(".input-chatbox").on("keydown", function(event) {
-			if (extractChatMessage$1(jquery_default(this)).length >= MAX_LENGTH) {
-				if ([
-					"ArrowLeft",
-					"ArrowUp",
-					"ArrowRight",
-					"ArrowDown",
-					"Backspace",
-					"Delete",
-					"Enter",
-					"Insert"
-				].includes(event.key)) return true;
-				if (event.ctrlKey || event.altKey) return true;
-				event.preventDefault();
-				return false;
-			}
-		});
-		this.ui.find(".input-chatbox").on("paste", function(event) {
-			event.preventDefault();
-			const clipboard = (event.originalEvent || event).clipboardData;
-			let pastedText = clipboard ? clipboard.getData("text/plain") : "";
-			if (!pastedText) return false;
-			pastedText = pastedText.replace(/\u00A0/g, " ");
-			const remaining = MAX_LENGTH - extractChatMessage$1(this.ui.find(".input-chatbox")).length;
-			if (remaining <= 0) return false;
-			const toInsert = pastedText.substr(0, remaining);
-			if (document.queryCommandSupported && document.queryCommandSupported("insertText")) document.execCommand("insertText", false, toInsert);
-			else {
-				const node = document.createTextNode(toInsert);
-				this.ui.find(".input-chatbox")[0].appendChild(node);
-			}
-			return false;
-		}.bind(this));
-		this.ui.find(".input .username").blur(function() {
-			Events.setTimeout(function() {
-				const active = KEYS.getDeepActiveElement();
-				const movedInsideChatbox = active && jquery_default(active).closest("#chatbox").length;
-				const isTextInput = active && active.tagName && active.tagName.match(/input|select|textarea/i);
-				const isChatMessage = active === this.ui.find(".input-chatbox")[0];
-				if (!movedInsideChatbox && !isTextInput && !isChatMessage) this.ui.find(".input .username").focus();
-			}.bind(this), 1e3);
-		}.bind(this));
-		this.ui.find("input[type=text]").on("drop", onDropText$2).on("dragover", stopPropagation$15);
-		this.ui.find(".header input").dblclick(function() {
-			this.type = "text";
-			this.select();
-		}).blur(function() {
-			this.type = "button";
-		});
-		this.ui.find(".input .list").click(function() {
-			const names = _historyNickName.list;
-			const count = names.length;
-			const pos = jquery_default(this).offset();
-			const ui = ContextMenu_default.ui.find(".menu");
-			if (!count) {
-				ChatBox.addText(DB.getMessage(192), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
-				return;
-			}
-			ContextMenu_default.remove();
-			ContextMenu_default.append();
-			for (let i = 0; i < count; ++i) ContextMenu_default.addElement(names[i], onPrivateMessageUserSelection(names[i]));
-			ContextMenu_default.addElement("", onPrivateMessageUserSelection(""));
-			ui.css({
-				top: pos.top - ui.height() - 5,
-				left: pos.left - ui.width() - 5
-			});
-		}).mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.find(".draggable").mousedown(function(event) {
-			event.stopPropagation();
-		});
-		this.ui.find(".input .filter").click(function() {
-			const pos = jquery_default(this).offset();
-			const ui = ContextMenu_default.ui.find(".menu");
-			ContextMenu_default.remove();
-			ContextMenu_default.append();
-			ContextMenu_default.addElement(DB.getMessage(85), onChangeTargetMessage(ChatBox.TYPE.PUBLIC));
-			ContextMenu_default.addElement(DB.getMessage(86), onChangeTargetMessage(ChatBox.TYPE.PARTY));
-			ContextMenu_default.addElement(DB.getMessage(437), onChangeTargetMessage(ChatBox.TYPE.GUILD));
-			ContextMenu_default.addElement(DB.getMessage(2361), onChangeTargetMessage(ChatBox.TYPE.CLAN));
-			ui.css({
-				top: pos.top - ui.height() - 5,
-				left: pos.left - ui.width() + 25
-			});
-		}).mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.find(".input .size").click(function(event) {
-			ChatBox.updateHeight(true);
-			event.stopImmediatePropagation();
-			return false;
-		});
-		this.ui.find(".content").on("mousewheel DOMMouseScroll", onScroll$8);
-		(function initTabHoverBlock() {
-			let _tabIntersect, _tabEnter = 0;
-			ChatBox.ui.on("mouseenter", "table.header tr td.tab, table.header tr td.tab *", function() {
-				if (_tabEnter === 0) {
-					_tabIntersect = Mouse.intersect;
-					_tabEnter++;
-					if (_tabIntersect) {
-						Mouse.intersect = false;
-						Cursor.setType(Cursor.ACTION.DEFAULT);
-						EntityManager.setOverEntity(null);
-					}
-				}
-			});
-			ChatBox.ui.on("mouseleave", "table.header tr td.tab, table.header tr td.tab *", function() {
-				if (_tabEnter > 0) {
-					_tabEnter--;
-					if (_tabEnter === 0 && _tabIntersect) {
-						Mouse.intersect = true;
-						EntityManager.setOverEntity(null);
-					}
-				}
-			});
-			ChatBox.ui.on("mousedown", "table.header tr td.tab, table.header tr td.tab *", function(event) {
-				event.stopPropagation();
-			});
-		})();
-		this.ui.on("mousedown", ".body, .contentwrapper, .content", function(event) {
-			if (event.which !== 3) return true;
-			if (jquery_default(event.target).closest(".event_add_cursor, .chat-function, td.tab").length) {
-				event.preventDefault();
-				event.stopPropagation();
-				return false;
-			}
-			event.preventDefault();
-			event.stopPropagation();
-			return false;
-		});
-		this.ui.on("contextmenu", ".body, .contentwrapper, .content", function(event) {
-			if (jquery_default(event.target).closest("a, .item-link, .event_add_cursor, .chat-function, td.tab").length) return true;
-			event.preventDefault();
-			event.stopPropagation();
-			Mouse.screen.x = event.pageX;
-			Mouse.screen.y = event.pageY;
-			ContextMenu_default.remove();
-			ContextMenu_default.append();
-			ContextMenu_default.addElement("Chat font x1.0", setChatFontScale(1));
-			ContextMenu_default.addElement("Chat font x1.2", setChatFontScale(1.2));
-			ContextMenu_default.addElement("Chat font x1.4", setChatFontScale(1.4));
-			return false;
-		});
-		this.ui.on("mousedown", ".content a, .content .item-link", function(event) {
-			event.stopPropagation();
-		});
-		this.ui.find(".battlemode .bmtoggle").click(function(event) {
-			ChatBox.ui.find(".input").toggle();
-			ChatBox.ui.find(".battlemode").toggle();
-		});
-		this.ui.find(".chat-function .battleopt2").click(function(event) {
-			if (ChatBox.tabCount <= 5) {
-				ChatBox.addNewTab();
-				ChatBox.onAppend();
-			}
-		});
-		this.ui.on("click", "table.header tr td.tab", function(event) {
-			event.stopImmediatePropagation();
-			const currentElem = event.currentTarget;
-			if (ChatBox.activeTab !== currentElem.dataset.tab - 1) ChatBox.switchTab(currentElem.dataset.tab);
-		});
-		this.ui.find(".chat-function .wndminib").click(function() {
-			if (ChatBox.tabCount > 1) ChatBox.removeTab();
-		});
-		this.ui.find(".chat-function .chatmode").click(function() {
-			ChatBox.toggleChat();
-		});
-		this.ui.find(".chat-function .battleopt").click(function() {
-			ChatBox.toggleChatBattleOption();
-		});
-		ChatBoxSettings_default.append();
-		if (_preferences$70.tabs.length > 0 && _preferences$70.tabs.length == _preferences$70.tabOption.length) {
-			for (let i = 0; i < _preferences$70.tabs.length; i++) if (_preferences$70.tabs[i] && _preferences$70.tabOption[i]) ChatBox.addNewTab(_preferences$70.tabs[i].name, _preferences$70.tabOption[i]);
-			if (ChatBox.tabs[_preferences$70.activeTab]) this.switchTab(_preferences$70.activeTab);
-		} else {
-			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
-				ChatBox.FILTER.PUBLIC_LOG,
-				ChatBox.FILTER.PUBLIC_CHAT,
-				ChatBox.FILTER.WHISPER,
-				ChatBox.FILTER.PARTY,
-				ChatBox.FILTER.GUILD,
-				ChatBox.FILTER.ITEM,
-				ChatBox.FILTER.EQUIP,
-				ChatBox.FILTER.STATUS,
-				ChatBox.FILTER.PARTY_ITEM,
-				ChatBox.FILTER.PARTY_STATUS,
-				ChatBox.FILTER.SKILL_FAIL,
-				ChatBox.FILTER.PARTY_SETUP,
-				ChatBox.FILTER.EQUIP_DAMAGE,
-				ChatBox.FILTER.WOE,
-				ChatBox.FILTER.PARTY_SEARCH,
-				ChatBox.FILTER.QUEST,
-				ChatBox.FILTER.BATTLEFIELD,
-				ChatBox.FILTER.CLAN
-			]);
-			ChatBox.addNewTab(DB.getMessage(1292));
-			ChatBox.switchTab(firstTab);
-		}
-		makeResizableDiv();
-		ProcessCommand_default.add("savechat", "Saves current chat tab to txt file.", function() {
-			ChatBox.saveCurrentTabChat();
-		}, ["sc"], false);
-	};
-	/**
-	* Clean up the box
-	*/
-	ChatBox.clean = function Clean() {
-		const matches = this.ui.find(".content").html().match(/(blob:[^"]+)/g);
-		if (matches) for (let i = 0, count = matches.length; i < count; ++i) window.URL.revokeObjectURL(matches[i]);
-		this.ui.find(".content").empty();
-		this.ui.find(".input-chatbox").html("");
-		this.ui.find(".input .username").val("");
-		_historyMessage.clear();
-		_historyNickName.clear();
-	};
-	ChatBox.toggleChatBattleOption = function toggleChatBattleOption() {
-		const tabName = this.ui.find(".header tr td div.on input").val();
-		ChatBoxSettings_default.toggle();
-		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
-	};
-	ChatBox.removeTab = function removeTab() {
-		this.ui.find("table.header tr td.tab[data-tab=\"" + this.activeTab + "\"]").remove();
-		this.ui.find(".body .content[data-content=\"" + this.activeTab + "\"]").remove();
-		let tabName = "";
-		let _elem = this.ui.find("table.header tr td.tab");
-		_elem = this.ui.find("table.header tr td.tab")[_elem.length - 1];
-		delete ChatBoxSettings_default.tabOption[this.activeTab];
-		delete this.tabs[this.activeTab];
-		this.tabCount--;
-		ChatBox.switchTab(_elem.dataset.tab);
-		tabName = this.ui.find(".header tr td div.on input").val();
-		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
-	};
-	ChatBox.addNewTab = function addNewTab(name, settings) {
-		if (!name) name = "New Tab";
-		if (!settings) settings = [
-			ChatBox.FILTER.PUBLIC_LOG,
-			ChatBox.FILTER.PUBLIC_CHAT,
-			ChatBox.FILTER.WHISPER,
-			ChatBox.FILTER.PARTY,
-			ChatBox.FILTER.GUILD,
-			ChatBox.FILTER.ITEM,
-			ChatBox.FILTER.EQUIP,
-			ChatBox.FILTER.STATUS,
-			ChatBox.FILTER.PARTY_ITEM,
-			ChatBox.FILTER.PARTY_STATUS,
-			ChatBox.FILTER.SKILL_FAIL,
-			ChatBox.FILTER.PARTY_SETUP,
-			ChatBox.FILTER.EQUIP_DAMAGE,
-			ChatBox.FILTER.WOE,
-			ChatBox.FILTER.PARTY_SEARCH,
-			ChatBox.FILTER.BATTLE,
-			ChatBox.FILTER.PARTY_BATTLE,
-			ChatBox.FILTER.EXP,
-			ChatBox.FILTER.PARTY_EXP,
-			ChatBox.FILTER.QUEST,
-			ChatBox.FILTER.BATTLEFIELD,
-			ChatBox.FILTER.CLAN
-		];
-		const tabName = name;
-		const tabID = ++this.lastTabID;
-		const tab = {};
-		tab.id = tabID;
-		tab.name = tabName;
-		this.ui.find("table.header tr td.tab div").removeClass("on");
-		this.ui.find(".body .content").removeClass("active");
-		this.ui.find("table.header tr .opttab").before(`
-			<td class="tab" data-tab="${tabID}">
-				<div class="on">
-					<input type="text" value="${tabName}"/>
-				</div>
-			</td>
-		`);
-		this.ui.find("table.header tr td.tab[data-tab=\"" + tabID + "\"] div input").on("change", function() {
-			ChatBox.tabs[tabID].name = this.value;
-		});
-		this.ui.find(".body .contentwrapper").append(`<div class="content active" data-content="${tabID}" data-scrollbar-skin="chatbox"></div>`);
-		ChatBoxSettings_default.tabOption[tabID] = settings;
-		this.tabs[tabID] = tab;
-		this.activeTab = tabID;
-		this.tabCount++;
-		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
-		return tabID;
-	};
-	ChatBox.switchTab = function switchTab(tabID) {
-		let tabName = "";
-		this.ui.find("table.header tr td.tab div").removeClass("on");
-		this.ui.find(".body .content").removeClass("active");
-		this.activeTab = tabID;
-		this.ui.find("table.header tr td.tab[data-tab=\"" + this.activeTab + "\"] div").addClass("on");
-		this.ui.find(".body .content[data-content=\"" + this.activeTab + "\"]").addClass("active");
-		tabName = this.ui.find(".header tr td div.on input").val();
-		this.ui.find(".content")[tabID].scrollTop = this.ui.find(".content")[tabID].scrollHeight;
-		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
-	};
-	/**
-	* Once append to HTML
-	*/
-	ChatBox.onAppend = function OnAppend() {
-		this.ui.find(".input").hide();
-		this.ui.find(".battlemode").show();
-		const content = this.ui.find(".content.active");
-		content[0].scrollTop = content[0].scrollHeight;
-	};
-	/**
-	* Stop custom scroll
-	*/
-	ChatBox.onRemove = function OnRemove() {
-		this.ui.find(".content.active").off("scroll");
-		_preferences$70.y = parseInt(this.ui.css("top"), 10) + this.ui.height();
-		_preferences$70.x = parseInt(this.ui.css("left"), 10);
-		_preferences$70.height = _heightIndex;
-		_preferences$70.magnet_top = this.magnet.TOP;
-		_preferences$70.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$70.magnet_left = this.magnet.LEFT;
-		_preferences$70.magnet_right = this.magnet.RIGHT;
-		_preferences$70.tabs = this.tabs;
-		_preferences$70.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$70.activeTab = this.activeTab;
-		_preferences$70.save();
-		this.lastTabID = -1;
-		this.activeTab = 0;
-	};
-	/**
-	* BattleMode processing
-	*
-	* @param {number} key id to check
-	* @return {boolean} found a shortcut ?
-	*/
-	ChatBox.processBattleMode = function processBattleMode(keyId) {
-		if (this.ui.find(".battlemode").is(":visible") || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL || keyId >= KEYS.F1 && keyId <= KEYS.F24 || KEYS.INSERT) return BattleMode.process(keyId);
-		return false;
-	};
-	/**
-	* Key Event Handler
-	*
-	* @param {object} event - KeyEventHandler
-	* @return {boolean}
-	*/
-	ChatBox.onKeyDown = function OnKeyDown(event) {
-		const messageBox = this.ui.find(".input-chatbox");
-		const nickBox = this.ui.find(".input .username");
-		this.ui.find(".header tr td div.on input").on("keyup", function() {
-			ChatBoxSettings_default.updateTab(ChatBox.activeTab, this.value);
-		});
-		const activeElement = KEYS.getDeepActiveElement();
-		const isChatInputFocused = activeElement === messageBox[0] || activeElement === nickBox[0];
-		if (activeElement && !isChatInputFocused && (activeElement.tagName && activeElement.tagName.match(/input|select|textarea/i) || activeElement.isContentEditable)) return true;
-		switch (event.which) {
-			default:
-				if (isChatInputFocused) {
-					if (event.which >= KEYS.F1 && event.which <= KEYS.F24) {
-						if (event.which === KEYS.F11 || event.which === KEYS.F12) {
-							event.preventDefault();
-							return true;
-						}
-						if (ChatBox.processBattleMode(event.which)) {
-							event.preventDefault();
-							event.stopImmediatePropagation();
-							return false;
-						}
-						event.preventDefault();
-						event.stopImmediatePropagation();
-						return false;
-					}
-					if (event.getModifierState && event.getModifierState("AltGraph")) {
-						event.stopImmediatePropagation();
-						return true;
-					}
-					if (event.ctrlKey || KEYS.CTRL) {
-						if (!(event.which === KEYS.C || event.which === KEYS.V || event.which === KEYS.X || event.which === KEYS.A || event.which === KEYS.Z || event.which === KEYS.Y)) {
-							if (ChatBox.processBattleMode(event.which)) {
-								event.preventDefault();
-								event.stopImmediatePropagation();
-								return false;
-							}
-							event.preventDefault();
-							return true;
-						}
-						event.stopImmediatePropagation();
-						return true;
-					}
-					if (event.altKey || KEYS.ALT) {
-						if (!(event.which === KEYS.LEFT || event.which === KEYS.RIGHT || event.which === KEYS.UP || event.which === KEYS.DOWN || event.which === KEYS.BACKSPACE || event.which === KEYS.DELETE || event.which === KEYS.HOME || event.which === KEYS.END)) {
-							if (ChatBox.processBattleMode(event.which)) {
-								event.preventDefault();
-								event.stopImmediatePropagation();
-								return false;
-							}
-							event.preventDefault();
-							return true;
-						}
-						event.stopImmediatePropagation();
-						return true;
-					}
-					if (event.which === KEYS.ESCAPE || event.key === "Escape") return true;
-					event.stopImmediatePropagation();
-					return true;
-				}
-				if (event.target.tagName && !event.target.tagName.match(/input|select|textarea/i) || event.which >= KEYS.F1 && event.which <= KEYS.F24 || event.which >= KEYS[1] && event.which <= KEYS[9] || event.which >= KEYS.A && event.which <= KEYS.Z || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL) {
-					if (ChatBox.processBattleMode(event.which)) {
-						event.stopImmediatePropagation();
-						return false;
-					}
-				}
-				return true;
-			case KEYS.TAB:
-				if (document.activeElement === messageBox[0]) {
-					nickBox.select().focus();
-					break;
-				}
-				if (document.activeElement === nickBox[0]) {
-					messageBox.select().focus();
-					break;
-				}
-				return true;
-			case KEYS.UP:
-				if (!jquery_default("#NpcMenu").length) {
-					if (document.activeElement === messageBox[0]) {
-						if (shouldLetChatInputHandleVerticalArrows(messageBox[0], "up")) {
-							event.stopImmediatePropagation();
-							return true;
-						}
-						messageBox.html(_historyMessage.previous()).select();
-						break;
-					}
-					if (document.activeElement === nickBox[0]) {
-						nickBox.val(_historyNickName.previous()).select();
-						break;
-					}
-				}
-				return true;
-			case KEYS.DOWN:
-				if (!jquery_default("#NpcMenu").length) {
-					if (document.activeElement === messageBox[0]) {
-						if (shouldLetChatInputHandleVerticalArrows(messageBox[0], "down")) {
-							event.stopImmediatePropagation();
-							return true;
-						}
-						messageBox.html(_historyMessage.next()).select();
-						break;
-					}
-					if (document.activeElement === nickBox[0]) {
-						nickBox.val(_historyNickName.next()).select();
-						break;
-					}
-				}
-				return true;
-			case KEYS.F10:
-				this.updateHeight(false);
-				this.ui.find(".content")[this.activeTab].scrollTop = this.ui.find(".content")[this.activeTab].scrollHeight;
-				break;
-			case KEYS.ENTER: {
-				if (document.activeElement.className === "message input-chatbox" && document.activeElement !== messageBox[0]) return true;
-				if (jquery_default("#NpcMenu, #NpcBox").length) return true;
-				if (document.activeElement === messageBox[0]) {
-					this.submit();
-					event.stopImmediatePropagation();
-					return false;
-				}
-				const input = this.ui.find(".input");
-				if (!input.is(":visible")) {
-					input.show();
-					this.ui.find(".battlemode").hide();
-				}
-				const el = messageBox[0];
-				el.focus();
-				const range = document.createRange();
-				const sel = window.getSelection();
-				range.selectNodeContents(el);
-				range.collapse(false);
-				sel.removeAllRanges();
-				sel.addRange(range);
-				event.stopImmediatePropagation();
-				return false;
-			}
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	ChatBox.toggleChat = function toggleChat() {
-		const messageBox = this.ui.find(".input-chatbox");
-		const activeElement = KEYS.getDeepActiveElement();
-		if (activeElement.tagName === "INPUT" && activeElement !== messageBox[0]) return true;
-		if (jquery_default("#NpcMenu, #NpcBox").length) return true;
-		messageBox.focus();
-		this.submit();
-	};
-	/**
-	* Process ChatBox message
-	*/
-	ChatBox.submit = function Submit() {
-		const input = this.ui.find(".input");
-		const $user = input.find(".username");
-		const $text = input.find(".input-chatbox");
-		const user = $user.val();
-		const trimmedText = extractChatMessage$1($text).replace(/\u00A0/g, " ").trim();
-		let isChatOn = false;
-		if (!trimmedText.length) {
-			input.toggle();
-			this.ui.find(".battlemode").toggle();
-			if (input.is(":visible")) {
-				isChatOn = true;
-				$text.focus();
-			}
-			const chatmode = isChatOn ? "on" : "off";
-			Client.loadFile(DB.INTERFACE_PATH + "basic_interface/chatmode_" + chatmode + ".bmp", function(data) {
-				ChatBox.ui.find(".chat-function .chatmode").css("backgroundImage", "url(" + data + ")");
-			});
-			return;
-		}
-		if (user.length && trimmedText[0] !== "/") {
-			this.PrivateMessageStorage.nick = user;
-			this.PrivateMessageStorage.msg = trimmedText;
-			_historyNickName.push(user);
-			_historyNickName.previous();
-		}
-		_historyMessage.push(trimmedText);
-		$text.html("");
-		if (trimmedText[0] === "/") {
-			ProcessCommand_default.processCommand.call(this, trimmedText.substr(1));
-			return;
-		}
-		this.onRequestTalk(user, trimmedText, ChatBox.sendTo);
-	};
-	/**
-	* Add text to chatbox
-	*
-	* @param {string} text
-	* @param {number} colorType
-	* @param {number} filterType
-	* @param {string} color
-	* @param {boolean} override - default false, html or text ?
-	*/
-	ChatBox.addText = function addText(text, colorType, filterType, color, override) {
-		text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, function(match) {
-			const item = DB.parseItemLink(match);
-			const span = "<span data-item=\"" + match + "\" class=\"item-link\" style=\"color:#FFFF63;\">&lt;" + item.name + "&gt;</span>";
-			override = true;
-			return span;
-		});
-		if (isNaN(filterType)) filterType = ChatBox.FILTER.PUBLIC_LOG;
-		_messageBuffer.push({
-			text,
-			colorType,
-			filterType,
-			color,
-			override
-		});
-		if (!_rafScheduled) {
-			_rafScheduled = true;
-			requestAnimationFrame(function() {
-				_rafScheduled = false;
-				flushMessageBuffer();
-			});
-		}
-	};
-	/**
-	* Change chatbox's height
-	*/
-	ChatBox.updateHeight = function changeHeight(AlwaysVisible) {
-		const HeightList = [
-			0,
-			0,
-			MAGIC_NUMBER,
-			MAGIC_NUMBER * 2,
-			MAGIC_NUMBER * 3,
-			MAGIC_NUMBER * 4,
-			MAGIC_NUMBER * 5
-		];
-		const content = this.ui.find(".contentwrapper");
-		const bottomBefore = getChatBottomAnchorPx(this.ui, this.__lastBottomY);
-		_heightIndex = (_heightIndex + 1) % HeightList.length;
-		if (_heightIndex === 0 && AlwaysVisible) _heightIndex = 1;
-		content.height(HeightList[_heightIndex]);
-		switch (_heightIndex) {
-			case 0:
-				this.__lastBottomY = bottomBefore;
-				this.ui.hide();
-				break;
-			case 1:
-				this.ui.show();
-				this.ui.find(".header, .body").hide();
-				this.ui.find(".input").addClass("fix");
-				break;
-			default:
-				this.ui.find(".input").removeClass("fix");
-				this.ui.find(".header, .body").show();
-				break;
-		}
-		if (_heightIndex !== 0 && isFinite(bottomBefore)) {
-			const bottomAfter = getChatBottomAnchorPx(this.ui, bottomBefore);
-			if (isFinite(bottomAfter)) {
-				let top = parseInt(this.ui.css("top"), 10);
-				top = isFinite(top) ? top : 0;
-				this.ui.css("top", top + (bottomBefore - bottomAfter));
-				this.__lastBottomY = bottomBefore;
-			}
-		}
-		const active = this.ui.find(".content[data-content=\"" + this.activeTab + "\"]")[0];
-		if (active) active.scrollTop = active.scrollHeight;
-	};
-	/**
-	* Save user name to nick name history
-	*
-	* @param {string} nick name
-	*/
-	ChatBox.saveNickName = function saveNickName(pseudo) {
-		_historyNickName.push(pseudo);
-	};
-	/**
-	* Save chat from current tab into a file.
-	*/
-	ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
-		let data;
-		const tzoffset = (/* @__PURE__ */ new Date()).getTimezoneOffset() * 6e4;
-		let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
-		localISOTime = localISOTime.replace("T", " ");
-		const timezone = (/* @__PURE__ */ new Date()).getTimezoneOffset() / 60;
-		const date = localISOTime + " (GMT " + (timezone > 0 ? "-" : "+") + Math.abs(timezone).toString() + ")";
-		data = "<html><head><title>Chat History</title><style> body { background-color: DarkSlateGray; } </style></head><body>";
-		data += this.ui.find(".content[data-content=\"" + ChatBox.activeTab + "\"]")[0].outerHTML;
-		data += "</body></html>";
-		const url = window.URL.createObjectURL(new Blob([data], { type: "text/plain" }));
-		ChatBox.addText("Chat History [" + ChatBox.tabs[ChatBox.activeTab].name + "] " + date + " can be saved by <a style=\"color:#F88\" download=\"ChatHistory [" + ChatBox.tabs[ChatBox.activeTab].name + "] (" + date.replace("/", "-") + ").html\" href=\"" + url + "\" target=\"_blank\">clicking here</a>.", ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, null, true);
-	};
-	ChatBox.applyFontScale = function applyFontScale() {
-		const scale = clampChatFontScale(_preferences$70.fontScale || 1);
-		const baseFont = 12;
-		const baseLineHeight = 14;
-		const baseInputLineHeight = 18;
-		const fontSize = Math.max(10, Math.round(baseFont * scale));
-		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
-		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$70.fontScale = scale;
-		this.ui.find(".content").css({
-			fontSize: fontSize + "px",
-			lineHeight: lineHeight + "px"
-		});
-		this.ui.find(".input input, .input .message").css({
-			fontFamily: "Arial",
-			fontSize: fontSize + "px"
-		});
-		this.ui.find(".input .message").css({ lineHeight: inputLineHeight + "px" });
-	};
-	jquery_default(document).on("click", ".item-link", function(event) {
-		if (jquery_default(this).closest("#chatbox .input-chatbox").length) {
-			event.stopImmediatePropagation();
-			return false;
-		}
-		const item = DB.parseItemLink(jquery_default(this).data("item"));
-		if (!item) return;
-		const ItemInfo = UIManager.getComponent("ItemInfo");
-		ItemInfo.append();
-		ItemInfo.setItem(item);
-	});
-	ChatBox.insertText = function(text) {
-		const input = this.ui.find(".input-chatbox");
-		input.append(document.createTextNode(text));
-		input.focus();
-	};
-	ChatBox_default = UIManager.addComponent(ChatBox);
-}));
-//#endregion
-//#region src/UI/Components/ChatRoom/ChatRoom.html?raw
-var ChatRoom_default$2;
-var init_ChatRoom$3 = __esmMin((() => {
-	ChatRoom_default$2 = "<div id=\"ChatRoom\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\"><span class=\"title\"></span> (<span class=\"count\"></span>)</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"content resize\">\r\n			<div class=\"messages resize\"></div>\r\n			<div class=\"members resize\"></div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"send\">\r\n			<input type=\"text\" name=\"message\" class=\"sendmsg\" />\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ChatRoom/ChatRoom.css?raw
-var ChatRoom_default$1;
-var init_ChatRoom$2 = __esmMin((() => {
-	ChatRoom_default$1 = ":host {\r\n	width: 279px;\r\n	height: 200px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#ChatRoom {\r\n	position: absolute;\r\n	width: 279px;\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#ChatRoom table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatRoom .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0px 0px;\r\n}\r\n#ChatRoom .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatRoom .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatRoom .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	padding-left: 5px;\r\n	padding-top: 2px;\r\n	text-shadow: 1px 1px 1px white;\r\n}\r\n#ChatRoom .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatRoom .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .panel {\r\n	background-color: white;\r\n}\r\n#ChatRoom .content {\r\n	height: 120px;\r\n}\r\n#ChatRoom .content .messages {\r\n	width: 70%;\r\n	height: 120px;\r\n	float: left;\r\n	border-right: 1px solid #ccc;\r\n	overflow-y: auto;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .messages .self {\r\n	color: #315937;\r\n}\r\n#ChatRoom .content .messages .join {\r\n	color: #416d6c;\r\n}\r\n#ChatRoom .content .messages .leave {\r\n	color: #481b22;\r\n}\r\n#ChatRoom .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .content .members {\r\n	width: 26%;\r\n	height: 120px;\r\n	float: left;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .owner {\r\n	color: #36716d;\r\n}\r\n\r\n#ChatRoom .send {\r\n	height: 30px;\r\n	position: relative;\r\n	padding-left: 5px;\r\n}\r\n#ChatRoom .send input {\r\n	width: 100%;\r\n	height: 20px;\r\n	padding: 0px;\r\n	border: none;\r\n	border-top: 1px solid #ccc;\r\n}\r\n\r\n#ChatRoom .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ChatRoom .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#ChatRoom .extend {\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#ChatRoom .content .members span.member {\r\n	cursor: pointer;\r\n}\r\n#ChatRoom .content .members span.member:hover {\r\n	text-decoration: underline;\r\n}\r\n#ChatRoom .content .members span.owner {\r\n	font-weight: bold;\r\n}\r\n";
-}));
-//#endregion
-//#region src/DB/Items/EquipmentLocation.js
-var EquipmentLocation_default;
-var init_EquipmentLocation = __esmMin((() => {
-	EquipmentLocation_default = {
-		HEAD_BOTTOM: 1,
-		WEAPON: 2,
-		GARMENT: 4,
-		ACCESSORY1: 8,
-		ARMOR: 16,
-		SHIELD: 32,
-		SHOES: 64,
-		ACCESSORY2: 128,
-		HEAD_TOP: 256,
-		HEAD_MID: 512,
-		COSTUME_HEAD_TOP: 1024,
-		COSTUME_HEAD_MID: 2048,
-		COSTUME_HEAD_BOTTOM: 4096,
-		COSTUME_ROBE: 8192,
-		COSTUME_FLOOR: 16384,
-		AMMO: 32768,
-		SHADOW_ARMOR: 65536,
-		SHADOW_WEAPON: 1 << 17,
-		SHADOW_SHIELD: 1 << 18,
-		SHADOW_SHOES: 1 << 19,
-		SHADOW_R_ACCESSORY_SHADOW: 1 << 20,
-		SHADOW_L_ACCESSORY_SHADOW: 1 << 21
-	};
-}));
-//#endregion
-//#region src/DB/Items/ItemType.js
-var ItemType_default;
-var init_ItemType = __esmMin((() => {
-	ItemType_default = {
-		HEALING: 0,
-		UNKNOWN: 1,
-		USABLE: 2,
-		ETC: 3,
-		ARMOR: 4,
-		WEAPON: 5,
-		CARD: 6,
-		PETEGG: 7,
-		PETARMOR: 8,
-		AMMO: 10,
-		DELAYCONSUME: 11,
-		SHADOWGEAR: 12,
-		CASH: 18,
-		SEARCH: 99
-	};
-}));
-//#endregion
-//#region src/UI/UIVersionManager.js
-var _UIAliases, UIVersionManager;
-var init_UIVersionManager = __esmMin((() => {
-	init_Configs();
-	init_PacketVerManager();
-	_UIAliases = {};
-	UIVersionManager = class UIVersionManager {
-		static getUIAlias(name) {
-			return name in _UIAliases ? _UIAliases[name] : false;
-		}
-		static selectUIVersion(publicName, versionInfo) {
-			let SelectedUI = versionInfo.default;
-			let _maxDate = 0;
-			function getUIbyGameMode(gameMode) {
-				if (typeof gameMode === "object" && Object.keys(gameMode).length > 0) for (const [keydate, UI] of Object.entries(gameMode)) {
-					const dateNum = parseInt(keydate);
-					if (PacketVerManager_default.value >= dateNum && dateNum > _maxDate) {
-						SelectedUI = UI;
-						_maxDate = dateNum;
-					}
-				}
-			}
-			getUIbyGameMode(versionInfo.common);
-			if (Configs.get("renewal")) getUIbyGameMode(versionInfo.re);
-			else getUIbyGameMode(versionInfo.prere);
-			_UIAliases[publicName] = SelectedUI.name;
-			console.log("%c[UIVersion] " + publicName + ": ", "color:#007000", SelectedUI.name);
-			return SelectedUI;
-		}
-		static getUIController(publicName, versionInfo) {
-			let _selectedUI;
-			const UIController = {};
-			UIController.selectUIVersion = function() {
-				_selectedUI = UIVersionManager.selectUIVersion(publicName, versionInfo);
-			};
-			UIController.selectUIVersionWithJob = function(job) {
-				_selectedUI = versionInfo.job[job] || versionInfo.job.default;
-				_UIAliases[publicName] = _selectedUI.name;
-				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
-			};
-			UIController.selectSpecificUIVersion = function(version) {
-				_selectedUI = versionInfo.common[version] || versionInfo.default;
-				_UIAliases[publicName] = _selectedUI.name;
-				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
-			};
-			UIController.getUI = function() {
-				return _selectedUI;
-			};
-			return UIController;
-		}
-		static getEquipmentVersion() {
-			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
-			else return 0;
-			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
-			return 1;
-		}
-		static getWinStatsVersion() {
-			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
-			else return 0;
-			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
-			return 1;
-		}
-		static getInventoryVersion() {
-			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
-			else return 0;
-			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
-			return 1;
-		}
-	};
-}));
-//#endregion
 //#region src/UI/Elements/UIButton.js
 var UIButton;
 var init_UIButton = __esmMin((() => {
@@ -240033,6 +238571,1585 @@ var init_Elements = __esmMin((() => {
 	init_UIButton();
 	init_UIText();
 	init_UIImage();
+}));
+//#endregion
+//#region src/UI/Components/ContextMenu/ContextMenu.css?raw
+var ContextMenu_default$1;
+var init_ContextMenu$1 = __esmMin((() => {
+	ContextMenu_default$1 = ":host {\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#ContextMenu {\r\n	position: fixed;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#ContextMenu .menu {\r\n	position: absolute;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n	padding: 2px;\r\n}\r\n\r\n#ContextMenu .menu hr {\r\n	background-color: #cecece;\r\n	height: 1px;\r\n	border: none;\r\n	margin: 2px;\r\n}\r\n\r\n#ContextMenu .menu div {\r\n	color: black;\r\n	white-space: nowrap;\r\n	padding: 1px;\r\n	height: 14px;\r\n}\r\n\r\n#ContextMenu .menu div:hover {\r\n	background-color: #739cef;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ContextMenu/ContextMenu.js
+var ContextMenu, ContextMenu_default;
+var init_ContextMenu = __esmMin((() => {
+	init_Renderer();
+	init_MouseEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_ContextMenu$1();
+	ContextMenu = new GUIComponent("ContextMenu", ContextMenu_default$1);
+	/**
+	* Render HTML
+	*/
+	ContextMenu.render = () => "<div id=\"ContextMenu\"><div class=\"menu\"></div></div>";
+	/**
+	* @var {boolean} focus this UI
+	*/
+	ContextMenu.needFocus = true;
+	/**
+	* Initialize event handler
+	*/
+	ContextMenu.init = function init() {
+		const root = this._shadow || this._host;
+		root.querySelector("#ContextMenu").addEventListener("mousedown", () => {
+			ContextMenu.remove();
+		});
+		root.querySelector(".menu").addEventListener("mousedown", (event) => {
+			event.stopImmediatePropagation();
+		});
+	};
+	/**
+	* Position menu at mouse cursor
+	*/
+	ContextMenu.onAppend = function onAppend() {
+		const menu = (this._shadow || this._host).querySelector(".menu");
+		const width = menu.offsetWidth;
+		const height = menu.offsetHeight;
+		let x = Mouse.screen.x;
+		let y = Mouse.screen.y;
+		if (x + width > Renderer.width) x = x - width;
+		if (y + height > Renderer.height) y = y - height;
+		menu.style.top = y + "px";
+		menu.style.left = x + "px";
+	};
+	/**
+	* Clean up menu contents
+	*/
+	ContextMenu.onRemove = function onRemove() {
+		const root = this._shadow || this._host;
+		root.querySelector(".menu").innerHTML = "";
+	};
+	/**
+	* Add a clickable node to the context menu
+	*
+	* @param {string} text
+	* @param {function} callback once clicked
+	*/
+	ContextMenu.addElement = function addElement(text, callback) {
+		const root = this._shadow || this._host;
+		const item = document.createElement("div");
+		item.textContent = text;
+		item.addEventListener("click", () => {
+			ContextMenu.remove();
+			callback();
+		});
+		root.querySelector(".menu").appendChild(item);
+	};
+	/**
+	* Add a delimiter to the links
+	*/
+	ContextMenu.nextGroup = function nextGroup() {
+		(this._shadow || this._host).querySelector(".menu").appendChild(document.createElement("hr"));
+	};
+	ContextMenu_default = UIManager.addComponent(ContextMenu);
+}));
+//#endregion
+//#region src/UI/Components/ChatBox/ChatBox.html?raw
+var ChatBox_default$2;
+var init_ChatBox$2 = __esmMin((() => {
+	ChatBox_default$2 = "<div id=\"chatbox\">\r\n	<table class=\"header\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\">\r\n		<tbody>\r\n			<tr>\r\n				<td class=\"opttab\"><div class=\"options\"></div></td>\r\n			</tr>\r\n		</tbody>\r\n	</table>\r\n	<div class=\"chat-function\">\r\n		<button class=\"cfunc chatmode\" data-background=\"basic_interface/chatmode_on.bmp\"></button>\r\n		<button class=\"cfunc battleopt\" data-background=\"basic_interface/battle_option2_a.bmp\"></button>\r\n		<button class=\"cfunc stickfucn\" data-background=\"basic_interface/stickoff.bmp\"></button>\r\n		<button class=\"cfunc battleopt2\" data-background=\"basic_interface/battle_option_a.bmp\"></button>\r\n		<button class=\"cfunc wndminib\" data-background=\"basic_interface/wnd_mini_b.bmp\"></button>\r\n		<button class=\"cfunc lockdragwnd\" data-background=\"basic_interface/lock_dragwnd.bmp\"></button>\r\n	</div>\r\n	<div class=\"body\">\r\n		<div class=\"event_add_cursor draggable\"></div>\r\n		<div class=\"contentwrapper\"></div>\r\n	</div>\r\n\r\n	<div class=\"battlemode\"><button class=\"bmtoggle\">...</button></div>\r\n	<div class=\"input\" data-background=\"basic_interface/dialog_bg.bmp\">\r\n		<input type=\"text\" class=\"username\" />\r\n		<ui-button\r\n			class=\"list\"\r\n			bg=\"basic_interface/dialog_btn0.bmp\"\r\n			hover=\"basic_interface/dialog_btn1.bmp\"\r\n			down=\"basic_interface/dialog_btn2.bmp\"\r\n		></ui-button>\r\n		<div class=\"wrapper\"><div contenteditable=\"true\" class=\"message input-chatbox\"></div></div>\r\n		<button\r\n			class=\"filter\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-down=\"basic_interface/sys_base_off.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"size\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-down=\"basic_interface/sys_base_off.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ChatBox/ChatBox.css?raw
+var ChatBox_default$1;
+var init_ChatBox$1 = __esmMin((() => {
+	ChatBox_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#chatbox {\r\n	position: relative;\r\n	left: 5px;\r\n	width: 595px;\r\n}\r\n\r\n/** Tabs **/\r\n#chatbox .header {\r\n	margin-left: 3px;\r\n	height: 17px;\r\n\r\n	max-width: 100%;\r\n}\r\n\r\n#chatbox .header .tab {\r\n	width: 75px;\r\n	color: white;\r\n	text-align: center;\r\n}\r\n\r\n#chatbox .header input {\r\n	border: none;\r\n	background-color: transparent;\r\n	color: white;\r\n	width: 75px;\r\n	height: 15px;\r\n	text-align: center;\r\n}\r\n\r\n#chatbox .header .tab div {\r\n	padding-top: 2px;\r\n	border-radius: 2px 2px 0px 0px;\r\n	background: rgba(0, 0, 0, 0.75);\r\n	border: 1px solid #959595;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n#chatbox .header .tab div.on {\r\n	background: rgba(0, 0, 0, 0.5);\r\n	border: 1px solid white;\r\n	border-bottom: none;\r\n	border-right: none;\r\n	height: 18px;\r\n}\r\n\r\n#chatbox .header .options {\r\n	border-bottom: 1px solid white;\r\n	height: 18px;\r\n	margin-right: 4px;\r\n}\r\n\r\n/** Content **/\r\n#chatbox .body {\r\n	background: rgba(0, 0, 0, 0.5);\r\n	border-left: 1px solid white;\r\n	border-right: 1px solid white;\r\n	border-radius: 0px 3px 0px 0px;\r\n	padding: 0px 5px 5px 5px;\r\n	margin-left: 3px;\r\n	margin-right: -2px;\r\n	max-width: 100%;\r\n}\r\n#chatbox .contentwrapper {\r\n	height: 42px;\r\n}\r\n#chatbox .content {\r\n	text-shadow: 1px 1px 0px black;\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	line-height: 14px;\r\n	display: none;\r\n}\r\n#chatbox .content.active {\r\n	display: block;\r\n}\r\n#chatbox .content a {\r\n	color: inherit;\r\n	text-decoration: underline;\r\n}\r\n\r\n#chatbox .content a,\r\n#chatbox .content .item-link {\r\n	cursor: pointer;\r\n}\r\n\r\n#chatbox .event_add_cursor {\r\n	height: 14px;\r\n	cursor: ns-resize;\r\n}\r\n\r\n#chatbox .battlemode {\r\n	width: 592px;\r\n	height: 25px;\r\n	position: relative;\r\n	border-left: 1px solid white;\r\n	border-right: 1px solid white;\r\n	border-top: 1px solid grey;\r\n	background-color: rgba(0, 0, 0, 0.5);\r\n	margin-left: 3px;\r\n	display: none;\r\n	max-width: 100%;\r\n}\r\n\r\n/** Input **/\r\n#chatbox .input {\r\n	width: 600px;\r\n	height: 25px;\r\n	position: relative;\r\n	max-width: 100%;\r\n}\r\n\r\n#chatbox .input.fix {\r\n	margin-top: 29px;\r\n}\r\n\r\n#chatbox .input input {\r\n	position: absolute;\r\n	top: 3px;\r\n	height: 18px;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n\r\n#chatbox .input .username {\r\n	left: 4px;\r\n	width: 90px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#chatbox .input .list {\r\n	width: 8px;\r\n	height: 18px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 97px;\r\n	background-repeat: no-repeat;\r\n	padding: 0;\r\n}\r\n#chatbox .input .wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	margin-left: 108px;\r\n	height: 100%;\r\n	overflow: hidden;\r\n	width: calc(100% - 140px);\r\n}\r\n\r\n#chatbox .input .message {\r\n	width: 100%;\r\n	padding-left: 5px;\r\n\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	max-width: 100%;\r\n	vertical-align: middle;\r\n	display: inline-block;\r\n}\r\n#chatbox .input .message.party {\r\n	color: #840084;\r\n}\r\n#chatbox .input .message.guild {\r\n	color: #008484;\r\n}\r\n#chatbox .input .message.clan {\r\n	color: #ffa631;\r\n}\r\n\r\n#chatbox .input .filter,\r\n#chatbox .input .size {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	position: absolute;\r\n	right: 13px;\r\n	top: 8px;\r\n	background-color: transparent;\r\n}\r\n\r\n#chatbox .input .size {\r\n	right: 1px;\r\n}\r\n\r\n#chatbox .battlemode .bmtoggle {\r\n	height: 100%;\r\n}\r\n#chatbox .chat-function {\r\n	position: absolute;\r\n	right: 0px;\r\n	top: 0px;\r\n	/* Expand the \"no-walk\" header zone around buttons (but don't move them visually). */\r\n	padding: 6px;\r\n	margin: -6px;\r\n}\r\n#chatbox .chat-function button {\r\n	background-size: auto;\r\n	border: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#chatbox .chat-function .chatmode {\r\n	width: 15px;\r\n	height: 9px;\r\n}\r\n#chatbox .chat-function .battleopt {\r\n	width: 10px;\r\n	height: 10px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .stickfucn {\r\n	width: 14px;\r\n	height: 10px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .battleopt2 {\r\n	width: 9px;\r\n	height: 9px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .wndminib {\r\n	width: 9px;\r\n	height: 9px;\r\n	background-size: cover;\r\n}\r\n#chatbox .chat-function .lockdragwnd {\r\n	width: 15px;\r\n	height: 10px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ChatBoxSettings/ChatBoxSettings.html?raw
+var ChatBoxSettings_default$2;
+var init_ChatBoxSettings$2 = __esmMin((() => {
+	ChatBoxSettings_default$2 = "<div id=\"ChatBoxSettings\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"title\"><span class=\"tabname\"></span> message log settings</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\" data-background=\"basic_interface/chatwin1_mid.bmp\">\r\n		<div class=\"content resize\">\r\n			<div class=\"listoption\">\r\n				<button data-id=\"0\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1291\">\r\n					Public Log\r\n				</button>\r\n				<button data-id=\"1\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1277\">\r\n					Public Chat\r\n				</button>\r\n				<button data-id=\"2\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1278\">Whisper</button>\r\n				<button data-id=\"3\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1279\">Party</button>\r\n				<button data-id=\"4\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1280\">Guild</button>\r\n				<button data-id=\"5\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1281\">Item</button>\r\n				<button data-id=\"6\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1282\">\r\n					Equipment on/off\r\n				</button>\r\n				<button data-id=\"7\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1283\">\r\n					Abnormal Status\r\n				</button>\r\n				<button data-id=\"8\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1284\">\r\n					Party Item\r\n				</button>\r\n				<button data-id=\"9\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1285\">\r\n					Party Status\r\n				</button>\r\n				<button data-id=\"10\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1286\">\r\n					Skill Fail\r\n				</button>\r\n				<button data-id=\"11\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1287\">\r\n					Party Setup\r\n				</button>\r\n				<button data-id=\"12\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1288\">\r\n					Equip Damage\r\n				</button>\r\n				<button data-id=\"13\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1289\">WOE</button>\r\n				<button data-id=\"14\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1549\">\r\n					Party Search\r\n				</button>\r\n				<button data-id=\"15\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1618\">Battle</button>\r\n				<button data-id=\"16\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1619\">\r\n					Party Battle\r\n				</button>\r\n				<button data-id=\"17\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1620\">EXP</button>\r\n				<button data-id=\"18\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1621\">\r\n					Party EXP\r\n				</button>\r\n				<button data-id=\"19\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1622\">Quest</button>\r\n				<button data-id=\"20\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"1623\">\r\n					Battlefield\r\n				</button>\r\n				<button data-id=\"21\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"2365\">Clan</button>\r\n				<!--<button data-id=\"22\" data-background=\"basic_interface/grp_offline.bmp\" data-text=\"\">Call</button>-->\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n			<div class=\"footer-opt\">All on</div>\r\n		</div>\r\n	</div>\r\n	<button class=\"extend\"></button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ChatBoxSettings/ChatBoxSettings.css?raw
+var ChatBoxSettings_default$1;
+var init_ChatBoxSettings$1 = __esmMin((() => {
+	ChatBoxSettings_default$1 = ":host {\r\n	width: 255px;\r\n	height: 232px;\r\n	top: 50%;\r\n	left: 50%;\r\n}\r\n\r\n#ChatBoxSettings {\r\n	position: absolute;\r\n	width: 255px;\r\n	height: auto;\r\n}\r\n\r\n#ChatBoxSettings table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatBoxSettings .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0px 0px;\r\n}\r\n#ChatBoxSettings .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatBoxSettings .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatBoxSettings .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#ChatBoxSettings .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatBoxSettings .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatBoxSettings .panel {\r\n	background-color: white;\r\n}\r\n#ChatBoxSettings .content {\r\n	height: 197px;\r\n}\r\n#ChatBoxSettings .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatBoxSettings .content .members {\r\n	width: 26%;\r\n	height: 120px;\r\n	float: left;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatBoxSettings .content .owner {\r\n	color: #36716d;\r\n}\r\n\r\n#ChatBoxSettings .send {\r\n	height: 30px;\r\n	position: relative;\r\n	padding-left: 5px;\r\n}\r\n#ChatBoxSettings .send input {\r\n	width: 100%;\r\n	height: 20px;\r\n	padding: 0px;\r\n	border: none;\r\n	border-top: 1px solid #ccc;\r\n}\r\n\r\n#ChatBoxSettings .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ChatBoxSettings .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#ChatBoxSettings .extend {\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n#ChatBoxSettings .listoption {\r\n	width: 231px;\r\n	float: right;\r\n	background: #ffffff;\r\n	height: 166px;\r\n	overflow-y: auto;\r\n	padding-left: 5px;\r\n	padding-bottom: 5px;\r\n	border-left: 1px solid #cfcfcf;\r\n	border-bottom: 1px solid #cfcfcf;\r\n}\r\n#ChatBoxSettings .listoption button {\r\n	width: 100%;\r\n	text-align: left;\r\n	background: #fff;\r\n	border: 0;\r\n	margin-bottom: 3px;\r\n	margin-top: 2px;\r\n	background-repeat: no-repeat;\r\n	padding-left: 19px;\r\n	height: 15px;\r\n	text-overflow: ellipsis;\r\n}\r\n#ChatBoxSettings .listoption button:hover {\r\n	border: 1px solid #000;\r\n}\r\n\r\n#ChatBoxSettings .footer-opt {\r\n	margin-top: 5px;\r\n	width: 231px;\r\n	float: right;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ChatBoxSettings/ChatBoxSettings.js
+/**
+* Handle option button click
+*/
+function onClickOption(btn) {
+	const dataId = parseInt(btn.getAttribute("data-id"), 10);
+	let isOn = btn.classList.contains("on");
+	if (isOn) {
+		btn.classList.remove("on");
+		isOn = false;
+	} else {
+		btn.classList.add("on");
+		isOn = true;
+	}
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_" + (isOn ? "online" : "offline") + ".bmp", (data) => {
+		btn.style.backgroundImage = "url(" + data + ")";
+	});
+	if (!isNaN(dataId)) {
+		const idsIndex = ChatBoxSettings.tabOption[ChatBoxSettings.activeTab].indexOf(dataId);
+		if (idsIndex > -1) ChatBoxSettings.tabOption[ChatBoxSettings.activeTab].splice(idsIndex, 1);
+		else ChatBoxSettings.tabOption[ChatBoxSettings.activeTab].push(dataId);
+	}
+}
+/**
+* Resize ChatBoxSettings
+*/
+function onResize$18() {
+	const top = ChatBoxSettings._host.getBoundingClientRect().top;
+	let lastHeight = 0;
+	function resizeProcess() {
+		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
+		h = Math.min(Math.max(h, 3), 8);
+		if (h === lastHeight) return;
+		resize$7(h);
+		lastHeight = h;
+	}
+	const interval = setInterval(resizeProcess, 30);
+	const onMouseUp = (event) => {
+		if (event.which === 1) {
+			clearInterval(interval);
+			window.removeEventListener("mouseup", onMouseUp);
+		}
+	};
+	window.addEventListener("mouseup", onMouseUp);
+}
+/**
+* Extend window size
+*/
+function resize$7(height) {
+	height = Math.min(Math.max(height, 3), 8);
+	const root = ChatBoxSettings._shadow || ChatBoxSettings._host;
+	const content = root.querySelector(".content");
+	if (content) content.style.height = height * 32 + "px";
+	const list = root.querySelector(".listoption");
+	if (list) list.style.height = height * 32 - 31 + "px";
+	const inner = root.querySelector("#ChatBoxSettings");
+	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
+	_preferences$71.height = height;
+	_preferences$71.save();
+}
+var ChatBoxSettings, _preferences$71, ChatBoxSettings_default;
+var init_ChatBoxSettings = __esmMin((() => {
+	init_DBManager();
+	init_Preferences$1();
+	init_Renderer();
+	init_Client();
+	init_MouseEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_ChatBoxSettings$2();
+	init_ChatBoxSettings$1();
+	ChatBoxSettings = new GUIComponent("ChatBoxSettings", ChatBoxSettings_default$1);
+	/**
+	* Render HTML
+	*/
+	ChatBoxSettings.render = () => ChatBoxSettings_default$2;
+	/**
+	* @var {boolean} is ChatBoxSettings open ? (Temporary fix)
+	*/
+	ChatBoxSettings.isOpen = false;
+	ChatBoxSettings.tabOption = [];
+	ChatBoxSettings.activeTab = 0;
+	_preferences$71 = Preferences.get("ChatBoxSettings", {
+		x: 480,
+		y: 200,
+		width: 7,
+		height: 4
+	}, 1);
+	/**
+	* Initialize UI
+	*/
+	ChatBoxSettings.init = function init() {
+		const root = this._shadow || this._host;
+		const extendBtn = root.querySelector(".extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$18);
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			this._host.style.display = "none";
+		});
+		const listOption = root.querySelector(".listoption");
+		if (listOption) listOption.addEventListener("click", (event) => {
+			const btn = event.target.closest("button");
+			if (btn) onClickOption(btn);
+		});
+		this.draggable(".titlebar");
+	};
+	/**
+	* Once in HTML
+	*/
+	ChatBoxSettings.onAppend = function onAppend() {
+		resize$7(_preferences$71.height);
+		const rect = this._host.getBoundingClientRect();
+		this._host.style.top = Math.min(Math.max(0, _preferences$71.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$71.x), Renderer.width - rect.width) + "px";
+		this._host.style.display = "none";
+	};
+	/**
+	* Key Event Handler
+	*/
+	ChatBoxSettings.onKeyDown = function onKeyDown(event) {};
+	ChatBoxSettings.toggle = function toggle() {
+		if (this._host.style.display === "none") this.ui.show();
+		else this.ui.hide();
+	};
+	ChatBoxSettings.updateTab = function updateTab(tabID, tabName) {
+		const root = this._shadow || this._host;
+		const optList = ChatBoxSettings.tabOption[tabID];
+		const buttons = root.querySelectorAll(".content .listoption button");
+		this.activeTab = tabID;
+		root.querySelector(".tabname").textContent = tabName;
+		buttons.forEach((btn) => {
+			btn.classList.remove("on");
+			Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_offline.bmp", (data) => {
+				btn.style.backgroundImage = "url(" + data + ")";
+			});
+		});
+		buttons.forEach((btn) => {
+			const id = parseInt(btn.getAttribute("data-id"), 10);
+			if (optList && optList.includes(id)) {
+				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", (data) => {
+					btn.style.backgroundImage = "url(" + data + ")";
+				});
+				btn.classList.add("on");
+			}
+		});
+	};
+	ChatBoxSettings.onRemove = function onRemove() {
+		_preferences$71.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$71.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$71.save();
+	};
+	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
+	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
+}));
+//#endregion
+//#region src/UI/Components/ChatBox/ChatBox.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$10() {
+	return ChatBox._shadow || ChatBox._host;
+}
+/**
+* Extract plain chat text from the contenteditable input while preserving item links.
+*/
+function extractChatMessage$1(inputEl) {
+	if (!inputEl) return "";
+	const clone = inputEl.cloneNode(true);
+	clone.querySelectorAll("span.item-link").forEach((el) => {
+		const itemData = el.getAttribute("data-item") || el.dataset.item || "";
+		el.replaceWith(document.createTextNode(itemData));
+	});
+	let result = clone.textContent;
+	result = result.replace(/\u00A0/g, " ");
+	return result;
+}
+/**
+* Process all messages in the buffer at once
+*/
+function flushMessageBuffer() {
+	if (_messageBuffer.length === 0) return;
+	const root = _root$10();
+	const messages = _messageBuffer.slice();
+	_messageBuffer = [];
+	const messagesByTab = {};
+	messages.forEach((msg) => {
+		ChatBox.tabs.forEach((tab, TabNum) => {
+			const chatTabOption = ChatBoxSettings_default.tabOption[TabNum];
+			if (!chatTabOption || !chatTabOption.includes(msg.filterType)) return;
+			if (!messagesByTab[TabNum]) messagesByTab[TabNum] = [];
+			messagesByTab[TabNum].push(msg);
+		});
+	});
+	Object.keys(messagesByTab).forEach((TabNum) => {
+		const content = root.querySelector(`.content[data-content="${TabNum}"]`);
+		if (!content) return;
+		const fragment = document.createDocumentFragment();
+		const wasAtBottom = shouldScrollDownBeforeAdd(content, content.offsetHeight);
+		messagesByTab[TabNum].forEach((msg) => {
+			const color = msg.color || getColorForType(msg.colorType);
+			const div = document.createElement("div");
+			div.style.color = color;
+			if (!msg.override) div.textContent = msg.text;
+			else div.innerHTML = msg.text;
+			fragment.appendChild(div);
+		});
+		content.appendChild(fragment);
+		while (content.childElementCount > MAX_MSG) {
+			const element = content.firstElementChild;
+			const matches = element.innerHTML.match(/(blob:[^"]+)/g);
+			if (matches) for (let i = 0; i < matches.length; i++) window.URL.revokeObjectURL(matches[i]);
+			element.remove();
+		}
+		if (wasAtBottom) content.scrollTop = content.scrollHeight;
+	});
+}
+function getColorForType(colorType) {
+	if (colorType & ChatBox.TYPE.PUBLIC && colorType & ChatBox.TYPE.SELF) return "#00FF00";
+	else if (colorType & ChatBox.TYPE.PARTY) return colorType & ChatBox.TYPE.SELF ? "rgb(200, 200, 100)" : "rgb(230,215,200)";
+	else if (colorType & ChatBox.TYPE.GUILD) return "rgb(180, 255, 180)";
+	else if (colorType & ChatBox.TYPE.PRIVATE) return "#FFFF00";
+	else if (colorType & ChatBox.TYPE.ERROR) return "#FF0000";
+	else if (colorType & ChatBox.TYPE.INFO) return "#FFFF63";
+	else if (colorType & ChatBox.TYPE.BLUE) return "#00FFFF";
+	else if (colorType & ChatBox.TYPE.ADMIN) return "#FFFF00";
+	else if (colorType & ChatBox.TYPE.MAIL) return "#F4D293";
+	return "white";
+}
+function shouldScrollDownBeforeAdd(container, height) {
+	const atBottom = container.scrollTop + height >= container.scrollHeight - 5;
+	if (height >= container.scrollHeight || atBottom) return true;
+	return false;
+}
+function getChatBottomAnchorPx(root, fallback) {
+	const inputEl = root.querySelector(".input");
+	if (inputEl && inputEl.style.display !== "none") return inputEl.getBoundingClientRect().bottom;
+	const bmEl = root.querySelector(".battlemode");
+	if (bmEl && bmEl.style.display !== "none") return bmEl.getBoundingClientRect().bottom;
+	return fallback;
+}
+/**
+* Determine if vertical arrow should scroll the contenteditable rather than navigate history
+*/
+function shouldLetChatInputHandleVerticalArrows(inputEl, direction) {
+	if (!inputEl) return false;
+	const sel = window.getSelection();
+	if (!sel || sel.rangeCount < 1) return false;
+	const range = sel.getRangeAt(0);
+	if (!range) return false;
+	const anchorNode = sel.anchorNode || range.startContainer;
+	if (!anchorNode) return false;
+	if (anchorNode !== inputEl && !(inputEl.contains && inputEl.contains(anchorNode))) return false;
+	if (!sel.isCollapsed) return true;
+	const hasNewline = extractChatMessage$1(inputEl).indexOf("\n") > -1;
+	const hasOverflow = inputEl.scrollHeight > inputEl.clientHeight + 1;
+	if (!hasNewline && !hasOverflow) return false;
+	let caretRect;
+	try {
+		caretRect = range.getClientRects && range.getClientRects().length ? range.getClientRects()[0] : range.getBoundingClientRect();
+	} catch (_e) {
+		return true;
+	}
+	if (!caretRect) return true;
+	const inputRect = inputEl.getBoundingClientRect ? inputEl.getBoundingClientRect() : null;
+	if (!inputRect) return true;
+	if (direction === "up") return caretRect.top > inputRect.top + 2;
+	if (direction === "down") return caretRect.bottom < inputRect.bottom - 2;
+	return false;
+}
+/**
+* Update scroll by block (14px)
+*/
+function onScroll$8(event) {
+	let delta;
+	if (event.wheelDelta) {
+		delta = event.wheelDelta / 120;
+		if (window.opera) delta = -delta;
+	} else if (event.detail) delta = -event.detail;
+	else if (event.deltaY) delta = -event.deltaY / Math.abs(event.deltaY);
+	const lineHeight = getScrollLineHeightPx(this);
+	this.scrollTop = Math.floor(this.scrollTop / lineHeight) * lineHeight - (delta || 0) * lineHeight;
+	event.preventDefault();
+}
+/**
+* Validate the type of information being dropped into the text field
+*/
+function onDropText$2(event) {
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	let data;
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return;
+	}
+	if (data.type == "item") return;
+	event.currentTarget.value = data;
+}
+/**
+* Stop event propagation
+*/
+function stopPropagation$15(event) {
+	event.stopImmediatePropagation();
+	event.preventDefault();
+}
+/**
+* Change private message nick name
+*/
+function onPrivateMessageUserSelection(name) {
+	return function onPrivateMessageUserSelectionClosure() {
+		const nickBox = _root$10().querySelector(".input .username");
+		if (nickBox) nickBox.value = name;
+	};
+}
+/**
+* Change target of global chat (party, guild)
+*/
+function onChangeTargetMessage(type) {
+	return function onChangeTargetMessageClosure() {
+		const $input = _root$10().querySelector(".input-chatbox");
+		if ($input) {
+			$input.classList.remove("guild", "party", "clan");
+			if (type & ChatBox.TYPE.PARTY) $input.classList.add("party");
+			else if (type & ChatBox.TYPE.GUILD) $input.classList.add("guild");
+			else if (type & ChatBox.TYPE.CLAN) $input.classList.add("clan");
+		}
+		ChatBox.sendTo = type;
+	};
+}
+function setChatFontScale(scale) {
+	return function setChatFontScaleClosure() {
+		_preferences$70.fontScale = clampChatFontScale(scale);
+		_preferences$70.save();
+		ChatBox.applyFontScale();
+	};
+}
+function clampChatFontScale(scale) {
+	const allowed = [
+		1,
+		1.2,
+		1.4
+	];
+	let best = allowed[0];
+	let bestDist = Infinity;
+	scale = parseFloat(scale);
+	if (!isFinite(scale) || scale <= 0) return 1;
+	for (let i = 0; i < allowed.length; ++i) {
+		const dist = Math.abs(allowed[i] - scale);
+		if (dist < bestDist) {
+			bestDist = dist;
+			best = allowed[i];
+		}
+	}
+	return best;
+}
+function getScrollLineHeightPx(element) {
+	let style, lh;
+	try {
+		style = window.getComputedStyle(element);
+		lh = parseFloat(style.lineHeight);
+		if (isFinite(lh) && lh > 0) return Math.round(lh);
+	} catch (_e) {}
+	return 14;
+}
+function makeResizableDiv() {
+	const root = _root$10();
+	const resizer = root.querySelector(".event_add_cursor");
+	if (!resizer) return;
+	let originalHeight = 0;
+	let originalAnchorY = 0;
+	let originalMouseY = 0;
+	const fixHeight = (height) => Math.floor(height / MAGIC_NUMBER) * MAGIC_NUMBER;
+	const resize = (e) => {
+		let height = fixHeight(originalHeight - (e.pageY - originalMouseY));
+		height = Math.max(MAGIC_NUMBER, Math.min(MAGIC_NUMBER * 5, height));
+		ChatBox._host.style.top = `${originalAnchorY - height}px`;
+		const contentWrapper = root.querySelector(".contentwrapper");
+		if (contentWrapper) contentWrapper.style.height = `${height}px`;
+		_heightIndex = Math.max(2, Math.min(6, height / MAGIC_NUMBER + 1));
+		const active = root.querySelector(`.content[data-content="${ChatBox.activeTab}"]`);
+		if (active) active.scrollTop = active.scrollHeight;
+	};
+	const stopResize = () => {
+		window.removeEventListener("mousemove", resize);
+		window.removeEventListener("mouseup", stopResize);
+	};
+	resizer.addEventListener("mousedown", (e) => {
+		e.preventDefault();
+		const contentWrapper = root.querySelector(".contentwrapper");
+		originalHeight = contentWrapper ? contentWrapper.offsetHeight : 0;
+		originalAnchorY = (parseInt(ChatBox._host.style.top, 10) || 0) + originalHeight;
+		originalMouseY = e.pageY;
+		window.addEventListener("mousemove", resize);
+		window.addEventListener("mouseup", stopResize);
+	});
+}
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$70, ChatBox, ChatBox_default;
+var init_ChatBox = __esmMin((() => {
+	init_DBManager();
+	init_jquery();
+	init_Renderer();
+	init_Client();
+	init_Events();
+	init_Preferences$1();
+	init_KeyEventHandler();
+	init_MouseEventHandler();
+	init_CursorManager();
+	init_BattleMode();
+	init_History();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_ContextMenu();
+	init_ChatBox$2();
+	init_ChatBox$1();
+	init_ProcessCommand();
+	init_ChatBoxSettings();
+	init_Configs();
+	init_EntityManager();
+	MAX_MSG = 400;
+	MAX_LENGTH = 100;
+	MAGIC_NUMBER = 42;
+	_historyMessage = new History();
+	_historyNickName = new History(true);
+	_heightIndex = 2;
+	_messageBuffer = [];
+	_rafScheduled = false;
+	_preferences$70 = Preferences.get("ChatBox", {
+		x: 0,
+		y: Infinity,
+		height: 2,
+		fontScale: 1,
+		magnet_top: false,
+		magnet_bottom: true,
+		magnet_left: true,
+		magnet_right: false,
+		tabs: [],
+		tabOption: [],
+		activeTab: 0
+	}, 1);
+	ChatBox = new GUIComponent("ChatBox", ChatBox_default$1);
+	/**
+	* Render HTML
+	*/
+	ChatBox.render = () => ChatBox_default$2;
+	/**
+	* Has input fields, protect key events
+	*/
+	ChatBox.captureKeyEvents = true;
+	/**
+	* Constants
+	*/
+	ChatBox.TYPE = {
+		SELF: 1,
+		PUBLIC: 2,
+		PRIVATE: 4,
+		PARTY: 8,
+		GUILD: 16,
+		ANNOUNCE: 32,
+		ERROR: 64,
+		INFO: 128,
+		BLUE: 256,
+		ADMIN: 512,
+		MAIL: 1024,
+		CLAN: 2048
+	};
+	ChatBox.FILTER = {
+		PUBLIC_LOG: 0,
+		PUBLIC_CHAT: 1,
+		WHISPER: 2,
+		PARTY: 3,
+		GUILD: 4,
+		ITEM: 5,
+		EQUIP: 6,
+		STATUS: 7,
+		PARTY_ITEM: 8,
+		PARTY_STATUS: 9,
+		SKILL_FAIL: 10,
+		PARTY_SETUP: 11,
+		EQUIP_DAMAGE: 12,
+		WOE: 13,
+		PARTY_SEARCH: 14,
+		BATTLE: 15,
+		PARTY_BATTLE: 16,
+		EXP: 17,
+		PARTY_EXP: 18,
+		QUEST: 19,
+		BATTLEFIELD: 20,
+		CLAN: 21
+	};
+	/**
+	* @var {number} target message ?
+	*/
+	ChatBox.sendTo = ChatBox.TYPE.PUBLIC;
+	/**
+	* Storage to cache the private messages
+	*/
+	ChatBox.PrivateMessageStorage = {
+		nick: "",
+		msg: ""
+	};
+	ChatBox.lastTabID = -1;
+	ChatBox.tabCount = 0;
+	ChatBox.activeTab = 0;
+	ChatBox.tabs = [];
+	/**
+	* Initialize UI
+	*/
+	ChatBox.init = function init() {
+		const root = _root$10();
+		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
+		_heightIndex = _preferences$70.height - 1;
+		ChatBox.updateHeight();
+		ChatBox.applyFontScale();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$70.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$70.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		this.magnet.TOP = _preferences$70.magnet_top;
+		this.magnet.BOTTOM = _preferences$70.magnet_bottom;
+		this.magnet.LEFT = _preferences$70.magnet_left;
+		this.magnet.RIGHT = _preferences$70.magnet_right;
+		this.draggable(".input");
+		this.draggable(".battlemode");
+		root.querySelectorAll(".input, .chat-function, .battlemode, .event_add_cursor").forEach((el) => {
+			let _intersect;
+			let _enter = 0;
+			el.addEventListener("mouseenter", () => {
+				if (_enter === 0) {
+					_intersect = Mouse.intersect;
+					_enter++;
+					if (_intersect) {
+						Mouse.intersect = false;
+						Cursor.setType(Cursor.ACTION.DEFAULT);
+						EntityManager.setOverEntity(null);
+					}
+				}
+			});
+			el.addEventListener("mouseleave", () => {
+				if (_enter > 0) {
+					_enter--;
+					if (_enter === 0 && _intersect) {
+						Mouse.intersect = true;
+						EntityManager.setOverEntity(null);
+					}
+				}
+			});
+		});
+		Client.loadFiles([DB.INTERFACE_PATH + "basic_interface/dialscr_down.bmp", DB.INTERFACE_PATH + "basic_interface/dialscr_up.bmp"], (down, up) => {
+			const scrollbarCSS = [
+				"#chatbox .content::-webkit-scrollbar { width: 10px; height: 10px;}",
+				"#chatbox .content::-webkit-scrollbar-button:vertical:start:increment,",
+				"#chatbox .content::-webkit-scrollbar-button:vertical:end:decrement { display: none;}",
+				"#chatbox .content::-webkit-scrollbar-corner:vertical { display:none;}",
+				"#chatbox .content::-webkit-scrollbar-resizer:vertical { display:none;}",
+				"#chatbox .content::-webkit-scrollbar-button:start:decrement,",
+				"#chatbox .content::-webkit-scrollbar-button:end:increment { display: block; border:none;}",
+				`#chatbox .content::-webkit-scrollbar-button:vertical:increment { background: url(${down}) no-repeat; height:10px;}`,
+				`#chatbox .content::-webkit-scrollbar-button:vertical:decrement { background: url(${up}) no-repeat; height:10px;}`,
+				"#chatbox .content::-webkit-scrollbar-track-piece:vertical { background:black; border:none;}",
+				"#chatbox .content::-webkit-scrollbar-thumb:vertical { background:grey; -webkit-border-image:none; border-color:transparent;border-width: 0px 0; }"
+			].join("\n");
+			const style = document.createElement("style");
+			style.textContent = scrollbarCSS;
+			if (ChatBox._shadow) ChatBox._shadow.appendChild(style);
+		});
+		const usernameInput = root.querySelector(".input input");
+		if (usernameInput) usernameInput.addEventListener("mousedown", function(event) {
+			this.select();
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
+		const inputChatbox = root.querySelector(".input-chatbox");
+		if (Configs.get("restoreChatFocus", false) && inputChatbox) inputChatbox.addEventListener("blur", () => {
+			Events.setTimeout(() => {
+				const active = KEYS.getDeepActiveElement();
+				const movedInsideChatbox = active && root.querySelector("#chatbox").contains(active);
+				const isTextInput = active && active.tagName && active.tagName.match(/input|select|textarea/i);
+				if (!movedInsideChatbox && !isTextInput) inputChatbox.focus();
+			}, 1e3);
+		});
+		if (inputChatbox) {
+			inputChatbox.addEventListener("click", function() {
+				const range = document.createRange();
+				const selection = window.getSelection();
+				range.selectNodeContents(this);
+				range.collapse(false);
+				selection.removeAllRanges();
+				selection.addRange(range);
+			});
+			inputChatbox.addEventListener("focus", function() {
+				const range = document.createRange();
+				const selection = window.getSelection();
+				range.selectNodeContents(this);
+				range.collapse(false);
+				selection.removeAllRanges();
+				selection.addRange(range);
+			});
+			inputChatbox.maxLength = MAX_LENGTH;
+			inputChatbox.addEventListener("input", (event) => {
+				if (extractChatMessage$1(inputChatbox).length >= MAX_LENGTH) event.preventDefault();
+			});
+			inputChatbox.addEventListener("keydown", (event) => {
+				if (extractChatMessage$1(inputChatbox).length >= MAX_LENGTH) {
+					if ([
+						"ArrowLeft",
+						"ArrowUp",
+						"ArrowRight",
+						"ArrowDown",
+						"Backspace",
+						"Delete",
+						"Enter",
+						"Insert"
+					].includes(event.key)) return true;
+					if (event.ctrlKey || event.altKey) return true;
+					event.preventDefault();
+					return false;
+				}
+			});
+			inputChatbox.addEventListener("paste", (event) => {
+				event.preventDefault();
+				const clipboard = (event.originalEvent || event).clipboardData || event.clipboardData;
+				let pastedText = clipboard ? clipboard.getData("text/plain") : "";
+				if (!pastedText) return;
+				pastedText = pastedText.replace(/\u00A0/g, " ");
+				const remaining = MAX_LENGTH - extractChatMessage$1(inputChatbox).length;
+				if (remaining <= 0) return;
+				const toInsert = pastedText.substr(0, remaining);
+				if (document.queryCommandSupported && document.queryCommandSupported("insertText")) document.execCommand("insertText", false, toInsert);
+				else {
+					const node = document.createTextNode(toInsert);
+					inputChatbox.appendChild(node);
+				}
+			});
+		}
+		const nickBox = root.querySelector(".input .username");
+		if (nickBox) nickBox.addEventListener("blur", () => {
+			Events.setTimeout(() => {
+				const active = KEYS.getDeepActiveElement();
+				const movedInsideChatbox = active && root.querySelector("#chatbox").contains(active);
+				const isTextInput = active && active.tagName && active.tagName.match(/input|select|textarea/i);
+				if (!movedInsideChatbox && !isTextInput && !(active === inputChatbox)) nickBox.focus();
+			}, 1e3);
+		});
+		root.querySelectorAll("input[type=text]").forEach((input) => {
+			input.addEventListener("drop", onDropText$2);
+			input.addEventListener("dragover", stopPropagation$15);
+		});
+		root.querySelectorAll(".header input").forEach((input) => {
+			input.addEventListener("dblclick", function() {
+				this.type = "text";
+				this.select();
+			});
+			input.addEventListener("blur", function() {
+				this.type = "button";
+			});
+		});
+		const listBtn = root.querySelector(".input .list");
+		if (listBtn) {
+			listBtn.addEventListener("click", function() {
+				const names = _historyNickName.list;
+				const count = names.length;
+				if (!count) {
+					ChatBox.addText(DB.getMessage(192), ChatBox.TYPE.ERROR, ChatBox.FILTER.PUBLIC_LOG);
+					return;
+				}
+				ContextMenu_default.remove();
+				ContextMenu_default.append();
+				for (let i = 0; i < count; ++i) ContextMenu_default.addElement(names[i], onPrivateMessageUserSelection(names[i]));
+				ContextMenu_default.addElement("", onPrivateMessageUserSelection(""));
+				const pos = this.getBoundingClientRect();
+				const ui = ContextMenu_default.ui.find(".menu");
+				ui.css({
+					top: pos.top - ui.height() - 5,
+					left: pos.left - ui.width() - 5
+				});
+			});
+			listBtn.addEventListener("mousedown", (event) => {
+				event.stopImmediatePropagation();
+				event.preventDefault();
+			});
+		}
+		const draggableEl = root.querySelector(".draggable");
+		if (draggableEl) draggableEl.addEventListener("mousedown", (event) => {
+			event.stopPropagation();
+		});
+		const filterBtn = root.querySelector(".input .filter");
+		if (filterBtn) {
+			filterBtn.addEventListener("click", function() {
+				const pos = this.getBoundingClientRect();
+				const ui = ContextMenu_default.ui.find(".menu");
+				ContextMenu_default.remove();
+				ContextMenu_default.append();
+				ContextMenu_default.addElement(DB.getMessage(85), onChangeTargetMessage(ChatBox.TYPE.PUBLIC));
+				ContextMenu_default.addElement(DB.getMessage(86), onChangeTargetMessage(ChatBox.TYPE.PARTY));
+				ContextMenu_default.addElement(DB.getMessage(437), onChangeTargetMessage(ChatBox.TYPE.GUILD));
+				ContextMenu_default.addElement(DB.getMessage(2361), onChangeTargetMessage(ChatBox.TYPE.CLAN));
+				ui.css({
+					top: pos.top - ui.height() - 5,
+					left: pos.left - ui.width() + 25
+				});
+			});
+			filterBtn.addEventListener("mousedown", (event) => {
+				event.stopImmediatePropagation();
+				event.preventDefault();
+			});
+		}
+		const sizeBtn = root.querySelector(".input .size");
+		if (sizeBtn) sizeBtn.addEventListener("click", (event) => {
+			ChatBox.updateHeight(true);
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
+		root.querySelectorAll(".content").forEach((el) => {
+			el.addEventListener("wheel", onScroll$8);
+		});
+		(function initTabHoverBlock() {
+			let _tabIntersect;
+			let _tabEnter = 0;
+			root.querySelector("#chatbox").addEventListener("mouseenter", (event) => {
+				if (event.target.closest("table.header tr td.tab")) {
+					if (_tabEnter === 0) {
+						_tabIntersect = Mouse.intersect;
+						_tabEnter++;
+						if (_tabIntersect) {
+							Mouse.intersect = false;
+							Cursor.setType(Cursor.ACTION.DEFAULT);
+							EntityManager.setOverEntity(null);
+						}
+					}
+				}
+			}, true);
+			root.querySelector("#chatbox").addEventListener("mouseleave", (event) => {
+				if (event.target.closest("table.header tr td.tab")) {
+					if (_tabEnter > 0) {
+						_tabEnter--;
+						if (_tabEnter === 0 && _tabIntersect) {
+							Mouse.intersect = true;
+							EntityManager.setOverEntity(null);
+						}
+					}
+				}
+			}, true);
+			root.querySelector("#chatbox").addEventListener("mousedown", (event) => {
+				if (event.target.closest("table.header tr td.tab")) event.stopPropagation();
+			}, true);
+		})();
+		const chatBody = root.querySelector(".body");
+		if (chatBody) chatBody.addEventListener("mousedown", (event) => {
+			if (event.which !== 3) return;
+			event.preventDefault();
+			event.stopPropagation();
+		});
+		const chatboxEl = root.querySelector("#chatbox");
+		if (chatboxEl) chatboxEl.addEventListener("contextmenu", (event) => {
+			const target = event.target;
+			if (target.closest(".body, .contentwrapper, .content")) {
+				if (target.closest("a, .item-link, .event_add_cursor, .chat-function, td.tab")) return;
+				event.preventDefault();
+				event.stopPropagation();
+				Mouse.screen.x = event.pageX;
+				Mouse.screen.y = event.pageY;
+				ContextMenu_default.remove();
+				ContextMenu_default.append();
+				ContextMenu_default.addElement("Chat font x1.0", setChatFontScale(1));
+				ContextMenu_default.addElement("Chat font x1.2", setChatFontScale(1.2));
+				ContextMenu_default.addElement("Chat font x1.4", setChatFontScale(1.4));
+			}
+		});
+		if (chatboxEl) chatboxEl.addEventListener("mousedown", (event) => {
+			if (event.target.closest(".content a, .content .item-link")) event.stopPropagation();
+		});
+		const bmtoggle = root.querySelector(".battlemode .bmtoggle");
+		if (bmtoggle) bmtoggle.addEventListener("click", () => {
+			const inputEl = root.querySelector(".input");
+			const bmEl = root.querySelector(".battlemode");
+			if (inputEl) inputEl.style.display = inputEl.style.display === "none" ? "block" : "none";
+			if (bmEl) bmEl.style.display = bmEl.style.display === "none" ? "block" : "none";
+		});
+		const battleopt2 = root.querySelector(".chat-function .battleopt2");
+		if (battleopt2) battleopt2.addEventListener("click", () => {
+			if (ChatBox.tabCount <= 5) {
+				ChatBox.addNewTab();
+				ChatBox.onAppend();
+			}
+		});
+		if (chatboxEl) chatboxEl.addEventListener("click", (event) => {
+			const tab = event.target.closest("table.header tr td.tab");
+			if (tab) {
+				event.stopImmediatePropagation();
+				if (ChatBox.activeTab != tab.dataset.tab) ChatBox.switchTab(tab.dataset.tab);
+			}
+		});
+		const wndminib = root.querySelector(".chat-function .wndminib");
+		if (wndminib) wndminib.addEventListener("click", () => {
+			if (ChatBox.tabCount > 1) ChatBox.removeTab();
+		});
+		const chatmodeBtn = root.querySelector(".chat-function .chatmode");
+		if (chatmodeBtn) chatmodeBtn.addEventListener("click", () => {
+			ChatBox.toggleChat();
+		});
+		const battleoptBtn = root.querySelector(".chat-function .battleopt");
+		if (battleoptBtn) battleoptBtn.addEventListener("click", () => {
+			ChatBox.toggleChatBattleOption();
+		});
+		ChatBoxSettings_default.append();
+		if (_preferences$70.tabs.length > 0 && _preferences$70.tabs.length == _preferences$70.tabOption.length) {
+			for (let i = 0; i < _preferences$70.tabs.length; i++) if (_preferences$70.tabs[i]) {
+				const tabName = _preferences$70.tabs[i].name;
+				const tabSettings = _preferences$70.tabOption[i];
+				ChatBox.addNewTab(tabName, tabSettings);
+			}
+			if (_preferences$70.activeTab !== void 0 && ChatBox.tabs[_preferences$70.activeTab]) ChatBox.switchTab(_preferences$70.activeTab);
+		} else {
+			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
+				ChatBox.FILTER.PUBLIC_LOG,
+				ChatBox.FILTER.PUBLIC_CHAT,
+				ChatBox.FILTER.WHISPER,
+				ChatBox.FILTER.PARTY,
+				ChatBox.FILTER.GUILD,
+				ChatBox.FILTER.ITEM,
+				ChatBox.FILTER.EQUIP,
+				ChatBox.FILTER.STATUS,
+				ChatBox.FILTER.PARTY_ITEM,
+				ChatBox.FILTER.PARTY_STATUS,
+				ChatBox.FILTER.SKILL_FAIL,
+				ChatBox.FILTER.PARTY_SETUP,
+				ChatBox.FILTER.EQUIP_DAMAGE,
+				ChatBox.FILTER.WOE,
+				ChatBox.FILTER.PARTY_SEARCH,
+				ChatBox.FILTER.QUEST,
+				ChatBox.FILTER.BATTLEFIELD,
+				ChatBox.FILTER.CLAN
+			]);
+			ChatBox.addNewTab(DB.getMessage(1292));
+			ChatBox.switchTab(firstTab);
+		}
+		makeResizableDiv();
+		ProcessCommand_default.add("savechat", "Saves current chat tab to txt file.", () => {
+			ChatBox.saveCurrentTabChat();
+		}, ["sc"], false);
+		ChatBox._setupItemLinkHandler();
+	};
+	/**
+	* Clean up the box
+	*/
+	ChatBox.clean = function Clean() {
+		const root = _root$10();
+		root.querySelectorAll(".content").forEach((content) => {
+			const matches = content.innerHTML.match(/(blob:[^"]+)/g);
+			if (matches) for (let i = 0, count = matches.length; i < count; ++i) window.URL.revokeObjectURL(matches[i]);
+			content.innerHTML = "";
+		});
+		const inputChatbox = root.querySelector(".input-chatbox");
+		if (inputChatbox) inputChatbox.innerHTML = "";
+		const nickBox = root.querySelector(".input .username");
+		if (nickBox) nickBox.value = "";
+		_historyMessage.clear();
+		_historyNickName.clear();
+	};
+	ChatBox.toggleChatBattleOption = function toggleChatBattleOption() {
+		const onInput = _root$10().querySelector(".header tr td div.on input");
+		const tabName = onInput ? onInput.value : "";
+		ChatBoxSettings_default.toggle();
+		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
+	};
+	ChatBox.removeTab = function removeTab() {
+		const root = _root$10();
+		const tabEl = root.querySelector(`table.header tr td.tab[data-tab="${this.activeTab}"]`);
+		if (tabEl) tabEl.remove();
+		const contentEl = root.querySelector(`.body .content[data-content="${this.activeTab}"]`);
+		if (contentEl) contentEl.remove();
+		const _elem = root.querySelectorAll("table.header tr td.tab");
+		const lastElem = _elem[_elem.length - 1];
+		delete ChatBoxSettings_default.tabOption[this.activeTab];
+		delete this.tabs[this.activeTab];
+		this.tabCount--;
+		ChatBox.switchTab(lastElem.dataset.tab);
+		const onInput = root.querySelector(".header tr td div.on input");
+		const tabName = onInput ? onInput.value : "";
+		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
+	};
+	ChatBox.addNewTab = function addNewTab(name, settings) {
+		const root = _root$10();
+		if (!name) name = "New Tab";
+		if (!settings) settings = [
+			ChatBox.FILTER.PUBLIC_LOG,
+			ChatBox.FILTER.PUBLIC_CHAT,
+			ChatBox.FILTER.WHISPER,
+			ChatBox.FILTER.PARTY,
+			ChatBox.FILTER.GUILD,
+			ChatBox.FILTER.ITEM,
+			ChatBox.FILTER.EQUIP,
+			ChatBox.FILTER.STATUS,
+			ChatBox.FILTER.PARTY_ITEM,
+			ChatBox.FILTER.PARTY_STATUS,
+			ChatBox.FILTER.SKILL_FAIL,
+			ChatBox.FILTER.PARTY_SETUP,
+			ChatBox.FILTER.EQUIP_DAMAGE,
+			ChatBox.FILTER.WOE,
+			ChatBox.FILTER.PARTY_SEARCH,
+			ChatBox.FILTER.BATTLE,
+			ChatBox.FILTER.PARTY_BATTLE,
+			ChatBox.FILTER.EXP,
+			ChatBox.FILTER.PARTY_EXP,
+			ChatBox.FILTER.QUEST,
+			ChatBox.FILTER.BATTLEFIELD,
+			ChatBox.FILTER.CLAN
+		];
+		const tabName = name;
+		const tabID = ++this.lastTabID;
+		const tab = {};
+		tab.id = tabID;
+		tab.name = tabName;
+		root.querySelectorAll("table.header tr td.tab div").forEach((el) => el.classList.remove("on"));
+		root.querySelectorAll(".body .content").forEach((el) => el.classList.remove("active"));
+		const opttab = root.querySelector("table.header tr .opttab");
+		if (opttab) opttab.insertAdjacentHTML("beforebegin", `
+			<td class="tab" data-tab="${tabID}">
+				<div class="on">
+					<input type="text" value="${tabName}"/>
+				</div>
+			</td>
+		`);
+		const newTabInput = root.querySelector(`table.header tr td.tab[data-tab="${tabID}"] div input`);
+		if (newTabInput) newTabInput.addEventListener("change", function() {
+			ChatBox.tabs[tabID].name = this.value;
+		});
+		const contentWrapper = root.querySelector(".body .contentwrapper");
+		if (contentWrapper) contentWrapper.insertAdjacentHTML("beforeend", `<div class="content active" data-content="${tabID}" data-scrollbar-skin="chatbox"></div>`);
+		const newContent = root.querySelector(`.body .content[data-content="${tabID}"]`);
+		if (newContent) newContent.addEventListener("wheel", onScroll$8);
+		ChatBoxSettings_default.tabOption[tabID] = settings;
+		this.tabs[tabID] = tab;
+		this.activeTab = tabID;
+		this.tabCount++;
+		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
+		return tabID;
+	};
+	ChatBox.switchTab = function switchTab(tabID) {
+		const root = _root$10();
+		root.querySelectorAll("table.header tr td.tab div").forEach((el) => el.classList.remove("on"));
+		root.querySelectorAll(".body .content").forEach((el) => el.classList.remove("active"));
+		this.activeTab = tabID;
+		const tabDiv = root.querySelector(`table.header tr td.tab[data-tab="${this.activeTab}"] div`);
+		if (tabDiv) tabDiv.classList.add("on");
+		const contentDiv = root.querySelector(`.body .content[data-content="${this.activeTab}"]`);
+		if (contentDiv) {
+			contentDiv.classList.add("active");
+			contentDiv.scrollTop = contentDiv.scrollHeight;
+		}
+		const onInput = root.querySelector(".header tr td div.on input");
+		const tabName = onInput ? onInput.value : "";
+		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
+	};
+	/**
+	* Once append to HTML
+	*/
+	ChatBox.onAppend = function OnAppend() {
+		const root = _root$10();
+		const inputEl = root.querySelector(".input");
+		if (inputEl) inputEl.style.display = "none";
+		const bmEl = root.querySelector(".battlemode");
+		if (bmEl) bmEl.style.display = "block";
+		const content = root.querySelector(".content.active");
+		if (content) content.scrollTop = content.scrollHeight;
+	};
+	/**
+	* Stop custom scroll
+	*/
+	ChatBox.onRemove = function OnRemove() {
+		_preferences$70.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
+		_preferences$70.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$70.height = _heightIndex;
+		_preferences$70.magnet_top = this.magnet.TOP;
+		_preferences$70.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$70.magnet_left = this.magnet.LEFT;
+		_preferences$70.magnet_right = this.magnet.RIGHT;
+		_preferences$70.tabs = this.tabs;
+		_preferences$70.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$70.activeTab = this.activeTab;
+		_preferences$70.save();
+		this.lastTabID = -1;
+		this.activeTab = 0;
+	};
+	/**
+	* @param {number} key id to check
+	* @return {boolean} found a shortcut ?
+	*/
+	ChatBox.processBattleMode = function processBattleMode(keyId) {
+		const bmEl = _root$10().querySelector(".battlemode");
+		if (bmEl && bmEl.style.display !== "none" || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL || keyId >= KEYS.F1 && keyId <= KEYS.F24 || KEYS.INSERT) return BattleMode.process(keyId);
+		return false;
+	};
+	/**
+	* Key Event Handler
+	*/
+	ChatBox.onKeyDown = function OnKeyDown(event) {
+		const root = _root$10();
+		const messageBox = root.querySelector(".input-chatbox");
+		const nickBox = root.querySelector(".input .username");
+		const onInput = root.querySelector(".header tr td div.on input");
+		if (onInput) onInput.addEventListener("keyup", function() {
+			ChatBoxSettings_default.updateTab(ChatBox.activeTab, this.value);
+		});
+		const activeElement = KEYS.getDeepActiveElement();
+		const isChatInputFocused = activeElement === messageBox || activeElement === nickBox;
+		if (activeElement && !isChatInputFocused && (activeElement.tagName && activeElement.tagName.match(/input|select|textarea/i) || activeElement.isContentEditable)) return true;
+		switch (event.which) {
+			default:
+				if (isChatInputFocused) {
+					if (event.which >= KEYS.F1 && event.which <= KEYS.F24) {
+						if (event.which === KEYS.F11 || event.which === KEYS.F12) {
+							event.preventDefault();
+							return true;
+						}
+						if (ChatBox.processBattleMode(event.which)) {
+							event.preventDefault();
+							event.stopImmediatePropagation();
+							return false;
+						}
+						event.preventDefault();
+						event.stopImmediatePropagation();
+						return false;
+					}
+					if (event.getModifierState && event.getModifierState("AltGraph")) {
+						event.stopImmediatePropagation();
+						return true;
+					}
+					if (event.ctrlKey || KEYS.CTRL) {
+						if (!(event.which === KEYS.C || event.which === KEYS.V || event.which === KEYS.X || event.which === KEYS.A || event.which === KEYS.Z || event.which === KEYS.Y)) {
+							if (ChatBox.processBattleMode(event.which)) {
+								event.preventDefault();
+								event.stopImmediatePropagation();
+								return false;
+							}
+							event.preventDefault();
+							return true;
+						}
+						event.stopImmediatePropagation();
+						return true;
+					}
+					if (event.altKey || KEYS.ALT) {
+						if (!(event.which === KEYS.LEFT || event.which === KEYS.RIGHT || event.which === KEYS.UP || event.which === KEYS.DOWN || event.which === KEYS.BACKSPACE || event.which === KEYS.DELETE || event.which === KEYS.HOME || event.which === KEYS.END)) {
+							if (ChatBox.processBattleMode(event.which)) {
+								event.preventDefault();
+								event.stopImmediatePropagation();
+								return false;
+							}
+							event.preventDefault();
+							return true;
+						}
+						event.stopImmediatePropagation();
+						return true;
+					}
+					if (event.which === KEYS.ESCAPE || event.key === "Escape") return true;
+					event.stopImmediatePropagation();
+					return true;
+				}
+				if (event.target.tagName && !event.target.tagName.match(/input|select|textarea/i) || event.which >= KEYS.F1 && event.which <= KEYS.F24 || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL) {
+					if (ChatBox.processBattleMode(event.which)) {
+						event.stopImmediatePropagation();
+						return false;
+					}
+				}
+				return true;
+			case KEYS.UP:
+				if (!document.querySelector("#NpcMenu")) {
+					if (activeElement === messageBox) {
+						if (shouldLetChatInputHandleVerticalArrows(messageBox, "up")) {
+							event.stopImmediatePropagation();
+							return true;
+						}
+						messageBox.innerHTML = _historyMessage.previous();
+						break;
+					}
+					if (activeElement === nickBox) {
+						nickBox.value = _historyNickName.previous();
+						nickBox.select();
+						break;
+					}
+				}
+				return true;
+			case KEYS.DOWN:
+				if (!document.querySelector("#NpcMenu")) {
+					if (activeElement === messageBox) {
+						if (shouldLetChatInputHandleVerticalArrows(messageBox, "down")) {
+							event.stopImmediatePropagation();
+							return true;
+						}
+						messageBox.innerHTML = _historyMessage.next();
+						break;
+					}
+					if (activeElement === nickBox) {
+						nickBox.value = _historyNickName.next();
+						nickBox.select();
+						break;
+					}
+				}
+				return true;
+			case KEYS.F10:
+				this.updateHeight(false);
+				{
+					const activeContent = root.querySelector(`.content[data-content="${this.activeTab}"]`);
+					if (activeContent) activeContent.scrollTop = activeContent.scrollHeight;
+				}
+				break;
+			case KEYS.ENTER: {
+				if (document.activeElement.className === "message input-chatbox" && document.activeElement !== messageBox) return true;
+				if (document.querySelector("#NpcMenu, #NpcBox")) return true;
+				if (activeElement === messageBox) {
+					this.submit();
+					event.stopImmediatePropagation();
+					return false;
+				}
+				const input = root.querySelector(".input");
+				if (input && input.style.display === "none") {
+					input.style.display = "block";
+					const bmEl = root.querySelector(".battlemode");
+					if (bmEl) bmEl.style.display = "none";
+				}
+				messageBox.focus();
+				const range = document.createRange();
+				const sel = window.getSelection();
+				range.selectNodeContents(messageBox);
+				range.collapse(false);
+				sel.removeAllRanges();
+				sel.addRange(range);
+				event.stopImmediatePropagation();
+				return false;
+			}
+		}
+		event.stopImmediatePropagation();
+		return false;
+	};
+	ChatBox.toggleChat = function toggleChat() {
+		const messageBox = _root$10().querySelector(".input-chatbox");
+		const activeElement = KEYS.getDeepActiveElement();
+		if (activeElement.tagName === "INPUT" && activeElement !== messageBox) return true;
+		if (document.querySelector("#NpcMenu, #NpcBox")) return true;
+		messageBox.focus();
+		this.submit();
+	};
+	/**
+	* Process ChatBox message
+	*/
+	ChatBox.submit = function Submit() {
+		const root = _root$10();
+		const inputEl = root.querySelector(".input");
+		const $user = root.querySelector(".input .username");
+		const $text = root.querySelector(".input-chatbox");
+		const user = $user ? $user.value : "";
+		const trimmedText = extractChatMessage$1($text).replace(/\u00A0/g, " ").trim();
+		let isChatOn = false;
+		if (!trimmedText.length) {
+			const bmEl = root.querySelector(".battlemode");
+			if (inputEl) inputEl.style.display = inputEl.style.display === "none" ? "block" : "none";
+			if (bmEl) bmEl.style.display = bmEl.style.display === "none" ? "block" : "none";
+			if (inputEl && inputEl.style.display !== "none") {
+				isChatOn = true;
+				$text.focus();
+			}
+			const chatmode = isChatOn ? "on" : "off";
+			Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/chatmode_${chatmode}.bmp`, (data) => {
+				const chatmodeBtn = root.querySelector(".chat-function .chatmode");
+				if (chatmodeBtn) chatmodeBtn.style.backgroundImage = `url(${data})`;
+			});
+			return;
+		}
+		if (user.length && trimmedText[0] !== "/") {
+			this.PrivateMessageStorage.nick = user;
+			this.PrivateMessageStorage.msg = trimmedText;
+			_historyNickName.push(user);
+			_historyNickName.previous();
+		}
+		_historyMessage.push(trimmedText);
+		$text.innerHTML = "";
+		if (trimmedText[0] === "/") {
+			ProcessCommand_default.processCommand.call(this, trimmedText.substr(1));
+			return;
+		}
+		this.onRequestTalk(user, trimmedText, ChatBox.sendTo);
+	};
+	/**
+	* Add text to chatbox
+	*/
+	ChatBox.addText = function addText(text, colorType, filterType, color, override) {
+		text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, function(match) {
+			const span = `<span data-item="${match}" class="item-link" style="color:#FFFF63;">&lt;${DB.parseItemLink(match).name}&gt;</span>`;
+			override = true;
+			return span;
+		});
+		if (!override && /<span\s+class="nickname-link"/.test(text)) override = true;
+		if (isNaN(filterType)) filterType = ChatBox.FILTER.PUBLIC_LOG;
+		_messageBuffer.push({
+			text,
+			colorType,
+			filterType,
+			color,
+			override
+		});
+		if (!_rafScheduled) {
+			_rafScheduled = true;
+			requestAnimationFrame(() => {
+				_rafScheduled = false;
+				flushMessageBuffer();
+			});
+		}
+	};
+	/**
+	* Change chatbox's height
+	*/
+	ChatBox.updateHeight = function changeHeight(AlwaysVisible) {
+		const root = _root$10();
+		const HeightList = [
+			0,
+			0,
+			MAGIC_NUMBER,
+			MAGIC_NUMBER * 2,
+			MAGIC_NUMBER * 3,
+			MAGIC_NUMBER * 4,
+			MAGIC_NUMBER * 5
+		];
+		const content = root.querySelector(".contentwrapper");
+		const bottomBefore = getChatBottomAnchorPx(root, this.__lastBottomY);
+		_heightIndex = (_heightIndex + 1) % HeightList.length;
+		if (_heightIndex === 0 && AlwaysVisible) _heightIndex = 1;
+		if (content) content.style.height = `${HeightList[_heightIndex]}px`;
+		const header = root.querySelector(".header");
+		const body = root.querySelector(".body");
+		const inputEl = root.querySelector(".input");
+		switch (_heightIndex) {
+			case 0:
+				this.__lastBottomY = bottomBefore;
+				this._host.style.display = "none";
+				break;
+			case 1:
+				this._host.style.display = "block";
+				if (header) header.style.display = "none";
+				if (body) body.style.display = "none";
+				if (inputEl) inputEl.classList.add("fix");
+				break;
+			default:
+				if (inputEl) inputEl.classList.remove("fix");
+				if (header) header.style.display = "";
+				if (body) body.style.display = "";
+				break;
+		}
+		if (_heightIndex !== 0 && isFinite(bottomBefore)) {
+			const bottomAfter = getChatBottomAnchorPx(root, bottomBefore);
+			if (isFinite(bottomAfter)) {
+				let top = parseInt(this._host.style.top, 10);
+				top = isFinite(top) ? top : 0;
+				this._host.style.top = `${top + (bottomBefore - bottomAfter)}px`;
+				this.__lastBottomY = bottomBefore;
+			}
+		}
+		const active = root.querySelector(`.content[data-content="${this.activeTab}"]`);
+		if (active) active.scrollTop = active.scrollHeight;
+	};
+	/**
+	* Save user name to nick name history
+	*/
+	ChatBox.saveNickName = function saveNickName(pseudo) {
+		_historyNickName.push(pseudo);
+	};
+	/**
+	* Save chat from current tab into a file.
+	*/
+	ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
+		const root = _root$10();
+		let data;
+		const tzoffset = (/* @__PURE__ */ new Date()).getTimezoneOffset() * 6e4;
+		let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
+		localISOTime = localISOTime.replace("T", " ");
+		const timezone = (/* @__PURE__ */ new Date()).getTimezoneOffset() / 60;
+		const date = `${localISOTime} (GMT ${timezone > 0 ? "-" : "+"}${Math.abs(timezone).toString()})`;
+		const contentEl = root.querySelector(`.content[data-content="${ChatBox.activeTab}"]`);
+		data = "<html><head><title>Chat History</title><style> body { background-color: DarkSlateGray; } </style></head><body>";
+		data += contentEl ? contentEl.outerHTML : "";
+		data += "</body></html>";
+		const url = window.URL.createObjectURL(new Blob([data], { type: "text/plain" }));
+		ChatBox.addText(`Chat History [${ChatBox.tabs[ChatBox.activeTab].name}] ${date} can be saved by <a style="color:#F88" download="ChatHistory [${ChatBox.tabs[ChatBox.activeTab].name}] (${date.replace("/", "-")}).html" href="${url}" target="_blank">clicking here</a>.`, ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, null, true);
+	};
+	ChatBox.applyFontScale = function applyFontScale() {
+		const root = _root$10();
+		const scale = clampChatFontScale(_preferences$70.fontScale || 1);
+		const baseFont = 12;
+		const baseLineHeight = 14;
+		const baseInputLineHeight = 18;
+		const fontSize = Math.max(10, Math.round(baseFont * scale));
+		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
+		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
+		_preferences$70.fontScale = scale;
+		root.querySelectorAll(".content").forEach((el) => {
+			el.style.fontSize = `${fontSize}px`;
+			el.style.lineHeight = `${lineHeight}px`;
+		});
+		root.querySelectorAll(".input input, .input .message").forEach((el) => {
+			el.style.fontFamily = "Arial";
+			el.style.fontSize = `${fontSize}px`;
+		});
+		const message = root.querySelector(".input .message");
+		if (message) message.style.lineHeight = `${inputLineHeight}px`;
+	};
+	ChatBox._setupItemLinkHandler = function _setupItemLinkHandler() {
+		const root = _root$10();
+		if (!root) return;
+		root.addEventListener("click", (event) => {
+			const link = event.target.closest(".item-link");
+			if (!link) return;
+			if (link.closest(".input-chatbox")) {
+				event.stopImmediatePropagation();
+				return;
+			}
+			const item = DB.parseItemLink(link.dataset.item || link.getAttribute("data-item"));
+			if (!item) return;
+			const ItemInfo = UIManager.getComponent("ItemInfo");
+			ItemInfo.append();
+			ItemInfo.setItem(item);
+		});
+	};
+	jquery_default(document).on("click", ".item-link", function(event) {
+		if (jquery_default(this).closest("#chatbox .input-chatbox").length) {
+			event.stopImmediatePropagation();
+			return false;
+		}
+		const item = DB.parseItemLink(jquery_default(this).data("item"));
+		if (!item) return;
+		const ItemInfo = UIManager.getComponent("ItemInfo");
+		ItemInfo.append();
+		ItemInfo.setItem(item);
+	});
+	ChatBox.insertText = function(text) {
+		const input = _root$10().querySelector(".input-chatbox");
+		if (!input) return;
+		input.appendChild(document.createTextNode(text));
+		input.focus();
+	};
+	ChatBox.mouseMode = GUIComponent.MouseMode.CROSS;
+	ChatBox_default = UIManager.addComponent(ChatBox);
+}));
+//#endregion
+//#region src/UI/Components/ChatRoom/ChatRoom.html?raw
+var ChatRoom_default$2;
+var init_ChatRoom$3 = __esmMin((() => {
+	ChatRoom_default$2 = "<div id=\"ChatRoom\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\"><span class=\"title\"></span> (<span class=\"count\"></span>)</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"content resize\">\r\n			<div class=\"messages resize\"></div>\r\n			<div class=\"members resize\"></div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"send\">\r\n			<input type=\"text\" name=\"message\" class=\"sendmsg\" />\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ChatRoom/ChatRoom.css?raw
+var ChatRoom_default$1;
+var init_ChatRoom$2 = __esmMin((() => {
+	ChatRoom_default$1 = ":host {\r\n	width: 279px;\r\n	height: 200px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#ChatRoom {\r\n	position: absolute;\r\n	width: 279px;\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#ChatRoom table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatRoom .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0px 0px;\r\n}\r\n#ChatRoom .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatRoom .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatRoom .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	padding-left: 5px;\r\n	padding-top: 2px;\r\n	text-shadow: 1px 1px 1px white;\r\n}\r\n#ChatRoom .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatRoom .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .panel {\r\n	background-color: white;\r\n}\r\n#ChatRoom .content {\r\n	height: 120px;\r\n}\r\n#ChatRoom .content .messages {\r\n	width: 70%;\r\n	height: 120px;\r\n	float: left;\r\n	border-right: 1px solid #ccc;\r\n	overflow-y: auto;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .messages .self {\r\n	color: #315937;\r\n}\r\n#ChatRoom .content .messages .join {\r\n	color: #416d6c;\r\n}\r\n#ChatRoom .content .messages .leave {\r\n	color: #481b22;\r\n}\r\n#ChatRoom .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .content .members {\r\n	width: 26%;\r\n	height: 120px;\r\n	float: left;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .owner {\r\n	color: #36716d;\r\n}\r\n\r\n#ChatRoom .send {\r\n	height: 30px;\r\n	position: relative;\r\n	padding-left: 5px;\r\n}\r\n#ChatRoom .send input {\r\n	width: 100%;\r\n	height: 20px;\r\n	padding: 0px;\r\n	border: none;\r\n	border-top: 1px solid #ccc;\r\n}\r\n\r\n#ChatRoom .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ChatRoom .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#ChatRoom .extend {\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#ChatRoom .content .members span.member {\r\n	cursor: pointer;\r\n}\r\n#ChatRoom .content .members span.member:hover {\r\n	text-decoration: underline;\r\n}\r\n#ChatRoom .content .members span.owner {\r\n	font-weight: bold;\r\n}\r\n";
+}));
+//#endregion
+//#region src/DB/Items/EquipmentLocation.js
+var EquipmentLocation_default;
+var init_EquipmentLocation = __esmMin((() => {
+	EquipmentLocation_default = {
+		HEAD_BOTTOM: 1,
+		WEAPON: 2,
+		GARMENT: 4,
+		ACCESSORY1: 8,
+		ARMOR: 16,
+		SHIELD: 32,
+		SHOES: 64,
+		ACCESSORY2: 128,
+		HEAD_TOP: 256,
+		HEAD_MID: 512,
+		COSTUME_HEAD_TOP: 1024,
+		COSTUME_HEAD_MID: 2048,
+		COSTUME_HEAD_BOTTOM: 4096,
+		COSTUME_ROBE: 8192,
+		COSTUME_FLOOR: 16384,
+		AMMO: 32768,
+		SHADOW_ARMOR: 65536,
+		SHADOW_WEAPON: 1 << 17,
+		SHADOW_SHIELD: 1 << 18,
+		SHADOW_SHOES: 1 << 19,
+		SHADOW_R_ACCESSORY_SHADOW: 1 << 20,
+		SHADOW_L_ACCESSORY_SHADOW: 1 << 21
+	};
+}));
+//#endregion
+//#region src/DB/Items/ItemType.js
+var ItemType_default;
+var init_ItemType = __esmMin((() => {
+	ItemType_default = {
+		HEALING: 0,
+		UNKNOWN: 1,
+		USABLE: 2,
+		ETC: 3,
+		ARMOR: 4,
+		WEAPON: 5,
+		CARD: 6,
+		PETEGG: 7,
+		PETARMOR: 8,
+		AMMO: 10,
+		DELAYCONSUME: 11,
+		SHADOWGEAR: 12,
+		CASH: 18,
+		SEARCH: 99
+	};
+}));
+//#endregion
+//#region src/UI/UIVersionManager.js
+var _UIAliases, UIVersionManager;
+var init_UIVersionManager = __esmMin((() => {
+	init_Configs();
+	init_PacketVerManager();
+	_UIAliases = {};
+	UIVersionManager = class UIVersionManager {
+		static getUIAlias(name) {
+			return name in _UIAliases ? _UIAliases[name] : false;
+		}
+		static selectUIVersion(publicName, versionInfo) {
+			let SelectedUI = versionInfo.default;
+			let _maxDate = 0;
+			function getUIbyGameMode(gameMode) {
+				if (typeof gameMode === "object" && Object.keys(gameMode).length > 0) for (const [keydate, UI] of Object.entries(gameMode)) {
+					const dateNum = parseInt(keydate);
+					if (PacketVerManager_default.value >= dateNum && dateNum > _maxDate) {
+						SelectedUI = UI;
+						_maxDate = dateNum;
+					}
+				}
+			}
+			getUIbyGameMode(versionInfo.common);
+			if (Configs.get("renewal")) getUIbyGameMode(versionInfo.re);
+			else getUIbyGameMode(versionInfo.prere);
+			_UIAliases[publicName] = SelectedUI.name;
+			console.log("%c[UIVersion] " + publicName + ": ", "color:#007000", SelectedUI.name);
+			return SelectedUI;
+		}
+		static getUIController(publicName, versionInfo) {
+			let _selectedUI;
+			const UIController = {};
+			UIController.selectUIVersion = function() {
+				_selectedUI = UIVersionManager.selectUIVersion(publicName, versionInfo);
+			};
+			UIController.selectUIVersionWithJob = function(job) {
+				_selectedUI = versionInfo.job[job] || versionInfo.job.default;
+				_UIAliases[publicName] = _selectedUI.name;
+				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
+			};
+			UIController.selectSpecificUIVersion = function(version) {
+				_selectedUI = versionInfo.common[version] || versionInfo.default;
+				_UIAliases[publicName] = _selectedUI.name;
+				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
+			};
+			UIController.getUI = function() {
+				return _selectedUI;
+			};
+			return UIController;
+		}
+		static getEquipmentVersion() {
+			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
+			else return 0;
+			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
+			return 1;
+		}
+		static getWinStatsVersion() {
+			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
+			else return 0;
+			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
+			return 1;
+		}
+		static getInventoryVersion() {
+			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
+			else return 0;
+			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
+			return 1;
+		}
+	};
 }));
 //#endregion
 //#region src/UI/Components/CardIllustration/CardIllustration.html?raw
@@ -242994,13 +243111,13 @@ var init_InventoryV0$1 = __esmMin((() => {
 //#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.html?raw
 var PartyHelper_default$2;
 var init_PartyHelper$2 = __esmMin((() => {
-	PartyHelper_default$2 = "<div id=\"PartyHelper\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text setup\" data-text=\"291\">Party Setup</span>\r\n			<span class=\"text friend-setup\" data-text=\"355\">Friend Setup</span>\r\n			<span class=\"text create\" data-text=\"2054\">Create Party</span>\r\n			<span class=\"text invite\" data-text=\"2056\">Create Party</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content party-content\">\r\n		<div class=\"create invite\">\r\n			<p>\r\n				<span data-text=\"2057\" class=\"create\">Party Name:</span>\r\n				<span data-text=\"2058\" class=\"invite\">Player Name:</span>\r\n			</p>\r\n			<input type=\"text\" class=\"name\" value=\"\" />\r\n		</div>\r\n		<div class=\"exp_share setup\">\r\n			<p data-text=\"292\">How to share EXP</p>\r\n			<button class=\"on\" data-value=\"0\" data-background=\"radiobtn_on.bmp\" data-text=\"287\">Each Take</button>\r\n			<button class=\"off\" data-value=\"1\" data-background=\"radiobtn_off.bmp\" data-text=\"288\">Even Share</button>\r\n		</div>\r\n		<div class=\"item_share setup create\">\r\n			<p data-text=\"293\">How to share Items</p>\r\n			<button class=\"on\" data-value=\"0\" data-background=\"radiobtn_on.bmp\" data-text=\"289\">Each Take</button>\r\n			<button class=\"off\" data-value=\"1\" data-background=\"radiobtn_off.bmp\" data-text=\"290\">Party Share</button>\r\n		</div>\r\n		<div class=\"item_sharing_type setup create\">\r\n			<p data-text=\"738\">Item Sharing type</p>\r\n			<button class=\"on\" data-value=\"0\" data-background=\"radiobtn_on.bmp\" data-text=\"739\">Individual</button>\r\n			<button class=\"off\" data-value=\"1\" data-background=\"radiobtn_off.bmp\" data-text=\"740\">Shared</button>\r\n		</div>\r\n	</div>\r\n	<div class=\"content friend-content\">\r\n		<div class=\"friend-setup\">\r\n			<div class=\"open1to1Stranger setting-row\">\r\n				<button class=\"on\" data-value=\"1\" data-background=\"checkbox_1.bmp\"></button>\r\n				<button class=\"off\" data-value=\"0\" data-background=\"checkbox_0.bmp\"></button>\r\n				<span data-text=\"361\">Open 1:1 Chat between Strangers</span>\r\n			</div>\r\n			<div class=\"open1to1Friend setting-row\">\r\n				<button class=\"on\" data-value=\"1\" data-background=\"checkbox_1.bmp\"></button>\r\n				<button class=\"off\" data-value=\"0\" data-background=\"checkbox_0.bmp\"></button>\r\n				<span data-text=\"359\">Open 1:1 Chat between Friends</span>\r\n			</div>\r\n			<div class=\"alarm1to1 setting-row\">\r\n				<button class=\"on\" data-value=\"1\" data-background=\"checkbox_1.bmp\"></button>\r\n				<button class=\"off\" data-value=\"0\" data-background=\"checkbox_0.bmp\"></button>\r\n				<span data-text=\"362\">Alarm when receive a 1:1 Chat</span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n		<button\r\n			class=\"btn ok\"\r\n			data-background=\"basic_interface/btn_ok.bmp\"\r\n			data-hover=\"basic_interface/btn_ok_a.bmp\"\r\n			data-press=\"basic_interface/btn_ok_b.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"btn cancel\"\r\n			data-background=\"btn_cancel.bmp\"\r\n			data-hover=\"btn_cancel_a.bmp\"\r\n			data-press=\"btn_cancel_b.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
+	PartyHelper_default$2 = "<div id=\"PartyHelper\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text setup\"><ui-text msg=\"291\">Party Setup</ui-text></span>\r\n			<span class=\"text friend-setup\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			<span class=\"text create\"><ui-text msg=\"2054\">Create Party</ui-text></span>\r\n			<span class=\"text invite\"><ui-text msg=\"2056\">Create Party</ui-text></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content party-content\">\r\n		<div class=\"create invite\">\r\n			<p>\r\n				<span class=\"create\"><ui-text msg=\"2057\">Party Name:</ui-text></span>\r\n				<span class=\"invite\"><ui-text msg=\"2058\">Player Name:</ui-text></span>\r\n			</p>\r\n			<input type=\"text\" class=\"name\" value=\"\" />\r\n		</div>\r\n		<div class=\"exp_share setup\">\r\n			<p><ui-text msg=\"292\">How to share EXP</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"287\">Each Take</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"288\">Even Share</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"item_share setup create\">\r\n			<p><ui-text msg=\"293\">How to share Items</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"289\">Each Take</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"290\">Party Share</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"item_sharing_type setup create\">\r\n			<p><ui-text msg=\"738\">Item Sharing type</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"739\">Individual</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"740\">Shared</ui-text>\r\n			</button>\r\n		</div>\r\n	</div>\r\n	<div class=\"content friend-content\">\r\n		<div class=\"friend-setup\">\r\n			<div class=\"open1to1Stranger setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"361\">Open 1:1 Chat between Strangers</ui-text></span>\r\n			</div>\r\n			<div class=\"open1to1Friend setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"359\">Open 1:1 Chat between Friends</ui-text></span>\r\n			</div>\r\n			<div class=\"alarm1to1 setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"362\">Alarm when receive a 1:1 Chat</ui-text></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n		<ui-button\r\n			class=\"btn ok\"\r\n			bg=\"basic_interface/btn_ok.bmp\"\r\n			hover=\"basic_interface/btn_ok_a.bmp\"\r\n			down=\"basic_interface/btn_ok_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.css?raw
 var PartyHelper_default$1;
 var init_PartyHelper$1 = __esmMin((() => {
-	PartyHelper_default$1 = "#PartyHelper {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n\r\n#PartyHelper .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyHelper .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyHelper .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyHelper .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyHelper .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyHelper .content {\r\n	background-color: white;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#PartyHelper .party-content {\r\n	min-height: 100px;\r\n}\r\n\r\n#PartyHelper .friend-content {\r\n	padding: 5px;\r\n}\r\n\r\n#PartyHelper .disabled,\r\n#PartyHelper .disabled button {\r\n	color: #888;\r\n}\r\n\r\n#PartyHelper .on,\r\n#PartyHelper .off {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 3px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .content p {\r\n	padding: 0;\r\n	margin: 0;\r\n	padding-top: 10px;\r\n}\r\n\r\n#PartyHelper .content div {\r\n	margin-left: 10px;\r\n}\r\n\r\n#PartyHelper .content button {\r\n	margin-left: 10px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .name {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 95px;\r\n	height: 20px;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#PartyHelper .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyHelper .btn {\r\n	position: absolute;\r\n	bottom: 3px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyHelper .ok {\r\n	right: 46px;\r\n}\r\n\r\n#PartyHelper .cancel {\r\n	right: 2px;\r\n}\r\n\r\n#PartyHelper .friend-setup .setting-row {\r\n	margin-left: 0px;\r\n	margin-bottom: 3px;\r\n	cursor: pointer;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyHelper .friend-setup .off {\r\n	display: none;\r\n}\r\n\r\n#PartyHelper .friend-setup .on {\r\n	display: inline-block;\r\n}\r\n\r\n#PartyHelper .friend-setup span {\r\n	margin-left: 5px;\r\n	font-size: 11px;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .friend-setup button {\r\n	display: inline-block;\r\n	width: 15px;\r\n	height: 18px;\r\n	background-position: 0px 3px;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	vertical-align: middle;\r\n}\r\n";
+	PartyHelper_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyHelper {\r\n	width: 130px;\r\n}\r\n\r\n#PartyHelper .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyHelper .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyHelper .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyHelper .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyHelper .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyHelper .content {\r\n	background-color: white;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#PartyHelper .party-content {\r\n	min-height: 100px;\r\n}\r\n\r\n#PartyHelper .friend-content {\r\n	padding: 5px;\r\n}\r\n\r\n#PartyHelper .disabled,\r\n#PartyHelper .disabled button {\r\n	color: #888;\r\n}\r\n\r\n#PartyHelper .on,\r\n#PartyHelper .off {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 3px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .content p {\r\n	padding: 0;\r\n	margin: 0;\r\n	padding-top: 10px;\r\n}\r\n\r\n#PartyHelper .content div {\r\n	margin-left: 10px;\r\n}\r\n\r\n#PartyHelper .content button {\r\n	margin-left: 10px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .name {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 95px;\r\n	height: 20px;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#PartyHelper .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyHelper .btn {\r\n	position: absolute;\r\n	bottom: 3px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyHelper .ok {\r\n	right: 46px;\r\n}\r\n\r\n#PartyHelper .cancel {\r\n	right: 2px;\r\n}\r\n\r\n#PartyHelper .friend-setup .setting-row {\r\n	margin-left: 0px;\r\n	margin-bottom: 3px;\r\n	cursor: pointer;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyHelper .friend-setup .off {\r\n	display: none;\r\n}\r\n\r\n#PartyHelper .friend-setup .on {\r\n	display: inline-block;\r\n}\r\n\r\n#PartyHelper .friend-setup span {\r\n	margin-left: 5px;\r\n	font-size: 11px;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .friend-setup button {\r\n	display: inline-block;\r\n	width: 15px;\r\n	height: 18px;\r\n	background-position: 0px 3px;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	vertical-align: middle;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/WhisperBox/WhisperBox.html?raw
@@ -243249,7 +243366,11 @@ function setupItemLinkHandler(instance) {
 * @param {GUIComponent} instance
 */
 function setupNicknameLinkHandler(instance) {
-	(instance._shadow || instance._host).addEventListener("click", (event) => {
+	const root = instance._shadow || instance._host;
+	root.addEventListener("mousedown", (event) => {
+		if (event.target.closest(".nickname-link")) event.stopPropagation();
+	});
+	root.addEventListener("click", (event) => {
 		const link = event.target.closest(".nickname-link");
 		if (!link) return;
 		const nickname = link.getAttribute("data-nickname");
@@ -243298,6 +243419,7 @@ var init_WhisperBox = __esmMin((() => {
 	init_Preferences$1();
 	init_KeyEventHandler();
 	init_Renderer();
+	init_ChatBox();
 	init_History();
 	init_SoundManager();
 	init_WhisperBox$2();
@@ -243328,8 +243450,13 @@ var init_WhisperBox = __esmMin((() => {
 	/**
 	* Initialize component
 	*/
+	WhisperBox._chatBoxNickHandlerAttached = false;
 	WhisperBox.init = function init() {
 		this.clearAll();
+		if (!this._chatBoxNickHandlerAttached) {
+			setupNicknameLinkHandler(ChatBox_default);
+			this._chatBoxNickHandlerAttached = true;
+		}
 	};
 	/**
 	* Clear all history and windows
@@ -243442,7 +243569,6 @@ var init_WhisperBox = __esmMin((() => {
 			instance.focus();
 		});
 		setupItemLinkHandler(instance);
-		setupNicknameLinkHandler(instance);
 		initResizable(instance);
 		const offset = this._spawnCounter % 10 * 20;
 		this._spawnCounter++;
@@ -243485,39 +243611,56 @@ var init_WhisperBox = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.js
 /**
+* Helper: query inside shadow root
+*/
+function _root$9() {
+	return PartyHelper._shadow || PartyHelper._host;
+}
+/**
 * Validate and process form data
 */
 function onValidate$1() {
-	let name;
+	const root = _root$9();
 	const PartyFriends = UIManager.getComponent("PartyFriends");
 	switch (_type$6) {
-		case PartyHelper.Type.CREATE:
-			name = PartyHelper.ui.find(".content .name").val();
+		case PartyHelper.Type.CREATE: {
+			const nameInput = root.querySelector(".content .name");
+			const name = nameInput ? nameInput.value : "";
 			if (name.length) {
-				PartyFriends.onRequestPartyCreation(name, PartyHelper.ui.find(".item_share .on").data("value"), PartyHelper.ui.find(".item_sharing_type .on").data("value"));
+				const itemShareOn = root.querySelector(".item_share .on");
+				const itemSharingOn = root.querySelector(".item_sharing_type .on");
+				PartyFriends.onRequestPartyCreation(name, itemShareOn ? parseInt(itemShareOn.dataset.value, 10) : 0, itemSharingOn ? parseInt(itemSharingOn.dataset.value, 10) : 0);
 				PartyHelper.remove();
 			}
 			break;
-		case PartyHelper.Type.INVITE:
-			name = PartyHelper.ui.find(".content .name").val();
+		}
+		case PartyHelper.Type.INVITE: {
+			const nameInput = root.querySelector(".content .name");
+			const name = nameInput ? nameInput.value : "";
 			if (name.length) PartyFriends.onRequestAddingMember(0, name);
 			break;
-		case PartyHelper.Type.SETUP:
-			PartyFriends.onRequestSettingUpdate(PartyHelper.ui.find(".exp_share .on").data("value"), PartyHelper.ui.find(".item_share .on").data("value"), PartyHelper.ui.find(".item_sharing_type .on").data("value"));
+		}
+		case PartyHelper.Type.SETUP: {
+			const expShareOn = root.querySelector(".exp_share .on");
+			const itemShareOn = root.querySelector(".item_share .on");
+			const itemSharingOn = root.querySelector(".item_sharing_type .on");
+			PartyFriends.onRequestSettingUpdate(expShareOn ? parseInt(expShareOn.dataset.value, 10) : 0, itemShareOn ? parseInt(itemShareOn.dataset.value, 10) : 0, itemSharingOn ? parseInt(itemSharingOn.dataset.value, 10) : 0);
 			PartyHelper.remove();
 			break;
+		}
 	}
 }
 var PartyHelper, _type$6, PartyHelper_default;
 var init_PartyHelper = __esmMin((() => {
 	init_UIManager();
-	init_UIComponent();
-	init_jquery();
+	init_GUIComponent();
+	init_Elements();
+	init_KeyEventHandler();
 	init_PacketVerManager();
 	init_PartyHelper$2();
 	init_PartyHelper$1();
 	init_WhisperBox();
-	PartyHelper = new UIComponent("PartyHelper", PartyHelper_default$2, PartyHelper_default$1);
+	PartyHelper = new GUIComponent("PartyHelper", PartyHelper_default$1);
 	/**
 	* Window type constants
 	*/
@@ -243529,90 +243672,140 @@ var init_PartyHelper = __esmMin((() => {
 	};
 	_type$6 = PartyHelper.Type.CREATE;
 	/**
+	* Render HTML
+	*/
+	PartyHelper.render = () => PartyHelper_default$2;
+	/**
+	* Has input fields — protect keyboard events
+	*/
+	PartyHelper.captureKeyEvents = true;
+	/**
 	* Initialize component event listeners
 	*/
 	PartyHelper.init = function init() {
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
+		const root = _root$9();
+		const baseBtn = root.querySelector(".base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
 		});
-		this.ui.on("click", ".close", function() {
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
 			PartyHelper.remove();
 		});
-		this.ui.on("click", ".cancel", function() {
+		const cancelBtn = root.querySelector(".cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", () => {
 			PartyHelper.remove();
 		});
-		this.ui.find(".ok").click(function() {
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => {
 			onValidate$1();
 		});
-		this.ui.on("keydown", ".name", function(event) {
-			if (event.which === 13) {
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.addEventListener("keydown", (event) => {
+			if (event.which === 13 || event.key === "Enter") {
 				onValidate$1();
-				return false;
+				event.preventDefault();
+				event.stopImmediatePropagation();
 			}
-			return true;
 		});
-		this.ui.on("mousedown", ".setting-row", function(event) {
-			const on = this.querySelector(".on");
-			const off = this.querySelector(".off");
-			if (!on || !off) return;
-			on.classList.remove("on");
-			on.classList.add("off");
-			off.classList.remove("off");
-			off.classList.add("on");
-			const prefs = WhisperBox.preferences;
-			prefs.open1to1Stranger = parseInt(PartyHelper.ui.find(".open1to1Stranger .on").attr("data-value"), 10) === 1;
-			prefs.open1to1Friend = parseInt(PartyHelper.ui.find(".open1to1Friend .on").attr("data-value"), 10) === 1;
-			prefs.alarm1to1 = parseInt(PartyHelper.ui.find(".alarm1to1 .on").attr("data-value"), 10) === 1;
-			prefs.save();
-			event.stopImmediatePropagation();
-			return false;
+		root.querySelectorAll(".setting-row").forEach((row) => {
+			row.addEventListener("mousedown", (event) => {
+				const on = row.querySelector(".on");
+				const off = row.querySelector(".off");
+				if (!on || !off) return;
+				on.classList.remove("on");
+				on.classList.add("off");
+				off.classList.remove("off");
+				off.classList.add("on");
+				const prefs = WhisperBox.preferences;
+				const rootEl = _root$9();
+				const strangerOn = rootEl.querySelector(".open1to1Stranger .on");
+				const friendOn = rootEl.querySelector(".open1to1Friend .on");
+				const alarmOn = rootEl.querySelector(".alarm1to1 .on");
+				prefs.open1to1Stranger = strangerOn ? parseInt(strangerOn.dataset.value, 10) === 1 : prefs.open1to1Stranger;
+				prefs.open1to1Friend = friendOn ? parseInt(friendOn.dataset.value, 10) === 1 : prefs.open1to1Friend;
+				prefs.alarm1to1 = alarmOn ? parseInt(alarmOn.dataset.value, 10) === 1 : prefs.alarm1to1;
+				prefs.save();
+				event.stopImmediatePropagation();
+				event.preventDefault();
+			});
 		});
-		this.ui.on("mousedown", ".off", function(event) {
-			if (PartyHelper.ui.find(".content").hasClass("disabled")) return;
-			if (this.parentNode.classList.contains("setting-row")) return;
-			const off = this;
-			const on = this.parentNode.getElementsByClassName("on")[0];
+		root.addEventListener("mousedown", (event) => {
+			const off = event.target.closest(".off");
+			if (!off) return;
+			if (off.parentNode.classList.contains("setting-row")) return;
+			const contentEl = root.querySelector(".content");
+			if (contentEl && contentEl.classList.contains("disabled")) return;
+			const on = off.parentNode.querySelector(".on");
+			if (!on) return;
 			on.className = "off";
 			off.className = "on";
 			const tmp = on.style.backgroundImage;
 			on.style.backgroundImage = off.style.backgroundImage;
 			off.style.backgroundImage = tmp;
 		});
-		this.ui.on("mousedown", ".on", function(event) {
-			if (this.parentNode.classList.contains("setting-row")) return;
+		root.addEventListener("mousedown", (event) => {
+			const on = event.target.closest(".on");
+			if (!on) return;
+			if (on.parentNode.classList.contains("setting-row")) return;
 			event.stopImmediatePropagation();
-			return false;
-		});
-		this.draggable(this.ui.find(".titlebar"));
-		const self = this;
-		this._onKeyDown = function(event) {
-			if (event.which === 27) {
-				self.remove();
+			event.preventDefault();
+		}, true);
+		this.draggable(".titlebar");
+	};
+	/**
+	* Key handler — block shortcuts when input is focused
+	*/
+	PartyHelper.onKeyDown = function onKeyDown(event) {
+		const shadow = this._shadow || this._host;
+		const focused = shadow ? shadow.activeElement : null;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				PartyHelper.remove();
 				event.stopImmediatePropagation();
 				return false;
 			}
-		};
+			if (event.which === KEYS.ENTER || event.key === "Enter") return true;
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+			PartyHelper.remove();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
 	};
 	/**
 	* Position UI relative to PartyFriends window
 	*/
 	PartyHelper.onAppend = function onAppend() {
-		const base = UIManager.getComponent("PartyFriends").ui;
-		this.ui.find(".party-content, .friend-content").hide();
-		this.ui.find(".name").val("");
-		this.ui.css({
-			top: base.css("top"),
-			left: parseInt(base.css("left"), 10) + base.width() + 10
-		});
+		const base = UIManager.getComponent("PartyFriends");
+		const root = _root$9();
+		const partyContent = root.querySelector(".party-content");
+		const friendContent = root.querySelector(".friend-content");
+		if (partyContent) partyContent.style.display = "none";
+		if (friendContent) friendContent.style.display = "none";
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.value = "";
+		if (base && base._host) {
+			this._host.style.top = base._host.style.top;
+			this._host.style.left = `${parseInt(base._host.style.left, 10) + (base._host.offsetWidth || 0) + 10}px`;
+		}
 		window.addEventListener("keydown", this._onKeyDown, true);
 	};
 	/**
 	* Cleanup on window removal
 	*/
 	PartyHelper.onRemove = function onRemove() {
-		this.ui.find(".party-content, .friend-content").hide();
-		this.ui.find(".name").val("");
+		const root = _root$9();
+		const partyContent = root.querySelector(".party-content");
+		const friendContent = root.querySelector(".friend-content");
+		if (partyContent) partyContent.style.display = "none";
+		if (friendContent) friendContent.style.display = "none";
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.value = "";
 		window.removeEventListener("keydown", this._onKeyDown, true);
 	};
 	/**
@@ -243620,51 +243813,82 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {number} type
 	*/
 	PartyHelper.setType = function setType(type) {
-		this.ui.find(".content").removeClass("disabled");
-		this.ui.find(".footer").show();
+		const root = _root$9();
+		root.querySelectorAll(".content").forEach((el) => el.classList.remove("disabled"));
+		const footer = root.querySelector(".footer");
+		if (footer) footer.style.display = "block";
 		if (type === PartyHelper.Type.FRIEND_SETUP && PacketVerManager_default.value < 20090617) type = PartyHelper.Type.SETUP;
+		const innerRoot = root.querySelector("#PartyHelper");
+		const friendContent = root.querySelector(".friend-content");
+		const partyContent = root.querySelector(".party-content");
+		const footerBtns = root.querySelectorAll(".footer .btn");
+		const show = (sel) => root.querySelectorAll(sel).forEach((el) => {
+			el.style.display = "";
+		});
+		const hide = (sel) => root.querySelectorAll(sel).forEach((el) => {
+			el.style.display = "none";
+		});
 		switch (type) {
 			case PartyHelper.Type.CREATE:
-				this.ui.css("width", "130px");
-				this.ui.find(".friend-content").hide();
-				this.ui.find(".party-content").show();
-				this.ui.find(".setup, .invite").hide();
-				this.ui.find(".create").show();
-				this.ui.find(".titlebar .setup, .titlebar .invite, .titlebar .friend-setup").hide();
-				this.ui.find(".titlebar .create").show();
-				this.ui.find(".footer").css("height", "27px");
-				this.ui.find(".footer .btn").show();
+				if (innerRoot) innerRoot.style.width = "130px";
+				if (friendContent) friendContent.style.display = "none";
+				if (partyContent) partyContent.style.display = "block";
+				hide(".setup");
+				hide(".invite");
+				show(".create");
+				hide(".titlebar .setup");
+				hide(".titlebar .invite");
+				hide(".titlebar .friend-setup");
+				show(".titlebar .create");
+				if (footer) footer.style.height = "27px";
+				footerBtns.forEach((el) => {
+					el.style.display = "";
+				});
 				break;
 			case PartyHelper.Type.INVITE:
-				this.ui.css("width", "130px");
-				this.ui.find(".friend-content").hide();
-				this.ui.find(".party-content").show();
-				this.ui.find(".setup, .create").hide();
-				this.ui.find(".invite").show();
-				this.ui.find(".titlebar .setup, .titlebar .create, .titlebar .friend-setup").hide();
-				this.ui.find(".titlebar .invite").show();
-				this.ui.find(".footer").css("height", "27px");
-				this.ui.find(".footer .btn").show();
+				if (innerRoot) innerRoot.style.width = "130px";
+				if (friendContent) friendContent.style.display = "none";
+				if (partyContent) partyContent.style.display = "block";
+				hide(".setup");
+				hide(".create");
+				show(".invite");
+				hide(".titlebar .setup");
+				hide(".titlebar .create");
+				hide(".titlebar .friend-setup");
+				show(".titlebar .invite");
+				if (footer) footer.style.height = "27px";
+				footerBtns.forEach((el) => {
+					el.style.display = "";
+				});
 				break;
 			case PartyHelper.Type.SETUP:
-				this.ui.css("width", "130px");
-				this.ui.find(".friend-content").hide();
-				this.ui.find(".party-content").show();
-				this.ui.find(".create, .invite").hide();
-				this.ui.find(".setup").show();
-				this.ui.find(".titlebar .create, .titlebar .invite, .titlebar .friend-setup").hide();
-				this.ui.find(".titlebar .setup").show();
-				this.ui.find(".footer").css("height", "27px");
-				this.ui.find(".footer .btn").show();
+				if (innerRoot) innerRoot.style.width = "130px";
+				if (friendContent) friendContent.style.display = "none";
+				if (partyContent) partyContent.style.display = "block";
+				hide(".create");
+				hide(".invite");
+				show(".setup");
+				hide(".titlebar .create");
+				hide(".titlebar .invite");
+				hide(".titlebar .friend-setup");
+				show(".titlebar .setup");
+				if (footer) footer.style.height = "27px";
+				footerBtns.forEach((el) => {
+					el.style.display = "";
+				});
 				break;
 			case PartyHelper.Type.FRIEND_SETUP:
-				this.ui.css("width", "230px");
-				this.ui.find(".party-content").hide();
-				this.ui.find(".friend-content").show();
-				this.ui.find(".titlebar .create, .titlebar .invite, .titlebar .setup").hide();
-				this.ui.find(".titlebar .friend-setup").show();
-				this.ui.find(".footer").css("height", "20px");
-				this.ui.find(".footer .btn").hide();
+				if (innerRoot) innerRoot.style.width = "230px";
+				if (partyContent) partyContent.style.display = "none";
+				if (friendContent) friendContent.style.display = "block";
+				hide(".titlebar .create");
+				hide(".titlebar .invite");
+				hide(".titlebar .setup");
+				show(".titlebar .friend-setup");
+				if (footer) footer.style.height = "20px";
+				footerBtns.forEach((el) => {
+					el.style.display = "none";
+				});
 				break;
 		}
 		_type$6 = type;
@@ -243675,6 +243899,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {boolean} editable
 	*/
 	PartyHelper.setOptions = function setOptions(options, editable) {
+		const root = _root$9();
 		function swap(off) {
 			const on = off.parentNode.querySelector(".on");
 			const tmp = on.style.backgroundImage;
@@ -243689,20 +243914,23 @@ var init_PartyHelper = __esmMin((() => {
 			"item_sharing_type"
 		];
 		const count = list.length;
-		let element;
 		for (let i = 0; i < count; ++i) {
 			if (options[list[i]] === void 0) continue;
-			element = this.ui.find("." + list[i]).find(".off")[0];
-			if (options[list[i]] == element.dataset.value) swap(element);
+			const container = root.querySelector(`.${list[i]}`);
+			if (!container) continue;
+			const element = container.querySelector(".off");
+			if (element && options[list[i]] == element.dataset.value) swap(element);
 		}
-		if (!editable) this.ui.find(".content").addClass("disabled");
-		else this.ui.find(".content").removeClass("disabled");
+		const contentEls = root.querySelectorAll(".content");
+		if (!editable) contentEls.forEach((el) => el.classList.add("disabled"));
+		else contentEls.forEach((el) => el.classList.remove("disabled"));
 	};
 	/**
 	* Update friend/whisper settings UI
 	* @param {object} options
 	*/
 	PartyHelper.setFriendOptions = function setFriendOptions(options) {
+		const root = _root$9();
 		function swap(off) {
 			const on = off.parentNode.querySelector(".on");
 			on.className = "off";
@@ -243716,10 +243944,11 @@ var init_PartyHelper = __esmMin((() => {
 		const count = list.length;
 		for (let i = 0; i < count; ++i) {
 			const value = options[list[i]] === true || options[list[i]] == 1;
-			const row = this.ui.find("." + list[i]);
-			const on = row.find(".on")[0];
-			const off = row.find(".off")[0];
-			if (on && value !== (on.dataset.value == 1)) swap(off);
+			const row = root.querySelector(`.${list[i]}`);
+			if (!row) continue;
+			const on = row.querySelector(".on");
+			const off = row.querySelector(".off");
+			if (on && off && value !== (on.dataset.value == 1)) swap(off);
 		}
 	};
 	/**
@@ -243735,24 +243964,33 @@ var init_PartyHelper = __esmMin((() => {
 	PartyHelper.onCreate = function onCreate() {};
 	PartyHelper.onInvite = function onInvite() {};
 	PartyHelper.onSetupUpdate = function onSetUpUpdate() {};
+	PartyHelper.mouseMode = GUIComponent.MouseMode.STOP;
 	PartyHelper_default = UIManager.addComponent(PartyHelper);
 }));
 //#endregion
 //#region src/UI/Components/Mail/Mail.html?raw
 var Mail_default$2;
 var init_Mail$3 = __esmMin((() => {
-	Mail_default$2 = "<div id=\"Mail\">\r\n	<div class=\"body\" data-background=\"basic_interface/maillist1_bg.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<span class=\"text\" id=\"title\" data-text=\"1025\">Mail List</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/close2.bmp\"\r\n					data-hover=\"basic_interface/close2_a.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"clear\">\r\n			<section class=\"container flex_block\">\r\n				<div class=\"flex container\">\r\n					<div style=\"flex: 1\">\r\n						<div class=\"flex_block btn_iw\">\r\n							<div class=\"inbox\" id=\"inbox\" style=\"flex: 1\"></div>\r\n							<div class=\"write\" id=\"write\" style=\"flex: 1\"></div>\r\n						</div>\r\n					</div>\r\n\r\n					<div class=\"list_mail flex_block\">\r\n						<!-- list mail -->\r\n						<div class=\"block_mail\">\r\n							<div class=\"list_item_mail\"></div>\r\n							<div class=\"flex prev_next\">\r\n								<div class=\"prev\">\r\n									<div class=\"overlay_prev\"></div>\r\n									<span class=\"text_pagination\" data-text=\"1053\">Prev</span>\r\n								</div>\r\n								<div class=\"pagination\">\r\n									<span class=\"text\" id=\"infor_page\">1/1</span>\r\n								</div>\r\n								<div class=\"next\">\r\n									<div class=\"overlay_next margin_next\"></div>\r\n									<span class=\"text_pagination margin_next\" data-text=\"1054\">Next</span>\r\n								</div>\r\n							</div>\r\n						</div>\r\n						<!-- create mail -->\r\n						<div class=\"block_create_mail\">\r\n							<div class=\"to_create_mail\">\r\n								<span class=\"text text_to_title\"> <span data-text=\"1099\">To</span> :</span>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"text_to\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"title_create_mail\">\r\n								<span class=\"text text_title_create_mail\"> <span data-text=\"1100\">Title</span> :</span>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"input_title\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"email_body\">\r\n								<textarea class=\"textarea_mail\" maxlength=\"198\"></textarea>\r\n							</div>\r\n							<div class=\"block_zeny_item\">\r\n								<button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_amt\"\r\n									data-background=\"basic_interface/inputzeny.bmp\"\r\n									data-hover=\"basic_interface/inputzeny_a.bmp\"\r\n								></button>\r\n								<button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_ok\"\r\n									data-background=\"basic_interface/setzeny.bmp\"\r\n									data-hover=\"basic_interface/setzeny_a.bmp\"\r\n								></button>\r\n								<div class=\"block_zeny\">\r\n									<input class=\"input_zeny_amt\" type=\"text\" value=\"\" maxlength=\"9\" disabled />\r\n								</div>\r\n\r\n								<div class=\"block_item\">\r\n									<div class=\"container_item\">\r\n										<div class=\"overlay\"></div>\r\n									</div>\r\n								</div>\r\n							</div>\r\n\r\n							<div class=\"block_send_cancel\">\r\n								<button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_send\"\r\n									data-background=\"basic_interface/send.bmp\"\r\n									data-hover=\"basic_interface/send_a.bmp\"\r\n								></button>\r\n								<button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_cancel\"\r\n									data-background=\"basic_interface/cancel2.bmp\"\r\n									data-hover=\"basic_interface/cancel2_a.bmp\"\r\n								></button>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</section>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	Mail_default$2 = "<div id=\"Mail\">\r\n	<div class=\"body\">\r\n		<ui-image src=\"basic_interface/maillist1_bg.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<span class=\"text\" id=\"title\"><ui-text msg=\"1025\">Mail List</ui-text></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/close2.bmp\"\r\n					hover=\"basic_interface/close2_a.bmp\"\r\n				></ui-button>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"clear\">\r\n			<section class=\"container flex_block\">\r\n				<div class=\"flex container\">\r\n					<div style=\"flex: 1\">\r\n						<div class=\"flex_block btn_iw\">\r\n							<div class=\"inbox\" id=\"inbox\" style=\"flex: 1\"></div>\r\n							<div class=\"write\" id=\"write\" style=\"flex: 1\"></div>\r\n						</div>\r\n					</div>\r\n\r\n					<div class=\"list_mail flex_block\">\r\n						<!-- list mail -->\r\n						<div class=\"block_mail\">\r\n							<div class=\"list_item_mail\"></div>\r\n							<div class=\"flex prev_next\">\r\n								<div class=\"prev\">\r\n									<div class=\"overlay_prev\"></div>\r\n									<span class=\"text_pagination\"><ui-text msg=\"1053\">Prev</ui-text></span>\r\n								</div>\r\n								<div class=\"pagination\">\r\n									<span class=\"text\" id=\"infor_page\">1/1</span>\r\n								</div>\r\n								<div class=\"next\">\r\n									<div class=\"overlay_next margin_next\"></div>\r\n									<span class=\"text_pagination margin_next\"><ui-text msg=\"1054\">Next</ui-text></span>\r\n								</div>\r\n							</div>\r\n						</div>\r\n						<!-- create mail -->\r\n						<div class=\"block_create_mail\">\r\n							<div class=\"to_create_mail\">\r\n								<span class=\"text text_to_title\">\r\n									<span><ui-text msg=\"1099\">To</ui-text></span> :</span\r\n								>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"text_to\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"title_create_mail\">\r\n								<span class=\"text text_title_create_mail\">\r\n									<span><ui-text msg=\"1100\">Title</ui-text></span> :</span\r\n								>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"input_title\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"email_body\">\r\n								<textarea class=\"textarea_mail\" maxlength=\"198\"></textarea>\r\n							</div>\r\n							<div class=\"block_zeny_item\">\r\n								<ui-button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_amt\"\r\n									bg=\"basic_interface/inputzeny.bmp\"\r\n									hover=\"basic_interface/inputzeny_a.bmp\"\r\n								></ui-button>\r\n								<ui-button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_ok\"\r\n									bg=\"basic_interface/setzeny.bmp\"\r\n									hover=\"basic_interface/setzeny_a.bmp\"\r\n								></ui-button>\r\n								<div class=\"block_zeny\">\r\n									<input class=\"input_zeny_amt\" type=\"text\" value=\"0\" maxlength=\"9\" disabled />\r\n								</div>\r\n\r\n								<div class=\"block_item\">\r\n									<div class=\"container_item\">\r\n										<div class=\"overlay\"></div>\r\n									</div>\r\n								</div>\r\n							</div>\r\n\r\n							<div class=\"block_send_cancel\">\r\n								<ui-button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_send\"\r\n									bg=\"basic_interface/send.bmp\"\r\n									hover=\"basic_interface/send_a.bmp\"\r\n								></ui-button>\r\n								<ui-button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_cancel\"\r\n									bg=\"basic_interface/cancel2.bmp\"\r\n									hover=\"basic_interface/cancel2_a.bmp\"\r\n								></ui-button>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</section>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Mail/Mail.css?raw
 var Mail_default$1;
 var init_Mail$2 = __esmMin((() => {
-	Mail_default$1 = "#Mail {\r\n	width: 250px;\r\n	height: 330px;\r\n	position: absolute;\r\n}\r\n\r\n#Mail .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: relative;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 6px;\r\n}\r\n#Mail .body .base {\r\n	width: 9px;\r\n	height: 7px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Mail .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Mail .container {\r\n	width: 298px;\r\n	height: 385px;\r\n}\r\n\r\n#Mail .flex {\r\n	display: flex;\r\n}\r\n\r\n#Mail .list_item_mail {\r\n	width: 279px;\r\n	height: 358px;\r\n}\r\n\r\n#Mail .flex_block {\r\n	display: block;\r\n}\r\n\r\n#Mail .list_mail {\r\n	flex: 14;\r\n}\r\n\r\n#Mail .prev_next {\r\n	color: #e4baa8;\r\n}\r\n\r\n#Mail .prev {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-end;\r\n	display: flex;\r\n}\r\n\r\n#Mail .next {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-start;\r\n	display: flex;\r\n}\r\n\r\n#Mail .pagination {\r\n	text-align: end;\r\n}\r\n\r\n#Mail .btn_iw {\r\n	height: 371px;\r\n	margin-left: 4px;\r\n}\r\n\r\n#Mail .inbox {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .write {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .block_mail {\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n\r\n#Mail .item_mail {\r\n	width: 268px;\r\n	height: 51px;\r\n	display: flex;\r\n}\r\n\r\n#Mail .btn_envelop {\r\n	width: 16px;\r\n	height: 11px;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n	background-color: transparent;\r\n	margin-top: 24%;\r\n	margin-left: 18%;\r\n}\r\n\r\n#Mail .to_title {\r\n	width: 100%;\r\n	height: 52px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n}\r\n#Mail .to_title button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n	flex: 1;\r\n}\r\n\r\n#Mail .block_create_mail {\r\n	display: block;\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n#Mail .add_zeny {\r\n	width: 51px;\r\n	height: 21px;\r\n	border: none;\r\n	margin-left: 16%;\r\n	margin-top: 3%;\r\n}\r\n#zeny_ok {\r\n	display: none;\r\n	width: 43px !important;\r\n	margin-left: 19% !important;\r\n}\r\n#Mail .create_mail_btn {\r\n	width: 43px;\r\n	height: 21px;\r\n	border: none;\r\n}\r\n#Mail .to_create_mail {\r\n	flex: 1;\r\n	margin-top: 8%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .title_create_mail {\r\n	flex: 1;\r\n	margin-top: 6%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .text_to_title {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .text_to {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 105px;\r\n}\r\n#Mail .text_title_create_mail {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .input_title {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 164px;\r\n}\r\n#Mail .email_body {\r\n	flex: 1;\r\n	margin-top: 5%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .textarea_mail {\r\n	resize: none;\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 226px;\r\n	padding: initial;\r\n	width: 243px;\r\n	overflow: hidden;\r\n}\r\n\r\n#Mail .block_zeny_item {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .block_zeny {\r\n	margin-top: 4%;\r\n	margin-left: 1%;\r\n}\r\n#Mail .block_item {\r\n	margin-left: 18%;\r\n}\r\n#Mail .input_zeny_amt {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 13px;\r\n	width: 64px;\r\n}\r\n#Mail .input_add_item {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 24px;\r\n	width: 24px;\r\n}\r\n\r\n#Mail .container_item {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 2px;\r\n	margin-left: 2px;\r\n	margin-bottom: 6px;\r\n}\r\n\r\n#Mail .block_send_cancel {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-right: 8%;\r\n	text-align: right;\r\n}\r\n\r\n#Mail .to_title button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .to_title button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#Mail .tooltip {\r\n	position: relative;\r\n	display: inline-block;\r\n	color: #a37162;\r\n}\r\n\r\n#Mail .name_data {\r\n	color: #cd9b77;\r\n	margin-top: 15%;\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n\r\n#Mail .tooltip .tooltiptext {\r\n	visibility: hidden;\r\n	position: absolute;\r\n	bottom: 100%;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	position: absolute;\r\n	float: left;\r\n	left: 0px;\r\n	pointer-events: none;\r\n}\r\n\r\n#Mail .tooltip .to {\r\n}\r\n\r\n#Mail .tooltip .title {\r\n}\r\n\r\n#Mail .tooltip:hover .tooltiptext {\r\n	visibility: visible;\r\n}\r\n\r\n#Mail .date_mail {\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n	align-items: center;\r\n}\r\n\r\n#Mail .container_item .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#Mail .container_item .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Mail .container_item .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Mail .container_item .overlay {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .container_item .overlay.grey {\r\n	pointer-events: none;\r\n	color: #aaa;\r\n}\r\n\r\n#Mail .overlay_prev {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n	margin-right: -3%;\r\n}\r\n\r\n#Mail .overlay_next {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n}\r\n#Mail .margin_next {\r\n	margin-left: 5%;\r\n}\r\n\r\n#Mail .prev_next .text_pagination {\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	position: absolute;\r\n}\r\n\r\n#Mail .body .text {\r\n	/* text-shadow: 1px 1px white; */\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#Mail .body .left {\r\n	margin-left: 25px;\r\n	float: left;\r\n}\r\n#Mail .body .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Mail .body .clear {\r\n	clear: both;\r\n}\r\n";
+	Mail_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#Mail {\r\n	width: 250px;\r\n	height: 330px;\r\n}\r\n\r\n#Mail .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: relative;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 6px;\r\n}\r\n#Mail .body .base {\r\n	width: 9px;\r\n	height: 7px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Mail .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Mail .container {\r\n	width: 298px;\r\n	height: 385px;\r\n}\r\n\r\n#Mail .flex {\r\n	display: flex;\r\n}\r\n\r\n#Mail .list_item_mail {\r\n	width: 279px;\r\n	height: 358px;\r\n}\r\n\r\n#Mail .flex_block {\r\n	display: block;\r\n}\r\n\r\n#Mail .list_mail {\r\n	flex: 14;\r\n}\r\n\r\n#Mail .prev_next {\r\n	color: #e4baa8;\r\n}\r\n\r\n#Mail .prev {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-end;\r\n	display: flex;\r\n}\r\n\r\n#Mail .next {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-start;\r\n	display: flex;\r\n}\r\n\r\n#Mail .pagination {\r\n	text-align: end;\r\n}\r\n\r\n#Mail .btn_iw {\r\n	height: 371px;\r\n	margin-left: 4px;\r\n}\r\n\r\n#Mail .inbox {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .write {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .block_mail {\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n\r\n#Mail .item_mail {\r\n	width: 268px;\r\n	height: 51px;\r\n	display: flex;\r\n}\r\n\r\n#Mail .btn_envelop {\r\n	width: 16px;\r\n	height: 11px;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n	background-color: transparent;\r\n	margin-top: 24%;\r\n	margin-left: 18%;\r\n}\r\n\r\n#Mail .to_title {\r\n	width: 100%;\r\n	height: 52px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n}\r\n#Mail .to_title button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n	flex: 1;\r\n}\r\n\r\n#Mail .block_create_mail {\r\n	display: block;\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n#Mail .add_zeny {\r\n	width: 51px;\r\n	height: 21px;\r\n	border: none;\r\n	margin-left: 16%;\r\n	margin-top: 3%;\r\n}\r\n#zeny_ok {\r\n	display: none;\r\n	width: 43px !important;\r\n	margin-left: 19% !important;\r\n}\r\n#Mail .create_mail_btn {\r\n	width: 43px;\r\n	height: 21px;\r\n	border: none;\r\n}\r\n#Mail .to_create_mail {\r\n	flex: 1;\r\n	margin-top: 8%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .title_create_mail {\r\n	flex: 1;\r\n	margin-top: 6%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .text_to_title {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .text_to {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 105px;\r\n}\r\n#Mail .text_title_create_mail {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .input_title {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 164px;\r\n}\r\n#Mail .email_body {\r\n	flex: 1;\r\n	margin-top: 5%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .textarea_mail {\r\n	resize: none;\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 226px;\r\n	padding: initial;\r\n	width: 243px;\r\n	overflow: hidden;\r\n}\r\n\r\n#Mail .block_zeny_item {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .block_zeny {\r\n	margin-top: 4%;\r\n	margin-left: 1%;\r\n}\r\n#Mail .block_item {\r\n	margin-left: 18%;\r\n}\r\n#Mail .input_zeny_amt {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 13px;\r\n	width: 64px;\r\n}\r\n#Mail .input_add_item {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 24px;\r\n	width: 24px;\r\n}\r\n\r\n#Mail .container_item {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 2px;\r\n	margin-left: 2px;\r\n	margin-bottom: 6px;\r\n}\r\n\r\n#Mail .block_send_cancel {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-right: 8%;\r\n	text-align: right;\r\n}\r\n\r\n#Mail .to_title button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .to_title button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#Mail .tooltip {\r\n	position: relative;\r\n	display: inline-block;\r\n	color: #a37162;\r\n}\r\n\r\n#Mail .name_data {\r\n	color: #cd9b77;\r\n	margin-top: 15%;\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n\r\n#Mail .tooltip .tooltiptext {\r\n	visibility: hidden;\r\n	position: absolute;\r\n	bottom: 100%;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	position: absolute;\r\n	float: left;\r\n	left: 0px;\r\n	pointer-events: none;\r\n}\r\n\r\n#Mail .tooltip .to {\r\n}\r\n\r\n#Mail .tooltip .title {\r\n}\r\n\r\n#Mail .tooltip:hover .tooltiptext {\r\n	visibility: visible;\r\n}\r\n\r\n#Mail .date_mail {\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n	align-items: center;\r\n}\r\n\r\n#Mail .container_item .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#Mail .container_item .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Mail .container_item .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Mail .container_item .overlay {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .container_item .overlay.grey {\r\n	pointer-events: none;\r\n	color: #aaa;\r\n}\r\n\r\n#Mail .overlay_prev {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n	margin-right: -3%;\r\n}\r\n\r\n#Mail .overlay_next {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n}\r\n#Mail .margin_next {\r\n	margin-left: 5%;\r\n}\r\n\r\n#Mail .prev_next .text_pagination {\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	position: absolute;\r\n}\r\n\r\n#Mail .body .text {\r\n	/* text-shadow: 1px 1px white; */\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#Mail .body .left {\r\n	margin-left: 25px;\r\n	float: left;\r\n}\r\n#Mail .body .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Mail .body .clear {\r\n	clear: both;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Mail/Mail.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$8() {
+	return Mail._shadow || Mail._host;
+}
 function updatePageMailItems() {
-	Mail.ui.find(".next").click(function(e) {
+	const root = _root$8();
+	const nextBtn = root.querySelector(".next");
+	if (nextBtn) nextBtn.addEventListener("click", (e) => {
 		e.stopImmediatePropagation();
 		if (Mail.page < Mail.list.mailList.length / Mail.pageSize - 1) {
 			Mail.page++;
@@ -243760,7 +243998,8 @@ function updatePageMailItems() {
 			adjustButtons();
 		}
 	});
-	Mail.ui.find(".prev").click(function(e) {
+	const prevBtn = root.querySelector(".prev");
+	if (prevBtn) prevBtn.addEventListener("click", (e) => {
 		e.stopImmediatePropagation();
 		if (Mail.page > 0) {
 			Mail.page--;
@@ -243774,93 +244013,123 @@ function updatePageMailItems() {
 * Create messages window size
 */
 function onWindowMailbox() {
+	const root = _root$8();
 	Mail.parseMailrefreshinbox();
-	Mail.ui.find("#create_mail_send").prop("disabled", false);
-	Mail.ui.find(".block_create_mail").hide();
-	Mail.ui.find(".text_to").val("");
-	Mail.ui.find(".input_title").val("");
-	Mail.ui.find(".textarea_mail").val("");
-	Mail.ui.find(".input_zeny_amt").val("");
-	Mail.ui.find(".input_add_item").val("");
-	Mail.ui.find(".prev_next").show();
-	Mail.ui.find(".block_mail").show();
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist1_bg.bmp", function(url) {
-		Mail.ui.find(".body").css("backgroundImage", "url(" + url + ")");
-	}.bind(this));
-	Mail.ui.find("#title").text(DB.getMessage(1025));
+	const sendBtn = root.querySelector("#create_mail_send");
+	if (sendBtn) sendBtn.disabled = false;
+	const createMail = root.querySelector(".block_create_mail");
+	if (createMail) createMail.style.display = "none";
+	const textTo = root.querySelector(".text_to");
+	if (textTo) textTo.value = "";
+	const inputTitle = root.querySelector(".input_title");
+	if (inputTitle) inputTitle.value = "";
+	const textareaMail = root.querySelector(".textarea_mail");
+	if (textareaMail) textareaMail.value = "";
+	const zenyInput = root.querySelector(".input_zeny_amt");
+	if (zenyInput) zenyInput.value = "0";
+	const addItemInput = root.querySelector(".input_add_item");
+	if (addItemInput) addItemInput.value = "";
+	const prevNext = root.querySelector(".prev_next");
+	if (prevNext) prevNext.style.display = "flex";
+	const blockMail = root.querySelector(".block_mail");
+	if (blockMail) blockMail.style.display = "block";
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist1_bg.bmp", (url) => {
+		const body = root.querySelector(".body");
+		if (body) body.style.backgroundImage = `url(${url})`;
+	});
+	const title = root.querySelector("#title");
+	if (title) title.textContent = DB.getMessage(1025);
 }
 function createMailList() {
-	const content = Mail.ui.find(".list_item_mail");
-	Mail.ui.find(".item_mail").remove();
+	const root = _root$8();
+	const content = root.querySelector(".list_item_mail");
+	root.querySelectorAll(".item_mail").forEach((el) => el.remove());
 	if (Mail.list.length == 0) return;
 	for (let i = Mail.page * Mail.pageSize; i < Mail.list.mailList.length && i < (Mail.page + 1) * Mail.pageSize; i++) {
 		const from_name = Mail.list.mailList[i].FromName.length > 15 ? Mail.list.mailList[i].FromName.substring(0, 15) + "..." : Mail.list.mailList[i].FromName;
 		const header = Mail.list.mailList[i].HEADER.length > 23 ? Mail.list.mailList[i].HEADER.substring(0, 23) + "..." : Mail.list.mailList[i].HEADER;
 		const mailId = Mail.list.mailList[i].MailID;
 		const isOpen = Mail.list.mailList[i].isOpen;
-		content.append(`<div class="item_mail">
+		if (content) content.insertAdjacentHTML("beforeend", `<div class="item_mail">
 					<div class="envelop" style="flex: 1;">
-						<div class="btn_envelop" id="envelop_` + mailId + `"></div>
+						<div class="btn_envelop" id="envelop_${mailId}"></div>
 					</div>
 					<div class="to_title" style="flex: 3;">
 						<div class="flex">
-							<div  style="flex: 3;">
-								<span id="from_name_` + mailId + "\" class=\"event_add_cursor tooltip name_data\" > " + from_name + `
-									<span class="tooltiptext to">` + Mail.list.mailList[i].FromName + `</samp>
+							<div style="flex: 3;">
+								<span id="from_name_${mailId}" class="event_add_cursor tooltip name_data"> ${from_name}
+									<span class="tooltiptext to">${Mail.list.mailList[i].FromName}</span>
 								</span>
 							</div>
-							<div   style="flex: 3;">
-								<span class="name_data">` + formateDeleteTime(Mail.list.mailList[i].DeleteTime) + ` </samp>
+							<div style="flex: 3;">
+								<span class="name_data">${formateDeleteTime(Mail.list.mailList[i].DeleteTime)}</span>
 							</div>
-
 						</div>
-						<div >
-							<span id="from_header_` + mailId + "\" data-id=\"" + mailId + "\" class=\"event_add_cursor tooltip\"> " + header + `
-								<span class="tooltiptext title">` + Mail.list.mailList[i].HEADER + ` </samp>
+						<div>
+							<span id="from_header_${mailId}" data-id="${mailId}" class="event_add_cursor tooltip"> ${header}
+								<span class="tooltiptext title">${Mail.list.mailList[i].HEADER}</span>
 							</span>
 						</div>
 					</div>
 				</div>`);
-		if (!isOpen) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/envelop.bmp", function(data) {
-			content.find("#envelop_" + mailId).css("backgroundImage", "url(" + data + ")");
+		if (!isOpen) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/envelop.bmp", (data) => {
+			const envelop = root.querySelector(`#envelop_${mailId}`);
+			if (envelop) envelop.style.backgroundImage = `url(${data})`;
 		});
-		Mail.ui.find("#from_name_" + mailId).on("click", () => {
-			Mail.replyNewMail(Mail.ui.find("#from_name_" + mailId + " .to").text());
+		const fromNameEl = root.querySelector(`#from_name_${mailId}`);
+		if (fromNameEl) fromNameEl.addEventListener("click", () => {
+			const toEl = root.querySelector(`#from_name_${mailId} .to`);
+			if (toEl) Mail.replyNewMail(toEl.textContent);
 		});
-		Mail.ui.find("#from_header_" + mailId).on("click", (event) => {
-			Mail.openMail(jquery_default(event.currentTarget).data("id"));
+		const fromHeaderEl = root.querySelector(`#from_header_${mailId}`);
+		if (fromHeaderEl) fromHeaderEl.addEventListener("click", (event) => {
+			Mail.openMail(parseInt(event.currentTarget.dataset.id, 10));
 		});
 	}
-	if (Mail.list.mailList.length === 0) Mail.ui.find(".prev_next").hide();
-	else Mail.ui.find("#infor_page").text(Mail.page + 1 + "/" + Math.ceil(Mail.list.mailList.length / Mail.pageSize));
+	if (Mail.list.mailList.length === 0) {
+		const prevNext = root.querySelector(".prev_next");
+		if (prevNext) prevNext.style.display = "none";
+	} else {
+		const inforPage = root.querySelector("#infor_page");
+		if (inforPage) inforPage.textContent = `${Mail.page + 1}/${Math.ceil(Mail.list.mailList.length / Mail.pageSize)}`;
+	}
 	adjustButtons();
 }
 function adjustButtons() {
+	const root = _root$8();
 	if (Mail.list.length == 0) return;
 	const mailLength = Mail.list.mailList.length;
 	if (!(Mail.page > mailLength / Mail.pageSize - 1)) addEventNextAndPrevAdd("next");
 	else addEventNextAndPrevRemove("next");
 	if (!(Mail.page == 0)) addEventNextAndPrevAdd("prev");
 	else addEventNextAndPrevRemove("prev");
-	Mail.ui.find(".next span").prop("disabled", mailLength <= Mail.pageSize || Mail.page > mailLength / Mail.pageSize - 1);
-	Mail.ui.find(".prev span").prop("disabled", mailLength <= Mail.pageSize || Mail.page == 0);
+	const nextSpan = root.querySelector(".next span");
+	if (nextSpan) nextSpan.disabled = mailLength <= Mail.pageSize || Mail.page > mailLength / Mail.pageSize - 1;
+	const prevSpan = root.querySelector(".prev span");
+	if (prevSpan) prevSpan.disabled = mailLength <= Mail.pageSize || Mail.page == 0;
 }
 function addEventNextAndPrevAdd(eventName) {
-	const overlay = Mail.ui.find(".prev_next .overlay_" + eventName);
-	const text = Mail.ui.find(".prev_next ." + eventName + " span");
-	text.addClass("event_add_cursor");
-	overlay.text(text.text());
-	Mail.ui.find("." + eventName + " .event_add_cursor").mouseover(function() {
-		if (text.hasClass("event_add_cursor")) overlay.show();
-	}).mouseout(function() {
-		overlay.hide();
-	});
+	const root = _root$8();
+	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
+	const text = root.querySelector(`.prev_next .${eventName} span`);
+	if (text) text.classList.add("event_add_cursor");
+	if (overlay && text) overlay.textContent = text.textContent;
+	const cursor = root.querySelector(`.${eventName} .event_add_cursor`);
+	if (cursor) {
+		cursor.addEventListener("mouseover", () => {
+			if (text && text.classList.contains("event_add_cursor") && overlay) overlay.style.display = "block";
+		});
+		cursor.addEventListener("mouseout", () => {
+			if (overlay) overlay.style.display = "none";
+		});
+	}
 }
 function addEventNextAndPrevRemove(eventName) {
-	const overlay = Mail.ui.find(".prev_next .overlay_" + eventName);
-	const text = Mail.ui.find(".prev_next ." + eventName + " span");
-	overlay.hide();
-	text.removeClass("event_add_cursor");
+	const root = _root$8();
+	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
+	const text = root.querySelector(`.prev_next .${eventName} span`);
+	if (overlay) overlay.style.display = "none";
+	if (text) text.classList.remove("event_add_cursor");
 }
 function offCreateMessagesOnWindowMailbox(event) {
 	event.stopImmediatePropagation();
@@ -243868,16 +244137,18 @@ function offCreateMessagesOnWindowMailbox(event) {
 	removeCreateAllItem();
 }
 function sendCreateMessagesMail(event) {
+	const root = _root$8();
 	event.stopImmediatePropagation();
-	if (Mail.ui.find("#zeny_ok").is(":visible")) {
+	const zenyOk = root.querySelector("#zeny_ok");
+	if (zenyOk && window.getComputedStyle(zenyOk).display !== "none") {
 		ChatBox_default.addText(DB.getMessage(1110), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
 		return;
 	}
-	let to = Mail.ui.find(".text_to").val();
+	let to = root.querySelector(".text_to")?.value || "";
 	to = to.length > 50 ? to.substring(0, 50) : to;
-	let title = Mail.ui.find(".input_title").val();
+	let title = root.querySelector(".input_title")?.value || "";
 	title = title.length > 50 ? title.substring(0, 50) : title;
-	let message = Mail.ui.find(".textarea_mail").val();
+	let message = root.querySelector(".textarea_mail")?.value || "";
 	message = message.length > 198 ? message.substring(0, 198) : message;
 	if (title === "") {
 		ChatBox_default.addText(DB.getMessage(1106), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
@@ -243889,7 +244160,8 @@ function sendCreateMessagesMail(event) {
 		msg_len: message.length,
 		msg: message
 	};
-	Mail.ui.find("#create_mail_send").prop("disabled", true);
+	const sendBtn = root.querySelector("#create_mail_send");
+	if (sendBtn) sendBtn.disabled = true;
 	Mail.parseMailSend(send_message);
 }
 function openWindowCreateMessages(event) {
@@ -243900,37 +244172,57 @@ function openWindowCreateMessages(event) {
 * Open Create messages window size
 */
 function onWindowCreateMessages() {
+	const root = _root$8();
 	removeCreateAllItem();
 	offWindowListMail();
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist2_bg.bmp", function(url) {
-		Mail.ui.find(".body").css("backgroundImage", "url(" + url + ")");
-	}.bind(this));
-	Mail.ui.find("#title").text(DB.getMessage(1026));
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist2_bg.bmp", (url) => {
+		const body = root.querySelector(".body");
+		if (body) body.style.backgroundImage = `url(${url})`;
+	});
+	const title = root.querySelector("#title");
+	if (title) title.textContent = DB.getMessage(1026);
 }
 function offWindowListMail() {
-	Mail.ui.find(".prev_next").hide();
-	Mail.ui.find(".block_mail").hide();
-	Mail.ui.find(".block_create_mail").show();
-	Mail.ui.find(".textarea_mail").focus();
+	const root = _root$8();
+	const prevNext = root.querySelector(".prev_next");
+	if (prevNext) prevNext.style.display = "none";
+	const blockMail = root.querySelector(".block_mail");
+	if (blockMail) blockMail.style.display = "none";
+	const createMail = root.querySelector(".block_create_mail");
+	if (createMail) createMail.style.display = "block";
+	const textarea = root.querySelector(".textarea_mail");
+	if (textarea) textarea.focus();
 }
 function onAddZenyInput(event) {
+	const root = _root$8();
 	event.stopImmediatePropagation();
-	Mail.ui.find("#zeny_amt").hide();
-	Mail.ui.find("#zeny_ok").show();
-	Mail.ui.find(".input_zeny_amt").prop("disabled", false);
-	Mail.ui.find(".input_zeny_amt").focus();
-	Mail.ui.find(".input_zeny_amt").select();
+	const zenyAmt = root.querySelector("#zeny_amt");
+	if (zenyAmt) zenyAmt.style.display = "none";
+	const zenyOk = root.querySelector("#zeny_ok");
+	if (zenyOk) zenyOk.style.display = "inline-block";
+	const input = root.querySelector(".input_zeny_amt");
+	if (input) {
+		input.disabled = false;
+		input.focus();
+		input.select();
+	}
 	Mail.parseMailWinopen(2);
 }
 function onValidZenyInput(event) {
+	const root = _root$8();
 	event.stopImmediatePropagation();
-	Mail.ui.find("#zeny_amt").show();
-	Mail.ui.find("#zeny_ok").hide();
-	let val_Zeny = Mail.ui.find(".input_zeny_amt").val().split(",").join("");
+	const zenyAmt = root.querySelector("#zeny_amt");
+	if (zenyAmt) zenyAmt.style.display = "inline-block";
+	const zenyOk = root.querySelector("#zeny_ok");
+	if (zenyOk) zenyOk.style.display = "none";
+	const input = root.querySelector(".input_zeny_amt");
+	let val_Zeny = input ? input.value.split(",").join("") : "0";
 	val_Zeny = Math.min(Math.max(0, val_Zeny), SessionStorage_default.zeny);
 	val_Zeny = isNaN(val_Zeny) ? 0 : val_Zeny;
-	Mail.ui.find(".input_zeny_amt").val(prettifyZeny$4(val_Zeny));
-	Mail.ui.find(".input_zeny_amt").prop("disabled", true);
+	if (input) {
+		input.value = prettifyZeny$4(val_Zeny);
+		input.disabled = true;
+	}
 	Mail.parseMailSetattach(0, val_Zeny);
 }
 /**
@@ -243938,7 +244230,7 @@ function onValidZenyInput(event) {
 */
 function stopPropagation$14(event) {
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Drop an item in the equipment, equip it if possible
@@ -243946,13 +244238,14 @@ function stopPropagation$14(event) {
 function onDrop$20(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item" || data.from == "Storage" || data.from == "Mail") return false;
+	if (data.type !== "item" || data.from == "Storage" || data.from == "Mail") return;
 	if (item.count > 1) {
 		InputBox_default.append();
 		InputBox_default.setType("number", false, item.count);
@@ -243965,7 +244258,7 @@ function onDrop$20(event) {
 			_preferences$64.item_add_email.count = parseInt(count, 10);
 			_preferences$64.save();
 		};
-		return false;
+		return;
 	}
 	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
 	Mail.parseMailWinopen(1);
@@ -243973,26 +244266,29 @@ function onDrop$20(event) {
 	_preferences$64.item_add_email = item;
 	_preferences$64.item_add_email.count = 1;
 	_preferences$64.save();
-	return false;
 }
 /**
 * Show item name when mouse is over
 */
 function onItemOver$16() {
+	const root = _root$8();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(idx);
 	if (!item) return;
-	const overlay = Mail.ui.find(".container_item .overlay");
-	overlay.show();
-	overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const overlay = root.querySelector(".container_item .overlay");
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
 /**
 * Hide the item name
 */
 function onItemOut$17() {
-	Mail.ui.find(".container_item .overlay").hide();
+	const overlay = _root$8().querySelector(".container_item .overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
@@ -244002,11 +244298,11 @@ function onItemDragStart$12(event) {
 	const item = Mail.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1];
+	const url = this.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url.replace(/^"/, "").replace(/"$/, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Mail",
 		data: item
@@ -244015,7 +244311,6 @@ function onItemDragStart$12(event) {
 }
 /**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$13() {
 	delete window._OBJ_DRAG_;
@@ -244027,21 +244322,17 @@ function onItemInfo$20(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(index);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
 /**
 * Prettify number (15000 -> 15,000)
-*
-* @param {number} value
-* @return {string}
 */
 function prettifyZeny$4(value) {
 	const num = String(value);
@@ -244050,24 +244341,19 @@ function prettifyZeny$4(value) {
 	let out = "";
 	while (i < len) {
 		out = num[len - i - 1] + out;
-		if ((i + 1) % 3 === 0 && i + 1 !== len) out = "," + out;
+		if ((i + 1) % 3 === 0 && i + 1 !== len) out = `,${out}`;
 		++i;
 	}
 	return out;
 }
 /**
 * Converte DeleteTime
-*
-* @param {number} value
-* @return {string}
 */
 function formateDeleteTime(value) {
 	const ts_ms = value * 1e3;
 	const date_ob = new Date(ts_ms);
 	const year = date_ob.getFullYear();
-	const month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
-	const date = ("0" + date_ob.getDate()).slice(-2);
-	return month + " " + date + " " + (year + "").substring(2, 4);
+	return `${`0${date_ob.getMonth() + 1}`.slice(-2)} ${`0${date_ob.getDate()}`.slice(-2)} ${String(year).substring(2, 4)}`;
 }
 function removeCreateAllItem() {
 	Mail.parseMailWinopen(0);
@@ -244078,15 +244364,15 @@ function removeCreateAllItem() {
 */
 function onDropText$1(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	let data;
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
-	} catch (e) {
-		return false;
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return;
 	}
-	if (data.type == "item") return false;
-	jquery_default(event.currentTarget).val(data);
-	return false;
+	if (data.type == "item") return;
+	event.currentTarget.value = data;
 }
 function sleep(time) {
 	return new Promise((resolve) => setTimeout(resolve, time));
@@ -244095,7 +244381,6 @@ var Mail, _preferences$64, Mail_default;
 var init_Mail$1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
-	init_jquery();
 	init_Preferences$1();
 	init_Client();
 	init_SessionStorage();
@@ -244106,10 +244391,11 @@ var init_Mail$1 = __esmMin((() => {
 	init_Inventory();
 	init_ChatBox();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Mail$3();
 	init_Mail$2();
-	Mail = new UIComponent("Mail", Mail_default$2, Mail_default$1);
+	Mail = new GUIComponent("Mail", Mail_default$1);
 	/**
 	* Store Mail items
 	*/
@@ -244136,71 +244422,118 @@ var init_Mail$1 = __esmMin((() => {
 		item_add_email: {}
 	}, 2);
 	/**
+	* Render HTML
+	*/
+	Mail.render = () => Mail_default$2;
+	/**
+	* Has input fields, protect key events
+	*/
+	Mail.captureKeyEvents = true;
+	/**
 	* Apply preferences once append to body
 	*/
 	Mail.onAppend = function OnAppend() {
-		this.ui.find(".right .close").on("click", this.onClosePressed.bind(this)).removeClass("hover");
-		this.ui.find("#inbox").on("click", offCreateMessagesOnWindowMailbox);
-		this.ui.find("#write").on("click", openWindowCreateMessages);
-		this.ui.find("#create_mail_cancel").on("click", offCreateMessagesOnWindowMailbox);
-		this.ui.find("#create_mail_send").on("click", sendCreateMessagesMail);
+		const root = _root$8();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", this.onClosePressed.bind(this));
+		const inboxBtn = root.querySelector("#inbox");
+		if (inboxBtn) inboxBtn.addEventListener("click", offCreateMessagesOnWindowMailbox);
+		const writeBtn = root.querySelector("#write");
+		if (writeBtn) writeBtn.addEventListener("click", openWindowCreateMessages);
+		const cancelBtn = root.querySelector("#create_mail_cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", offCreateMessagesOnWindowMailbox);
+		const sendBtn = root.querySelector("#create_mail_send");
+		if (sendBtn) sendBtn.addEventListener("click", sendCreateMessagesMail);
 		updatePageMailItems();
-		this.ui.find(".container_item").on("drop", onDrop$20).on("dragover", stopPropagation$14).on("mouseover", ".item", onItemOver$16).on("mouseout", ".item", onItemOut$17).on("dragstart", ".item", onItemDragStart$12).on("dragend", ".item", onItemDragEnd$13).on("contextmenu", ".item", onItemInfo$20);
-		this.ui.find("input[type=text]").on("drop", onDropText$1).on("dragover", stopPropagation$14);
-		this.ui.find("textarea").on("drop", onDropText$1).on("dragover", stopPropagation$14);
-		this.ui.find("#zeny_amt").on("click", onAddZenyInput);
-		this.ui.find("#zeny_ok").on("click", onValidZenyInput);
-		onWindowMailbox();
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$64.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$64.x), Renderer.width - this.ui.width())
+		const containerItem = root.querySelector(".container_item");
+		if (containerItem) {
+			containerItem.addEventListener("drop", onDrop$20);
+			containerItem.addEventListener("dragover", stopPropagation$14);
+			containerItem.addEventListener("mouseover", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemOver$16.call(item, event);
+			});
+			containerItem.addEventListener("mouseout", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemOut$17.call(item, event);
+			});
+			containerItem.addEventListener("dragstart", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemDragStart$12.call(item, event);
+			});
+			containerItem.addEventListener("dragend", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemDragEnd$13.call(item, event);
+			});
+			containerItem.addEventListener("contextmenu", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemInfo$20.call(item, event);
+			});
+		}
+		root.querySelectorAll("input[type=text]").forEach((input) => {
+			input.addEventListener("drop", onDropText$1);
+			input.addEventListener("dragover", stopPropagation$14);
 		});
-		this.draggable(this.ui.find(".titlebar"));
+		const textarea = root.querySelector("textarea");
+		if (textarea) {
+			textarea.addEventListener("drop", onDropText$1);
+			textarea.addEventListener("dragover", stopPropagation$14);
+		}
+		const zenyAmtBtn = root.querySelector("#zeny_amt");
+		if (zenyAmtBtn) zenyAmtBtn.addEventListener("click", onAddZenyInput);
+		const zenyOkBtn = root.querySelector("#zeny_ok");
+		if (zenyOkBtn) zenyOkBtn.addEventListener("click", onValidZenyInput);
+		onWindowMailbox();
+		const hostHeight = this._host.offsetHeight || 0;
+		const hostWidth = this._host.offsetWidth || 0;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$64.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$64.x), Renderer.width - hostWidth)}px`;
+		this.draggable(".titlebar");
 	};
 	/**
 	* Add item to inventory
-	*
-	* @param {object} Index
 	*/
 	Mail.addItemSub = function AddItemSub(Index) {
+		const root = _root$8();
 		const item = _preferences$64.item_add_email;
 		if (item.index !== Index) return false;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
-		const content = this.ui.find(".container_item");
-		this.ui.find(".item").remove();
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-		this.ui.find(".hide").show();
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const content = root.querySelector(".container_item");
+		const oldItem = root.querySelector(".item");
+		if (oldItem) oldItem.remove();
+		if (content) content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		const hideEl = root.querySelector(".hide");
+		if (hideEl) hideEl.style.display = "block";
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = content ? content.querySelector(`.item[data-index="${item.index}"] .icon`) : null;
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 		return true;
 	};
 	/**
-	* Send from mail to inventory
-	* Remove item
+	* Send from mail to inventory - Remove item
 	*/
 	Mail.removeItem = function removeItem() {
-		this.ui.find(".item").remove();
+		const item = _root$8().querySelector(".item");
+		if (item) item.remove();
 	};
 	/**
-	* Send from mail to inventory
-	* Remove zenys
+	* Send from mail to inventory - Remove zenys
 	*/
 	Mail.removeZeny = function removeZeny() {
-		this.ui.find(".input_zeny_amt").val("");
+		const input = _root$8().querySelector(".input_zeny_amt");
+		if (input) input.value = "0";
 	};
 	/**
 	* Remove Mail from window (and so clean up items)
 	*/
 	Mail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$64.show = this.ui.is(":visible");
+		_preferences$64.show = this._host.style.display !== "none";
 		_preferences$64.reduce = false;
-		_preferences$64.y = parseInt(this.ui.css("top"), 10);
-		_preferences$64.x = parseInt(this.ui.css("left"), 10);
-		_preferences$64.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$64.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$64.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$64.x = parseInt(this._host.style.left, 10) || 0;
 		_preferences$64.magnet_top = this.magnet.TOP;
 		_preferences$64.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$64.magnet_left = this.magnet.LEFT;
@@ -244209,22 +244542,19 @@ var init_Mail$1 = __esmMin((() => {
 	};
 	/**
 	* Extend Mail window size
-	*
-	* @param {number} width
-	* @param {number} height
 	*/
 	Mail.resize = function Resize(width, height) {
+		const root = _root$8();
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		this.ui.css({
-			width: 55 + width * 32,
-			height: 50 + height * 32
-		});
+		const mailEl = root.querySelector("#Mail");
+		if (mailEl) {
+			mailEl.style.width = `${55 + width * 32}px`;
+			mailEl.style.height = `${50 + height * 32}px`;
+		}
 	};
 	/**
 	* Extend Mail window size
-	*
-	* @param {object} read
 	*/
 	Mail.mailList = function mailList(read) {
 		Mail.list = read;
@@ -244232,8 +244562,6 @@ var init_Mail$1 = __esmMin((() => {
 	};
 	/**
 	* Mail receive
-	*
-	* @param {object} newMail
 	*/
 	Mail.mailReceiveUpdate = function mailReceiveUpdate(newMail) {
 		if (Mail.list.mailList === void 0) return;
@@ -244258,9 +244586,6 @@ var init_Mail$1 = __esmMin((() => {
 	};
 	/**
 	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {object}
 	*/
 	Mail.getItemByIndex = function getItemByIndex(index) {
 		const list = _preferences$64.item_add_email;
@@ -244269,35 +244594,68 @@ var init_Mail$1 = __esmMin((() => {
 	};
 	/**
 	* Responder to a mail.
-	* @param {string} fromName
 	*/
 	Mail.replyNewMail = function replyNewMail(fromName) {
+		const root = _root$8();
 		onWindowCreateMessages();
-		Mail.ui.find(".text_to").val(fromName.replace(/^(\$|\%)/, "").replace(/\t/g, ""));
+		const textTo = root.querySelector(".text_to");
+		if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
 	};
 	/**
-	* Responder to a mail.
-	* @param {string} fromName
+	* Responder to a mail from friends.
 	*/
 	Mail.replyNewMailFriends = async function replyNewMailFriends(fromName) {
+		const root = _root$8();
 		Mail.append();
 		sleep(1).then(() => {
 			onWindowCreateMessages();
 			offWindowListMail();
-			Mail.ui.find(".text_to").val(fromName.replace(/^(\$|\%)/, "").replace(/\t/g, ""));
-			Mail.ui.find("#inbox").off("click");
-			Mail.ui.find("#inbox").prop("disabled", false).on("click", function() {});
-			Mail.ui.find("#create_mail_cancel").off("click");
-			Mail.ui.find("#create_mail_cancel").on("click", this.onClosePressed.bind(this));
+			const textTo = root.querySelector(".text_to");
+			if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
+			const inboxBtn = root.querySelector("#inbox");
+			if (inboxBtn) {
+				inboxBtn.replaceWith(inboxBtn.cloneNode(true));
+				const newInbox = root.querySelector("#inbox");
+				if (newInbox) {
+					newInbox.disabled = false;
+					newInbox.addEventListener("click", () => {});
+				}
+			}
+			const cancelBtn = root.querySelector("#create_mail_cancel");
+			if (cancelBtn) {
+				cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+				const newCancel = root.querySelector("#create_mail_cancel");
+				if (newCancel) newCancel.addEventListener("click", this.onClosePressed.bind(this));
+			}
 		});
 	};
 	Mail.clearFieldsItemZeny = function clearFieldsItemZeny() {
-		this.ui.find(".item").remove();
-		this.ui.find(".input_zeny_amt").val("");
-		this.ui.find("#create_mail_send").prop("disabled", false);
+		const root = _root$8();
+		const item = root.querySelector(".item");
+		if (item) item.remove();
+		const zenyInput = root.querySelector(".input_zeny_amt");
+		if (zenyInput) zenyInput.value = "0";
+		const sendBtn = root.querySelector("#create_mail_send");
+		if (sendBtn) sendBtn.disabled = false;
 	};
 	Mail.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.remove();
+		const shadow = this._shadow || this._host;
+		const focused = shadow ? shadow.activeElement : null;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				this.remove();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			this.remove();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
 	};
 	/**
 	* Callbacks
@@ -244599,23 +244957,37 @@ var init_SkillTargetSelection = __esmMin((() => {
 //#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.html?raw
 var PartyFriendsV0_default$2;
 var init_PartyFriendsV0$2 = __esmMin((() => {
-	PartyFriendsV0_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"party\"> <span class=\"text\" data-text=\"103\">Party</span> <span class=\"partyname\"></span> </span>\r\n			<span class=\"friend\">\r\n				<span class=\"text\" data-text=\"102\">Friends</span> (<span class=\"friendcount\">0</span>/<span\r\n					class=\"friendmax\"\r\n					>40</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\" data-background=\"basic_interface/mesbtn_mid.bmp\">\r\n		<button\r\n			class=\"mail\"\r\n			data-background=\"basic_interface/mesbtn_01.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"98\">Send Message</div>\r\n		</button>\r\n		<button\r\n			class=\"privatemessage\"\r\n			data-background=\"basic_interface/mesbtn_02.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"99\">1:1 Chat</div>\r\n		</button>\r\n		<button class=\"unknown\" data-background=\"basic_interface/mesbtn_03.bmp\"></button>\r\n		<button\r\n			class=\"info\"\r\n			data-background=\"basic_interface/mesbtn_04.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\" data-text=\"101\">Party Setup</span>\r\n				<span class=\"friend\" data-text=\"355\">Friend Setup</span>\r\n			</div>\r\n		</button>\r\n		<button\r\n			class=\"remove\"\r\n			data-background=\"basic_interface/mesbtn_05.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\" data-text=\"97\">Expel from party</span>\r\n				<span class=\"friend\" data-text=\"351\">Delete</span>\r\n			</div>\r\n		</button>\r\n		<button\r\n			class=\"lock on\"\r\n			data-background=\"basic_interface/mesbtn_06.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"1626\">Activate lock function</div>\r\n		</button>\r\n		<button\r\n			class=\"lock off\"\r\n			data-background=\"basic_interface/mesbtn_07.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"1627\">Deactivate lock function</div>\r\n		</button>\r\n		<button\r\n			class=\"party create\"\r\n			data-background=\"basic_interface/mesbtn_08.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"2054\">Create Party</div>\r\n		</button>\r\n		<button\r\n			class=\"party add\"\r\n			data-background=\"basic_interface/mesbtn_010.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"2056\">Party Invitation</div>\r\n		</button>\r\n		<button\r\n			class=\"party leave\"\r\n			data-background=\"basic_interface/mesbtn_09.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"96\">Leave Party</div>\r\n		</button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid.bmp\">\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\" data-background=\"radiobtn_on.bmp\" data-text=\"102\">Friends</button>\r\n			<button class=\"switchtab off\" data-background=\"radiobtn_off.bmp\" data-text=\"103\">Party</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\" data-background=\"radiobtn_off.bmp\" data-text=\"102\">Friends</button>\r\n			<button class=\"switchtab on\" data-background=\"radiobtn_on.bmp\" data-text=\"103\">Party</button>\r\n		</div>\r\n		<button class=\"resize\" data-background=\"btn_resize.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
+	PartyFriendsV0_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"party\"> <ui-text msg=\"103\">Party</ui-text> <span class=\"partyname\"></span> </span>\r\n			<span class=\"friend\">\r\n				<ui-text msg=\"102\">Friends</ui-text> (<span class=\"friendcount\">0</span>/<span class=\"friendmax\"\r\n					>40</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\">\r\n		<ui-image src=\"basic_interface/mesbtn_mid.bmp\"></ui-image>\r\n		<ui-button\r\n			class=\"mail\"\r\n			bg=\"basic_interface/mesbtn_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"98\">Send Message</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"privatemessage\"\r\n			bg=\"basic_interface/mesbtn_02.bmp\"\r\n			hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"99\">1:1 Chat</ui-text></div>\r\n		</ui-button>\r\n		<button class=\"unknown\"><ui-image src=\"basic_interface/mesbtn_03.bmp\"></ui-image></button>\r\n		<ui-button\r\n			class=\"info\"\r\n			bg=\"basic_interface/mesbtn_04.bmp\"\r\n			hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"101\">Party Setup</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"remove\"\r\n			bg=\"basic_interface/mesbtn_05.bmp\"\r\n			hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"97\">Expel from party</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"351\">Delete</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock on\"\r\n			bg=\"basic_interface/mesbtn_06.bmp\"\r\n			hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1626\">Activate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock off\"\r\n			bg=\"basic_interface/mesbtn_07.bmp\"\r\n			hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1627\">Deactivate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party create\"\r\n			bg=\"basic_interface/mesbtn_08.bmp\"\r\n			hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2054\">Create Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party add\"\r\n			bg=\"basic_interface/mesbtn_010.bmp\"\r\n			hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2056\">Party Invitation</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party leave\"\r\n			bg=\"basic_interface/mesbtn_09.bmp\"\r\n			hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"96\">Leave Party</ui-text></div>\r\n		</ui-button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid.bmp\"></ui-image>\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<button class=\"resize\"><ui-image src=\"btn_resize.bmp\"></ui-image></button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.css?raw
 var PartyFriendsV0_default$1;
 var init_PartyFriendsV0$1 = __esmMin((() => {
-	PartyFriendsV0_default$1 = "#PartyFriends {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n#PartyFriends .navigation button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n#PartyFriends .navigation button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#PartyFriends .navigation button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+	PartyFriendsV0_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n#PartyFriends .navigation button,\r\n#PartyFriends .navigation ui-button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n#PartyFriends .navigation button .overlay,\r\n#PartyFriends .navigation ui-button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#PartyFriends .navigation button:hover .overlay,\r\n#PartyFriends .navigation ui-button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.js
 /**
+* Helper: query inside shadow root
+*/
+function _root$7() {
+	return PartyFriendsV0._shadow || PartyFriendsV0._host;
+}
+/**
+* Helper: escape HTML (replace jQuery.escape)
+*/
+function _escapeHTML$8(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+/**
 * Resizing UI
 */
 function onResize$13() {
-	const ui = PartyFriendsV0.ui;
-	const top = ui.position().top;
-	const left = ui.position().left;
+	const host = PartyFriendsV0._host;
+	const top = host.offsetTop;
+	const left = host.offsetLeft;
 	let lastWidth = 0;
 	let lastHeight = 0;
 	function resizing() {
@@ -244631,12 +245003,13 @@ function onResize$13() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Close the window
@@ -244651,33 +245024,55 @@ function onClose$13() {
 function onToggleLock$1() {
 	_preferences$63.lock = !_preferences$63.lock;
 	_preferences$63.save();
+	const root = _root$7();
+	const lockOn = root.querySelector(".lock.on");
+	const lockOff = root.querySelector(".lock.off");
 	if (_preferences$63.lock) {
-		PartyFriendsV0.ui.find(".lock.on").show();
-		PartyFriendsV0.ui.find(".lock.off").hide();
+		if (lockOn) lockOn.style.display = "inline-block";
+		if (lockOff) lockOff.style.display = "none";
 	} else {
-		PartyFriendsV0.ui.find(".lock.on").hide();
-		PartyFriendsV0.ui.find(".lock.off").show();
+		if (lockOn) lockOn.style.display = "none";
+		if (lockOff) lockOff.style.display = "inline-block";
 	}
 }
 /**
 * Move to the other tab (Friend -> Party or Party -> Friend)
 */
 function onChangeTab$2() {
-	const ui = PartyFriendsV0.ui;
+	const root = _root$7();
 	_preferences$63.friend = !_preferences$63.friend;
 	_preferences$63.save();
+	const friendEls = root.querySelectorAll(".friend");
+	const partyEls = root.querySelectorAll(".party");
 	if (_preferences$63.friend) {
-		ui.find(".friend").show();
-		ui.find(".party").hide();
+		friendEls.forEach((el) => {
+			el.style.display = "";
+		});
+		partyEls.forEach((el) => {
+			el.style.display = "none";
+		});
 	} else {
-		ui.find(".friend").hide();
-		ui.find(".party").show();
+		friendEls.forEach((el) => {
+			el.style.display = "none";
+		});
+		partyEls.forEach((el) => {
+			el.style.display = "";
+		});
 		if (SessionStorage_default.hasParty) {
-			ui.find(".party.create").hide();
-			if (!SessionStorage_default.isPartyLeader) ui.find(".party.add").hide();
-		} else ui.find(".party.add, .party.leave").hide();
+			const createBtn = root.querySelector(".party.create");
+			if (createBtn) createBtn.style.display = "none";
+			if (!SessionStorage_default.isPartyLeader) {
+				const addBtn = root.querySelector(".party.add");
+				if (addBtn) addBtn.style.display = "none";
+			}
+		} else {
+			const addBtn = root.querySelector(".party.add");
+			const leaveBtn = root.querySelector(".party.leave");
+			if (addBtn) addBtn.style.display = "none";
+			if (leaveBtn) leaveBtn.style.display = "none";
+		}
 	}
-	ui.find(".node").removeClass("selection");
+	root.querySelectorAll(".node").forEach((n) => n.classList.remove("selection"));
 	_index$8 = -1;
 }
 /**
@@ -244686,7 +245081,7 @@ function onChangeTab$2() {
 function onRequestRemoveSelection$1() {
 	if (_index$8 < 0 || _preferences$63.lock || _preferences$63.friend && !_friends$1[_index$8] || !_preferences$63.friend && !_party$3[_index$8]) return;
 	const text = _preferences$63.friend ? DB.getMessage(356) : DB.getMessage(363);
-	UIManager.showPromptBox(text, "ok", "cancel", function() {
+	UIManager.showPromptBox(text, "ok", "cancel", () => {
 		if (_preferences$63.friend) PartyFriendsV0.onRemoveFriend(_index$8);
 		else PartyFriendsV0.onExpelMember(_party$3[_index$8].AID, _party$3[_index$8].characterName);
 	});
@@ -244702,8 +245097,13 @@ function onRequestPrivateMessage$1() {
 		WhisperBox.show(name);
 		return;
 	}
-	ChatBox_default.ui.find(".username").val(name);
-	ChatBox_default.ui.find(".message").select();
+	const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
+	if (chatRoot) {
+		const usernameInput = chatRoot.querySelector(".username");
+		if (usernameInput) usernameInput.value = name;
+		const messageInput = chatRoot.querySelector(".message");
+		if (messageInput) messageInput.focus();
+	}
 }
 /**
 * Right click on a character
@@ -244729,7 +245129,6 @@ function onRightClickInfo$1() {
 }
 /**
 * Request player information
-* (Not implemented yet in official client)
 */
 function onRequestInformation() {
 	if (_preferences$63.lock) return;
@@ -244740,35 +245139,33 @@ function onRequestInformation() {
 */
 function onRequestLeaveParty$1() {
 	if (_preferences$63.lock) return;
-	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV0.onRequestLeave();
 	});
 }
 /**
 * Request to change party leader
-* (need to be the leader)
 */
 function onRequestPartyDelegation$1() {
 	if (_preferences$63.lock) return;
-	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
 		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$8].AID);
 	});
 }
 /**
 * Change selection (click on a friend/party)
 */
-function onSelectionChange$1(event) {
-	PartyFriendsV0.ui.find(".content .name").removeClass("selection");
-	jquery_default(this).find(".name").addClass("selection");
-	_index$8 = PartyFriendsV0.ui.find(this.parentNode).find(".node").index(this);
+function onSelectionChange$1(nodeEl) {
+	_root$7().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
+	const nameEl = nodeEl.querySelector(".name");
+	if (nameEl) nameEl.classList.add("selection");
+	const siblings = nodeEl.parentNode.querySelectorAll(".node");
+	_index$8 = Array.prototype.indexOf.call(siblings, nodeEl);
 	if (SkillTargetSelection_default.intersectEntityId) {
 		const entityId = _preferences$63.friend ? _friends$1[_index$8].AID : _party$3[_index$8].AID;
 		SkillTargetSelection_default.intersectEntityId(entityId);
 	}
 }
-/**
-* Internal functions to manage the windows
-*/
 /**
 * Open the party info window
 */
@@ -244818,12 +245215,15 @@ function onOpenPartyCreationWindow$1() {
 */
 function onOpenMailCreationWindow$1() {
 	if (_preferences$63.lock) return;
-	Mail_default.append();
+	let recipient = "";
+	if (_preferences$63.friend && _friends$1[_index$8]) recipient = _friends$1[_index$8].Name;
+	else if (!_preferences$63.friend && _party$3[_index$8]) recipient = _party$3[_index$8].characterName;
+	if (recipient) Mail_default.replyNewMailFriends(recipient);
+	else Mail_default.append();
 }
 var PartyFriendsV0, _index$8, _friends$1, _party$3, _options$1, _preferences$63, PartyFriendsV0_default;
 var init_PartyFriendsV0 = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_Preferences$1();
 	init_Client();
 	init_Renderer();
@@ -244831,7 +245231,8 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	init_MouseEventHandler();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_Elements();
+	init_GUIComponent();
 	init_PacketVerManager();
 	init_PartyHelper();
 	init_ContextMenu();
@@ -244841,7 +245242,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	init_SkillTargetSelection();
 	init_PartyFriendsV0$2();
 	init_PartyFriendsV0$1();
-	PartyFriendsV0 = new UIComponent("PartyFriendsV0", PartyFriendsV0_default$2, PartyFriendsV0_default$1);
+	PartyFriendsV0 = new GUIComponent("PartyFriendsV0", PartyFriendsV0_default$1);
 	_index$8 = -1;
 	_friends$1 = [];
 	_party$3 = [];
@@ -244860,27 +245261,60 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		lock: false
 	}, 1);
 	/**
+	* Render HTML
+	*/
+	PartyFriendsV0.render = () => PartyFriendsV0_default$2;
+	/**
 	* Initialize the component (event listener, etc.)
 	*/
 	PartyFriendsV0.init = function init() {
+		const root = _root$7();
 		PartyHelper_default.prepare();
-		this.ui.find(".base").mousedown(function(event) {
-			event.stopImmediatePropagation();
-			return false;
+		const baseBtn = root.querySelector(".base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
 		});
-		this.ui.find(".close").click(onClose$13);
-		this.ui.find(".lock").mousedown(onToggleLock$1);
-		this.ui.find(".switchtab.off").mousedown(onChangeTab$2);
-		this.ui.find(".remove").mousedown(onRequestRemoveSelection$1);
-		this.ui.find(".privatemessage").mousedown(onRequestPrivateMessage$1);
-		this.ui.find(".leave").mousedown(onRequestLeaveParty$1);
-		this.ui.find(".resize").mousedown(onResize$13);
-		this.ui.find(".mail").mousedown(onOpenMailCreationWindow$1);
-		this.ui.find(".party.create").mousedown(onOpenPartyCreationWindow$1);
-		this.ui.find(".party.add").mousedown(onOpenPartyInviteWindow$1);
-		this.ui.find(".info").mousedown(onOpenPartyOptionWindow$1);
-		this.ui.find(".content").on("contextmenu", ".node", onRightClickInfo$1).on("mousedown", ".node", onSelectionChange$1);
-		this.draggable(this.ui.find(".titlebar"));
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", onClose$13);
+		const lockOn = root.querySelector(".lock.on");
+		const lockOff = root.querySelector(".lock.off");
+		if (lockOn) lockOn.addEventListener("mousedown", onToggleLock$1);
+		if (lockOff) lockOff.addEventListener("mousedown", onToggleLock$1);
+		root.querySelectorAll(".switchtab.off").forEach((el) => {
+			el.addEventListener("mousedown", onChangeTab$2);
+		});
+		const removeBtn = root.querySelector(".remove");
+		if (removeBtn) removeBtn.addEventListener("mousedown", onRequestRemoveSelection$1);
+		const pmBtn = root.querySelector(".privatemessage");
+		if (pmBtn) pmBtn.addEventListener("mousedown", onRequestPrivateMessage$1);
+		const leaveBtn = root.querySelector(".party.leave");
+		if (leaveBtn) leaveBtn.addEventListener("mousedown", onRequestLeaveParty$1);
+		const resizeBtn = root.querySelector(".resize");
+		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$13);
+		const mailBtn = root.querySelector(".mail");
+		if (mailBtn) mailBtn.addEventListener("mousedown", onOpenMailCreationWindow$1);
+		const createBtn = root.querySelector(".party.create");
+		if (createBtn) createBtn.addEventListener("mousedown", onOpenPartyCreationWindow$1);
+		const addBtn = root.querySelector(".party.add");
+		if (addBtn) addBtn.addEventListener("mousedown", onOpenPartyInviteWindow$1);
+		const infoBtn = root.querySelector(".info");
+		if (infoBtn) infoBtn.addEventListener("mousedown", onOpenPartyOptionWindow$1);
+		const contentEl = root.querySelector(".content");
+		if (contentEl) {
+			contentEl.addEventListener("contextmenu", (e) => {
+				if (e.target.closest(".node")) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					onRightClickInfo$1();
+				}
+			});
+			contentEl.addEventListener("mousedown", (e) => {
+				const node = e.target.closest(".node");
+				if (node) onSelectionChange$1(node);
+			});
+		}
+		this.draggable(".titlebar");
 	};
 	/**
 	* Once append to the DOM, start to position the UI
@@ -244888,18 +245322,19 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.onAppend = function onAppend() {
 		_preferences$63.friend = !_preferences$63.friend;
 		onChangeTab$2();
+		const root = _root$7();
+		const lockOn = root.querySelector(".lock.on");
+		const lockOff = root.querySelector(".lock.off");
 		if (_preferences$63.lock) {
-			this.ui.find(".lock.on").show();
-			this.ui.find(".lock.off").hide();
+			if (lockOn) lockOn.style.display = "inline-block";
+			if (lockOff) lockOff.style.display = "none";
 		} else {
-			this.ui.find(".lock.on").hide();
-			this.ui.find(".lock.off").show();
+			if (lockOn) lockOn.style.display = "none";
+			if (lockOff) lockOff.style.display = "inline-block";
 		}
 		this.resize(_preferences$63.width, _preferences$63.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$63.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$63.x), Renderer.width - this.ui.width())
-		});
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$63.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$63.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
 		if (!_preferences$63.show) this.ui.hide();
 	};
 	/**
@@ -244912,26 +245347,31 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		_options$1.exp_share = 0;
 		_options$1.item_share = 0;
 		_options$1.item_sharing_type = 0;
-		this.ui.find(".partyname").text("");
-		this.ui.find(".friendcount").text("0");
-		this.ui.find(".content .party, .content .friend").empty();
+		const root = _root$7();
+		const partyName = root.querySelector(".partyname");
+		if (partyName) partyName.textContent = "";
+		const friendCount = root.querySelector(".friendcount");
+		if (friendCount) friendCount.textContent = "0";
+		const partyContent = root.querySelector(".content .party");
+		if (partyContent) partyContent.innerHTML = "";
+		const friendContent = root.querySelector(".content .friend");
+		if (friendContent) friendContent.innerHTML = "";
 		_preferences$63.friend = !_preferences$63.friend;
 		onChangeTab$2();
 	};
 	/**
 	* Removing the UI from window, save preferences
-	*
 	*/
 	PartyFriendsV0.onRemove = function onRemove() {
 		_preferences$63.show = this.ui.is(":visible");
-		_preferences$63.y = parseInt(this.ui.css("top"), 10);
-		_preferences$63.x = parseInt(this.ui.css("left"), 10);
+		_preferences$63.y = parseInt(this._host.style.top, 10);
+		_preferences$63.x = parseInt(this._host.style.left, 10);
 		_preferences$63.save();
 	};
 	/**
 	* Window Shortcuts
 	*/
-	PartyFriendsV0.onShortCut = function onShurtCut(key) {
+	PartyFriendsV0.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "FRIEND":
 				if (_preferences$63.friend) this.ui.toggle();
@@ -244971,14 +245411,19 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.setFriends = function setFriends(friends) {
 		const count = friends.length;
-		const ui = this.ui.find(".content .friend");
+		const root = _root$7();
+		const friendContainer = root.querySelector(".content .friend");
 		_friends$1.length = friends.length;
-		ui.empty();
+		if (friendContainer) friendContainer.innerHTML = "";
 		for (let i = 0; i < count; i++) {
 			_friends$1[i] = friends[i];
-			ui.append("<div class=\"node" + (friends[i].State === 0 ? " online" : "") + "\"><span class=\"name\">" + jquery_default.escape(friends[i].Name) + "</span></div>");
+			const div = document.createElement("div");
+			div.className = `node${friends[i].State === 0 ? " online" : ""}`;
+			div.innerHTML = `<span class="name">${_escapeHTML$8(friends[i].Name)}</span>`;
+			if (friendContainer) friendContainer.appendChild(div);
 		}
-		this.ui.find(".friendcount").text(count);
+		const friendCount = root.querySelector(".friendcount");
+		if (friendCount) friendCount.textContent = String(count);
 		_index$8 = -1;
 	};
 	/**
@@ -244988,16 +245433,16 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {boolean} state
 	*/
 	PartyFriendsV0.updateFriendState = function updateFriendState(index, state) {
-		const node = this.ui.find(".content .friend .node:eq(" + index + ")");
+		const node = _root$7().querySelectorAll(".content .friend .node")[index];
 		_friends$1[index].State = state;
 		if (state) {
-			node.css("backgroundImage", "");
+			if (node) node.style.backgroundImage = "";
 			ChatBox_default.addText(DB.getMessage(1042).replace("%s", _friends$1[index].Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 			return;
 		}
 		ChatBox_default.addText(DB.getMessage(1041).replace("%s", _friends$1[index].Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", function(url) {
-			node.css("backgroundImage", "url(" + url + ")");
+			if (node) node.style.backgroundImage = `url(${url})`;
 		});
 	};
 	/**
@@ -245007,19 +245452,30 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {object} friend data
 	*/
 	PartyFriendsV0.updateFriend = function updateFriend(idx, friend) {
+		const root = _root$7();
 		if (!_friends$1[idx]) {
 			_friends$1[idx] = {};
-			this.ui.find(".content .friend").append("<div class=\"node\"><span class=\"name\"></span></div>");
-			this.ui.find(".friendcount").text(_friends$1.length);
+			const friendContainer = root.querySelector(".content .friend");
+			if (friendContainer) {
+				const div = document.createElement("div");
+				div.className = "node";
+				div.innerHTML = "<span class=\"name\"></span>";
+				friendContainer.appendChild(div);
+			}
+			const friendCount = root.querySelector(".friendcount");
+			if (friendCount) friendCount.textContent = String(_friends$1.length);
 		}
 		_friends$1[idx].Name = friend.Name;
 		_friends$1[idx].GID = friend.GID;
 		_friends$1[idx].AID = friend.AID;
 		_friends$1[idx].State = friend.State || 0;
-		const node = this.ui.find(".content .friend .node:eq(" + idx + ")");
-		node.find(".name").text(friend.Name);
+		const node = root.querySelectorAll(".content .friend .node")[idx];
+		if (node) {
+			const nameEl = node.querySelector(".name");
+			if (nameEl) nameEl.textContent = friend.Name;
+		}
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", function(url) {
-			node.css("backgroundImage", "url(" + url + ")");
+			if (node) node.style.backgroundImage = `url(${url})`;
 		});
 	};
 	/**
@@ -245029,8 +245485,11 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.removeFriend = function removeFriend(index) {
 		_friends$1.splice(index, 1);
-		this.ui.find(".content .friend .node:eq(" + index + ")").remove();
-		this.ui.find(".friendcount").text(_friends$1.length);
+		const root = _root$7();
+		const nodes = root.querySelectorAll(".content .friend .node");
+		if (nodes[index]) nodes[index].remove();
+		const friendCount = root.querySelector(".friendcount");
+		if (friendCount) friendCount.textContent = String(_friends$1.length);
 		if (_index$8 === index) _index$8 = -1;
 	};
 	/**
@@ -245040,11 +245499,16 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {Array} member list
 	*/
 	PartyFriendsV0.setParty = function setParty(name, members) {
-		this.ui.find(".partyname").text("(" + name + ")");
-		this.ui.find(".content .party").empty();
+		const root = _root$7();
+		const partyName = root.querySelector(".partyname");
+		if (partyName) partyName.textContent = `(${name})`;
+		const partyContent = root.querySelector(".content .party");
+		if (partyContent) partyContent.innerHTML = "";
 		SessionStorage_default.isPartyLeader = false;
-		this.ui.find(".party.create").hide();
-		this.ui.find(".party.leave").show();
+		const createBtn = root.querySelector(".party.create");
+		const leaveBtn = root.querySelector(".party.leave");
+		if (createBtn) createBtn.style.display = "none";
+		if (leaveBtn) leaveBtn.style.display = "inline-block";
 		const count = members.length;
 		_party$3.length = 0;
 		for (let i = 0; i < count; i++) PartyFriendsV0.addPartyMember(members[i]);
@@ -245058,39 +245522,54 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.addPartyMember = function addPartyMember(player) {
 		const role = player.role || player.Role || 0;
 		const count = _party$3.length;
+		const root = _root$7();
 		let node;
 		if (player.AID === SessionStorage_default.AID) {
 			SessionStorage_default.isPartyLeader = role === 0;
-			if (SessionStorage_default.isPartyLeader) this.ui.find(".party.add").show();
-			else this.ui.find(".party.add").hide();
+			const addBtn = root.querySelector(".party.add");
+			if (addBtn) addBtn.style.display = SessionStorage_default.isPartyLeader ? "inline-block" : "none";
 		}
+		const nodes = root.querySelectorAll(".content .party .node");
 		for (let i = 0; i < count; ++i) if (_party$3[i].AID === player.AID && _party$3[i].characterName === player.characterName) {
-			node = this.ui.find(".content .party .node:eq(" + i + ")");
+			node = nodes[i];
 			break;
 		}
 		if (node) {
-			node.removeClass("leader online");
-			if (role === 0) node.addClass("leader");
-			if (player.state === 0) node.addClass("online");
-			node.css("backgroundImage", "");
-			node.find(".name").text(player.characterName);
-			node.find(".map").text("(" + DB.getMapName(player.mapName) + ")");
+			node.classList.remove("leader", "online");
+			if (role === 0) node.classList.add("leader");
+			if (player.state === 0) node.classList.add("online");
+			node.style.backgroundImage = "";
+			const nameEl = node.querySelector(".name");
+			if (nameEl) nameEl.textContent = player.characterName;
+			const mapEl = node.querySelector(".map");
+			if (mapEl) mapEl.textContent = `(${DB.getMapName(player.mapName)})`;
 		} else {
-			player = jquery_default.extend({}, player);
+			player = Object.assign({}, player);
 			_party$3.push(player);
-			this.ui.find(".content .party").append("<div class=\"node" + (role === 0 ? " leader" : "") + (player.state === 0 ? " online" : "") + "\"><span class=\"name\">" + jquery_default.escape(player.characterName) + "</span><span class=\"map\">(" + jquery_default.escape(DB.getMapName(player.mapName)) + ")</span><canvas class=\"life\" width=\"60\" height=\"5\"></canvas> <span class=\"hp\"></span></div>");
-			node = this.ui.find(".content .party .node").last();
+			const partyContent = root.querySelector(".content .party");
+			if (partyContent) {
+				const div = document.createElement("div");
+				div.className = `node${role === 0 ? " leader" : ""}${player.state === 0 ? " online" : ""}`;
+				div.innerHTML = `<span class="name">${_escapeHTML$8(player.characterName)}</span><span class="map">(${_escapeHTML$8(DB.getMapName(player.mapName))})</span><canvas class="life" width="60" height="5"></canvas> <span class="hp"></span>`;
+				partyContent.appendChild(div);
+				node = div;
+			}
 		}
-		node.find(".hp").text("");
-		const ctx = node.find("canvas").get(0).getContext("2d");
-		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-		if (player.life && player.life.display) {
-			ctx.drawImage(player.life.canvas, 0, 0, 60, 5, 0, 0, 60, 5);
-			node.find(".hp").text(player.life.hp + "/" + player.life.hp_max);
+		if (!node) return;
+		const hpEl = node.querySelector(".hp");
+		if (hpEl) hpEl.textContent = "";
+		const canvas = node.querySelector("canvas");
+		if (canvas) {
+			const ctx = canvas.getContext("2d");
+			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+			if (player.life && player.life.display) {
+				ctx.drawImage(player.life.canvas, 0, 0, 60, 5, 0, 0, 60, 5);
+				if (hpEl) hpEl.textContent = `${player.life.hp}/${player.life.hp_max}`;
+			}
 		}
 		const texture = role === 0 && player.state === 0 ? "grp_leader.bmp" : player.state === 0 ? "grp_online.bmp" : "";
 		if (texture) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/" + texture, function(url) {
-			node.css("backgroundImage", "url(" + url + ")");
+			if (node) node.style.backgroundImage = `url(${url})`;
 		});
 	};
 	/**
@@ -245100,19 +245579,27 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {string} character name
 	*/
 	PartyFriendsV0.removePartyMember = function removePartyMember(AID, characterName) {
+		const root = _root$7();
 		if (AID === SessionStorage_default.AID) {
 			_party$3.length = 0;
-			this.ui.find(".content .party").empty();
-			this.ui.find(".partyname").text("");
-			this.ui.find(".party.create").show();
-			this.ui.find(".party.leave, .party.add").hide();
+			const partyContent = root.querySelector(".content .party");
+			if (partyContent) partyContent.innerHTML = "";
+			const partyName = root.querySelector(".partyname");
+			if (partyName) partyName.textContent = "";
+			const createBtn = root.querySelector(".party.create");
+			if (createBtn) createBtn.style.display = "inline-block";
+			const leaveBtn = root.querySelector(".party.leave");
+			const addBtn = root.querySelector(".party.add");
+			if (leaveBtn) leaveBtn.style.display = "none";
+			if (addBtn) addBtn.style.display = "none";
 			ChatBox_default.addText(DB.getMessage(84), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PARTY_SETUP);
 			return;
 		}
 		const count = _party$3.length;
+		const nodes = root.querySelectorAll(".content .party .node");
 		for (let i = 0; i < count; ++i) if (_party$3[i].AID === AID && _party$3[i].characterName === characterName) {
 			_party$3.splice(i, 1);
-			this.ui.find(".content .party .node:eq(" + i + ")").remove();
+			if (nodes[i]) nodes[i].remove();
 			break;
 		}
 	};
@@ -245128,10 +245615,11 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		_preferences$63.width = width;
 		_preferences$63.height = height;
 		_preferences$63.save();
-		this.ui.find(".content").css({
-			width: width * 20,
-			height: height * 20
-		});
+		const content = _root$7().querySelector(".content");
+		if (content) {
+			content.style.width = `${width * 20}px`;
+			content.style.height = `${height * 20}px`;
+		}
 	};
 	/**
 	* Update player life in interface
@@ -245143,11 +245631,14 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
 		const count = _party$3.length;
-		let node;
+		const nodes = _root$7().querySelectorAll(".content .party .node");
 		for (let i = 0; i < count; ++i) if (_party$3[i].AID === AID && _party$3[i].state === 0) {
-			node = this.ui.find(".content .party .node:eq(" + i + ")");
-			node.find("canvas").get(0).getContext("2d").drawImage(canvas, 0, 0, 60, 5, 0, 0, 60, 5);
-			node.find(".hp").text(hp + "/" + maxhp);
+			const node = nodes[i];
+			if (!node) break;
+			const cvs = node.querySelector("canvas");
+			if (cvs) cvs.getContext("2d").drawImage(canvas, 0, 0, 60, 5, 0, 0, 60, 5);
+			const hpEl = node.querySelector(".hp");
+			if (hpEl) hpEl.textContent = `${hp}/${maxhp}`;
 			break;
 		}
 	};
@@ -245181,8 +245672,13 @@ var init_PartyFriendsV0 = __esmMin((() => {
 			WhisperBox.show(name);
 			return;
 		}
-		ChatBox_default.ui.find(".username").val(name);
-		ChatBox_default.ui.find(".message").select();
+		const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
+		if (chatRoot) {
+			const usernameInput = chatRoot.querySelector(".username");
+			if (usernameInput) usernameInput.value = name;
+			const messageInput = chatRoot.querySelector(".message");
+			if (messageInput) messageInput.focus();
+		}
 	};
 	/**
 	* Functions to be hooked
@@ -245194,6 +245690,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.onExpelMember = function onExpelMember() {};
 	PartyFriendsV0.onRemoveFriend = function onRemoveFriend() {};
 	PartyFriendsV0.onRequestSettingUpdate = function onRequestSettingUpdate() {};
+	PartyFriendsV0.mouseMode = GUIComponent.MouseMode.STOP;
 	PartyFriendsV0_default = UIManager.addComponent(PartyFriendsV0);
 }));
 //#endregion
@@ -247921,61 +248418,76 @@ var init_Rodex$1 = __esmMin((() => {
 //#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.html?raw
 var PartyFriendsV1_default$2;
 var init_PartyFriendsV1$2 = __esmMin((() => {
-	PartyFriendsV1_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"party\"> <span class=\"text\" data-text=\"103\">Party</span> <span class=\"partyname\"></span> </span>\r\n			<span class=\"friend\">\r\n				<span class=\"text\" data-text=\"102\">Friends</span> (<span class=\"friendcount\">0</span>/<span\r\n					class=\"friendmax\"\r\n					>127</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party info-v2\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\" data-background=\"basic_interface/mesbtn_mid.bmp\">\r\n		<!-- Friend specific buttons -->\r\n		<button\r\n			class=\"friend mail\"\r\n			data-background=\"basic_interface/mesbtn_01.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"98\">Send Message</div>\r\n		</button>\r\n		<button\r\n			class=\"friend privatemessage\"\r\n			data-background=\"basic_interface/mesbtn_02.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"99\">1:1 Chat</div>\r\n		</button>\r\n\r\n		<!-- Party specific buttons -->\r\n		<button\r\n			class=\"party agency\"\r\n			data-background=\"basic_interface/mesbtn_partymaster_01.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_partymaster_01_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_partymaster_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"3504\">Adventurer's Agency</div>\r\n		</button>\r\n		<button\r\n			class=\"info\"\r\n			data-background=\"basic_interface/mesbtn_04.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\" data-text=\"101\">Party Setup</span>\r\n				<span class=\"friend\" data-text=\"355\">Friend Setup</span>\r\n			</div>\r\n		</button>\r\n		<button\r\n			class=\"friend remove\"\r\n			data-background=\"basic_interface/mesbtn_05.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"351\">Delete</div>\r\n		</button>\r\n		<button\r\n			class=\"lock on\"\r\n			data-background=\"basic_interface/mesbtn_06.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"1626\">Activate lock function</div>\r\n		</button>\r\n		<button\r\n			class=\"lock off\"\r\n			data-background=\"basic_interface/mesbtn_07.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"1627\">Deactivate lock function</div>\r\n		</button>\r\n		<button\r\n			class=\"party create\"\r\n			data-background=\"basic_interface/mesbtn_08.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"2054\">Create Party</div>\r\n		</button>\r\n		<button\r\n			class=\"party add\"\r\n			data-background=\"basic_interface/mesbtn_010.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"2056\">Party Invitation</div>\r\n		</button>\r\n		<button\r\n			class=\"party leave\"\r\n			data-background=\"basic_interface/mesbtn_09.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"96\">Leave Party</div>\r\n		</button>\r\n		<button\r\n			class=\"party sort\"\r\n			data-background=\"basic_interface/mesbtn_011.bmp\"\r\n			data-hover=\"basic_interface/mesbtn_011_a.bmp\"\r\n			data-down=\"basic_interface/mesbtn_011_b.bmp\"\r\n		>\r\n			<div class=\"overlay\" data-text=\"3983\">Sort Mini Party Window</div>\r\n		</button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid.bmp\">\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\" data-background=\"radiobtn_on.bmp\" data-text=\"102\">Friends</button>\r\n			<button class=\"switchtab off\" data-background=\"radiobtn_off.bmp\" data-text=\"103\">Party</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\" data-background=\"radiobtn_off.bmp\" data-text=\"102\">Friends</button>\r\n			<button class=\"switchtab on\" data-background=\"radiobtn_on.bmp\" data-text=\"103\">Party</button>\r\n			<div class=\"member-count-container\">\r\n				<div class=\"footer-label\" data-text=\"3231\">Cap</div>\r\n				<span class=\"count-box\"><span class=\"inner-count\">0/12</span></span>\r\n			</div>\r\n		</div>\r\n		<button class=\"resize\" data-background=\"btn_resize.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
+	PartyFriendsV1_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"party\">\r\n				<span class=\"text\"><ui-text msg=\"103\">Party</ui-text></span> <span class=\"partyname\"></span>\r\n			</span>\r\n			<span class=\"friend\">\r\n				<span class=\"text\"><ui-text msg=\"102\">Friends</ui-text></span> (<span class=\"friendcount\">0</span>/<span\r\n					class=\"friendmax\"\r\n					>127</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party info-v2\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\">\r\n		<ui-image src=\"basic_interface/mesbtn_mid.bmp\"></ui-image>\r\n		<!-- Friend specific buttons -->\r\n		<ui-button\r\n			class=\"friend mail\"\r\n			bg=\"basic_interface/mesbtn_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"98\">Send Message</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"friend privatemessage\"\r\n			bg=\"basic_interface/mesbtn_02.bmp\"\r\n			hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"99\">1:1 Chat</ui-text></div>\r\n		</ui-button>\r\n\r\n		<!-- Party specific buttons -->\r\n		<ui-button\r\n			class=\"party agency\"\r\n			bg=\"basic_interface/mesbtn_partymaster_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_partymaster_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_partymaster_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"3504\">Adventurer's Agency</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"info\"\r\n			bg=\"basic_interface/mesbtn_04.bmp\"\r\n			hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"101\">Party Setup</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"friend remove\"\r\n			bg=\"basic_interface/mesbtn_05.bmp\"\r\n			hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"351\">Delete</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock on\"\r\n			bg=\"basic_interface/mesbtn_06.bmp\"\r\n			hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1626\">Activate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock off\"\r\n			bg=\"basic_interface/mesbtn_07.bmp\"\r\n			hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1627\">Deactivate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party create\"\r\n			bg=\"basic_interface/mesbtn_08.bmp\"\r\n			hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2054\">Create Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party add\"\r\n			bg=\"basic_interface/mesbtn_010.bmp\"\r\n			hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2056\">Party Invitation</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party leave\"\r\n			bg=\"basic_interface/mesbtn_09.bmp\"\r\n			hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"96\">Leave Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party sort\"\r\n			bg=\"basic_interface/mesbtn_011.bmp\"\r\n			hover=\"basic_interface/mesbtn_011_a.bmp\"\r\n			down=\"basic_interface/mesbtn_011_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"3983\">Sort Mini Party Window</ui-text></div>\r\n		</ui-button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid.bmp\"></ui-image>\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n			<div class=\"member-count-container\">\r\n				<div class=\"footer-label\"><ui-text msg=\"3231\">Cap</ui-text></div>\r\n				<span class=\"count-box\"><span class=\"inner-count\">0/12</span></span>\r\n			</div>\r\n		</div>\r\n		<button class=\"resize\"><ui-image src=\"btn_resize.bmp\"></ui-image></button>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.css?raw
 var PartyFriendsV1_default$1;
 var init_PartyFriendsV1$1 = __esmMin((() => {
-	PartyFriendsV1_default$1 = "#PartyFriends {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 {\r\n	padding: 0;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node {\r\n	height: 38px;\r\n	padding: 3px 5px;\r\n	position: relative;\r\n	background: #ffffff;\r\n	display: flex;\r\n	align-items: center;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.detached {\r\n	background: #deefff;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1,\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	margin-top: 2px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 span,\r\n#PartyFriends .content .party.info-v2 .node .row2 * {\r\n	position: static !important;\r\n	display: inline-block !important;\r\n	float: none !important;\r\n	font-weight: bold;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container {\r\n	position: relative !important;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	background: #f8f8f8;\r\n	border: 1px solid #ccc;\r\n	display: flex;\r\n	/* Centering children */\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute !important;\r\n	top: 0;\r\n	left: 0;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon-frame {\r\n	position: absolute !important;\r\n	top: -2px;\r\n	left: -2px;\r\n	width: 28px;\r\n	height: 28px;\r\n	background-repeat: no-repeat;\r\n	z-index: 10;\r\n	pointer-events: none;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .crown {\r\n	position: absolute !important;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	display: none;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n}\r\n\r\n.drag-ghost {\r\n	pointer-events: none;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node:hover {\r\n	background: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .info-container {\r\n	flex: 1;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 {\r\n	height: 18px;\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	height: 12px;\r\n	width: 100%;\r\n	gap: 5px;\r\n}\r\n\r\n/* Removed redundant absolute rules moved to job-icon-container scope */\r\n/* Removed redundant absolute rules moved to job-icon-container scope */\r\n#PartyFriends .content .party.info-v2 .node.leader .crown {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .level {\r\n	font-size: 11px;\r\n	color: #e37522;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .name {\r\n	font-weight: normal;\r\n	color: #333;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 100px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .map {\r\n	font-size: 10px;\r\n	color: #777;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 80px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	/* Thinner */\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	margin-right: 5px;\r\n	position: relative !important;\r\n	display: inline-block !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .life {\r\n	display: block !important;\r\n	height: 5px !important;\r\n	width: 75px !important;\r\n	position: static !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp {\r\n	font-size: 10px;\r\n	color: #666;\r\n	display: inline-block !important;\r\n	vertical-align: middle;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .status-icon {\r\n	width: 26px;\r\n	min-width: 26px;\r\n	height: 12px;\r\n	background-repeat: no-repeat;\r\n	display: block !important;\r\n	position: absolute !important;\r\n	right: 20px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container {\r\n	position: absolute;\r\n	right: 13px;\r\n	bottom: 1px;\r\n	height: 19px;\r\n	width: 156px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	pointer-events: none;\r\n	z-index: 100;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .footer-label {\r\n	color: #333;\r\n	font-size: 10px;\r\n	white-space: nowrap;\r\n	margin-right: 10px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box {\r\n	position: relative;\r\n	width: 48px;\r\n	height: 19px;\r\n	display: block !important;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box .inner-count {\r\n	position: absolute !important;\r\n	left: 0 !important;\r\n	top: 0 !important;\r\n	width: 44px !important;\r\n	/* Centered in the gold box part */\r\n	height: 19px !important;\r\n	line-height: 20px !important;\r\n	text-align: center !important;\r\n	color: #ffffff !important;\r\n	/* Pure White */\r\n	font-weight: bold !important;\r\n	font-size: 10px !important;\r\n	margin: 0 !important;\r\n	padding: 0 !important;\r\n	display: block !important;\r\n}\r\n\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyFriends .navigation button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .navigation button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#PartyFriends .navigation button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.ro-tooltip {\r\n	display: none;\r\n	position: fixed;\r\n	background-color: rgba(0, 0, 0, 0.8);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 2px 6px;\r\n	white-space: nowrap;\r\n	z-index: 20000;\r\n	border-radius: 2px;\r\n	pointer-events: none;\r\n	line-height: 1.2;\r\n	font-size: 11px;\r\n}\r\n\r\n.ro-tooltip.show {\r\n	display: block;\r\n}\r\n";
+	PartyFriendsV1_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 {\r\n	padding: 0;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node {\r\n	height: 38px;\r\n	padding: 3px 5px;\r\n	position: relative;\r\n	background: #ffffff;\r\n	display: flex;\r\n	align-items: center;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.detached {\r\n	background: #deefff;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1,\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	margin-top: 2px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 span,\r\n#PartyFriends .content .party.info-v2 .node .row2 * {\r\n	position: static !important;\r\n	display: inline-block !important;\r\n	float: none !important;\r\n	font-weight: bold;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container {\r\n	position: relative !important;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	background: #f8f8f8;\r\n	border: 1px solid #ccc;\r\n	display: flex;\r\n	/* Centering children */\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute !important;\r\n	top: 0;\r\n	left: 0;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon-frame {\r\n	position: absolute !important;\r\n	top: -2px;\r\n	left: -2px;\r\n	width: 28px;\r\n	height: 28px;\r\n	background-repeat: no-repeat;\r\n	z-index: 10;\r\n	pointer-events: none;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .crown {\r\n	position: absolute !important;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	display: none;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n}\r\n\r\n.drag-ghost {\r\n	pointer-events: none;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node:hover {\r\n	background: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .info-container {\r\n	flex: 1;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 {\r\n	height: 18px;\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	height: 12px;\r\n	width: 100%;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.leader .crown {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .level {\r\n	font-size: 11px;\r\n	color: #e37522;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .name {\r\n	font-weight: normal;\r\n	color: #333;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 100px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .map {\r\n	font-size: 10px;\r\n	color: #777;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 80px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	/* Thinner */\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	margin-right: 5px;\r\n	position: relative !important;\r\n	display: inline-block !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .life {\r\n	display: block !important;\r\n	height: 5px !important;\r\n	width: 75px !important;\r\n	position: static !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp {\r\n	font-size: 10px;\r\n	color: #666;\r\n	display: inline-block !important;\r\n	vertical-align: middle;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .status-icon {\r\n	width: 26px;\r\n	min-width: 26px;\r\n	height: 12px;\r\n	background-repeat: no-repeat;\r\n	display: block !important;\r\n	position: absolute !important;\r\n	right: 20px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container {\r\n	position: absolute;\r\n	right: 13px;\r\n	bottom: 1px;\r\n	height: 19px;\r\n	width: 156px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	pointer-events: none;\r\n	z-index: 100;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .footer-label {\r\n	color: #333;\r\n	font-size: 10px;\r\n	white-space: nowrap;\r\n	margin-right: 10px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box {\r\n	position: relative;\r\n	width: 48px;\r\n	height: 19px;\r\n	display: block !important;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box .inner-count {\r\n	position: absolute !important;\r\n	left: 0 !important;\r\n	top: 0 !important;\r\n	width: 44px !important;\r\n	/* Centered in the gold box part */\r\n	height: 19px !important;\r\n	line-height: 20px !important;\r\n	text-align: center !important;\r\n	color: #ffffff !important;\r\n	/* Pure White */\r\n	font-weight: bold !important;\r\n	font-size: 10px !important;\r\n	margin: 0 !important;\r\n	padding: 0 !important;\r\n	display: block !important;\r\n}\r\n\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyFriends .navigation button,\r\n#PartyFriends .navigation ui-button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .navigation button .overlay,\r\n#PartyFriends .navigation ui-button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#PartyFriends .navigation button:hover .overlay,\r\n#PartyFriends .navigation ui-button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.html?raw
 var PartyMemberExternal_default$2;
 var init_PartyMemberExternal$2 = __esmMin((() => {
-	PartyMemberExternal_default$2 = "<div id=\"PartyMemberExternal\" data-background=\"renewalparty/img_partymini_bg.tga\">\r\n	<button\r\n		class=\"close\"\r\n		data-background=\"renewalparty/btn_titlebar_maximum_out.bmp\"\r\n		data-hover=\"renewalparty/btn_titlebar_maximum_over.bmp\"\r\n		data-down=\"renewalparty/btn_titlebar_maximum_press.bmp\"\r\n	></button>\r\n	<div class=\"job-icon-container\">\r\n		<div class=\"job-icon\"></div>\r\n		<div class=\"crown\"></div>\r\n	</div>\r\n	<div class=\"info-container\">\r\n		<div class=\"row1\">\r\n			<span class=\"level\"></span>\r\n			<span class=\"name\"></span>\r\n			<span class=\"map\"></span>\r\n		</div>\r\n		<div class=\"row2\">\r\n			<div class=\"hp-bar-container\">\r\n				<canvas class=\"life\" width=\"75\" height=\"5\"></canvas>\r\n			</div>\r\n			<span class=\"hp-text\"></span>\r\n			<div class=\"status-icon\"></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	PartyMemberExternal_default$2 = "<div id=\"PartyMemberExternal\">\r\n	<ui-image src=\"renewalparty/img_partymini_bg.tga\"></ui-image>\r\n	<ui-button\r\n		class=\"close\"\r\n		bg=\"renewalparty/btn_titlebar_maximum_out.bmp\"\r\n		hover=\"renewalparty/btn_titlebar_maximum_over.bmp\"\r\n		down=\"renewalparty/btn_titlebar_maximum_press.bmp\"\r\n	></ui-button>\r\n	<div class=\"job-icon-container\">\r\n		<div class=\"job-icon\"></div>\r\n		<div class=\"crown\"></div>\r\n	</div>\r\n	<div class=\"info-container\">\r\n		<div class=\"row1\">\r\n			<span class=\"level\"></span>\r\n			<span class=\"name\"></span>\r\n			<span class=\"map\"></span>\r\n		</div>\r\n		<div class=\"row2\">\r\n			<div class=\"hp-bar-container\">\r\n				<canvas class=\"life\" width=\"75\" height=\"5\"></canvas>\r\n			</div>\r\n			<span class=\"hp-text\"></span>\r\n			<div class=\"status-icon\"></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.css?raw
 var PartyMemberExternal_default$1;
 var init_PartyMemberExternal$1 = __esmMin((() => {
-	PartyMemberExternal_default$1 = "#PartyMemberExternal {\r\n	position: absolute;\r\n	width: 150px;\r\n	height: 38px;\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 3px 5px;\r\n	box-sizing: border-box;\r\n	z-index: 100;\r\n	cursor: move;\r\n}\r\n\r\n#PartyMemberExternal .close {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .job-icon-container {\r\n	position: relative;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyMemberExternal .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyMemberExternal:not(.online) .job-icon,\r\n#PartyMemberExternal:not(.online) .crown {\r\n	filter: grayscale(100%);\r\n}\r\n\r\n#PartyMemberExternal .crown {\r\n	position: absolute;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .info-container {\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyMemberExternal .row1,\r\n#PartyMemberExternal .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyMemberExternal .row2 {\r\n	margin-top: 2px;\r\n	height: 12px;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyMemberExternal .level {\r\n	font-size: 11px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyMemberExternal .name {\r\n	font-weight: normal;\r\n	color: #fff;\r\n	font-size: 11px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	flex: 1;\r\n}\r\n\r\n#PartyMemberExternal .map {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	position: relative;\r\n}\r\n\r\n#PartyMemberExternal .life {\r\n	display: block;\r\n	height: 5px;\r\n	width: 75px;\r\n}\r\n\r\n#PartyMemberExternal .hp-text {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .status-icon {\r\n	display: none;\r\n}\r\n\r\n.ro-tooltip {\r\n	display: none;\r\n	position: fixed;\r\n	background-color: rgba(0, 0, 0, 0.8);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 2px 6px;\r\n	white-space: nowrap;\r\n	z-index: 20000;\r\n	border-radius: 2px;\r\n	pointer-events: none;\r\n	line-height: 1.2;\r\n	font-size: 11px;\r\n}\r\n\r\n.ro-tooltip.show {\r\n	display: block;\r\n}\r\n";
+	PartyMemberExternal_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyMemberExternal {\r\n	width: 150px;\r\n	height: 38px;\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 3px 5px;\r\n	box-sizing: border-box;\r\n	z-index: 100;\r\n	cursor: move;\r\n}\r\n\r\n#PartyMemberExternal .close {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .job-icon-container {\r\n	position: relative;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyMemberExternal .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyMemberExternal:not(.online) .job-icon,\r\n#PartyMemberExternal:not(.online) .crown {\r\n	filter: grayscale(100%);\r\n}\r\n\r\n#PartyMemberExternal .crown {\r\n	position: absolute;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .info-container {\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyMemberExternal .row1,\r\n#PartyMemberExternal .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyMemberExternal .row2 {\r\n	margin-top: 2px;\r\n	height: 12px;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyMemberExternal .level {\r\n	font-size: 11px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyMemberExternal .name {\r\n	font-weight: normal;\r\n	color: #fff;\r\n	font-size: 11px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	flex: 1;\r\n}\r\n\r\n#PartyMemberExternal .map {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	position: relative;\r\n}\r\n\r\n#PartyMemberExternal .life {\r\n	display: block;\r\n	height: 5px;\r\n	width: 75px;\r\n}\r\n\r\n#PartyMemberExternal .hp-text {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .status-icon {\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.js
 /**
-* Custom RO-style tooltips
+* Helper: query inside shadow root
+*/
+function _root$6(comp) {
+	return comp._shadow || comp._host;
+}
+/**
+* Custom RO-style tooltips (global, outside shadow DOM)
 */
 function onTooltipShow$1(event) {
-	const text = jquery_default(this).attr("data-tooltip");
+	const text = event.currentTarget.dataset.tooltip;
 	if (text) {
-		let tooltip = jquery_default("#ro-tooltip-party");
-		if (!tooltip.length) tooltip = jquery_default("<div id=\"ro-tooltip-party\" class=\"ro-tooltip\"></div>").appendTo("body");
-		tooltip.text(text).addClass("show");
+		let tooltip = document.getElementById("ro-tooltip-party");
+		if (!tooltip) {
+			tooltip = document.createElement("div");
+			tooltip.id = "ro-tooltip-party";
+			tooltip.className = "ro-tooltip";
+			tooltip.style.cssText = "display:none;position:fixed;background-color:rgba(0,0,0,0.8);text-shadow:1px 1px black;color:white;padding:2px 6px;white-space:nowrap;z-index:20000;border-radius:2px;pointer-events:none;line-height:1.2;font-size:11px;";
+			document.body.appendChild(tooltip);
+		}
+		tooltip.textContent = text;
+		tooltip.style.display = "block";
 	}
 }
 function onTooltipMove$1(event) {
-	const tooltip = jquery_default("#ro-tooltip-party");
-	if (tooltip.hasClass("show")) tooltip.css({
-		top: event.clientY + 15,
-		left: event.clientX + 10
-	});
+	const tooltip = document.getElementById("ro-tooltip-party");
+	if (tooltip && tooltip.style.display === "block") {
+		tooltip.style.top = `${event.clientY + 15}px`;
+		tooltip.style.left = `${event.clientX + 10}px`;
+	}
 }
-function onTooltipHide$1(event) {
-	jquery_default("#ro-tooltip-party").removeClass("show");
+function onTooltipHide$1() {
+	const tooltip = document.getElementById("ro-tooltip-party");
+	if (tooltip) tooltip.style.display = "none";
 }
 /**
 * Helper to update the HP bar on a canvas
-* @param {jQuery} node
+* @param {Element} root
 * @param {number} hp
 * @param {number} maxhp
 */
-function updateCanvasLife$1(node, hp, maxhp) {
+function updateCanvasLife$1(root, hp, maxhp) {
 	const hasLife = hp !== void 0 && maxhp !== void 0 && maxhp > 0;
 	const lifeRatio = hasLife ? hp / maxhp : 0;
-	node.find(".hp-bar-container").css("visibility", "visible");
+	const hpBarContainer = root.querySelector(".hp-bar-container");
+	if (hpBarContainer) hpBarContainer.style.visibility = "visible";
 	if (hasLife) {
-		const canvas = node.find("canvas").get(0);
+		const canvas = root.querySelector("canvas");
 		if (canvas) {
 			const ctx = canvas.getContext("2d");
 			const width = Math.floor(lifeRatio * 75);
@@ -247985,20 +248497,22 @@ function updateCanvasLife$1(node, hp, maxhp) {
 			ctx.fillStyle = lifeRatio <= .25 ? "#ef1010" : "#32cd32";
 			ctx.fillRect(0, 0, width, 5);
 		}
-		node.find(".hp-text").text(hp + "/" + maxhp);
+		const hpText = root.querySelector(".hp-text");
+		if (hpText) hpText.textContent = `${hp}/${maxhp}`;
 	} else {
-		const canvas = node.find("canvas").get(0);
+		const canvas = root.querySelector("canvas");
 		if (canvas) canvas.getContext("2d").clearRect(0, 0, 75, 5);
-		node.find(".hp-text").text("");
+		const hpText = root.querySelector(".hp-text");
+		if (hpText) hpText.textContent = "";
 	}
 }
 var PartyMemberExternal, PartyMemberExternal_default;
 var init_PartyMemberExternal = __esmMin((() => {
-	init_jquery();
 	init_Client();
 	init_DBManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_PartyMemberExternal$2();
 	init_PartyMemberExternal$1();
 	init_ContextMenu();
@@ -248010,14 +248524,22 @@ var init_PartyMemberExternal = __esmMin((() => {
 	init_SessionStorage();
 	init_WhisperBox();
 	init_PartyFriends();
-	PartyMemberExternal = new UIComponent("PartyMemberExternal", PartyMemberExternal_default$2, PartyMemberExternal_default$1);
+	PartyMemberExternal = new GUIComponent("PartyMemberExternal", PartyMemberExternal_default$1);
+	/**
+	* Render HTML
+	*/
+	PartyMemberExternal.render = () => PartyMemberExternal_default$2;
 	/**
 	* Initialize the component
 	*/
 	PartyMemberExternal.init = function init() {
 		const self = this;
-		this.ui.on("mousedown", function(event) {
-			self._lastPos = self.ui.position();
+		const root = _root$6(this);
+		root.addEventListener("mousedown", (event) => {
+			self._lastPos = {
+				top: self._host.offsetTop,
+				left: self._host.offsetLeft
+			};
 			event.preventDefault();
 			event.stopPropagation();
 			if (ContextMenu_default) ContextMenu_default.remove();
@@ -248029,20 +248551,20 @@ var init_PartyMemberExternal = __esmMin((() => {
 			}
 			if (PartyFriendsV1_default && PartyFriendsV1_default.isLocked && PartyFriendsV1_default.isLocked()) event.stopImmediatePropagation();
 		});
-		this.ui.on("contextmenu", function(event) {
+		root.addEventListener("contextmenu", (event) => {
 			event.preventDefault();
 			event.stopImmediatePropagation();
 			if (Camera && Camera.rotate) Camera.rotate(false);
-			if (PartyFriendsV1_default && PartyFriendsV1_default.isLocked && PartyFriendsV1_default.isLocked()) return false;
-			if (!ContextMenu_default) return false;
+			if (PartyFriendsV1_default && PartyFriendsV1_default.isLocked && PartyFriendsV1_default.isLocked()) return;
+			if (!ContextMenu_default) return;
 			ContextMenu_default.remove();
 			ContextMenu_default.append();
-			ContextMenu_default.addElement(DB.getMessage(98), function() {
+			ContextMenu_default.addElement(DB.getMessage(98), () => {
 				if (!self._player) return;
 				if (Rodex_default) Rodex_default.requestOpenWriteRodex(self._player.characterName);
 			});
-			if (self._player && SessionStorage_default && self._player.AID === SessionStorage_default.AID) ContextMenu_default.addElement(DB.getMessage(2055), function() {
-				UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", function() {
+			if (self._player && SessionStorage_default && self._player.AID === SessionStorage_default.AID) ContextMenu_default.addElement(DB.getMessage(2055), () => {
+				UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 					if (controller && controller.onRequestLeave) controller.onRequestLeave();
 					else {
 						const ui = controller ? controller.getUI() : null;
@@ -248050,19 +248572,23 @@ var init_PartyMemberExternal = __esmMin((() => {
 					}
 				});
 			});
-			else ContextMenu_default.addElement(DB.getMessage(360), function() {
+			else ContextMenu_default.addElement(DB.getMessage(360), () => {
 				if (!self._player) return;
 				if (WhisperBox) WhisperBox.show(self._player.characterName);
 				else if (ChatBox_default) {
-					ChatBox_default.ui.find(".username").val(self._player.characterName);
-					ChatBox_default.ui.find(".message").select();
+					const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
+					if (chatRoot) {
+						const usernameInput = chatRoot.querySelector(".username");
+						if (usernameInput) usernameInput.value = self._player.characterName;
+						const messageInput = chatRoot.querySelector(".message");
+						if (messageInput) messageInput.focus();
+					}
 				}
 			});
-			ContextMenu_default.addElement("Remove small party window", function() {
+			ContextMenu_default.addElement("Remove small party window", () => {
 				self._closedByUser = true;
 				self.remove();
 			});
-			return false;
 		});
 		this.gridSnap = {
 			width: 172,
@@ -248071,13 +248597,14 @@ var init_PartyMemberExternal = __esmMin((() => {
 			padY: 4
 		};
 		this.snapDuration = 80;
-		this.draggable(this.ui);
+		this.draggable();
 		this.onDragEnd = function() {
 			if (PartyMemberExternal.onDragEnd) PartyMemberExternal.onDragEnd(this);
 		};
-		this.ui.on("mouseenter", onTooltipShow$1);
-		this.ui.on("mousemove", onTooltipMove$1);
-		this.ui.on("mouseleave", onTooltipHide$1);
+		const hostEl = this._host;
+		hostEl.addEventListener("mouseenter", onTooltipShow$1);
+		hostEl.addEventListener("mousemove", onTooltipMove$1);
+		hostEl.addEventListener("mouseleave", onTooltipHide$1);
 	};
 	/**
 	* Once append to the DOM, start to position the UI
@@ -248100,33 +248627,49 @@ var init_PartyMemberExternal = __esmMin((() => {
 	* @param {object} player
 	*/
 	PartyMemberExternal.update = function update(player) {
-		const ui = this.ui;
+		const root = _root$6(this);
+		if (!root) return;
 		const level = player.baseLevel || player.level || player.Level || 0;
 		const jobID = player.class_ || player.job || player.Job || 0;
 		const state = player.state || 0;
 		const role = player.role || 0;
 		const isOnline = state === 0;
 		const isLeader = role === 0;
-		ui.find(".name").text(player.characterName);
-		ui.find(".level").text("Lv. " + level);
-		updateCanvasLife$1(ui, player.life && player.life.display ? player.life.hp : void 0, player.life && player.life.display ? player.life.hp_max : void 0);
-		const jobIcon = ui.find(".job-icon");
-		const asset = !!player.isDead ? "icon_jobs_" + jobID + "_die.bmp" : "icon_jobs_" + jobID + ".bmp";
+		const nameEl = root.querySelector(".name");
+		if (nameEl) nameEl.textContent = player.characterName;
+		const levelEl = root.querySelector(".level");
+		if (levelEl) levelEl.textContent = `Lv. ${level}`;
+		updateCanvasLife$1(root, player.life && player.life.display ? player.life.hp : void 0, player.life && player.life.display ? player.life.hp_max : void 0);
+		const jobIcon = root.querySelector(".job-icon");
+		const asset = !!player.isDead ? `icon_jobs_${jobID}_die.bmp` : `icon_jobs_${jobID}.bmp`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/" + asset, function(url) {
-			jobIcon.css("backgroundImage", "url(" + url + ")");
+			if (jobIcon) jobIcon.style.backgroundImage = `url(${url})`;
 		});
-		ui.find(".crown").toggle(isLeader);
+		const crownEl = root.querySelector(".crown");
+		if (crownEl) crownEl.style.display = isLeader ? "block" : "none";
 		if (isLeader) Client.loadFile(DB.INTERFACE_PATH + "renewalparty/ico_partycrown.bmp", function(url) {
-			ui.find(".crown").css("backgroundImage", "url(" + url + ")");
+			if (crownEl) crownEl.style.backgroundImage = `url(${url})`;
 		});
 		const mapDisplay = DB.getMapName(player.mapName || "");
-		const tooltipText = "Lv." + level + " " + player.characterName + "(" + mapDisplay + ")";
-		this.ui.attr("data-tooltip", tooltipText);
+		const tooltipText = `Lv.${level} ${player.characterName}(${mapDisplay})`;
+		this._host.dataset.tooltip = tooltipText;
 		const memberColor = isOnline ? "white" : "#adadad";
-		ui.find(".name").text(player.characterName).css("color", memberColor);
-		ui.find(".map").text("(" + mapDisplay + ")").css("color", memberColor);
-		ui.find(".level").text("Lv. " + level).css("color", memberColor);
-		ui.toggleClass("online", isOnline);
+		if (nameEl) {
+			nameEl.textContent = player.characterName;
+			nameEl.style.color = memberColor;
+		}
+		const mapEl = root.querySelector(".map");
+		if (mapEl) {
+			mapEl.textContent = `(${mapDisplay})`;
+			mapEl.style.color = memberColor;
+		}
+		if (levelEl) {
+			levelEl.textContent = `Lv. ${level}`;
+			levelEl.style.color = memberColor;
+		}
+		const innerRoot = root.querySelector("#PartyMemberExternal");
+		if (innerRoot) if (isOnline) innerRoot.classList.add("online");
+		else innerRoot.classList.remove("online");
 	};
 	/**
 	* Update HP bar
@@ -248134,28 +248677,45 @@ var init_PartyMemberExternal = __esmMin((() => {
 	* @param {number} maxhp
 	*/
 	PartyMemberExternal.updateMemberLife = function updateMemberLife(hp, maxhp) {
-		updateCanvasLife$1(this.ui, hp, maxhp);
+		const root = _root$6(this);
+		if (root) updateCanvasLife$1(root, hp, maxhp);
 	};
 	PartyMemberExternal_default = UIManager.addComponent(PartyMemberExternal);
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.js
 /**
+* Helper: query inside shadow root
+*/
+function _root$5() {
+	return PartyFriendsV1._shadow || PartyFriendsV1._host;
+}
+/**
+* Helper: escape HTML entities
+*/
+function _escapeHTML$7(str) {
+	const div = document.createElement("div");
+	div.appendChild(document.createTextNode(str));
+	return div.innerHTML;
+}
+/**
 * Logic when clicking a member node to handle possible drag out
 */
 function onMemberMouseDown(event) {
 	if (event.which === 1) event.stopPropagation();
 	else return;
-	const node = jquery_default(this);
-	const AID = node.data("aid");
+	const node = this;
+	const AID = parseInt(node.dataset.aid, 10);
 	event.preventDefault();
-	onSelectionChange.call(this, event);
+	onSelectionChange.call(node, event);
 	const player = _party.find((member) => member.AID == AID);
 	if (!player) return;
 	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$58.friend) {
 		if (player.state === 0) SkillTargetSelection_default.intersectEntityId(player.AID);
 		SkillTargetSelection_default.remove();
-		return false;
+		event.preventDefault();
+		event.stopImmediatePropagation();
+		return;
 	}
 	if (_detachedMembers[AID]) return;
 	if (player.state !== 0) return;
@@ -248166,39 +248726,50 @@ function onMemberMouseDown(event) {
 	const threshold = 5;
 	let ghostWrapper = null;
 	let ghostInner = null;
-	jquery_default(window).off(".peeloff");
-	jquery_default(window).on("mousemove.peeloff", function(moveEvent) {
+	const nodeRect = node.getBoundingClientRect();
+	function onMouseMove(moveEvent) {
 		if (!isDragging) {
 			if (Math.abs(moveEvent.pageX - startX) > threshold || Math.abs(moveEvent.pageY - startY) > threshold) {
 				isDragging = true;
 				if (ContextMenu_default) ContextMenu_default.remove();
-				ghostWrapper = jquery_default("<div class=\"drag-shield\" style=\"position:fixed; top:0; left:0; right:0; bottom:0; z-index:10000; background:transparent; cursor:grabbing;\"><div id=\"PartyFriends\" class=\"drag-ghost-wrapper\" style=\"position:absolute; pointer-events:none; opacity:0.6; background:none !important; border:none !important; height:auto !important; width:auto !important;\"><div class=\"content\" style=\"background:none !important; height:auto !important; width:auto !important;\"><div class=\"party info-v2\"></div></div></div></div>").appendTo("body");
-				ghostInner = ghostWrapper.find(".drag-ghost-wrapper");
-				const ghostContent = node.clone();
-				ghostInner.find(".party").append(ghostContent);
-				const srcCanvas = node.find("canvas")[0];
-				const dstCanvas = ghostContent.find("canvas")[0];
+				ghostWrapper = document.createElement("div");
+				ghostWrapper.className = "drag-shield";
+				ghostWrapper.style.cssText = "position:fixed; top:0; left:0; right:0; bottom:0; z-index:10000; background:transparent; cursor:grabbing;";
+				ghostInner = document.createElement("div");
+				ghostInner.id = "PartyFriends";
+				ghostInner.className = "drag-ghost-wrapper";
+				ghostInner.style.cssText = "position:absolute; pointer-events:none; opacity:0.6; background:none !important; border:none !important; height:auto !important; width:auto !important;";
+				const ghostContent = document.createElement("div");
+				ghostContent.className = "content";
+				ghostContent.style.cssText = "background:none !important; height:auto !important; width:auto !important;";
+				const ghostParty = document.createElement("div");
+				ghostParty.className = "party info-v2";
+				const clonedNode = node.cloneNode(true);
+				ghostParty.appendChild(clonedNode);
+				ghostContent.appendChild(ghostParty);
+				ghostInner.appendChild(ghostContent);
+				ghostWrapper.appendChild(ghostInner);
+				document.body.appendChild(ghostWrapper);
+				const srcCanvas = node.querySelector("canvas");
+				const dstCanvas = clonedNode.querySelector("canvas");
 				if (srcCanvas && dstCanvas) {
 					dstCanvas.width = srcCanvas.width;
 					dstCanvas.height = srcCanvas.height;
 					dstCanvas.getContext("2d").drawImage(srcCanvas, 0, 0);
 				}
-				ghostInner.css({
-					width: node.outerWidth(),
-					height: node.outerHeight()
-				});
+				ghostInner.style.width = `${node.offsetWidth}px`;
+				ghostInner.style.height = `${node.offsetHeight}px`;
 			}
 		}
 		if (isDragging && ghostInner) {
-			ghostInner.css({
-				left: moveEvent.clientX - (startX - node.offset().left),
-				top: moveEvent.clientY - (startY - node.offset().top)
-			});
+			ghostInner.style.left = `${moveEvent.clientX - (startX - nodeRect.left)}px`;
+			ghostInner.style.top = `${moveEvent.clientY - (startY - nodeRect.top)}px`;
 			moveEvent.preventDefault();
 		}
-	});
-	jquery_default(window).on("mouseup.peeloff", function(upEvent) {
-		jquery_default(window).off("mousemove.peeloff mouseup.peeloff");
+	}
+	function onMouseUp(upEvent) {
+		window.removeEventListener("mousemove", onMouseMove);
+		window.removeEventListener("mouseup", onMouseUp);
 		if (ghostWrapper) {
 			ghostWrapper.remove();
 			ghostWrapper = null;
@@ -248206,20 +248777,20 @@ function onMemberMouseDown(event) {
 		}
 		if (isDragging) {
 			upEvent.stopImmediatePropagation();
-			const ui = PartyFriendsV1.ui;
-			const offset = ui.offset();
+			const rect = PartyFriendsV1._host.getBoundingClientRect();
 			const x = upEvent.pageX;
 			const y = upEvent.pageY;
-			if (x < offset.left - 10 || x > offset.left + ui.width() + 10 || y < offset.top - 10 || y > offset.top + ui.height() + 10) {
+			if (x < rect.left - 10 || x > rect.left + rect.width + 10 || y < rect.top - 10 || y > rect.top + rect.height + 10) {
 				detachMember(AID, player, x, y);
 				PartyFriendsV1.saveDetachedMembers();
 			}
 		}
-	});
+	}
+	window.addEventListener("mousemove", onMouseMove);
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Find the next available slot for a detached member window.
-* Starts from left: 0, top: 100 and stacks vertically.
 */
 function getNextAvailableSlot() {
 	const startX = 0;
@@ -248231,9 +248802,10 @@ function getNextAvailableSlot() {
 		found = false;
 		for (const aid in _detachedMembers) {
 			const ext = _detachedMembers[aid];
-			if (ext && ext.ui) {
-				const pos = ext.ui.position();
-				if (Math.abs(pos.left - startX) < 5 && Math.abs(pos.top - currentY) < 5) {
+			if (ext && ext._host) {
+				const posLeft = ext._host.offsetLeft;
+				const posTop = ext._host.offsetTop;
+				if (Math.abs(posLeft - startX) < 5 && Math.abs(posTop - currentY) < 5) {
 					currentY += stepY;
 					found = true;
 					break;
@@ -248247,8 +248819,7 @@ function getNextAvailableSlot() {
 	};
 }
 /**
-* Position all detached members into a neat vertical stack starting at (0, 100)
-* ordered by the current party list.
+* Position all detached members into a neat vertical stack
 */
 function sortDetachedMembers() {
 	const startX = 0;
@@ -248258,11 +248829,9 @@ function sortDetachedMembers() {
 	for (let i = 0, count = _party.length; i < count; i++) {
 		const player = _party[i];
 		const external = _detachedMembers[player.AID];
-		if (external && external.ui) {
-			external.ui.css({
-				left: startX,
-				top: currentY
-			});
+		if (external && external._host) {
+			external._host.style.left = `${startX}px`;
+			external._host.style.top = `${currentY}px`;
 			currentY += stepY;
 		}
 	}
@@ -248273,13 +248842,14 @@ function sortDetachedMembers() {
 */
 function detachMember(AID, player, x, y, restorePos) {
 	if (_detachedMembers[AID]) return;
-	const external = PartyMemberExternal_default.clone("PartyMemberExternal_" + AID, true);
-	external.name = "PartyMemberExternal_" + AID;
+	const external = PartyMemberExternal_default.clone(`PartyMemberExternal_${AID}`, true);
+	external.name = `PartyMemberExternal_${AID}`;
 	UIManager.addComponent(external);
 	external.onRemove = function() {
 		delete _detachedMembers[AID];
 		delete UIManager.components[external.name];
-		jquery_default("#ro-tooltip-party").removeClass("show");
+		const tooltip = document.getElementById("ro-tooltip-party");
+		if (tooltip) tooltip.style.display = "none";
 		PartyFriendsV1.refreshPartyList();
 		if (external._closedByUser) PartyFriendsV1.saveDetachedMembers();
 	};
@@ -248295,22 +248865,19 @@ function detachMember(AID, player, x, y, restorePos) {
 		initX = slot.x;
 		initY = slot.y;
 	}
-	external.ui.css({
-		left: initX,
-		top: initY
-	});
+	external._host.style.left = `${initX}px`;
+	external._host.style.top = `${initY}px`;
 	_detachedMembers[AID] = external;
 	PartyFriendsV1.refreshPartyList();
 }
 /**
 * Helper to restore a detached member from saved layout.
-* @param {object} player
 */
 function restoreDetachedMember(player) {
 	if (_detachedMembers[player.AID]) return;
 	if (!SessionStorage_default.Character || !SessionStorage_default.Character.name) return;
 	if (_savedPositions === null) {
-		const key = "PartyFriends_" + SessionStorage_default.Character.name + "_Detached";
+		const key = `PartyFriends_${SessionStorage_default.Character.name}_Detached`;
 		const savedStr = localStorage.getItem(key);
 		_savedPositions = {};
 		try {
@@ -248324,7 +248891,7 @@ function restoreDetachedMember(player) {
 }
 /**
 * Helper to update the HP bar on a canvas
-* @param {jQuery} node
+* @param {Element} node
 * @param {number} hp
 * @param {number} maxhp
 */
@@ -248332,9 +248899,12 @@ function updateCanvasLife(node, hp, maxhp) {
 	const hasLife = hp !== void 0 && maxhp !== void 0 && maxhp > 0;
 	const lifeRatio = hasLife ? hp / maxhp : 0;
 	const barVisibility = hasLife ? "visible" : "hidden";
-	node.find(".hp-bar-container, .hp").css("visibility", barVisibility);
+	const hpBarContainer = node.querySelector(".hp-bar-container");
+	if (hpBarContainer) hpBarContainer.style.visibility = barVisibility;
+	const hpEl = node.querySelector(".hp");
+	if (hpEl) hpEl.style.visibility = barVisibility;
 	if (hasLife) {
-		const canvas = node.find("canvas").get(0);
+		const canvas = node.querySelector("canvas");
 		if (canvas) {
 			const ctx = canvas.getContext("2d");
 			const width = Math.floor(lifeRatio * 75);
@@ -248344,15 +248914,16 @@ function updateCanvasLife(node, hp, maxhp) {
 			ctx.fillStyle = lifeRatio <= .25 ? "#ef1010" : "#32cd32";
 			ctx.fillRect(0, 0, width, 5);
 		}
-		node.find(".hp").text(hp + "/" + maxhp);
-	} else node.find(".hp").text("");
+		if (hpEl) hpEl.textContent = `${hp}/${maxhp}`;
+	} else if (hpEl) hpEl.textContent = "";
 }
 /**
 * Resizing UI
 */
 function onResize$12() {
-	const top = PartyFriendsV1.ui.position().top;
-	const left = PartyFriendsV1.ui.position().left;
+	const hostEl = PartyFriendsV1._host;
+	const top = hostEl.offsetTop;
+	const left = hostEl.offsetLeft;
 	let lastWidth = 0;
 	let lastHeight = 0;
 	function resizing() {
@@ -248368,54 +248939,73 @@ function onResize$12() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	function onMouseUp(event) {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	}
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Close the window
 */
 function onClose$11() {
-	PartyFriendsV1.ui.hide();
+	PartyFriendsV1._host.style.display = "none";
 	PartyHelper_default.remove();
 }
 /**
 * Enable or disable the lock features
 */
 function onToggleLock() {
+	const root = _root$5();
 	_preferences$58.lock = !_preferences$58.lock;
 	_preferences$58.save();
+	const lockOn = root.querySelector(".lock.on");
+	const lockOff = root.querySelector(".lock.off");
 	if (_preferences$58.lock) {
-		PartyFriendsV1.ui.find(".lock.on").show();
-		PartyFriendsV1.ui.find(".lock.off").hide();
+		if (lockOn) lockOn.style.display = "inline-block";
+		if (lockOff) lockOff.style.display = "none";
 	} else {
-		PartyFriendsV1.ui.find(".lock.on").hide();
-		PartyFriendsV1.ui.find(".lock.off").show();
+		if (lockOn) lockOn.style.display = "none";
+		if (lockOff) lockOff.style.display = "inline-block";
 	}
 }
 /**
 * Move to the other tab (Friend -> Party or Party -> Friend)
 */
 function onChangeTab$1() {
-	const ui = PartyFriendsV1.ui;
+	const root = _root$5();
 	_preferences$58.friend = !_preferences$58.friend;
 	_preferences$58.save();
+	const showClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
+		el.style.display = "";
+	});
+	const hideClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
+		el.style.display = "none";
+	});
 	if (_preferences$58.friend) {
-		ui.find(".friend").show();
-		ui.find(".party").hide();
+		showClass(".friend");
+		hideClass(".party");
 	} else {
-		ui.find(".friend").hide();
-		ui.find(".party").show();
+		hideClass(".friend");
+		showClass(".party");
 		if (SessionStorage_default.hasParty) {
-			ui.find(".party.create").hide();
-			ui.find(".party.sort").show();
-			if (!SessionStorage_default.isPartyLeader) ui.find(".party.add").hide();
-		} else ui.find(".party.add, .party.leave, .party.sort").hide();
+			const createBtn = root.querySelector(".party.create");
+			if (createBtn) createBtn.style.display = "none";
+			const sortBtn = root.querySelector(".party.sort");
+			if (sortBtn) sortBtn.style.display = "";
+			if (!SessionStorage_default.isPartyLeader) {
+				const addBtn = root.querySelector(".party.add");
+				if (addBtn) addBtn.style.display = "none";
+			}
+		} else {
+			hideClass(".party.add");
+			hideClass(".party.leave");
+			hideClass(".party.sort");
+		}
 	}
-	ui.find(".node").removeClass("selection");
+	root.querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
 	_index$7 = -1;
 }
 /**
@@ -248424,14 +249014,13 @@ function onChangeTab$1() {
 function onRequestRemoveSelection() {
 	if (_index$7 < 0 || _preferences$58.lock || _preferences$58.friend && !_friends[_index$7] || !_preferences$58.friend && !_party[_index$7]) return;
 	const text = _preferences$58.friend ? DB.getMessage(356) : DB.getMessage(363);
-	UIManager.showPromptBox(text, "ok", "cancel", function() {
+	UIManager.showPromptBox(text, "ok", "cancel", () => {
 		if (_preferences$58.friend) PartyFriendsV1.onRemoveFriend(_index$7);
 		else PartyFriendsV1.onExpelMember(_party[_index$7].AID, _party[_index$7].characterName);
 	});
 }
 /**
 * Add nick name to chatbox
-* Or open a new conversation window (todo)
 */
 function onRequestPrivateMessage() {
 	if (_index$7 < 0 || _preferences$58.lock) return;
@@ -248447,19 +249036,19 @@ function onRightClickInfo(event) {
 		event.preventDefault();
 	}
 	if (Camera && Camera.rotate) Camera.rotate(false);
-	if (_preferences$58.lock) return false;
+	if (_preferences$58.lock) return;
 	onSelectionChange.call(this, event);
-	if (_index$7 < 0) return false;
+	if (_index$7 < 0) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
 	if (_preferences$58.friend) {
 		const friend = _friends[_index$7];
-		if (!friend) return false;
+		if (!friend) return;
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
 		if (friend.GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection);
 	} else {
 		const player = _party[_index$7];
-		if (!player) return false;
+		if (!player) return;
 		const isMe = player.AID === SessionStorage_default.AID;
 		const isLeader = SessionStorage_default.isPartyLeader;
 		const isOnline = player.state === 0;
@@ -248473,11 +249062,11 @@ function onRightClickInfo(event) {
 			}
 		}
 		if (isOnline) {
-			ContextMenu_default.addElement(DB.getMessage(3101), function() {
+			ContextMenu_default.addElement(DB.getMessage(3101), () => {
 				detachMember(player.AID, player, Mouse.screen.x, Mouse.screen.y);
 				PartyFriendsV1.saveDetachedMembers();
 			});
-			ContextMenu_default.addElement(DB.getMessage(3102), function() {
+			ContextMenu_default.addElement(DB.getMessage(3102), () => {
 				if (_detachedMembers[player.AID]) {
 					_detachedMembers[player.AID].remove();
 					PartyFriendsV1.saveDetachedMembers();
@@ -248485,24 +249074,22 @@ function onRightClickInfo(event) {
 			});
 		}
 	}
-	return false;
 }
 /**
 * Request to leave a party
 */
 function onRequestLeaveParty() {
 	if (_preferences$58.lock) return;
-	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV1.onRequestLeave();
 	});
 }
 /**
 * Request to change party leader
-* (need to be the leader)
 */
 function onRequestPartyDelegation() {
 	if (_preferences$58.lock) return;
-	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
 		PartyFriendsV1.onRequestChangeLeader(_party[_index$7].AID);
 	});
 }
@@ -248510,12 +249097,12 @@ function onRequestPartyDelegation() {
 * Change selection (click on a friend/party)
 */
 function onSelectionChange(event) {
-	PartyFriendsV1.ui.find(".node").removeClass("selection");
-	const node = jquery_default(this);
-	node.addClass("selection");
-	const AID = node.data("aid");
+	_root$5().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
+	const node = this;
+	node.classList.add("selection");
+	const AID = parseInt(node.dataset.aid, 10);
 	_index$7 = -1;
-	if (_preferences$58.friend) _index$7 = PartyFriendsV1.ui.find(this.parentNode).find(".node").index(this);
+	if (_preferences$58.friend) _index$7 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
 	else {
 		const player = _party.find((member) => member.AID == AID);
 		_index$7 = _party.indexOf(player);
@@ -248577,37 +249164,44 @@ function onOpenPartyOptionWindow() {
 	PartyHelper_default.setOptions(_options, SessionStorage_default.isPartyLeader);
 }
 /**
-* Custom RO-style tooltips
+* Custom RO-style tooltips (global, outside shadow DOM)
 */
 function onTooltipShow(event) {
 	if (event.__tooltipHandled) return;
 	event.__tooltipHandled = true;
-	const text = jquery_default(this).attr("data-tooltip");
+	const text = this.getAttribute("data-tooltip");
 	if (text) {
-		let tooltip = jquery_default("#ro-tooltip-party");
-		if (!tooltip.length) tooltip = jquery_default("<div id=\"ro-tooltip-party\" class=\"ro-tooltip\"></div>").appendTo("body");
-		tooltip.text(text).addClass("show");
+		let tooltip = document.getElementById("ro-tooltip-party");
+		if (!tooltip) {
+			tooltip = document.createElement("div");
+			tooltip.id = "ro-tooltip-party";
+			tooltip.className = "ro-tooltip";
+			tooltip.style.cssText = "display:none;position:fixed;background-color:rgba(0,0,0,0.8);text-shadow:1px 1px black;color:white;padding:2px 6px;white-space:nowrap;z-index:20000;border-radius:2px;pointer-events:none;line-height:1.2;font-size:11px;";
+			document.body.appendChild(tooltip);
+		}
+		tooltip.textContent = text;
+		tooltip.style.display = "block";
 	}
 }
 function onTooltipMove(event) {
 	if (event.__tooltipMoved) return;
 	event.__tooltipMoved = true;
-	const tooltip = jquery_default("#ro-tooltip-party");
-	if (tooltip.hasClass("show")) tooltip.css({
-		top: event.clientY + 15,
-		left: event.clientX + 10
-	});
+	const tooltip = document.getElementById("ro-tooltip-party");
+	if (tooltip && tooltip.style.display === "block") {
+		tooltip.style.top = `${event.clientY + 15}px`;
+		tooltip.style.left = `${event.clientX + 10}px`;
+	}
 }
 function onTooltipHide(event) {
 	if (event.__tooltipHidden) return;
 	event.__tooltipHidden = true;
-	jquery_default("#ro-tooltip-party").removeClass("show");
+	const tooltip = document.getElementById("ro-tooltip-party");
+	if (tooltip) tooltip.style.display = "none";
 }
 var PartyFriendsV1, _detachedMembers, _index$7, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$58, PartyFriendsV1_default;
 var init_PartyFriendsV1 = __esmMin((() => {
 	init_DBManager();
 	init_Camera();
-	init_jquery();
 	init_MiniMap();
 	init_Preferences$1();
 	init_MonsterTable();
@@ -248617,7 +249211,8 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	init_MouseEventHandler();
 	init_KeyEventHandler();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_PartyHelper();
 	init_ContextMenu();
 	init_Rodex$1();
@@ -248627,7 +249222,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	init_PartyFriendsV1$1();
 	init_PartyMemberExternal();
 	init_SkillTargetSelection();
-	PartyFriendsV1 = new UIComponent("PartyFriendsV1", PartyFriendsV1_default$2, PartyFriendsV1_default$1);
+	PartyFriendsV1 = new GUIComponent("PartyFriendsV1", PartyFriendsV1_default$1);
 	_detachedMembers = {};
 	_index$7 = -1;
 	_friends = [];
@@ -248650,40 +249245,86 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		detachedMembers: {}
 	}, 1);
 	/**
+	* Render HTML
+	*/
+	PartyFriendsV1.render = () => PartyFriendsV1_default$2;
+	/**
 	* Initialize the component (event listener, etc.)
 	*/
 	PartyFriendsV1.init = function init() {
+		const root = _root$5();
 		PartyHelper_default.prepare();
-		this.ui.find(".base").mousedown(function(event) {
+		const baseBtn = root.querySelector(".base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (event) => {
 			event.stopImmediatePropagation();
-			return false;
+			event.preventDefault();
 		});
-		this.ui.find(".close").click(onClose$11);
-		this.ui.find(".lock").mousedown(onToggleLock);
-		this.ui.find(".switchtab.off").mousedown(onChangeTab$1);
-		this.ui.find(".remove").mousedown(onRequestRemoveSelection);
-		this.ui.find(".privatemessage").mousedown(onRequestPrivateMessage);
-		this.ui.find(".leave").mousedown(onRequestLeaveParty);
-		this.ui.find(".resize").mousedown(onResize$12);
-		this.ui.find(".mail").mousedown(onOpenMailCreationWindow);
-		this.ui.find(".party.create").mousedown(onOpenPartyCreationWindow);
-		this.ui.find(".party.add").mousedown(onOpenPartyInviteWindow);
-		this.ui.find(".info").mousedown(onOpenPartyOptionWindow);
-		this.ui.find(".party.sort").mousedown(sortDetachedMembers);
-		this.ui.find(".content").on("contextmenu", ".node", onRightClickInfo).on("mousedown", ".node", onMemberMouseDown).on("mouseover", "[data-tooltip]", onTooltipShow).on("mousemove", "[data-tooltip]", onTooltipMove).on("mouseout", "[data-tooltip]", onTooltipHide);
-		this.draggable(this.ui.find(".titlebar"));
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", onClose$11);
+		root.querySelectorAll(".lock").forEach((el) => {
+			el.addEventListener("mousedown", onToggleLock);
+		});
+		root.querySelectorAll(".switchtab.off").forEach((el) => {
+			el.addEventListener("mousedown", onChangeTab$1);
+		});
+		const removeBtn = root.querySelector(".remove");
+		if (removeBtn) removeBtn.addEventListener("mousedown", onRequestRemoveSelection);
+		const pmBtn = root.querySelector(".privatemessage");
+		if (pmBtn) pmBtn.addEventListener("mousedown", onRequestPrivateMessage);
+		const leaveBtn = root.querySelector(".leave");
+		if (leaveBtn) leaveBtn.addEventListener("mousedown", onRequestLeaveParty);
+		const resizeBtn = root.querySelector(".resize");
+		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$12);
+		const mailBtn = root.querySelector(".mail");
+		if (mailBtn) mailBtn.addEventListener("mousedown", onOpenMailCreationWindow);
+		const createBtn = root.querySelector(".party.create");
+		if (createBtn) createBtn.addEventListener("mousedown", onOpenPartyCreationWindow);
+		const addBtn = root.querySelector(".party.add");
+		if (addBtn) addBtn.addEventListener("mousedown", onOpenPartyInviteWindow);
+		const infoBtn = root.querySelector(".info");
+		if (infoBtn) infoBtn.addEventListener("mousedown", onOpenPartyOptionWindow);
+		const sortBtn = root.querySelector(".party.sort");
+		if (sortBtn) sortBtn.addEventListener("mousedown", sortDetachedMembers);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("contextmenu", (event) => {
+				const node = event.target.closest(".node");
+				if (node) onRightClickInfo.call(node, event);
+			});
+			content.addEventListener("mousedown", (event) => {
+				const node = event.target.closest(".node");
+				if (node) onMemberMouseDown.call(node, event);
+			});
+			content.addEventListener("mouseover", (event) => {
+				const el = event.target.closest("[data-tooltip]");
+				if (el) onTooltipShow.call(el, event);
+			});
+			content.addEventListener("mousemove", (event) => {
+				const el = event.target.closest("[data-tooltip]");
+				if (el) onTooltipMove.call(el, event);
+			});
+			content.addEventListener("mouseout", (event) => {
+				const el = event.target.closest("[data-tooltip]");
+				if (el) onTooltipHide.call(el, event);
+			});
+		}
+		this.draggable(".titlebar");
 		PartyMemberExternal_default.onDragEnd = function(movedComponent) {
-			const pos = movedComponent.ui.position();
+			const pos = {
+				left: movedComponent._host.offsetLeft,
+				top: movedComponent._host.offsetTop
+			};
 			const oldPos = movedComponent._lastPos;
 			if (oldPos) for (const aid in _detachedMembers) {
 				const other = _detachedMembers[aid];
-				if (other && other !== movedComponent && other.ui) {
-					const otherPos = other.ui.position();
+				if (other && other !== movedComponent && other._host) {
+					const otherPos = {
+						left: other._host.offsetLeft,
+						top: other._host.offsetTop
+					};
 					if (Math.abs(otherPos.left - pos.left) < 5 && Math.abs(otherPos.top - pos.top) < 5) {
-						other.ui.css({
-							left: oldPos.left,
-							top: oldPos.top
-						});
+						other._host.style.left = `${oldPos.left}px`;
+						other._host.style.top = `${oldPos.top}px`;
 						PartyFriendsV1.saveDetachedMembers();
 						return;
 					}
@@ -248696,38 +249337,46 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Refresh the party list rendering
 	*/
 	PartyFriendsV1.refreshPartyList = function refreshPartyList() {
-		this.ui.find(".content .party").empty();
+		const root = _root$5();
+		const partyContent = root.querySelector(".content .party");
+		if (partyContent) partyContent.innerHTML = "";
 		for (let i = 0; i < _party.length; i++) this.renderPartyMember(_party[i]);
-		this.ui.find(".count-box .inner-count").text(_party.length + "/12");
+		const innerCount = root.querySelector(".count-box .inner-count");
+		if (innerCount) innerCount.textContent = `${_party.length}/12`;
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
 	PartyFriendsV1.onAppend = function onAppend() {
+		const root = _root$5();
 		_preferences$58.friend = !_preferences$58.friend;
 		onChangeTab$1();
+		const lockOn = root.querySelector(".lock.on");
+		const lockOff = root.querySelector(".lock.off");
 		if (_preferences$58.lock) {
-			this.ui.find(".lock.on").show();
-			this.ui.find(".lock.off").hide();
+			if (lockOn) lockOn.style.display = "inline-block";
+			if (lockOff) lockOff.style.display = "none";
 		} else {
-			this.ui.find(".lock.on").hide();
-			this.ui.find(".lock.off").show();
+			if (lockOn) lockOn.style.display = "none";
+			if (lockOff) lockOff.style.display = "inline-block";
 		}
 		this.resize(_preferences$58.width, _preferences$58.height);
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$58.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$58.x), Renderer.width - this.ui.width())
-		});
+		const hostHeight = this._host.offsetHeight || 0;
+		const hostWidth = this._host.offsetWidth || 0;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$58.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$58.x), Renderer.width - hostWidth)}px`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/bg_partymember.bmp", function(url) {
-			PartyFriendsV1.ui.find(".count-box").css({ backgroundImage: "url(" + url + ")" });
+			const countBox = root.querySelector(".count-box");
+			if (countBox) countBox.style.backgroundImage = `url(${url})`;
 		});
-		if (!_preferences$58.show) this.ui.hide();
+		if (!_preferences$58.show) this._host.style.display = "none";
 		for (let i = 0; i < _party.length; i++) restoreDetachedMember(_party[i]);
 	};
 	/**
 	* Clean up UI
 	*/
 	PartyFriendsV1.clean = function clean() {
+		const root = _root$5();
 		_party.length = 0;
 		_friends.length = 0;
 		_skipSaveOnRemove = true;
@@ -248737,49 +249386,56 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		_options.exp_share = 0;
 		_options.item_share = 0;
 		_options.item_sharing_type = 0;
-		this.ui.find(".partyname").text("");
-		this.ui.find(".friendcount").text("0");
-		this.ui.find(".content .party, .content .friend").empty();
-		this.ui.find(".count-box .inner-count").text("0/12");
+		const partyName = root.querySelector(".partyname");
+		if (partyName) partyName.textContent = "";
+		const friendCount = root.querySelector(".friendcount");
+		if (friendCount) friendCount.textContent = "0";
+		const partyContent = root.querySelector(".content .party");
+		if (partyContent) partyContent.innerHTML = "";
+		const friendContent = root.querySelector(".content .friend");
+		if (friendContent) friendContent.innerHTML = "";
+		const innerCount = root.querySelector(".count-box .inner-count");
+		if (innerCount) innerCount.textContent = "0/12";
 		_preferences$58.friend = !_preferences$58.friend;
 		onChangeTab$1();
 	};
 	/**
 	* Removing the UI from window, save preferences
-	*
 	*/
 	PartyFriendsV1.onRemove = function onRemove() {
-		_preferences$58.show = this.ui.is(":visible");
-		_preferences$58.y = parseInt(this.ui.css("top"), 10);
-		_preferences$58.x = parseInt(this.ui.css("left"), 10);
+		_preferences$58.show = this._host.style.display !== "none";
+		_preferences$58.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$58.x = parseInt(this._host.style.left, 10) || 0;
 		_preferences$58.save();
 		if (!_skipSaveOnRemove && Object.keys(_detachedMembers).length > 0) this.saveDetachedMembers();
 		_skipSaveOnRemove = false;
 		_savedPositions = null;
-		jquery_default("#ro-tooltip-party").removeClass("show");
+		const tooltip = document.getElementById("ro-tooltip-party");
+		if (tooltip) tooltip.style.display = "none";
 	};
 	/**
 	* Window Shortcuts
 	*/
-	PartyFriendsV1.onShortCut = function onShurtCut(key) {
+	PartyFriendsV1.onShortCut = function onShortCut(key) {
+		const isVisible = this._host.style.display !== "none";
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$58.friend) this.ui.toggle();
+				if (_preferences$58.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
 					_preferences$58.friend = false;
 					onChangeTab$1();
-					this.ui.show();
+					this._host.style.display = "block";
 				}
-				if (this.ui.is(":visible")) this.focus();
+				if (this._host.style.display !== "none") this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$58.friend) this.ui.toggle();
+				if (!_preferences$58.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
 					_preferences$58.friend = true;
 					onChangeTab$1();
-					this.ui.show();
+					this._host.style.display = "block";
 				}
-				if (this.ui.is(":visible")) this.focus();
+				if (this._host.style.display !== "none") this.focus();
 				break;
 		}
 	};
@@ -248787,12 +249443,13 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Show/Hide UI
 	*/
 	PartyFriendsV1.toggle = function toggle() {
-		this.ui.toggle();
+		const isVisible = this._host.style.display !== "none";
+		this._host.style.display = isVisible ? "none" : "block";
 		PartyHelper_default.remove();
-		if (this.ui.is(":visible")) this.focus();
+		if (this._host.style.display !== "none") this.focus();
 	};
 	PartyFriendsV1.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.toggle();
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this.toggle();
 	};
 	/**
 	* Set friends to UI
@@ -248800,80 +249457,86 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* @param {Array} friends list
 	*/
 	PartyFriendsV1.setFriends = function setFriends(friends) {
+		const root = _root$5();
 		const count = friends.length;
-		const ui = this.ui.find(".content .friend");
+		const friendContent = root.querySelector(".content .friend");
 		_friends.length = friends.length;
-		ui.empty();
+		if (friendContent) friendContent.innerHTML = "";
 		for (let i = 0; i < count; i++) {
 			_friends[i] = friends[i];
-			ui.append("<div class=\"node" + (friends[i].State === 0 ? " online" : "") + "\"><span class=\"name\">" + jquery_default.escape(friends[i].Name) + "</span></div>");
+			if (friendContent) friendContent.insertAdjacentHTML("beforeend", `<div class="node${friends[i].State === 0 ? " online" : ""}"><span class="name">${_escapeHTML$7(friends[i].Name)}</span></div>`);
 		}
-		this.ui.find(".friendcount").text(count);
+		const friendCountEl = root.querySelector(".friendcount");
+		if (friendCountEl) friendCountEl.textContent = String(count);
 		_index$7 = -1;
 	};
 	/**
 	* Update friend (online/offline) state
-	*
-	* @param {number} index
-	* @param {boolean} state
 	*/
 	PartyFriendsV1.updateFriendState = function updateFriendState(index, state) {
-		const node = this.ui.find(".content .friend .node:eq(" + index + ")");
+		const node = _root$5().querySelectorAll(".content .friend .node")[index];
 		_friends[index].State = state;
 		if (state) {
-			node.css("backgroundImage", "");
+			if (node) node.style.backgroundImage = "";
 			ChatBox_default.addText(DB.getMessage(1042).replace("%s", _friends[index].Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 			return;
 		}
 		ChatBox_default.addText(DB.getMessage(1041).replace("%s", _friends[index].Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", function(url) {
-			node.css("backgroundImage", "url(" + url + ")");
+			if (node) node.style.backgroundImage = `url(${url})`;
 		});
 	};
 	/**
 	* Update/Add a friend to the list
-	*
-	* @param {number} index
-	* @param {object} friend data
 	*/
 	PartyFriendsV1.updateFriend = function updateFriend(idx, friend) {
+		const root = _root$5();
+		const friendContent = root.querySelector(".content .friend");
 		if (!_friends[idx]) {
 			_friends[idx] = {};
-			this.ui.find(".content .friend").append("<div class=\"node\"><span class=\"name\"></span></div>");
-			this.ui.find(".friendcount").text(_friends.length);
+			if (friendContent) friendContent.insertAdjacentHTML("beforeend", "<div class=\"node\"><span class=\"name\"></span></div>");
+			const friendCountEl = root.querySelector(".friendcount");
+			if (friendCountEl) friendCountEl.textContent = String(_friends.length);
 		}
 		_friends[idx].Name = friend.Name;
 		_friends[idx].GID = friend.GID;
 		_friends[idx].AID = friend.AID;
 		_friends[idx].State = friend.State || 0;
-		const node = this.ui.find(".content .friend .node:eq(" + idx + ")");
-		node.find(".name").text(friend.Name);
+		const node = root.querySelectorAll(".content .friend .node")[idx];
+		if (node) {
+			const nameEl = node.querySelector(".name");
+			if (nameEl) nameEl.textContent = friend.Name;
+		}
 		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", function(url) {
-			node.css("backgroundImage", "url(" + url + ")");
+			if (node) node.style.backgroundImage = `url(${url})`;
 		});
 	};
 	/**
 	* Remove friend from list
-	*
-	* @param {number} index
 	*/
 	PartyFriendsV1.removeFriend = function removeFriend(index) {
+		const root = _root$5();
 		_friends.splice(index, 1);
-		this.ui.find(".content .friend .node:eq(" + index + ")").remove();
-		this.ui.find(".friendcount").text(_friends.length);
+		const nodes = root.querySelectorAll(".content .friend .node");
+		if (nodes[index]) nodes[index].remove();
+		const friendCountEl = root.querySelector(".friendcount");
+		if (friendCountEl) friendCountEl.textContent = String(_friends.length);
 		if (_index$7 === index) _index$7 = -1;
 	};
 	/**
 	* Add members to party
-	*
-	* @param {string} party name
-	* @param {Array} member list
 	*/
 	PartyFriendsV1.setParty = function setParty(name, members) {
-		this.ui.find(".partyname").text("(" + name + ")");
+		const root = _root$5();
+		const partyName = root.querySelector(".partyname");
+		if (partyName) partyName.textContent = `(${name})`;
 		SessionStorage_default.isPartyLeader = false;
-		this.ui.find(".party.create").hide();
-		this.ui.find(".party.leave, .party.sort").show();
+		const createBtn = root.querySelector(".party.create");
+		if (createBtn) createBtn.style.display = "none";
+		const leaveBtn = root.querySelector(".party.leave");
+		if (leaveBtn) leaveBtn.style.display = "";
+		const sortBtn = root.querySelector(".party.sort");
+		if (sortBtn) sortBtn.style.display = "";
 		const count = members.length;
 		const newAIDs = {};
 		for (let i = 0; i < count; i++) {
@@ -248884,11 +249547,13 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (_party.length > 0 && count > 0) {
 			for (let i = 0; i < _party.length; i++) if (!newAIDs[_party[i].AID]) {
 				const removed = _party.splice(i, 1)[0];
-				this.ui.find(".content .party .node[data-aid=\"" + removed.AID + "\"]").remove();
+				const nodeEl = root.querySelector(`.content .party .node[data-aid="${removed.AID}"]`);
+				if (nodeEl) nodeEl.remove();
 				i--;
 			}
 		}
-		this.ui.find(".count-box .inner-count").text(_party.length + "/12");
+		const innerCount = root.querySelector(".count-box .inner-count");
+		if (innerCount) innerCount.textContent = `${_party.length}/12`;
 		let removedCount = 0;
 		for (const aid in _detachedMembers) {
 			let foundInPacket = false;
@@ -248904,45 +249569,45 @@ var init_PartyFriendsV1 = __esmMin((() => {
 				}
 			}
 		}
-		if (removedCount > 0) console.log("[PartyFriendsV1] Cleaned up " + removedCount + " orphaned detached windows");
+		if (removedCount > 0) console.log(`[PartyFriendsV1] Cleaned up ${removedCount} orphaned detached windows`);
 	};
 	/**
 	* Add a new party member to the list
-	*
-	* @param {object} player information
 	*/
 	PartyFriendsV1.addPartyMember = function addPartyMember(player) {
+		const root = _root$5();
 		const role = player.role || 0;
 		const count = _party.length;
 		let i;
 		if (player.AID === SessionStorage_default.AID) {
 			SessionStorage_default.isPartyLeader = role === 0;
-			if (SessionStorage_default.isPartyLeader) this.ui.find(".party.add").show();
-			else this.ui.find(".party.add").hide();
+			const addBtn = root.querySelector(".party.add");
+			if (addBtn) addBtn.style.display = SessionStorage_default.isPartyLeader ? "" : "none";
 		}
 		for (i = 0; i < count; ++i) if (_party[i].AID === player.AID || _party[i].characterName === player.characterName) break;
 		let hasChanged = false;
 		if (i < count) {
 			const old = _party[i];
 			if (old.baseLevel !== (player.baseLevel !== void 0 ? player.baseLevel : old.baseLevel) || old.class_ !== (player.class_ !== void 0 ? player.class_ : old.class_) || old.mapName !== (player.mapName !== void 0 ? player.mapName : old.mapName) || old.role !== player.role || old.state !== (player.state !== void 0 ? player.state : old.state)) hasChanged = true;
-			_party[i] = jquery_default.extend(_party[i], player);
+			Object.assign(_party[i], player);
 			player = _party[i];
 		} else {
-			player = jquery_default.extend({}, player);
+			player = Object.assign({}, player);
 			_party.push(player);
 			hasChanged = true;
 		}
 		if (!hasChanged) return;
-		this.ui.find(".count-box .inner-count").text(_party.length + "/12");
+		const innerCount = root.querySelector(".count-box .inner-count");
+		if (innerCount) innerCount.textContent = `${_party.length}/12`;
 		if (_detachedMembers[player.AID]) _detachedMembers[player.AID].setMember(player.AID, player);
 		else restoreDetachedMember(player);
 		this.renderPartyMember(player);
 	};
 	/**
 	* Render a party member into the UI
-	* @param {object} player
 	*/
 	PartyFriendsV1.renderPartyMember = function renderPartyMember(player) {
+		const root = _root$5();
 		const role = player.role || player.Role || 0;
 		const job = player.class_ || player.job || player.Job || 0;
 		const level = player.baseLevel || player.level || player.Level || 0;
@@ -248952,38 +249617,43 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const jobName = MonsterTable_default[job] || "Unknown";
 		const mapDisplay = DB.getMapName(player.mapName);
 		player.color = Controller$5 && Controller$5.getMemberColor ? Controller$5.getMemberColor(player.AID) : "white";
-		const nameTooltip = player.characterName + " (" + mapDisplay + ")";
+		const nameTooltip = `${player.characterName} (${mapDisplay})`;
 		const hasLife = !!(player.life && player.life.display);
 		const barVisibility = hasLife ? "visible" : "hidden";
 		const memberColor = isOnline ? player.color || "#333" : "#848ca5";
-		const html = "<div class=\"node" + (role === 0 ? " leader" : "") + (isOnline ? " online" : "") + (isDetached ? " detached" : "") + "\" style=\"background-color: " + (isDetached ? "#deefff" : "white") + ";\" data-aid=\"" + player.AID + "\" data-tooltip=\"" + (isOnline ? jquery_default.escape(nameTooltip) : "") + "\"><div class=\"job-icon-container\" data-tooltip=\"" + jquery_default.escape(jobName) + "\"><div class=\"job-icon\"></div><div class=\"crown\"></div></div><div class=\"info-container\"><div class=\"row1\"><span class=\"level\">Lv. " + level + "</span><span class=\"name\" style=\"color: " + memberColor + ";\">" + jquery_default.escape(player.characterName) + "</span><span class=\"map\" style=\"color: " + memberColor + ";\">(" + jquery_default.escape(mapDisplay) + ")</span></div><div class=\"row2\"><div class=\"hp-bar-container\" style=\"visibility:" + barVisibility + "\"><canvas class=\"life\" width=\"75\" height=\"5\"></canvas></div><span class=\"hp\" style=\"visibility:" + barVisibility + "\"></span><div class=\"status-icon\"></div></div></div></div>";
-		let node = this.ui.find(".content .party .node[data-aid=\"" + player.AID + "\"]");
-		if (node.length) {
-			node.replaceWith(html);
-			node = this.ui.find(".content .party .node[data-aid=\"" + player.AID + "\"]");
+		const html = `<div class="node${role === 0 ? " leader" : ""}${isOnline ? " online" : ""}${isDetached ? " detached" : ""}" style="background-color: ${isDetached ? "#deefff" : "white"};" data-aid="${player.AID}" data-tooltip="${isOnline ? _escapeHTML$7(nameTooltip) : ""}"><div class="job-icon-container" data-tooltip="${_escapeHTML$7(jobName)}"><div class="job-icon"></div><div class="crown"></div></div><div class="info-container"><div class="row1"><span class="level">Lv. ${level}</span><span class="name" style="color: ${memberColor};">${_escapeHTML$7(player.characterName)}</span><span class="map" style="color: ${memberColor};">(${_escapeHTML$7(mapDisplay)})</span></div><div class="row2"><div class="hp-bar-container" style="visibility:${barVisibility}"><canvas class="life" width="75" height="5"></canvas></div><span class="hp" style="visibility:${barVisibility}"></span><div class="status-icon"></div></div></div></div>`;
+		let node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
+		if (node) {
+			node.outerHTML = html;
+			node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
 		} else {
-			this.ui.find(".content .party").append(html);
-			node = this.ui.find(".content .party .node:last");
+			const partyContent = root.querySelector(".content .party");
+			if (partyContent) {
+				partyContent.insertAdjacentHTML("beforeend", html);
+				node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
+			}
 		}
-		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/icon_jobs_" + job + (isDead ? "_die" : "") + ".bmp", function(url) {
-			node.find(".job-icon").css("backgroundImage", "url(" + url + ")");
+		if (!node) return;
+		Client.loadFile(`${DB.INTERFACE_PATH}renewalparty/icon_jobs_${job}${isDead ? "_die" : ""}.bmp`, function(url) {
+			const jobIcon = node.querySelector(".job-icon");
+			if (jobIcon) jobIcon.style.backgroundImage = `url(${url})`;
 		});
 		if (role === 0) Client.loadFile(DB.INTERFACE_PATH + "renewalparty/ico_partycrown.bmp", function(url) {
-			node.find(".crown").css("backgroundImage", "url(" + url + ")");
+			const crown = node.querySelector(".crown");
+			if (crown) crown.style.backgroundImage = `url(${url})`;
 		});
-		const statusFile = "icon_party_" + (player.AID == SessionStorage_default.AID ? "me.bmp" : isOnline ? "on.bmp" : "off.bmp");
+		const statusFile = `icon_party_${player.AID == SessionStorage_default.AID ? "me.bmp" : isOnline ? "on.bmp" : "off.bmp"}`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/" + statusFile, function(url) {
-			node.find(".status-icon").css("backgroundImage", "url(" + url + ")");
+			const statusIcon = node.querySelector(".status-icon");
+			if (statusIcon) statusIcon.style.backgroundImage = `url(${url})`;
 		});
 		updateCanvasLife(node, hasLife ? player.life.hp : void 0, hasLife ? player.life.hp_max : void 0);
 	};
 	/**
 	* Remove a character from list
-	*
-	* @param {number} account id
-	* @param {string} character name
 	*/
 	PartyFriendsV1.removePartyMember = function removePartyMember(AID, characterName) {
+		const root = _root$5();
 		if (AID === SessionStorage_default.AID) {
 			for (const aid in _detachedMembers) if (_detachedMembers[aid]) {
 				_detachedMembers[aid].onRemove = function() {
@@ -248993,44 +249663,48 @@ var init_PartyFriendsV1 = __esmMin((() => {
 			}
 			_detachedMembers = {};
 			_party.length = 0;
-			this.ui.find(".content .party").empty();
-			this.ui.find(".partyname").text("");
-			this.ui.find(".party.create").show();
-			this.ui.find(".party.leave, .party.add").hide();
+			const partyContent = root.querySelector(".content .party");
+			if (partyContent) partyContent.innerHTML = "";
+			const partyNameEl = root.querySelector(".partyname");
+			if (partyNameEl) partyNameEl.textContent = "";
+			const createBtn = root.querySelector(".party.create");
+			if (createBtn) createBtn.style.display = "";
+			const leaveBtn = root.querySelector(".party.leave");
+			if (leaveBtn) leaveBtn.style.display = "none";
+			const addBtn = root.querySelector(".party.add");
+			if (addBtn) addBtn.style.display = "none";
 			ChatBox_default.addText(DB.getMessage(84), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PARTY_SETUP);
 			return;
 		}
 		const count = _party.length;
 		for (let i = 0; i < count; ++i) if (_party[i].AID === AID && _party[i].characterName === characterName) {
 			_party.splice(i, 1);
-			this.ui.find(".content .party .node:eq(" + i + ")").remove();
-			this.ui.find(".count-box .inner-count").text(_party.length + "/12");
+			const nodes = root.querySelectorAll(".content .party .node");
+			if (nodes[i]) nodes[i].remove();
+			const innerCount = root.querySelector(".count-box .inner-count");
+			if (innerCount) innerCount.textContent = `${_party.length}/12`;
 			if (_detachedMembers[AID]) _detachedMembers[AID].remove();
 			break;
 		}
 	};
 	/**
-	* Extend inventory window size
-	*
-	* @param {number} width
-	* @param {number} height
+	* Extend window size
 	*/
 	PartyFriendsV1.resize = function resize(width, height) {
+		const root = _root$5();
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
 		_preferences$58.width = width;
 		_preferences$58.height = height;
 		_preferences$58.save();
-		this.ui.find(".content").css({
-			width: width * 20,
-			height: height * 20
-		});
+		const content = root.querySelector(".content");
+		if (content) {
+			content.style.width = `${width * 20}px`;
+			content.style.height = `${height * 20}px`;
+		}
 	};
 	/**
-	* Update player dead/alive state (separate from online/offline)
-	*
-	* @param {number} AID - account id
-	* @param {boolean} isDead - true if the member has died
+	* Update player dead/alive state
 	*/
 	PartyFriendsV1.updateMemberDead = function updateMemberDead(AID, isDead) {
 		const count = _party.length;
@@ -249045,13 +249719,9 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	/**
 	* Update player life in interface
-	*
-	* @param {number} account id
-	* @param {canvas} canvas life element
-	* @param {number} hp
-	* @param {number} maxhp
 	*/
 	PartyFriendsV1.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
+		const root = _root$5();
 		const count = _party.length;
 		for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
 			if (!_party[i].life) _party[i].life = {};
@@ -249068,15 +249738,11 @@ var init_PartyFriendsV1 = __esmMin((() => {
 			break;
 		}
 		if (_detachedMembers[AID]) _detachedMembers[AID].updateMemberLife(hp, maxhp);
-		const node = this.ui.find(".content .party .node[data-aid=\"" + AID + "\"]");
-		if (node.length) updateCanvasLife(node, hp, maxhp);
+		const node = root.querySelector(`.content .party .node[data-aid="${AID}"]`);
+		if (node) updateCanvasLife(node, hp, maxhp);
 	};
 	/**
 	* Update party options
-	*
-	* @param {boolean} exp share option
-	* @param {boolean} item share option
-	* @param {boolean} item sharing option
 	*/
 	PartyFriendsV1.setOptions = function setOptions(exp_share, item_share, item_sharing_type) {
 		if (exp_share !== void 0) _options.exp_share = exp_share;
@@ -249085,8 +249751,6 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	/**
 	* Check if character is a group member
-	*
-	* @param {string} character name
 	*/
 	PartyFriendsV1.isGroupMember = function isGroupMember(characterName) {
 		const count = _party.length;
@@ -249120,22 +249784,21 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	*/
 	PartyFriendsV1.saveDetachedMembers = function() {
 		if (!SessionStorage_default.Character || !SessionStorage_default.Character.name) return;
-		const key = "PartyFriends_" + SessionStorage_default.Character.name + "_Detached";
+		const key = `PartyFriends_${SessionStorage_default.Character.name}_Detached`;
 		const saved = {};
 		let count = 0;
 		for (const aid in _detachedMembers) {
 			const ext = _detachedMembers[aid];
-			if (ext && ext.ui) {
-				const pos = ext.ui.position();
+			if (ext && ext._host) {
 				saved[aid] = {
-					x: pos.left,
-					y: pos.top
+					x: ext._host.offsetLeft,
+					y: ext._host.offsetTop
 				};
 				count++;
 			}
 		}
 		localStorage.setItem(key, JSON.stringify(saved));
-		if (count > 0) console.log("[PartyFriendsV1] Saved " + count + " detached windows for " + SessionStorage_default.Character.name);
+		if (count > 0) console.log(`[PartyFriendsV1] Saved ${count} detached windows for ${SessionStorage_default.Character.name}`);
 	};
 	PartyFriendsV1_default = UIManager.addComponent(PartyFriendsV1);
 }));
@@ -249705,7 +250368,7 @@ var init_WinStats = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$3(comp) {
+function _root$4(comp) {
 	return comp._shadow || comp._host;
 }
 /**
@@ -249744,7 +250407,7 @@ function onRequestSkillInfo() {
 function onSkillFocus() {
 	let main = this.parentElement;
 	if (!main.classList.contains("skill")) main = main.parentElement;
-	const root = _root$3(Guild);
+	const root = _root$4(Guild);
 	for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
 	main.classList.add("selected");
 }
@@ -249771,7 +250434,7 @@ function skillLevelSelectUp$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
-		const element = _root$3(Guild).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$4(Guild).querySelector(`.skill.id${skill.SKID}`);
 		if (element) {
 			const current = element.querySelector(".level .current");
 			if (current) current.textContent = skill.selectedLevel;
@@ -249782,7 +250445,7 @@ function skillLevelSelectDown$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
-		const element = _root$3(Guild).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$4(Guild).querySelector(`.skill.id${skill.SKID}`);
 		if (element) {
 			const current = element.querySelector(".level .current");
 			if (current) current.textContent = skill.selectedLevel;
@@ -249791,7 +250454,7 @@ function skillLevelSelectDown$2(skill) {
 }
 function onChangeTab(event) {
 	const tab = parseInt(this.getAttribute("data-flag"), 10);
-	const root = _root$3(Guild);
+	const root = _root$4(Guild);
 	if (this.classList.contains("active") || tab && !(_guildAccess & AccessTypeBit[tab])) return false;
 	Guild.onGuildInfoRequest(tab);
 	for (const btn of root.querySelectorAll(".tabs button")) btn.classList.remove("active");
@@ -249807,7 +250470,7 @@ function onChangeTab(event) {
 	return false;
 }
 function renderTendency(honor, virtue) {
-	const canvas = _root$3(Guild).querySelector(".content.info .tendency canvas");
+	const canvas = _root$4(Guild).querySelector(".content.info .tendency canvas");
 	if (!canvas) return;
 	const ctx = canvas.getContext("2d");
 	ctx.fillStyle = "#cecfce";
@@ -249821,7 +250484,7 @@ function renderTendency(honor, virtue) {
 	ctx.fillRect(canvas.width / 2 - 1, canvas.height / 2 - 1, 2, 2);
 }
 function onValidate() {
-	const root = _root$3(Guild);
+	const root = _root$4(Guild);
 	const visibleContent = Array.from(root.querySelectorAll(".content")).find((el) => {
 		return el.style.display !== "none" && getComputedStyle(el).display !== "none";
 	});
@@ -249922,7 +250585,7 @@ var init_Guild$1 = __esmMin((() => {
 	* Initialize component
 	*/
 	Guild.init = function init() {
-		const root = _root$3(this);
+		const root = _root$4(this);
 		_memberViewTemplate = root.querySelector(".MemberView");
 		if (_memberViewTemplate) _memberViewTemplate.remove();
 		_positionViewTemplate = root.querySelector(".PositionView");
@@ -250011,7 +250674,7 @@ var init_Guild$1 = __esmMin((() => {
 				if (isSelf && !SessionStorage_default.isGuildMaster) ContextMenu_default.addElement(DB.getMessage(508), () => {
 					InputBox_default.append();
 					InputBox_default.setType("text");
-					const textEl = (_root$3(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					const textEl = (_root$4(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
 					if (textEl) textEl.textContent = DB.getMessage(523);
 					else InputBox_default.ui.find(".text").text(DB.getMessage(523));
 					InputBox_default.onSubmitRequest = (reason) => {
@@ -250022,7 +250685,7 @@ var init_Guild$1 = __esmMin((() => {
 				if (SessionStorage_default.guildRight & 16 && !isSelf) ContextMenu_default.addElement(DB.getMessage(509), () => {
 					InputBox_default.append();
 					InputBox_default.setType("text");
-					const textEl = (_root$3(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					const textEl = (_root$4(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
 					if (textEl) textEl.textContent = DB.getMessage(524);
 					else InputBox_default.ui.find(".text").text(DB.getMessage(524));
 					InputBox_default.onSubmitRequest = (reason) => {
@@ -250127,7 +250790,7 @@ var init_Guild$1 = __esmMin((() => {
 		this.focus();
 		if (this.ui.is(":visible")) return;
 		this.ui.show();
-		const root = _root$3(this);
+		const root = _root$4(this);
 		if (!root.querySelector(".tabs .active")) {
 			const infoBtn = root.querySelector(".tabs .info");
 			if (infoBtn) infoBtn.click();
@@ -250141,7 +250804,7 @@ var init_Guild$1 = __esmMin((() => {
 		Renderer.stop(renderMemberFaces);
 	};
 	Guild.setGuildInformations = function setGuildInformations(info) {
-		const general = _root$3(this).querySelector(".content.info");
+		const general = _root$4(this).querySelector(".content.info");
 		if (!general) return;
 		general.querySelector(".name .value").textContent = info.guildname;
 		general.querySelector(".level .value").textContent = info.level;
@@ -250160,11 +250823,11 @@ var init_Guild$1 = __esmMin((() => {
 		renderTendency(info.honor, info.virtue);
 	};
 	Guild.setEmblem = function setEmblem(image) {
-		const el = _root$3(this).querySelector(".content.info .emblem_container");
+		const el = _root$4(this).querySelector(".content.info .emblem_container");
 		if (el) el.style.backgroundImage = `url(${image.src})`;
 	};
 	Guild.setRelations = function setRelations(guilds) {
-		const root = _root$3(this);
+		const root = _root$4(this);
 		const allyList = root.querySelector(".ally_list");
 		const hostileList = root.querySelector(".hostile_list");
 		if (allyList) allyList.innerHTML = "";
@@ -250172,7 +250835,7 @@ var init_Guild$1 = __esmMin((() => {
 		for (let i = 0, count = guilds.length; i < count; ++i) this.addRelation(guilds[i]);
 	};
 	Guild.addRelation = function addRelation(guild) {
-		const list = _root$3(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
+		const list = _root$4(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const div = document.createElement("div");
 		div.setAttribute("data-guild-id", guild.GDID);
@@ -250180,7 +250843,7 @@ var init_Guild$1 = __esmMin((() => {
 		list.appendChild(div);
 	};
 	Guild.removeRelation = function removeRelation(guildId, relation) {
-		const list = _root$3(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
+		const list = _root$4(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const el = list.querySelector(`div[data-guild-id="${guildId}"]`);
 		if (el) el.remove();
@@ -250190,7 +250853,7 @@ var init_Guild$1 = __esmMin((() => {
 		const count = members.length;
 		_members.length = 0;
 		_totalExp = 0;
-		const root = _root$3(this);
+		const root = _root$4(this);
 		const tbody = root.querySelector(".content.members tbody");
 		if (tbody) tbody.innerHTML = "";
 		for (let i = 0; i < count; ++i) {
@@ -250206,7 +250869,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.setMember = function setMember(member) {
 		let i, count;
-		const root = _root$3(this);
+		const root = _root$4(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		let view;
 		if (i < count) view = root.querySelector(`.MemberView[data-index="${i}"]`);
@@ -250274,7 +250937,7 @@ var init_Guild$1 = __esmMin((() => {
 	Guild.updateMemberStatus = function updateMemberStatus(member) {
 		let i, count;
 		let online = 0;
-		const root = _root$3(this);
+		const root = _root$4(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		if (i >= count) return;
 		const view = root.querySelector(`.MemberView[data-index="${i}"]`);
@@ -250322,7 +250985,7 @@ var init_Guild$1 = __esmMin((() => {
 		Guild.updatePositionView();
 	};
 	Guild.updatePositionView = function updatePositionView() {
-		const container = _root$3(this).querySelector(".content.positions tbody");
+		const container = _root$4(this).querySelector(".content.positions tbody");
 		if (!container) return;
 		container.innerHTML = "";
 		const count = _positions.length;
@@ -250352,7 +251015,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.setSkills = function setSkills(skills) {
-		const root = _root$3(this);
+		const root = _root$4(this);
 		for (let i = 0, count = _skills.length; i < count; ++i) this.onUpdateSkill(_skills[i].SKID, 0);
 		_skills.length = 0;
 		const table = root.querySelector(".content.skills .skill_list table");
@@ -250361,7 +251024,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		const root = _root$3(this);
+		const root = _root$4(this);
 		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
@@ -250412,7 +251075,7 @@ var init_Guild$1 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = _root$3(this).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$4(this).querySelector(`.skill.id${skill.SKID}`);
 		if (!element) return;
 		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 		if (skill.selectedLevel) {
@@ -250441,7 +251104,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.setPoints = function setPoints(amount) {
-		const root = _root$3(this);
+		const root = _root$4(this);
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_skpoints === !amount) {
@@ -250459,14 +251122,14 @@ var init_Guild$1 = __esmMin((() => {
 		if (_btnLevelUp$7) document.body.appendChild(_btnLevelUp$7);
 	};
 	Guild.setNotice = function setNotice(subject, notice) {
-		const root = _root$3(this);
+		const root = _root$4(this);
 		const subjectInput = root.querySelector(".content.notice .subject");
 		if (subjectInput) subjectInput.value = subject;
 		const noticeTextarea = root.querySelector(".content.notice textarea.notice");
 		if (noticeTextarea) noticeTextarea.value = notice;
 	};
 	Guild.setExpelList = function setExpelList(list) {
-		const container = _root$3(this).querySelector(".content.history tbody");
+		const container = _root$4(this).querySelector(".content.history tbody");
 		if (!container) return;
 		container.innerHTML = "";
 		for (let i = 0, count = list.length; i < count; ++i) {
@@ -250486,7 +251149,7 @@ var init_Guild$1 = __esmMin((() => {
 		return function renderMemberFace(tick) {
 			if (tick < lastTick + 1e3) return;
 			lastTick = tick;
-			const canvases = _root$3(Guild).querySelectorAll(".content.members canvas");
+			const canvases = _root$4(Guild).querySelectorAll(".content.members canvas");
 			Camera.direction = 4;
 			for (let i = 0, count = _members.length; i < count; ++i) {
 				if (!canvases[i]) continue;
@@ -251652,7 +252315,7 @@ var init_SkillList$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList/SkillList.js
-function _root$2(comp) {
+function _root$3(comp) {
 	return comp._shadow || comp._host;
 }
 function _escapeHTML$5(text) {
@@ -251807,7 +252470,7 @@ function onResize$11(e, comp) {
 	window.addEventListener("mouseup", onMouseUp);
 }
 function resize$5(comp, width, height) {
-	const root = _root$2(comp);
+	const root = _root$3(comp);
 	if (_preferences$53.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
@@ -251877,12 +252540,12 @@ function onApplyChoice$1(comp) {
 		for (let i = 0; i < c; i++) SkillList.onIncreaseSkill(parseInt(k, 10));
 	});
 	totalCounter$1 = 0;
-	const skpointsEl = _root$2(comp).querySelector(".skpoints_count");
+	const skpointsEl = _root$3(comp).querySelector(".skpoints_count");
 	if (skpointsEl) skpointsEl.textContent = `${_points$1 - totalCounter$1}`;
 	rememberChoice$1 = [];
 }
 function onResetChoice$1(comp) {
-	const root = _root$2(comp);
+	const root = _root$3(comp);
 	rememberChoice$1.forEach((_count, skillId) => {
 		if (!skillDependencyTree$1[skillId]) return;
 		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree$1[skillId].position}`);
@@ -252044,7 +252707,7 @@ var init_SkillList$1 = __esmMin((() => {
 	hasSkills$1 = [];
 	_justDragged$1 = false;
 	SkillList.init = function init() {
-		const root = _root$2(this);
+		const root = _root$3(this);
 		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
 		});
@@ -252200,7 +252863,7 @@ var init_SkillList$1 = __esmMin((() => {
 		resize$5(this, _preferences$53.width, _preferences$53.height);
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - 100)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - 100)}px`;
-		const cb = _root$2(this).querySelector(".view_skill_info");
+		const cb = _root$3(this).querySelector(".view_skill_info");
 		if (cb) cb.checked = _preferences$53.skillInfo;
 	};
 	SkillList.onRemove = function onRemove() {
@@ -252208,7 +252871,7 @@ var init_SkillList$1 = __esmMin((() => {
 		_preferences$53.show = this.ui.is(":visible");
 		_preferences$53.y = parseInt(this._host.style.top, 10) || 0;
 		_preferences$53.x = parseInt(this._host.style.left, 10) || 0;
-		const content = _root$2(this).querySelector(".content");
+		const content = _root$3(this).querySelector(".content");
 		if (content) {
 			_preferences$53.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
 			_preferences$53.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
@@ -252233,7 +252896,7 @@ var init_SkillList$1 = __esmMin((() => {
 		onResetChoice$1(this);
 	};
 	SkillList.setSkills = function setSkills(skills) {
-		const root = _root$2(this);
+		const root = _root$3(this);
 		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
@@ -252268,7 +252931,7 @@ var init_SkillList$1 = __esmMin((() => {
 	};
 	SkillList.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (_root$2(this).querySelector(`.skill.id${skill.SKID}`)) {
+		if (_root$3(this).querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
@@ -252276,7 +252939,7 @@ var init_SkillList$1 = __esmMin((() => {
 		this.addSkillMini(skill);
 	};
 	SkillList.prepareSkillTree = function prepareSkillTree(items, list) {
-		const root = _root$2(this);
+		const root = _root$3(this);
 		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
 			const className = "disabled";
@@ -252323,7 +252986,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.addSkillBig = function addSkillBig(skill) {
-		const root = _root$2(this);
+		const root = _root$3(this);
 		const sk = SkillInfo[skill.SKID];
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
 		const element = document.createElement("div");
@@ -252399,7 +253062,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.addSkillMini = function addSkillMini(skill) {
-		const root = _root$2(this);
+		const root = _root$3(this);
 		const sk = SkillInfo[skill.SKID];
 		const levelup = _btnIncSkill$1.cloneNode(true);
 		levelup.addEventListener("click", function() {
@@ -252445,7 +253108,7 @@ var init_SkillList$1 = __esmMin((() => {
 	SkillList.removeSkill = function removeSkill() {};
 	SkillList.updateSkill = function updateSkill(skill) {
 		let target = getSkillById$1(skill.SKID);
-		const root = _root$2(this);
+		const root = _root$3(this);
 		if (!target) if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			_list$13.push(skill);
 			this.onUpdateSkill(skill.SKID, 0);
@@ -252486,7 +253149,7 @@ var init_SkillList$1 = __esmMin((() => {
 		}
 	};
 	SkillList.setPoints = function setPoints(amount) {
-		const root = _root$2(this);
+		const root = _root$3(this);
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_points$1 === !amount) {
@@ -252529,7 +253192,7 @@ var init_SkillListV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillListV0/SkillListV0.js
-function _root$1(comp) {
+function _root$2(comp) {
 	return comp._shadow || comp._host;
 }
 function _escapeHTML$4(text) {
@@ -252676,7 +253339,7 @@ function onResize$10(e, comp) {
 	window.addEventListener("mouseup", onMouseUp);
 }
 function resize$4(comp, width, height) {
-	const root = _root$1(comp);
+	const root = _root$2(comp);
 	if (_preferences$52.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
@@ -252728,12 +253391,12 @@ function onApplyChoice(comp) {
 		for (let i = 0; i < c; i++) SkillListV0.onIncreaseSkill(parseInt(k, 10));
 	});
 	totalCounter = 0;
-	const skpointsEl = _root$1(comp).querySelector(".skpoints_count");
+	const skpointsEl = _root$2(comp).querySelector(".skpoints_count");
 	if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}`;
 	rememberChoice = [];
 }
 function onResetChoice(comp) {
-	const root = _root$1(comp);
+	const root = _root$2(comp);
 	rememberChoice.forEach((_count, skillId) => {
 		if (!skillDependencyTree[skillId]) return;
 		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree[skillId].position}`);
@@ -252822,7 +253485,7 @@ var init_SkillListV0 = __esmMin((() => {
 	hasSkills = [];
 	_justDragged = false;
 	SkillListV0.init = function init() {
-		const root = _root$1(this);
+		const root = _root$2(this);
 		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
 		});
@@ -252968,7 +253631,7 @@ var init_SkillListV0 = __esmMin((() => {
 		resize$4(this, _preferences$52.width, _preferences$52.height);
 		this._host.style.top = `${Math.min(Math.max(0, _preferences$52.y), Renderer.height - 100)}px`;
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$52.x), Renderer.width - 100)}px`;
-		const cb = _root$1(this).querySelector(".view_skill_info");
+		const cb = _root$2(this).querySelector(".view_skill_info");
 		if (cb) cb.checked = _preferences$52.skillInfo;
 	};
 	SkillListV0.onRemove = function onRemove() {
@@ -252976,7 +253639,7 @@ var init_SkillListV0 = __esmMin((() => {
 		_preferences$52.show = this.ui.is(":visible");
 		_preferences$52.y = parseInt(this._host.style.top, 10) || 0;
 		_preferences$52.x = parseInt(this._host.style.left, 10) || 0;
-		const content = _root$1(this).querySelector(".content");
+		const content = _root$2(this).querySelector(".content");
 		if (content) {
 			_preferences$52.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
 			_preferences$52.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
@@ -253001,7 +253664,7 @@ var init_SkillListV0 = __esmMin((() => {
 		onResetChoice(this);
 	};
 	SkillListV0.setSkills = function setSkills(skills) {
-		const root = _root$1(this);
+		const root = _root$2(this);
 		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
@@ -253026,7 +253689,7 @@ var init_SkillListV0 = __esmMin((() => {
 	};
 	SkillListV0.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (_root$1(this).querySelector(`.skill.id${skill.SKID}`)) {
+		if (_root$2(this).querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
@@ -253034,7 +253697,7 @@ var init_SkillListV0 = __esmMin((() => {
 		this.addSkillMini(skill);
 	};
 	SkillListV0.prepareSkillTree = function prepareSkillTree(items, list) {
-		const root = _root$1(this);
+		const root = _root$2(this);
 		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
 			const className = "disabled";
@@ -253069,7 +253732,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.addSkillBig = function addSkillBig(skill) {
-		const root = _root$1(this);
+		const root = _root$2(this);
 		const sk = SkillInfo[skill.SKID];
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
 		const element = document.createElement("div");
@@ -253103,7 +253766,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.addSkillMini = function addSkillMini(skill) {
-		const root = _root$1(this);
+		const root = _root$2(this);
 		const sk = SkillInfo[skill.SKID];
 		const levelup = _btnIncSkill.cloneNode(true);
 		levelup.addEventListener("click", function() {
@@ -253147,7 +253810,7 @@ var init_SkillListV0 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		_root$1(this).querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+		_root$2(this).querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
 			for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 			if (skill.selectedLevel) {
 				const current = element.querySelector(".level .current");
@@ -253176,7 +253839,7 @@ var init_SkillListV0 = __esmMin((() => {
 		}
 	};
 	SkillListV0.setPoints = function setPoints(amount) {
-		const root = _root$1(this);
+		const root = _root$2(this);
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_points === !amount) {
@@ -270469,7 +271132,7 @@ var init_SkillListMH$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root(comp) {
+function _root$1(comp) {
 	return comp._shadow || comp._host;
 }
 /**
@@ -270503,7 +271166,7 @@ function createSkillListMH(type) {
 	comp._lArrow = null;
 	comp._rArrow = null;
 	comp.init = function init() {
-		const root = _root(this);
+		const root = _root$1(this);
 		root.querySelector(".titlebar .text").textContent = this._skillType === "homunculus" ? "Homunculus Skills" : "Mercenary Skills";
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
@@ -270643,7 +271306,7 @@ function createSkillListMH(type) {
 	comp.setSize = function setSize(width, height) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
-		const content = _root(this).querySelector(".content");
+		const content = _root$1(this).querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 32}px`;
 			content.style.height = `${height * 32}px`;
@@ -270654,7 +271317,7 @@ function createSkillListMH(type) {
 		_preferences.show = this.ui.is(":visible");
 		_preferences.y = parseInt(this._host.style.top, 10) || 0;
 		_preferences.x = parseInt(this._host.style.left, 10) || 0;
-		const content = _root(this).querySelector(".content");
+		const content = _root$1(this).querySelector(".content");
 		if (content) {
 			_preferences.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
 			_preferences.height = Math.floor(parseInt(content.style.height, 10) / 32) || 5;
@@ -270676,13 +271339,13 @@ function createSkillListMH(type) {
 	comp.setSkills = function setSkills(skills) {
 		for (let i = 0, count = this.list.length; i < count; ++i) this.onUpdateSkill(this.list[i].SKID, 0);
 		this.list.length = 0;
-		const table = _root(this).querySelector(".content table");
+		const table = _root$1(this).querySelector(".content table");
 		if (table) table.innerHTML = "";
 		for (let i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
 	};
 	comp.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		const root = _root(this);
+		const root = _root$1(this);
 		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
@@ -270734,7 +271397,7 @@ function createSkillListMH(type) {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = _root(this).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
 		if (!element) return;
 		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 		if (skill.selectedLevel) {
@@ -270763,7 +271426,7 @@ function createSkillListMH(type) {
 		}
 	};
 	comp.setPoints = function setPoints(amount) {
-		const root = _root(this);
+		const root = _root$1(this);
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!this.points === !amount) {
@@ -270789,7 +271452,7 @@ function createSkillListMH(type) {
 		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 		if (level < skill.level) {
 			skill.selectedLevel = level + 1;
-			const element = _root(this).querySelector(`.skill.id${skill.SKID}`);
+			const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
 			if (element) {
 				const current = element.querySelector(".level .current");
 				if (current) current.textContent = skill.selectedLevel;
@@ -270800,7 +271463,7 @@ function createSkillListMH(type) {
 		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 		if (level > 1) {
 			skill.selectedLevel = level - 1;
-			const element = _root(this).querySelector(`.skill.id${skill.SKID}`);
+			const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
 			if (element) {
 				const current = element.querySelector(".level .current");
 				if (current) current.textContent = skill.selectedLevel;
@@ -327829,48 +328492,83 @@ var init_Item = __esmMin((() => {
 //#region src/UI/Components/Mail/ReadMail.html?raw
 var ReadMail_default$2;
 var init_ReadMail$2 = __esmMin((() => {
-	ReadMail_default$2 = "<div id=\"ReadMail\">\r\n	<div class=\"body\" data-background=\"basic_interface/maillist3_bg.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<span class=\"text\" id=\"title\" data-text=\"1027\">Read Mail</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/close2.bmp\"\r\n					data-hover=\"basic_interface/close2_a.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"clear\">\r\n			<section class=\"container flex_grid\">\r\n				<div class=\"title\">\r\n					<div>\r\n						<span class=\"text_title\"> </span>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"name_sender\">\r\n					<div>\r\n						<span class=\"text_sender\"> </span>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"mail_body\">\r\n					<div>\r\n						<textarea class=\"textarea_mail\" maxlength=\"198\" disabled></textarea>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"zeny_item\">\r\n					<div class=\"zeny_item_container\">\r\n						<div class=\"zeny_item_infor_box\"></div>\r\n						<div class=\"zeny_item_infor event_add_cursor\">\r\n							<div class=\"block_zeny\">\r\n								<input\r\n									class=\"input_zeny_amt event_add_cursor\"\r\n									type=\"text\"\r\n									value=\"\"\r\n									maxlength=\"9\"\r\n									disabled\r\n								/>\r\n							</div>\r\n							<!-- item -->\r\n							<div class=\"block_item\">\r\n								<div class=\"container_item\">\r\n									<div class=\"overlay\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n				<div class=\"btn_return_reply_remove\">\r\n					<div class=\"container_return_reply_remove\">\r\n						<button\r\n							class=\"read_mail_btn\"\r\n							id=\"read_mail_return\"\r\n							data-background=\"basic_interface/return.bmp\"\r\n							data-hover=\"basic_interface/return_a.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"read_mail_btn\"\r\n							id=\"read_mail_remail\"\r\n							data-background=\"basic_interface/remail.bmp\"\r\n							data-hover=\"basic_interface/remail_a.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"read_mail_btn\"\r\n							id=\"read_mail_del\"\r\n							data-background=\"basic_interface/del.bmp\"\r\n							data-hover=\"basic_interface/del_a.bmp\"\r\n						></button>\r\n					</div>\r\n				</div>\r\n			</section>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	ReadMail_default$2 = "<div id=\"ReadMail\">\r\n	<div class=\"body\">\r\n		<ui-image src=\"basic_interface/maillist3_bg.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<span class=\"text\" id=\"title\"><ui-text msg=\"1027\">Read Mail</ui-text></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/close2.bmp\"\r\n					hover=\"basic_interface/close2_a.bmp\"\r\n				></ui-button>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"clear\">\r\n			<section class=\"container flex_grid\">\r\n				<div class=\"title\">\r\n					<div>\r\n						<span class=\"text_title\"> </span>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"name_sender\">\r\n					<div>\r\n						<span class=\"text_sender\"> </span>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"mail_body\">\r\n					<div>\r\n						<textarea class=\"textarea_mail\" maxlength=\"198\" disabled></textarea>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"zeny_item\">\r\n					<div class=\"zeny_item_container\">\r\n						<div class=\"zeny_item_infor_box\"></div>\r\n						<div class=\"zeny_item_infor event_add_cursor\">\r\n							<div class=\"block_zeny\">\r\n								<input\r\n									class=\"input_zeny_amt event_add_cursor\"\r\n									type=\"text\"\r\n									value=\"\"\r\n									maxlength=\"9\"\r\n									disabled\r\n								/>\r\n							</div>\r\n							<!-- item -->\r\n							<div class=\"block_item\">\r\n								<div class=\"container_item\">\r\n									<div class=\"overlay\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n				<div class=\"btn_return_reply_remove\">\r\n					<div class=\"container_return_reply_remove\">\r\n						<ui-button\r\n							class=\"read_mail_btn\"\r\n							id=\"read_mail_return\"\r\n							bg=\"basic_interface/return.bmp\"\r\n							hover=\"basic_interface/return_a.bmp\"\r\n						></ui-button>\r\n						<ui-button\r\n							class=\"read_mail_btn\"\r\n							id=\"read_mail_remail\"\r\n							bg=\"basic_interface/remail.bmp\"\r\n							hover=\"basic_interface/remail_a.bmp\"\r\n						></ui-button>\r\n						<ui-button\r\n							class=\"read_mail_btn\"\r\n							id=\"read_mail_del\"\r\n							bg=\"basic_interface/del.bmp\"\r\n							hover=\"basic_interface/del_a.bmp\"\r\n						></ui-button>\r\n					</div>\r\n				</div>\r\n			</section>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Mail/ReadMail.css?raw
 var ReadMail_default$1;
 var init_ReadMail$1 = __esmMin((() => {
-	ReadMail_default$1 = "#ReadMail {\r\n	width: 250px;\r\n	height: 330px;\r\n	position: absolute;\r\n}\r\n\r\n#ReadMail .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: relative;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 6px;\r\n}\r\n#ReadMail .body .base {\r\n	width: 9px;\r\n	height: 7px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ReadMail .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n\r\n#ReadMail .container {\r\n	width: 298px;\r\n	height: 385px;\r\n}\r\n\r\n#ReadMail .flex {\r\n	display: flex;\r\n}\r\n\r\n#ReadMail .flex_grid {\r\n	display: grid;\r\n}\r\n\r\n#ReadMail .text_title {\r\n	color: #a5978c;\r\n	font-weight: 600;\r\n}\r\n#ReadMail .text_sender {\r\n	color: #d8b091;\r\n}\r\n#ReadMail .title {\r\n	flex: 1;\r\n	display: flex;\r\n	align-items: end;\r\n	justify-content: center;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n	grid-row-end: span 2;\r\n}\r\n#ReadMail .name_sender {\r\n	flex: 1;\r\n	display: flex;\r\n	align-items: end;\r\n	justify-content: right;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n}\r\n#ReadMail .name_sender div {\r\n	margin-right: 5%;\r\n}\r\n\r\n#ReadMail .mail_body {\r\n	flex: 1;\r\n}\r\n\r\n#ReadMail .textarea_mail {\r\n	resize: none;\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 205px;\r\n	padding: initial;\r\n	width: 264px;\r\n	overflow: hidden;\r\n	margin-top: 5%;\r\n	margin-left: 7%;\r\n	color: #a37162;\r\n}\r\n\r\n#ReadMail .zeny_item {\r\n	flex: 1;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n	grid-row-end: span 4;\r\n	display: flex;\r\n}\r\n#ReadMail .btn_return_reply_remove {\r\n	flex: 1;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n	grid-row-end: span 2;\r\n	display: flex;\r\n	justify-content: end;\r\n}\r\n#ReadMail .container_return_reply_remove {\r\n	flex: 1;\r\n	margin-right: 8%;\r\n	text-align: right;\r\n	position: absolute;\r\n}\r\n\r\n#ReadMail .zeny_item_container {\r\n	flex: 1;\r\n	position: relative;\r\n}\r\n#ReadMail .zeny_item_infor {\r\n	width: 48%;\r\n	height: 53%;\r\n	top: 9px;\r\n	left: 120px;\r\n	position: absolute;\r\n	flex: 1;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#ReadMail .zeny_item_infor_box {\r\n	border: 2px solid #f1e2cf;\r\n	width: 48%;\r\n	height: 53%;\r\n	top: 9px;\r\n	left: 130px;\r\n	position: absolute;\r\n	display: none;\r\n	pointer-events: none;\r\n}\r\n\r\n#ReadMail .read_mail_btn {\r\n	width: 43px;\r\n	height: 21px;\r\n	border: none;\r\n}\r\n#ReadMail .body .text {\r\n	/* text-shadow: 1px 1px white; */\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n#ReadMail .body .left {\r\n	margin-left: 25px;\r\n	float: left;\r\n}\r\n#ReadMail .body .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ReadMail .body .clear {\r\n	clear: both;\r\n}\r\n#ReadMail .block_item {\r\n	margin-left: 30%;\r\n}\r\n#ReadMail .container_item {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 2px;\r\n	margin-left: 2px;\r\n	margin-bottom: 6px;\r\n}\r\n#ReadMail .container_item .overlay {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ReadMail .container_item .overlay.grey {\r\n	pointer-events: none;\r\n	color: #aaa;\r\n}\r\n\r\n#ReadMail .container_item .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#ReadMail .container_item .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#ReadMail .container_item .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#ReadMail .block_zeny_item {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n\r\n#ReadMail .input_zeny_amt {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 13px;\r\n	width: 64px;\r\n	margin-top: 21%;\r\n}\r\n#Mail .block_zeny {\r\n	margin-top: 4%;\r\n	margin-left: 1%;\r\n}\r\n";
+	ReadMail_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#ReadMail {\r\n	width: 250px;\r\n	height: 330px;\r\n}\r\n\r\n#ReadMail .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: relative;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 6px;\r\n}\r\n#ReadMail .body .base {\r\n	width: 9px;\r\n	height: 7px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ReadMail .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n\r\n#ReadMail .container {\r\n	width: 298px;\r\n	height: 385px;\r\n}\r\n\r\n#ReadMail .flex {\r\n	display: flex;\r\n}\r\n\r\n#ReadMail .flex_grid {\r\n	display: grid;\r\n}\r\n\r\n#ReadMail .text_title {\r\n	color: #a5978c;\r\n	font-weight: 600;\r\n}\r\n#ReadMail .text_sender {\r\n	color: #d8b091;\r\n}\r\n#ReadMail .title {\r\n	flex: 1;\r\n	display: flex;\r\n	align-items: end;\r\n	justify-content: center;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n	grid-row-end: span 2;\r\n}\r\n#ReadMail .name_sender {\r\n	flex: 1;\r\n	display: flex;\r\n	align-items: end;\r\n	justify-content: right;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n}\r\n#ReadMail .name_sender div {\r\n	margin-right: 5%;\r\n}\r\n\r\n#ReadMail .mail_body {\r\n	flex: 1;\r\n}\r\n\r\n#ReadMail .textarea_mail {\r\n	resize: none;\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 205px;\r\n	padding: initial;\r\n	width: 264px;\r\n	overflow: hidden;\r\n	margin-top: 5%;\r\n	margin-left: 7%;\r\n	color: #a37162;\r\n}\r\n\r\n#ReadMail .zeny_item {\r\n	flex: 1;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n	grid-row-end: span 4;\r\n	display: flex;\r\n}\r\n#ReadMail .btn_return_reply_remove {\r\n	flex: 1;\r\n	grid-column-start: 1;\r\n	grid-column-end: span col4-start;\r\n	grid-row-end: span 2;\r\n	display: flex;\r\n	justify-content: end;\r\n}\r\n#ReadMail .container_return_reply_remove {\r\n	flex: 1;\r\n	margin-right: 8%;\r\n	text-align: right;\r\n	position: absolute;\r\n}\r\n\r\n#ReadMail .zeny_item_container {\r\n	flex: 1;\r\n	position: relative;\r\n}\r\n#ReadMail .zeny_item_infor {\r\n	width: 48%;\r\n	height: 53%;\r\n	top: 9px;\r\n	left: 120px;\r\n	position: absolute;\r\n	flex: 1;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#ReadMail .zeny_item_infor_box {\r\n	border: 2px solid #f1e2cf;\r\n	width: 48%;\r\n	height: 53%;\r\n	top: 9px;\r\n	left: 130px;\r\n	position: absolute;\r\n	display: none;\r\n	pointer-events: none;\r\n}\r\n\r\n#ReadMail .read_mail_btn {\r\n	width: 43px;\r\n	height: 21px;\r\n	border: none;\r\n}\r\n#ReadMail .body .text {\r\n	/* text-shadow: 1px 1px white; */\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n#ReadMail .body .left {\r\n	margin-left: 25px;\r\n	float: left;\r\n}\r\n#ReadMail .body .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ReadMail .body .clear {\r\n	clear: both;\r\n}\r\n#ReadMail .block_item {\r\n	margin-left: 30%;\r\n}\r\n#ReadMail .container_item {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 2px;\r\n	margin-left: 2px;\r\n	margin-bottom: 6px;\r\n}\r\n#ReadMail .container_item .overlay {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ReadMail .container_item .overlay.grey {\r\n	pointer-events: none;\r\n	color: #aaa;\r\n}\r\n\r\n#ReadMail .container_item .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#ReadMail .container_item .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#ReadMail .container_item .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#ReadMail .block_zeny_item {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n\r\n#ReadMail .input_zeny_amt {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 13px;\r\n	width: 64px;\r\n	margin-top: 21%;\r\n}\r\n#Mail .block_zeny {\r\n	margin-top: 4%;\r\n	margin-left: 1%;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Mail/ReadMail.js
+/**
+* Helper: query inside shadow root
+*/
+function _root() {
+	return ReadMail._shadow || ReadMail._host;
+}
 function addItemSub(itemMail) {
+	const root = _root();
 	removeValueItemZeny();
-	const zenyItemContainer = ReadMail.ui.find(".zeny_item_container");
+	const zenyItemContainer = root.querySelector(".zeny_item_container");
 	if (itemMail.ITID != 0 && itemMail.count > 0) {
 		const item = itemMail;
 		const it = DB.getItemInfo(item.ITID);
-		const content = ReadMail.ui.find(".container_item");
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-		ReadMail.ui.find(".hide").show();
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const content = root.querySelector(".container_item");
+		if (content) content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		const hideEl = root.querySelector(".hide");
+		if (hideEl) hideEl.style.display = "block";
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			if (content) {
+				const icon = content.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
+			}
 		});
-		ReadMail.ui.find(".container_item").on("mouseover", ".item", onItemOver).on("mouseout", ".item", onItemOut).on("contextmenu", ".item", onItemInfo$2);
+		if (content) {
+			content.addEventListener("mouseover", (event) => {
+				const el = event.target.closest(".item");
+				if (el) onItemOver.call(el, event);
+			});
+			content.addEventListener("mouseout", (event) => {
+				const el = event.target.closest(".item");
+				if (el) onItemOut.call(el, event);
+			});
+			content.addEventListener("contextmenu", (event) => {
+				const el = event.target.closest(".item");
+				if (el) onItemInfo$2.call(el, event);
+			});
+		}
 	}
 	if (itemMail.Money > 0) {
-		ReadMail.ui.find(".input_zeny_amt").val(prettifyZeny$1(itemMail.Money));
-		ReadMail.ui.find(".input_zeny_amt").prop("disabled", true);
+		const zenyInput = root.querySelector(".input_zeny_amt");
+		if (zenyInput) {
+			zenyInput.value = prettifyZeny$1(itemMail.Money);
+			zenyInput.disabled = true;
+		}
 	}
-	ReadMail.ui.find(".zeny_item_infor_box").remove();
-	zenyItemContainer.append("<div class=\"zeny_item_infor_box\"></div>");
-	ReadMail.ui.find(".zeny_item_infor").mouseover(function() {
-		ReadMail.ui.find(".zeny_item_infor_box").show();
-	}).mouseout(function() {
-		ReadMail.ui.find(".zeny_item_infor_box").hide();
-	});
+	const oldInfoBox = root.querySelector(".zeny_item_infor_box");
+	if (oldInfoBox) oldInfoBox.remove();
+	if (zenyItemContainer) zenyItemContainer.insertAdjacentHTML("beforeend", "<div class=\"zeny_item_infor_box\"></div>");
+	const inforEl = root.querySelector(".zeny_item_infor");
+	if (inforEl) {
+		inforEl.addEventListener("mouseover", () => {
+			const box = root.querySelector(".zeny_item_infor_box");
+			if (box) box.style.display = "block";
+		});
+		inforEl.addEventListener("mouseout", () => {
+			const box = root.querySelector(".zeny_item_infor_box");
+			if (box) box.style.display = "none";
+		});
+	}
 	_preferences$8.item_add_email = itemMail;
 	_preferences$8.save();
-	ReadMail.ui.find(".zeny_item_infor").click(function(event) {
+	if (inforEl) inforEl.addEventListener("click", (event) => {
 		event.stopImmediatePropagation();
 		if (!validItemMoneyExists()) {
-			const mailID = ReadMail.ui.find(".btn_return_reply_remove").data("mailID");
-			Mail_default.parseMailgetattach(mailID);
+			const btnContainer = root.querySelector(".btn_return_reply_remove");
+			const mailID = btnContainer ? btnContainer.dataset.mailID : null;
+			if (mailID) Mail_default.parseMailgetattach(parseInt(mailID, 10));
 		}
 	});
 }
@@ -327878,21 +328576,26 @@ function addItemSub(itemMail) {
 * Hide the item name
 */
 function onItemOut(event) {
+	const root = _root();
 	event.stopImmediatePropagation();
-	ReadMail.ui.find(".container_item .overlay").hide();
+	const overlay = root.querySelector(".container_item .overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Show item name when mouse is over
 */
 function onItemOver(event) {
+	const root = _root();
 	event.stopImmediatePropagation();
 	const item = _preferences$8.item_add_email;
 	if (!item) return;
-	const overlay = ReadMail.ui.find(".container_item .overlay");
-	overlay.show();
-	overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const overlay = root.querySelector(".container_item .overlay");
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
 }
 /**
 * Get item info (open description window)
@@ -327900,26 +328603,29 @@ function onItemOver(event) {
 function onItemInfo$2(event) {
 	event.stopImmediatePropagation();
 	const item = _preferences$8.item_add_email;
-	if (!item) return false;
+	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
 function replyMail(event) {
+	const root = _root();
 	event.stopImmediatePropagation();
-	const textSender = ReadMail.ui.find(".text_sender").text();
+	const senderEl = root.querySelector(".text_sender");
+	const textSender = senderEl ? senderEl.textContent : "";
 	Mail_default.replyNewMail(textSender);
 }
 function deleteMail(event) {
+	const root = _root();
 	event.stopImmediatePropagation();
 	if (validItemMoneyExists()) {
-		const mailID = ReadMail.ui.find(".btn_return_reply_remove").data("mailID");
-		Mail_default.deleteMail(mailID);
+		const btnContainer = root.querySelector(".btn_return_reply_remove");
+		const mailID = btnContainer ? btnContainer.dataset.mailID : null;
+		if (mailID) Mail_default.deleteMail(parseInt(mailID, 10));
 	} else ChatBox_default.addText(DB.getMessage(1105), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
 }
 function validItemMoneyExists() {
@@ -327930,19 +328636,16 @@ function validItemMoneyExists() {
 	return validItem && validMoney;
 }
 function returnMail(event) {
+	const root = _root();
 	event.stopImmediatePropagation();
-	const mailID = ReadMail.ui.find(".btn_return_reply_remove").data("mailID");
-	const textSender = ReadMail.ui.find(".text_sender").text();
-	Mail_default.returnMail(mailID, textSender);
+	const btnContainer = root.querySelector(".btn_return_reply_remove");
+	const mailID = btnContainer ? btnContainer.dataset.mailID : null;
+	const senderEl = root.querySelector(".text_sender");
+	const textSender = senderEl ? senderEl.textContent : "";
+	if (mailID) Mail_default.returnMail(parseInt(mailID, 10), textSender);
 }
 /**
-* Extend Mail window size
-*/
-/**
 * Prettify number (15000 -> 15,000)
-*
-* @param {number}
-* @return {string}
 */
 function prettifyZeny$1(value) {
 	const num = String(value);
@@ -327951,14 +328654,17 @@ function prettifyZeny$1(value) {
 	let out = "";
 	while (i < len) {
 		out = num[len - i - 1] + out;
-		if ((i + 1) % 3 === 0 && i + 1 !== len) out = "," + out;
+		if ((i + 1) % 3 === 0 && i + 1 !== len) out = `,${out}`;
 		++i;
 	}
 	return out;
 }
 function removeValueItemZeny() {
-	ReadMail.ui.find(".item").remove();
-	ReadMail.ui.find(".input_zeny_amt").val("");
+	const root = _root();
+	const item = root.querySelector(".item");
+	if (item) item.remove();
+	const zenyInput = root.querySelector(".input_zeny_amt");
+	if (zenyInput) zenyInput.value = "";
 }
 var ReadMail, _preferences$8, ReadMail_default;
 var init_ReadMail = __esmMin((() => {
@@ -327970,11 +328676,12 @@ var init_ReadMail = __esmMin((() => {
 	init_ChatBox();
 	init_ItemInfo();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Mail$1();
 	init_ReadMail$2();
 	init_ReadMail$1();
-	ReadMail = new UIComponent("ReadMail", ReadMail_default$2, ReadMail_default$1);
+	ReadMail = new GUIComponent("ReadMail", ReadMail_default$1);
 	/**
 	* Store ReadMail items
 	*/
@@ -327993,33 +328700,43 @@ var init_ReadMail = __esmMin((() => {
 		item_add_email: {}
 	}, 1);
 	/**
+	* Render HTML
+	*/
+	ReadMail.render = () => ReadMail_default$2;
+	/**
 	* Initialize Component
 	*/
 	ReadMail.onAppend = function onAppend() {
-		ReadMail.ui.find(".right .close").click(function(event) {
+		const root = _root();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", (event) => {
 			event.stopImmediatePropagation();
 			ReadMail.remove();
 		});
-		ReadMail.ui.find("#read_mail_del").click(deleteMail);
-		ReadMail.ui.find("#read_mail_remail").click(replyMail);
-		ReadMail.ui.find("#read_mail_return").click(returnMail);
-		ReadMail.ui.css({
-			top: Math.min(Math.max(0, parseInt(Mail_default.ui.css("top"), 10)), Renderer.height - ReadMail.ui.height()),
-			left: Math.min(Math.max(0, parseInt(Mail_default.ui.css("left"), 10)) + 300, Renderer.width - ReadMail.ui.width())
-		});
-		ReadMail.draggable(ReadMail.ui.find(".titlebar"));
+		const delBtn = root.querySelector("#read_mail_del");
+		if (delBtn) delBtn.addEventListener("click", deleteMail);
+		const remailBtn = root.querySelector("#read_mail_remail");
+		if (remailBtn) remailBtn.addEventListener("click", replyMail);
+		const returnBtn = root.querySelector("#read_mail_return");
+		if (returnBtn) returnBtn.addEventListener("click", returnMail);
+		const mailHost = Mail_default._host;
+		const mailTop = mailHost ? parseInt(mailHost.style.top, 10) || 0 : 0;
+		const mailLeft = mailHost ? parseInt(mailHost.style.left, 10) || 0 : 0;
+		const hostHeight = this._host.offsetHeight || 0;
+		const hostWidth = this._host.offsetWidth || 0;
+		this._host.style.top = `${Math.min(Math.max(0, mailTop), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, mailLeft + 300), Renderer.width - hostWidth)}px`;
+		this.draggable(".titlebar");
 	};
 	/**
 	* Remove Mail from window (and so clean up items)
 	*/
 	ReadMail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$8.show = this.ui.is(":visible");
+		_preferences$8.show = this._host.style.display !== "none";
 		_preferences$8.reduce = false;
-		_preferences$8.y = parseInt(this.ui.css("top"), 10);
-		_preferences$8.x = parseInt(this.ui.css("left"), 10);
-		_preferences$8.width = Math.floor((this.ui.width() - 25) / 32);
-		_preferences$8.height = Math.floor((this.ui.height() - 20) / 32);
+		_preferences$8.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$8.x = parseInt(this._host.style.left, 10) || 0;
 		_preferences$8.magnet_top = this.magnet.TOP;
 		_preferences$8.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$8.magnet_left = this.magnet.LEFT;
@@ -328029,24 +328746,31 @@ var init_ReadMail = __esmMin((() => {
 	ReadMail.openEmail = function openEmail(inforMail) {
 		ReadMail.remove();
 		ReadMail.append();
+		const freshRoot = _root();
 		const textSender = inforMail.FromName;
 		const textTitle = inforMail.Header;
 		const textMessage = inforMail.msg === "(no message)" ? "" : inforMail.msg;
-		this.ui.find(".text_sender").text(textSender);
-		this.ui.find(".text_title").text(textTitle);
-		this.ui.find(".textarea_mail").val(textMessage);
-		this.ui.find(".btn_return_reply_remove").data("mailID", inforMail.MailID);
+		const senderEl = freshRoot.querySelector(".text_sender");
+		if (senderEl) senderEl.textContent = textSender;
+		const titleEl = freshRoot.querySelector(".text_title");
+		if (titleEl) titleEl.textContent = textTitle;
+		const textarea = freshRoot.querySelector(".textarea_mail");
+		if (textarea) textarea.value = textMessage;
+		const btnContainer = freshRoot.querySelector(".btn_return_reply_remove");
+		if (btnContainer) btnContainer.dataset.mailID = inforMail.MailID;
 		if (inforMail.ITID != 0 || inforMail.Money != 0) addItemSub(inforMail);
 		else this.resetItemZeny();
 	};
 	ReadMail.resetItemZeny = function resetItemZeny() {
+		const root = _root();
 		_preferences$8.item_add_email = {};
 		_preferences$8.save();
 		removeValueItemZeny();
-		ReadMail.ui.find(".zeny_item_infor_box").remove();
+		const infoBox = root.querySelector(".zeny_item_infor_box");
+		if (infoBox) infoBox.remove();
 	};
 	ReadMail.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.remove();
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this.remove();
 	};
 	ReadMail_default = UIManager.addComponent(ReadMail);
 }));
@@ -334271,6 +334995,8 @@ function onRequestTalk(user, text, target) {
 		pkt.receiver = user;
 		pkt.msg = text;
 		Network.sendPacket(pkt);
+		ChatBox_default.PrivateMessageStorage.nick = user;
+		ChatBox_default.PrivateMessageStorage.msg = text;
 		return;
 	}
 	if (flag_party) target = target & ~ChatBox_default.TYPE.PARTY | ~target & ChatBox_default.TYPE.PARTY;
