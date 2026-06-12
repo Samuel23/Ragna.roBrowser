@@ -235824,6 +235824,42 @@ var init_StatusState = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/ClampToViewport.js
+/**
+* UI/clampToViewport.js
+*
+* Shared viewport clamp + magnet math for UI components.
+* Used by both UIManager.fixResizeOverflow() (batch, on resize)
+* and GUIComponent._fixPositionOverflow() (single, on append).
+*
+* Pure: takes a resolved element + dimensions + magnet, mutates style only.
+*/
+/**
+* Keep an element inside the viewport and apply magnet constraints.
+*
+* @param {HTMLElement} el      - The element to reposition (host / ui[0]).
+* @param {number} WIDTH        - Viewport width.
+* @param {number} HEIGHT       - Viewport height.
+* @param {{TOP?:boolean,BOTTOM?:boolean,LEFT?:boolean,RIGHT?:boolean}} [magnet]
+*/
+function UIClamp(el, WIDTH, HEIGHT, magnet) {
+	if (!el) return;
+	const rect = el.getBoundingClientRect();
+	const x = rect.left;
+	const y = rect.top;
+	const width = rect.width;
+	const height = rect.height;
+	if (y + height > HEIGHT) el.style.top = HEIGHT - Math.min(height, HEIGHT) + "px";
+	if (y < 0) el.style.top = "0px";
+	if (x + width > WIDTH) el.style.left = WIDTH - Math.min(width, WIDTH) + "px";
+	if (x < 0) el.style.left = "0px";
+	if (magnet) {
+		if (magnet.BOTTOM) el.style.top = HEIGHT - height + "px";
+		if (magnet.RIGHT) el.style.left = WIDTH - width + "px";
+	}
+}
+var init_ClampToViewport = __esmMin((() => {}));
+//#endregion
 //#region src/UI/Scrollbar.js
 var Scrollbar_exports = /* @__PURE__ */ __exportAll({ default: () => ScrollBar });
 var ScrollBar;
@@ -236189,6 +236225,7 @@ var init_GUIComponent = __esmMin((() => {
 	init_UI();
 	init_SessionStorage();
 	init_Targa();
+	init_ClampToViewport();
 	init_preload_helper();
 	_Cursor$1 = null;
 	_DB$1 = null;
@@ -236245,6 +236282,12 @@ var init_GUIComponent = __esmMin((() => {
 			this.ui = null;
 		}
 		static MouseMode = MouseMode;
+		/**
+		* Get the root element of the component.
+		*/
+		getRoot() {
+			return this._shadow || this._host;
+		}
 		/**
 		* Build the Shadow DOM, inject CSS, call init(), set up
 		* mouse intersection and touch handling.
@@ -236317,19 +236360,9 @@ var init_GUIComponent = __esmMin((() => {
 		*/
 		_fixPositionOverflow() {
 			if (!this._host || !this._isDraggable) return;
-			const rect = this._host.getBoundingClientRect();
-			const x = rect.left;
-			const y = rect.top;
-			const width = rect.width;
-			const height = rect.height;
 			const WIDTH = _Renderer$1?.width ?? window.innerWidth;
 			const HEIGHT = _Renderer$1?.height ?? window.innerHeight;
-			if (y + height > HEIGHT) this._host.style.top = HEIGHT - Math.min(height, HEIGHT) + "px";
-			if (y < 0) this._host.style.top = "0px";
-			if (x + width > WIDTH) this._host.style.left = WIDTH - Math.min(width, WIDTH) + "px";
-			if (x < 0) this._host.style.left = "0px";
-			if (this.magnet.BOTTOM) this._host.style.top = HEIGHT - height + "px";
-			if (this.magnet.RIGHT) this._host.style.left = WIDTH - width + "px";
+			UIClamp(this._host, WIDTH, HEIGHT, this.magnet);
 		}
 		/**
 		* Remove the component from the DOM.
@@ -236449,6 +236482,18 @@ var init_GUIComponent = __esmMin((() => {
 				window.removeEventListener("keydown", this._keyHandler, true);
 				this._keyHandler = null;
 			}
+		}
+		/**
+		* Check if an editable element is focused.
+		* @returns {boolean}
+		*/
+		isEditableFocused() {
+			const root = this.getRoot();
+			const active = root && root.activeElement;
+			if (!active || !active.tagName) return false;
+			if (/input|textarea|select/i.test(active.tagName)) return true;
+			else if (active.getAttribute("contenteditable") === "true") return true;
+			return false;
 		}
 		/**
 		* Get zIndex from either a GUIComponent or a legacy UIComponent.
@@ -237089,202 +237134,429 @@ var init_ChatRoomCreate$1 = __esmMin((() => {
 	ChatRoomCreate_default$1 = ":host {\r\n	width: 280px;\r\n	height: 120px;\r\n	top: 50%;\r\n	left: 50%;\r\n}\r\n\r\n#ChatRoomCreate {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 120px;\r\n}\r\n#ChatRoomCreate table {\r\n	border-spacing: 0px 2px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatRoomCreate .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#ChatRoomCreate .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatRoomCreate .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatRoomCreate .titlebar .left {\r\n	margin-left: 8px;\r\n	float: left;\r\n}\r\n#ChatRoomCreate .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatRoomCreate .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoomCreate .panel {\r\n	background: white;\r\n}\r\n\r\n#ChatRoomCreate select {\r\n	height: 20px;\r\n	border: 1px solid #ccc;\r\n}\r\n#ChatRoomCreate input {\r\n	height: 14px;\r\n	border: 1px solid #ccc;\r\n	background-color: #f5f5f5;\r\n}\r\n#ChatRoomCreate .container {\r\n	padding-left: 7px;\r\n	padding-top: 5px;\r\n	width: 266px;\r\n}\r\n#ChatRoomCreate .container .title {\r\n	height: 16px;\r\n	width: 198px;\r\n	padding-left: 5px;\r\n}\r\n#ChatRoomCreate .container .limit,\r\n#ChatRoomCreate .container .password {\r\n	width: 58px;\r\n	padding-left: 5px;\r\n}\r\n#ChatRoomCreate .container .type {\r\n	width: 110px;\r\n}\r\n#ChatRoomCreate .head {\r\n	color: #0f4b8c;\r\n	text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);\r\n	text-align: right;\r\n	width: 40px;\r\n	white-space: nowrap;\r\n}\r\n#ChatRoomCreate .mode {\r\n	white-space: nowrap;\r\n}\r\n#ChatRoomCreate .mode span {\r\n	overflow: hidden;\r\n	display: inline-block;\r\n	white-space: nowrap;\r\n}\r\n\r\n#ChatRoomCreate .footer {\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	text-align: right;\r\n	padding-top: 5px;\r\n	padding-right: 3px;\r\n	border-bottom-left-radius: 8px;\r\n	border-bottom-right-radius: 8px;\r\n}\r\n#ChatRoomCreate .footer button {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/ChatRoomCreate/ChatRoomCreate.js
-/**
-* Parse and send chat room request
-*/
-function parseChatSetup() {
-	const root = this._shadow || this._host;
-	this.title = root.querySelector("input[name=title]").value;
-	this.limit = parseInt(root.querySelector("select[name=limit]").value, 10);
-	this.type = parseInt(root.querySelector("input[name=public]:checked").value, 10);
-	this.password = root.querySelector("input[name=password]").value;
-	if (this.title.length < 1) {
-		const overlay = document.createElement("div");
-		overlay.className = "win_popup_overlay";
-		document.body.appendChild(overlay);
-		const popup = UIManager.showMessageBox(DB.getMessage(13), "ok", () => {
-			document.body.removeChild(overlay);
-		}, true);
-		popup._host.style.top = parseInt(this._host.style.top, 10) - 120 + "px";
-		popup._host.style.left = parseInt(this._host.style.left, 10) + "px";
-		return;
-	}
-	this.requestRoom();
-	this.hide();
-}
-var ChatRoomCreate, _preferences$72, ChatRoomCreate_default;
-var init_ChatRoomCreate = __esmMin((() => {
+//#region src/UI/Elements/UIButton.js
+var UIButton;
+var init_UIButton = __esmMin((() => {
 	init_DBManager();
-	init_KeyEventHandler();
-	init_Renderer();
-	init_Preferences$1();
+	init_Client();
+	init_Targa();
+	UIButton = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const bg = this.getAttribute("bg");
+			const hover = this.getAttribute("hover");
+			const down = this.getAttribute("down");
+			let bgUri = null, hoverUri = null, downUri = null;
+			const state = {
+				hover: false,
+				down: false
+			};
+			const update = () => {
+				if (this.disabled) {
+					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+					this.style.opacity = "0.5";
+					this.style.cursor = "default";
+					return;
+				}
+				this.style.opacity = "";
+				this.style.cursor = "";
+				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
+				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
+				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
+				else this.style.backgroundImage = "";
+			};
+			this._update = update;
+			const loadBmp = (path, cb) => {
+				if (!path) return;
+				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+					if (dataURI instanceof ArrayBuffer) try {
+						const tga = new Targa();
+						tga.load(new Uint8Array(dataURI));
+						cb(tga.getDataURL());
+					} catch (e) {
+						console.error(e.message);
+					}
+					else cb(dataURI);
+				});
+			};
+			loadBmp(bg, (uri) => {
+				bgUri = uri;
+				update();
+			});
+			loadBmp(hover, (uri) => {
+				hoverUri = uri;
+			});
+			loadBmp(down, (uri) => {
+				downUri = uri;
+			});
+			this.addEventListener("mouseover", () => {
+				if (this.disabled) return;
+				state.hover = true;
+				update();
+			});
+			this.addEventListener("mouseout", () => {
+				state.hover = false;
+				state.down = false;
+				update();
+			});
+			this.addEventListener("mousedown", () => {
+				if (this.disabled) return;
+				state.down = true;
+				update();
+			});
+			this.addEventListener("mouseup", () => {
+				state.down = false;
+				update();
+			});
+			this.addEventListener("click", (e) => {
+				if (this.disabled) {
+					e.stopImmediatePropagation();
+					e.preventDefault();
+				}
+			}, true);
+		}
+		get disabled() {
+			return this.hasAttribute("disabled");
+		}
+		set disabled(val) {
+			if (val) this.setAttribute("disabled", "");
+			else this.removeAttribute("disabled");
+		}
+		static get observedAttributes() {
+			return ["disabled"];
+		}
+		attributeChangedCallback(name) {
+			if (name === "disabled" && this._initialized) {
+				if (this._update) this._update();
+			}
+		}
+	};
+	customElements.define("ui-button", UIButton);
+}));
+//#endregion
+//#region src/UI/Elements/UIText.js
+var UIText;
+var init_UIText = __esmMin((() => {
+	init_DBManager();
+	UIText = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			const msgId = this.getAttribute("msg");
+			if (msgId) {
+				const text = DB.getMessage(msgId, "");
+				if (text) this.textContent = text;
+			}
+		}
+		static get observedAttributes() {
+			return ["msg"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "msg" && newVal) {
+				const text = DB.getMessage(newVal, "");
+				if (text) this.textContent = text;
+			}
+		}
+	};
+	customElements.define("ui-text", UIText);
+}));
+//#endregion
+//#region src/UI/Elements/UIImage.js
+var UIImage;
+var init_UIImage = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Targa();
+	UIImage = class extends HTMLElement {
+		connectedCallback() {
+			if (this._initialized) return;
+			this._initialized = true;
+			this.style.display = "none";
+			this._applyBackground();
+		}
+		static get observedAttributes() {
+			return ["src"];
+		}
+		attributeChangedCallback(name, oldVal, newVal) {
+			if (name === "src" && this._initialized) this._applyBackground();
+		}
+		_applyBackground() {
+			const path = this.getAttribute("src");
+			if (!path) return;
+			const target = this.parentElement;
+			if (!target) {
+				requestAnimationFrame(() => {
+					const retryTarget = this.parentElement;
+					if (retryTarget) this._loadImage(path, retryTarget);
+				});
+				return;
+			}
+			this._loadImage(path, target);
+		}
+		_loadImage(path, target) {
+			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
+				if (dataURI instanceof ArrayBuffer) try {
+					const tga = new Targa();
+					tga.load(new Uint8Array(dataURI));
+					target.style.backgroundImage = `url(${tga.getDataURL()})`;
+				} catch (e) {
+					console.error(`[ui-image] TGA decode error for "${path}":`, e.message);
+				}
+				else target.style.backgroundImage = `url(${dataURI})`;
+			}, () => {
+				console.warn(`[ui-image] Failed to load: ${path}`);
+			});
+		}
+	};
+	customElements.define("ui-image", UIImage);
+}));
+//#endregion
+//#region src/UI/Elements/Elements.js
+var init_Elements = __esmMin((() => {
+	init_UIButton();
+	init_UIText();
+	init_UIImage();
+}));
+//#endregion
+//#region src/DB/Items/ItemType.js
+var ItemType_default;
+var init_ItemType = __esmMin((() => {
+	ItemType_default = {
+		HEALING: 0,
+		UNKNOWN: 1,
+		USABLE: 2,
+		ETC: 3,
+		ARMOR: 4,
+		WEAPON: 5,
+		CARD: 6,
+		PETEGG: 7,
+		PETARMOR: 8,
+		AMMO: 10,
+		DELAYCONSUME: 11,
+		SHADOWGEAR: 12,
+		CASH: 18,
+		SEARCH: 99
+	};
+}));
+//#endregion
+//#region src/DB/Items/EquipmentLocation.js
+var EquipmentLocation_default;
+var init_EquipmentLocation = __esmMin((() => {
+	EquipmentLocation_default = {
+		HEAD_BOTTOM: 1,
+		WEAPON: 2,
+		GARMENT: 4,
+		ACCESSORY1: 8,
+		ARMOR: 16,
+		SHIELD: 32,
+		SHOES: 64,
+		ACCESSORY2: 128,
+		HEAD_TOP: 256,
+		HEAD_MID: 512,
+		COSTUME_HEAD_TOP: 1024,
+		COSTUME_HEAD_MID: 2048,
+		COSTUME_HEAD_BOTTOM: 4096,
+		COSTUME_ROBE: 8192,
+		COSTUME_FLOOR: 16384,
+		AMMO: 32768,
+		SHADOW_ARMOR: 65536,
+		SHADOW_WEAPON: 1 << 17,
+		SHADOW_SHIELD: 1 << 18,
+		SHADOW_SHOES: 1 << 19,
+		SHADOW_R_ACCESSORY_SHADOW: 1 << 20,
+		SHADOW_L_ACCESSORY_SHADOW: 1 << 21
+	};
+}));
+//#endregion
+//#region src/UI/Components/CardIllustration/CardIllustration.html?raw
+var CardIllustration_default$2;
+var init_CardIllustration$2 = __esmMin((() => {
+	CardIllustration_default$2 = "<div id=\"CardIllustration\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left text\"></div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\"></div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CardIllustration/CardIllustration.css?raw
+var CardIllustration_default$1;
+var init_CardIllustration$1 = __esmMin((() => {
+	CardIllustration_default$1 = ":host {\r\n	width: 300px;\r\n	height: 417px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#CardIllustration {\r\n	position: absolute;\r\n	width: 300px;\r\n	height: 417px;\r\n}\r\n#CardIllustration .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#CardIllustration .titlebar .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#CardIllustration .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap; /* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CardIllustration .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#CardIllustration .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#CardIllustration .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CardIllustration .content {\r\n	width: 300px;\r\n	height: 400px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CardIllustration/CardIllustration.js
+var CardIllustration, CardIllustration_default;
+var init_CardIllustration = __esmMin((() => {
+	init_DBManager();
+	init_Client();
 	init_UIManager();
 	init_GUIComponent();
-	init_ChatRoomCreate$2();
-	init_ChatRoomCreate$1();
-	ChatRoomCreate = new GUIComponent("ChatRoomCreate", ChatRoomCreate_default$1);
+	init_CardIllustration$2();
+	init_CardIllustration$1();
+	CardIllustration = new GUIComponent("CardIllustration", CardIllustration_default$1);
 	/**
 	* Render HTML
 	*/
-	ChatRoomCreate.render = () => ChatRoomCreate_default$2;
+	CardIllustration.render = () => CardIllustration_default$2;
 	/**
-	* @var {string} chat room title
+	* Initialize events
 	*/
-	ChatRoomCreate.title = "";
+	CardIllustration.init = function init() {
+		this.getRoot().querySelector(".close").addEventListener("click", this.remove.bind(this));
+		this.draggable();
+	};
 	/**
-	* @var {number} chat room limit
+	* Show image
+	*
+	* @param {object} item
 	*/
-	ChatRoomCreate.limit = 20;
-	/**
-	* @var {number} type
-	* 0 = Private
-	* 1 = Public
-	*/
-	ChatRoomCreate.type = 1;
-	/**
-	* @var {string} password
-	*/
-	ChatRoomCreate.password = "";
-	_preferences$72 = Preferences.get("ChatRoomCreate", {
-		x: 480,
-		y: 200,
-		show: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	ChatRoomCreate.init = function init() {
-		const root = this._shadow || this._host;
-		root.querySelector(".close").addEventListener("mousedown", (event) => {
-			event.stopImmediatePropagation();
+	CardIllustration.setCard = function setCard(item) {
+		const root = this.getRoot();
+		root.querySelector(".titlebar .text").textContent = item.identifiedDisplayName;
+		root.querySelector(".content").style.backgroundImage = "none";
+		Client.loadFile(`${DB.INTERFACE_PATH}cardbmp/${item.illustResourcesName}.bmp`, (data) => {
+			const r = CardIllustration.getRoot();
+			r.querySelector(".content").style.backgroundImage = `url(${data})`;
 		});
-		root.querySelector(".close").addEventListener("click", () => ChatRoomCreate.hide());
-		root.querySelector(".cancel").addEventListener("mousedown", (event) => {
-			event.stopImmediatePropagation();
-		});
-		root.querySelector(".cancel").addEventListener("click", () => ChatRoomCreate.hide());
-		root.querySelector(".ok").addEventListener("click", () => parseChatSetup.call(ChatRoomCreate));
-		root.querySelector(".setup").addEventListener("submit", (event) => {
-			event.preventDefault();
-		});
-		root.querySelectorAll("input, select").forEach((el) => {
-			el.addEventListener("mousedown", (event) => {
-				event.stopImmediatePropagation();
+	};
+	CardIllustration.mouseMode = GUIComponent.MouseMode.STOP;
+	CardIllustration.needFocus = true;
+	CardIllustration_default = UIManager.addComponent(CardIllustration);
+}));
+//#endregion
+//#region src/UI/Components/MakeReadBook/MakeReadBook.html?raw
+var MakeReadBook_default$2;
+var init_MakeReadBook$2 = __esmMin((() => {
+	MakeReadBook_default$2 = "<div id=\"MakeReadBook\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"title\"><span class=\"text\" id=\"titleBook\"></span> <span class=\"text\" id=\"pageBook\">(1/3)</span></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"head\">\r\n			<div class=\"event_book\" id=\"highlighter\">\r\n				<span class=\"bookmark\" data-text=\"1296\">Bookmark</span>\r\n			</div>\r\n			<div class=\"event_book\" id=\"next_previous\">\r\n				<span class=\"previous\" data-text=\"1297\">Previous</span>\r\n				<span class=\"next\" data-text=\"1298\">Next</span>\r\n			</div>\r\n		</div>\r\n		<div class=\"body\">\r\n			<pre class=\"text\" id=\"textBook\"></pre>\r\n		</div>\r\n		<div class=\"footer\"></div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/MakeReadBook/MakeReadBook.css?raw
+var MakeReadBook_default$1;
+var init_MakeReadBook$1 = __esmMin((() => {
+	MakeReadBook_default$1 = ":host {\r\n	width: 555px;\r\n	height: 455px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#MakeReadBook {\r\n	position: absolute;\r\n	width: 555px;\r\n}\r\n\r\n#MakeReadBook .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#MakeReadBook .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#MakeReadBook .titlebar .title {\r\n	margin-left: 3px;\r\n	text-align: center;\r\n}\r\n\r\n#MakeReadBook #textBook {\r\n	margin: 0;\r\n	margin-top: -25px;\r\n	width: 500px;\r\n	white-space: break-spaces;\r\n}\r\n\r\n#MakeReadBook .panel {\r\n	height: 415px;\r\n	display: block;\r\n}\r\n#MakeReadBook .body {\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	padding: 0px 0px 0px 30px;\r\n	white-space: pre-wrap;\r\n}\r\n#MakeReadBook .head {\r\n	display: flex;\r\n	text-align: center;\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	width: 535px;\r\n	height: 25px;\r\n}\r\n#MakeReadBook .footer {\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 555px;\r\n	height: 25px;\r\n}\r\n#MakeReadBook .event_book {\r\n	flex: 1;\r\n}\r\n#MakeReadBook .clone_book {\r\n	position: absolute;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	right: 4px;\r\n	top: 10%;\r\n}\r\n#MakeReadBook .highlighter {\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n#MakeReadBook #highlighter {\r\n	text-align: left;\r\n}\r\n#MakeReadBook #next_previous {\r\n	text-align: right;\r\n	margin-top: 5px;\r\n	margin-right: -10px;\r\n}\r\n\r\n#MakeReadBook .bookmark {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 8px;\r\n	left: 11px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n#MakeReadBook .previous {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 6px;\r\n	right: 12px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n#MakeReadBook .next {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 6px;\r\n	right: -10px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Announce/Announce.html?raw
+var Announce_default$2;
+var init_Announce$2 = __esmMin((() => {
+	Announce_default$2 = "<div id=\"Announce\">\r\n	<canvas></canvas>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Announce/Announce.css?raw
+var Announce_default$1;
+var init_Announce$1 = __esmMin((() => {
+	Announce_default$1 = ":host {\r\n	top: 40px;\r\n	left: 0px;\r\n}\r\n\r\n#Announce canvas {\r\n	display: block;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Announce/Announce.js
+var Announce, _timer$2, _life$1, Announce_default;
+var init_Announce = __esmMin((() => {
+	init_Events();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Announce$2();
+	init_Announce$1();
+	Announce = new GUIComponent("Announce", Announce_default$1);
+	/**
+	* Mouse can cross this UI
+	*/
+	Announce.mouseMode = GUIComponent.MouseMode.CROSS;
+	/**
+	* @var {boolean} do not focus this UI
+	*/
+	Announce.needFocus = false;
+	_timer$2 = 0;
+	_life$1 = 20 * 1e3;
+	Announce.render = () => Announce_default$2;
+	/**
+	* Initialize component
+	*/
+	Announce.init = function init() {
+		const root = this.getRoot();
+		this.canvas = root.querySelector("canvas");
+		this.ctx = this.canvas.getContext("2d");
+	};
+	/**
+	* Once removed from HTML, clean timer
+	*/
+	Announce.onRemove = function onRemove() {
+		if (_timer$2) {
+			Events.clearTimeout(_timer$2);
+			_timer$2 = 0;
+		}
+	};
+	/**
+	* Timer end, cleaning announce
+	*/
+	Announce.timeEnd = function timeEnd() {
+		this.remove();
+	};
+	/**
+	* Add an announce with text and color
+	*
+	* @param {string} text to display
+	* @param {string} color
+	*/
+	Announce.set = function set(text, color, options = {}) {
+		const allowNewlines = typeof options === "boolean" ? options : !!options.allowNewlines;
+		const opts = typeof options === "object" ? options : {};
+		const fontSize = opts.fontSize || 12;
+		const life = opts.life || _life$1;
+		let targetWidth = null;
+		if (opts.width === "100%") targetWidth = Renderer.width;
+		else if (opts.width) targetWidth = opts.width;
+		const maxWidth = targetWidth ? targetWidth - 20 : 500;
+		const lines = [];
+		this.ctx.font = `${fontSize}px Arial`;
+		if (allowNewlines) text.split("\n").forEach((line) => {
+			const words = line.split(" ");
+			let currentLine = "";
+			words.forEach((word) => {
+				const testLine = `${currentLine}${word} `;
+				if (this.ctx.measureText(testLine).width > maxWidth) {
+					lines.push(currentLine.trim());
+					currentLine = `${word} `;
+				} else currentLine = testLine;
 			});
+			if (currentLine.trim()) lines.push(currentLine.trim());
 		});
-		this.draggable(".titlebar");
-		this._host.style.display = "none";
-	};
-	/**
-	* Once append to body
-	*/
-	ChatRoomCreate.onAppend = function onAppend() {
-		if (!_preferences$72.show) this._host.style.display = "none";
-		this._host.style.top = Math.min(Math.max(0, _preferences$72.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$72.x), Renderer.width - this._host.offsetWidth) + "px";
-	};
-	/**
-	* Once removed from DOM, save preferences
-	*/
-	ChatRoomCreate.onRemove = function onRemove() {
-		_preferences$72.show = this._host.style.display !== "none";
-		_preferences$72.y = parseInt(this._host.style.top, 10);
-		_preferences$72.x = parseInt(this._host.style.left, 10);
-		_preferences$72.save();
-		ChatRoomCreate.editMode = false;
-	};
-	/**
-	* Show the setup for room creation
-	*/
-	ChatRoomCreate.show = function showSetup() {
-		this._host.style.display = "";
-		(this._shadow || this._host).querySelector(".title").focus();
-		this._fixPositionOverflow();
-		_preferences$72.show = true;
-	};
-	/**
-	* Hide the setup ui
-	*/
-	ChatRoomCreate.hide = function hideSetup() {
-		this._host.style.display = "none";
-		(this._shadow || this._host).querySelector(".setup").reset();
-		ChatRoomCreate.editMode = false;
-		_preferences$72.show = false;
-	};
-	/**
-	* Pre-fill form with values (used by ChatRoom.openRoomSettings)
-	* @param {string} title
-	* @param {number} limit
-	* @param {number} type
-	* @param {string} password
-	*/
-	ChatRoomCreate.prefill = function prefill(title, limit, type) {
-		const root = this._shadow || this._host;
-		root.querySelector("input[name=title]").value = title ?? "";
-		root.querySelector("select[name=limit]").value = limit ?? 20;
-		const radio = root.querySelector("input[name=public][value=\"" + (type ?? 1) + "\"]");
-		if (radio) radio.checked = true;
-		root.querySelector("input[name=password]").value = "";
-	};
-	/**
-	* Key Listener
-	*
-	* @param {object} event
-	* @return {boolean}
-	*/
-	ChatRoomCreate.onKeyDown = function onKeyDown(event) {
-		const active = (this._shadow || this._host).activeElement;
-		if (this._host.style.display === "none") return true;
-		if (active && active.tagName && /input|select|textarea/i.test(active.tagName)) {
-			if (event.which === KEYS.ENTER) {
-				parseChatSetup.call(this);
-				event.stopImmediatePropagation();
-				return false;
-			}
-			if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-				ChatRoomCreate.hide();
-				event.stopImmediatePropagation();
-				return false;
-			}
-			event.stopImmediatePropagation();
-			return true;
+		else {
+			let currentLine = "";
+			text.split(" ").forEach((word) => {
+				const testLine = `${currentLine}${word} `;
+				if (this.ctx.measureText(testLine).width > maxWidth) {
+					lines.push(currentLine.trim());
+					currentLine = `${word} `;
+				} else currentLine = testLine;
+			});
+			if (currentLine.trim()) lines.push(currentLine.trim());
 		}
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			ChatRoomCreate.hide();
-			event.stopImmediatePropagation();
-			return false;
+		this.canvas.width = targetWidth || 20 + Math.max(...lines.map((line) => this.ctx.measureText(line).width));
+		this.canvas.height = opts.height || 10 + (fontSize + 5) * lines.length;
+		if (opts.width === "100%") this._host.style.left = "0px";
+		else this._host.style.left = `${Renderer.width - this.canvas.width >> 1}px`;
+		this.ctx.font = `${fontSize}px Arial`;
+		if (!opts.noBackground) {
+			this.ctx.fillStyle = "rgba(0,0,0,0.5)";
+			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 		}
-		return true;
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	ChatRoomCreate.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				ChatRoomCreate.toggle();
-				break;
+		this.ctx.fillStyle = color || "#FFFF00";
+		if (targetWidth || opts.height) {
+			this.ctx.textAlign = "center";
+			this.ctx.textBaseline = "middle";
+			lines.forEach((line, index) => {
+				const y = this.canvas.height / 2 + (index - (lines.length - 1) / 2) * (fontSize + 5);
+				this.ctx.fillText(line, this.canvas.width / 2, y);
+			});
+		} else {
+			this.ctx.textAlign = "left";
+			this.ctx.textBaseline = "alphabetic";
+			lines.forEach((line, index) => {
+				this.ctx.fillText(line, 10, 5 + fontSize + (fontSize + 5) * index);
+			});
 		}
+		if (_timer$2) Events.clearTimeout(_timer$2);
+		_timer$2 = Events.setTimeout(this.timeEnd.bind(this), life);
 	};
-	ChatRoomCreate.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			this._fixPositionOverflow();
-			this.focus();
-		} else this._host.style.display = "none";
-	};
-	/**
-	* Pseudo functions :)
-	*/
-	ChatRoomCreate.requestRoom = function requestRoom() {};
-	ChatRoomCreate.mouseMode = GUIComponent.MouseMode.STOP;
-	ChatRoomCreate.captureKeyEvents = true;
-	ChatRoomCreate.needFocus = true;
-	ChatRoomCreate.editMode = false;
-	ChatRoomCreate_default = UIManager.addComponent(ChatRoomCreate);
+	Announce_default = UIManager.addComponent(Announce);
 }));
 //#endregion
 //#region src/Preferences/ShortCutControls.js
@@ -238355,191 +238627,6 @@ var init_History = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Elements/UIButton.js
-var UIButton;
-var init_UIButton = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIButton = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const bg = this.getAttribute("bg");
-			const hover = this.getAttribute("hover");
-			const down = this.getAttribute("down");
-			let bgUri = null, hoverUri = null, downUri = null;
-			const state = {
-				hover: false,
-				down: false
-			};
-			const update = () => {
-				if (this.disabled) {
-					if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-					this.style.opacity = "0.5";
-					this.style.cursor = "default";
-					return;
-				}
-				this.style.opacity = "";
-				this.style.cursor = "";
-				if (state.down && downUri) this.style.backgroundImage = `url(${downUri})`;
-				else if (state.hover && hoverUri) this.style.backgroundImage = `url(${hoverUri})`;
-				else if (bgUri) this.style.backgroundImage = `url(${bgUri})`;
-				else this.style.backgroundImage = "";
-			};
-			this._update = update;
-			const loadBmp = (path, cb) => {
-				if (!path) return;
-				Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-					if (dataURI instanceof ArrayBuffer) try {
-						const tga = new Targa();
-						tga.load(new Uint8Array(dataURI));
-						cb(tga.getDataURL());
-					} catch (e) {
-						console.error(e.message);
-					}
-					else cb(dataURI);
-				});
-			};
-			loadBmp(bg, (uri) => {
-				bgUri = uri;
-				update();
-			});
-			loadBmp(hover, (uri) => {
-				hoverUri = uri;
-			});
-			loadBmp(down, (uri) => {
-				downUri = uri;
-			});
-			this.addEventListener("mouseover", () => {
-				if (this.disabled) return;
-				state.hover = true;
-				update();
-			});
-			this.addEventListener("mouseout", () => {
-				state.hover = false;
-				state.down = false;
-				update();
-			});
-			this.addEventListener("mousedown", () => {
-				if (this.disabled) return;
-				state.down = true;
-				update();
-			});
-			this.addEventListener("mouseup", () => {
-				state.down = false;
-				update();
-			});
-			this.addEventListener("click", (e) => {
-				if (this.disabled) {
-					e.stopImmediatePropagation();
-					e.preventDefault();
-				}
-			}, true);
-		}
-		get disabled() {
-			return this.hasAttribute("disabled");
-		}
-		set disabled(val) {
-			if (val) this.setAttribute("disabled", "");
-			else this.removeAttribute("disabled");
-		}
-		static get observedAttributes() {
-			return ["disabled"];
-		}
-		attributeChangedCallback(name) {
-			if (name === "disabled" && this._initialized) {
-				if (this._update) this._update();
-			}
-		}
-	};
-	customElements.define("ui-button", UIButton);
-}));
-//#endregion
-//#region src/UI/Elements/UIText.js
-var UIText;
-var init_UIText = __esmMin((() => {
-	init_DBManager();
-	UIText = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			const msgId = this.getAttribute("msg");
-			if (msgId) {
-				const text = DB.getMessage(msgId, "");
-				if (text) this.textContent = text;
-			}
-		}
-		static get observedAttributes() {
-			return ["msg"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "msg" && newVal) {
-				const text = DB.getMessage(newVal, "");
-				if (text) this.textContent = text;
-			}
-		}
-	};
-	customElements.define("ui-text", UIText);
-}));
-//#endregion
-//#region src/UI/Elements/UIImage.js
-var UIImage;
-var init_UIImage = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Targa();
-	UIImage = class extends HTMLElement {
-		connectedCallback() {
-			if (this._initialized) return;
-			this._initialized = true;
-			this.style.display = "none";
-			this._applyBackground();
-		}
-		static get observedAttributes() {
-			return ["src"];
-		}
-		attributeChangedCallback(name, oldVal, newVal) {
-			if (name === "src" && this._initialized) this._applyBackground();
-		}
-		_applyBackground() {
-			const path = this.getAttribute("src");
-			if (!path) return;
-			const target = this.parentElement;
-			if (!target) {
-				requestAnimationFrame(() => {
-					const retryTarget = this.parentElement;
-					if (retryTarget) this._loadImage(path, retryTarget);
-				});
-				return;
-			}
-			this._loadImage(path, target);
-		}
-		_loadImage(path, target) {
-			Client.loadFile(DB.INTERFACE_PATH + path, (dataURI) => {
-				if (dataURI instanceof ArrayBuffer) try {
-					const tga = new Targa();
-					tga.load(new Uint8Array(dataURI));
-					target.style.backgroundImage = `url(${tga.getDataURL()})`;
-				} catch (e) {
-					console.error(`[ui-image] TGA decode error for "${path}":`, e.message);
-				}
-				else target.style.backgroundImage = `url(${dataURI})`;
-			}, () => {
-				console.warn(`[ui-image] Failed to load: ${path}`);
-			});
-		}
-	};
-	customElements.define("ui-image", UIImage);
-}));
-//#endregion
-//#region src/UI/Elements/Elements.js
-var init_Elements = __esmMin((() => {
-	init_UIButton();
-	init_UIText();
-	init_UIImage();
-}));
-//#endregion
 //#region src/UI/Components/ContextMenu/ContextMenu.css?raw
 var ContextMenu_default$1;
 var init_ContextMenu$1 = __esmMin((() => {
@@ -238567,7 +238654,7 @@ var init_ContextMenu = __esmMin((() => {
 	* Initialize event handler
 	*/
 	ContextMenu.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		root.querySelector("#ContextMenu").addEventListener("mousedown", () => {
 			ContextMenu.remove();
 		});
@@ -238579,7 +238666,7 @@ var init_ContextMenu = __esmMin((() => {
 	* Position menu at mouse cursor
 	*/
 	ContextMenu.onAppend = function onAppend() {
-		const menu = (this._shadow || this._host).querySelector(".menu");
+		const menu = this.getRoot().querySelector(".menu");
 		const width = menu.offsetWidth;
 		const height = menu.offsetHeight;
 		let x = Mouse.screen.x;
@@ -238593,7 +238680,7 @@ var init_ContextMenu = __esmMin((() => {
 	* Clean up menu contents
 	*/
 	ContextMenu.onRemove = function onRemove() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		root.querySelector(".menu").innerHTML = "";
 	};
 	/**
@@ -238603,7 +238690,7 @@ var init_ContextMenu = __esmMin((() => {
 	* @param {function} callback once clicked
 	*/
 	ContextMenu.addElement = function addElement(text, callback) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const item = document.createElement("div");
 		item.textContent = text;
 		item.addEventListener("click", () => {
@@ -238616,7 +238703,7 @@ var init_ContextMenu = __esmMin((() => {
 	* Add a delimiter to the links
 	*/
 	ContextMenu.nextGroup = function nextGroup() {
-		(this._shadow || this._host).querySelector(".menu").appendChild(document.createElement("hr"));
+		this.getRoot().querySelector(".menu").appendChild(document.createElement("hr"));
 	};
 	ContextMenu_default = UIManager.addComponent(ContextMenu);
 }));
@@ -238695,17 +238782,17 @@ function onResize$18() {
 */
 function resize$7(height) {
 	height = Math.min(Math.max(height, 3), 8);
-	const root = ChatBoxSettings._shadow || ChatBoxSettings._host;
+	const root = ChatBoxSettings.getRoot();
 	const content = root.querySelector(".content");
 	if (content) content.style.height = height * 32 + "px";
 	const list = root.querySelector(".listoption");
 	if (list) list.style.height = height * 32 - 31 + "px";
 	const inner = root.querySelector("#ChatBoxSettings");
 	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$71.height = height;
-	_preferences$71.save();
+	_preferences$72.height = height;
+	_preferences$72.save();
 }
-var ChatBoxSettings, _preferences$71, ChatBoxSettings_default;
+var ChatBoxSettings, _preferences$72, ChatBoxSettings_default;
 var init_ChatBoxSettings = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -238727,7 +238814,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.isOpen = false;
 	ChatBoxSettings.tabOption = [];
 	ChatBoxSettings.activeTab = 0;
-	_preferences$71 = Preferences.get("ChatBoxSettings", {
+	_preferences$72 = Preferences.get("ChatBoxSettings", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -238737,7 +238824,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Initialize UI
 	*/
 	ChatBoxSettings.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const extendBtn = root.querySelector(".extend");
 		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$18);
 		const closeBtn = root.querySelector(".close");
@@ -238755,10 +238842,10 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Once in HTML
 	*/
 	ChatBoxSettings.onAppend = function onAppend() {
-		resize$7(_preferences$71.height);
+		resize$7(_preferences$72.height);
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$71.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$71.x), Renderer.width - rect.width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$72.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$72.x), Renderer.width - rect.width) + "px";
 		this._host.style.display = "none";
 	};
 	/**
@@ -238770,7 +238857,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 		else this.ui.hide();
 	};
 	ChatBoxSettings.updateTab = function updateTab(tabID, tabName) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const optList = ChatBoxSettings.tabOption[tabID];
 		const buttons = root.querySelectorAll(".content .listoption button");
 		this.activeTab = tabID;
@@ -238792,9 +238879,9 @@ var init_ChatBoxSettings = __esmMin((() => {
 		});
 	};
 	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$71.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$71.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$71.save();
+		_preferences$72.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$72.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$72.save();
 	};
 	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
 	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
@@ -238804,7 +238891,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$10() {
+function _root$7() {
 	return ChatBox._shadow || ChatBox._host;
 }
 /**
@@ -238826,7 +238913,7 @@ function extractChatMessage$1(inputEl) {
 */
 function flushMessageBuffer() {
 	if (_messageBuffer.length === 0) return;
-	const root = _root$10();
+	const root = _root$7();
 	const messages = _messageBuffer.slice();
 	_messageBuffer = [];
 	const messagesByTab = {};
@@ -238955,7 +239042,7 @@ function stopPropagation$15(event) {
 */
 function onPrivateMessageUserSelection(name) {
 	return function onPrivateMessageUserSelectionClosure() {
-		const nickBox = _root$10().querySelector(".input .username");
+		const nickBox = _root$7().querySelector(".input .username");
 		if (nickBox) nickBox.value = name;
 	};
 }
@@ -238964,7 +239051,7 @@ function onPrivateMessageUserSelection(name) {
 */
 function onChangeTargetMessage(type) {
 	return function onChangeTargetMessageClosure() {
-		const $input = _root$10().querySelector(".input-chatbox");
+		const $input = _root$7().querySelector(".input-chatbox");
 		if ($input) {
 			$input.classList.remove("guild", "party", "clan");
 			if (type & ChatBox.TYPE.PARTY) $input.classList.add("party");
@@ -238976,8 +239063,8 @@ function onChangeTargetMessage(type) {
 }
 function setChatFontScale(scale) {
 	return function setChatFontScaleClosure() {
-		_preferences$70.fontScale = clampChatFontScale(scale);
-		_preferences$70.save();
+		_preferences$71.fontScale = clampChatFontScale(scale);
+		_preferences$71.save();
 		ChatBox.applyFontScale();
 	};
 }
@@ -239010,7 +239097,7 @@ function getScrollLineHeightPx(element) {
 	return 14;
 }
 function makeResizableDiv() {
-	const root = _root$10();
+	const root = _root$7();
 	const resizer = root.querySelector(".event_add_cursor");
 	if (!resizer) return;
 	let originalHeight = 0;
@@ -239041,7 +239128,7 @@ function makeResizableDiv() {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$70, ChatBox, ChatBox_default;
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$71, ChatBox, ChatBox_default;
 var init_ChatBox = __esmMin((() => {
 	init_DBManager();
 	init_jquery();
@@ -239072,7 +239159,7 @@ var init_ChatBox = __esmMin((() => {
 	_heightIndex = 2;
 	_messageBuffer = [];
 	_rafScheduled = false;
-	_preferences$70 = Preferences.get("ChatBox", {
+	_preferences$71 = Preferences.get("ChatBox", {
 		x: 0,
 		y: Infinity,
 		height: 2,
@@ -239154,17 +239241,17 @@ var init_ChatBox = __esmMin((() => {
 	* Initialize UI
 	*/
 	ChatBox.init = function init() {
-		const root = _root$10();
+		const root = _root$7();
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$70.height - 1;
+		_heightIndex = _preferences$71.height - 1;
 		ChatBox.updateHeight();
 		ChatBox.applyFontScale();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$70.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$70.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		this.magnet.TOP = _preferences$70.magnet_top;
-		this.magnet.BOTTOM = _preferences$70.magnet_bottom;
-		this.magnet.LEFT = _preferences$70.magnet_left;
-		this.magnet.RIGHT = _preferences$70.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$71.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$71.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		this.magnet.TOP = _preferences$71.magnet_top;
+		this.magnet.BOTTOM = _preferences$71.magnet_bottom;
+		this.magnet.LEFT = _preferences$71.magnet_left;
+		this.magnet.RIGHT = _preferences$71.magnet_right;
 		this.draggable(".input");
 		this.draggable(".battlemode");
 		root.querySelectorAll(".input, .chat-function, .battlemode, .event_add_cursor").forEach((el) => {
@@ -239449,13 +239536,13 @@ var init_ChatBox = __esmMin((() => {
 			ChatBox.toggleChatBattleOption();
 		});
 		ChatBoxSettings_default.append();
-		if (_preferences$70.tabs.length > 0 && _preferences$70.tabs.length == _preferences$70.tabOption.length) {
-			for (let i = 0; i < _preferences$70.tabs.length; i++) if (_preferences$70.tabs[i]) {
-				const tabName = _preferences$70.tabs[i].name;
-				const tabSettings = _preferences$70.tabOption[i];
+		if (_preferences$71.tabs.length > 0 && _preferences$71.tabs.length == _preferences$71.tabOption.length) {
+			for (let i = 0; i < _preferences$71.tabs.length; i++) if (_preferences$71.tabs[i]) {
+				const tabName = _preferences$71.tabs[i].name;
+				const tabSettings = _preferences$71.tabOption[i];
 				ChatBox.addNewTab(tabName, tabSettings);
 			}
-			if (_preferences$70.activeTab !== void 0 && ChatBox.tabs[_preferences$70.activeTab]) ChatBox.switchTab(_preferences$70.activeTab);
+			if (_preferences$71.activeTab !== void 0 && ChatBox.tabs[_preferences$71.activeTab]) ChatBox.switchTab(_preferences$71.activeTab);
 		} else {
 			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
 				ChatBox.FILTER.PUBLIC_LOG,
@@ -239490,7 +239577,7 @@ var init_ChatBox = __esmMin((() => {
 	* Clean up the box
 	*/
 	ChatBox.clean = function Clean() {
-		const root = _root$10();
+		const root = _root$7();
 		root.querySelectorAll(".content").forEach((content) => {
 			const matches = content.innerHTML.match(/(blob:[^"]+)/g);
 			if (matches) for (let i = 0, count = matches.length; i < count; ++i) window.URL.revokeObjectURL(matches[i]);
@@ -239504,13 +239591,13 @@ var init_ChatBox = __esmMin((() => {
 		_historyNickName.clear();
 	};
 	ChatBox.toggleChatBattleOption = function toggleChatBattleOption() {
-		const onInput = _root$10().querySelector(".header tr td div.on input");
+		const onInput = _root$7().querySelector(".header tr td div.on input");
 		const tabName = onInput ? onInput.value : "";
 		ChatBoxSettings_default.toggle();
 		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
 	};
 	ChatBox.removeTab = function removeTab() {
-		const root = _root$10();
+		const root = _root$7();
 		const tabEl = root.querySelector(`table.header tr td.tab[data-tab="${this.activeTab}"]`);
 		if (tabEl) tabEl.remove();
 		const contentEl = root.querySelector(`.body .content[data-content="${this.activeTab}"]`);
@@ -239526,7 +239613,7 @@ var init_ChatBox = __esmMin((() => {
 		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
 	};
 	ChatBox.addNewTab = function addNewTab(name, settings) {
-		const root = _root$10();
+		const root = _root$7();
 		if (!name) name = "New Tab";
 		if (!settings) settings = [
 			ChatBox.FILTER.PUBLIC_LOG,
@@ -239583,7 +239670,7 @@ var init_ChatBox = __esmMin((() => {
 		return tabID;
 	};
 	ChatBox.switchTab = function switchTab(tabID) {
-		const root = _root$10();
+		const root = _root$7();
 		root.querySelectorAll("table.header tr td.tab div").forEach((el) => el.classList.remove("on"));
 		root.querySelectorAll(".body .content").forEach((el) => el.classList.remove("active"));
 		this.activeTab = tabID;
@@ -239602,7 +239689,7 @@ var init_ChatBox = __esmMin((() => {
 	* Once append to HTML
 	*/
 	ChatBox.onAppend = function OnAppend() {
-		const root = _root$10();
+		const root = _root$7();
 		const inputEl = root.querySelector(".input");
 		if (inputEl) inputEl.style.display = "none";
 		const bmEl = root.querySelector(".battlemode");
@@ -239614,17 +239701,17 @@ var init_ChatBox = __esmMin((() => {
 	* Stop custom scroll
 	*/
 	ChatBox.onRemove = function OnRemove() {
-		_preferences$70.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
-		_preferences$70.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$70.height = _heightIndex;
-		_preferences$70.magnet_top = this.magnet.TOP;
-		_preferences$70.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$70.magnet_left = this.magnet.LEFT;
-		_preferences$70.magnet_right = this.magnet.RIGHT;
-		_preferences$70.tabs = this.tabs;
-		_preferences$70.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$70.activeTab = this.activeTab;
-		_preferences$70.save();
+		_preferences$71.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
+		_preferences$71.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$71.height = _heightIndex;
+		_preferences$71.magnet_top = this.magnet.TOP;
+		_preferences$71.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$71.magnet_left = this.magnet.LEFT;
+		_preferences$71.magnet_right = this.magnet.RIGHT;
+		_preferences$71.tabs = this.tabs;
+		_preferences$71.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$71.activeTab = this.activeTab;
+		_preferences$71.save();
 		this.lastTabID = -1;
 		this.activeTab = 0;
 	};
@@ -239633,7 +239720,7 @@ var init_ChatBox = __esmMin((() => {
 	* @return {boolean} found a shortcut ?
 	*/
 	ChatBox.processBattleMode = function processBattleMode(keyId) {
-		const bmEl = _root$10().querySelector(".battlemode");
+		const bmEl = _root$7().querySelector(".battlemode");
 		if (bmEl && bmEl.style.display !== "none" || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL || keyId >= KEYS.F1 && keyId <= KEYS.F24 || KEYS.INSERT) return BattleMode.process(keyId);
 		return false;
 	};
@@ -239641,7 +239728,7 @@ var init_ChatBox = __esmMin((() => {
 	* Key Event Handler
 	*/
 	ChatBox.onKeyDown = function OnKeyDown(event) {
-		const root = _root$10();
+		const root = _root$7();
 		const messageBox = root.querySelector(".input-chatbox");
 		const nickBox = root.querySelector(".input .username");
 		const onInput = root.querySelector(".header tr td div.on input");
@@ -239779,7 +239866,7 @@ var init_ChatBox = __esmMin((() => {
 		return false;
 	};
 	ChatBox.toggleChat = function toggleChat() {
-		const messageBox = _root$10().querySelector(".input-chatbox");
+		const messageBox = _root$7().querySelector(".input-chatbox");
 		const activeElement = KEYS.getDeepActiveElement();
 		if (activeElement.tagName === "INPUT" && activeElement !== messageBox) return true;
 		if (document.querySelector("#NpcMenu, #NpcBox")) return true;
@@ -239790,7 +239877,7 @@ var init_ChatBox = __esmMin((() => {
 	* Process ChatBox message
 	*/
 	ChatBox.submit = function Submit() {
-		const root = _root$10();
+		const root = _root$7();
 		const inputEl = root.querySelector(".input");
 		const $user = root.querySelector(".input .username");
 		const $text = root.querySelector(".input-chatbox");
@@ -239856,7 +239943,7 @@ var init_ChatBox = __esmMin((() => {
 	* Change chatbox's height
 	*/
 	ChatBox.updateHeight = function changeHeight(AlwaysVisible) {
-		const root = _root$10();
+		const root = _root$7();
 		const HeightList = [
 			0,
 			0,
@@ -239913,7 +240000,7 @@ var init_ChatBox = __esmMin((() => {
 	* Save chat from current tab into a file.
 	*/
 	ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
-		const root = _root$10();
+		const root = _root$7();
 		let data;
 		const tzoffset = (/* @__PURE__ */ new Date()).getTimezoneOffset() * 6e4;
 		let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
@@ -239928,15 +240015,15 @@ var init_ChatBox = __esmMin((() => {
 		ChatBox.addText(`Chat History [${ChatBox.tabs[ChatBox.activeTab].name}] ${date} can be saved by <a style="color:#F88" download="ChatHistory [${ChatBox.tabs[ChatBox.activeTab].name}] (${date.replace("/", "-")}).html" href="${url}" target="_blank">clicking here</a>.`, ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, null, true);
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
-		const root = _root$10();
-		const scale = clampChatFontScale(_preferences$70.fontScale || 1);
+		const root = _root$7();
+		const scale = clampChatFontScale(_preferences$71.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
 		const baseInputLineHeight = 18;
 		const fontSize = Math.max(10, Math.round(baseFont * scale));
 		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
 		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$70.fontScale = scale;
+		_preferences$71.fontScale = scale;
 		root.querySelectorAll(".content").forEach((el) => {
 			el.style.fontSize = `${fontSize}px`;
 			el.style.lineHeight = `${lineHeight}px`;
@@ -239949,7 +240036,7 @@ var init_ChatBox = __esmMin((() => {
 		if (message) message.style.lineHeight = `${inputLineHeight}px`;
 	};
 	ChatBox._setupItemLinkHandler = function _setupItemLinkHandler() {
-		const root = _root$10();
+		const root = _root$7();
 		if (!root) return;
 		root.addEventListener("click", (event) => {
 			const link = event.target.closest(".item-link");
@@ -239977,7 +240064,7 @@ var init_ChatBox = __esmMin((() => {
 		ItemInfo.setItem(item);
 	});
 	ChatBox.insertText = function(text) {
-		const input = _root$10().querySelector(".input-chatbox");
+		const input = _root$7().querySelector(".input-chatbox");
 		if (!input) return;
 		input.appendChild(document.createTextNode(text));
 		input.focus();
@@ -239986,339 +240073,7 @@ var init_ChatBox = __esmMin((() => {
 	ChatBox_default = UIManager.addComponent(ChatBox);
 }));
 //#endregion
-//#region src/UI/Components/ChatRoom/ChatRoom.html?raw
-var ChatRoom_default$2;
-var init_ChatRoom$3 = __esmMin((() => {
-	ChatRoom_default$2 = "<div id=\"ChatRoom\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\"><span class=\"title\"></span> (<span class=\"count\"></span>)</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"content resize\">\r\n			<div class=\"messages resize\"></div>\r\n			<div class=\"members resize\"></div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"send\">\r\n			<input type=\"text\" name=\"message\" class=\"sendmsg\" />\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/ChatRoom/ChatRoom.css?raw
-var ChatRoom_default$1;
-var init_ChatRoom$2 = __esmMin((() => {
-	ChatRoom_default$1 = ":host {\r\n	width: 279px;\r\n	height: 200px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#ChatRoom {\r\n	position: absolute;\r\n	width: 279px;\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#ChatRoom table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatRoom .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0px 0px;\r\n}\r\n#ChatRoom .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatRoom .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatRoom .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	padding-left: 5px;\r\n	padding-top: 2px;\r\n	text-shadow: 1px 1px 1px white;\r\n}\r\n#ChatRoom .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatRoom .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .panel {\r\n	background-color: white;\r\n}\r\n#ChatRoom .content {\r\n	height: 120px;\r\n}\r\n#ChatRoom .content .messages {\r\n	width: 70%;\r\n	height: 120px;\r\n	float: left;\r\n	border-right: 1px solid #ccc;\r\n	overflow-y: auto;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .messages .self {\r\n	color: #315937;\r\n}\r\n#ChatRoom .content .messages .join {\r\n	color: #416d6c;\r\n}\r\n#ChatRoom .content .messages .leave {\r\n	color: #481b22;\r\n}\r\n#ChatRoom .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .content .members {\r\n	width: 26%;\r\n	height: 120px;\r\n	float: left;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .owner {\r\n	color: #36716d;\r\n}\r\n\r\n#ChatRoom .send {\r\n	height: 30px;\r\n	position: relative;\r\n	padding-left: 5px;\r\n}\r\n#ChatRoom .send input {\r\n	width: 100%;\r\n	height: 20px;\r\n	padding: 0px;\r\n	border: none;\r\n	border-top: 1px solid #ccc;\r\n}\r\n\r\n#ChatRoom .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ChatRoom .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#ChatRoom .extend {\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#ChatRoom .content .members span.member {\r\n	cursor: pointer;\r\n}\r\n#ChatRoom .content .members span.member:hover {\r\n	text-decoration: underline;\r\n}\r\n#ChatRoom .content .members span.owner {\r\n	font-weight: bold;\r\n}\r\n";
-}));
-//#endregion
-//#region src/DB/Items/EquipmentLocation.js
-var EquipmentLocation_default;
-var init_EquipmentLocation = __esmMin((() => {
-	EquipmentLocation_default = {
-		HEAD_BOTTOM: 1,
-		WEAPON: 2,
-		GARMENT: 4,
-		ACCESSORY1: 8,
-		ARMOR: 16,
-		SHIELD: 32,
-		SHOES: 64,
-		ACCESSORY2: 128,
-		HEAD_TOP: 256,
-		HEAD_MID: 512,
-		COSTUME_HEAD_TOP: 1024,
-		COSTUME_HEAD_MID: 2048,
-		COSTUME_HEAD_BOTTOM: 4096,
-		COSTUME_ROBE: 8192,
-		COSTUME_FLOOR: 16384,
-		AMMO: 32768,
-		SHADOW_ARMOR: 65536,
-		SHADOW_WEAPON: 1 << 17,
-		SHADOW_SHIELD: 1 << 18,
-		SHADOW_SHOES: 1 << 19,
-		SHADOW_R_ACCESSORY_SHADOW: 1 << 20,
-		SHADOW_L_ACCESSORY_SHADOW: 1 << 21
-	};
-}));
-//#endregion
-//#region src/DB/Items/ItemType.js
-var ItemType_default;
-var init_ItemType = __esmMin((() => {
-	ItemType_default = {
-		HEALING: 0,
-		UNKNOWN: 1,
-		USABLE: 2,
-		ETC: 3,
-		ARMOR: 4,
-		WEAPON: 5,
-		CARD: 6,
-		PETEGG: 7,
-		PETARMOR: 8,
-		AMMO: 10,
-		DELAYCONSUME: 11,
-		SHADOWGEAR: 12,
-		CASH: 18,
-		SEARCH: 99
-	};
-}));
-//#endregion
-//#region src/UI/UIVersionManager.js
-var _UIAliases, UIVersionManager;
-var init_UIVersionManager = __esmMin((() => {
-	init_Configs();
-	init_PacketVerManager();
-	_UIAliases = {};
-	UIVersionManager = class UIVersionManager {
-		static getUIAlias(name) {
-			return name in _UIAliases ? _UIAliases[name] : false;
-		}
-		static selectUIVersion(publicName, versionInfo) {
-			let SelectedUI = versionInfo.default;
-			let _maxDate = 0;
-			function getUIbyGameMode(gameMode) {
-				if (typeof gameMode === "object" && Object.keys(gameMode).length > 0) for (const [keydate, UI] of Object.entries(gameMode)) {
-					const dateNum = parseInt(keydate);
-					if (PacketVerManager_default.value >= dateNum && dateNum > _maxDate) {
-						SelectedUI = UI;
-						_maxDate = dateNum;
-					}
-				}
-			}
-			getUIbyGameMode(versionInfo.common);
-			if (Configs.get("renewal")) getUIbyGameMode(versionInfo.re);
-			else getUIbyGameMode(versionInfo.prere);
-			_UIAliases[publicName] = SelectedUI.name;
-			console.log("%c[UIVersion] " + publicName + ": ", "color:#007000", SelectedUI.name);
-			return SelectedUI;
-		}
-		static getUIController(publicName, versionInfo) {
-			let _selectedUI;
-			const UIController = {};
-			UIController.selectUIVersion = function() {
-				_selectedUI = UIVersionManager.selectUIVersion(publicName, versionInfo);
-			};
-			UIController.selectUIVersionWithJob = function(job) {
-				_selectedUI = versionInfo.job[job] || versionInfo.job.default;
-				_UIAliases[publicName] = _selectedUI.name;
-				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
-			};
-			UIController.selectSpecificUIVersion = function(version) {
-				_selectedUI = versionInfo.common[version] || versionInfo.default;
-				_UIAliases[publicName] = _selectedUI.name;
-				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
-			};
-			UIController.getUI = function() {
-				return _selectedUI;
-			};
-			return UIController;
-		}
-		static getEquipmentVersion() {
-			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
-			else return 0;
-			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
-			return 1;
-		}
-		static getWinStatsVersion() {
-			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
-			else return 0;
-			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
-			return 1;
-		}
-		static getInventoryVersion() {
-			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
-			else return 0;
-			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
-			return 1;
-		}
-	};
-}));
-//#endregion
-//#region src/UI/Components/CardIllustration/CardIllustration.html?raw
-var CardIllustration_default$2;
-var init_CardIllustration$2 = __esmMin((() => {
-	CardIllustration_default$2 = "<div id=\"CardIllustration\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left text\"></div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\"></div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CardIllustration/CardIllustration.css?raw
-var CardIllustration_default$1;
-var init_CardIllustration$1 = __esmMin((() => {
-	CardIllustration_default$1 = ":host {\r\n	width: 300px;\r\n	height: 417px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#CardIllustration {\r\n	position: absolute;\r\n	width: 300px;\r\n	height: 417px;\r\n}\r\n#CardIllustration .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#CardIllustration .titlebar .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#CardIllustration .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap; /* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CardIllustration .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#CardIllustration .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#CardIllustration .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CardIllustration .content {\r\n	width: 300px;\r\n	height: 400px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CardIllustration/CardIllustration.js
-var CardIllustration, CardIllustration_default;
-var init_CardIllustration = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_UIManager();
-	init_GUIComponent();
-	init_CardIllustration$2();
-	init_CardIllustration$1();
-	CardIllustration = new GUIComponent("CardIllustration", CardIllustration_default$1);
-	/**
-	* Render HTML
-	*/
-	CardIllustration.render = () => CardIllustration_default$2;
-	/**
-	* Initialize events
-	*/
-	CardIllustration.init = function init() {
-		(this._shadow || this._host).querySelector(".close").addEventListener("click", this.remove.bind(this));
-		this.draggable();
-	};
-	/**
-	* Show image
-	*
-	* @param {object} item
-	*/
-	CardIllustration.setCard = function setCard(item) {
-		const root = this._shadow || this._host;
-		root.querySelector(".titlebar .text").textContent = item.identifiedDisplayName;
-		root.querySelector(".content").style.backgroundImage = "none";
-		Client.loadFile(`${DB.INTERFACE_PATH}cardbmp/${item.illustResourcesName}.bmp`, (data) => {
-			const r = CardIllustration._shadow || CardIllustration._host;
-			r.querySelector(".content").style.backgroundImage = `url(${data})`;
-		});
-	};
-	CardIllustration.mouseMode = GUIComponent.MouseMode.STOP;
-	CardIllustration.needFocus = true;
-	CardIllustration_default = UIManager.addComponent(CardIllustration);
-}));
-//#endregion
-//#region src/UI/Components/MakeReadBook/MakeReadBook.html?raw
-var MakeReadBook_default$2;
-var init_MakeReadBook$2 = __esmMin((() => {
-	MakeReadBook_default$2 = "<div id=\"MakeReadBook\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"title\"><span class=\"text\" id=\"titleBook\"></span> <span class=\"text\" id=\"pageBook\">(1/3)</span></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"head\">\r\n			<div class=\"event_book\" id=\"highlighter\">\r\n				<span class=\"bookmark\" data-text=\"1296\">Bookmark</span>\r\n			</div>\r\n			<div class=\"event_book\" id=\"next_previous\">\r\n				<span class=\"previous\" data-text=\"1297\">Previous</span>\r\n				<span class=\"next\" data-text=\"1298\">Next</span>\r\n			</div>\r\n		</div>\r\n		<div class=\"body\">\r\n			<pre class=\"text\" id=\"textBook\"></pre>\r\n		</div>\r\n		<div class=\"footer\"></div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/MakeReadBook/MakeReadBook.css?raw
-var MakeReadBook_default$1;
-var init_MakeReadBook$1 = __esmMin((() => {
-	MakeReadBook_default$1 = ":host {\r\n	width: 555px;\r\n	height: 455px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#MakeReadBook {\r\n	position: absolute;\r\n	width: 555px;\r\n}\r\n\r\n#MakeReadBook .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#MakeReadBook .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#MakeReadBook .titlebar .title {\r\n	margin-left: 3px;\r\n	text-align: center;\r\n}\r\n\r\n#MakeReadBook #textBook {\r\n	margin: 0;\r\n	margin-top: -25px;\r\n	width: 500px;\r\n	white-space: break-spaces;\r\n}\r\n\r\n#MakeReadBook .panel {\r\n	height: 415px;\r\n	display: block;\r\n}\r\n#MakeReadBook .body {\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	padding: 0px 0px 0px 30px;\r\n	white-space: pre-wrap;\r\n}\r\n#MakeReadBook .head {\r\n	display: flex;\r\n	text-align: center;\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	width: 535px;\r\n	height: 25px;\r\n}\r\n#MakeReadBook .footer {\r\n	flex: 1;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 0px 5px;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 555px;\r\n	height: 25px;\r\n}\r\n#MakeReadBook .event_book {\r\n	flex: 1;\r\n}\r\n#MakeReadBook .clone_book {\r\n	position: absolute;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	right: 4px;\r\n	top: 10%;\r\n}\r\n#MakeReadBook .highlighter {\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n#MakeReadBook #highlighter {\r\n	text-align: left;\r\n}\r\n#MakeReadBook #next_previous {\r\n	text-align: right;\r\n	margin-top: 5px;\r\n	margin-right: -10px;\r\n}\r\n\r\n#MakeReadBook .bookmark {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 8px;\r\n	left: 11px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n#MakeReadBook .previous {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 6px;\r\n	right: 12px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n#MakeReadBook .next {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: 6px;\r\n	right: -10px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Announce/Announce.html?raw
-var Announce_default$2;
-var init_Announce$2 = __esmMin((() => {
-	Announce_default$2 = "<div id=\"Announce\">\r\n	<canvas></canvas>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Announce/Announce.css?raw
-var Announce_default$1;
-var init_Announce$1 = __esmMin((() => {
-	Announce_default$1 = ":host {\r\n	top: 40px;\r\n	left: 0px;\r\n}\r\n\r\n#Announce canvas {\r\n	display: block;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Announce/Announce.js
-function _getRoot$61() {
-	return Announce._shadow || Announce._host;
-}
-var Announce, _timer$2, _life$1, Announce_default;
-var init_Announce = __esmMin((() => {
-	init_Events();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Announce$2();
-	init_Announce$1();
-	Announce = new GUIComponent("Announce", Announce_default$1);
-	/**
-	* Mouse can cross this UI
-	*/
-	Announce.mouseMode = GUIComponent.MouseMode.CROSS;
-	/**
-	* @var {boolean} do not focus this UI
-	*/
-	Announce.needFocus = false;
-	_timer$2 = 0;
-	_life$1 = 20 * 1e3;
-	Announce.render = () => Announce_default$2;
-	/**
-	* Initialize component
-	*/
-	Announce.init = function init() {
-		const root = _getRoot$61();
-		this.canvas = root.querySelector("canvas");
-		this.ctx = this.canvas.getContext("2d");
-	};
-	/**
-	* Once removed from HTML, clean timer
-	*/
-	Announce.onRemove = function onRemove() {
-		if (_timer$2) {
-			Events.clearTimeout(_timer$2);
-			_timer$2 = 0;
-		}
-	};
-	/**
-	* Timer end, cleaning announce
-	*/
-	Announce.timeEnd = function timeEnd() {
-		this.remove();
-	};
-	/**
-	* Add an announce with text and color
-	*
-	* @param {string} text to display
-	* @param {string} color
-	*/
-	Announce.set = function set(text, color, options = {}) {
-		const allowNewlines = typeof options === "boolean" ? options : !!options.allowNewlines;
-		const opts = typeof options === "object" ? options : {};
-		const fontSize = opts.fontSize || 12;
-		const life = opts.life || _life$1;
-		let targetWidth = null;
-		if (opts.width === "100%") targetWidth = Renderer.width;
-		else if (opts.width) targetWidth = opts.width;
-		const maxWidth = targetWidth ? targetWidth - 20 : 500;
-		const lines = [];
-		this.ctx.font = `${fontSize}px Arial`;
-		if (allowNewlines) text.split("\n").forEach((line) => {
-			const words = line.split(" ");
-			let currentLine = "";
-			words.forEach((word) => {
-				const testLine = `${currentLine}${word} `;
-				if (this.ctx.measureText(testLine).width > maxWidth) {
-					lines.push(currentLine.trim());
-					currentLine = `${word} `;
-				} else currentLine = testLine;
-			});
-			if (currentLine.trim()) lines.push(currentLine.trim());
-		});
-		else {
-			let currentLine = "";
-			text.split(" ").forEach((word) => {
-				const testLine = `${currentLine}${word} `;
-				if (this.ctx.measureText(testLine).width > maxWidth) {
-					lines.push(currentLine.trim());
-					currentLine = `${word} `;
-				} else currentLine = testLine;
-			});
-			if (currentLine.trim()) lines.push(currentLine.trim());
-		}
-		this.canvas.width = targetWidth || 20 + Math.max(...lines.map((line) => this.ctx.measureText(line).width));
-		this.canvas.height = opts.height || 10 + (fontSize + 5) * lines.length;
-		if (opts.width === "100%") this._host.style.left = "0px";
-		else this._host.style.left = `${Renderer.width - this.canvas.width >> 1}px`;
-		this.ctx.font = `${fontSize}px Arial`;
-		if (!opts.noBackground) {
-			this.ctx.fillStyle = "rgba(0,0,0,0.5)";
-			this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-		}
-		this.ctx.fillStyle = color || "#FFFF00";
-		if (targetWidth || opts.height) {
-			this.ctx.textAlign = "center";
-			this.ctx.textBaseline = "middle";
-			lines.forEach((line, index) => {
-				const y = this.canvas.height / 2 + (index - (lines.length - 1) / 2) * (fontSize + 5);
-				this.ctx.fillText(line, this.canvas.width / 2, y);
-			});
-		} else {
-			this.ctx.textAlign = "left";
-			this.ctx.textBaseline = "alphabetic";
-			lines.forEach((line, index) => {
-				this.ctx.fillText(line, 10, 5 + fontSize + (fontSize + 5) * index);
-			});
-		}
-		if (_timer$2) Events.clearTimeout(_timer$2);
-		_timer$2 = Events.setTimeout(this.timeEnd.bind(this), life);
-	};
-	Announce_default = UIManager.addComponent(Announce);
-}));
-//#endregion
 //#region src/UI/Components/MakeReadBook/MakeReadBook.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$60() {
-	return MakeReadBook._shadow || MakeReadBook._host;
-}
 async function repeatedGreetingsLoop(book_information) {
 	const text1 = book_information.split("\n");
 	for (let i = 0; i < text1.length; i++) {
@@ -240366,10 +240121,10 @@ function onClose$14(e) {
 	} catch (_error) {}
 	_BOOK_INFORMATION["book_open"] = false;
 	_BOOK_INFORMATION.save();
-	if (_preferences$69.show) MakeReadBook.onRemove();
+	if (_preferences$70.show) MakeReadBook.onRemove();
 }
 function page() {
-	const root = _getRoot$60();
+	const root = MakeReadBook.getRoot();
 	const textBook = root.querySelector("#textBook");
 	if (textBook) textBook.innerHTML = "";
 	for (let i = _BOOK_INFORMATION["page"] * 1; i < _BOOK_INFORMATION["pagesize"] && i < (_BOOK_INFORMATION["page"] + 1) * 1; i++) if (textBook) {
@@ -240380,13 +240135,13 @@ function page() {
 	if (pageBook) pageBook.textContent = `(${_BOOK_INFORMATION["page"] + 1}/${Math.ceil(_BOOK_INFORMATION["pagesize"] / 1)})`;
 }
 function adjustButtons$1() {
-	const root = _getRoot$60();
+	const root = MakeReadBook.getRoot();
 	const nextBtn = root.querySelector(".next_btn");
 	if (nextBtn) nextBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] > _BOOK_INFORMATION["pagesize"] / 1 - 1;
 	const prevBtn = root.querySelector(".previous_btn");
 	if (prevBtn) prevBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] == 0;
 }
-var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$69, MakeReadBook_default;
+var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$70, MakeReadBook_default;
 var init_MakeReadBook = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -240418,7 +240173,7 @@ var init_MakeReadBook = __esmMin((() => {
 	* Store MakeReadBook items
 	*/
 	MakeReadBook.list = [];
-	_preferences$69 = Preferences.get("MakeReadBook", {
+	_preferences$70 = Preferences.get("MakeReadBook", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -240467,7 +240222,7 @@ var init_MakeReadBook = __esmMin((() => {
 	};
 	MakeReadBook.openBook = function openBook() {
 		MakeReadBook.append();
-		const root = _getRoot$60();
+		const root = MakeReadBook.getRoot();
 		const panel = root.querySelector(".panel");
 		if (panel) panel.style.backgroundColor = `#${_BOOK_INFORMATION["color"]}`;
 		const footer = root.querySelector(".footer");
@@ -240480,7 +240235,7 @@ var init_MakeReadBook = __esmMin((() => {
 			"data/sprite/book/Ã¥¿ÞÂÊ.spr",
 			"data/sprite/book/Ã¥¿À¸¥ÂÊ.spr"
 		], (spr_close, spr_highlighter, spr_previous, spr_next) => {
-			const innerRoot = _getRoot$60();
+			const innerRoot = MakeReadBook.getRoot();
 			const canvas = new SPR(spr_close).getCanvasFromFrame(0);
 			canvas.className = "clone_book event_add_cursor";
 			const footerEl = innerRoot.querySelector(".footer");
@@ -240559,7 +240314,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$69.show) onClose$14();
+		if (_preferences$70.show) onClose$14();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -240570,13 +240325,13 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onAppend = function OnAppend() {
 		this._host.style.display = "";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$69.y), Renderer.height - 455)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$69.x), Renderer.width - 555)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$70.y), Renderer.height - 455)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$70.x), Renderer.width - 555)}px`;
 		_BOOK_INFORMATION["book_open"] = true;
 		_BOOK_INFORMATION.save();
-		_preferences$69.show = true;
-		_preferences$69.save();
-		const root = _getRoot$60();
+		_preferences$70.show = true;
+		_preferences$70.save();
+		const root = MakeReadBook.getRoot();
 		this.draggable(root.querySelector(".titlebar"));
 	};
 	/**
@@ -240584,19 +240339,19 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onRemove = function OnRemove() {
 		try {
-			if (_preferences$69.show) this._host.style.display = "none";
-			_preferences$69.show = this._host.style.display !== "none";
-			_preferences$69.reduce = false;
-			_preferences$69.y = parseInt(this._host.style.top, 10) || 0;
-			_preferences$69.x = parseInt(this._host.style.left, 10) || 0;
-			_preferences$69.magnet_top = this.magnet.TOP;
-			_preferences$69.magnet_bottom = this.magnet.BOTTOM;
-			_preferences$69.magnet_left = this.magnet.LEFT;
-			_preferences$69.magnet_right = this.magnet.RIGHT;
-			_preferences$69.save();
+			if (_preferences$70.show) this._host.style.display = "none";
+			_preferences$70.show = this._host.style.display !== "none";
+			_preferences$70.reduce = false;
+			_preferences$70.y = parseInt(this._host.style.top, 10) || 0;
+			_preferences$70.x = parseInt(this._host.style.left, 10) || 0;
+			_preferences$70.magnet_top = this.magnet.TOP;
+			_preferences$70.magnet_bottom = this.magnet.BOTTOM;
+			_preferences$70.magnet_left = this.magnet.LEFT;
+			_preferences$70.magnet_right = this.magnet.RIGHT;
+			_preferences$70.save();
 		} catch (_error) {
-			_preferences$69.show = false;
-			_preferences$69.save();
+			_preferences$70.show = false;
+			_preferences$70.save();
 		}
 	};
 	/**
@@ -241152,6 +240907,77 @@ var init_ItemInfo$1 = __esmMin((() => {
 	ItemInfo_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n.ItemInfo {\r\n	position: relative;\r\n	width: 280px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemInfo .container {\r\n	height: 140px;\r\n	position: relative;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .event_view {\r\n	position: absolute;\r\n}\r\n.ItemInfo .event_view .view {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	top: 6px;\r\n	left: 6px;\r\n}\r\n.ItemInfo .collection {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 10px;\r\n	width: 75px;\r\n	height: 100px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemInfo .title {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 86px;\r\n	width: 185px;\r\n	height: 14px;\r\n	padding-left: 4px;\r\n	padding-top: 6px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n.ItemInfo .close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	display: block;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n.ItemInfo .description {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 100px;\r\n	line-height: 18px;\r\n	width: 170px;\r\n	height: 75px;\r\n	overflow-y: auto;\r\n}\r\n.ItemInfo .description .description-inner {\r\n	width: 150px;\r\n}\r\n.ItemInfo .extend {\r\n	position: absolute;\r\n	right: 4px;\r\n	bottom: 3px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.ItemInfo .cardlist {\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemInfo .cardlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .cardlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemInfo .cardlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemInfo .cardlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemInfo .cardlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemInfo .book_open {\r\n	margin-top: 6px;\r\n	margin-left: 7px;\r\n}\r\n.ItemInfo .book_read {\r\n	position: absolute;\r\n	margin-top: 7px;\r\n}\r\n\r\n.ItemInfo .overlay_open {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 7px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n.ItemInfo .overlay_read {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 27px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n\r\n.ItemInfo .optionlist {\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemInfo .optionlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemInfo .optionlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemInfo .optionlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemInfo .optionlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemInfo .optionlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemInfo .title.damaged {\r\n	text-shadow: red 1px 1px 0px;\r\n}\r\n\r\n.ItemInfo .preview-action {\r\n	padding-top: 115px;\r\n	padding-left: 9px;\r\n}\r\n\r\n.moveinfo-label {\r\n	color: #000000;\r\n	display: block;\r\n	text-decoration: underline;\r\n}\r\n\r\n#moveinfo-tooltip {\r\n	position: absolute;\r\n	display: none;\r\n	pointer-events: none;\r\n	z-index: 9999;\r\n	background: #e6e7ef;\r\n	border: 2px solid #bdbdee;\r\n	padding: 6px 8px;\r\n	color: #183984;\r\n	white-space: nowrap;\r\n	border-radius: 8px;\r\n}\r\n\r\n.ItemInfo .btn_mounting {\r\n	border: 0;\r\n	width: 80px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
+//#region src/UI/UIVersionManager.js
+var _UIAliases, UIVersionManager;
+var init_UIVersionManager = __esmMin((() => {
+	init_Configs();
+	init_PacketVerManager();
+	_UIAliases = {};
+	UIVersionManager = class UIVersionManager {
+		static getUIAlias(name) {
+			return name in _UIAliases ? _UIAliases[name] : false;
+		}
+		static selectUIVersion(publicName, versionInfo) {
+			let SelectedUI = versionInfo.default;
+			let _maxDate = 0;
+			function getUIbyGameMode(gameMode) {
+				if (typeof gameMode === "object" && Object.keys(gameMode).length > 0) for (const [keydate, UI] of Object.entries(gameMode)) {
+					const dateNum = parseInt(keydate);
+					if (PacketVerManager_default.value >= dateNum && dateNum > _maxDate) {
+						SelectedUI = UI;
+						_maxDate = dateNum;
+					}
+				}
+			}
+			getUIbyGameMode(versionInfo.common);
+			if (Configs.get("renewal")) getUIbyGameMode(versionInfo.re);
+			else getUIbyGameMode(versionInfo.prere);
+			_UIAliases[publicName] = SelectedUI.name;
+			console.log("%c[UIVersion] " + publicName + ": ", "color:#007000", SelectedUI.name);
+			return SelectedUI;
+		}
+		static getUIController(publicName, versionInfo) {
+			let _selectedUI;
+			const UIController = {};
+			UIController.selectUIVersion = function() {
+				_selectedUI = UIVersionManager.selectUIVersion(publicName, versionInfo);
+			};
+			UIController.selectUIVersionWithJob = function(job) {
+				_selectedUI = versionInfo.job[job] || versionInfo.job.default;
+				_UIAliases[publicName] = _selectedUI.name;
+				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
+			};
+			UIController.selectSpecificUIVersion = function(version) {
+				_selectedUI = versionInfo.common[version] || versionInfo.default;
+				_UIAliases[publicName] = _selectedUI.name;
+				console.log("[UIVersion] " + publicName + ": ", _selectedUI.name);
+			};
+			UIController.getUI = function() {
+				return _selectedUI;
+			};
+			return UIController;
+		}
+		static getEquipmentVersion() {
+			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
+			else return 0;
+			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
+			return 1;
+		}
+		static getWinStatsVersion() {
+			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
+			else return 0;
+			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
+			return 1;
+		}
+		static getInventoryVersion() {
+			if (Configs.get("clientVersionMode") === "PacketVer") if (PacketVerManager_default.value >= 20090601) return 1;
+			else return 0;
+			if (Configs.get("clientVersionMode") === "PreRenewal") return 0;
+			return 1;
+		}
+	};
+}));
+//#endregion
 //#region src/UI/Components/InputBox/InputBox.html?raw
 var InputBox_default$2;
 var init_InputBox$2 = __esmMin((() => {
@@ -241166,16 +240992,10 @@ var init_InputBox$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/InputBox/InputBox.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$59() {
-	return InputBox._shadow || InputBox._host;
-}
-/**
 * Validate input
 */
 function validate$1() {
-	const root = _getRoot$59();
+	const root = InputBox.getRoot();
 	const input = root.querySelector("input");
 	let text = input ? input.value : "";
 	if (!InputBox.isPersistent || text.length) {
@@ -241211,7 +241031,7 @@ var init_InputBox = __esmMin((() => {
 		this.draggable();
 		this._host.style.top = `${(Renderer.height - 120) / 1.5 - 49}px`;
 		this._host.style.left = `${(Renderer.width - 280) / 2 + 1}px`;
-		const root = _getRoot$59();
+		const root = InputBox.getRoot();
 		const btn = root.querySelector("ui-button");
 		if (btn) btn.addEventListener("click", () => validate$1());
 		const input = root.querySelector("input");
@@ -241232,7 +241052,7 @@ var init_InputBox = __esmMin((() => {
 	* Input Post-Render callback
 	*/
 	InputBox.onAppend = function onAppend() {
-		const input = _getRoot$59().querySelector("input");
+		const input = InputBox.getRoot().querySelector("input");
 		if (input) {
 			input.focus();
 			if (input.value) input.select();
@@ -241242,7 +241062,7 @@ var init_InputBox = __esmMin((() => {
 	* Remove data from UI
 	*/
 	InputBox.onRemove = function onRemove() {
-		const root = _getRoot$59();
+		const root = InputBox.getRoot();
 		const input = root.querySelector("input");
 		if (input) {
 			input.value = "";
@@ -241259,20 +241079,14 @@ var init_InputBox = __esmMin((() => {
 	* @return {boolean}
 	*/
 	InputBox.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
-			if (!this.isPersistent && event.which === KEYS.ENTER) {
-				validate$1();
-				event.stopImmediatePropagation();
-				return false;
-			}
-			event.stopImmediatePropagation();
-			return true;
-		}
-		if (!this.isPersistent && event.which === KEYS.ENTER) {
+		if (event.which === KEYS.ENTER) {
 			validate$1();
 			event.stopImmediatePropagation();
 			return false;
+		}
+		if (this.isEditableFocused()) {
+			event.stopImmediatePropagation();
+			return true;
 		}
 		return true;
 	};
@@ -241286,7 +241100,7 @@ var init_InputBox = __esmMin((() => {
 	*/
 	InputBox.setType = function setType(type, isPersistent, defaultVal, itemId = null) {
 		this.isPersistent = !!isPersistent;
-		const root = _getRoot$59();
+		const root = InputBox.getRoot();
 		const innerRoot = root.querySelector("#inputbox");
 		const textEl = root.querySelector(".text");
 		const input = root.querySelector("input");
@@ -241372,1697 +241186,6 @@ var init_Storage$6 = __esmMin((() => {
 	Storage_default$4 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/Storage/StorageV0/Storage.js
-function onResize$16() {
-	const top = Storage$1._host.offsetTop;
-	let lastHeight = 0;
-	function resizing() {
-		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
-		h = Math.min(Math.max(h, 8), 17);
-		if (h === lastHeight) return;
-		resizeHeight$3(h);
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function resizeHeight$3(height) {
-	height = Math.min(Math.max(height, 8), 17);
-	const content = (Storage$1._shadow || Storage$1._host).querySelector(".container .content");
-	if (content) content.style.height = `${height * 32}px`;
-	Storage$1._host.style.height = `${50 + height * 32}px`;
-}
-function onSwitchTab$5(idx) {
-	_preferences$68.tab = idx;
-	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
-		const tabs = (Storage$1._shadow || Storage$1._host).querySelector(".tabs");
-		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		requestFilter$5();
-	});
-}
-function onDrop$23(event) {
-	let data;
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (e) {}
-	event.stopImmediatePropagation();
-	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
-	const item = data.data;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			if (data.from === "CartItems") Storage$1.reqAddItemFromCart(item.index, parseInt(count, 10));
-			else Storage$1.reqAddItem(item.index, parseInt(count, 10));
-		};
-		return false;
-	}
-	if (data.from === "CartItems") Storage$1.reqAddItemFromCart(item.index, 1);
-	else Storage$1.reqAddItem(item.index, 1);
-	return false;
-}
-function requestFilter$5() {
-	const content = (Storage$1._shadow || Storage$1._host).querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	for (let i = 0, count = _list$15.length; i < count; ++i) Storage$1.addItemSub(_list$15[i]);
-}
-function getItemIndexById$3(index) {
-	for (let i = 0, count = _list$15.length; i < count; ++i) if (_list$15[i].index === index) return i;
-	return -1;
-}
-function onScroll$7(event, contentEl) {
-	let delta;
-	if (event.wheelDelta) delta = event.wheelDelta / 120;
-	else if (event.detail) delta = -event.detail;
-	else if (event.deltaY) delta = -event.deltaY / 100;
-	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
-	event.preventDefault();
-}
-function onItemOver$19(itemEl, root) {
-	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i < 0) return;
-	const item = _list$15[i];
-	const overlay = root.querySelector(".overlay");
-	if (overlay) {
-		overlay.style.display = "";
-		overlay.style.top = `${itemEl.offsetTop - 10}px`;
-		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
-		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-function onItemOut$20(root) {
-	const overlay = root.querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemDragStart$15(event, itemEl) {
-	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return;
-	const img = new Image();
-	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	url = url.replace(/^"/, "").replace(/"$/, "");
-	img.decoding = "async";
-	img.src = url;
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Storage",
-		data: _list$15[i]
-	}));
-}
-function onItemDragEnd$16() {
-	delete window._OBJ_DRAG_;
-}
-function onItemInfo$23(event, itemEl) {
-	event.stopImmediatePropagation();
-	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$5(_list$15[i]);
-		return false;
-	}
-	if (ItemInfo_default.uid === _list$15[i].ITID) ItemInfo_default.remove();
-	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$15[i].ITID;
-	ItemInfo_default.setItem(_list$15[i]);
-	return false;
-}
-function transferItemToOtherUI$5(item) {
-	const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
-	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isInventoryOpen) Storage$1.reqRemoveItem(item.index, count);
-	else if (isCartOpen) Storage$1.reqMoveItemToCart(item.index, count);
-	return true;
-}
-var Storage$1, _list$15, _preferences$68, Storage_default$3;
-var init_Storage$5 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_InputBox();
-	init_ItemInfo();
-	init_Storage$7();
-	init_Storage$6();
-	init_CartItems();
-	init_Inventory();
-	Storage$1 = new GUIComponent("Storage", Storage_default$4);
-	Storage$1.render = () => Storage_default$5;
-	Storage$1.TAB = {
-		ITEM: 0,
-		KAFRA: 1,
-		ARMOR: 2,
-		ARMS: 3,
-		AMMO: 4,
-		CARD: 5,
-		ETC: 6
-	};
-	_list$15 = [];
-	_preferences$68 = Preferences.get("Storage", {
-		x: 200,
-		y: 500,
-		height: 8,
-		tab: Storage$1.TAB.ITEM
-	}, 1);
-	Storage$1.init = function init() {
-		const root = this._shadow || this._host;
-		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
-			btn.addEventListener("mousedown", () => onSwitchTab$5(idx));
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$16());
-		const closeBtn = root.querySelector(".footer .close");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => {
-				if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
-			});
-		}
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$68.tab + 1}.bmp`, (data) => {
-			const tabs = root.querySelector(".tabs");
-			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		});
-		resizeHeight$3(_preferences$68.height);
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("wheel", (e) => onScroll$7(e, content));
-			content.addEventListener("mouseover", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) onItemOver$19(itemEl, root);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$20(root);
-			});
-			content.addEventListener("dragstart", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					onItemDragStart$15(e, itemEl);
-					onItemOut$20(root);
-				}
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$16();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					e.preventDefault();
-					onItemInfo$23(e, itemEl);
-				}
-			});
-		}
-		this._host.addEventListener("drop", (e) => onDrop$23(e));
-		this._host.addEventListener("dragover", (e) => {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		});
-		this.draggable(".titlebar");
-		this.ui.hide();
-	};
-	Storage$1.onAppend = function onAppend() {
-		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$68.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$68.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-	};
-	Storage$1.onRemove = function onRemove() {
-		const content = (this._shadow || this._host).querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		_list$15.length = 0;
-		_preferences$68.y = parseInt(this._host.style.top, 10);
-		_preferences$68.x = parseInt(this._host.style.left, 10);
-		_preferences$68.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$68.save();
-	};
-	Storage$1.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$15.push(items[i]);
-	};
-	Storage$1.addItem = function addItem(item) {
-		const i = getItemIndexById$3(item.index);
-		if (i > -1) {
-			_list$15[i].count += item.count;
-			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$15[i].count;
-			return;
-		}
-		if (this.addItemSub(item)) _list$15.push(item);
-	};
-	Storage$1.addItemSub = function addItemSub(item) {
-		let tab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				tab = Storage$1.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				tab = Storage$1.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				tab = Storage$1.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				tab = Storage$1.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				tab = Storage$1.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				tab = Storage$1.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				tab = Storage$1.TAB.ETC;
-				break;
-		}
-		if (tab === _preferences$68.tab) {
-			const it = DB.getItemInfo(item.ITID);
-			const root = this._shadow || this._host;
-			const content = root.querySelector(".container .content");
-			const itemEl = document.createElement("div");
-			itemEl.className = "item";
-			itemEl.setAttribute("data-index", item.index);
-			itemEl.setAttribute("draggable", "true");
-			const iconDiv = document.createElement("div");
-			iconDiv.className = "icon";
-			itemEl.appendChild(iconDiv);
-			const amountDiv = document.createElement("div");
-			amountDiv.className = "amount";
-			if (item.count) {
-				const countSpan = document.createElement("span");
-				countSpan.className = "count";
-				countSpan.textContent = item.count;
-				amountDiv.appendChild(countSpan);
-				amountDiv.appendChild(document.createTextNode(" "));
-			}
-			itemEl.appendChild(amountDiv);
-			const nameSpan = document.createElement("span");
-			nameSpan.className = "name";
-			nameSpan.innerHTML = DB.getItemName(item);
-			itemEl.appendChild(nameSpan);
-			if (content) content.appendChild(itemEl);
-			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
-				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-				if (icon) icon.style.backgroundImage = `url(${data})`;
-			});
-		}
-		return true;
-	};
-	Storage$1.removeItem = function removeItem(index, count) {
-		const i = getItemIndexById$3(index);
-		if (i < 0) return null;
-		if (_list$15[i].count) {
-			_list$15[i].count -= count;
-			if (_list$15[i].count > 0) {
-				const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$15[i].count;
-				return _list$15[i];
-			}
-		}
-		const item = _list$15[i];
-		_list$15.splice(i, 1);
-		const el = (this._shadow || this._host).querySelector(`.item[data-index="${index}"]`);
-		if (el) el.remove();
-		return item;
-	};
-	Storage$1.setItemInfo = function setItemInfo(current, limit) {
-		const root = this._shadow || this._host;
-		const currentEl = root.querySelector(".footer .current");
-		const limitEl = root.querySelector(".footer .limit");
-		if (currentEl) currentEl.textContent = current;
-		if (limitEl) limitEl.textContent = limit;
-	};
-	Storage$1.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
-		}
-	};
-	Storage$1.onClosePressed = function onClosedPressed() {};
-	Storage$1.reqAddItem = function reqAddItem() {};
-	Storage$1.reqAddItemFromCart = function reqAddItemFromCart() {};
-	Storage$1.reqRemoveItem = function reqRemoveItem() {};
-	Storage$1.reqMoveItemToCart = function reqMoveItemToCart() {};
-	Storage$1.mouseMode = GUIComponent.MouseMode.STOP;
-	Storage_default$3 = UIManager.addComponent(Storage$1);
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV3/StorageFilter.html?raw
-var StorageFilter_default$1;
-var init_StorageFilter$2 = __esmMin((() => {
-	StorageFilter_default$1 = "<div id=\"StorageFilter\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\">Item Filter</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n	</div>\r\n\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n		<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV3/StorageFilter.css?raw
-var StorageFilter_default;
-var init_StorageFilter$1 = __esmMin((() => {
-	StorageFilter_default = ":host {\r\n	width: 220px;\r\n	height: 164px;\r\n	top: 150px;\r\n	left: 150px;\r\n}\r\n\r\n#StorageFilter {\r\n	position: absolute;\r\n	width: 220px;\r\n}\r\n#StorageFilter .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#StorageFilter .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#StorageFilter .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#StorageFilter .titlebar .right {\r\n	margin-right: 3px;\r\n	float: right;\r\n}\r\n#StorageFilter .titlebar .clear {\r\n	clear: both;\r\n}\r\n#StorageFilter .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#StorageFilter .panel {\r\n	border: 1px solid #ccc;\r\n	border-bottom: none;\r\n	background: white;\r\n	padding-left: 16px;\r\n}\r\n\r\n#StorageFilter .content {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	min-height: 128px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#StorageFilter .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#StorageFilter .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#StorageFilter .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#StorageFilter .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#StorageFilter .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#StorageFilter .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 160px;\r\n}\r\n\r\n#StorageFilter .footer {\r\n	width: 100%;\r\n	height: 19px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border: 1px solid #ccc;\r\n	border-top: none;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#StorageFilter .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: se-resize;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV3/StorageFilter.js
-function StorageFilter(tabId) {
-	const prefName = "StorageFilter_" + tabId;
-	GUIComponent.call(this, prefName, StorageFilter_default);
-	this.render = () => StorageFilter_default$1;
-	this.onRemove = function() {
-		const root = this._shadow || this._host;
-		const content = root.querySelector(".content");
-		if (content) content.innerHTML = "";
-		this._list.length = 0;
-		this._currentTabId = -1;
-		this._preferences.y = parseInt(this._host.style.top, 10);
-		this._preferences.x = parseInt(this._host.style.left, 10);
-		this._preferences.height = Math.floor((root.querySelector(".content") ? root.querySelector(".content").offsetHeight : 128) / 32);
-		this._preferences.save();
-		if (typeof this.onCloseCallback === "function") this.onCloseCallback();
-	};
-	this._list = [];
-	this._currentTabId = -1;
-	this._preferences = Preferences.get(prefName, {
-		x: 300 + tabId * 20,
-		y: 200 + tabId * 20,
-		height: 4
-	}, 1);
-	this.onCloseCallback = null;
-}
-var init_StorageFilter = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_StorageFilter$2();
-	init_StorageFilter$1();
-	StorageFilter.prototype = Object.create(GUIComponent.prototype);
-	StorageFilter.prototype.constructor = StorageFilter;
-	StorageFilter.prototype.init = function init() {
-		const self = this;
-		const root = this._shadow || this._host;
-		const closeBtn = root.querySelector(".titlebar .right .close");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => {
-				self.remove();
-			});
-		}
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", () => this.onResize());
-		this.resizeHeight(this._preferences.height);
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("mouseover", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) this.onItemOver(itemEl, root);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) this.onItemOut(root);
-			});
-			content.addEventListener("contextmenu", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					e.preventDefault();
-					this.onItemInfo(e, itemEl);
-				}
-			});
-			content.addEventListener("dragstart", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					this.onItemDragStart(e, itemEl);
-					this.onItemOut(root);
-				}
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) this.onItemDragEnd();
-			});
-		}
-		this.draggable(".titlebar");
-		this.ui.hide();
-	};
-	StorageFilter.prototype.onAppend = function onAppend() {
-		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, this._preferences.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, this._preferences.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-	};
-	StorageFilter.prototype.setItems = function setItems(title, items, tabId) {
-		this._list = items.slice(0);
-		this._currentTabId = tabId;
-		const root = this._shadow || this._host;
-		const titleEl = root.querySelector(".titlebar .text");
-		if (titleEl) titleEl.textContent = title;
-		const content = root.querySelector(".content");
-		if (content) content.innerHTML = "";
-		for (let i = 0, count = this._list.length; i < count; ++i) this.renderItem(this._list[i]);
-	};
-	StorageFilter.prototype.renderItem = function renderItem(item) {
-		const it = DB.getItemInfo(item.ITID);
-		const root = this._shadow || this._host;
-		const content = root.querySelector(".content");
-		const itemEl = document.createElement("div");
-		itemEl.className = "item";
-		itemEl.setAttribute("data-index", item.index);
-		itemEl.setAttribute("draggable", "true");
-		const iconDiv = document.createElement("div");
-		iconDiv.className = "icon";
-		itemEl.appendChild(iconDiv);
-		const amountDiv = document.createElement("div");
-		amountDiv.className = "amount";
-		if (item.count) {
-			const countSpan = document.createElement("span");
-			countSpan.className = "count";
-			countSpan.textContent = item.count;
-			amountDiv.appendChild(countSpan);
-			amountDiv.appendChild(document.createTextNode(" "));
-		}
-		itemEl.appendChild(amountDiv);
-		const nameSpan = document.createElement("span");
-		nameSpan.className = "name";
-		nameSpan.innerHTML = DB.getItemName(item);
-		itemEl.appendChild(nameSpan);
-		if (content) content.appendChild(itemEl);
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
-			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-			if (icon) icon.style.backgroundImage = `url(${data})`;
-		});
-	};
-	StorageFilter.prototype.getItemFromIndex = function getItemFromIndex(index) {
-		return this._list.filter((item) => item.index === index)[0];
-	};
-	StorageFilter.prototype.onItemOver = function onItemOver(itemEl, root) {
-		const index = parseInt(itemEl.getAttribute("data-index"), 10);
-		const item = this.getItemFromIndex(index);
-		if (!item) return;
-		const overlay = root.querySelector(".overlay");
-		if (overlay) {
-			overlay.style.display = "";
-			overlay.style.top = `${itemEl.offsetTop - 10}px`;
-			overlay.style.left = `${itemEl.offsetLeft + 35}px`;
-			overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
-			if (item.IsIdentified) overlay.classList.remove("grey");
-			else overlay.classList.add("grey");
-		}
-	};
-	StorageFilter.prototype.onItemOut = function onItemOut(root) {
-		if (!root) root = this._shadow || this._host;
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-	};
-	StorageFilter.prototype.onItemDragStart = function onItemDragStart(event, itemEl) {
-		const index = parseInt(itemEl.getAttribute("data-index"), 10);
-		const item = this.getItemFromIndex(index);
-		if (!item) return;
-		const img = new Image();
-		let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-		url = url.replace(/^"/, "").replace(/"$/, "");
-		img.src = url;
-		event.dataTransfer.setDragImage(img, 12, 12);
-		event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-			type: "item",
-			from: "Storage",
-			data: item
-		}));
-	};
-	StorageFilter.prototype.onItemDragEnd = function onItemDragEnd() {
-		delete window._OBJ_DRAG_;
-	};
-	StorageFilter.prototype.onItemInfo = function onItemInfo(event, itemEl) {
-		event.stopImmediatePropagation();
-		const index = parseInt(itemEl.getAttribute("data-index"), 10);
-		const item = this.getItemFromIndex(index);
-		if (!item) return false;
-		if (event.altKey && event.which === 3) {
-			if (typeof this.onTransferItemToOtherUI === "function") this.onTransferItemToOtherUI(item);
-			return false;
-		}
-		if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-		return false;
-	};
-	StorageFilter.prototype.resizeHeight = function resizeHeight(height) {
-		height = Math.min(Math.max(height, 4), 10);
-		const content = (this._shadow || this._host).querySelector(".content");
-		if (content) content.style.height = `${height * 32}px`;
-		this._host.style.height = `${height * 32 + 17 + 19}px`;
-	};
-	StorageFilter.prototype.onResize = function onResize() {
-		const self = this;
-		const top = this._host.offsetTop;
-		let lastHeight = 0;
-		const extraY = 36;
-		function resizing() {
-			let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-			h = Math.min(Math.max(h, 4), 10);
-			if (h === lastHeight) return;
-			self.resizeHeight(h);
-			lastHeight = h;
-		}
-		const _Interval = setInterval(resizing, 30);
-		const onMouseUp = (event) => {
-			if (event.which === 1) {
-				clearInterval(_Interval);
-				window.removeEventListener("mouseup", onMouseUp);
-			}
-		};
-		window.addEventListener("mouseup", onMouseUp);
-	};
-	StorageFilter.prototype.getCurrentTab = function getCurrentTab() {
-		return this._currentTabId;
-	};
-	StorageFilter.prototype.removeItem = function removeItem(index, count) {
-		let i = -1;
-		for (let j = 0, count_ = this._list.length; j < count_; ++j) if (this._list[j].index === index) {
-			i = j;
-			break;
-		}
-		if (i < 0) return;
-		const item = this._list[i];
-		if (item.count) {
-			item.count -= count;
-			if (item.count > 0) {
-				const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = item.count;
-				return;
-			}
-		}
-		this._list.splice(i, 1);
-		const root = this._shadow || this._host;
-		const el = root.querySelector(`.item[data-index="${index}"]`);
-		if (el) el.remove();
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-	};
-	StorageFilter.prototype.addItem = function addItem(item) {
-		for (let j = 0, count_ = this._list.length; j < count_; ++j) if (this._list[j].index === item.index) {
-			this._list[j].count += item.count;
-			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = this._list[j].count;
-			return;
-		}
-		this._list.push(JSON.parse(JSON.stringify(item)));
-		this.renderItem(item);
-	};
-	StorageFilter.prototype.mouseMode = GUIComponent.MouseMode.STOP;
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV3/Storage.html?raw
-var Storage_default$2;
-var init_Storage$4 = __esmMin((() => {
-	Storage_default$2 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\"><ui-text msg=\"169\">Storage</ui-text></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tbody>\r\n				<tr>\r\n					<td\r\n						colspan=\"2\"\r\n						class=\"tabs\"\r\n						data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n						data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n					>\r\n						<button class=\"item\"></button>\r\n						<button class=\"kafra\"></button>\r\n						<button class=\"armor\"></button>\r\n						<button class=\"arms\"></button>\r\n						<button class=\"ammo\"></button>\r\n						<button class=\"card\"></button>\r\n						<button class=\"etc\"></button>\r\n					</td>\r\n					<td class=\"container\">\r\n						<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n					</td>\r\n				</tr>\r\n			</tbody>\r\n			<tfoot class=\"footer\" data-background=\"basic_interface/btnbar_mid3.bmp\">\r\n				<tr>\r\n					<td colspan=\"3\" class=\"filter-buttons\">\r\n						<button\r\n							class=\"filter-use\"\r\n							data-tab-id=\"0\"\r\n							data-title=\"Use\"\r\n							data-background=\"basic_interface/¼Òºñ-2.bmp\"\r\n							data-down=\"basic_interface/¼Òºñ-1.bmp\"\r\n							data-active=\"basic_interface/¼Òºñ-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-kafra\"\r\n							data-tab-id=\"1\"\r\n							data-title=\"Cash\"\r\n							data-background=\"basic_interface/Ä³½Ã-2.bmp\"\r\n							data-down=\"basic_interface/Ä³½Ã-1.bmp\"\r\n							data-active=\"basic_interface/Ä³½Ã-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-armor\"\r\n							data-tab-id=\"2\"\r\n							data-title=\"Armor\"\r\n							data-background=\"basic_interface/ÀÇ»ó-2.bmp\"\r\n							data-down=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n							data-active=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-arms\"\r\n							data-tab-id=\"3\"\r\n							data-title=\"Weapon\"\r\n							data-background=\"basic_interface/¹«±â-2.bmp\"\r\n							data-down=\"basic_interface/¹«±â-1.bmp\"\r\n							data-active=\"basic_interface/¹«±â-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-ammo\"\r\n							data-tab-id=\"4\"\r\n							data-title=\"Ammo\"\r\n							data-background=\"basic_interface/Åõ»çÃ¼-2.bmp\"\r\n							data-down=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n							data-active=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-card\"\r\n							data-tab-id=\"5\"\r\n							data-title=\"Card\"\r\n							data-background=\"basic_interface/Ä«µå-2.bmp\"\r\n							data-down=\"basic_interface/Ä«µå-1.bmp\"\r\n							data-active=\"basic_interface/Ä«µå-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-etc\"\r\n							data-tab-id=\"6\"\r\n							data-title=\"Etc\"\r\n							data-background=\"basic_interface/±âÅ¸-2.bmp\"\r\n							data-down=\"basic_interface/±âÅ¸-1.bmp\"\r\n							data-active=\"basic_interface/±âÅ¸-1.bmp\"\r\n						></button>\r\n						<select class=\"storage-order-by\">\r\n							<option value=\"BASE\">Base</option>\r\n							<option value=\"UPGRADE\">Upgrade</option>\r\n							<option value=\"DOWNGRADE\">Downgrade</option>\r\n						</select>\r\n					</td>\r\n				</tr>\r\n				<tr>\r\n					<td colspan=\"2\">\r\n						<div class=\"item_num_display\">\r\n							<button class=\"item_num\" data-background=\"inventory/icon_num.bmp\"></button>\r\n							<span class=\"current\">0</span><span class=\"divider\">/</span><span class=\"limit\">0</span>\r\n						</div>\r\n					</td>\r\n					<td>\r\n						<div class=\"search-container\">\r\n							<input id=\"storage-search-input\" type=\"text\" class=\"search-input\" />\r\n							<ui-button\r\n								class=\"search-button\"\r\n								bg=\"bt_search_normal.bmp\"\r\n								hover=\"bt_search_over.bmp\"\r\n								down=\"bt_search_press.bmp\"\r\n							></ui-button>\r\n						</div>\r\n						<ui-button\r\n							class=\"close\"\r\n							bg=\"btn_close.bmp\"\r\n							hover=\"btn_close_a.bmp\"\r\n							down=\"btn_close_b.bmp\"\r\n						></ui-button>\r\n						<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n					</td>\r\n				</tr>\r\n			</tfoot>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV3/Storage.css?raw
-var Storage_default$1;
-var init_Storage$3 = __esmMin((() => {
-	Storage_default$1 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n	border-radius: 3px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	width: 100%;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 55px;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 2px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Storage .footer .divider-bar {\r\n	left: 0;\r\n	right: 0;\r\n	height: 10px;\r\n}\r\n\r\n#Storage .footer .filter-buttons {\r\n	padding-left: 5px;\r\n	height: 28px;\r\n}\r\n\r\n#Storage .footer .filter-buttons button {\r\n	width: 23px;\r\n	height: 23px;\r\n	border: 1px solid #cfcfcf;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	padding: 0;\r\n	border-radius: 2px;\r\n	margin: 2px 1px 0px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .filter-buttons button:hover {\r\n	background-color: #f5f5f5;\r\n}\r\n\r\n#Storage .footer .item_num_display {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 3px;\r\n}\r\n\r\n#Storage .footer .item_num {\r\n	display: inline-block;\r\n	height: 14px;\r\n	width: 11px;\r\n	margin-right: 2px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Storage .footer .current {\r\n	margin-left: 2px;\r\n}\r\n\r\n#Storage .footer .current,\r\n#Storage .footer .divider,\r\n#Storage .footer .limit {\r\n	font-size: 12px;\r\n}\r\n\r\n/* Search */\r\n#Storage .footer .search-container {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 18px;\r\n}\r\n\r\n#Storage .footer .search-input {\r\n	border: 1px solid #ccc;\r\n	border-radius: 5px;\r\n	padding: 2px;\r\n	width: 130px;\r\n	height: 14px;\r\n}\r\n\r\n#Storage .footer .search-button {\r\n	width: 23px;\r\n	height: 18px;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	border: none;\r\n	margin-left: -23px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .storage-order-by {\r\n	margin-left: 2px;\r\n	width: 70px;\r\n	vertical-align: super;\r\n	border-radius: 3px;\r\n}\r\n\r\n/* add blue border to options */\r\n#Storage .footer .storage-order-by option {\r\n	border: 1px solid blue;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV3/Storage.js
-function onResize$15() {
-	const top = Storage._host.offsetTop;
-	let lastHeight = 0;
-	function resizing() {
-		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
-		h = Math.min(Math.max(h, 8), 17);
-		if (h === lastHeight) return;
-		resizeHeight$2(h);
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function resizeHeight$2(height) {
-	height = Math.min(Math.max(height, 8), 17);
-	const content = (Storage._shadow || Storage._host).querySelector(".container .content");
-	if (content) content.style.height = `${height * 32}px`;
-	Storage._host.style.height = `${50 + height * 32}px`;
-}
-function onSwitchTab$4(idx) {
-	_preferences$67.tab = idx;
-	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
-		const tabs = (Storage._shadow || Storage._host).querySelector(".tabs");
-		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		requestFilter$4();
-	});
-}
-function onDrop$22(event) {
-	let data;
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (e) {}
-	event.stopImmediatePropagation();
-	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
-	const item = data.data;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			if (data.from === "CartItems") Storage.reqAddItemFromCart(item.index, parseInt(count, 10));
-			else Storage.reqAddItem(item.index, parseInt(count, 10));
-		};
-		return false;
-	}
-	if (data.from === "CartItems") Storage.reqAddItemFromCart(item.index, 1);
-	else Storage.reqAddItem(item.index, 1);
-	return false;
-}
-function requestFilter$4() {
-	const root = Storage._shadow || Storage._host;
-	const content = root.querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	let list = _list$14;
-	const orderBySelect = root.querySelector(".storage-order-by");
-	const orderBy = orderBySelect ? orderBySelect.value : "BASE";
-	if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
-		list = _list$14.slice(0);
-		list.sort((a, b) => {
-			const nameA = DB.getItemName(a);
-			const nameB = DB.getItemName(b);
-			return orderBy === "UPGRADE" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-		});
-	}
-	for (let i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
-}
-function getItemIndexById$2(index) {
-	for (let i = 0, count = _list$14.length; i < count; ++i) if (_list$14[i].index === index) return i;
-	return -1;
-}
-function onScroll$6(event, contentEl) {
-	let delta;
-	if (event.wheelDelta) delta = event.wheelDelta / 120;
-	else if (event.detail) delta = -event.detail;
-	else if (event.deltaY) delta = -event.deltaY / 100;
-	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
-	event.preventDefault();
-}
-function onFilterWindowOpen(button) {
-	const tabId = parseInt(button.getAttribute("data-tab-id"), 10);
-	const title = button.getAttribute("data-title") || "Items";
-	button.classList.toggle("active");
-	if (_openFilters[tabId]) {
-		_openFilters[tabId].remove();
-		delete _openFilters[tabId];
-		return;
-	}
-	const filtered_list = [];
-	for (let i = 0, count = _list$14.length; i < count; ++i) {
-		const item = _list$14[i];
-		let tab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				tab = Storage.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				tab = Storage.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				tab = Storage.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				tab = Storage.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				tab = Storage.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				tab = Storage.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				tab = Storage.TAB.ETC;
-				break;
-		}
-		if (tab === tabId) filtered_list.push(item);
-	}
-	const newFilter = new StorageFilter(tabId);
-	_openFilters[tabId] = newFilter;
-	newFilter.onCloseCallback = function() {
-		button.classList.remove("active");
-		if (_openFilters[tabId]) delete _openFilters[tabId];
-	};
-	newFilter.onTransferItemToOtherUI = function(item) {
-		Storage.transferItemToOtherUI(item);
-	};
-	newFilter.append();
-	newFilter.setItems(title, filtered_list, tabId);
-}
-function onFilterWindowHover(button, root) {
-	const title = button.getAttribute("data-title");
-	const overlay = root.querySelector(".overlay");
-	if (overlay) {
-		overlay.textContent = title;
-		const height = Storage._host.getBoundingClientRect().height;
-		overlay.style.top = `${height - 50}px`;
-		overlay.style.left = `${button.offsetLeft}px`;
-		overlay.style.display = "";
-	}
-}
-function onFilterWindowHoverOut(root) {
-	const overlay = root.querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemOver$18(itemEl, root) {
-	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i < 0) return;
-	const item = _list$14[i];
-	const overlay = root.querySelector(".overlay");
-	if (overlay) {
-		overlay.style.display = "";
-		overlay.style.top = `${itemEl.offsetTop - 10}px`;
-		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
-		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-function onItemOut$19(root) {
-	const overlay = root.querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemDragStart$14(event, itemEl) {
-	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return;
-	const img = new Image();
-	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	url = url.replace(/^"/, "").replace(/"$/, "");
-	img.src = url;
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Storage",
-		data: _list$14[i]
-	}));
-}
-function onItemDragEnd$15() {
-	delete window._OBJ_DRAG_;
-}
-function onItemInfo$22(event, itemEl) {
-	event.stopImmediatePropagation();
-	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		Storage.transferItemToOtherUI(_list$14[i]);
-		return false;
-	}
-	if (ItemInfo_default.uid === _list$14[i].ITID) ItemInfo_default.remove();
-	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$14[i].ITID;
-	ItemInfo_default.setItem(_list$14[i]);
-	return false;
-}
-var Storage, _list$14, _openFilters, _preferences$67, Storage_default;
-var init_Storage$2 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_InputBox();
-	init_ItemInfo();
-	init_StorageFilter();
-	init_Storage$4();
-	init_Storage$3();
-	init_CartItems();
-	init_Inventory();
-	Storage = new GUIComponent("Storage", Storage_default$1);
-	Storage.render = () => Storage_default$2;
-	Storage.TAB = {
-		ITEM: 0,
-		KAFRA: 1,
-		ARMOR: 2,
-		ARMS: 3,
-		AMMO: 4,
-		CARD: 5,
-		ETC: 6
-	};
-	_list$14 = [];
-	_openFilters = {};
-	_preferences$67 = Preferences.get("Storage", {
-		x: 200,
-		y: 500,
-		height: 8,
-		tab: Storage.TAB.ITEM
-	}, 1);
-	Storage.init = function init() {
-		const root = this._shadow || this._host;
-		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
-			btn.addEventListener("mousedown", () => onSwitchTab$4(idx));
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$15());
-		const closeBtn = root.querySelector(".footer .close");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => {
-				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
-			});
-		}
-		root.querySelectorAll(".filter-buttons button").forEach((btn) => {
-			btn.addEventListener("mousedown", () => onFilterWindowOpen(btn));
-			btn.addEventListener("mouseover", () => onFilterWindowHover(btn, root));
-			btn.addEventListener("mouseout", () => onFilterWindowHoverOut(root));
-		});
-		const searchBtn = root.querySelector(".search-button");
-		if (searchBtn) {
-			searchBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			searchBtn.addEventListener("click", () => Storage.onSearch());
-		}
-		const orderBySelect = root.querySelector(".storage-order-by");
-		if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter$4());
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$67.tab + 1}.bmp`, (data) => {
-			const tabs = root.querySelector(".tabs");
-			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		});
-		resizeHeight$2(_preferences$67.height);
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("wheel", (e) => onScroll$6(e, content));
-			content.addEventListener("mouseover", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) onItemOver$18(itemEl, root);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$19(root);
-			});
-			content.addEventListener("dragstart", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					onItemDragStart$14(e, itemEl);
-					onItemOut$19(root);
-				}
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$15();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					e.preventDefault();
-					onItemInfo$22(e, itemEl);
-				}
-			});
-		}
-		this._host.addEventListener("drop", (e) => onDrop$22(e));
-		this._host.addEventListener("dragover", (e) => {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		});
-		this.draggable(".titlebar");
-		this.ui.hide();
-	};
-	Storage.onAppend = function onAppend() {
-		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$67.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$67.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-	};
-	Storage.onRemove = function onRemove() {
-		const root = this._shadow || this._host;
-		const content = root.querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		_list$14.length = 0;
-		_preferences$67.y = parseInt(this._host.style.top, 10);
-		_preferences$67.x = parseInt(this._host.style.left, 10);
-		_preferences$67.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$67.save();
-		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
-		_openFilters = {};
-		const searchInput = root.querySelector("#storage-search-input");
-		if (searchInput) searchInput.value = "";
-	};
-	Storage.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$14.push(items[i]);
-	};
-	Storage.addItem = function addItem(item) {
-		const i = getItemIndexById$2(item.index);
-		let itemTab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				itemTab = Storage.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				itemTab = Storage.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				itemTab = Storage.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				itemTab = Storage.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				itemTab = Storage.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				itemTab = Storage.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				itemTab = Storage.TAB.ETC;
-				break;
-		}
-		if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
-		if (i > -1) {
-			_list$14[i].count += item.count;
-			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$14[i].count;
-			return;
-		}
-		if (this.addItemSub(item)) _list$14.push(item);
-	};
-	Storage.addItemSub = function addItemSub(item) {
-		let tab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				tab = Storage.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				tab = Storage.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				tab = Storage.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				tab = Storage.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				tab = Storage.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				tab = Storage.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				tab = Storage.TAB.ETC;
-				break;
-		}
-		if (tab === _preferences$67.tab) {
-			const it = DB.getItemInfo(item.ITID);
-			const root = this._shadow || this._host;
-			const content = root.querySelector(".container .content");
-			const itemEl = document.createElement("div");
-			itemEl.className = "item";
-			itemEl.setAttribute("data-index", item.index);
-			itemEl.setAttribute("draggable", "true");
-			const iconDiv = document.createElement("div");
-			iconDiv.className = "icon";
-			itemEl.appendChild(iconDiv);
-			const amountDiv = document.createElement("div");
-			amountDiv.className = "amount";
-			if (item.count) {
-				const countSpan = document.createElement("span");
-				countSpan.className = "count";
-				countSpan.textContent = item.count;
-				amountDiv.appendChild(countSpan);
-				amountDiv.appendChild(document.createTextNode(" "));
-			}
-			itemEl.appendChild(amountDiv);
-			const nameSpan = document.createElement("span");
-			nameSpan.className = "name";
-			nameSpan.innerHTML = DB.getItemName(item);
-			itemEl.appendChild(nameSpan);
-			if (content) content.appendChild(itemEl);
-			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
-				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-				if (icon) icon.style.backgroundImage = `url(${data})`;
-			});
-		}
-		return true;
-	};
-	Storage.removeItem = function removeItem(index, count) {
-		const i = getItemIndexById$2(index);
-		if (i < 0) return null;
-		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].removeItem(index, count);
-		if (_list$14[i].count) {
-			_list$14[i].count -= count;
-			if (_list$14[i].count > 0) {
-				const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$14[i].count;
-				return _list$14[i];
-			}
-		}
-		const item = _list$14[i];
-		_list$14.splice(i, 1);
-		const root = this._shadow || this._host;
-		const el = root.querySelector(`.item[data-index="${index}"]`);
-		if (el) el.remove();
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-		return item;
-	};
-	Storage.setItemInfo = function setItemInfo(current, limit) {
-		const root = this._shadow || this._host;
-		const currentEl = root.querySelector(".footer .current");
-		const limitEl = root.querySelector(".footer .limit");
-		if (currentEl) currentEl.textContent = current;
-		if (limitEl) limitEl.textContent = limit;
-	};
-	Storage.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display !== "none") {
-			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
-			}
-			if (event.which === KEYS.ENTER || event.key === "Enter") {
-				if (typeof Storage.onEnterPressed === "function") Storage.onEnterPressed();
-			}
-		}
-	};
-	Storage.onSearch = function onSearch() {
-		const searchInput = (this._shadow || this._host).querySelector("#storage-search-input");
-		if (!searchInput) return;
-		const searchTerm = searchInput.value.toLowerCase();
-		const filteredItems = _list$14.filter((item) => {
-			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
-		});
-		if (!_openFilters[ItemType_default.SEARCH]) {
-			const newFilter = new StorageFilter(ItemType_default.SEARCH);
-			_openFilters[ItemType_default.SEARCH] = newFilter;
-			newFilter.onCloseCallback = function() {
-				if (_openFilters[ItemType_default.SEARCH]) delete _openFilters[ItemType_default.SEARCH];
-			};
-			newFilter.onTransferItemToOtherUI = function(item) {
-				Storage.transferItemToOtherUI(item);
-			};
-			newFilter.append();
-			newFilter.setItems("Search", filteredItems, ItemType_default.SEARCH);
-		} else _openFilters[ItemType_default.SEARCH].setItems("Search", filteredItems, ItemType_default.SEARCH);
-	};
-	Storage.transferItemToOtherUI = function transferItemToOtherUI(item) {
-		const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
-		const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
-		if (!item) return false;
-		const count = item.count || 1;
-		if (isInventoryOpen) Storage.reqRemoveItem(item.index, count);
-		else if (isCartOpen) Storage.reqMoveItemToCart(item.index, count);
-		return true;
-	};
-	Storage.onClosePressed = function onClosedPressed() {};
-	Storage.reqAddItem = function reqAddItem() {};
-	Storage.reqAddItemFromCart = function reqAddItemFromCart() {};
-	Storage.reqRemoveItem = function reqRemoveItem() {};
-	Storage.reqMoveItemToCart = function reqMoveItemToCart() {};
-	Storage.mouseMode = GUIComponent.MouseMode.STOP;
-	Storage_default = UIManager.addComponent(Storage);
-}));
-//#endregion
-//#region src/UI/Components/Storage/Storage.js
-var publicName$12, versionInfo$12, StorageController, _selectUIVersion$6;
-var init_Storage$1 = __esmMin((() => {
-	init_Storage$5();
-	init_Storage$2();
-	init_UIVersionManager();
-	publicName$12 = "Storage";
-	versionInfo$12 = {
-		default: Storage_default$3,
-		common: { 20181219: Storage_default },
-		re: {},
-		prere: {}
-	};
-	StorageController = UIVersionManager.getUIController(publicName$12, versionInfo$12);
-	_selectUIVersion$6 = StorageController.selectUIVersion;
-	StorageController.selectUIVersion = function() {
-		_selectUIVersion$6();
-	};
-	[
-		"reqAddItem",
-		"reqAddItemFromCart",
-		"reqRemoveItem",
-		"reqMoveItemToCart",
-		"onClosePressed"
-	].forEach(function(method) {
-		Object.defineProperty(StorageController, method, {
-			set: function(value) {
-				Storage_default$3[method] = value;
-				Storage_default[method] = value;
-			},
-			get: function() {
-				return (StorageController.getUI() || Storage_default$3)[method];
-			}
-		});
-	});
-}));
-//#endregion
-//#region src/UI/Components/CartItems/CartItems.js
-function _getRoot$58() {
-	return CartItems._shadow || CartItems._host;
-}
-/**
-* Extend inventory window size
-*/
-function onResize$14() {
-	const content = _getRoot$58().querySelector(".container .content");
-	const hideEl = _getRoot$58().querySelector(".hide");
-	const top = CartItems._host.offsetTop;
-	const left = CartItems._host.offsetLeft;
-	let lastWidth = 0;
-	let lastHeight = 0;
-	function resizing() {
-		const extraX = 25;
-		const extraY = 20;
-		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-		w = Math.min(Math.max(w, 6), 9);
-		h = Math.min(Math.max(h, 2), 6);
-		if (w === lastWidth && h === lastHeight) return;
-		CartItems.resize(w, h);
-		lastWidth = w;
-		lastHeight = h;
-		if (content && hideEl) if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
-		else hideEl.style.display = "none";
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-/**
-* Hide/show inventory's content
-*/
-function onToggleReduction$4() {
-	const panel = _getRoot$58().querySelector(".panel");
-	if (_realSize$5) {
-		if (panel) panel.style.display = "block";
-		CartItems._host.style.height = `${_realSize$5}px`;
-		_realSize$5 = 0;
-	} else {
-		_realSize$5 = CartItems._host.getBoundingClientRect().height;
-		CartItems._host.style.height = "17px";
-		if (panel) panel.style.display = "none";
-	}
-}
-/**
-* Drop an item from storage to inventory
-*
-* @param {event}
-*/
-function onDrop$21(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item" || data.from !== "Storage" && data.from !== "Inventory") return false;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			switch (data.from) {
-				case "Storage":
-					StorageController.reqMoveItemToCart(item.index, parseInt(count, 10));
-					break;
-				case "Inventory":
-					InventoryController.getUI().reqMoveItemToCart(item.index, parseInt(count, 10));
-					break;
-			}
-		};
-		return false;
-	}
-	switch (data.from) {
-		case "Storage":
-			StorageController.reqMoveItemToCart(item.index, 1);
-			break;
-		case "Inventory":
-			InventoryController.getUI().reqMoveItemToCart(item.index, 1);
-			break;
-	}
-	return false;
-}
-/**
-* Block the scroll to move 32px at each move
-*/
-function onScroll$5(event) {
-	const delta = event.deltaY > 0 ? -1 : 1;
-	const el = event.currentTarget;
-	el.scrollTop = Math.floor(el.scrollTop / 32) * 32 - delta * 32;
-	if (el._roScrollbarRestart) el._roScrollbarRestart();
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$17(_e) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = CartItems.getItemByIndex(idx);
-	if (!item) return;
-	let quantity = " ea";
-	if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.Options && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$58();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#cartitems") || root;
-	const itemRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${itemRect.top - rootRect.top}px`;
-		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
-		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-/**
-* Hide the item name
-*/
-function onItemOut$18() {
-	const overlay = _getRoot$58().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* Start dragging an item
-*/
-function onItemDragStart$13(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = CartItems.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const iconEl = this.querySelector(".icon");
-	const url = iconEl ? iconEl.style.backgroundImage.match(/\(([^)]+)/)?.[1] : "";
-	img.decoding = "async";
-	img.src = url ? url.replace(/^["']/, "").replace(/["']$/, "") : "";
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "CartItems",
-		data: item
-	}));
-	onItemOut$18();
-}
-/**
-* Stop dragging an item
-*
-*/
-function onItemDragEnd$14() {
-	delete window._OBJ_DRAG_;
-}
-/**
-* Get item info (open description window)
-*/
-function onItemInfo$21(event) {
-	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = CartItems.getItemByIndex(index);
-	if (!item) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$4(item);
-		return false;
-	}
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
-	}
-	if (ItemCompare_default.ui) ItemCompare_default.remove();
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-	const compareItem = EquipmentController.getUI().isInEquipList(item.location);
-	if (compareItem && InventoryController.getUI().itemcomp) {
-		ItemCompare_default.prepare();
-		ItemCompare_default.append();
-		ItemCompare_default.uid = compareItem.ITID;
-		ItemCompare_default.setItem(compareItem);
-	}
-	return false;
-}
-/**
-* Alt Right Click Request Transfer
-*/
-function transferItemToOtherUI$4(item) {
-	const storageUI = StorageController.getUI();
-	const inventoryUI = InventoryController.getUI();
-	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
-	const isInventoryOpen = inventoryUI._host ? inventoryUI._host.style.display !== "none" : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isStorageOpen) StorageController.reqAddItemFromCart(item.index, count);
-	else if (isInventoryOpen) CartItems.reqRemoveItem(item.index, count);
-	return true;
-}
-/**
-* Ask to use an item
-*/
-function onItemUsed$5(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = CartItems.getItemByIndex(index);
-	if (item) {
-		CartItems.useItem(item);
-		onItemOut$18();
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-var CartItems, _realSize$5, _preferences$66, CartItems_default;
-var init_CartItems = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_InputBox();
-	init_ItemInfo();
-	init_ItemCompare();
-	init_SessionStorage();
-	init_CartItems$2();
-	init_CartItems$1();
-	init_Storage$1();
-	init_Inventory();
-	init_Equipment();
-	CartItems = new GUIComponent("CartItems", CartItems_default$1);
-	CartItems.render = () => CartItems_default$2;
-	/**
-	* Store inventory items
-	*/
-	CartItems.list = [];
-	_realSize$5 = 0;
-	_preferences$66 = Preferences.get("CartItems", {
-		x: 200,
-		y: 200,
-		width: 7,
-		height: 4,
-		show: false,
-		reduce: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	CartItems.init = function Init() {
-		const root = _getRoot$58();
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$4);
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$14);
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			CartItems._host.style.display = "none";
-		});
-		this._host.addEventListener("drop", onDrop$21);
-		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("wheel", onScroll$5);
-			content.addEventListener("mouseover", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemOver$17.call(item, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$18();
-			});
-			content.addEventListener("dragstart", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemDragStart$13.call(item, e);
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$14();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onItemInfo$21.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemUsed$5.call(item, e);
-			});
-		}
-		this.draggable(".titlebar");
-	};
-	/**
-	* Apply preferences once append to body
-	*/
-	CartItems.onAppend = function OnAppend() {
-		if (SessionStorage_default.Entity.hasCart === false) this._host.style.display = "none";
-		if (!_preferences$66.show) this._host.style.display = "none";
-		this.resize(_preferences$66.width, _preferences$66.height);
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$66.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$66.x), Renderer.width - hostRect.width)}px`;
-		_realSize$5 = _preferences$66.reduce ? 0 : hostRect.height;
-		const miniBtn = _getRoot$58().querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
-	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
-	CartItems.onRemove = function OnRemove() {
-		const content = _getRoot$58().querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		this.list.length = 0;
-		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$66.show = this._host.style.display !== "none";
-		_preferences$66.reduce = !!_realSize$5;
-		_preferences$66.y = parseInt(this._host.style.top, 10);
-		_preferences$66.x = parseInt(this._host.style.left, 10);
-		const hostRect = this._host.getBoundingClientRect();
-		_preferences$66.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$66.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$66.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	CartItems.onShortCut = function onShurtCut(key) {
-		if (SessionStorage_default.Entity.hasCart === false) return;
-		switch (key.cmd) {
-			case "TOGGLE":
-				if (this._host.style.display === "none") {
-					this._host.style.display = "";
-					this.focus();
-				} else {
-					this._host.style.display = "none";
-					this._host.dispatchEvent(new Event("mouseleave"));
-				}
-				break;
-		}
-	};
-	CartItems.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this._host.style.display = this._host.style.display === "none" ? "" : "none";
-	};
-	/**
-	* Extend inventory window size
-	*
-	* @param {number} width
-	* @param {number} height
-	*/
-	CartItems.resize = function Resize(width, height) {
-		width = Math.min(Math.max(width, 6), 9);
-		height = Math.min(Math.max(height, 2), 6);
-		const content = _getRoot$58().querySelector(".container .content");
-		if (content) {
-			content.style.width = `${width * 32 + 13}px`;
-			content.style.height = `${height * 32}px`;
-		}
-		this._host.style.width = `${55 + width * 32}px`;
-		this._host.style.height = `${50 + height * 32}px`;
-	};
-	/**
-	* Get item object
-	*
-	* @param {number} id
-	* @returns {Item}
-	*/
-	CartItems.getItemById = function GetItemById(id) {
-		const list = CartItems.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
-		return null;
-	};
-	/**
-	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {Item}
-	*/
-	CartItems.getItemByIndex = function getItemByIndex(index) {
-		const list = CartItems.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
-		return null;
-	};
-	/**
-	* Add items to the list
-	* if the item index is exist you should clear it;[skybook888]
-	*/
-	CartItems.setItems = function SetItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) {
-			const object = this.getItemByIndex(items[i].index);
-			if (object) this.removeItem(object.index, object.count);
-			if (this.addItemSub(items[i])) this.list.push(items[i]);
-		}
-	};
-	CartItems.setCartInfo = function SetCartInfo(curCount, maxCount, curWeight, maxWeight) {
-		const root = _getRoot$58();
-		const ncnt = root.querySelector(".ncnt");
-		const mcnt = root.querySelector(".mcnt");
-		const nwt = root.querySelector(".nwt");
-		const mwt = root.querySelector(".mwt");
-		if (ncnt) ncnt.textContent = curCount;
-		if (mcnt) mcnt.textContent = maxCount;
-		if (nwt) nwt.textContent = curWeight / 10;
-		if (mwt) mwt.textContent = maxWeight / 10;
-	};
-	/**
-	* Insert Item to inventory
-	*
-	* @param {object} Item
-	*/
-	CartItems.addItem = function AddItem(item) {
-		let object = this.getItemByIndex(item.index);
-		if (object) {
-			object.count += item.count;
-			const countEl = _getRoot$58().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = object.count;
-			return;
-		}
-		object = Object.assign({}, item);
-		if (this.addItemSub(object)) this.list.push(object);
-	};
-	/**
-	* Add item to inventory
-	*
-	* @param {object} Item
-	*/
-	CartItems.addItemSub = function AddItemSub(item) {
-		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
-		const it = DB.getItemInfo(item.ITID);
-		const root = _getRoot$58();
-		const content = root.querySelector(".container .content");
-		if (!content) return true;
-		content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
-		const hideEl = root.querySelector(".hide");
-		if (hideEl) if (content.offsetHeight < content.scrollHeight) hideEl.style.display = "none";
-		else hideEl.style.display = "block";
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
-			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-			if (icon) icon.style.backgroundImage = `url(${data})`;
-		});
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
-			const grade = root.querySelector(`.item[data-index="${item.index}"] .grade`);
-			if (grade) grade.style.backgroundImage = `url(${data})`;
-		});
-		return true;
-	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
-	CartItems.removeItem = function RemoveItem(index, count) {
-		const item = this.getItemByIndex(index);
-		if (!item || count <= 0) return null;
-		if (item.count) {
-			item.count -= count;
-			if (item.count > 0) {
-				const countEl = _getRoot$58().querySelector(`.item[data-index="${item.index}"] .count`);
-				if (countEl) countEl.textContent = item.count;
-				return item;
-			}
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const root = _getRoot$58();
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const content = root.querySelector(".container .content");
-		const hideEl = root.querySelector(".hide");
-		if (content && hideEl) {
-			if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
-		}
-		return item;
-	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
-	CartItems.updateItem = function UpdateItem(index, count) {
-		const item = this.getItemByIndex(index);
-		if (!item) return;
-		item.count = count;
-		const root = _getRoot$58();
-		if (item.count > 0) {
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = item.count;
-			return;
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const content = root.querySelector(".container .content");
-		const hideEl = root.querySelector(".hide");
-		if (content && hideEl) {
-			if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
-		}
-	};
-	CartItems.reqRemoveItem = function reqRemoveItem() {};
-	CartItems.mouseMode = GUIComponent.MouseMode.STOP;
-	CartItems_default = UIManager.addComponent(CartItems);
-}));
-//#endregion
 //#region src/UI/Components/Inventory/InventoryV0/InventoryV0.html?raw
 var InventoryV0_default$2;
 var init_InventoryV0$2 = __esmMin((() => {
@@ -243097,6 +241220,166 @@ var init_WhisperBox$2 = __esmMin((() => {
 var WhisperBox_default;
 var init_WhisperBox$1 = __esmMin((() => {
 	WhisperBox_default = ":host {\r\n	width: 280px;\r\n	height: 156px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.whisper-container {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 156px;\r\n	border: 1px solid white;\r\n	border-radius: 5px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	display: flex;\r\n	flex-direction: column;\r\n	overflow: hidden;\r\n	color: #ffffff;\r\n	min-width: 150px;\r\n	min-height: 100px;\r\n}\r\n\r\n.whisper-header {\r\n	background: rgba(255, 255, 255, 0.2);\r\n	height: 18px;\r\n	padding: 0 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: space-between;\r\n	color: #ffffff;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n	cursor: move;\r\n}\r\n\r\n.whisper-header .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.whisper-body {\r\n	flex: 1;\r\n	padding: 0 2px 2px 5px;\r\n	overflow: hidden;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n.whisper-body .contentwrapper {\r\n	height: 100%;\r\n}\r\n\r\n.whisper-body .content {\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	font-size: 12px;\r\n	text-shadow: 1px 1px 0px #000;\r\n	word-break: break-all;\r\n	line-height: 14px;\r\n}\r\n\r\n.whisper-footer {\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.whisper-footer .input-wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	height: 23px;\r\n	width: calc(100% - 25px);\r\n	overflow: hidden;\r\n}\r\n\r\n.whisper-footer .message {\r\n	width: 100%;\r\n	padding-left: 2px;\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	color: #ffffff;\r\n	font-size: 12px;\r\n	display: inline-block;\r\n}\r\n\r\n.whisper-container img {\r\n	max-height: 1.25em;\r\n	width: auto;\r\n	vertical-align: middle;\r\n	background: transparent !important;\r\n}\r\n\r\n.whisper-footer .resizer {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcMenu/NpcMenu.html?raw
+var NpcMenu_default$2;
+var init_NpcMenu$2 = __esmMin((() => {
+	NpcMenu_default$2 = "<div id=\"NpcMenu\">\r\n	<div class=\"container\">\r\n		<div class=\"middle\">\r\n			<span class=\"title\"></span>\r\n			<div class=\"content\"></div>\r\n		</div>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcMenu/NpcMenu.css?raw
+var NpcMenu_default$1;
+var init_NpcMenu$1 = __esmMin((() => {
+	NpcMenu_default$1 = ":host {\r\n	width: 276px;\r\n	height: 116px;\r\n	top: 285px;\r\n	left: 100px;\r\n}\r\n\r\n#NpcMenu {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	width: 276px;\r\n	height: 116px;\r\n	background-color: white;\r\n	padding: 2px;\r\n}\r\n\r\n#NpcMenu .title {\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	display: block;\r\n	width: 260px;\r\n	padding-left: 3px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#NpcMenu .container {\r\n	border-radius: 5px;\r\n	border: 1px solid #c1c6c2;\r\n	width: 269px;\r\n	height: 109px;\r\n	padding-left: 5px;\r\n	padding-top: 5px;\r\n}\r\n\r\n#NpcMenu .middle {\r\n	overflow-x: hidden;\r\n	overflow-y: scroll;\r\n}\r\n\r\n#NpcMenu .content {\r\n	white-space: pre-wrap;\r\n	background-color: #f9f9f9;\r\n	width: 260px;\r\n	height: 80px;\r\n	padding-left: 3px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#NpcMenu .content div {\r\n	width: auto;\r\n	height: 17px;\r\n	display: block;\r\n	padding-top: 3px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#NpcMenu .content div.selected {\r\n	background-color: #cde0ff;\r\n}\r\n\r\n#NpcMenu .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 5px;\r\n}\r\n\r\n#NpcMenu .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#NpcMenu .ok {\r\n	right: 50px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcMenu/NpcMenu.js
+/**
+* Helper: escape HTML
+*/
+function _escapeHTML$8(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+/**
+* Submit an index
+*/
+function validate() {
+	NpcMenu.onSelectMenu(_ownerID, _index$7 + 1);
+}
+/**
+* Pressed cancel, client send "255" as value
+*/
+function cancel$9() {
+	NpcMenu.onSelectMenu(_ownerID, 255);
+}
+/**
+* Select an index, change background color
+*/
+function selectIndex(div) {
+	NpcMenu.getRoot().querySelector(".content").querySelectorAll("div").forEach((d) => d.classList.remove("selected"));
+	div.classList.add("selected");
+	_index$7 = parseInt(div.dataset.index, 10);
+}
+var NpcMenu, _index$7, _ownerID, NpcMenu_default;
+var init_NpcMenu = __esmMin((() => {
+	init_KeyEventHandler();
+	init_DBManager();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_NpcMenu$2();
+	init_NpcMenu$1();
+	init_InputBox();
+	NpcMenu = new GUIComponent("NpcMenu", NpcMenu_default$1);
+	NpcMenu.render = () => NpcMenu_default$2;
+	/**
+	* Freeze mouse — NPC menu blocks interaction
+	*/
+	NpcMenu.mouseMode = GUIComponent.MouseMode.FREEZE;
+	_index$7 = 0;
+	_ownerID = 0;
+	/**
+	* Initialize component
+	*/
+	NpcMenu.init = function init() {
+		const root = NpcMenu.getRoot();
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => validate());
+		const cancelBtn = root.querySelector(".cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", () => cancel$9());
+		this._host.style.top = `${Math.max(376, Renderer.height / 2 + 76)}px`;
+		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
+		this.draggable();
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("mousedown", (e) => {
+				const div = e.target.closest("div");
+				if (div && content.contains(div)) selectIndex(div);
+				e.stopImmediatePropagation();
+			});
+			content.addEventListener("dblclick", (e) => {
+				const div = e.target.closest("div");
+				if (div && content.contains(div)) validate();
+			});
+		}
+	};
+	/**
+	* Clean up events
+	*/
+	NpcMenu.onRemove = function onRemove() {
+		const content = NpcMenu.getRoot().querySelector(".content");
+		if (content) content.innerHTML = "";
+	};
+	/**
+	* Bind KeyDown event
+	*/
+	NpcMenu.onKeyDown = function onKeyDown(event) {
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (this._host.style.display === "none") return true;
+		const content = NpcMenu.getRoot().querySelector(".content");
+		switch (event.which) {
+			case KEYS.SPACE:
+			case KEYS.ENTER:
+				validate();
+				break;
+			case KEYS.ESCAPE:
+				cancel$9();
+				break;
+			case KEYS.UP: {
+				const divs = content.querySelectorAll("div");
+				_index$7 = Math.max(_index$7 - 1, 0);
+				divs.forEach((d) => d.classList.remove("selected"));
+				if (divs[_index$7]) divs[_index$7].classList.add("selected");
+				const top = _index$7 * 20;
+				if (top < content.scrollTop) content.scrollTop = top;
+				break;
+			}
+			case KEYS.DOWN: {
+				const divs = content.querySelectorAll("div");
+				const count = divs.length;
+				_index$7 = Math.min(_index$7 + 1, count - 1);
+				divs.forEach((d) => d.classList.remove("selected"));
+				if (divs[_index$7]) divs[_index$7].classList.add("selected");
+				const top = _index$7 * 20;
+				if (top >= content.scrollTop + 80) content.scrollTop = top - 60;
+				break;
+			}
+			default: return true;
+		}
+		event.stopImmediatePropagation();
+		return false;
+	};
+	/**
+	* Initialize menu
+	*
+	* @param {string} menu
+	* @param {number} gid - npc id
+	*/
+	NpcMenu.setMenu = function setMenu(menu, gid) {
+		const content = NpcMenu.getRoot().querySelector(".content");
+		const list = menu.split(":");
+		_ownerID = gid;
+		_index$7 = 0;
+		content.innerHTML = "";
+		let j = 0;
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].length) {
+			const div = document.createElement("div");
+			div.innerHTML = DB.formatMsgToHtml(_escapeHTML$8(list[i]));
+			div.dataset.index = j++;
+			content.appendChild(div);
+		}
+		const first = content.querySelector("div");
+		if (first) first.classList.add("selected");
+	};
+	/**
+	* Abstract callback to define
+	*/
+	NpcMenu.onSelectMenu = function onSelectMenu() {};
+	NpcMenu_default = UIManager.addComponent(NpcMenu);
 }));
 //#endregion
 //#region src/Engine/MapEngine/Friends.js
@@ -243315,7 +241598,7 @@ function extractChatMessage(inputEl) {
 * @param {GUIComponent} instance
 */
 function setupItemLinkHandler(instance) {
-	(instance._shadow || instance._host).addEventListener("click", (event) => {
+	instance.getRoot().addEventListener("click", (event) => {
 		const link = event.target.closest(".item-link");
 		if (!link) return;
 		const match = link.getAttribute("data-item");
@@ -243333,7 +241616,7 @@ function setupItemLinkHandler(instance) {
 * @param {GUIComponent} instance
 */
 function setupNicknameLinkHandler(instance) {
-	const root = instance._shadow || instance._host;
+	const root = instance.getRoot();
 	root.addEventListener("mousedown", (event) => {
 		if (event.target.closest(".nickname-link")) event.stopPropagation();
 	});
@@ -243350,7 +241633,7 @@ function setupNicknameLinkHandler(instance) {
 * @param {GUIComponent} instance
 */
 function initResizable(instance) {
-	const root = instance._shadow || instance._host;
+	const root = instance.getRoot();
 	const resizer = root.querySelector(".resizer");
 	if (!resizer) return;
 	const resize = (e) => {
@@ -243377,7 +241660,7 @@ function initResizable(instance) {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var WhisperBox, _preferences$65;
+var WhisperBox, _preferences$69;
 var init_WhisperBox = __esmMin((() => {
 	init_DBManager();
 	init_UIManager();
@@ -243391,6 +241674,9 @@ var init_WhisperBox = __esmMin((() => {
 	init_SoundManager();
 	init_WhisperBox$2();
 	init_WhisperBox$1();
+	init_NpcBox();
+	init_NpcMenu();
+	init_InputBox();
 	init_preload_helper();
 	WhisperBox = new GUIComponent("WhisperBox", WhisperBox_default);
 	WhisperBox.render = () => WhisperBox_default$1;
@@ -243411,7 +241697,7 @@ var init_WhisperBox = __esmMin((() => {
 		open1to1Friend: true,
 		alarm1to1: true
 	}, 1);
-	_preferences$65 = WhisperBox.preferences;
+	_preferences$69 = WhisperBox.preferences;
 	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
 	WhisperBox.captureKeyEvents = true;
 	/**
@@ -243444,17 +241730,20 @@ var init_WhisperBox = __esmMin((() => {
 			this.instances[nickname].focus();
 			return this.instances[nickname];
 		}
-		if (_preferences$65.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
+		if (_preferences$69.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
 		const instance = this.clone(nickname);
 		instance.nickname = nickname;
 		instance.name = `WhisperBox:${nickname}`;
 		instance.needFocus = true;
 		instance.captureKeyEvents = true;
 		instance.onKeyDown = function onKeyDown(event) {
-			const focused = (this._shadow || this._host).activeElement;
-			if (focused && focused.tagName) {
-				const isInput = focused.tagName.match(/input|select|textarea/i);
-				const isContentEditable = focused.getAttribute("contenteditable") === "true";
+			if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+			if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+			if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
+			if (this.isEditableFocused()) {
+				const focused = this.getRoot().activeElement;
+				const isInput = !!(focused && focused.tagName && focused.tagName.match(/input|select|textarea/i));
+				const isContentEditable = !!(focused && focused.getAttribute && focused.getAttribute("contenteditable") === "true");
 				if (isInput || isContentEditable) switch (event.which) {
 					case KEYS.ESCAPE:
 						this.remove();
@@ -243494,7 +241783,7 @@ var init_WhisperBox = __esmMin((() => {
 		UIManager.addComponent(instance);
 		instance.prepare();
 		instance.append();
-		const root = instance._shadow || instance._host;
+		const root = instance.getRoot();
 		instance._contentEl = root.querySelector(".content");
 		instance._inputEl = root.querySelector(".input-whisper");
 		__vitePreload(() => Promise.resolve().then(() => (init_Friends(), Friends_exports)).then((Friends) => {
@@ -243539,8 +241828,8 @@ var init_WhisperBox = __esmMin((() => {
 		initResizable(instance);
 		const offset = this._spawnCounter % 10 * 20;
 		this._spawnCounter++;
-		instance._host.style.top = `${Math.min(Math.max(0, _preferences$65.y + offset), Renderer.height - 156)}px`;
-		instance._host.style.left = `${Math.min(Math.max(0, _preferences$65.x + offset), Renderer.width - 280)}px`;
+		instance._host.style.top = `${Math.min(Math.max(0, _preferences$69.y + offset), Renderer.height - 156)}px`;
+		instance._host.style.left = `${Math.min(Math.max(0, _preferences$69.x + offset), Renderer.width - 280)}px`;
 		this.instances[nickname] = instance;
 		return instance;
 	};
@@ -243580,14 +241869,14 @@ var init_WhisperBox = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$9() {
+function _root$6() {
 	return PartyHelper._shadow || PartyHelper._host;
 }
 /**
 * Validate and process form data
 */
 function onValidate$1() {
-	const root = _root$9();
+	const root = _root$6();
 	const PartyFriends = UIManager.getComponent("PartyFriends");
 	switch (_type$6) {
 		case PartyHelper.Type.CREATE: {
@@ -243650,7 +241939,7 @@ var init_PartyHelper = __esmMin((() => {
 	* Initialize component event listeners
 	*/
 	PartyHelper.init = function init() {
-		const root = _root$9();
+		const root = _root$6();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
@@ -243686,7 +241975,7 @@ var init_PartyHelper = __esmMin((() => {
 				off.classList.remove("off");
 				off.classList.add("on");
 				const prefs = WhisperBox.preferences;
-				const rootEl = _root$9();
+				const rootEl = _root$6();
 				const strangerOn = rootEl.querySelector(".open1to1Stranger .on");
 				const friendOn = rootEl.querySelector(".open1to1Friend .on");
 				const alarmOn = rootEl.querySelector(".alarm1to1 .on");
@@ -243749,7 +242038,7 @@ var init_PartyHelper = __esmMin((() => {
 	*/
 	PartyHelper.onAppend = function onAppend() {
 		const base = UIManager.getComponent("PartyFriends");
-		const root = _root$9();
+		const root = _root$6();
 		const partyContent = root.querySelector(".party-content");
 		const friendContent = root.querySelector(".friend-content");
 		if (partyContent) partyContent.style.display = "none";
@@ -243766,7 +242055,7 @@ var init_PartyHelper = __esmMin((() => {
 	* Cleanup on window removal
 	*/
 	PartyHelper.onRemove = function onRemove() {
-		const root = _root$9();
+		const root = _root$6();
 		const partyContent = root.querySelector(".party-content");
 		const friendContent = root.querySelector(".friend-content");
 		if (partyContent) partyContent.style.display = "none";
@@ -243780,7 +242069,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {number} type
 	*/
 	PartyHelper.setType = function setType(type) {
-		const root = _root$9();
+		const root = _root$6();
 		root.querySelectorAll(".content").forEach((el) => el.classList.remove("disabled"));
 		const footer = root.querySelector(".footer");
 		if (footer) footer.style.display = "block";
@@ -243866,7 +242155,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {boolean} editable
 	*/
 	PartyHelper.setOptions = function setOptions(options, editable) {
-		const root = _root$9();
+		const root = _root$6();
 		function swap(off) {
 			const on = off.parentNode.querySelector(".on");
 			const tmp = on.style.backgroundImage;
@@ -243897,7 +242186,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {object} options
 	*/
 	PartyHelper.setFriendOptions = function setFriendOptions(options) {
-		const root = _root$9();
+		const root = _root$6();
 		function swap(off) {
 			const on = off.parentNode.querySelector(".on");
 			on.className = "off";
@@ -243951,11 +242240,11 @@ var init_Mail$2 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$8() {
+function _root$5() {
 	return Mail._shadow || Mail._host;
 }
 function updatePageMailItems() {
-	const root = _root$8();
+	const root = _root$5();
 	const nextBtn = root.querySelector(".next");
 	if (nextBtn) nextBtn.addEventListener("click", (e) => {
 		e.stopImmediatePropagation();
@@ -243980,7 +242269,7 @@ function updatePageMailItems() {
 * Create messages window size
 */
 function onWindowMailbox() {
-	const root = _root$8();
+	const root = _root$5();
 	Mail.parseMailrefreshinbox();
 	const sendBtn = root.querySelector("#create_mail_send");
 	if (sendBtn) sendBtn.disabled = false;
@@ -244008,7 +242297,7 @@ function onWindowMailbox() {
 	if (title) title.textContent = DB.getMessage(1025);
 }
 function createMailList() {
-	const root = _root$8();
+	const root = _root$5();
 	const content = root.querySelector(".list_item_mail");
 	root.querySelectorAll(".item_mail").forEach((el) => el.remove());
 	if (Mail.list.length == 0) return;
@@ -244063,7 +242352,7 @@ function createMailList() {
 	adjustButtons();
 }
 function adjustButtons() {
-	const root = _root$8();
+	const root = _root$5();
 	if (Mail.list.length == 0) return;
 	const mailLength = Mail.list.mailList.length;
 	if (!(Mail.page > mailLength / Mail.pageSize - 1)) addEventNextAndPrevAdd("next");
@@ -244076,7 +242365,7 @@ function adjustButtons() {
 	if (prevSpan) prevSpan.disabled = mailLength <= Mail.pageSize || Mail.page == 0;
 }
 function addEventNextAndPrevAdd(eventName) {
-	const root = _root$8();
+	const root = _root$5();
 	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
 	const text = root.querySelector(`.prev_next .${eventName} span`);
 	if (text) text.classList.add("event_add_cursor");
@@ -244092,7 +242381,7 @@ function addEventNextAndPrevAdd(eventName) {
 	}
 }
 function addEventNextAndPrevRemove(eventName) {
-	const root = _root$8();
+	const root = _root$5();
 	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
 	const text = root.querySelector(`.prev_next .${eventName} span`);
 	if (overlay) overlay.style.display = "none";
@@ -244104,7 +242393,7 @@ function offCreateMessagesOnWindowMailbox(event) {
 	removeCreateAllItem();
 }
 function sendCreateMessagesMail(event) {
-	const root = _root$8();
+	const root = _root$5();
 	event.stopImmediatePropagation();
 	const zenyOk = root.querySelector("#zeny_ok");
 	if (zenyOk && window.getComputedStyle(zenyOk).display !== "none") {
@@ -244139,7 +242428,7 @@ function openWindowCreateMessages(event) {
 * Open Create messages window size
 */
 function onWindowCreateMessages() {
-	const root = _root$8();
+	const root = _root$5();
 	removeCreateAllItem();
 	offWindowListMail();
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist2_bg.bmp", (url) => {
@@ -244150,7 +242439,7 @@ function onWindowCreateMessages() {
 	if (title) title.textContent = DB.getMessage(1026);
 }
 function offWindowListMail() {
-	const root = _root$8();
+	const root = _root$5();
 	const prevNext = root.querySelector(".prev_next");
 	if (prevNext) prevNext.style.display = "none";
 	const blockMail = root.querySelector(".block_mail");
@@ -244161,7 +242450,7 @@ function offWindowListMail() {
 	if (textarea) textarea.focus();
 }
 function onAddZenyInput(event) {
-	const root = _root$8();
+	const root = _root$5();
 	event.stopImmediatePropagation();
 	const zenyAmt = root.querySelector("#zeny_amt");
 	if (zenyAmt) zenyAmt.style.display = "none";
@@ -244176,7 +242465,7 @@ function onAddZenyInput(event) {
 	Mail.parseMailWinopen(2);
 }
 function onValidZenyInput(event) {
-	const root = _root$8();
+	const root = _root$5();
 	event.stopImmediatePropagation();
 	const zenyAmt = root.querySelector("#zeny_amt");
 	if (zenyAmt) zenyAmt.style.display = "inline-block";
@@ -244202,7 +242491,7 @@ function stopPropagation$14(event) {
 /**
 * Drop an item in the equipment, equip it if possible
 */
-function onDrop$20(event) {
+function onDrop$23(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -244221,24 +242510,24 @@ function onDrop$20(event) {
 			Mail.parseMailWinopen(1);
 			if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, parseInt(count, 10));
 			Mail.parseMailSetattach(item.index, parseInt(count, 10));
-			_preferences$64.item_add_email = item;
-			_preferences$64.item_add_email.count = parseInt(count, 10);
-			_preferences$64.save();
+			_preferences$68.item_add_email = item;
+			_preferences$68.item_add_email.count = parseInt(count, 10);
+			_preferences$68.save();
 		};
 		return;
 	}
 	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
 	Mail.parseMailWinopen(1);
 	Mail.parseMailSetattach(item.index, 1);
-	_preferences$64.item_add_email = item;
-	_preferences$64.item_add_email.count = 1;
-	_preferences$64.save();
+	_preferences$68.item_add_email = item;
+	_preferences$68.item_add_email.count = 1;
+	_preferences$68.save();
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$16() {
-	const root = _root$8();
+function onItemOver$19() {
+	const root = _root$5();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(idx);
 	if (!item) return;
@@ -244253,14 +242542,14 @@ function onItemOver$16() {
 /**
 * Hide the item name
 */
-function onItemOut$17() {
-	const overlay = _root$8().querySelector(".container_item .overlay");
+function onItemOut$20() {
+	const overlay = _root$5().querySelector(".container_item .overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
 */
-function onItemDragStart$12(event) {
+function onItemDragStart$15(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(index);
 	if (!item) return;
@@ -244274,18 +242563,18 @@ function onItemDragStart$12(event) {
 		from: "Mail",
 		data: item
 	}));
-	onItemOut$17();
+	onItemOut$20();
 }
 /**
 * Stop dragging an item
 */
-function onItemDragEnd$13() {
+function onItemDragEnd$16() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$20(event) {
+function onItemInfo$23(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(index);
@@ -244344,7 +242633,7 @@ function onDropText$1(event) {
 function sleep(time) {
 	return new Promise((resolve) => setTimeout(resolve, time));
 }
-var Mail, _preferences$64, Mail_default;
+var Mail, _preferences$68, Mail_default;
 var init_Mail$1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -244375,7 +242664,7 @@ var init_Mail$1 = __esmMin((() => {
 	* know which page is current
 	*/
 	Mail.page = 0;
-	_preferences$64 = Preferences.get("Mail", {
+	_preferences$68 = Preferences.get("Mail", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -244400,7 +242689,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	Mail.onAppend = function OnAppend() {
-		const root = _root$8();
+		const root = _root$5();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) closeBtn.addEventListener("click", this.onClosePressed.bind(this));
 		const inboxBtn = root.querySelector("#inbox");
@@ -244414,27 +242703,27 @@ var init_Mail$1 = __esmMin((() => {
 		updatePageMailItems();
 		const containerItem = root.querySelector(".container_item");
 		if (containerItem) {
-			containerItem.addEventListener("drop", onDrop$20);
+			containerItem.addEventListener("drop", onDrop$23);
 			containerItem.addEventListener("dragover", stopPropagation$14);
 			containerItem.addEventListener("mouseover", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemOver$16.call(item, event);
+				if (item) onItemOver$19.call(item, event);
 			});
 			containerItem.addEventListener("mouseout", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemOut$17.call(item, event);
+				if (item) onItemOut$20.call(item, event);
 			});
 			containerItem.addEventListener("dragstart", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemDragStart$12.call(item, event);
+				if (item) onItemDragStart$15.call(item, event);
 			});
 			containerItem.addEventListener("dragend", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemDragEnd$13.call(item, event);
+				if (item) onItemDragEnd$16.call(item, event);
 			});
 			containerItem.addEventListener("contextmenu", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemInfo$20.call(item, event);
+				if (item) onItemInfo$23.call(item, event);
 			});
 		}
 		root.querySelectorAll("input[type=text]").forEach((input) => {
@@ -244453,16 +242742,16 @@ var init_Mail$1 = __esmMin((() => {
 		onWindowMailbox();
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$64.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$64.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$68.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$68.x), Renderer.width - hostWidth)}px`;
 		this.draggable(".titlebar");
 	};
 	/**
 	* Add item to inventory
 	*/
 	Mail.addItemSub = function AddItemSub(Index) {
-		const root = _root$8();
-		const item = _preferences$64.item_add_email;
+		const root = _root$5();
+		const item = _preferences$68.item_add_email;
 		if (item.index !== Index) return false;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
@@ -244482,14 +242771,14 @@ var init_Mail$1 = __esmMin((() => {
 	* Send from mail to inventory - Remove item
 	*/
 	Mail.removeItem = function removeItem() {
-		const item = _root$8().querySelector(".item");
+		const item = _root$5().querySelector(".item");
 		if (item) item.remove();
 	};
 	/**
 	* Send from mail to inventory - Remove zenys
 	*/
 	Mail.removeZeny = function removeZeny() {
-		const input = _root$8().querySelector(".input_zeny_amt");
+		const input = _root$5().querySelector(".input_zeny_amt");
 		if (input) input.value = "0";
 	};
 	/**
@@ -244497,21 +242786,21 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$64.show = this._host.style.display !== "none";
-		_preferences$64.reduce = false;
-		_preferences$64.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$64.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$64.magnet_top = this.magnet.TOP;
-		_preferences$64.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$64.magnet_left = this.magnet.LEFT;
-		_preferences$64.magnet_right = this.magnet.RIGHT;
-		_preferences$64.save();
+		_preferences$68.show = this._host.style.display !== "none";
+		_preferences$68.reduce = false;
+		_preferences$68.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$68.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$68.magnet_top = this.magnet.TOP;
+		_preferences$68.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$68.magnet_left = this.magnet.LEFT;
+		_preferences$68.magnet_right = this.magnet.RIGHT;
+		_preferences$68.save();
 	};
 	/**
 	* Extend Mail window size
 	*/
 	Mail.resize = function Resize(width, height) {
-		const root = _root$8();
+		const root = _root$5();
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
 		const mailEl = root.querySelector("#Mail");
@@ -244555,7 +242844,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Search in a list for an item by its index
 	*/
 	Mail.getItemByIndex = function getItemByIndex(index) {
-		const list = _preferences$64.item_add_email;
+		const list = _preferences$68.item_add_email;
 		if (list.index == index) return list;
 		return null;
 	};
@@ -244563,7 +242852,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Responder to a mail.
 	*/
 	Mail.replyNewMail = function replyNewMail(fromName) {
-		const root = _root$8();
+		const root = _root$5();
 		onWindowCreateMessages();
 		const textTo = root.querySelector(".text_to");
 		if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
@@ -244572,7 +242861,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Responder to a mail from friends.
 	*/
 	Mail.replyNewMailFriends = async function replyNewMailFriends(fromName) {
-		const root = _root$8();
+		const root = _root$5();
 		Mail.append();
 		sleep(1).then(() => {
 			onWindowCreateMessages();
@@ -244597,7 +242886,7 @@ var init_Mail$1 = __esmMin((() => {
 		});
 	};
 	Mail.clearFieldsItemZeny = function clearFieldsItemZeny() {
-		const root = _root$8();
+		const root = _root$5();
 		const item = root.querySelector(".item");
 		if (item) item.remove();
 		const zenyInput = root.querySelector(".input_zeny_amt");
@@ -244651,12 +242940,6 @@ var init_SkillTargetSelection$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$57() {
-	return SkillTargetSelection._shadow || SkillTargetSelection._host;
-}
 /**
 * Render text into the canvas
 *
@@ -244803,7 +243086,7 @@ var init_SkillTargetSelection = __esmMin((() => {
 	* Initialize component
 	*/
 	SkillTargetSelection.init = function init() {
-		const root = _getRoot$57();
+		const root = this.getRoot();
 		_skillName = root.querySelector(".skill-name");
 		_description = root.querySelector(".skill-description");
 		_skillLevel = root.querySelector(".skill-level");
@@ -244937,13 +243220,13 @@ var init_PartyFriendsV0$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$7() {
+function _root$4() {
 	return PartyFriendsV0._shadow || PartyFriendsV0._host;
 }
 /**
 * Helper: escape HTML (replace jQuery.escape)
 */
-function _escapeHTML$8(text) {
+function _escapeHTML$7(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -244951,7 +243234,7 @@ function _escapeHTML$8(text) {
 /**
 * Resizing UI
 */
-function onResize$13() {
+function onResize$16() {
 	const host = PartyFriendsV0._host;
 	const top = host.offsetTop;
 	const left = host.offsetLeft;
@@ -244989,12 +243272,12 @@ function onClose$13() {
 * Enable or disable the lock features
 */
 function onToggleLock$1() {
-	_preferences$63.lock = !_preferences$63.lock;
-	_preferences$63.save();
-	const root = _root$7();
+	_preferences$67.lock = !_preferences$67.lock;
+	_preferences$67.save();
+	const root = _root$4();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$63.lock) {
+	if (_preferences$67.lock) {
 		if (lockOn) lockOn.style.display = "inline-block";
 		if (lockOff) lockOff.style.display = "none";
 	} else {
@@ -245006,12 +243289,12 @@ function onToggleLock$1() {
 * Move to the other tab (Friend -> Party or Party -> Friend)
 */
 function onChangeTab$2() {
-	const root = _root$7();
-	_preferences$63.friend = !_preferences$63.friend;
-	_preferences$63.save();
+	const root = _root$4();
+	_preferences$67.friend = !_preferences$67.friend;
+	_preferences$67.save();
 	const friendEls = root.querySelectorAll(".friend");
 	const partyEls = root.querySelectorAll(".party");
-	if (_preferences$63.friend) {
+	if (_preferences$67.friend) {
 		friendEls.forEach((el) => {
 			el.style.display = "";
 		});
@@ -245040,17 +243323,17 @@ function onChangeTab$2() {
 		}
 	}
 	root.querySelectorAll(".node").forEach((n) => n.classList.remove("selection"));
-	_index$7 = -1;
+	_index$6 = -1;
 }
 /**
 * Ask confirmation to remove a character from the list
 */
 function onRequestRemoveSelection$1() {
-	if (_index$7 < 0 || _preferences$63.lock || _preferences$63.friend && !_friends$1[_index$7] || !_preferences$63.friend && !_party$3[_index$7]) return;
-	const text = _preferences$63.friend ? DB.getMessage(356) : DB.getMessage(363);
+	if (_index$6 < 0 || _preferences$67.lock || _preferences$67.friend && !_friends$1[_index$6] || !_preferences$67.friend && !_party$3[_index$6]) return;
+	const text = _preferences$67.friend ? DB.getMessage(356) : DB.getMessage(363);
 	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$63.friend) PartyFriendsV0.onRemoveFriend(_index$7);
-		else PartyFriendsV0.onExpelMember(_party$3[_index$7].AID, _party$3[_index$7].characterName);
+		if (_preferences$67.friend) PartyFriendsV0.onRemoveFriend(_index$6);
+		else PartyFriendsV0.onExpelMember(_party$3[_index$6].AID, _party$3[_index$6].characterName);
 	});
 }
 /**
@@ -245058,8 +243341,8 @@ function onRequestRemoveSelection$1() {
 * Or open a new conversation window (todo)
 */
 function onRequestPrivateMessage$1() {
-	if (_index$7 < 0 || _preferences$63.lock) return;
-	const name = _preferences$63.friend ? _friends$1[_index$7].Name : _party$3[_index$7].characterName;
+	if (_index$6 < 0 || _preferences$67.lock) return;
+	const name = _preferences$67.friend ? _friends$1[_index$6].Name : _party$3[_index$6].characterName;
 	if (PacketVerManager_default.value >= 20090617) {
 		WhisperBox.show(name);
 		return;
@@ -245076,15 +243359,15 @@ function onRequestPrivateMessage$1() {
 * Right click on a character
 */
 function onRightClickInfo$1() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
-	if (_preferences$63.friend) {
+	if (_preferences$67.friend) {
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
-		if (_friends$1[_index$7].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection$1);
+		if (_friends$1[_index$6].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection$1);
 	} else {
 		ContextMenu_default.addElement(DB.getMessage(129), onRequestInformation);
-		if (_party$3[_index$7].GID === SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty$1);
+		if (_party$3[_index$6].GID === SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty$1);
 		else {
 			ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
 			if (SessionStorage_default.isPartyLeader) {
@@ -245098,14 +243381,14 @@ function onRightClickInfo$1() {
 * Request player information
 */
 function onRequestInformation() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	UIManager.showMessageBox(DB.getMessage(191), "ok");
 }
 /**
 * Request to leave a party
 */
 function onRequestLeaveParty$1() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV0.onRequestLeave();
 	});
@@ -245114,22 +243397,22 @@ function onRequestLeaveParty$1() {
 * Request to change party leader
 */
 function onRequestPartyDelegation$1() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
-		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$7].AID);
+		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$6].AID);
 	});
 }
 /**
 * Change selection (click on a friend/party)
 */
 function onSelectionChange$1(nodeEl) {
-	_root$7().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
+	_root$4().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
 	const nameEl = nodeEl.querySelector(".name");
 	if (nameEl) nameEl.classList.add("selection");
 	const siblings = nodeEl.parentNode.querySelectorAll(".node");
-	_index$7 = Array.prototype.indexOf.call(siblings, nodeEl);
+	_index$6 = Array.prototype.indexOf.call(siblings, nodeEl);
 	if (SkillTargetSelection_default.intersectEntityId) {
-		const entityId = _preferences$63.friend ? _friends$1[_index$7].AID : _party$3[_index$7].AID;
+		const entityId = _preferences$67.friend ? _friends$1[_index$6].AID : _party$3[_index$6].AID;
 		SkillTargetSelection_default.intersectEntityId(entityId);
 	}
 }
@@ -245137,8 +243420,8 @@ function onSelectionChange$1(nodeEl) {
 * Open the party info window
 */
 function onOpenPartyOptionWindow$1() {
-	if (_preferences$63.lock) return;
-	const type = _preferences$63.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
+	if (_preferences$67.lock) return;
+	const type = _preferences$67.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === type) {
 		PartyHelper_default.remove();
 		return;
@@ -245157,7 +243440,7 @@ function onOpenPartyOptionWindow$1() {
 * Open the window to invite people
 */
 function onOpenPartyInviteWindow$1() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.INVITE) {
 		PartyHelper_default.remove();
 		return;
@@ -245169,7 +243452,7 @@ function onOpenPartyInviteWindow$1() {
 * Open the window to create a party
 */
 function onOpenPartyCreationWindow$1() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.CREATE) {
 		PartyHelper_default.remove();
 		return;
@@ -245181,14 +243464,14 @@ function onOpenPartyCreationWindow$1() {
 * Open the window to manage mails
 */
 function onOpenMailCreationWindow$1() {
-	if (_preferences$63.lock) return;
+	if (_preferences$67.lock) return;
 	let recipient = "";
-	if (_preferences$63.friend && _friends$1[_index$7]) recipient = _friends$1[_index$7].Name;
-	else if (!_preferences$63.friend && _party$3[_index$7]) recipient = _party$3[_index$7].characterName;
+	if (_preferences$67.friend && _friends$1[_index$6]) recipient = _friends$1[_index$6].Name;
+	else if (!_preferences$67.friend && _party$3[_index$6]) recipient = _party$3[_index$6].characterName;
 	if (recipient) Mail_default.replyNewMailFriends(recipient);
 	else Mail_default.append();
 }
-var PartyFriendsV0, _index$7, _friends$1, _party$3, _options$1, _preferences$63, PartyFriendsV0_default;
+var PartyFriendsV0, _index$6, _friends$1, _party$3, _options$1, _preferences$67, PartyFriendsV0_default;
 var init_PartyFriendsV0 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -245210,7 +243493,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	init_PartyFriendsV0$2();
 	init_PartyFriendsV0$1();
 	PartyFriendsV0 = new GUIComponent("PartyFriendsV0", PartyFriendsV0_default$1);
-	_index$7 = -1;
+	_index$6 = -1;
 	_friends$1 = [];
 	_party$3 = [];
 	_options$1 = {
@@ -245218,7 +243501,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		item_share: 0,
 		item_sharing_type: 0
 	};
-	_preferences$63 = Preferences.get("PartyFriendsV0", {
+	_preferences$67 = Preferences.get("PartyFriendsV0", {
 		x: 200,
 		y: 200,
 		width: 12,
@@ -245235,7 +243518,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	PartyFriendsV0.init = function init() {
-		const root = _root$7();
+		const root = _root$4();
 		PartyHelper_default.prepare();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
@@ -245258,7 +243541,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		const leaveBtn = root.querySelector(".party.leave");
 		if (leaveBtn) leaveBtn.addEventListener("mousedown", onRequestLeaveParty$1);
 		const resizeBtn = root.querySelector(".resize");
-		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$13);
+		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$16);
 		const mailBtn = root.querySelector(".mail");
 		if (mailBtn) mailBtn.addEventListener("mousedown", onOpenMailCreationWindow$1);
 		const createBtn = root.querySelector(".party.create");
@@ -245287,22 +243570,22 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	PartyFriendsV0.onAppend = function onAppend() {
-		_preferences$63.friend = !_preferences$63.friend;
+		_preferences$67.friend = !_preferences$67.friend;
 		onChangeTab$2();
-		const root = _root$7();
+		const root = _root$4();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$63.lock) {
+		if (_preferences$67.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$63.width, _preferences$63.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$63.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$63.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		if (!_preferences$63.show) this.ui.hide();
+		this.resize(_preferences$67.width, _preferences$67.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$67.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$67.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		if (!_preferences$67.show) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -245310,11 +243593,11 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.clean = function clean() {
 		_party$3.length = 0;
 		_friends$1.length = 0;
-		_index$7 = -1;
+		_index$6 = -1;
 		_options$1.exp_share = 0;
 		_options$1.item_share = 0;
 		_options$1.item_sharing_type = 0;
-		const root = _root$7();
+		const root = _root$4();
 		const partyName = root.querySelector(".partyname");
 		if (partyName) partyName.textContent = "";
 		const friendCount = root.querySelector(".friendcount");
@@ -245323,17 +243606,17 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		if (partyContent) partyContent.innerHTML = "";
 		const friendContent = root.querySelector(".content .friend");
 		if (friendContent) friendContent.innerHTML = "";
-		_preferences$63.friend = !_preferences$63.friend;
+		_preferences$67.friend = !_preferences$67.friend;
 		onChangeTab$2();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
 	PartyFriendsV0.onRemove = function onRemove() {
-		_preferences$63.show = this.ui.is(":visible");
-		_preferences$63.y = parseInt(this._host.style.top, 10);
-		_preferences$63.x = parseInt(this._host.style.left, 10);
-		_preferences$63.save();
+		_preferences$67.show = this.ui.is(":visible");
+		_preferences$67.y = parseInt(this._host.style.top, 10);
+		_preferences$67.x = parseInt(this._host.style.left, 10);
+		_preferences$67.save();
 	};
 	/**
 	* Window Shortcuts
@@ -245341,18 +243624,18 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$63.friend) this.ui.toggle();
+				if (_preferences$67.friend) this.ui.toggle();
 				else {
-					_preferences$63.friend = false;
+					_preferences$67.friend = false;
 					onChangeTab$2();
 					this.ui.show();
 				}
 				if (this.ui.is(":visible")) this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$63.friend) this.ui.toggle();
+				if (!_preferences$67.friend) this.ui.toggle();
 				else {
-					_preferences$63.friend = true;
+					_preferences$67.friend = true;
 					onChangeTab$2();
 					this.ui.show();
 				}
@@ -245378,7 +243661,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.setFriends = function setFriends(friends) {
 		const count = friends.length;
-		const root = _root$7();
+		const root = _root$4();
 		const friendContainer = root.querySelector(".content .friend");
 		_friends$1.length = friends.length;
 		if (friendContainer) friendContainer.innerHTML = "";
@@ -245386,12 +243669,12 @@ var init_PartyFriendsV0 = __esmMin((() => {
 			_friends$1[i] = friends[i];
 			const div = document.createElement("div");
 			div.className = `node${friends[i].State === 0 ? " online" : ""}`;
-			div.innerHTML = `<span class="name">${_escapeHTML$8(friends[i].Name)}</span>`;
+			div.innerHTML = `<span class="name">${_escapeHTML$7(friends[i].Name)}</span>`;
 			if (friendContainer) friendContainer.appendChild(div);
 		}
 		const friendCount = root.querySelector(".friendcount");
 		if (friendCount) friendCount.textContent = String(count);
-		_index$7 = -1;
+		_index$6 = -1;
 	};
 	/**
 	* Update friend (online/offline) state
@@ -245400,7 +243683,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {boolean} state
 	*/
 	PartyFriendsV0.updateFriendState = function updateFriendState(index, state) {
-		const node = _root$7().querySelectorAll(".content .friend .node")[index];
+		const node = _root$4().querySelectorAll(".content .friend .node")[index];
 		_friends$1[index].State = state;
 		if (state) {
 			if (node) node.style.backgroundImage = "";
@@ -245419,7 +243702,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {object} friend data
 	*/
 	PartyFriendsV0.updateFriend = function updateFriend(idx, friend) {
-		const root = _root$7();
+		const root = _root$4();
 		if (!_friends$1[idx]) {
 			_friends$1[idx] = {};
 			const friendContainer = root.querySelector(".content .friend");
@@ -245452,12 +243735,12 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.removeFriend = function removeFriend(index) {
 		_friends$1.splice(index, 1);
-		const root = _root$7();
+		const root = _root$4();
 		const nodes = root.querySelectorAll(".content .friend .node");
 		if (nodes[index]) nodes[index].remove();
 		const friendCount = root.querySelector(".friendcount");
 		if (friendCount) friendCount.textContent = String(_friends$1.length);
-		if (_index$7 === index) _index$7 = -1;
+		if (_index$6 === index) _index$6 = -1;
 	};
 	/**
 	* Add members to party
@@ -245466,7 +243749,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {Array} member list
 	*/
 	PartyFriendsV0.setParty = function setParty(name, members) {
-		const root = _root$7();
+		const root = _root$4();
 		const partyName = root.querySelector(".partyname");
 		if (partyName) partyName.textContent = `(${name})`;
 		const partyContent = root.querySelector(".content .party");
@@ -245479,7 +243762,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		const count = members.length;
 		_party$3.length = 0;
 		for (let i = 0; i < count; i++) PartyFriendsV0.addPartyMember(members[i]);
-		_index$7 = -1;
+		_index$6 = -1;
 	};
 	/**
 	* Add a new party member to the list
@@ -245489,7 +243772,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.addPartyMember = function addPartyMember(player) {
 		const role = player.role || player.Role || 0;
 		const count = _party$3.length;
-		const root = _root$7();
+		const root = _root$4();
 		let node;
 		if (player.AID === SessionStorage_default.AID) {
 			SessionStorage_default.isPartyLeader = role === 0;
@@ -245517,7 +243800,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 			if (partyContent) {
 				const div = document.createElement("div");
 				div.className = `node${role === 0 ? " leader" : ""}${player.state === 0 ? " online" : ""}`;
-				div.innerHTML = `<span class="name">${_escapeHTML$8(player.characterName)}</span><span class="map">(${_escapeHTML$8(DB.getMapName(player.mapName))})</span><canvas class="life" width="60" height="5"></canvas> <span class="hp"></span>`;
+				div.innerHTML = `<span class="name">${_escapeHTML$7(player.characterName)}</span><span class="map">(${_escapeHTML$7(DB.getMapName(player.mapName))})</span><canvas class="life" width="60" height="5"></canvas> <span class="hp"></span>`;
 				partyContent.appendChild(div);
 				node = div;
 			}
@@ -245546,7 +243829,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {string} character name
 	*/
 	PartyFriendsV0.removePartyMember = function removePartyMember(AID, characterName) {
-		const root = _root$7();
+		const root = _root$4();
 		if (AID === SessionStorage_default.AID) {
 			_party$3.length = 0;
 			const partyContent = root.querySelector(".content .party");
@@ -245579,10 +243862,10 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$63.width = width;
-		_preferences$63.height = height;
-		_preferences$63.save();
-		const content = _root$7().querySelector(".content");
+		_preferences$67.width = width;
+		_preferences$67.height = height;
+		_preferences$67.save();
+		const content = _root$4().querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
 			content.style.height = `${height * 20}px`;
@@ -245598,7 +243881,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
 		const count = _party$3.length;
-		const nodes = _root$7().querySelectorAll(".content .party .node");
+		const nodes = _root$4().querySelectorAll(".content .party .node");
 		for (let i = 0; i < count; ++i) if (_party$3[i].AID === AID && _party$3[i].state === 0) {
 			const node = nodes[i];
 			if (!node) break;
@@ -245674,9 +243957,6 @@ var init_MiniMap$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap/MiniMap.js
-function _getRoot$56() {
-	return MiniMap._shadow || MiniMap._host;
-}
 /**
 * Async image create helper
 */
@@ -245685,7 +243965,7 @@ function createAsyncImage$2() {
 	img.decoding = "async";
 	return img;
 }
-var MiniMap, _preferences$62, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$13, _zoomFactor$1, render$17, MiniMap_default;
+var MiniMap, _preferences$66, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$13, _zoomFactor$1, render$17, MiniMap_default;
 var init_MiniMap$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -245709,7 +243989,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	*/
 	MiniMap.needFocus = false;
 	MiniMap.render = () => MiniMap_default$2;
-	_preferences$62 = Preferences.get("MiniMap", {
+	_preferences$66 = Preferences.get("MiniMap", {
 		zoom: 0,
 		opacity: 2
 	}, 1);
@@ -245738,7 +244018,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Initialize minimap
 	*/
 	MiniMap.init = function init() {
-		const root = _getRoot$56();
+		const root = this.getRoot();
 		_ctx$13 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
@@ -245780,8 +244060,8 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Once append to HTML
 	*/
 	MiniMap.onAppend = function onAppend() {
-		this.updateZoom(_preferences$62.zoom);
-		this.toggleOpacity(_preferences$62.opacity + 1);
+		this.updateZoom(_preferences$66.zoom);
+		this.toggleOpacity(_preferences$66.opacity + 1);
 		Renderer.render(render$17);
 	};
 	/**
@@ -245939,16 +244219,16 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMap.updateZoom = function updateZoom(value) {
-		_preferences$62.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$62.zoom + value));
-		_preferences$62.save();
+		_preferences$66.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$66.zoom + value));
+		_preferences$66.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMap.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$62.opacity = this.opacity;
-		_preferences$62.save();
+		_preferences$66.opacity = this.opacity;
+		_preferences$66.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
@@ -245981,7 +244261,7 @@ var init_MiniMap$1 = __esmMin((() => {
 			let i, count;
 			let dot;
 			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$13) return;
-			zoom = _zoomFactor$1[_preferences$62.zoom];
+			zoom = _zoomFactor$1[_preferences$66.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
@@ -246269,9 +244549,6 @@ var init_MapPathFinder = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Navigation/Navigation.js
-function _getRoot$55() {
-	return Navigation._shadow || Navigation._host;
-}
 /**
 * Async image create helper
 */
@@ -246468,7 +244745,7 @@ var init_Navigation = __esmMin((() => {
 	* Initialize component
 	*/
 	Navigation.init = function init() {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		_mapData = { walkableType: Altitude.TYPE.WALKABLE };
 		this._host.style.top = `${Math.max(0, Math.min(Renderer.height - 300, 200))}px`;
 		this._host.style.left = `${Math.max(0, Math.min(Renderer.width - 300, 200))}px`;
@@ -246559,7 +244836,7 @@ var init_Navigation = __esmMin((() => {
 	* Handle search button click
 	*/
 	Navigation.onSearch = function onSearch() {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		const query = root.querySelector(".search-input").value.trim();
 		const type = root.querySelector(".search-type").value;
 		if (query.length < 2) return;
@@ -246570,7 +244847,7 @@ var init_Navigation = __esmMin((() => {
 	* Display search results
 	*/
 	Navigation.displaySearchResults = function displaySearchResults(results) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		let resultsContainer = root.querySelector(".search-results");
 		if (!resultsContainer) {
 			resultsContainer = document.createElement("div");
@@ -246616,7 +244893,7 @@ var init_Navigation = __esmMin((() => {
 			endY: result.y,
 			displayName: result.name
 		});
-		const resultsContainer = _getRoot$55().querySelector(".search-results");
+		const resultsContainer = Navigation.getRoot().querySelector(".search-results");
 		if (resultsContainer) resultsContainer.style.display = "none";
 	};
 	/**
@@ -246662,7 +244939,7 @@ var init_Navigation = __esmMin((() => {
 	* Handle map click event
 	*/
 	Navigation.onMapClick = function onMapClick(event) {
-		const rect = _getRoot$55().querySelector(".map-display").getBoundingClientRect();
+		const rect = Navigation.getRoot().querySelector(".map-display").getBoundingClientRect();
 		const x = Math.floor(event.clientX - rect.left);
 		const y = Math.floor(event.clientY - rect.top);
 		const mapCoords = this.screenToMapCoordinates(x, y);
@@ -246726,7 +245003,7 @@ var init_Navigation = __esmMin((() => {
 		_finalTargetData = null;
 		_targetData = null;
 		_isMapClickTarget = false;
-		const targetInfo = _getRoot$55().querySelector(".target-info");
+		const targetInfo = Navigation.getRoot().querySelector(".target-info");
 		if (targetInfo) targetInfo.style.display = "none";
 		const currentMap = getCurrentMap();
 		if (currentMap) this.setLocationTitle(currentMap, null);
@@ -246885,7 +245162,7 @@ var init_Navigation = __esmMin((() => {
 	* Update the target coordinates text
 	*/
 	Navigation.updateTargetText = function updateTargetText(noPathFound) {
-		const targetInfo = _getRoot$55().querySelector(".target-info");
+		const targetInfo = Navigation.getRoot().querySelector(".target-info");
 		if (targetInfo) targetInfo.style.display = "flex";
 		if (_finalTargetData) this.setTargetCoordinatesText(_finalTargetData.x, _finalTargetData.y, {
 			noPathFound,
@@ -246896,7 +245173,7 @@ var init_Navigation = __esmMin((() => {
 	* Set target coordinates text with proper formatting
 	*/
 	Navigation.setTargetCoordinatesText = function setTargetCoordinatesText(x, y, options) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		if (!root) return;
 		const text = formatTargetCoordinates(x, y, options);
 		const targetCoords = root.querySelector(".target-coordinates");
@@ -246908,7 +245185,7 @@ var init_Navigation = __esmMin((() => {
 		if (targetInfo) targetInfo.style.display = "flex";
 	};
 	Navigation.setTargetCoordinatesBlinking = function setTargetCoordinatesBlinking(blinking) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		if (!root) return;
 		const targetCoordinates = root.querySelector(".target-coordinates");
 		if (!targetCoordinates) return;
@@ -246937,7 +245214,7 @@ var init_Navigation = __esmMin((() => {
 	* Set location title with proper formatting
 	*/
 	Navigation.setLocationTitle = function setLocationTitle(currentMap, targetMap, displayName) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		if (!root) return;
 		const title = formatLocationTitle(currentMap, targetMap, displayName);
 		const locationTitle = root.querySelector(".location-title");
@@ -246947,7 +245224,7 @@ var init_Navigation = __esmMin((() => {
 	* Set coordinates text with proper formatting
 	*/
 	Navigation.setCoordinatesText = function setCoordinatesText(x, y, options) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		if (!root) return;
 		const text = formatCoordinates(x, y, options);
 		const coords = root.querySelector(".coordinates");
@@ -246957,7 +245234,7 @@ var init_Navigation = __esmMin((() => {
 	* Set map name text with proper formatting
 	*/
 	Navigation.setMapNameText = function setMapNameText(mapName) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		if (!root) return;
 		const mapNameEl = root.querySelector(".map-name");
 		if (mapNameEl) mapNameEl.textContent = normalizeMapName(mapName);
@@ -246966,7 +245243,7 @@ var init_Navigation = __esmMin((() => {
 	* Set mouse coordinates text with proper formatting
 	*/
 	Navigation.setMouseCoordinatesText = function setMouseCoordinatesText(x, y, options) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		if (!root) return;
 		const text = formatCoordinates(x, y, options);
 		const mouseCoords = root.querySelector(".mouse-coordinates");
@@ -247019,7 +245296,7 @@ var init_Navigation = __esmMin((() => {
 	* Show the navigation window
 	*/
 	Navigation.show = function show() {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		this.clearPath();
 		initializePathFindingWorker();
 		const mouseInfo = root.querySelector(".mouse-info");
@@ -247057,7 +245334,7 @@ var init_Navigation = __esmMin((() => {
 	* Handle mouse movement over the map to display coordinates
 	*/
 	Navigation.onMapMouseMove = function onMapMouseMove(event) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		const rect = root.querySelector(".map-display").getBoundingClientRect();
 		const x = Math.floor(event.clientX - rect.left);
 		const y = Math.floor(event.clientY - rect.top);
@@ -247072,7 +245349,7 @@ var init_Navigation = __esmMin((() => {
 	* Handle mouse leaving the map area
 	*/
 	Navigation.onMapMouseLeave = function onMapMouseLeave() {
-		const mouseInfo = _getRoot$55().querySelector(".mouse-info");
+		const mouseInfo = Navigation.getRoot().querySelector(".mouse-info");
 		if (mouseInfo) mouseInfo.style.display = "none";
 	};
 	/**
@@ -247084,7 +245361,7 @@ var init_Navigation = __esmMin((() => {
 		const mapName = parts[0];
 		const x = parseInt(parts[1], 10);
 		const y = parseInt(parts[2], 10);
-		const searchInput = _getRoot$55().querySelector(".search-input");
+		const searchInput = Navigation.getRoot().querySelector(".search-input");
 		if (searchInput) searchInput.value = "";
 		_isMapClickTarget = false;
 		const currentMap = getCurrentMap();
@@ -247112,7 +245389,7 @@ var init_Navigation = __esmMin((() => {
 	* Unified navigation function that handles both same-map and cross-map navigation
 	*/
 	Navigation.navigateTo = function navigateTo(options) {
-		const root = _getRoot$55();
+		const root = Navigation.getRoot();
 		const startMap = normalizeMapName(options.startMap);
 		const endMap = normalizeMapName(options.endMap);
 		const displayName = options.displayName;
@@ -247163,14 +245440,14 @@ var init_Navigation = __esmMin((() => {
 * Create WorldMap list of maps (select Element)
 */
 function setMapList() {
-	const selectEl = (WorldMap._shadow || WorldMap._host).querySelector("#WorldMaps");
+	const selectEl = WorldMap.getRoot().querySelector("#WorldMaps");
 	if (!selectEl) return;
 	let list = "";
 	for (const map of WorldMap_default$3) if (WorldMap.settings.episode >= map.ep_from && WorldMap.settings.episode < map.ep_to) list += `<option value="${map.id}">${map.name}</option>`;
 	selectEl.innerHTML = list;
 }
 function onSelect() {
-	selectMap((WorldMap._shadow || WorldMap._host).querySelector(".titlebar select").value);
+	selectMap(WorldMap.getRoot().querySelector(".titlebar select").value);
 }
 /**
 * Select world map
@@ -247178,7 +245455,7 @@ function onSelect() {
 * @param {string} name eg. `"worldmap_localizing1"`
 */
 function selectMap(name = null) {
-	if (!name) if (WorldMap_default$3.length > 0) name = WorldMap_default$3[0].id;
+	if (!name || name === null || name === "") if (WorldMap_default$3.length > 0 && WorldMap_default$3[0].id !== null && WorldMap_default$3[0].id !== "") name = WorldMap_default$3[0].id;
 	else name = "worldmap.jpg";
 	Client.loadFile(DB.INTERFACE_PATH + name, (data) => {
 		for (const map of WorldMap_default$3) if (map.id === name) {
@@ -247192,7 +245469,7 @@ function selectMap(name = null) {
 * Resize world map
 */
 function resizeMap() {
-	const mapContainer = (WorldMap._shadow || WorldMap._host).querySelector(".map-view");
+	const mapContainer = WorldMap.getRoot().querySelector(".map-view");
 	if (!mapContainer) return;
 	const currentwidth = typeof Renderer !== "undefined" && Renderer.width || window.innerWidth;
 	const currentheight = (typeof Renderer !== "undefined" && Renderer.height || window.innerHeight) - C_TITLEBARHEIGHT;
@@ -247213,7 +245490,8 @@ function onWorldMapSectionClick(e) {
 	const displayName = section.getAttribute("data-displayname") || "";
 	const mapId = section.id;
 	Navigation_default.show();
-	Navigation_default.ui.find(".search-input").val(displayName || mapId);
+	const input = Navigation_default.getRoot().querySelector(".search-input");
+	if (input) input.value = displayName || mapId;
 	Navigation_default.onSearch();
 	Navigation_default.focus();
 }
@@ -247242,7 +245520,7 @@ function onWorldMapMouseOut(e) {
 * @param {*} section
 */
 function showTooltip(section) {
-	const tooltip = (WorldMap._shadow || WorldMap._host).querySelector("#map-tooltip");
+	const tooltip = WorldMap.getRoot().querySelector("#map-tooltip");
 	if (!tooltip) return;
 	const displayName = section.getAttribute("data-displayname") || "";
 	tooltip.querySelector(".tooltip-mapname").textContent = displayName;
@@ -247264,7 +245542,7 @@ function showTooltip(section) {
 * Hide tooltip
 */
 function hideTooltip() {
-	const tooltip = (WorldMap._shadow || WorldMap._host).querySelector("#map-tooltip");
+	const tooltip = WorldMap.getRoot().querySelector("#map-tooltip");
 	if (tooltip) tooltip.style.display = "none";
 }
 /**
@@ -247275,7 +245553,7 @@ function hideTooltip() {
 * @param {string} imgData world map image data as a base64
 */
 function createWorldMapView(map, imgData) {
-	const container = (WorldMap._shadow || WorldMap._host).querySelector(".map .content");
+	const container = WorldMap.getRoot().querySelector(".map .content");
 	const worldmap = document.createElement("div");
 	const currentMap = MapRenderer.currentMap.replace(/\.gat$/i, "");
 	worldmap.className = "worldmap" + (WorldMap.showLVLMode ? " show-lvls" : "");
@@ -247407,7 +245685,7 @@ function loadAirplane(mapView) {
 * @todo use server time and set position and angle
 */
 function setAirplanePosition(airplane) {
-	const root = WorldMap._shadow || WorldMap._host;
+	const root = WorldMap.getRoot();
 	const el = airplane || root.querySelector(".worldmap #midgard-airplane");
 	if (!el) return;
 	el.style.top = "35%";
@@ -247418,7 +245696,7 @@ function setAirplanePosition(airplane) {
 * Toggle all maps
 */
 function onToggleMaps() {
-	const root = WorldMap._shadow || WorldMap._host;
+	const root = WorldMap.getRoot();
 	if (WorldMap.showAllMaps) {
 		root.querySelectorAll(".worldmap .section").forEach((el) => el.classList.remove("allmapvisible"));
 		WorldMap.showAllMaps = false;
@@ -247432,7 +245710,7 @@ function onToggleMaps() {
 */
 function onShowLVL() {
 	WorldMap.showLVLMode = !WorldMap.showLVLMode;
-	const root = WorldMap._shadow || WorldMap._host;
+	const root = WorldMap.getRoot();
 	Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (WorldMap.showLVLMode ? "1" : "0") + ".bmp", function(data) {
 		const btn = root.querySelector(".showlvl");
 		if (btn) btn.style.backgroundImage = "url(" + data + ")";
@@ -247455,7 +245733,7 @@ function stopPropagation$13(event) {
 function onClose$12() {
 	WorldMap._host.style.display = "none";
 }
-var WorldMap, _preferences$61, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
+var WorldMap, _preferences$65, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
 var init_WorldMap = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -247473,7 +245751,7 @@ var init_WorldMap = __esmMin((() => {
 	init_Navigation();
 	WorldMap = new GUIComponent("WorldMap", WorldMap_default$1);
 	WorldMap.render = () => WorldMap_default$2;
-	_preferences$61 = Preferences.get("WorldMap", {
+	_preferences$65 = Preferences.get("WorldMap", {
 		x: 0,
 		y: 0,
 		width: window.innerWidth,
@@ -247491,7 +245769,7 @@ var init_WorldMap = __esmMin((() => {
 	* Initialize UI
 	*/
 	WorldMap.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$13));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
@@ -247513,7 +245791,7 @@ var init_WorldMap = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	WorldMap.onAppend = function onAppend() {
-		if (!_preferences$61.show) this._host.style.display = "none";
+		if (!_preferences$65.show) this._host.style.display = "none";
 		this.settings = {
 			episode: 98,
 			add: [],
@@ -247536,12 +245814,12 @@ var init_WorldMap = __esmMin((() => {
 		this._host.style.left = "0px";
 	};
 	WorldMap.onRemove = function onRemove() {
-		_preferences$61.show = this._host.style.display !== "none";
-		_preferences$61.y = 0;
-		_preferences$61.x = 0;
-		_preferences$61.width = 0;
-		_preferences$61.height = 0;
-		_preferences$61.save();
+		_preferences$65.show = this._host.style.display !== "none";
+		_preferences$65.y = 0;
+		_preferences$65.x = 0;
+		_preferences$65.width = 0;
+		_preferences$65.height = 0;
+		_preferences$65.save();
 	};
 	/**
 	* Show/Hide UI
@@ -247552,13 +245830,13 @@ var init_WorldMap = __esmMin((() => {
 			hideTooltip();
 		} else {
 			this._host.style.display = "";
+			selectMap();
 			this.focus();
 		}
 	};
 	WorldMap.captureKeyEvents = true;
 	WorldMap.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+		if (this.isEditableFocused()) {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				this.toggle();
 				event.stopImmediatePropagation();
@@ -247604,7 +245882,7 @@ var init_WorldMap = __esmMin((() => {
 				});
 			}
 		});
-		const root = WorldMap._shadow || WorldMap._host;
+		const root = WorldMap.getRoot();
 		root.querySelectorAll(".worldmap .section").forEach((el) => el.classList.remove("membersonmap"));
 		for (const mapId of Object.keys(_partyMembersByMap)) {
 			const el = root.querySelector(".worldmap .section#" + CSS.escape(mapId));
@@ -247628,9 +245906,6 @@ var init_MiniMapV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMapV2/MiniMapV2.js
-function _getRoot$54() {
-	return MiniMapV2._shadow || MiniMapV2._host;
-}
 /**
 * Async image create helper
 */
@@ -247639,7 +245914,7 @@ function createAsyncImage() {
 	img.decoding = "async";
 	return img;
 }
-var MiniMapV2, _preferences$60, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$11, _zoomFactor, render$16, MiniMapV2_default;
+var MiniMapV2, _preferences$64, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$11, _zoomFactor, render$16, MiniMapV2_default;
 var init_MiniMapV2 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -247664,7 +245939,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	*/
 	MiniMapV2.needFocus = false;
 	MiniMapV2.render = () => MiniMapV2_default$2;
-	_preferences$60 = Preferences.get("MiniMapV2", {
+	_preferences$64 = Preferences.get("MiniMapV2", {
 		zoom: 0,
 		opacity: 2,
 		townInfoShow: true
@@ -247694,7 +245969,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	* Initialize minimap
 	*/
 	MiniMapV2.init = function init() {
-		const root = _getRoot$54();
+		const root = this.getRoot();
 		_ctx$11 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
@@ -247733,8 +246008,8 @@ var init_MiniMapV2 = __esmMin((() => {
 		});
 		const objectBtn = root.querySelector(".object");
 		if (objectBtn) objectBtn.addEventListener("mousedown", () => {
-			_preferences$60.townInfoShow = !_preferences$60.townInfoShow;
-			_preferences$60.save();
+			_preferences$64.townInfoShow = !_preferences$64.townInfoShow;
+			_preferences$64.save();
 		});
 		const viewonBtn = root.querySelector(".viewon");
 		if (viewonBtn) viewonBtn.addEventListener("mousedown", () => {
@@ -247745,8 +246020,8 @@ var init_MiniMapV2 = __esmMin((() => {
 	* Once append to HTML
 	*/
 	MiniMapV2.onAppend = function onAppend() {
-		this.updateZoom(_preferences$60.zoom);
-		this.toggleOpacity(_preferences$60.opacity + 1);
+		this.updateZoom(_preferences$64.zoom);
+		this.toggleOpacity(_preferences$64.opacity + 1);
 		Renderer.render(render$16);
 	};
 	/**
@@ -247898,7 +246173,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} y increment
 	*/
 	MiniMapV2.updateCoordinates = function updateCoordinates(x, y) {
-		const root = _getRoot$54();
+		const root = this.getRoot();
 		const coordX = root.querySelector(".coordinates .coord.x");
 		const coordY = root.querySelector(".coordinates .coord.y");
 		if (coordX) coordX.textContent = Math.floor(x);
@@ -247910,16 +246185,16 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMapV2.updateZoom = function updateZoom(value) {
-		_preferences$60.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$60.zoom + value));
-		_preferences$60.save();
+		_preferences$64.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$64.zoom + value));
+		_preferences$64.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMapV2.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$60.opacity = this.opacity;
-		_preferences$60.save();
+		_preferences$64.opacity = this.opacity;
+		_preferences$64.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
@@ -247952,7 +246227,7 @@ var init_MiniMapV2 = __esmMin((() => {
 			let i, count;
 			let dot;
 			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$11) return;
-			zoom = _zoomFactor[_preferences$60.zoom];
+			zoom = _zoomFactor[_preferences$64.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
@@ -247962,7 +246237,7 @@ var init_MiniMapV2 = __esmMin((() => {
 			_ctx$11.clearRect(0, 0, 128, 128);
 			if (_map.complete && _map.width) if (zoom === 1) _ctx$11.drawImage(_map, 0, 0, 128, 128);
 			else _ctx$11.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
-			if (_towninfo && _preferences$60.townInfoShow) {
+			if (_towninfo && _preferences$64.townInfoShow) {
 				count = _towninfo.length;
 				for (i = 0; i < count; ++i) {
 					dot = _towninfo[i];
@@ -248059,19 +246334,19 @@ var init_MiniMapV2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap.js
-var publicName$11, versionInfo$11, Controller$5;
+var publicName$12, versionInfo$12, Controller$5;
 var init_MiniMap = __esmMin((() => {
 	init_MiniMap$1();
 	init_MiniMapV2();
 	init_UIVersionManager();
-	publicName$11 = "MiniMap";
-	versionInfo$11 = {
+	publicName$12 = "MiniMap";
+	versionInfo$12 = {
 		default: MiniMap_default,
 		common: { 20180124: MiniMapV2_default },
 		re: {},
 		prere: {}
 	};
-	Controller$5 = UIVersionManager.getUIController(publicName$11, versionInfo$11);
+	Controller$5 = UIVersionManager.getUIController(publicName$12, versionInfo$12);
 	/**
 	* Proxy for getMemberColor
 	*/
@@ -248098,9 +246373,9 @@ function onClickClose$4(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
-	_preferences$59.y = parseInt(Rodex.ui.css("top"), 10);
-	_preferences$59.x = parseInt(Rodex.ui.css("left"), 10);
-	_preferences$59.save();
+	_preferences$63.y = parseInt(Rodex.ui.css("top"), 10);
+	_preferences$63.x = parseInt(Rodex.ui.css("left"), 10);
+	_preferences$63.save();
 	Rodex.ui.hide();
 }
 function onClickRefresh(e) {
@@ -248188,7 +246463,7 @@ function onClickReplyMail(e) {
 	const sender = jquery_default(e.currentTarget).attr("sender");
 	Rodex.requestOpenWriteRodex(sender);
 }
-var Rodex, _preferences$59, Rodex_default;
+var Rodex, _preferences$63, Rodex_default;
 var init_Rodex$1 = __esmMin((() => {
 	init_DBManager();
 	init_jquery();
@@ -248233,7 +246508,7 @@ var init_Rodex$1 = __esmMin((() => {
 		6: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp",
 		12: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp"
 	};
-	_preferences$59 = Preferences.get("Rodex", {
+	_preferences$63 = Preferences.get("Rodex", {
 		x: 350,
 		y: 350,
 		show: false
@@ -248243,8 +246518,8 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$59.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$59.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$63.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$63.x), Renderer.width - this.ui.width())
 		});
 		this.draggable(this.ui.find(".titlebar"));
 		this.ui.find(".close").on("click", onClickClose$4);
@@ -248270,10 +246545,10 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$59.show = this.ui.is(":visible");
-		_preferences$59.y = parseInt(this.ui.css("top"), 10);
-		_preferences$59.x = parseInt(this.ui.css("left"), 10);
-		_preferences$59.save();
+		_preferences$63.show = this.ui.is(":visible");
+		_preferences$63.y = parseInt(this.ui.css("top"), 10);
+		_preferences$63.x = parseInt(this.ui.css("left"), 10);
+		_preferences$63.save();
 		Rodex.openType = 0;
 	};
 	/**
@@ -248410,7 +246685,7 @@ var init_PartyMemberExternal$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$6(comp) {
+function _root$3(comp) {
 	return comp._shadow || comp._host;
 }
 /**
@@ -248501,7 +246776,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 	*/
 	PartyMemberExternal.init = function init() {
 		const self = this;
-		const root = _root$6(this);
+		const root = _root$3(this);
 		root.addEventListener("mousedown", (event) => {
 			self._lastPos = {
 				top: self._host.offsetTop,
@@ -248594,7 +246869,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 	* @param {object} player
 	*/
 	PartyMemberExternal.update = function update(player) {
-		const root = _root$6(this);
+		const root = _root$3(this);
 		if (!root) return;
 		const level = player.baseLevel || player.level || player.Level || 0;
 		const jobID = player.class_ || player.job || player.Job || 0;
@@ -248644,7 +246919,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 	* @param {number} maxhp
 	*/
 	PartyMemberExternal.updateMemberLife = function updateMemberLife(hp, maxhp) {
-		const root = _root$6(this);
+		const root = _root$3(this);
 		if (root) updateCanvasLife$1(root, hp, maxhp);
 	};
 	PartyMemberExternal_default = UIManager.addComponent(PartyMemberExternal);
@@ -248654,13 +246929,13 @@ var init_PartyMemberExternal = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$5() {
+function _root$2() {
 	return PartyFriendsV1._shadow || PartyFriendsV1._host;
 }
 /**
 * Helper: escape HTML entities
 */
-function _escapeHTML$7(str) {
+function _escapeHTML$6(str) {
 	const div = document.createElement("div");
 	div.appendChild(document.createTextNode(str));
 	return div.innerHTML;
@@ -248677,7 +246952,7 @@ function onMemberMouseDown(event) {
 	onSelectionChange.call(node, event);
 	const player = _party.find((member) => member.AID == AID);
 	if (!player) return;
-	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$58.friend) {
+	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$62.friend) {
 		if (player.state === 0) SkillTargetSelection_default.intersectEntityId(player.AID);
 		SkillTargetSelection_default.remove();
 		event.preventDefault();
@@ -248686,7 +246961,7 @@ function onMemberMouseDown(event) {
 	}
 	if (_detachedMembers[AID]) return;
 	if (player.state !== 0) return;
-	if (_preferences$58.lock) return;
+	if (_preferences$62.lock) return;
 	const startX = event.pageX;
 	const startY = event.pageY;
 	let isDragging = false;
@@ -248887,7 +247162,7 @@ function updateCanvasLife(node, hp, maxhp) {
 /**
 * Resizing UI
 */
-function onResize$12() {
+function onResize$15() {
 	const hostEl = PartyFriendsV1._host;
 	const top = hostEl.offsetTop;
 	const left = hostEl.offsetLeft;
@@ -248925,12 +247200,12 @@ function onClose$11() {
 * Enable or disable the lock features
 */
 function onToggleLock() {
-	const root = _root$5();
-	_preferences$58.lock = !_preferences$58.lock;
-	_preferences$58.save();
+	const root = _root$2();
+	_preferences$62.lock = !_preferences$62.lock;
+	_preferences$62.save();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$58.lock) {
+	if (_preferences$62.lock) {
 		if (lockOn) lockOn.style.display = "inline-block";
 		if (lockOff) lockOff.style.display = "none";
 	} else {
@@ -248942,16 +247217,16 @@ function onToggleLock() {
 * Move to the other tab (Friend -> Party or Party -> Friend)
 */
 function onChangeTab$1() {
-	const root = _root$5();
-	_preferences$58.friend = !_preferences$58.friend;
-	_preferences$58.save();
+	const root = _root$2();
+	_preferences$62.friend = !_preferences$62.friend;
+	_preferences$62.save();
 	const showClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
 		el.style.display = "";
 	});
 	const hideClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
 		el.style.display = "none";
 	});
-	if (_preferences$58.friend) {
+	if (_preferences$62.friend) {
 		showClass(".friend");
 		hideClass(".party");
 	} else {
@@ -248973,25 +247248,25 @@ function onChangeTab$1() {
 		}
 	}
 	root.querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
-	_index$6 = -1;
+	_index$5 = -1;
 }
 /**
 * Ask confirmation to remove a character from the list
 */
 function onRequestRemoveSelection() {
-	if (_index$6 < 0 || _preferences$58.lock || _preferences$58.friend && !_friends[_index$6] || !_preferences$58.friend && !_party[_index$6]) return;
-	const text = _preferences$58.friend ? DB.getMessage(356) : DB.getMessage(363);
+	if (_index$5 < 0 || _preferences$62.lock || _preferences$62.friend && !_friends[_index$5] || !_preferences$62.friend && !_party[_index$5]) return;
+	const text = _preferences$62.friend ? DB.getMessage(356) : DB.getMessage(363);
 	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$58.friend) PartyFriendsV1.onRemoveFriend(_index$6);
-		else PartyFriendsV1.onExpelMember(_party[_index$6].AID, _party[_index$6].characterName);
+		if (_preferences$62.friend) PartyFriendsV1.onRemoveFriend(_index$5);
+		else PartyFriendsV1.onExpelMember(_party[_index$5].AID, _party[_index$5].characterName);
 	});
 }
 /**
 * Add nick name to chatbox
 */
 function onRequestPrivateMessage() {
-	if (_index$6 < 0 || _preferences$58.lock) return;
-	const name = _preferences$58.friend ? _friends[_index$6].Name : _party[_index$6].characterName;
+	if (_index$5 < 0 || _preferences$62.lock) return;
+	const name = _preferences$62.friend ? _friends[_index$5].Name : _party[_index$5].characterName;
 	WhisperBox.show(name);
 }
 /**
@@ -249003,18 +247278,18 @@ function onRightClickInfo(event) {
 		event.preventDefault();
 	}
 	if (Camera && Camera.rotate) Camera.rotate(false);
-	if (_preferences$58.lock) return;
+	if (_preferences$62.lock) return;
 	onSelectionChange.call(this, event);
-	if (_index$6 < 0) return;
+	if (_index$5 < 0) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
-	if (_preferences$58.friend) {
-		const friend = _friends[_index$6];
+	if (_preferences$62.friend) {
+		const friend = _friends[_index$5];
 		if (!friend) return;
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
 		if (friend.GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection);
 	} else {
-		const player = _party[_index$6];
+		const player = _party[_index$5];
 		if (!player) return;
 		const isMe = player.AID === SessionStorage_default.AID;
 		const isLeader = SessionStorage_default.isPartyLeader;
@@ -249046,7 +247321,7 @@ function onRightClickInfo(event) {
 * Request to leave a party
 */
 function onRequestLeaveParty() {
-	if (_preferences$58.lock) return;
+	if (_preferences$62.lock) return;
 	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV1.onRequestLeave();
 	});
@@ -249055,34 +247330,34 @@ function onRequestLeaveParty() {
 * Request to change party leader
 */
 function onRequestPartyDelegation() {
-	if (_preferences$58.lock) return;
+	if (_preferences$62.lock) return;
 	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
-		PartyFriendsV1.onRequestChangeLeader(_party[_index$6].AID);
+		PartyFriendsV1.onRequestChangeLeader(_party[_index$5].AID);
 	});
 }
 /**
 * Change selection (click on a friend/party)
 */
 function onSelectionChange(event) {
-	_root$5().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
+	_root$2().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
 	const node = this;
 	node.classList.add("selection");
 	const AID = parseInt(node.dataset.aid, 10);
-	_index$6 = -1;
-	if (_preferences$58.friend) _index$6 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
+	_index$5 = -1;
+	if (_preferences$62.friend) _index$5 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
 	else {
 		const player = _party.find((member) => member.AID == AID);
-		_index$6 = _party.indexOf(player);
+		_index$5 = _party.indexOf(player);
 	}
 }
 /**
 * Request to create a team (open the window)
 */
 function onOpenMailCreationWindow() {
-	if (_preferences$58.lock) return;
+	if (_preferences$62.lock) return;
 	let recipient = "";
-	if (_preferences$58.friend && _friends[_index$6]) recipient = _friends[_index$6].Name;
-	else if (!_preferences$58.friend && _party[_index$6]) recipient = _party[_index$6].characterName;
+	if (_preferences$62.friend && _friends[_index$5]) recipient = _friends[_index$5].Name;
+	else if (!_preferences$62.friend && _party[_index$5]) recipient = _party[_index$5].characterName;
 	if (recipient) Rodex_default.requestOpenWriteRodex(recipient);
 }
 /**
@@ -249111,7 +247386,7 @@ function onOpenPartyInviteWindow() {
 * Request to open invitation window
 */
 function onOpenPartyOptionWindow() {
-	if (_preferences$58.friend) {
+	if (_preferences$62.friend) {
 		if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.FRIEND_SETUP) {
 			PartyHelper_default.remove();
 			return;
@@ -249165,7 +247440,7 @@ function onTooltipHide(event) {
 	const tooltip = document.getElementById("ro-tooltip-party");
 	if (tooltip) tooltip.style.display = "none";
 }
-var PartyFriendsV1, _detachedMembers, _index$6, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$58, PartyFriendsV1_default;
+var PartyFriendsV1, _detachedMembers, _index$5, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$62, PartyFriendsV1_default;
 var init_PartyFriendsV1 = __esmMin((() => {
 	init_DBManager();
 	init_Camera();
@@ -249191,7 +247466,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	init_SkillTargetSelection();
 	PartyFriendsV1 = new GUIComponent("PartyFriendsV1", PartyFriendsV1_default$1);
 	_detachedMembers = {};
-	_index$6 = -1;
+	_index$5 = -1;
 	_friends = [];
 	_party = [];
 	_options = {
@@ -249201,7 +247476,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	_savedPositions = null;
 	_skipSaveOnRemove = false;
-	_preferences$58 = Preferences.get("PartyFriendsV1", {
+	_preferences$62 = Preferences.get("PartyFriendsV1", {
 		x: 200,
 		y: 200,
 		width: 12,
@@ -249219,7 +247494,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	PartyFriendsV1.init = function init() {
-		const root = _root$5();
+		const root = _root$2();
 		PartyHelper_default.prepare();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (event) => {
@@ -249241,7 +247516,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const leaveBtn = root.querySelector(".leave");
 		if (leaveBtn) leaveBtn.addEventListener("mousedown", onRequestLeaveParty);
 		const resizeBtn = root.querySelector(".resize");
-		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$12);
+		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$15);
 		const mailBtn = root.querySelector(".mail");
 		if (mailBtn) mailBtn.addEventListener("mousedown", onOpenMailCreationWindow);
 		const createBtn = root.querySelector(".party.create");
@@ -249304,7 +247579,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Refresh the party list rendering
 	*/
 	PartyFriendsV1.refreshPartyList = function refreshPartyList() {
-		const root = _root$5();
+		const root = _root$2();
 		const partyContent = root.querySelector(".content .party");
 		if (partyContent) partyContent.innerHTML = "";
 		for (let i = 0; i < _party.length; i++) this.renderPartyMember(_party[i]);
@@ -249315,35 +247590,35 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	PartyFriendsV1.onAppend = function onAppend() {
-		const root = _root$5();
-		_preferences$58.friend = !_preferences$58.friend;
+		const root = _root$2();
+		_preferences$62.friend = !_preferences$62.friend;
 		onChangeTab$1();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$58.lock) {
+		if (_preferences$62.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$58.width, _preferences$58.height);
+		this.resize(_preferences$62.width, _preferences$62.height);
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$58.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$58.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$62.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$62.x), Renderer.width - hostWidth)}px`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/bg_partymember.bmp", function(url) {
 			const countBox = root.querySelector(".count-box");
 			if (countBox) countBox.style.backgroundImage = `url(${url})`;
 		});
-		if (!_preferences$58.show) this._host.style.display = "none";
+		if (!_preferences$62.show) this._host.style.display = "none";
 		for (let i = 0; i < _party.length; i++) restoreDetachedMember(_party[i]);
 	};
 	/**
 	* Clean up UI
 	*/
 	PartyFriendsV1.clean = function clean() {
-		const root = _root$5();
+		const root = _root$2();
 		_party.length = 0;
 		_friends.length = 0;
 		_skipSaveOnRemove = true;
@@ -249363,17 +247638,17 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (friendContent) friendContent.innerHTML = "";
 		const innerCount = root.querySelector(".count-box .inner-count");
 		if (innerCount) innerCount.textContent = "0/12";
-		_preferences$58.friend = !_preferences$58.friend;
+		_preferences$62.friend = !_preferences$62.friend;
 		onChangeTab$1();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
 	PartyFriendsV1.onRemove = function onRemove() {
-		_preferences$58.show = this._host.style.display !== "none";
-		_preferences$58.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$58.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$58.save();
+		_preferences$62.show = this._host.style.display !== "none";
+		_preferences$62.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$62.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$62.save();
 		if (!_skipSaveOnRemove && Object.keys(_detachedMembers).length > 0) this.saveDetachedMembers();
 		_skipSaveOnRemove = false;
 		_savedPositions = null;
@@ -249387,18 +247662,18 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const isVisible = this._host.style.display !== "none";
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$58.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (_preferences$62.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
-					_preferences$58.friend = false;
+					_preferences$62.friend = false;
 					onChangeTab$1();
 					this._host.style.display = "block";
 				}
 				if (this._host.style.display !== "none") this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$58.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (!_preferences$62.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
-					_preferences$58.friend = true;
+					_preferences$62.friend = true;
 					onChangeTab$1();
 					this._host.style.display = "block";
 				}
@@ -249424,24 +247699,24 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* @param {Array} friends list
 	*/
 	PartyFriendsV1.setFriends = function setFriends(friends) {
-		const root = _root$5();
+		const root = _root$2();
 		const count = friends.length;
 		const friendContent = root.querySelector(".content .friend");
 		_friends.length = friends.length;
 		if (friendContent) friendContent.innerHTML = "";
 		for (let i = 0; i < count; i++) {
 			_friends[i] = friends[i];
-			if (friendContent) friendContent.insertAdjacentHTML("beforeend", `<div class="node${friends[i].State === 0 ? " online" : ""}"><span class="name">${_escapeHTML$7(friends[i].Name)}</span></div>`);
+			if (friendContent) friendContent.insertAdjacentHTML("beforeend", `<div class="node${friends[i].State === 0 ? " online" : ""}"><span class="name">${_escapeHTML$6(friends[i].Name)}</span></div>`);
 		}
 		const friendCountEl = root.querySelector(".friendcount");
 		if (friendCountEl) friendCountEl.textContent = String(count);
-		_index$6 = -1;
+		_index$5 = -1;
 	};
 	/**
 	* Update friend (online/offline) state
 	*/
 	PartyFriendsV1.updateFriendState = function updateFriendState(index, state) {
-		const node = _root$5().querySelectorAll(".content .friend .node")[index];
+		const node = _root$2().querySelectorAll(".content .friend .node")[index];
 		_friends[index].State = state;
 		if (state) {
 			if (node) node.style.backgroundImage = "";
@@ -249457,7 +247732,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Update/Add a friend to the list
 	*/
 	PartyFriendsV1.updateFriend = function updateFriend(idx, friend) {
-		const root = _root$5();
+		const root = _root$2();
 		const friendContent = root.querySelector(".content .friend");
 		if (!_friends[idx]) {
 			_friends[idx] = {};
@@ -249482,19 +247757,19 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Remove friend from list
 	*/
 	PartyFriendsV1.removeFriend = function removeFriend(index) {
-		const root = _root$5();
+		const root = _root$2();
 		_friends.splice(index, 1);
 		const nodes = root.querySelectorAll(".content .friend .node");
 		if (nodes[index]) nodes[index].remove();
 		const friendCountEl = root.querySelector(".friendcount");
 		if (friendCountEl) friendCountEl.textContent = String(_friends.length);
-		if (_index$6 === index) _index$6 = -1;
+		if (_index$5 === index) _index$5 = -1;
 	};
 	/**
 	* Add members to party
 	*/
 	PartyFriendsV1.setParty = function setParty(name, members) {
-		const root = _root$5();
+		const root = _root$2();
 		const partyName = root.querySelector(".partyname");
 		if (partyName) partyName.textContent = `(${name})`;
 		SessionStorage_default.isPartyLeader = false;
@@ -249542,7 +247817,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Add a new party member to the list
 	*/
 	PartyFriendsV1.addPartyMember = function addPartyMember(player) {
-		const root = _root$5();
+		const root = _root$2();
 		const role = player.role || 0;
 		const count = _party.length;
 		let i;
@@ -249574,7 +247849,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Render a party member into the UI
 	*/
 	PartyFriendsV1.renderPartyMember = function renderPartyMember(player) {
-		const root = _root$5();
+		const root = _root$2();
 		const role = player.role || player.Role || 0;
 		const job = player.class_ || player.job || player.Job || 0;
 		const level = player.baseLevel || player.level || player.Level || 0;
@@ -249588,7 +247863,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const hasLife = !!(player.life && player.life.display);
 		const barVisibility = hasLife ? "visible" : "hidden";
 		const memberColor = isOnline ? player.color || "#333" : "#848ca5";
-		const html = `<div class="node${role === 0 ? " leader" : ""}${isOnline ? " online" : ""}${isDetached ? " detached" : ""}" style="background-color: ${isDetached ? "#deefff" : "white"};" data-aid="${player.AID}" data-tooltip="${isOnline ? _escapeHTML$7(nameTooltip) : ""}"><div class="job-icon-container" data-tooltip="${_escapeHTML$7(jobName)}"><div class="job-icon"></div><div class="crown"></div></div><div class="info-container"><div class="row1"><span class="level">Lv. ${level}</span><span class="name" style="color: ${memberColor};">${_escapeHTML$7(player.characterName)}</span><span class="map" style="color: ${memberColor};">(${_escapeHTML$7(mapDisplay)})</span></div><div class="row2"><div class="hp-bar-container" style="visibility:${barVisibility}"><canvas class="life" width="75" height="5"></canvas></div><span class="hp" style="visibility:${barVisibility}"></span><div class="status-icon"></div></div></div></div>`;
+		const html = `<div class="node${role === 0 ? " leader" : ""}${isOnline ? " online" : ""}${isDetached ? " detached" : ""}" style="background-color: ${isDetached ? "#deefff" : "white"};" data-aid="${player.AID}" data-tooltip="${isOnline ? _escapeHTML$6(nameTooltip) : ""}"><div class="job-icon-container" data-tooltip="${_escapeHTML$6(jobName)}"><div class="job-icon"></div><div class="crown"></div></div><div class="info-container"><div class="row1"><span class="level">Lv. ${level}</span><span class="name" style="color: ${memberColor};">${_escapeHTML$6(player.characterName)}</span><span class="map" style="color: ${memberColor};">(${_escapeHTML$6(mapDisplay)})</span></div><div class="row2"><div class="hp-bar-container" style="visibility:${barVisibility}"><canvas class="life" width="75" height="5"></canvas></div><span class="hp" style="visibility:${barVisibility}"></span><div class="status-icon"></div></div></div></div>`;
 		let node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
 		if (node) {
 			node.outerHTML = html;
@@ -249620,7 +247895,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Remove a character from list
 	*/
 	PartyFriendsV1.removePartyMember = function removePartyMember(AID, characterName) {
-		const root = _root$5();
+		const root = _root$2();
 		if (AID === SessionStorage_default.AID) {
 			for (const aid in _detachedMembers) if (_detachedMembers[aid]) {
 				_detachedMembers[aid].onRemove = function() {
@@ -249658,12 +247933,12 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Extend window size
 	*/
 	PartyFriendsV1.resize = function resize(width, height) {
-		const root = _root$5();
+		const root = _root$2();
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$58.width = width;
-		_preferences$58.height = height;
-		_preferences$58.save();
+		_preferences$62.width = width;
+		_preferences$62.height = height;
+		_preferences$62.save();
 		const content = root.querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
@@ -249688,7 +247963,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Update player life in interface
 	*/
 	PartyFriendsV1.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
-		const root = _root$5();
+		const root = _root$2();
 		const count = _party.length;
 		for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
 			if (!_party[i].life) _party[i].life = {};
@@ -249744,7 +248019,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Check if UI is locked
 	*/
 	PartyFriendsV1.isLocked = function isLocked() {
-		return !!_preferences$58.lock;
+		return !!_preferences$62.lock;
 	};
 	/**
 	* Save the current positions of all detached member windows to character-specific localStorage.
@@ -249771,19 +248046,19 @@ var init_PartyFriendsV1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriends.js
-var publicName$10, versionInfo$10, controller;
+var publicName$11, versionInfo$11, controller;
 var init_PartyFriends = __esmMin((() => {
 	init_PartyFriendsV0();
 	init_PartyFriendsV1();
 	init_UIVersionManager();
-	publicName$10 = "PartyFriends";
-	versionInfo$10 = {
+	publicName$11 = "PartyFriends";
+	versionInfo$11 = {
 		default: PartyFriendsV0_default,
 		common: { 20170524: PartyFriendsV1_default },
 		re: {},
 		prere: {}
 	};
-	controller = UIVersionManager.getUIController(publicName$10, versionInfo$10);
+	controller = UIVersionManager.getUIController(publicName$11, versionInfo$11);
 	/**
 	* Proxy for isGroupMember
 	*/
@@ -249843,12 +248118,6 @@ function _formatROText(value) {
 	txt = txt.replace(/\n/g, "<br/>");
 	return txt;
 }
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$53() {
-	return SkillDescription$1._shadow || SkillDescription$1._host;
-}
 var _allowedTags, SkillDescription$1, SkillDescription_default;
 var init_SkillDescription = __esmMin((() => {
 	init_DBManager();
@@ -249886,7 +248155,7 @@ var init_SkillDescription = __esmMin((() => {
 	* Initialize UI
 	*/
 	SkillDescription$1.init = function init() {
-		const closeBtn = _getRoot$53().querySelector(".close");
+		const closeBtn = this.getRoot().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => SkillDescription$1.remove());
@@ -249900,7 +248169,7 @@ var init_SkillDescription = __esmMin((() => {
 	*/
 	SkillDescription$1.setSkill = function setSkill(id) {
 		this.uid = id;
-		const content = _getRoot$53().querySelector(".content");
+		const content = this.getRoot().querySelector(".content");
 		if (content) content.innerHTML = _formatROText(DB.getSkillDescription(id));
 		const hostWidth = this._host.getBoundingClientRect().width;
 		const hostHeight = this._host.getBoundingClientRect().height;
@@ -249919,7 +248188,7 @@ var init_Guild$3 = __esmMin((() => {
 //#region src/UI/Components/Guild/Guild.css?raw
 var Guild_default$1;
 var init_Guild$2 = __esmMin((() => {
-	Guild_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Guild {\r\n	position: absolute;\r\n	width: 400px;\r\n	height: 317px;\r\n}\r\n\r\n#Guild .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#Guild .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Guild .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Guild .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Guild .panel {\r\n	background-color: white;\r\n	padding-right: 2px;\r\n}\r\n#Guild .content {\r\n	overflow-y: auto;\r\n	padding: 2px;\r\n	border-top: 1px solid #c6c6c6;\r\n	height: 238px;\r\n}\r\n\r\n#Guild .tabs {\r\n	height: 23px;\r\n	background-color: #b5b6b5;\r\n	white-space: nowrap;\r\n}\r\n#Guild .tabs button.active {\r\n	background-color: #fff;\r\n}\r\n#Guild .tabs button {\r\n	width: 64px;\r\n	height: 23px;\r\n	margin-left: 1px;\r\n	margin-right: 1px;\r\n	margin-top: 1px;\r\n	padding: 0;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n	background-color: #cecece;\r\n	border: 0px;\r\n	padding: 3px;\r\n}\r\n#Guild .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-radius: 0px 0px 3px 3px;\r\n}\r\n#Guild .footer .btn_ok {\r\n	display: none;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 4px;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n\r\n#Guild .content.members,\r\n#Guild .content.positions,\r\n#Guild .content.skills,\r\n#Guild .content.history,\r\n#Guild .content.notice {\r\n	display: none;\r\n}\r\n\r\n/*\r\n * Guild Info CSS\r\n */\r\n#Guild .content.info .exp,\r\n#Guild .content.info .emblem,\r\n#Guild .content.info .tax,\r\n#Guild .content.info .ally,\r\n#Guild .content.info .ally_list,\r\n#Guild .content.info .hostile,\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n}\r\n\r\n#Guild .content.info .name {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .level {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 28px;\r\n}\r\n#Guild .content.info .master {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 45px;\r\n}\r\n#Guild .content.info .members {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .avglevel {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 77px;\r\n}\r\n#Guild .content.info .territory {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 93px;\r\n}\r\n#Guild .content.info .tendency {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 114px;\r\n}\r\n#Guild .content.info .tendency .title {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#Guild .content.info .tendency .righteous {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 16px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .wiked {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 120px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .vulgar {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency .famed {\r\n	position: absolute;\r\n	left: 102px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency canvas {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 10px;\r\n}\r\n\r\n#Guild .content.info .members ui-button {\r\n	margin-left: 5px;\r\n	vertical-align: -4px;\r\n	border: none;\r\n	width: 15px;\r\n	height: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Guild .content.info .exp {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .emblem {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 37px;\r\n}\r\n#Guild .content.info .tax {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .ally {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 103px;\r\n}\r\n#Guild .content.info .ally_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 118px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n#Guild .content.info .hostile {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 177px;\r\n}\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 193px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n\r\n#Guild .content.info .ally_list div,\r\n#Guild .content.info .hostile_list div {\r\n	padding: 2px;\r\n}\r\n#Guild .content.info .ally_list div.active,\r\n#Guild .content.info .hostile_list div.active {\r\n	background-color: #739eef;\r\n	padding: 2px;\r\n}\r\n\r\n#Guild .content.info .emblem_container {\r\n	width: 24px;\r\n	height: 24px;\r\n	position: absolute;\r\n	top: 29px;\r\n	left: 300px;\r\n	background-color: #709ce7;\r\n	background-repeat: no-repeat;\r\n}\r\n#Guild .content.info .emblem_edit {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 330px;\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.info .emblem_edit input {\r\n	opacity: 0;\r\n}\r\n\r\n/*\r\n * Guild Members\r\n */\r\n#Guild .content.members table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.members tbody tr {\r\n	border-left: 1px solid #c2c2c2;\r\n	border-right: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td {\r\n	border-bottom: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members tr.active td {\r\n	background-color: #739eef !important;\r\n}\r\n#Guild .content.members th {\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td,\r\n#Guild .content.members th {\r\n	text-align: left;\r\n	font-weight: normal;\r\n	padding-left: 2px;\r\n	height: 35px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n}\r\n#Guild .content.members tr.online td {\r\n	background-color: #efe;\r\n}\r\n#Guild .content.members tr canvas {\r\n	display: inline;\r\n}\r\n#Guild .content.members .name {\r\n	width: 85px;\r\n	max-width: 85px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .name canvas {\r\n	vertical-align: -11px;\r\n}\r\n#Guild .content.members .position {\r\n	width: 70px;\r\n	max-width: 70px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .position select {\r\n	width: 65px;\r\n	max-width: 65px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .job {\r\n	width: 43px;\r\n	max-width: 43px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .level {\r\n	width: 30px;\r\n}\r\n#Guild .content.members .note {\r\n	width: 41px;\r\n}\r\n#Guild .content.members .devotion {\r\n	width: 42px;\r\n}\r\n#Guild .content.members .tax {\r\n	width: 63px;\r\n	max-width: 63px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n\r\n/*\r\n * Guild Positions\r\n */\r\n#Guild .content.positions table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.positions tr.active {\r\n	border: none;\r\n}\r\n#Guild .content.positions tr.active td {\r\n	background-color: #739eef;\r\n}\r\n#Guild .content.positions th,\r\n#Guild .content.positions td {\r\n	height: 20px;\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 2px 2px 0px 3px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.positions .id {\r\n	width: 57px;\r\n}\r\n#Guild .content.positions .title {\r\n	width: 158px;\r\n	padding: 0px;\r\n}\r\n#Guild .content.positions .invite {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .punish {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .tax {\r\n	width: 68px;\r\n	padding: 0;\r\n}\r\n#Guild .content.positions input {\r\n	border: none;\r\n	background-color: white;\r\n	padding: 0;\r\n	height: 18px;\r\n}\r\n#Guild .content.positions .title input {\r\n	padding-left: 2px;\r\n	width: 140px;\r\n	margin-left: 4px;\r\n}\r\n#Guild .content.positions .tax input {\r\n	width: 28px;\r\n	padding-left: 2px;\r\n	margin-left: 3px;\r\n}\r\n#Guild .content.positions ui-button {\r\n	border: none;\r\n	width: 10px;\r\n	height: 10px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/*\r\n * Guild Skills\r\n */\r\n#Guild .content.skills {\r\n	overflow-y: hidden;\r\n}\r\n#Guild .content.skills .skill_list {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 394px;\r\n	height: 215px;\r\n}\r\n#Guild .content.skills .skill_list table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n	width: 100%;\r\n}\r\n#Guild .content.skills .skill_list td,\r\n#Guild .content.skills .skill_list .name {\r\n	padding: 0px;\r\n}\r\n\r\n#Guild .content.skills .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Guild .content.skills td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#Guild .content.skills .skill_list .icon {\r\n	padding-left: 15px;\r\n}\r\n#Guild .content.skills .skill_list .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#Guild .content.skills .skill_list div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#Guild .content.skills .disabled .icon,\r\n#Guild .content.skills .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#Guild .content.skills .disabled .consume,\r\n#Guild .content.skills .disabled .level {\r\n	display: none;\r\n}\r\n#Guild .content.skills .currentDown,\r\n#Guild .content.skills .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#Guild .content.skills .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#Guild .content.skills .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n#Guild .content.skills .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n#Guild .content.skills .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#Guild .content.skills .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#Guild .content.skills .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#Guild .content.skills .footer .apply {\r\n	right: 70px;\r\n}\r\n#Guild .content.skills .footer .reset {\r\n	right: 20px;\r\n}\r\n\r\n/*\r\n * Guild History\r\n */\r\n#Guild .content.history table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.history th,\r\n#Guild .content.history td {\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 5px 5px 0px 5px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.history .name {\r\n	width: 90px;\r\n}\r\n#Guild .content.history .reason {\r\n	width: 275px;\r\n}\r\n\r\n/*\r\n * Guild Notice\r\n */\r\n#Guild .notice .subjectTitle {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .subject {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 50px;\r\n	padding-left: 5px;\r\n	height: 14px;\r\n	border: none;\r\n	width: 333px;\r\n	background-color: #eee;\r\n}\r\n#Guild .notice .noticeTitle {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .notice {\r\n	position: absolute;\r\n	top: 52px;\r\n	left: 9px;\r\n	padding-left: 5px;\r\n	margin: 0px;\r\n	width: 372px;\r\n	height: 168px;\r\n	background-color: #eee;\r\n	border: none;\r\n	resize: none;\r\n}\r\n";
+	Guild_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 400px;\r\n	height: 317px;\r\n}\r\n\r\n#Guild {\r\n	position: absolute;\r\n}\r\n\r\n#Guild .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#Guild .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Guild .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Guild .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Guild .panel {\r\n	background-color: white;\r\n	padding-right: 2px;\r\n}\r\n#Guild .content {\r\n	overflow-y: auto;\r\n	padding: 2px;\r\n	border-top: 1px solid #c6c6c6;\r\n	height: 238px;\r\n}\r\n\r\n#Guild .tabs {\r\n	height: 23px;\r\n	background-color: #b5b6b5;\r\n	white-space: nowrap;\r\n}\r\n#Guild .tabs button.active {\r\n	background-color: #fff;\r\n}\r\n#Guild .tabs button {\r\n	width: 64px;\r\n	height: 23px;\r\n	margin-left: 1px;\r\n	margin-right: 1px;\r\n	margin-top: 1px;\r\n	padding: 0;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n	background-color: #cecece;\r\n	border: 0px;\r\n	padding: 3px;\r\n}\r\n#Guild .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-radius: 0px 0px 3px 3px;\r\n}\r\n#Guild .footer .btn_ok {\r\n	display: none;\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 4px;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n\r\n#Guild .content.members,\r\n#Guild .content.positions,\r\n#Guild .content.skills,\r\n#Guild .content.history,\r\n#Guild .content.notice {\r\n	display: none;\r\n}\r\n\r\n/*\r\n * Guild Info CSS\r\n */\r\n#Guild .content.info .exp,\r\n#Guild .content.info .emblem,\r\n#Guild .content.info .tax,\r\n#Guild .content.info .ally,\r\n#Guild .content.info .ally_list,\r\n#Guild .content.info .hostile,\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n}\r\n\r\n#Guild .content.info .name {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .level {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 28px;\r\n}\r\n#Guild .content.info .master {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 45px;\r\n}\r\n#Guild .content.info .members {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .avglevel {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 77px;\r\n}\r\n#Guild .content.info .territory {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 93px;\r\n}\r\n#Guild .content.info .tendency {\r\n	position: absolute;\r\n	left: 9px;\r\n	top: 114px;\r\n}\r\n#Guild .content.info .tendency .title {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#Guild .content.info .tendency .righteous {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 16px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .wiked {\r\n	position: absolute;\r\n	left: 50px;\r\n	top: 120px;\r\n	text-align: center;\r\n}\r\n#Guild .content.info .tendency .vulgar {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency .famed {\r\n	position: absolute;\r\n	left: 102px;\r\n	top: 68px;\r\n}\r\n#Guild .content.info .tendency canvas {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 10px;\r\n}\r\n\r\n#Guild .content.info .members ui-button {\r\n	margin-left: 5px;\r\n	vertical-align: -4px;\r\n	border: none;\r\n	width: 15px;\r\n	height: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Guild .content.info .exp {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 13px;\r\n}\r\n#Guild .content.info .emblem {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 37px;\r\n}\r\n#Guild .content.info .tax {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 61px;\r\n}\r\n#Guild .content.info .ally {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 103px;\r\n}\r\n#Guild .content.info .ally_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 118px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n#Guild .content.info .hostile {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 177px;\r\n}\r\n#Guild .content.info .hostile_list {\r\n	position: absolute;\r\n	left: 201px;\r\n	top: 193px;\r\n	white-space: pre;\r\n	width: 168px;\r\n	height: 48px;\r\n	background: #cecece;\r\n}\r\n\r\n#Guild .content.info .ally_list div,\r\n#Guild .content.info .hostile_list div {\r\n	padding: 2px;\r\n}\r\n#Guild .content.info .ally_list div.active,\r\n#Guild .content.info .hostile_list div.active {\r\n	background-color: #739eef;\r\n	padding: 2px;\r\n}\r\n\r\n#Guild .content.info .emblem_container {\r\n	width: 24px;\r\n	height: 24px;\r\n	position: absolute;\r\n	top: 29px;\r\n	left: 300px;\r\n	background-color: #709ce7;\r\n	background-repeat: no-repeat;\r\n}\r\n#Guild .content.info .emblem_edit {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 330px;\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.info .emblem_edit input {\r\n	opacity: 0;\r\n}\r\n\r\n/*\r\n * Guild Members\r\n */\r\n#Guild .content.members table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.members tbody tr {\r\n	border-left: 1px solid #c2c2c2;\r\n	border-right: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td {\r\n	border-bottom: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members tr.active td {\r\n	background-color: #739eef !important;\r\n}\r\n#Guild .content.members th {\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.members td,\r\n#Guild .content.members th {\r\n	text-align: left;\r\n	font-weight: normal;\r\n	padding-left: 2px;\r\n	height: 35px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	white-space: nowrap;\r\n}\r\n#Guild .content.members tr.online td {\r\n	background-color: #efe;\r\n}\r\n#Guild .content.members tr canvas {\r\n	display: inline;\r\n}\r\n#Guild .content.members .name {\r\n	width: 85px;\r\n	max-width: 85px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .name canvas {\r\n	vertical-align: -11px;\r\n}\r\n#Guild .content.members .position {\r\n	width: 70px;\r\n	max-width: 70px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .position select {\r\n	width: 65px;\r\n	max-width: 65px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .job {\r\n	width: 43px;\r\n	max-width: 43px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n#Guild .content.members .level {\r\n	width: 30px;\r\n}\r\n#Guild .content.members .note {\r\n	width: 41px;\r\n}\r\n#Guild .content.members .devotion {\r\n	width: 42px;\r\n}\r\n#Guild .content.members .tax {\r\n	width: 63px;\r\n	max-width: 63px;\r\n	text-overflow: ellipsis;\r\n	overflow: hidden;\r\n}\r\n\r\n/*\r\n * Guild Positions\r\n */\r\n#Guild .content.positions table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.positions tr.active {\r\n	border: none;\r\n}\r\n#Guild .content.positions tr.active td {\r\n	background-color: #739eef;\r\n}\r\n#Guild .content.positions th,\r\n#Guild .content.positions td {\r\n	height: 20px;\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 2px 2px 0px 3px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.positions .id {\r\n	width: 57px;\r\n}\r\n#Guild .content.positions .title {\r\n	width: 158px;\r\n	padding: 0px;\r\n}\r\n#Guild .content.positions .invite {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .punish {\r\n	width: 68px;\r\n}\r\n#Guild .content.positions .tax {\r\n	width: 68px;\r\n	padding: 0;\r\n}\r\n#Guild .content.positions input {\r\n	border: none;\r\n	background-color: white;\r\n	padding: 0;\r\n	height: 18px;\r\n}\r\n#Guild .content.positions .title input {\r\n	padding-left: 2px;\r\n	width: 140px;\r\n	margin-left: 4px;\r\n}\r\n#Guild .content.positions .tax input {\r\n	width: 28px;\r\n	padding-left: 2px;\r\n	margin-left: 3px;\r\n}\r\n#Guild .content.positions ui-button {\r\n	border: none;\r\n	width: 10px;\r\n	height: 10px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/*\r\n * Guild Skills\r\n */\r\n#Guild .content.skills {\r\n	overflow-y: hidden;\r\n}\r\n#Guild .content.skills .skill_list {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 394px;\r\n	height: 215px;\r\n}\r\n#Guild .content.skills .skill_list table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n	width: 100%;\r\n}\r\n#Guild .content.skills .skill_list td,\r\n#Guild .content.skills .skill_list .name {\r\n	padding: 0px;\r\n}\r\n\r\n#Guild .content.skills .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Guild .content.skills td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#Guild .content.skills .skill_list .icon {\r\n	padding-left: 15px;\r\n}\r\n#Guild .content.skills .skill_list .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#Guild .content.skills .skill_list div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#Guild .content.skills .disabled .icon,\r\n#Guild .content.skills .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#Guild .content.skills .disabled .consume,\r\n#Guild .content.skills .disabled .level {\r\n	display: none;\r\n}\r\n#Guild .content.skills .currentDown,\r\n#Guild .content.skills .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#Guild .content.skills .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#Guild .content.skills .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n#Guild .content.skills .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n#Guild .content.skills .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#Guild .content.skills .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#Guild .content.skills .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#Guild .content.skills .footer .apply {\r\n	right: 70px;\r\n}\r\n#Guild .content.skills .footer .reset {\r\n	right: 20px;\r\n}\r\n\r\n/*\r\n * Guild History\r\n */\r\n#Guild .content.history table {\r\n	border-spacing: 0;\r\n	border-collapse: collapse;\r\n}\r\n#Guild .content.history th,\r\n#Guild .content.history td {\r\n	font-weight: normal;\r\n	text-align: left;\r\n	padding: 5px 5px 0px 5px;\r\n	border: 1px solid #c2c2c2;\r\n}\r\n#Guild .content.history .name {\r\n	width: 90px;\r\n}\r\n#Guild .content.history .reason {\r\n	width: 275px;\r\n}\r\n\r\n/*\r\n * Guild Notice\r\n */\r\n#Guild .notice .subjectTitle {\r\n	position: absolute;\r\n	top: 13px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .subject {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 50px;\r\n	padding-left: 5px;\r\n	height: 14px;\r\n	border: none;\r\n	width: 333px;\r\n	background-color: #eee;\r\n}\r\n#Guild .notice .noticeTitle {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 9px;\r\n}\r\n#Guild .notice .notice {\r\n	position: absolute;\r\n	top: 52px;\r\n	left: 9px;\r\n	padding-left: 5px;\r\n	margin: 0px;\r\n	width: 372px;\r\n	height: 168px;\r\n	background-color: #eee;\r\n	border: none;\r\n	resize: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/WinStats/WinStats/WinStats.html?raw
@@ -249984,7 +248253,7 @@ function createWinStats({ name, htmlText, cssText, hasTraits }) {
 		this.statuspoint = 0;
 		this.t_statuspoint = 0;
 		this.draggable(".titlebar");
-		_root = this._shadow || this._host;
+		_root = this.getRoot();
 		_root.querySelectorAll(".up button").forEach((btn) => {
 			btn.addEventListener("mousedown", () => {
 				const id = statButtonMap[btn.className];
@@ -250301,15 +248570,15 @@ var init_WinStatsV2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/WinStats/WinStats.js
-var publicName$9, versionInfo$9, WinStatsController, _selectUIVersion$5;
+var publicName$10, versionInfo$10, WinStatsController, _selectUIVersion$6;
 var init_WinStats = __esmMin((() => {
 	init_WinStats$1();
 	init_WinStatsV1();
 	init_WinStatsV2();
 	init_UIVersionManager();
 	init_KeyEventHandler();
-	publicName$9 = "WinStats";
-	versionInfo$9 = {
+	publicName$10 = "WinStats";
+	versionInfo$10 = {
 		default: WinStats_default,
 		common: {
 			20200520: WinStatsV2_default,
@@ -250318,10 +248587,10 @@ var init_WinStats = __esmMin((() => {
 		re: {},
 		prere: {}
 	};
-	WinStatsController = UIVersionManager.getUIController(publicName$9, versionInfo$9);
-	_selectUIVersion$5 = WinStatsController.selectUIVersion;
+	WinStatsController = UIVersionManager.getUIController(publicName$10, versionInfo$10);
+	_selectUIVersion$6 = WinStatsController.selectUIVersion;
 	WinStatsController.selectUIVersion = function() {
-		_selectUIVersion$5();
+		_selectUIVersion$6();
 		const component = WinStatsController.getUI();
 		component.onKeyDown = function onKeyDown(e) {
 			if ((e.which === KEYS.ESCAPE || e.key === "Escape") && component.ui.is(":visible")) {
@@ -250335,13 +248604,13 @@ var init_WinStats = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$4(comp) {
-	return comp._shadow || comp._host;
+function _root$1(comp) {
+	return comp.getRoot();
 }
 /**
 * Helper: escape HTML (replace jQuery.escape)
 */
-function _escapeHTML$6(text) {
+function _escapeHTML$5(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -250374,7 +248643,7 @@ function onRequestSkillInfo() {
 function onSkillFocus() {
 	let main = this.parentElement;
 	if (!main.classList.contains("skill")) main = main.parentElement;
-	const root = _root$4(Guild);
+	const root = _root$1(Guild);
 	for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
 	main.classList.add("selected");
 }
@@ -250401,7 +248670,7 @@ function skillLevelSelectUp$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
-		const element = _root$4(Guild).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$1(Guild).querySelector(`.skill.id${skill.SKID}`);
 		if (element) {
 			const current = element.querySelector(".level .current");
 			if (current) current.textContent = skill.selectedLevel;
@@ -250412,7 +248681,7 @@ function skillLevelSelectDown$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
-		const element = _root$4(Guild).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$1(Guild).querySelector(`.skill.id${skill.SKID}`);
 		if (element) {
 			const current = element.querySelector(".level .current");
 			if (current) current.textContent = skill.selectedLevel;
@@ -250421,7 +248690,7 @@ function skillLevelSelectDown$2(skill) {
 }
 function onChangeTab(event) {
 	const tab = parseInt(this.getAttribute("data-flag"), 10);
-	const root = _root$4(Guild);
+	const root = _root$1(Guild);
 	if (this.classList.contains("active") || tab && !(_guildAccess & AccessTypeBit[tab])) return false;
 	Guild.onGuildInfoRequest(tab);
 	for (const btn of root.querySelectorAll(".tabs button")) btn.classList.remove("active");
@@ -250437,7 +248706,7 @@ function onChangeTab(event) {
 	return false;
 }
 function renderTendency(honor, virtue) {
-	const canvas = _root$4(Guild).querySelector(".content.info .tendency canvas");
+	const canvas = _root$1(Guild).querySelector(".content.info .tendency canvas");
 	if (!canvas) return;
 	const ctx = canvas.getContext("2d");
 	ctx.fillStyle = "#cecfce";
@@ -250451,7 +248720,7 @@ function renderTendency(honor, virtue) {
 	ctx.fillRect(canvas.width / 2 - 1, canvas.height / 2 - 1, 2, 2);
 }
 function onValidate() {
-	const root = _root$4(Guild);
+	const root = _root$1(Guild);
 	const visibleContent = Array.from(root.querySelectorAll(".content")).find((el) => {
 		return el.style.display !== "none" && getComputedStyle(el).display !== "none";
 	});
@@ -250552,7 +248821,7 @@ var init_Guild$1 = __esmMin((() => {
 	* Initialize component
 	*/
 	Guild.init = function init() {
-		const root = _root$4(this);
+		const root = _root$1(this);
 		_memberViewTemplate = root.querySelector(".MemberView");
 		if (_memberViewTemplate) _memberViewTemplate.remove();
 		_positionViewTemplate = root.querySelector(".PositionView");
@@ -250641,7 +248910,7 @@ var init_Guild$1 = __esmMin((() => {
 				if (isSelf && !SessionStorage_default.isGuildMaster) ContextMenu_default.addElement(DB.getMessage(508), () => {
 					InputBox_default.append();
 					InputBox_default.setType("text");
-					const textEl = (_root$4(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					const textEl = (_root$1(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
 					if (textEl) textEl.textContent = DB.getMessage(523);
 					else InputBox_default.ui.find(".text").text(DB.getMessage(523));
 					InputBox_default.onSubmitRequest = (reason) => {
@@ -250652,7 +248921,7 @@ var init_Guild$1 = __esmMin((() => {
 				if (SessionStorage_default.guildRight & 16 && !isSelf) ContextMenu_default.addElement(DB.getMessage(509), () => {
 					InputBox_default.append();
 					InputBox_default.setType("text");
-					const textEl = (_root$4(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					const textEl = (_root$1(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
 					if (textEl) textEl.textContent = DB.getMessage(524);
 					else InputBox_default.ui.find(".text").text(DB.getMessage(524));
 					InputBox_default.onSubmitRequest = (reason) => {
@@ -250757,7 +249026,7 @@ var init_Guild$1 = __esmMin((() => {
 		this.focus();
 		if (this.ui.is(":visible")) return;
 		this.ui.show();
-		const root = _root$4(this);
+		const root = _root$1(this);
 		if (!root.querySelector(".tabs .active")) {
 			const infoBtn = root.querySelector(".tabs .info");
 			if (infoBtn) infoBtn.click();
@@ -250771,7 +249040,7 @@ var init_Guild$1 = __esmMin((() => {
 		Renderer.stop(renderMemberFaces);
 	};
 	Guild.setGuildInformations = function setGuildInformations(info) {
-		const general = _root$4(this).querySelector(".content.info");
+		const general = _root$1(this).querySelector(".content.info");
 		if (!general) return;
 		general.querySelector(".name .value").textContent = info.guildname;
 		general.querySelector(".level .value").textContent = info.level;
@@ -250790,11 +249059,11 @@ var init_Guild$1 = __esmMin((() => {
 		renderTendency(info.honor, info.virtue);
 	};
 	Guild.setEmblem = function setEmblem(image) {
-		const el = _root$4(this).querySelector(".content.info .emblem_container");
+		const el = _root$1(this).querySelector(".content.info .emblem_container");
 		if (el) el.style.backgroundImage = `url(${image.src})`;
 	};
 	Guild.setRelations = function setRelations(guilds) {
-		const root = _root$4(this);
+		const root = _root$1(this);
 		const allyList = root.querySelector(".ally_list");
 		const hostileList = root.querySelector(".hostile_list");
 		if (allyList) allyList.innerHTML = "";
@@ -250802,7 +249071,7 @@ var init_Guild$1 = __esmMin((() => {
 		for (let i = 0, count = guilds.length; i < count; ++i) this.addRelation(guilds[i]);
 	};
 	Guild.addRelation = function addRelation(guild) {
-		const list = _root$4(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
+		const list = _root$1(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const div = document.createElement("div");
 		div.setAttribute("data-guild-id", guild.GDID);
@@ -250810,7 +249079,7 @@ var init_Guild$1 = __esmMin((() => {
 		list.appendChild(div);
 	};
 	Guild.removeRelation = function removeRelation(guildId, relation) {
-		const list = _root$4(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
+		const list = _root$1(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const el = list.querySelector(`div[data-guild-id="${guildId}"]`);
 		if (el) el.remove();
@@ -250820,7 +249089,7 @@ var init_Guild$1 = __esmMin((() => {
 		const count = members.length;
 		_members.length = 0;
 		_totalExp = 0;
-		const root = _root$4(this);
+		const root = _root$1(this);
 		const tbody = root.querySelector(".content.members tbody");
 		if (tbody) tbody.innerHTML = "";
 		for (let i = 0; i < count; ++i) {
@@ -250836,7 +249105,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.setMember = function setMember(member) {
 		let i, count;
-		const root = _root$4(this);
+		const root = _root$1(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		let view;
 		if (i < count) view = root.querySelector(`.MemberView[data-index="${i}"]`);
@@ -250858,7 +249127,7 @@ var init_Guild$1 = __esmMin((() => {
 			if (SessionStorage_default.isGuildMaster && member.GPositionID !== 0) {
 				let selectHTML = `<select class="changePosition member_${member.AID}_${member.GID}">`;
 				_positions.forEach((position, key) => {
-					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$6(position.posName)}</option>`;
+					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$5(position.posName)}</option>`;
 				});
 				selectHTML += "</select>";
 				positionCell.innerHTML = selectHTML;
@@ -250904,7 +249173,7 @@ var init_Guild$1 = __esmMin((() => {
 	Guild.updateMemberStatus = function updateMemberStatus(member) {
 		let i, count;
 		let online = 0;
-		const root = _root$4(this);
+		const root = _root$1(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		if (i >= count) return;
 		const view = root.querySelector(`.MemberView[data-index="${i}"]`);
@@ -250952,7 +249221,7 @@ var init_Guild$1 = __esmMin((() => {
 		Guild.updatePositionView();
 	};
 	Guild.updatePositionView = function updatePositionView() {
-		const container = _root$4(this).querySelector(".content.positions tbody");
+		const container = _root$1(this).querySelector(".content.positions tbody");
 		if (!container) return;
 		container.innerHTML = "";
 		const count = _positions.length;
@@ -250982,7 +249251,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.setSkills = function setSkills(skills) {
-		const root = _root$4(this);
+		const root = _root$1(this);
 		for (let i = 0, count = _skills.length; i < count; ++i) this.onUpdateSkill(_skills[i].SKID, 0);
 		_skills.length = 0;
 		const table = root.querySelector(".content.skills .skill_list table");
@@ -250991,7 +249260,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		const root = _root$4(this);
+		const root = _root$1(this);
 		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
@@ -251006,7 +249275,7 @@ var init_Guild$1 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$6(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$5(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_skpoints) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const currentUp = tr.querySelector(".level .currentUp");
@@ -251042,7 +249311,7 @@ var init_Guild$1 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = _root$4(this).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
 		if (!element) return;
 		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 		if (skill.selectedLevel) {
@@ -251071,7 +249340,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.setPoints = function setPoints(amount) {
-		const root = _root$4(this);
+		const root = _root$1(this);
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_skpoints === !amount) {
@@ -251089,14 +249358,14 @@ var init_Guild$1 = __esmMin((() => {
 		if (_btnLevelUp$7) document.body.appendChild(_btnLevelUp$7);
 	};
 	Guild.setNotice = function setNotice(subject, notice) {
-		const root = _root$4(this);
+		const root = _root$1(this);
 		const subjectInput = root.querySelector(".content.notice .subject");
 		if (subjectInput) subjectInput.value = subject;
 		const noticeTextarea = root.querySelector(".content.notice textarea.notice");
 		if (noticeTextarea) noticeTextarea.value = notice;
 	};
 	Guild.setExpelList = function setExpelList(list) {
-		const container = _root$4(this).querySelector(".content.history tbody");
+		const container = _root$1(this).querySelector(".content.history tbody");
 		if (!container) return;
 		container.innerHTML = "";
 		for (let i = 0, count = list.length; i < count; ++i) {
@@ -251116,7 +249385,7 @@ var init_Guild$1 = __esmMin((() => {
 		return function renderMemberFace(tick) {
 			if (tick < lastTick + 1e3) return;
 			lastTick = tick;
-			const canvases = _root$4(Guild).querySelectorAll(".content.members canvas");
+			const canvases = _root$1(Guild).querySelectorAll(".content.members canvas");
 			Camera.direction = 4;
 			for (let i = 0, count = _members.length; i < count; ++i) {
 				if (!canvases[i]) continue;
@@ -251192,7 +249461,7 @@ function onToggleBGM() {
 	if (Audio_default.BGM.play) BGM.play(BGM.filename);
 	else BGM.stop();
 }
-var SoundOption, _preferences$57, SoundOption_default;
+var SoundOption, _preferences$61, SoundOption_default;
 var init_SoundOption = __esmMin((() => {
 	init_Preferences$1();
 	init_Audio();
@@ -251205,12 +249474,12 @@ var init_SoundOption = __esmMin((() => {
 	init_SoundOption$1();
 	SoundOption = new GUIComponent("SoundOption", SoundOption_default$1);
 	SoundOption.render = () => SoundOption_default$2;
-	_preferences$57 = Preferences.get("SoundOption", {
+	_preferences$61 = Preferences.get("SoundOption", {
 		x: 300,
 		y: 300
 	}, 1);
 	SoundOption.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", function(event) {
 			event.stopImmediatePropagation();
@@ -251230,9 +249499,9 @@ var init_SoundOption = __esmMin((() => {
 		this.draggable(".titlebar");
 	};
 	SoundOption.onAppend = function onAppend() {
-		this._host.style.top = _preferences$57.y + "px";
-		this._host.style.left = _preferences$57.x + "px";
-		const root = this._shadow || this._host;
+		this._host.style.top = _preferences$61.y + "px";
+		this._host.style.left = _preferences$61.x + "px";
+		const root = this.getRoot();
 		const soundSlider = root.querySelector(".sound");
 		if (soundSlider) soundSlider.value = Audio_default.Sound.volume * 100;
 		const bgmSlider = root.querySelector(".bgm");
@@ -251243,9 +249512,9 @@ var init_SoundOption = __esmMin((() => {
 		if (bgmState) bgmState.checked = Audio_default.BGM.play;
 	};
 	SoundOption.onRemove = function onRemove() {
-		_preferences$57.x = parseInt(this._host.style.left, 10);
-		_preferences$57.y = parseInt(this._host.style.top, 10);
-		_preferences$57.save();
+		_preferences$61.x = parseInt(this._host.style.left, 10);
+		_preferences$61.y = parseInt(this._host.style.top, 10);
+		_preferences$61.save();
 	};
 	SoundOption_default = UIManager.addComponent(SoundOption);
 }));
@@ -251263,7 +249532,7 @@ var init_FPS$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.js
-var FPS, _maxFPSRegistered, _tickFn, _preferences$56, FPS_default;
+var FPS, _maxFPSRegistered, _tickFn, _preferences$60, FPS_default;
 var init_FPS = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -251276,7 +249545,7 @@ var init_FPS = __esmMin((() => {
 	FPS.render = () => FPS_default$2;
 	_maxFPSRegistered = 0;
 	_tickFn = null;
-	_preferences$56 = Preferences.get("FPS", {
+	_preferences$60 = Preferences.get("FPS", {
 		show: false,
 		x: 100,
 		y: 100
@@ -251285,7 +249554,7 @@ var init_FPS = __esmMin((() => {
 	* Initialize UI
 	*/
 	FPS.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", function(event) {
 			event.stopImmediatePropagation();
@@ -251300,10 +249569,10 @@ var init_FPS = __esmMin((() => {
 	* When appended to DOM
 	*/
 	FPS.onAppend = function onAppend() {
-		this._host.style.top = _preferences$56.y + "px";
-		this._host.style.left = _preferences$56.x + "px";
-		this._host.style.display = _preferences$56.show ? "" : "none";
-		const root = this._shadow || this._host;
+		this._host.style.top = _preferences$60.y + "px";
+		this._host.style.left = _preferences$60.x + "px";
+		this._host.style.display = _preferences$60.show ? "" : "none";
+		const root = this.getRoot();
 		const fpsEl = root.querySelector("#fpsCounter");
 		const fpsRoot = root.querySelector("#FPS");
 		let startTime = 0;
@@ -251350,21 +249619,21 @@ var init_FPS = __esmMin((() => {
 			Renderer.stop(_tickFn);
 			_tickFn = null;
 		}
-		_preferences$56.x = parseInt(this._host.style.left, 10);
-		_preferences$56.y = parseInt(this._host.style.top, 10);
-		_preferences$56.show = this._host.style.display !== "none";
-		_preferences$56.save();
+		_preferences$60.x = parseInt(this._host.style.left, 10);
+		_preferences$60.y = parseInt(this._host.style.top, 10);
+		_preferences$60.show = this._host.style.display !== "none";
+		_preferences$60.save();
 	};
 	/**
 	* Show/Hide UI
 	*/
 	FPS.toggle = function toggle(isVisible) {
-		_preferences$56.x = parseInt(this._host.style.left, 10);
-		_preferences$56.y = parseInt(this._host.style.top, 10);
+		_preferences$60.x = parseInt(this._host.style.left, 10);
+		_preferences$60.y = parseInt(this._host.style.top, 10);
 		if (typeof isVisible === "boolean") this._host.style.display = isVisible ? "" : "none";
 		else this._host.style.display = this._host.style.display === "none" ? "" : "none";
-		_preferences$56.show = this._host.style.display !== "none";
-		_preferences$56.save();
+		_preferences$60.show = this._host.style.display !== "none";
+		_preferences$60.save();
 		if (this._host.style.display !== "none") this.focus();
 	};
 	FPS_default = UIManager.addComponent(FPS);
@@ -251599,7 +249868,7 @@ function onUpdateScreenSize() {
 function onTabSwitch(event) {
 	const btn = event.currentTarget;
 	const tabName = btn.dataset.tab;
-	const root = GraphicsOption._shadow || GraphicsOption._host;
+	const root = GraphicsOption.getRoot();
 	root.querySelectorAll(".tab-button").forEach((b) => {
 		b.classList.remove("selected");
 	});
@@ -251618,7 +249887,7 @@ function onResetToDefaults() {
 	GraphicsSettings.save();
 	GraphicsOption.onAppend();
 }
-var GraphicsOption, _preferences$55, GraphicsOption_default;
+var GraphicsOption, _preferences$59, GraphicsOption_default;
 var init_GraphicsOption = __esmMin((() => {
 	init_FPS();
 	init_Configs();
@@ -251633,7 +249902,7 @@ var init_GraphicsOption = __esmMin((() => {
 	init_MemoryManager();
 	init_ChatBox();
 	GraphicsOption = new GUIComponent("GraphicsOption", GraphicsOption_default$1);
-	_preferences$55 = Preferences.get("GraphicsOption", {
+	_preferences$59 = Preferences.get("GraphicsOption", {
 		x: 300,
 		y: 300
 	}, 1.1);
@@ -251645,7 +249914,7 @@ var init_GraphicsOption = __esmMin((() => {
 	* Initialize UI
 	*/
 	GraphicsOption.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (event) => {
 			event.stopImmediatePropagation();
@@ -251699,9 +249968,9 @@ var init_GraphicsOption = __esmMin((() => {
 	* When append the element to html
 	*/
 	GraphicsOption.onAppend = function onAppend() {
-		this._host.style.top = `${_preferences$55.y}px`;
-		this._host.style.left = `${_preferences$55.x}px`;
-		const root = this._shadow || this._host;
+		this._host.style.top = `${_preferences$59.y}px`;
+		this._host.style.left = `${_preferences$59.x}px`;
+		const root = this.getRoot();
 		root.querySelector(".details").value = GraphicsSettings.quality;
 		root.querySelector(".screensize").value = GraphicsSettings.screensize;
 		root.querySelector(".cursor-option").checked = GraphicsSettings.cursor;
@@ -251731,9 +250000,9 @@ var init_GraphicsOption = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	GraphicsOption.onRemove = function onRemove() {
-		_preferences$55.x = parseInt(this._host.style.left, 10);
-		_preferences$55.y = parseInt(this._host.style.top, 10);
-		_preferences$55.save();
+		_preferences$59.x = parseInt(this._host.style.left, 10);
+		_preferences$59.y = parseInt(this._host.style.top, 10);
+		_preferences$59.save();
 	};
 	GraphicsOption.needFocus = true;
 	GraphicsOption.mouseMode = GUIComponent.MouseMode.STOP;
@@ -251802,7 +250071,7 @@ function tempMatch(key) {
 * Updates the key list on the UI
 */
 function updateKeyList() {
-	const cells = (ShortCutOption._shadow || ShortCutOption._host).querySelectorAll("td[data-button]");
+	const cells = ShortCutOption.getRoot().querySelectorAll("td[data-button]");
 	for (let i = 0; i < cells.length; i++) {
 		const btnName = cells[i].dataset.button;
 		if (getKey(btnName)) cells[i].textContent = (getAlt(btnName) ? "ALT + " : "") + (getCtrl(btnName) ? "CTRL + " : "") + (getShift(btnName) ? "SHIFT + " : "") + KEYS.toReadableKey(parseInt(getKey(btnName), 10));
@@ -251813,7 +250082,7 @@ function updateKeyList() {
 * Resets key bindings to initial
 */
 function resetKeysToDefault() {
-	const root = ShortCutOption._shadow || ShortCutOption._host;
+	const root = ShortCutOption.getRoot();
 	Object.keys(ShortCuts$1).forEach(function(SC) {
 		ShortCutsTemp[SC] = {};
 		ShortCutsTemp[SC].cust = false;
@@ -251840,7 +250109,7 @@ function applySettings() {
 	BattleMode.reload();
 	ShortCutsTemp = {};
 	updateKeyList();
-	(ShortCutOption._shadow || ShortCutOption._host).querySelectorAll("td.changed").forEach(function(el) {
+	ShortCutOption.getRoot().querySelectorAll("td.changed").forEach(function(el) {
 		el.classList.remove("changed");
 	});
 	const ShortCut = UIManager.getComponent("ShortCut");
@@ -251852,7 +250121,7 @@ function applySettings() {
 function cancelSettings() {
 	ShortCutsTemp = {};
 	updateKeyList();
-	(ShortCutOption._shadow || ShortCutOption._host).querySelectorAll("td.changed").forEach(function(el) {
+	ShortCutOption.getRoot().querySelectorAll("td.changed").forEach(function(el) {
 		el.classList.remove("changed");
 	});
 }
@@ -251916,7 +250185,7 @@ function onUpdateDisableVirtualMouse() {
 	Controls_default.joyDisableVirtualMouse = !!this.checked;
 	Controls_default.save();
 }
-var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$54, ShortCutOption_default;
+var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$58, ShortCutOption_default;
 var init_ShortCutOption = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Preferences$1();
@@ -251932,7 +250201,7 @@ var init_ShortCutOption = __esmMin((() => {
 	ShortCuts$1 = ShortCutControls_default.ShortCuts;
 	ShortCutsTemp = {};
 	ShortCutOption.isCapturing = false;
-	_preferences$54 = Preferences.get("ShortCutOption", {
+	_preferences$58 = Preferences.get("ShortCutOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -251944,7 +250213,7 @@ var init_ShortCutOption = __esmMin((() => {
 	* Initialize UI
 	*/
 	ShortCutOption.init = function() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		let close = root.querySelector(".close");
 		function closebtn(btn) {
 			if (btn) {
@@ -252018,17 +250287,17 @@ var init_ShortCutOption = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCutOption.onAppend = function() {
-		this._host.style.left = _preferences$54.x + "px";
-		this._host.style.top = _preferences$54.y + "px";
+		this._host.style.left = _preferences$58.x + "px";
+		this._host.style.top = _preferences$58.y + "px";
 		this._host.style.zIndex = 100;
 	};
 	/**
 	* Remove from window (and so clean up)
 	*/
 	ShortCutOption.onRemove = function() {
-		_preferences$54.x = parseInt(this._host.style.left, 10);
-		_preferences$54.y = parseInt(this._host.style.top, 10);
-		_preferences$54.save();
+		_preferences$58.x = parseInt(this._host.style.left, 10);
+		_preferences$58.y = parseInt(this._host.style.top, 10);
+		_preferences$58.save();
 	};
 	/**
 	* Process key
@@ -252038,7 +250307,7 @@ var init_ShortCutOption = __esmMin((() => {
 	ShortCutOption.onKeyDown = function(event) {
 		if (ShortCutOption.isCapturing) {
 			if (16 != event.which && 17 != event.which && 18 != event.which) {
-				const root = ShortCutOption._shadow || ShortCutOption._host;
+				const root = ShortCutOption.getRoot();
 				const box = root.querySelector("td.selected");
 				const currentSC = box ? box.dataset.button : null;
 				if (!box || !currentSC || !ShortCuts$1[currentSC]) {
@@ -252155,7 +250424,7 @@ var init_Escape = __esmMin((() => {
 	* Initialize UI
 	*/
 	Escape.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const rect = this._host.getBoundingClientRect();
 		this._host.style.top = (Renderer.height - rect.height) * .75 + "px";
 		this._host.style.left = (Renderer.width - rect.width) * .5 + "px";
@@ -252203,7 +250472,7 @@ var init_Escape = __esmMin((() => {
 	*/
 	Escape.onRemove = function onRemove() {
 		this._host.style.display = "none";
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		root.querySelectorAll(".resurection, .savepoint").forEach(function(el) {
 			el.style.display = "none";
 		});
@@ -252227,7 +250496,7 @@ var init_Escape = __esmMin((() => {
 	* Show death menu (called when player dies)
 	*/
 	Escape.showDeathMenu = function showDeathMenu(hasSiegfried) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		this._host.style.display = "";
 		root.querySelector(".savepoint").style.display = "";
 		if (hasSiegfried) root.querySelector(".resurection").style.display = "";
@@ -252240,7 +250509,7 @@ var init_Escape = __esmMin((() => {
 	*/
 	Escape.resetMenu = function resetMenu() {
 		this._host.style.display = "none";
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		root.querySelectorAll(".resurection, .savepoint").forEach(function(el) {
 			el.style.display = "none";
 		});
@@ -252282,10 +250551,7 @@ var init_SkillList$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList/SkillList.js
-function _root$3(comp) {
-	return comp._shadow || comp._host;
-}
-function _escapeHTML$5(text) {
+function _escapeHTML$4(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -252405,11 +250671,11 @@ function getSkillPosition$1(JobId) {
 	return positions;
 }
 function getSkillById$1(id) {
-	const count = _list$13.length;
-	for (let i = 0; i < count; ++i) if (_list$13[i].SKID === id) return _list$13[i];
+	const count = _list$15.length;
+	for (let i = 0; i < count; ++i) if (_list$15[i].SKID === id) return _list$15[i];
 	return null;
 }
-function onResize$11(e, comp) {
+function onResize$14(e, comp) {
 	e.stopImmediatePropagation();
 	const top = parseInt(comp._host.style.top, 10) || 0;
 	const left = parseInt(comp._host.style.left, 10) || 0;
@@ -252437,8 +250703,8 @@ function onResize$11(e, comp) {
 	window.addEventListener("mouseup", onMouseUp);
 }
 function resize$5(comp, width, height) {
-	const root = _root$3(comp);
-	if (_preferences$53.mini) {
+	const root = comp.getRoot();
+	if (_preferences$57.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -252491,9 +250757,9 @@ function resize$5(comp, width, height) {
 	}
 }
 function onMini$1(comp) {
-	_preferences$53.mini = !_preferences$53.mini;
-	_preferences$53.save();
-	resize$5(comp, _preferences$53.width, _preferences$53.height);
+	_preferences$57.mini = !_preferences$57.mini;
+	_preferences$57.save();
+	resize$5(comp, _preferences$57.width, _preferences$57.height);
 }
 function onApplyChoice$1(comp) {
 	const applyArr = [];
@@ -252507,12 +250773,12 @@ function onApplyChoice$1(comp) {
 		for (let i = 0; i < c; i++) SkillList.onIncreaseSkill(parseInt(k, 10));
 	});
 	totalCounter$1 = 0;
-	const skpointsEl = _root$3(comp).querySelector(".skpoints_count");
+	const skpointsEl = comp.getRoot().querySelector(".skpoints_count");
 	if (skpointsEl) skpointsEl.textContent = `${_points$1 - totalCounter$1}`;
 	rememberChoice$1 = [];
 }
 function onResetChoice$1(comp) {
-	const root = _root$3(comp);
+	const root = comp.getRoot();
 	rememberChoice$1.forEach((_count, skillId) => {
 		if (!skillDependencyTree$1[skillId]) return;
 		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree$1[skillId].position}`);
@@ -252637,7 +250903,7 @@ function skillLevelSelectDown$1(skill, root) {
 		});
 	}
 }
-var SkillList, _preferences$53, _list$13, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$6, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
+var SkillList, _preferences$57, _list$15, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$6, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
 var init_SkillList$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -252656,7 +250922,7 @@ var init_SkillList$1 = __esmMin((() => {
 	init_SkillList$2();
 	SkillList = new GUIComponent("SkillList", SkillList_default$1);
 	SkillList.render = () => SkillList_default$2;
-	_preferences$53 = Preferences.get("SkillList", {
+	_preferences$57 = Preferences.get("SkillList", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -252665,7 +250931,7 @@ var init_SkillList$1 = __esmMin((() => {
 		mini: true,
 		skillInfo: false
 	}, 1);
-	_list$13 = [];
+	_list$15 = [];
 	_points$1 = 0;
 	totalCounter$1 = 0;
 	skillPosition$1 = [];
@@ -252674,12 +250940,12 @@ var init_SkillList$1 = __esmMin((() => {
 	hasSkills$1 = [];
 	_justDragged$1 = false;
 	SkillList.init = function init() {
-		const root = _root$3(this);
+		const root = this.getRoot();
 		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
 		});
 		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
-			onResize$11(e, this);
+			onResize$14(e, this);
 		});
 		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
 			this.ui.hide();
@@ -252688,8 +250954,8 @@ var init_SkillList$1 = __esmMin((() => {
 			onMini$1(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$53.skillInfo = !!this.checked;
-			_preferences$53.save();
+			_preferences$57.skillInfo = !!this.checked;
+			_preferences$57.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice$1(this);
@@ -252760,7 +251026,7 @@ var init_SkillList$1 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$53.skillInfo) {
+				if (_preferences$57.skillInfo) {
 					const skillID = _resolveSkillID$1(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -252772,7 +251038,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$53.skillInfo) SkillDescription_default.remove();
+				if (_preferences$57.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -252826,24 +251092,24 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.onAppend = function onAppend() {
-		if (!_preferences$53.show) this.ui.hide();
-		resize$5(this, _preferences$53.width, _preferences$53.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - 100)}px`;
-		const cb = _root$3(this).querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$53.skillInfo;
+		if (!_preferences$57.show) this.ui.hide();
+		resize$5(this, _preferences$57.width, _preferences$57.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$57.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$57.x), Renderer.width - 100)}px`;
+		const cb = this.getRoot().querySelector(".view_skill_info");
+		if (cb) cb.checked = _preferences$57.skillInfo;
 	};
 	SkillList.onRemove = function onRemove() {
 		if (_btnLevelUp$6 && _btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
-		_preferences$53.show = this.ui.is(":visible");
-		_preferences$53.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$53.x = parseInt(this._host.style.left, 10) || 0;
-		const content = _root$3(this).querySelector(".content");
+		_preferences$57.show = this.ui.is(":visible");
+		_preferences$57.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$57.x = parseInt(this._host.style.left, 10) || 0;
+		const content = this.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$53.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$53.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$57.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$57.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$53.save();
+		_preferences$57.save();
 	};
 	SkillList.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
@@ -252863,15 +251129,15 @@ var init_SkillList$1 = __esmMin((() => {
 		onResetChoice$1(this);
 	};
 	SkillList.setSkills = function setSkills(skills) {
-		const root = _root$3(this);
+		const root = this.getRoot();
 		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition$1 = getSkillPosition$1(skillJobId);
 		createSkillDependencyTree$1();
-		for (let i = 0, count = _list$13.length; i < count; ++i) this.onUpdateSkill(_list$13[i].SKID, 0);
-		_list$13.length = 0;
+		for (let i = 0, count = _list$15.length; i < count; ++i) this.onUpdateSkill(_list$15[i].SKID, 0);
+		_list$15.length = 0;
 		root.querySelectorAll(".content table").forEach((t) => {
 			t.innerHTML = "";
 		});
@@ -252898,7 +251164,7 @@ var init_SkillList$1 = __esmMin((() => {
 	};
 	SkillList.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (_root$3(this).querySelector(`.skill.id${skill.SKID}`)) {
+		if (this.getRoot().querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
@@ -252906,7 +251172,7 @@ var init_SkillList$1 = __esmMin((() => {
 		this.addSkillMini(skill);
 	};
 	SkillList.prepareSkillTree = function prepareSkillTree(items, list) {
-		const root = _root$3(this);
+		const root = this.getRoot();
 		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
 			const className = "disabled";
@@ -252915,7 +251181,7 @@ var init_SkillList$1 = __esmMin((() => {
 				element.className = `skill id${key} ${className}`;
 				element.setAttribute("data-index", key);
 				element.setAttribute("draggable", "true");
-				element.innerHTML = `<div class="name">${_escapeHTML$5(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				element.innerHTML = `<div class="name">${_escapeHTML$4(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
 				const upBtn = element.querySelector(".level .currentUp");
 				if (upBtn) {
 					if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
@@ -252936,7 +251202,7 @@ var init_SkillList$1 = __esmMin((() => {
 							const miniTr = document.createElement("tr");
 							miniTr.className = `skill id${key} disabled`;
 							miniTr.setAttribute("data-index", key);
-							miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$5(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
+							miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$4(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
 							miniBox.appendChild(miniTr);
 							Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
 								const img = miniTr.querySelector(".icon img");
@@ -252953,14 +251219,14 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.addSkillBig = function addSkillBig(skill) {
-		const root = _root$3(this);
+		const root = this.getRoot();
 		const sk = SkillInfo[skill.SKID];
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
 		const element = document.createElement("div");
 		element.className = `skill id${skill.SKID} ${className}`;
 		element.setAttribute("data-index", skill.SKID);
 		element.setAttribute("draggable", "true");
-		element.innerHTML = `<div class="name">${_escapeHTML$5(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		element.innerHTML = `<div class="name">${_escapeHTML$4(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
 		const upBtn = element.querySelector(".level .currentUp");
 		if (upBtn) {
 			if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
@@ -253029,7 +251295,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.addSkillMini = function addSkillMini(skill) {
-		const root = _root$3(this);
+		const root = this.getRoot();
 		const sk = SkillInfo[skill.SKID];
 		const levelup = _btnIncSkill$1.cloneNode(true);
 		levelup.addEventListener("click", function() {
@@ -253041,7 +251307,7 @@ var init_SkillList$1 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$5(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$4(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_points$1) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const upBtn = tr.querySelector(".level .currentUp");
@@ -253069,15 +251335,15 @@ var init_SkillList$1 = __esmMin((() => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$13.push(skill);
+		_list$15.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	SkillList.removeSkill = function removeSkill() {};
 	SkillList.updateSkill = function updateSkill(skill) {
 		let target = getSkillById$1(skill.SKID);
-		const root = _root$3(this);
+		const root = this.getRoot();
 		if (!target) if (root.querySelector(`.skill.id${skill.SKID}`)) {
-			_list$13.push(skill);
+			_list$15.push(skill);
 			this.onUpdateSkill(skill.SKID, 0);
 			hasSkills$1[skill.SKID] = skill;
 			target = skill;
@@ -253116,7 +251382,7 @@ var init_SkillList$1 = __esmMin((() => {
 		}
 	};
 	SkillList.setPoints = function setPoints(amount) {
-		const root = _root$3(this);
+		const root = this.getRoot();
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_points$1 === !amount) {
@@ -253124,9 +251390,9 @@ var init_SkillList$1 = __esmMin((() => {
 			return;
 		}
 		_points$1 = amount;
-		const count = _list$13.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$13[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$13[i].upgradable && amount ? "" : "none";
+		const count = _list$15.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$15[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$15[i].upgradable && amount ? "" : "none";
 		});
 	};
 	SkillList.onLevelUp = function onLevelUp() {
@@ -253159,10 +251425,7 @@ var init_SkillListV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillListV0/SkillListV0.js
-function _root$2(comp) {
-	return comp._shadow || comp._host;
-}
-function _escapeHTML$4(text) {
+function _escapeHTML$3(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -253274,11 +251537,11 @@ function getSkillPosition(JobId) {
 	return positions;
 }
 function getSkillById(id) {
-	const count = _list$12.length;
-	for (let i = 0; i < count; ++i) if (_list$12[i].SKID === id) return _list$12[i];
+	const count = _list$14.length;
+	for (let i = 0; i < count; ++i) if (_list$14[i].SKID === id) return _list$14[i];
 	return null;
 }
-function onResize$10(e, comp) {
+function onResize$13(e, comp) {
 	e.stopImmediatePropagation();
 	const top = parseInt(comp._host.style.top, 10) || 0;
 	const left = parseInt(comp._host.style.left, 10) || 0;
@@ -253306,8 +251569,8 @@ function onResize$10(e, comp) {
 	window.addEventListener("mouseup", onMouseUp);
 }
 function resize$4(comp, width, height) {
-	const root = _root$2(comp);
-	if (_preferences$52.mini) {
+	const root = comp.getRoot();
+	if (_preferences$56.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -253342,9 +251605,9 @@ function resize$4(comp, width, height) {
 	}
 }
 function onMini(comp) {
-	_preferences$52.mini = !_preferences$52.mini;
-	_preferences$52.save();
-	resize$4(comp, _preferences$52.width, _preferences$52.height);
+	_preferences$56.mini = !_preferences$56.mini;
+	_preferences$56.save();
+	resize$4(comp, _preferences$56.width, _preferences$56.height);
 }
 function onApplyChoice(comp) {
 	const applyArr = [];
@@ -253358,12 +251621,12 @@ function onApplyChoice(comp) {
 		for (let i = 0; i < c; i++) SkillListV0.onIncreaseSkill(parseInt(k, 10));
 	});
 	totalCounter = 0;
-	const skpointsEl = _root$2(comp).querySelector(".skpoints_count");
+	const skpointsEl = comp.getRoot().querySelector(".skpoints_count");
 	if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}`;
 	rememberChoice = [];
 }
 function onResetChoice(comp) {
-	const root = _root$2(comp);
+	const root = comp.getRoot();
 	rememberChoice.forEach((_count, skillId) => {
 		if (!skillDependencyTree[skillId]) return;
 		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree[skillId].position}`);
@@ -253415,7 +251678,7 @@ function skillLevelSelectDown(skill, root) {
 		});
 	}
 }
-var SkillListV0, _preferences$52, _list$12, _btnIncSkill, _points, totalCounter, _btnLevelUp$5, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
+var SkillListV0, _preferences$56, _list$14, _btnIncSkill, _points, totalCounter, _btnLevelUp$5, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
 var init_SkillListV0 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -253434,7 +251697,7 @@ var init_SkillListV0 = __esmMin((() => {
 	init_SkillListV0$1();
 	SkillListV0 = new GUIComponent("SkillListV0", SkillListV0_default$1);
 	SkillListV0.render = () => SkillListV0_default$2;
-	_preferences$52 = Preferences.get("SkillListV0", {
+	_preferences$56 = Preferences.get("SkillListV0", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -253443,7 +251706,7 @@ var init_SkillListV0 = __esmMin((() => {
 		mini: true,
 		skillInfo: false
 	}, 1);
-	_list$12 = [];
+	_list$14 = [];
 	_points = 0;
 	totalCounter = 0;
 	skillPosition = [];
@@ -253452,12 +251715,12 @@ var init_SkillListV0 = __esmMin((() => {
 	hasSkills = [];
 	_justDragged = false;
 	SkillListV0.init = function init() {
-		const root = _root$2(this);
+		const root = SkillListV0.getRoot();
 		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
 		});
 		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
-			onResize$10(e, this);
+			onResize$13(e, this);
 		});
 		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
 			this.ui.hide();
@@ -253466,8 +251729,8 @@ var init_SkillListV0 = __esmMin((() => {
 			onMini(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$52.skillInfo = !!this.checked;
-			_preferences$52.save();
+			_preferences$56.skillInfo = !!this.checked;
+			_preferences$56.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice(this);
@@ -253538,7 +251801,7 @@ var init_SkillListV0 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$52.mini || _preferences$52.skillInfo) {
+				if (_preferences$56.mini || _preferences$56.skillInfo) {
 					const skillID = _resolveSkillID(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -253550,7 +251813,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$52.mini || _preferences$52.skillInfo) SkillDescription_default.remove();
+				if (_preferences$56.mini || _preferences$56.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -253594,24 +251857,24 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.onAppend = function onAppend() {
-		if (!_preferences$52.show) this.ui.hide();
-		resize$4(this, _preferences$52.width, _preferences$52.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$52.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$52.x), Renderer.width - 100)}px`;
-		const cb = _root$2(this).querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$52.skillInfo;
+		if (!_preferences$56.show) this.ui.hide();
+		resize$4(this, _preferences$56.width, _preferences$56.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$56.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$56.x), Renderer.width - 100)}px`;
+		const cb = SkillListV0.getRoot().querySelector(".view_skill_info");
+		if (cb) cb.checked = _preferences$56.skillInfo;
 	};
 	SkillListV0.onRemove = function onRemove() {
 		if (_btnLevelUp$5 && _btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
-		_preferences$52.show = this.ui.is(":visible");
-		_preferences$52.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$52.x = parseInt(this._host.style.left, 10) || 0;
-		const content = _root$2(this).querySelector(".content");
+		_preferences$56.show = this.ui.is(":visible");
+		_preferences$56.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$56.x = parseInt(this._host.style.left, 10) || 0;
+		const content = SkillListV0.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$52.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$52.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$56.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$56.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$52.save();
+		_preferences$56.save();
 	};
 	SkillListV0.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
@@ -253631,15 +251894,15 @@ var init_SkillListV0 = __esmMin((() => {
 		onResetChoice(this);
 	};
 	SkillListV0.setSkills = function setSkills(skills) {
-		const root = _root$2(this);
+		const root = SkillListV0.getRoot();
 		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition = getSkillPosition(skillJobId);
 		createSkillDependencyTree();
-		for (let i = 0, count = _list$12.length; i < count; ++i) this.onUpdateSkill(_list$12[i].SKID, 0);
-		_list$12.length = 0;
+		for (let i = 0, count = _list$14.length; i < count; ++i) this.onUpdateSkill(_list$14[i].SKID, 0);
+		_list$14.length = 0;
 		const table = root.querySelector(".content table");
 		if (table) table.innerHTML = "";
 		root.querySelectorAll(".skillCol").forEach((el) => {
@@ -253656,7 +251919,7 @@ var init_SkillListV0 = __esmMin((() => {
 	};
 	SkillListV0.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		if (_root$2(this).querySelector(`.skill.id${skill.SKID}`)) {
+		if (SkillListV0.getRoot().querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
@@ -253664,7 +251927,7 @@ var init_SkillListV0 = __esmMin((() => {
 		this.addSkillMini(skill);
 	};
 	SkillListV0.prepareSkillTree = function prepareSkillTree(items, list) {
-		const root = _root$2(this);
+		const root = SkillListV0.getRoot();
 		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
 			const className = "disabled";
@@ -253673,7 +251936,7 @@ var init_SkillListV0 = __esmMin((() => {
 				element.className = `skill id${key} ${className}`;
 				element.setAttribute("data-index", key);
 				element.setAttribute("draggable", "true");
-				element.innerHTML = `<div class="name">${_escapeHTML$4(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				element.innerHTML = `<div class="name">${_escapeHTML$3(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
 				const upBtn = element.querySelector(".level .currentUp");
 				if (upBtn) {
 					if (_rArrow) upBtn.style.backgroundImage = _rArrow;
@@ -253699,14 +251962,14 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.addSkillBig = function addSkillBig(skill) {
-		const root = _root$2(this);
+		const root = SkillListV0.getRoot();
 		const sk = SkillInfo[skill.SKID];
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
 		const element = document.createElement("div");
 		element.className = `skill id${skill.SKID} ${className}`;
 		element.setAttribute("data-index", skill.SKID);
 		element.setAttribute("draggable", "true");
-		element.innerHTML = `<div class="name">${_escapeHTML$4(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		element.innerHTML = `<div class="name">${_escapeHTML$3(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
 		const upBtn = element.querySelector(".level .currentUp");
 		if (upBtn) {
 			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
@@ -253733,7 +251996,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.addSkillMini = function addSkillMini(skill) {
-		const root = _root$2(this);
+		const root = SkillListV0.getRoot();
 		const sk = SkillInfo[skill.SKID];
 		const levelup = _btnIncSkill.cloneNode(true);
 		levelup.addEventListener("click", function() {
@@ -253745,7 +252008,7 @@ var init_SkillListV0 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$4(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_points) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const upBtn = tr.querySelector(".level .currentUp");
@@ -253765,7 +252028,7 @@ var init_SkillListV0 = __esmMin((() => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$12.push(skill);
+		_list$14.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	SkillListV0.removeSkill = function removeSkill() {};
@@ -253777,7 +252040,7 @@ var init_SkillListV0 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		_root$2(this).querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+		SkillListV0.getRoot().querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
 			for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 			if (skill.selectedLevel) {
 				const current = element.querySelector(".level .current");
@@ -253806,7 +252069,7 @@ var init_SkillListV0 = __esmMin((() => {
 		}
 	};
 	SkillListV0.setPoints = function setPoints(amount) {
-		const root = _root$2(this);
+		const root = SkillListV0.getRoot();
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_points === !amount) {
@@ -253814,9 +252077,9 @@ var init_SkillListV0 = __esmMin((() => {
 			return;
 		}
 		_points = amount;
-		const count = _list$12.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$12[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$12[i].upgradable && amount ? "" : "none";
+		const count = _list$14.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$14[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$14[i].upgradable && amount ? "" : "none";
 		});
 	};
 	SkillListV0.onLevelUp = function onLevelUp() {
@@ -253830,23 +252093,23 @@ var init_SkillListV0 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList.js
-var publicName$8, versionInfo$8, Controller$4, _selectUIVersion$4;
+var publicName$9, versionInfo$9, Controller$4, _selectUIVersion$5;
 var init_SkillList = __esmMin((() => {
 	init_SkillList$1();
 	init_SkillListV0();
 	init_UIVersionManager();
 	init_KeyEventHandler();
-	publicName$8 = "SkillList";
-	versionInfo$8 = {
+	publicName$9 = "SkillList";
+	versionInfo$9 = {
 		default: SkillListV0_default,
 		common: { 20090601: SkillList_default },
 		re: {},
 		prere: {}
 	};
-	Controller$4 = UIVersionManager.getUIController(publicName$8, versionInfo$8);
-	_selectUIVersion$4 = Controller$4.selectUIVersion;
+	Controller$4 = UIVersionManager.getUIController(publicName$9, versionInfo$9);
+	_selectUIVersion$5 = Controller$4.selectUIVersion;
 	Controller$4.selectUIVersion = function() {
-		_selectUIVersion$4();
+		_selectUIVersion$5();
 		const component = Controller$4.getUI();
 		component.onKeyDown = (e) => {
 			if ((e.which === KEYS.ESCAPE || e.key === "Escape") && component.ui.is(":visible")) {
@@ -253869,9 +252132,6 @@ var init_QuestHelper$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/QuestHelper.js
-function _getRoot$52() {
-	return QuestHelper._shadow || QuestHelper._host;
-}
 /**
 * Process text with color codes (^RRGGBB)
 * @param {string} text - The text to process
@@ -253927,7 +252187,7 @@ function onClickClose$3() {
 function onClose$10() {
 	QuestHelper.ui.hide();
 }
-var QuestHelper, _preferences$51, QuestHelper_default;
+var QuestHelper, _preferences$55, QuestHelper_default;
 var init_QuestHelper = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -253942,7 +252202,7 @@ var init_QuestHelper = __esmMin((() => {
 	init_QuestHelper$1();
 	QuestHelper = new GUIComponent("QuestHelper", QuestHelper_default$1);
 	QuestHelper.render = () => QuestHelper_default$2;
-	_preferences$51 = Preferences.get("Quest", {
+	_preferences$55 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false
@@ -253951,7 +252211,7 @@ var init_QuestHelper = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	QuestHelper.init = function init() {
-		const root = _getRoot$52();
+		const root = QuestHelper.getRoot();
 		const closeBtn = root.querySelector(".quest-info-bottom-btn");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -254004,11 +252264,11 @@ var init_QuestHelper = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelper.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$51.x + 382), Renderer.width - 342)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$51.y), Renderer.height - 412)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$55.x + 382), Renderer.width - 342)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$55.y), Renderer.height - 412)}px`;
 	};
 	QuestHelper.setQuestInfo = function setQuestInfo(quest) {
-		const root = _getRoot$52();
+		const root = QuestHelper.getRoot();
 		if (!root) return;
 		const titleEl = root.querySelector(".quest-info-title-panel-text");
 		if (titleEl) titleEl.innerHTML = processText$2(quest.title);
@@ -254048,7 +252308,7 @@ var init_QuestHelper = __esmMin((() => {
 		}
 	};
 	QuestHelper.clearQuestDesc = function clearQuestDesc() {
-		const root = _getRoot$52();
+		const root = QuestHelper.getRoot();
 		if (!root) return;
 		const titleEl = root.querySelector(".quest-info-title-panel-text");
 		if (titleEl) titleEl.innerHTML = "";
@@ -254099,23 +252359,20 @@ var init_QuestWindow$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/QuestWindow.js
-function _getRoot$51() {
-	return QuestWindow._shadow || QuestWindow._host;
-}
 function isInCooldown(quest) {
 	if (quest.end_time == 0) return false;
 	const epoch_seconds = /* @__PURE__ */ new Date() / 1e3;
 	if (quest.end_time > epoch_seconds) return true;
 	return false;
 }
-var _preferences$50, QuestWindow, QuestWindow_default;
+var _preferences$54, QuestWindow, QuestWindow_default;
 var init_QuestWindow = __esmMin((() => {
 	init_Preferences$1();
 	init_UIManager();
 	init_GUIComponent();
 	init_QuestWindow$2();
 	init_QuestWindow$1();
-	_preferences$50 = Preferences.get("Quest", {
+	_preferences$54 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -254135,7 +252392,7 @@ var init_QuestWindow = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestWindow.onAppend = function onAppend() {
-		if (!_preferences$50.showwindow) this.ui.hide();
+		if (!_preferences$54.showwindow) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -254160,13 +252417,13 @@ var init_QuestWindow = __esmMin((() => {
 		}
 	};
 	QuestWindow.ClearQuestList = function ClearQuestList() {
-		const root = _getRoot$51();
+		const root = this.getRoot();
 		if (!root) return;
 		const ul = root.querySelector(".quest-window-ul");
 		if (ul) ul.innerHTML = "";
 	};
 	QuestWindow.addQuestToUI = function addQuestToUI(quest) {
-		const root = _getRoot$51();
+		const root = this.getRoot();
 		if (!root) return;
 		const title = quest.title.length > 25 ? `${quest.title.substr(0, 25)}...` : quest.title;
 		const summary = quest.summary.length > 25 ? `${quest.summary.substr(0, 25)}...` : quest.summary;
@@ -254191,11 +252448,8 @@ var init_Quest$3 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/Quest.js
-function _getRoot$50() {
-	return Quest._shadow || Quest._host;
-}
 function onClickMenu$2(e) {
-	const root = _getRoot$50();
+	const root = Quest.getRoot();
 	const menuId = e.currentTarget.id;
 	if (_active_menu$1 === menuId) return;
 	_active_menu$1 = menuId;
@@ -254228,24 +252482,23 @@ function onClickMenu$2(e) {
 	QuestHelper_default.clearQuestDesc();
 }
 function onClickQuestCheckbox() {
-	const root = _getRoot$50();
+	const root = Quest.getRoot();
 	let checkbox_background;
-	if (_preferences$49.showwindow) {
+	if (_preferences$53.showwindow) {
 		checkbox_background = "checkbox_off";
 		QuestWindow_default.ui.hide();
 	} else {
 		checkbox_background = "checkbox_on";
 		QuestWindow_default.ui.show();
 	}
-	_preferences$49.showwindow = !_preferences$49.showwindow;
-	_preferences$49.save();
+	_preferences$53.showwindow = !_preferences$53.showwindow;
+	_preferences$53.save();
 	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
 		const el = root.querySelector(".toggle-quest-image");
 		if (el) el.style.backgroundImage = `url(${data})`;
 	});
 }
 function onClickQuestToggle$1(e) {
-	_getRoot$50();
 	const id = e.currentTarget.id.replace("qid", "");
 	const _pkt = new PACKET.CZ.ACTIVE_QUEST();
 	_pkt.questID = _questList$1[id].questID;
@@ -254253,7 +252506,7 @@ function onClickQuestToggle$1(e) {
 	Network.sendPacket(_pkt);
 }
 function onClickQuestDisplay(e) {
-	const root = _getRoot$50();
+	const root = Quest.getRoot();
 	const cid = e.currentTarget.id;
 	const id = cid.replace("sid", "");
 	const iid = parseInt(Number(id));
@@ -254285,7 +252538,7 @@ function refreshQuestUI$1() {
 function onClose$9() {
 	Quest.ui.hide();
 }
-var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$49, Quest_default;
+var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$53, Quest_default;
 var init_Quest$2 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -254307,7 +252560,7 @@ var init_Quest$2 = __esmMin((() => {
 	_questList$1 = [];
 	_questNotShowList = [];
 	_active_menu$1 = "active";
-	_preferences$49 = Preferences.get("Quest", {
+	_preferences$53 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -254317,7 +252570,7 @@ var init_Quest$2 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	Quest.init = function init() {
-		const root = _getRoot$50();
+		const root = Quest.getRoot();
 		QuestHelper_default.prepare();
 		QuestWindow_default.prepare();
 		this.draggable(".titlebar");
@@ -254339,10 +252592,10 @@ var init_Quest$2 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	Quest.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$49.x), Renderer.width - 381)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$49.y), Renderer.height - 466)}px`;
-		const root = _getRoot$50();
-		const checkbox_background = _preferences$49.showwindow ? "checkbox_on" : "checkbox_off";
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - 381)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - 466)}px`;
+		const root = Quest.getRoot();
+		const checkbox_background = _preferences$53.showwindow ? "checkbox_on" : "checkbox_off";
 		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
 			const el = root.querySelector(".toggle-quest-image");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -254351,7 +252604,7 @@ var init_Quest$2 = __esmMin((() => {
 			const el = root.querySelector(".titlebar");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		if (!_preferences$49.show) this.ui.hide();
+		if (!_preferences$53.show) this.ui.hide();
 		QuestWindow_default.append();
 	};
 	/**
@@ -254360,7 +252613,7 @@ var init_Quest$2 = __esmMin((() => {
 	Quest.clean = function clean() {
 		_active_menu$1 = "";
 		_questList$1 = {};
-		const root = _getRoot$50();
+		const root = Quest.getRoot();
 		if (root) {
 			const activeList = root.querySelector("#active-quest-list");
 			if (activeList) activeList.style.display = "";
@@ -254380,10 +252633,10 @@ var init_Quest$2 = __esmMin((() => {
 	* Removing the UI from window, save preferences
 	*/
 	Quest.onRemove = function onRemove() {
-		_preferences$49.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
-		_preferences$49.y = parseInt(this._host.style.top, 10);
-		_preferences$49.x = parseInt(this._host.style.left, 10);
-		_preferences$49.save();
+		_preferences$53.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
+		_preferences$53.y = parseInt(this._host.style.top, 10);
+		_preferences$53.x = parseInt(this._host.style.left, 10);
+		_preferences$53.save();
 	};
 	/**
 	* Window Shortcuts
@@ -254489,7 +252742,7 @@ var init_Quest$2 = __esmMin((() => {
 		return typeof _questList$1[questID] !== "undefined" ? true : false;
 	};
 	Quest.addQuestToUI = function addQuest(quest) {
-		const root = _getRoot$50();
+		const root = Quest.getRoot();
 		if (!root) return;
 		let ul_id = "";
 		const toggle_id = `qid${quest.questID}`;
@@ -254559,7 +252812,7 @@ var init_Quest$2 = __esmMin((() => {
 		}
 	};
 	Quest.ClearQuestList = function ClearQuestList() {
-		const root = _getRoot$50();
+		const root = Quest.getRoot();
 		if (!root) return;
 		root.querySelectorAll(".quest-list").forEach((el) => {
 			el.innerHTML = "";
@@ -254581,9 +252834,6 @@ var init_QuestHelperV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestHelperV1.js
-function _getRoot$49() {
-	return QuestHelperV1._shadow || QuestHelperV1._host;
-}
 /**
 * Process text with color codes (^RRGGBB)
 * @param {string} text - The text to process
@@ -254640,14 +252890,14 @@ function onClose$8() {
 	QuestHelperV1.ui.hide();
 }
 function onSelectMonster(e) {
-	const root = _getRoot$49();
+	const root = QuestHelperV1.getRoot();
 	const selectedOption = e.currentTarget.options[e.currentTarget.selectedIndex];
 	const killedEl = root.querySelector(".killed");
 	if (killedEl) killedEl.textContent = selectedOption.getAttribute("current");
 	const limitedEl = root.querySelector(".limited");
 	if (limitedEl) limitedEl.textContent = selectedOption.getAttribute("max");
 }
-var QuestHelperV1, _preferences$48, QuestHelperV1_default;
+var QuestHelperV1, _preferences$52, QuestHelperV1_default;
 var init_QuestHelperV1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Client();
@@ -254662,7 +252912,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 	init_QuestHelperV1$1();
 	QuestHelperV1 = new GUIComponent("QuestHelperV1", QuestHelperV1_default$1);
 	QuestHelperV1.render = () => QuestHelperV1_default$2;
-	_preferences$48 = Preferences.get("QuestHelperV1", {
+	_preferences$52 = Preferences.get("QuestHelperV1", {
 		x: 200,
 		y: 200,
 		show: false
@@ -254671,7 +252921,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	QuestHelperV1.init = function init() {
-		const root = _getRoot$49();
+		const root = QuestHelperV1.getRoot();
 		const closeBtn = root.querySelector(".quest-info-close-btn");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -254719,11 +252969,11 @@ var init_QuestHelperV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelperV1.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$48.x + 382), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$48.y), Renderer.height - 375)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$52.x + 382), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$52.y), Renderer.height - 375)}px`;
 	};
 	QuestHelperV1.setQuestInfo = function setQuestInfo(quest) {
-		const root = _getRoot$49();
+		const root = QuestHelperV1.getRoot();
 		if (!root) return;
 		const titleEl = root.querySelector(".title");
 		if (titleEl) titleEl.innerHTML = processText$1(quest.title);
@@ -254750,7 +253000,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 		if (selectEl) selectEl.addEventListener("change", (e) => onSelectMonster(e));
 	};
 	QuestHelperV1.clearQuestDesc = function clearQuestDesc() {
-		const root = _getRoot$49();
+		const root = QuestHelperV1.getRoot();
 		if (!root) return;
 		const titleEl = root.querySelector(".title");
 		if (titleEl) titleEl.innerHTML = "";
@@ -254799,11 +253049,8 @@ var init_QuestV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestV1.js
-function _getRoot$48() {
-	return QuestV1._shadow || QuestV1._host;
-}
 function onClickMenu$1(e) {
-	const root = _getRoot$48();
+	const root = QuestV1.getRoot();
 	const menuId = e.currentTarget.id;
 	if (_active_menu === menuId) return;
 	_active_menu = menuId;
@@ -254831,19 +253078,19 @@ function onClickMenu$1(e) {
 	QuestHelperV1_default.clearQuestDesc();
 }
 function onClickQuest(e) {
-	const root = _getRoot$48();
+	const root = QuestV1.getRoot();
 	const toggleEl = e.currentTarget;
 	const tid = toggleEl.id || toggleEl.className.match(/qid(\d+)/)?.[0];
 	const id = tid ? tid.replace("qid", "") : null;
 	if (!id) return;
-	if (_index$5 > -1) {
-		root.querySelectorAll(`.qid${_index$5}`).forEach((el) => {
+	if (_index$4 > -1) {
+		root.querySelectorAll(`.qid${_index$4}`).forEach((el) => {
 			el.style.backgroundColor = "white";
 		});
-		const prevById = root.querySelector(`#qid${_index$5}`);
+		const prevById = root.querySelector(`#qid${_index$4}`);
 		if (prevById) prevById.style.backgroundColor = "white";
 	}
-	_index$5 = id;
+	_index$4 = id;
 	toggleEl.style.backgroundColor = "lightgray";
 }
 function onClickQuestToggle(e) {
@@ -254854,9 +253101,9 @@ function onClickQuestToggle(e) {
 	Network.sendPacket(_pkt);
 }
 function onClickView() {
-	if (_index$5 > -1) {
+	if (_index$4 > -1) {
 		QuestHelperV1_default.clearQuestDesc();
-		QuestHelperV1_default.setQuestInfo(_questList[_index$5]);
+		QuestHelperV1_default.setQuestInfo(_questList[_index$4]);
 		QuestHelperV1_default.prepare();
 		QuestHelperV1_default.append();
 		QuestHelperV1_default.ui.show();
@@ -254872,7 +253119,7 @@ function refreshQuestUI() {
 function onClose$7() {
 	QuestV1.ui.hide();
 }
-var QuestV1, _index$5, _questList, _active_menu, _preferences$47, QuestV1_default;
+var QuestV1, _index$4, _questList, _active_menu, _preferences$51, QuestV1_default;
 var init_QuestV1 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -254890,10 +253137,10 @@ var init_QuestV1 = __esmMin((() => {
 	init_SessionStorage();
 	QuestV1 = new GUIComponent("QuestV1", QuestV1_default$1);
 	QuestV1.render = () => QuestV1_default$2;
-	_index$5 = -1;
+	_index$4 = -1;
 	_questList = [];
 	_active_menu = "active";
-	_preferences$47 = Preferences.get("QuestV1", {
+	_preferences$51 = Preferences.get("QuestV1", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -254903,7 +253150,7 @@ var init_QuestV1 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	QuestV1.init = function init() {
-		const root = _getRoot$48();
+		const root = QuestV1.getRoot();
 		QuestHelperV1_default.prepare();
 		root.querySelector(".view").addEventListener("click", () => onClickView());
 		root.querySelector(".close").addEventListener("click", () => onClose$7());
@@ -254919,10 +253166,10 @@ var init_QuestV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestV1.onAppend = function onAppend() {
-		_index$5 = -1;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$47.x), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$47.y), Renderer.height - 250)}px`;
-		const root = _getRoot$48();
+		_index$4 = -1;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$51.x), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$51.y), Renderer.height - 250)}px`;
+		const root = QuestV1.getRoot();
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_que_01.bmp`, (data) => {
 			const el = root.querySelector(".quest-menu");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -254930,7 +253177,7 @@ var init_QuestV1 = __esmMin((() => {
 		root.querySelector("#active-quest-list").style.display = "";
 		root.querySelector("#inactive-quest-list").style.display = "none";
 		root.querySelector("#all-quest-list").style.display = "none";
-		if (!_preferences$47.show) this.ui.hide();
+		if (!_preferences$51.show) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -254938,7 +253185,7 @@ var init_QuestV1 = __esmMin((() => {
 	QuestV1.clean = function clean() {
 		_active_menu = "";
 		_questList = {};
-		const root = _getRoot$48();
+		const root = QuestV1.getRoot();
 		if (root) {
 			const activeList = root.querySelector("#active-quest-list");
 			if (activeList) activeList.style.display = "none";
@@ -254955,10 +253202,10 @@ var init_QuestV1 = __esmMin((() => {
 	* Removing the UI from window, save preferences
 	*/
 	QuestV1.onRemove = function onRemove() {
-		_preferences$47.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
-		_preferences$47.y = parseInt(this._host.style.top, 10);
-		_preferences$47.x = parseInt(this._host.style.left, 10);
-		_preferences$47.save();
+		_preferences$51.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
+		_preferences$51.y = parseInt(this._host.style.top, 10);
+		_preferences$51.x = parseInt(this._host.style.left, 10);
+		_preferences$51.save();
 	};
 	/**
 	* Window Shortcuts
@@ -255058,7 +253305,7 @@ var init_QuestV1 = __esmMin((() => {
 		return typeof _questList[questID] !== "undefined" ? true : false;
 	};
 	QuestV1.addQuestToUI = function addQuest(quest) {
-		const root = _getRoot$48();
+		const root = QuestV1.getRoot();
 		if (!root) return;
 		const toggle_id = `qid${quest.questID}`;
 		const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
@@ -255089,7 +253336,7 @@ var init_QuestV1 = __esmMin((() => {
 		if (allList) allList.appendChild(liAll);
 	};
 	QuestV1.ClearQuestList = function ClearQuestList() {
-		const root = _getRoot$48();
+		const root = QuestV1.getRoot();
 		if (!root) return;
 		root.querySelectorAll(".quest-list").forEach((el) => {
 			el.innerHTML = "";
@@ -255099,23 +253346,23 @@ var init_QuestV1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest.js
-var publicName$7, versionInfo$7, Controller$3, _selectUIVersion$3;
+var publicName$8, versionInfo$8, Controller$3, _selectUIVersion$4;
 var init_Quest$1 = __esmMin((() => {
 	init_Quest$2();
 	init_QuestV1();
 	init_UIVersionManager();
 	init_KeyEventHandler();
-	publicName$7 = "Quest";
-	versionInfo$7 = {
+	publicName$8 = "Quest";
+	versionInfo$8 = {
 		default: QuestV1_default,
 		common: { 20180307: Quest_default },
 		re: {},
 		prere: {}
 	};
-	Controller$3 = UIVersionManager.getUIController(publicName$7, versionInfo$7);
-	_selectUIVersion$3 = Controller$3.selectUIVersion;
+	Controller$3 = UIVersionManager.getUIController(publicName$8, versionInfo$8);
+	_selectUIVersion$4 = Controller$3.selectUIVersion;
 	Controller$3.selectUIVersion = function() {
-		_selectUIVersion$3();
+		_selectUIVersion$4();
 		const component = Controller$3.getUI();
 		component.onKeyDown = function onKeyDown(e) {
 			if ((e.which === KEYS.ESCAPE || e.key === "Escape") && component.ui.is(":visible")) {
@@ -255138,10 +253385,7 @@ var init_BasicInfo$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.js
-function _getRoot$47() {
-	return BasicInfo._shadow || BasicInfo._host;
-}
-var BasicInfo, _preferences$46, BasicInfo_default;
+var BasicInfo, _preferences$50, BasicInfo_default;
 var init_BasicInfo$1 = __esmMin((() => {
 	init_DBManager();
 	init_MonsterTable();
@@ -255172,7 +253416,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	BasicInfo.weight = 0;
 	BasicInfo.weight_max = 1;
 	BasicInfo.render = () => BasicInfo_default$2;
-	_preferences$46 = Preferences.get("BasicInfo", {
+	_preferences$50 = Preferences.get("BasicInfo", {
 		x: 0,
 		y: 0,
 		reduce: true,
@@ -255186,7 +253430,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfo.init = function init() {
-		const root = _getRoot$47();
+		const root = BasicInfo.getRoot();
 		root.querySelectorAll(".topbar button").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -255231,21 +253475,21 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfo.onAppend = function onAppend() {
-		const root = _getRoot$47();
+		const root = BasicInfo.getRoot();
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$46.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$46.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$46.magnet_top;
-		this.magnet.BOTTOM = _preferences$46.magnet_bottom;
-		this.magnet.LEFT = _preferences$46.magnet_left;
-		this.magnet.RIGHT = _preferences$46.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$50.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$50.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$50.magnet_top;
+		this.magnet.BOTTOM = _preferences$50.magnet_bottom;
+		this.magnet.LEFT = _preferences$50.magnet_left;
+		this.magnet.RIGHT = _preferences$50.magnet_right;
 		const inner = root.querySelector("#basicinfo");
 		if (inner) {
 			inner.classList.remove("small", "large");
-			if (_preferences$46.reduce) {
+			if (_preferences$50.reduce) {
 				inner.classList.add("small");
 				const buttons = root.querySelector(".buttons");
-				if (buttons) buttons.style.display = _preferences$46.buttons ? "" : "none";
+				if (buttons) buttons.style.display = _preferences$50.buttons ? "" : "none";
 			} else inner.classList.add("large");
 		}
 	};
@@ -255253,18 +253497,18 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfo.onRemove = function onRemove() {
-		const root = _getRoot$47();
+		const root = BasicInfo.getRoot();
 		const inner = root.querySelector("#basicinfo");
-		_preferences$46.x = parseInt(this._host.style.left, 10);
-		_preferences$46.y = parseInt(this._host.style.top, 10);
-		_preferences$46.reduce = inner ? inner.classList.contains("small") : _preferences$46.reduce;
+		_preferences$50.x = parseInt(this._host.style.left, 10);
+		_preferences$50.y = parseInt(this._host.style.top, 10);
+		_preferences$50.reduce = inner ? inner.classList.contains("small") : _preferences$50.reduce;
 		const buttons = root.querySelector(".buttons");
-		_preferences$46.buttons = buttons ? buttons.style.display !== "none" : _preferences$46.buttons;
-		_preferences$46.magnet_top = this.magnet.TOP;
-		_preferences$46.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$46.magnet_left = this.magnet.LEFT;
-		_preferences$46.magnet_right = this.magnet.RIGHT;
-		_preferences$46.save();
+		_preferences$50.buttons = buttons ? buttons.style.display !== "none" : _preferences$50.buttons;
+		_preferences$50.magnet_top = this.magnet.TOP;
+		_preferences$50.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$50.magnet_left = this.magnet.LEFT;
+		_preferences$50.magnet_right = this.magnet.RIGHT;
+		_preferences$50.save();
 	};
 	/**
 	* Process shortcut
@@ -255282,7 +253526,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfo.toggleMode = function toggleMode() {
-		const root = _getRoot$47();
+		const root = BasicInfo.getRoot();
 		const inner = root.querySelector("#basicinfo");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -255293,10 +253537,10 @@ var init_BasicInfo$1 = __esmMin((() => {
 			return;
 		}
 		const buttons = root.querySelector(".buttons");
-		if (_preferences$46.buttons) {
+		if (_preferences$50.buttons) {
 			if (buttons) buttons.style.display = "";
 		} else if (buttons) buttons.style.display = "none";
-		const type = _preferences$46.buttons ? "off" : "on";
+		const type = _preferences$50.buttons ? "off" : "on";
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
 			const toggleBtn = root.querySelector(".toggle_btns");
 			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
@@ -255306,13 +253550,13 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfo.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$47();
+		const root = BasicInfo.getRoot();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
-		_preferences$46.buttons = buttons.style.display === "none";
-		if (_preferences$46.buttons) buttons.style.display = "";
+		_preferences$50.buttons = buttons.style.display === "none";
+		if (_preferences$50.buttons) buttons.style.display = "";
 		else buttons.style.display = "none";
-		const type = _preferences$46.buttons ? "off" : "on";
+		const type = _preferences$50.buttons ? "off" : "on";
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
 			const toggleBtn = root.querySelector(".toggle_btns");
 			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
@@ -255327,7 +253571,7 @@ var init_BasicInfo$1 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfo.update = function update(type, val1, val2) {
-		const root = _getRoot$47();
+		const root = BasicInfo.getRoot();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -255442,10 +253686,7 @@ var init_BasicInfoV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.js
-function _getRoot$46() {
-	return BasicInfoV0._shadow || BasicInfoV0._host;
-}
-var BasicInfoV0, _preferences$45, BasicInfoV0_default;
+var BasicInfoV0, _preferences$49, BasicInfoV0_default;
 var init_BasicInfoV0 = __esmMin((() => {
 	init_DBManager();
 	init_MonsterTable();
@@ -255478,7 +253719,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	BasicInfoV0.weight = 0;
 	BasicInfoV0.weight_max = 1;
 	BasicInfoV0.render = () => BasicInfoV0_default$2;
-	_preferences$45 = Preferences.get("BasicInfoV0", {
+	_preferences$49 = Preferences.get("BasicInfoV0", {
 		x: 0,
 		y: 0,
 		reduce: false,
@@ -255492,7 +253733,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV0.init = function init() {
-		const root = _getRoot$46();
+		const root = this.getRoot();
 		root.querySelectorAll(".topbar button").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -255543,18 +253784,18 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV0.onAppend = function onAppend() {
-		const root = _getRoot$46();
+		const root = this.getRoot();
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$45.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$45.magnet_top;
-		this.magnet.BOTTOM = _preferences$45.magnet_bottom;
-		this.magnet.LEFT = _preferences$45.magnet_left;
-		this.magnet.RIGHT = _preferences$45.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$49.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$49.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$49.magnet_top;
+		this.magnet.BOTTOM = _preferences$49.magnet_bottom;
+		this.magnet.LEFT = _preferences$49.magnet_left;
+		this.magnet.RIGHT = _preferences$49.magnet_right;
 		const inner = root.querySelector("#BasicInfoV0");
 		if (inner) {
 			inner.classList.remove("small", "large");
-			if (_preferences$45.reduce) {
+			if (_preferences$49.reduce) {
 				inner.classList.add("small");
 				const buttons = root.querySelector(".buttons");
 				if (buttons) buttons.style.display = "none";
@@ -255573,18 +253814,18 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV0.onRemove = function onRemove() {
-		const root = _getRoot$46();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV0");
-		_preferences$45.x = parseInt(this._host.style.left, 10);
-		_preferences$45.y = parseInt(this._host.style.top, 10);
-		_preferences$45.reduce = inner ? inner.classList.contains("small") : _preferences$45.reduce;
+		_preferences$49.x = parseInt(this._host.style.left, 10);
+		_preferences$49.y = parseInt(this._host.style.top, 10);
+		_preferences$49.reduce = inner ? inner.classList.contains("small") : _preferences$49.reduce;
 		const buttons = root.querySelector(".buttons");
-		_preferences$45.buttons = buttons ? buttons.style.display !== "none" : _preferences$45.buttons;
-		_preferences$45.magnet_top = this.magnet.TOP;
-		_preferences$45.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$45.magnet_left = this.magnet.LEFT;
-		_preferences$45.magnet_right = this.magnet.RIGHT;
-		_preferences$45.save();
+		_preferences$49.buttons = buttons ? buttons.style.display !== "none" : _preferences$49.buttons;
+		_preferences$49.magnet_top = this.magnet.TOP;
+		_preferences$49.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$49.magnet_left = this.magnet.LEFT;
+		_preferences$49.magnet_right = this.magnet.RIGHT;
+		_preferences$49.save();
 	};
 	/**
 	* Process shortcut
@@ -255602,7 +253843,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV0.toggleMode = function toggleMode() {
-		const root = _getRoot$46();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV0");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -255627,13 +253868,13 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV0.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$46();
+		const root = this.getRoot();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
-		_preferences$45.buttons = buttons.style.display === "none";
-		if (_preferences$45.buttons) buttons.style.display = "";
+		_preferences$49.buttons = buttons.style.display === "none";
+		if (_preferences$49.buttons) buttons.style.display = "";
 		else buttons.style.display = "none";
-		const type = _preferences$45.buttons ? "off" : "on";
+		const type = _preferences$49.buttons ? "off" : "on";
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
 			const toggleBtn = root.querySelector(".toggle_btns");
 			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
@@ -255648,7 +253889,7 @@ var init_BasicInfoV0 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV0.update = function update(type, val1, val2) {
-		const root = _getRoot$46();
+		const root = this.getRoot();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -255764,7 +254005,7 @@ var init_Bank$2 = __esmMin((() => {
 * Check if input value is valid
 */
 function CheckValue(value) {
-	const error = (Bank._shadow || Bank._host).querySelector(".errorupdate");
+	const error = Bank.getRoot().querySelector(".errorupdate");
 	if (value === "") {
 		if (error) error.textContent = DB.getMessage(2781);
 		ChatBox_default.addText(DB.getMessage(2779), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
@@ -255791,7 +254032,7 @@ function CheckValue(value) {
 * Send Request to server to deposit
 */
 function sendDepositRequest(value) {
-	const root = Bank._shadow || Bank._host;
+	const root = Bank.getRoot();
 	const input = root.querySelector(".depo");
 	if (CheckValue(value) === false) {
 		input.value = "";
@@ -255819,7 +254060,7 @@ function sendDepositRequest(value) {
 * Send Request to server to withdraw
 */
 function sendWithdrawRequest(value) {
-	const root = Bank._shadow || Bank._host;
+	const root = Bank.getRoot();
 	const input = root.querySelector(".depo");
 	const error = root.querySelector(".errorupdate");
 	if (CheckValue(value) === false) {
@@ -255874,7 +254115,7 @@ function reqCloseBank() {
 	pkt.AID = SessionStorage_default.AID;
 	Network.sendPacket(pkt);
 }
-var Bank, maxInt, _preferences$44, Bank_default;
+var Bank, maxInt, _preferences$48, Bank_default;
 var init_Bank$1 = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -255888,13 +254129,16 @@ var init_Bank$1 = __esmMin((() => {
 	init_Bank$3();
 	init_Bank$2();
 	init_ChatBox();
+	init_NpcBox();
+	init_NpcMenu();
+	init_InputBox();
 	Bank = new GUIComponent("Bank", Bank_default$1);
 	/**
 	* Render HTML
 	*/
 	Bank.render = () => Bank_default$2;
 	maxInt = 2147483647;
-	_preferences$44 = Preferences.get("Bank", {
+	_preferences$48 = Preferences.get("Bank", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -255902,7 +254146,7 @@ var init_Bank$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	Bank.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		let isMax = false;
 		const inputDepo = root.querySelector(".depo");
 		this.draggable();
@@ -255958,9 +254202,9 @@ var init_Bank$1 = __esmMin((() => {
 	* Append to body
 	*/
 	Bank.onAppend = function onAppend() {
-		const root = this._shadow || this._host;
-		this._host.style.top = Math.min(Math.max(0, _preferences$44.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$44.x), Renderer.width - this._host.offsetWidth) + "px";
+		const root = this.getRoot();
+		this._host.style.top = Math.min(Math.max(0, _preferences$48.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$48.x), Renderer.width - this._host.offsetWidth) + "px";
 		const input = root.querySelector(".depo");
 		input.value = "";
 		input.focus();
@@ -255969,8 +254213,10 @@ var init_Bank$1 = __esmMin((() => {
 	* Key Handler
 	*/
 	Bank.onKeyDown = function onKeyDown(event) {
-		const activeEl = (this._shadow || this._host).activeElement;
-		if (activeEl && activeEl.tagName && activeEl.tagName.match(/input|select|textarea/i)) {
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+		if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
+		if (this.isEditableFocused()) {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				reqCloseBank();
 				event.stopImmediatePropagation();
@@ -256011,40 +254257,40 @@ var init_Bank$1 = __esmMin((() => {
 	* Remove Bank from window
 	*/
 	Bank.onRemove = function onRemove() {
-		_preferences$44.y = parseInt(this._host.style.top, 10);
-		_preferences$44.x = parseInt(this._host.style.left, 10);
-		_preferences$44.save();
-		const error = (this._shadow || this._host).querySelector(".errorupdate");
+		_preferences$48.y = parseInt(this._host.style.top, 10);
+		_preferences$48.x = parseInt(this._host.style.left, 10);
+		_preferences$48.save();
+		const error = this.getRoot().querySelector(".errorupdate");
 		if (error) error.textContent = "";
 	};
 	/**
 	* Public methods for Engine/MapEngine/Bank.js
 	*/
 	Bank.updateBankDisplay = function updateBankDisplay(bankMoney, handMoney) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const inbank = root.querySelector(".inbank.currency");
 		const onhand = root.querySelector(".onhand.currency");
 		if (inbank) inbank.textContent = bankMoney.toLocaleString() + "z";
 		if (onhand) onhand.textContent = handMoney.toLocaleString() + "z";
 	};
 	Bank.setError = function setError(message) {
-		const error = (this._shadow || this._host).querySelector(".errorupdate");
+		const error = this.getRoot().querySelector(".errorupdate");
 		if (error) error.textContent = message;
 	};
 	Bank.clearError = function clearError() {
-		const error = (this._shadow || this._host).querySelector(".errorupdate");
+		const error = this.getRoot().querySelector(".errorupdate");
 		if (error) error.textContent = "";
 	};
 	Bank.clearInput = function clearInput() {
-		const input = (this._shadow || this._host).querySelector(".depo");
+		const input = this.getRoot().querySelector(".depo");
 		if (input) input.value = "";
 	};
 	Bank.focusInput = function focusInput() {
-		const input = (this._shadow || this._host).querySelector(".depo");
+		const input = this.getRoot().querySelector(".depo");
 		if (input) input.focus();
 	};
 	Bank.getBankAmount = function getBankAmount() {
-		const inbank = (this._shadow || this._host).querySelector(".inbank.currency");
+		const inbank = this.getRoot().querySelector(".inbank.currency");
 		if (inbank) return inbank.textContent;
 		return "0z";
 	};
@@ -256067,7 +254313,7 @@ var init_Achievement$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Achievement/Achievement.js
-var _preferences$43, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
+var _preferences$47, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
 var init_Achievement$1 = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -256081,7 +254327,7 @@ var init_Achievement$1 = __esmMin((() => {
 	init_ItemInfo();
 	init_Achievement$3();
 	init_Achievement$2();
-	_preferences$43 = Preferences.get("Achievement", {
+	_preferences$47 = Preferences.get("Achievement", {
 		x: 100,
 		y: 100
 	}, 1);
@@ -256094,7 +254340,7 @@ var init_Achievement$1 = __esmMin((() => {
 			return Achievement_default$2;
 		}
 		init() {
-			const root = this._shadow || this._host;
+			const root = this.getRoot();
 			MAJOR_CATEGORIES = [
 				{
 					id: 0,
@@ -256224,15 +254470,15 @@ var init_Achievement$1 = __esmMin((() => {
 			this._host.style.display = "none";
 		}
 		onAppend() {
-			this._host.style.left = `${_preferences$43.x}px`;
-			this._host.style.top = `${_preferences$43.y}px`;
+			this._host.style.left = `${_preferences$47.x}px`;
+			this._host.style.top = `${_preferences$47.y}px`;
 			this._fixPositionOverflow();
 			this.updateHeaderAndView();
 		}
 		onRemove() {
-			_preferences$43.x = parseInt(this._host.style.left, 10);
-			_preferences$43.y = parseInt(this._host.style.top, 10);
-			_preferences$43.save();
+			_preferences$47.x = parseInt(this._host.style.left, 10);
+			_preferences$47.y = parseInt(this._host.style.top, 10);
+			_preferences$47.save();
 		}
 		toggle() {
 			if (this.__active && this._host.style.display !== "none") this._host.style.display = "none";
@@ -256248,7 +254494,7 @@ var init_Achievement$1 = __esmMin((() => {
 		}
 		updateHeaderAndView() {
 			if (this._host.style.display === "none") return;
-			const root = this._shadow || this._host;
+			const root = this.getRoot();
 			const ach = SessionStorage_default.Achievement || {
 				rank: 0,
 				total_points: 0,
@@ -256292,7 +254538,7 @@ var init_Achievement$1 = __esmMin((() => {
 			}
 		}
 		renderSidebar() {
-			const sidebar = (this._shadow || this._host).querySelector(".js-sidebar");
+			const sidebar = this.getRoot().querySelector(".js-sidebar");
 			sidebar.innerHTML = "";
 			MAJOR_CATEGORIES.forEach((major) => {
 				const mDiv = document.createElement("div");
@@ -256337,7 +254583,7 @@ var init_Achievement$1 = __esmMin((() => {
 			});
 		}
 		renderOverview() {
-			const root = this._shadow || this._host;
+			const root = this.getRoot();
 			root.querySelector(".bg-list").style.display = "none";
 			root.querySelector(".bg-summary").style.display = "block";
 			root.querySelector(".js-pane-listd").style.display = "none";
@@ -256452,7 +254698,7 @@ var init_Achievement$1 = __esmMin((() => {
 			}
 		}
 		renderList() {
-			const root = this._shadow || this._host;
+			const root = this.getRoot();
 			root.querySelector(".bg-list").style.display = "block";
 			root.querySelector(".bg-summary").style.display = "none";
 			root.querySelector(".js-pane-overview").style.display = "none";
@@ -256534,7 +254780,7 @@ var init_Achievement$1 = __esmMin((() => {
 			this.renderDetail();
 		}
 		renderDetail() {
-			const root = this._shadow || this._host;
+			const root = this.getRoot();
 			const allAch = DB.getAchievementTable();
 			const sessAch = SessionStorage_default.Achievement && SessionStorage_default.Achievement.list ? SessionStorage_default.Achievement.list : {};
 			const info = allAch[this.selectedAchId];
@@ -256643,10 +254889,7 @@ var init_BasicInfoV3$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
-function _getRoot$45() {
-	return BasicInfoV3._shadow || BasicInfoV3._host;
-}
-var BasicInfoV3, _preferences$42, BasicInfoV3_default;
+var BasicInfoV3, _preferences$46, BasicInfoV3_default;
 var init_BasicInfoV3 = __esmMin((() => {
 	init_DBManager();
 	init_MonsterTable();
@@ -256684,7 +254927,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	BasicInfoV3.weight = 0;
 	BasicInfoV3.weight_max = 1;
 	BasicInfoV3.render = () => BasicInfoV3_default$2;
-	_preferences$42 = Preferences.get("BasicInfoV3", {
+	_preferences$46 = Preferences.get("BasicInfoV3", {
 		x: 0,
 		y: 0,
 		reduce: true,
@@ -256698,7 +254941,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV3.init = function init() {
-		const root = _getRoot$45();
+		const root = this.getRoot();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -256759,24 +255002,24 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV3.onAppend = function onAppend() {
-		const root = _getRoot$45();
+		const root = this.getRoot();
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$42.magnet_top;
-		this.magnet.BOTTOM = _preferences$42.magnet_bottom;
-		this.magnet.LEFT = _preferences$42.magnet_left;
-		this.magnet.RIGHT = _preferences$42.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$46.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$46.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$46.magnet_top;
+		this.magnet.BOTTOM = _preferences$46.magnet_bottom;
+		this.magnet.LEFT = _preferences$46.magnet_left;
+		this.magnet.RIGHT = _preferences$46.magnet_right;
 		const inner = root.querySelector("#BasicInfoV3");
 		if (inner) {
 			inner.classList.remove("small", "large");
-			if (_preferences$42.reduce) inner.classList.add("small");
+			if (_preferences$46.reduce) inner.classList.add("small");
 			else inner.classList.add("large");
 		}
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$42.buttons) {
+		if (_preferences$46.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -256794,18 +255037,18 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV3.onRemove = function onRemove() {
-		const root = _getRoot$45();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV3");
 		const buttons = root.querySelector(".buttons");
-		_preferences$42.x = parseInt(this._host.style.left, 10);
-		_preferences$42.y = parseInt(this._host.style.top, 10);
-		_preferences$42.reduce = inner ? inner.classList.contains("small") : _preferences$42.reduce;
-		_preferences$42.buttons = buttons ? buttons.style.display !== "none" : _preferences$42.buttons;
-		_preferences$42.magnet_top = this.magnet.TOP;
-		_preferences$42.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$42.magnet_left = this.magnet.LEFT;
-		_preferences$42.magnet_right = this.magnet.RIGHT;
-		_preferences$42.save();
+		_preferences$46.x = parseInt(this._host.style.left, 10);
+		_preferences$46.y = parseInt(this._host.style.top, 10);
+		_preferences$46.reduce = inner ? inner.classList.contains("small") : _preferences$46.reduce;
+		_preferences$46.buttons = buttons ? buttons.style.display !== "none" : _preferences$46.buttons;
+		_preferences$46.magnet_top = this.magnet.TOP;
+		_preferences$46.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$46.magnet_left = this.magnet.LEFT;
+		_preferences$46.magnet_right = this.magnet.RIGHT;
+		_preferences$46.save();
 	};
 	/**
 	* Process shortcut
@@ -256823,7 +255066,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV3.toggleMode = function toggleMode() {
-		const root = _getRoot$45();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV3");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -256831,7 +255074,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$42.buttons) {
+		if (_preferences$46.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -256845,13 +255088,13 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV3.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$45();
+		const root = this.getRoot();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
-		_preferences$42.buttons = buttons.style.display === "none";
+		_preferences$46.buttons = buttons.style.display === "none";
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$42.buttons) {
+		if (_preferences$46.buttons) {
 			buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -256870,7 +255113,7 @@ var init_BasicInfoV3 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV3.update = function update(type, val1, val2) {
-		const root = _getRoot$45();
+		const root = this.getRoot();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -256997,7 +255240,7 @@ function onClickAttendance(e) {
 	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
 	Network.sendPacket(_pkt);
 }
-var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$41, CheckAttendance_default;
+var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$45, CheckAttendance_default;
 var init_CheckAttendance = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -257011,7 +255254,7 @@ var init_CheckAttendance = __esmMin((() => {
 	init_jquery();
 	init_ChatBox();
 	CheckAttendance = new UIComponent("CheckAttendance", CheckAttendance_default$2, CheckAttendance_default$1);
-	_preferences$41 = Preferences.get("CheckAttendance", {
+	_preferences$45 = Preferences.get("CheckAttendance", {
 		x: 200,
 		y: 200
 	}, 1);
@@ -257032,10 +255275,10 @@ var init_CheckAttendance = __esmMin((() => {
 	*/
 	CheckAttendance.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$41.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$41.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$45.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$45.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$41.show) this.ui.hide();
+		if (!_preferences$45.show) this.ui.hide();
 		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
 			CheckAttendance.updateUI();
 			this.focus();
@@ -257140,10 +255383,7 @@ var init_BasicInfoV4$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
-function _getRoot$44() {
-	return BasicInfoV4._shadow || BasicInfoV4._host;
-}
-var BasicInfoV4, _preferences$40, BasicInfoV4_default;
+var BasicInfoV4, _preferences$44, BasicInfoV4_default;
 var init_BasicInfoV4 = __esmMin((() => {
 	init_DBManager();
 	init_Configs();
@@ -257182,7 +255422,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	BasicInfoV4.weight = 0;
 	BasicInfoV4.weight_max = 1;
 	BasicInfoV4.render = () => BasicInfoV4_default$2;
-	_preferences$40 = Preferences.get("BasicInfoV4", {
+	_preferences$44 = Preferences.get("BasicInfoV4", {
 		x: 0,
 		y: 0,
 		reduce: true,
@@ -257196,7 +255436,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV4.init = function init() {
-		const root = _getRoot$44();
+		const root = this.getRoot();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -257262,24 +255502,24 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV4.onAppend = function onAppend() {
-		const root = _getRoot$44();
+		const root = this.getRoot();
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$40.magnet_top;
-		this.magnet.BOTTOM = _preferences$40.magnet_bottom;
-		this.magnet.LEFT = _preferences$40.magnet_left;
-		this.magnet.RIGHT = _preferences$40.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$44.magnet_top;
+		this.magnet.BOTTOM = _preferences$44.magnet_bottom;
+		this.magnet.LEFT = _preferences$44.magnet_left;
+		this.magnet.RIGHT = _preferences$44.magnet_right;
 		const inner = root.querySelector("#BasicInfoV4");
 		if (inner) {
 			inner.classList.remove("small", "large");
-			if (_preferences$40.reduce) inner.classList.add("small");
+			if (_preferences$44.reduce) inner.classList.add("small");
 			else inner.classList.add("large");
 		}
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$40.buttons) {
+		if (_preferences$44.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -257303,18 +255543,18 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV4.onRemove = function onRemove() {
-		const root = _getRoot$44();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV4");
 		const buttons = root.querySelector(".buttons");
-		_preferences$40.x = parseInt(this._host.style.left, 10);
-		_preferences$40.y = parseInt(this._host.style.top, 10);
-		_preferences$40.reduce = inner ? inner.classList.contains("small") : _preferences$40.reduce;
-		_preferences$40.buttons = buttons ? buttons.style.display !== "none" : _preferences$40.buttons;
-		_preferences$40.magnet_top = this.magnet.TOP;
-		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$40.magnet_left = this.magnet.LEFT;
-		_preferences$40.magnet_right = this.magnet.RIGHT;
-		_preferences$40.save();
+		_preferences$44.x = parseInt(this._host.style.left, 10);
+		_preferences$44.y = parseInt(this._host.style.top, 10);
+		_preferences$44.reduce = inner ? inner.classList.contains("small") : _preferences$44.reduce;
+		_preferences$44.buttons = buttons ? buttons.style.display !== "none" : _preferences$44.buttons;
+		_preferences$44.magnet_top = this.magnet.TOP;
+		_preferences$44.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$44.magnet_left = this.magnet.LEFT;
+		_preferences$44.magnet_right = this.magnet.RIGHT;
+		_preferences$44.save();
 	};
 	/**
 	* Process shortcut
@@ -257332,7 +255572,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV4.toggleMode = function toggleMode() {
-		const root = _getRoot$44();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV4");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -257340,7 +255580,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$40.buttons) {
+		if (_preferences$44.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -257354,13 +255594,13 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV4.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$44();
+		const root = this.getRoot();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
-		_preferences$40.buttons = buttons.style.display === "none";
+		_preferences$44.buttons = buttons.style.display === "none";
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$40.buttons) {
+		if (_preferences$44.buttons) {
 			buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -257379,7 +255619,7 @@ var init_BasicInfoV4 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV4.update = function update(type, val1, val2) {
-		const root = _getRoot$44();
+		const root = this.getRoot();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -257481,23 +255721,495 @@ var init_BasicInfoV4 = __esmMin((() => {
 	BasicInfoV4_default = UIManager.addComponent(BasicInfoV4);
 }));
 //#endregion
+//#region src/UI/Components/Reputation/Reputation.html?raw
+var Reputation_default$2;
+var init_Reputation$2 = __esmMin((() => {
+	Reputation_default$2 = "<div id=\"Reputation\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"3827\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overall_container\">\r\n		<div class=\"header\">\r\n			<div class=\"select-wrapper\">\r\n				<select id=\"repute_groups\" class=\"rep_group_selector\">\r\n					<option value=\"all\" data-text=\"3829\"></option>\r\n				</select>\r\n				<button\r\n					type=\"button\"\r\n					class=\"select-arrow\"\r\n					data-background=\"basic_interface/txtbox_btn_a.bmp\"\r\n					data-hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n					data-down=\"basic_interface/txtbox_btn_c.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"search_wrapper\">\r\n				<input class=\"rep_group_searchbar\" type=\"text\" />\r\n				<button\r\n					class=\"search\"\r\n					data-background=\"reputation/btn_search.bmp\"\r\n					data-hover=\"reputation/btn_search_over.bmp\"\r\n					data-down=\"reputation/btn_search_press.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"rep_group_total_points_wrapper\">\r\n				<div class=\"rep_group_text\">GROUP:</div>\r\n				<div class=\"rep_indicator\"></div>\r\n				<div class=\"rep_group_total_points_value\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"content\"></div>\r\n		<div class=\"paginator\">\r\n			<button class=\"page_prev\" data-background=\"reputation/arrow_prev.bmp\"></button>\r\n			<span class=\"page_text\">1 / 1</span>\r\n			<button class=\"page_next\" data-background=\"reputation/arrow_next.bmp\"></button>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button\r\n				class=\"big_btn_close\"\r\n				data-background=\"basic_interface/btn_close.bmp\"\r\n				data-hover=\"basic_interface/btn_close_a.bmp\"\r\n				data-down=\"basic_interface/btn_close_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Reputation/Reputation.css?raw
+var Reputation_default$1;
+var init_Reputation$1 = __esmMin((() => {
+	Reputation_default$1 = "#Reputation {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 665px;\r\n	height: 450px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Reputation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Reputation .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Reputation .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Reputation .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Reputation .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Reputation .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Reputation .overall_container {\r\n	display: flex;\r\n	flex-direction: column;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Reputation .header {\r\n	display: flex;\r\n	gap: 6px;\r\n}\r\n\r\n#Reputation .select-wrapper {\r\n	position: relative;\r\n	display: inline-block;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_selector {\r\n	width: 140px;\r\n	padding-right: 36px;\r\n	height: 18px;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .select-arrow {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 18px;\r\n	height: 18px;\r\n	border: none;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n#Reputation .search_wrapper {\r\n	height: 18px;\r\n	width: 235px;\r\n	margin-top: 5px;\r\n	display: inline-block;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_searchbar {\r\n	height: 14px;\r\n	width: 196px;\r\n	border: 1px solid black;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .search {\r\n	height: 18px;\r\n	width: 33px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#Reputation .rep_group_total_points_wrapper {\r\n	width: 245px;\r\n	border: 1px solid black;\r\n	margin-top: 5px;\r\n	background-color: #eeeeef;\r\n	align-items: center;\r\n	display: flex;\r\n}\r\n\r\n#Reputation .rep_group_text {\r\n	width: 50px;\r\n}\r\n\r\n#Reputation .rep_indicator {\r\n	width: 40px;\r\n	height: 100%;\r\n	background: no-repeat center;\r\n}\r\n\r\n#Reputation .rep_group_total_points_value {\r\n	margin-left: 5px;\r\n	margin-right: 5px;\r\n	width: 100%;\r\n	text-align: right;\r\n}\r\n\r\n#Reputation .content {\r\n	min-height: 350px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-wrap: wrap;\r\n	flex-basis: content;\r\n	align-content: flex-start;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Reputation .rep_group_wrapper {\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	width: 313px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_name {\r\n	margin-left: 5px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_indicator_wrapper {\r\n	display: flex;\r\n	height: 17px;\r\n	gap: 2px;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n\r\n#Reputation .rep_group_indicator {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#Reputation .rep_group_progess_bar {\r\n	height: 8px;\r\n	margin-top: 10px;\r\n	margin-left: 3px;\r\n	width: 97%;\r\n}\r\n\r\n#Reputation .rep_id_points {\r\n	width: 80px;\r\n	height: 20px;\r\n	margin-top: 5px;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n	text-align: center;\r\n}\r\n\r\n#Reputation .paginator {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	gap: 8px;\r\n	height: 30px;\r\n	margin-right: 25px;\r\n}\r\n\r\n#Reputation .paginator button {\r\n	width: 7px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .footer {\r\n	height: 28px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 3px 3px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n}\r\n\r\n#Reputation .big_btn_close {\r\n	height: 20px;\r\n	width: 42px;\r\n	border: none;\r\n	margin-top: 5px;\r\n	margin-right: 10px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Reputation/Reputation.js
+/**
+* Build the group selector based on the ReputeGroupTable in DB
+* Append a new <option> element for each group in the table
+* The option element will have the class 'repute_group_<groupIndex>'
+* The option element will have the value '<groupIndex>'
+* The option element will have the text content '<group.Name>'
+*/
+function buildGroupSelector() {
+	const groupSelector = Reputation.ui.find("#repute_groups");
+	const ReputeGroupTable = DB.getReputeGroup();
+	Object.entries(ReputeGroupTable).forEach(([groupIndex, group]) => {
+		const option = document.createElement("option");
+		option.className = "repute_group_" + groupIndex;
+		option.value = groupIndex;
+		option.textContent = group.Name;
+		groupSelector.append(option);
+	});
+}
+/**
+* Bind the group selector with the reputation page
+*
+* When the group selector changes, it will update the total points display
+* and re-render the reputation entries for the selected group
+*/
+function bindGroupSelector() {
+	Reputation.ui.find("#repute_groups").on("change", function() {
+		const selectedGroup = this.value;
+		updateGroupTotalPoints(selectedGroup);
+		Reputation.ui.find(".rep_group_searchbar").val("");
+		filterByGroup(selectedGroup);
+	});
+}
+/**
+* Bind search functionality to the input field and button
+*
+* Listens for the enter key on the search input field and performs a search
+* when the enter key is pressed. Listens for a click on the search button and
+* performs a search when the button is clicked.
+*
+*/
+function bindSearch() {
+	const input = Reputation.ui.find(".rep_group_searchbar");
+	const button = Reputation.ui.find(".search");
+	input.on("keydown", function(e) {
+		if (e.key === "Enter") performSearch(this.value.trim());
+	});
+	button.on("click", function() {
+		performSearch(input.val().trim());
+	});
+}
+/**
+* Build all reputation entries once
+*
+* Empties the content container and re-renders all reputation entries
+* using the createReputationEntry function. It also updates the UI state
+* of each entry with the current points value.
+*
+* @return {void}
+*/
+function buildAllReputeEntries() {
+	const content = Reputation.ui.find(".content");
+	const reputeIds = Object.keys(DB.getReputeInfo()).map(Number);
+	Reputation.page.reputeIds = reputeIds;
+	content.empty();
+	reputeIds.forEach((reputeId) => {
+		const info = DB.getReputeData(reputeId);
+		if (!info) return;
+		const points = Reputation.reputeState?.[reputeId] || 0;
+		const entry = createReputeEntry(reputeId, info);
+		entry.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
+		content.append(entry);
+		updateReputeUI(reputeId, points);
+	});
+}
+/**
+* Update the total points display for a given group id
+* @param {string} groupId - The ID of the group to update (or 'all' for all entries)
+*/
+function updateGroupTotalPoints(groupId) {
+	const wrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	const indicator = wrapper.find(".rep_indicator");
+	const pointsValue = wrapper.find(".rep_group_total_points_value");
+	if (groupId === "all") {
+		wrapper.hide();
+		return;
+	}
+	wrapper.show();
+	let reputeIds = DB.getReputeGroupList(groupId);
+	if (reputeIds && typeof reputeIds === "object") reputeIds = Object.values(reputeIds);
+	if (!reputeIds || !reputeIds.length) {
+		indicator.css("background-image", `url(${indicator_empty})`);
+		pointsValue.text("0");
+		return;
+	}
+	let totalPoints = 0;
+	reputeIds.forEach((reputeId) => {
+		totalPoints += Reputation.reputeState?.[reputeId] || 0;
+	});
+	if (totalPoints > 0) indicator.css("background-image", `url(${indicator_blue})`);
+	else if (totalPoints < 0) indicator.css("background-image", `url(${indicator_red})`);
+	else indicator.css("background-image", `url(${indicator_empty})`);
+	pointsValue.text(`${totalPoints} P`);
+}
+/**
+* Checks if a reputation entry is visible based on the info.Invisible value and the current points value
+* @param {object} info - The reputation entry info object
+* @param {number} points - The current points value of the reputation entry
+* @returns {boolean} True if the reputation entry is visible, false otherwise
+*/
+function isReputeVisible(info, points) {
+	switch (info.Invisible) {
+		case "VISIBLE_FALSE": return false;
+		case "VISIBLE_EXIST": return points !== 0;
+		default: return true;
+	}
+}
+/**
+* Filters the reputation entries based on the given group ID
+* If the group ID is 'all', shows all entries
+* If the group ID is not 'all', shows only the entries that belong to the group and updates the total points wrapper
+* @param {string} groupId - The ID of the group to filter by
+*/
+function filterByGroup(groupId) {
+	const items = Reputation.ui.find(".rep_group_wrapper");
+	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	if (groupId === "all") {
+		items.each(function() {
+			const el = this;
+			const reputeId = Number(el.dataset.reputeId);
+			const info = DB.getReputeData(reputeId);
+			const points = Reputation.reputeState?.[reputeId] || 0;
+			el.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
+		});
+		totalWrapper.hide();
+	} else {
+		const groupList = Object.values(DB.getReputeGroupList(groupId) || {});
+		items.each(function() {
+			const el = this;
+			const reputeId = Number(el.dataset.reputeId);
+			const info = DB.getReputeData(reputeId);
+			const points = Reputation.reputeState?.[reputeId] || 0;
+			el.dataset.visible = groupList.includes(reputeId) && isReputeVisible(info, points) ? "true" : "false";
+		});
+		updateGroupTotalPoints(groupId);
+		totalWrapper.show();
+	}
+	const visibleIds = items.filter((i, el) => el.dataset.visible === "true").map((i, el) => Number(el.dataset.reputeId)).get();
+	Reputation.page.reputeIds = visibleIds;
+	Reputation.page.current = 0;
+	renderReputePage(0);
+}
+/**
+* Update the reputation pager UI.
+*
+* This function is called after the reputation entries have been updated.
+* It updates the pager UI to reflect the current page and total number of pages.
+*/
+function updateReputePager() {
+	const total = Reputation.page.reputeIds.length;
+	const perPage = Reputation.page.perPage;
+	const totalPages = Math.max(1, Math.ceil(total / perPage));
+	const current = Reputation.page.current + 1;
+	const paginator = Reputation.ui.find(".paginator");
+	const prevBtn = paginator.find(".page_prev");
+	const nextBtn = paginator.find(".page_next");
+	paginator.find(".page_text").text(`${current} / ${totalPages}`);
+	prevBtn.css("visibility", current === 1 ? "hidden" : "visible");
+	nextBtn.css("visibility", current === totalPages ? "hidden" : "visible");
+	if (totalPages === 1) prevBtn.add(nextBtn).css("visibility", "hidden");
+}
+/**
+* Render a page of reputation entries based on current page index.
+*
+* Hides all entries first, then shows only visible entries within the current page.
+* Updates the pager afterwards.
+*
+* @param {number} pageIndex - current page index (starts from 0)
+*/
+function renderReputePage(pageIndex) {
+	const { perPage } = Reputation.page;
+	const items = Reputation.ui.find(".rep_group_wrapper");
+	Reputation.page.current = pageIndex;
+	items.hide();
+	const visibleItems = items.filter((i, el) => el.dataset.visible === "true");
+	const start = pageIndex * perPage;
+	const end = start + perPage;
+	const pageItems = visibleItems.slice(start, end);
+	pageItems.show();
+	if (Reputation.highlight.active && !Reputation.highlight.consumed) pageItems.each(function() {
+		const el = this;
+		if (Number(el.dataset.reputeId) === Reputation.highlight.reputeId) {
+			el.style.backgroundImage = `url(${bg_highlight})`;
+			Reputation.highlight.consumed = true;
+			Reputation.highlight.active = false;
+		}
+	});
+	else clearHighlights();
+	updateReputePager();
+}
+/**
+* Create a reputation entry element from given info
+* @param {number} reputeId - reputation id
+* @param {object} info - reputation info
+* @returns {HTMLDivElement} created element
+*/
+function createReputeEntry(reputeId, info) {
+	const wrapper = document.createElement("div");
+	wrapper.className = "rep_group_wrapper";
+	wrapper.dataset.reputeId = reputeId;
+	wrapper.style.backgroundImage = "url(" + bg + ")";
+	const name = document.createElement("div");
+	name.className = "rep_group_name";
+	name.textContent = info.Name;
+	wrapper.appendChild(name);
+	const indicatorWrapper = document.createElement("div");
+	indicatorWrapper.className = "rep_group_indicator_wrapper";
+	const indicatorCount = info.MaxPoint_Positive / 1e3;
+	for (let i = 1; i <= indicatorCount; i++) {
+		const indicator = document.createElement("div");
+		indicator.className = `rep_group_indicator indicator_${i}`;
+		indicator.dataset.index = i;
+		indicator.style.backgroundImage = `url(${indicator_empty})`;
+		indicatorWrapper.appendChild(indicator);
+	}
+	wrapper.appendChild(indicatorWrapper);
+	const progress = document.createElement("div");
+	progress.className = "rep_group_progess_bar";
+	wrapper.appendChild(progress);
+	const points = document.createElement("div");
+	points.className = "rep_id_points";
+	points.textContent = "0 / 1000";
+	wrapper.appendChild(points);
+	return wrapper;
+}
+/**
+* Update the UI of a specific Repute entry
+* @param {string} reputeId - The ID of the Repute entry to update
+* @param {number} points - The points to update the UI with
+*/
+function updateReputeUI(reputeId, points) {
+	const wrapper = Reputation.ui.find(`.rep_group_wrapper[data-repute-id="${reputeId}"]`);
+	if (!wrapper.length) return;
+	const indicators = wrapper.find(".rep_group_indicator");
+	const absPoints = Math.abs(points);
+	const fullIndicators = Math.floor(absPoints / 1e3);
+	const remainder = absPoints % 1e3;
+	indicators.each(function(index) {
+		this.style.backgroundImage = index < fullIndicators ? points >= 0 ? `url(${indicator_blue})` : `url(${indicator_red})` : `url(${indicator_empty})`;
+	});
+	wrapper.find(".rep_id_points").text(`${remainder} / 1000`);
+	const progress = wrapper.find(".rep_group_progess_bar");
+	const percent = remainder / 1e3 * 100;
+	const fillColor = points >= 0 ? "#7b95ce" : "#f60206";
+	progress.css("background-image", `linear-gradient(
+				to right,
+				${fillColor} 0%,
+				${fillColor} ${percent}%,
+				transparent ${percent}%
+			)`);
+}
+/**
+* Perform search on the reputation entries based on the given query.
+* If the query is empty, reset the search and show all entries.
+* Otherwise, filter the entries based on whether the entry name matches the query (case-insensitive) and whether the entry is visible.
+* @param {string} query - The search query to filter the reputation entries with
+*/
+function performSearch(query) {
+	const items = Reputation.ui.find(".rep_group_wrapper");
+	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	const groupSelector = Reputation.ui.find("#repute_groups");
+	if (!query) {
+		groupSelector.val("all");
+		totalWrapper.hide();
+		filterByGroup("all");
+		return;
+	}
+	const lowerQuery = query.toLowerCase();
+	const visibleIds = [];
+	items.each(function() {
+		const el = this;
+		const reputeId = Number(el.dataset.reputeId);
+		const info = DB.getReputeData(reputeId);
+		const points = Reputation.reputeState?.[reputeId] || 0;
+		const show = info?.Name.toLowerCase().includes(lowerQuery) && isReputeVisible(info, points);
+		el.dataset.visible = show ? "true" : "false";
+		if (show) visibleIds.push(reputeId);
+	});
+	Reputation.page.reputeIds = visibleIds;
+	Reputation.page.current = 0;
+	renderReputePage(0);
+}
+/**
+* Closing window
+*/
+function onClose$6() {
+	Reputation.ui.hide();
+}
+/**
+* Stop event propagation
+*/
+function stopPropagation$12(event) {
+	event.stopImmediatePropagation();
+	return false;
+}
+/**
+* Packet received from server
+* Initializes the Reputation UI
+* Store the initial values received from the server and update UI
+* If UI is open, update UI
+* @param {object} pkt - PACKET.ZC.REPUTE_INFO
+*/
+function onReputeInfo(pkt) {
+	if (!Reputation.__active) {
+		Reputation.append();
+		Reputation.ui.hide();
+	}
+	const selectedGroup = Reputation.ui.find("#repute_groups").val();
+	let updateSelectedGroup = false;
+	pkt.reputeInfo.forEach((entry) => {
+		Reputation.reputeState[entry.type] = entry.points;
+		updateReputeUI(entry.type, entry.points);
+		if (selectedGroup && selectedGroup !== "all") {
+			if (Object.values(DB.getReputeGroupList(selectedGroup) || {}).includes(entry.type)) updateSelectedGroup = true;
+		}
+	});
+	if (updateSelectedGroup) updateGroupTotalPoints(selectedGroup);
+}
+/**
+* Sets up Highlight, selects the given group,
+* and filters the reputation entries normally
+*
+* @param {object} pkt - PACKET.ZC.REPUTE_OPEN
+*/
+function onReputeOpen(pkt) {
+	const groupId = pkt.table === 0 ? "all" : pkt.table;
+	const highlightId = pkt.type || null;
+	Reputation.highlight.reputeId = highlightId;
+	Reputation.highlight.active = !!highlightId;
+	Reputation.highlight.consumed = false;
+	Reputation.ui.find("#repute_groups").val(groupId);
+	filterByGroup(groupId);
+	Reputation.ui.show();
+}
+/**
+* Clears all highlight effects from the reputation entries.
+* This function is called when the reputation window is opened.
+* It resets the background image and removes the highlight property from all entries.
+*/
+function clearHighlights() {
+	Reputation.ui.find(".rep_group_wrapper").each(function() {
+		this.style.backgroundImage = `url(${bg})`;
+		this.dataset.highlight = "false";
+	});
+}
+var Reputation, _preferences$43, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
+var init_Reputation = __esmMin((() => {
+	init_DBManager();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_Client();
+	init_Preferences$1();
+	init_UIManager();
+	init_UIComponent();
+	init_Reputation$2();
+	init_Reputation$1();
+	Reputation = new UIComponent("Reputation", Reputation_default$2, Reputation_default$1);
+	_preferences$43 = Preferences.get("Reputation", {
+		x: 400,
+		y: 200,
+		show: true
+	}, 1);
+	/**
+	* @var Reputation UI
+	* Store Pagination Data
+	*/
+	Reputation.page = {
+		current: 0,
+		perPage: 8,
+		reputeIds: []
+	};
+	/**
+	* @var Reputation UI
+	* Store ReputeID and Points
+	*/
+	Reputation.reputeState = {};
+	/**
+	* @var Reputation UI
+	* Store Variables for Highlighted ReputeID
+	*/
+	Reputation.highlight = {
+		reputeId: null,
+		active: false,
+		consumed: false
+	};
+	/**
+	* Initialize component
+	*/
+	Reputation.init = function init() {
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_info.bmp", (d) => bg = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_highlight.bmp", (d) => bg_highlight = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_empty.bmp", (d) => indicator_empty = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
+		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
+		this.draggable(this.ui);
+		this.ui.find(".base").mousedown(stopPropagation$12);
+		this.ui.find(".close").click(onClose$6);
+		this.ui.find(".big_btn_close").click(onClose$6);
+		const paginator = Reputation.ui.find(".paginator");
+		paginator.find(".page_prev").on("click", () => {
+			if (Reputation.page.current > 0) renderReputePage(Reputation.page.current - 1);
+		});
+		paginator.find(".page_next").on("click", () => {
+			const maxPage = Math.ceil(Reputation.page.reputeIds.length / Reputation.page.perPage);
+			if (Reputation.page.current < maxPage - 1) renderReputePage(Reputation.page.current + 1);
+		});
+	};
+	/**
+	* Called when the component is appended to the body.
+	* Initializes the reputation system by building the group selector,
+	* binding group selector events and rendering the default view.
+	*/
+	Reputation.onAppend = function onAppend() {
+		buildGroupSelector();
+		bindGroupSelector();
+		bindSearch();
+		buildAllReputeEntries();
+		filterByGroup("all");
+	};
+	/**
+	* Once remove from body, save user preferences
+	*/
+	Reputation.onRemove = function onRemove() {
+		_preferences$43.show = this.ui.is(":visible");
+		_preferences$43.y = parseInt(this.ui.css("top"), 10);
+		_preferences$43.x = parseInt(this.ui.css("left"), 10);
+		_preferences$43.save();
+	};
+	/**
+	* Request to toggle open/close reputation
+	*/
+	Reputation.toggle = function toggle() {
+		const selector = Reputation.ui.find("#repute_groups");
+		const searchInput = Reputation.ui.find(".rep_group_searchbar");
+		if (Reputation.ui.is(":visible")) {
+			Reputation.ui.hide();
+			return;
+		}
+		selector.val("all");
+		searchInput.val("");
+		filterByGroup("all");
+		Reputation.page.current = 0;
+		Reputation.focus();
+		Reputation.ui.show();
+	};
+	/**
+	* Packet Hooks to functions
+	*/
+	Network.hookPacket(PACKET.ZC.REPUTE_INFO, onReputeInfo);
+	Network.hookPacket(PACKET.ZC_REPUTE_OPEN, onReputeOpen);
+	Reputation_default = UIManager.addComponent(Reputation);
+}));
+//#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.html?raw
 var BasicInfoV5_default$2;
 var init_BasicInfoV5$2 = __esmMin((() => {
-	BasicInfoV5_default$2 = "<div\r\n	id=\"BasicInfoV5\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/w_basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"ap_title\">AP</div>\r\n		<div class=\"ap_bar\">\r\n			<div class=\"ap_bar_left\"></div>\r\n			<div class=\"ap_bar_middle\"></div>\r\n			<div class=\"ap_bar_right\"></div>\r\n			<div class=\"ap_bar_perc\"><span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"ap_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"info-container\">\r\n			<div class=\"line2\">\r\n				Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span\r\n					class=\"jlvl_value\"\r\n				></span>\r\n			</div>\r\n			<div class=\"line3\">\r\n				<span class=\"hpcontainer\">HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></span\r\n				><span class=\"expcontainer\">| Exp. <span class=\"bexp_value\"></span></span>\r\n			</div>\r\n			<div class=\"line4\">\r\n				<span class=\"spcontainer\">SP. <span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></span\r\n				><span class=\"apcontainer\"\r\n					>| AP. <span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span\r\n				></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_press.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_close_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_close_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_close_press.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\" data-background=\"menu_icon/bg_menu.tga\">\r\n		<div\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_status.bmp\"\r\n			data-down=\"menu_icon/bt_status_press.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</div>\r\n		<div\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_equip.bmp\"\r\n			data-down=\"menu_icon/bt_equip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</div>\r\n		<div\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_item.bmp\"\r\n			data-down=\"menu_icon/bt_item_press.bmp\"\r\n		>\r\n			<div\r\n				class=\"btn_overlay\"\r\n				data-background=\"menu_icon/bt_item_new.bmp\"\r\n				data-down=\"menu_icon/bt_item_new_press.bmp\"\r\n			></div>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</div>\r\n		<div\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_skill.bmp\"\r\n			data-down=\"menu_icon/bt_skill_press.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</div>\r\n		<div\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_party.bmp\"\r\n			data-down=\"menu_icon/bt_party_press.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_guild.bmp\"\r\n			data-down=\"menu_icon/bt_guild_press.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</div>\r\n		<div\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_battle.bmp\"\r\n			data-down=\"menu_icon/bt_battle_press.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</div>\r\n		<div\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_quest.bmp\"\r\n			data-down=\"menu_icon/bt_quest_press.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</div>\r\n		<div\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_map.bmp\"\r\n			data-down=\"menu_icon/bt_map_press.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</div>\r\n		<div\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_navigation.bmp\"\r\n			data-down=\"menu_icon/bt_navigation_press.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</div>\r\n		<div\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_option.bmp\"\r\n			data-down=\"menu_icon/bt_option_press.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</div>\r\n		<div\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_bank.bmp\"\r\n			data-down=\"menu_icon/bt_bank_press.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</div>\r\n		<div\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_rec.bmp\"\r\n			data-down=\"menu_icon/bt_rec_press.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</div>\r\n		<div\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_mail.bmp\"\r\n			data-down=\"menu_icon/bt_mail_press.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</div>\r\n		<div\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_achievement.bmp\"\r\n			data-down=\"menu_icon/bt_achievement_press.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</div>\r\n		<div\r\n			id=\"tipbox\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_tip.bmp\"\r\n			data-down=\"menu_icon/bt_tip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Tipbox (Alt + D)</span>\r\n		</div>\r\n		<div\r\n			id=\"shortcut\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_keyboard.bmp\"\r\n			data-down=\"menu_icon/bt_keyboard_press.bmp\"\r\n		>\r\n			<span class=\"name\">ShortCut Description</span>\r\n		</div>\r\n		<div\r\n			id=\"attendance\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_attendance.bmp\"\r\n			data-down=\"menu_icon/bt_attendance_press.bmp\"\r\n		>\r\n			<span class=\"name\">Attendance Check</span>\r\n		</div>\r\n		<div\r\n			id=\"agency\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_adventureragency.bmp\"\r\n			data-down=\"menu_icon/bt_adventureragency_press.bmp\"\r\n		>\r\n			<span class=\"name\">Adventurer's Agency (Ctrl + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"repute\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_repute.bmp\"\r\n			data-down=\"menu_icon/bt_repute_press.bmp\"\r\n		>\r\n			<span class=\"name\">Reputation Status</span>\r\n		</div>\r\n		<!--<button class=\"reputation\" data-background=\"menu_icon/\" data-hover=\"menu_icon/\" data-down=\"menu_icon/\"></button> -->\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
+	BasicInfoV5_default$2 = "<div\r\n	id=\"BasicInfoV5\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/w_basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"ap_title\">AP</div>\r\n		<div class=\"ap_bar\">\r\n			<div class=\"ap_bar_left\"></div>\r\n			<div class=\"ap_bar_middle\"></div>\r\n			<div class=\"ap_bar_right\"></div>\r\n			<div class=\"ap_bar_perc\"><span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"ap_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"info-container\">\r\n			<div class=\"line2\">\r\n				Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span\r\n					class=\"jlvl_value\"\r\n				></span>\r\n			</div>\r\n			<div class=\"line3\">\r\n				<span class=\"hpcontainer\">HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></span\r\n				><span class=\"expcontainer\">| Exp. <span class=\"bexp_value\"></span></span>\r\n			</div>\r\n			<div class=\"line4\">\r\n				<span class=\"spcontainer\">SP. <span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></span\r\n				><span class=\"apcontainer\"\r\n					>| AP. <span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span\r\n				></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_press.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_close_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_close_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_close_press.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\" data-background=\"menu_icon/bg_menu.tga\">\r\n		<div\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_status.bmp\"\r\n			data-down=\"menu_icon/bt_status_press.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</div>\r\n		<div\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_equip.bmp\"\r\n			data-down=\"menu_icon/bt_equip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</div>\r\n		<div\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_item.bmp\"\r\n			data-down=\"menu_icon/bt_item_press.bmp\"\r\n		>\r\n			<div\r\n				class=\"btn_overlay\"\r\n				data-background=\"menu_icon/bt_item_new.bmp\"\r\n				data-down=\"menu_icon/bt_item_new_press.bmp\"\r\n			></div>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</div>\r\n		<div\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_skill.bmp\"\r\n			data-down=\"menu_icon/bt_skill_press.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</div>\r\n		<div\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_party.bmp\"\r\n			data-down=\"menu_icon/bt_party_press.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_guild.bmp\"\r\n			data-down=\"menu_icon/bt_guild_press.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</div>\r\n		<div\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_battle.bmp\"\r\n			data-down=\"menu_icon/bt_battle_press.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</div>\r\n		<div\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_quest.bmp\"\r\n			data-down=\"menu_icon/bt_quest_press.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</div>\r\n		<div\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_map.bmp\"\r\n			data-down=\"menu_icon/bt_map_press.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</div>\r\n		<div\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_navigation.bmp\"\r\n			data-down=\"menu_icon/bt_navigation_press.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</div>\r\n		<div\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_option.bmp\"\r\n			data-down=\"menu_icon/bt_option_press.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</div>\r\n		<div\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_bank.bmp\"\r\n			data-down=\"menu_icon/bt_bank_press.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</div>\r\n		<div\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_rec.bmp\"\r\n			data-down=\"menu_icon/bt_rec_press.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</div>\r\n		<div\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_mail.bmp\"\r\n			data-down=\"menu_icon/bt_mail_press.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</div>\r\n		<div\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_achievement.bmp\"\r\n			data-down=\"menu_icon/bt_achievement_press.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</div>\r\n		<div\r\n			id=\"tipbox\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_tip.bmp\"\r\n			data-down=\"menu_icon/bt_tip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Tipbox (Alt + D)</span>\r\n		</div>\r\n		<div\r\n			id=\"shortcut\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_keyboard.bmp\"\r\n			data-down=\"menu_icon/bt_keyboard_press.bmp\"\r\n		>\r\n			<span class=\"name\">ShortCut Description</span>\r\n		</div>\r\n		<div\r\n			id=\"attendance\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_attendance.bmp\"\r\n			data-down=\"menu_icon/bt_attendance_press.bmp\"\r\n		>\r\n			<span class=\"name\">Attendance Check</span>\r\n		</div>\r\n		<div\r\n			id=\"agency\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_adventureragency.bmp\"\r\n			data-down=\"menu_icon/bt_adventureragency_press.bmp\"\r\n		>\r\n			<span class=\"name\">Adventurer's Agency (Ctrl + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"repute\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_repute.bmp\"\r\n			data-down=\"menu_icon/bt_repute_press.bmp\"\r\n		>\r\n			<span class=\"name\">Reputation Status</span>\r\n		</div>\r\n		<!-- <div class=\"clear\"></div> -->\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.css?raw
 var BasicInfoV5_default$1;
 var init_BasicInfoV5$1 = __esmMin((() => {
-	BasicInfoV5_default$1 = ":host {\r\n	width: 220px;\r\n	height: 150px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV5 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 104px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 116px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 134px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons div {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
+	BasicInfoV5_default$1 = ":host {\r\n	width: 220px;\r\n	height: 150px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV5 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 104px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 116px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 134px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 132px;\r\n	background-repeat: no-repeat;\r\n	background-position: bottom; /* alinha o fundo pela base */\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons > div[id] {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
-function _getRoot$43() {
-	return BasicInfoV5._shadow || BasicInfoV5._host;
-}
-var BasicInfoV5, _preferences$39, BasicInfoV5_default;
+var BasicInfoV5, _preferences$42, BasicInfoV5_default;
 var init_BasicInfoV5 = __esmMin((() => {
 	init_DBManager();
 	init_Configs();
@@ -257523,6 +256235,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	init_SkillList();
 	init_Quest$1();
 	init_Achievement$1();
+	init_Reputation();
 	init_BasicInfoV5$2();
 	init_BasicInfoV5$1();
 	BasicInfoV5 = new GUIComponent("BasicInfoV5", BasicInfoV5_default$1);
@@ -257536,7 +256249,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	BasicInfoV5.weight = 0;
 	BasicInfoV5.weight_max = 1;
 	BasicInfoV5.render = () => BasicInfoV5_default$2;
-	_preferences$39 = Preferences.get("BasicInfoV5", {
+	_preferences$42 = Preferences.get("BasicInfoV5", {
 		x: 0,
 		y: 0,
 		reduce: true,
@@ -257550,7 +256263,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Initialize UI
 	*/
 	BasicInfoV5.init = function init() {
-		const root = _getRoot$43();
+		const root = this.getRoot();
 		root.querySelectorAll(".topbar div").forEach((el) => {
 			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		});
@@ -257606,6 +256319,9 @@ var init_BasicInfoV5 = __esmMin((() => {
 					case "achievment":
 						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
 						break;
+					case "repute":
+						Reputation_default.toggle();
+						break;
 				}
 			});
 		});
@@ -257616,24 +256332,24 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Execute elements in memory
 	*/
 	BasicInfoV5.onAppend = function onAppend() {
-		const root = _getRoot$43();
+		const root = this.getRoot();
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$39.magnet_top;
-		this.magnet.BOTTOM = _preferences$39.magnet_bottom;
-		this.magnet.LEFT = _preferences$39.magnet_left;
-		this.magnet.RIGHT = _preferences$39.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$42.magnet_top;
+		this.magnet.BOTTOM = _preferences$42.magnet_bottom;
+		this.magnet.LEFT = _preferences$42.magnet_left;
+		this.magnet.RIGHT = _preferences$42.magnet_right;
 		const inner = root.querySelector("#BasicInfoV5");
 		if (inner) {
 			inner.classList.remove("small", "large");
-			if (_preferences$39.reduce) inner.classList.add("small");
+			if (_preferences$42.reduce) inner.classList.add("small");
 			else inner.classList.add("large");
 		}
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$39.buttons) {
+		if (_preferences$42.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -257657,18 +256373,18 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	BasicInfoV5.onRemove = function onRemove() {
-		const root = _getRoot$43();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV5");
 		const buttons = root.querySelector(".buttons");
-		_preferences$39.x = parseInt(this._host.style.left, 10);
-		_preferences$39.y = parseInt(this._host.style.top, 10);
-		_preferences$39.reduce = inner ? inner.classList.contains("small") : _preferences$39.reduce;
-		_preferences$39.buttons = buttons ? buttons.style.display !== "none" : _preferences$39.buttons;
-		_preferences$39.magnet_top = this.magnet.TOP;
-		_preferences$39.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$39.magnet_left = this.magnet.LEFT;
-		_preferences$39.magnet_right = this.magnet.RIGHT;
-		_preferences$39.save();
+		_preferences$42.x = parseInt(this._host.style.left, 10);
+		_preferences$42.y = parseInt(this._host.style.top, 10);
+		_preferences$42.reduce = inner ? inner.classList.contains("small") : _preferences$42.reduce;
+		_preferences$42.buttons = buttons ? buttons.style.display !== "none" : _preferences$42.buttons;
+		_preferences$42.magnet_top = this.magnet.TOP;
+		_preferences$42.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$42.magnet_left = this.magnet.LEFT;
+		_preferences$42.magnet_right = this.magnet.RIGHT;
+		_preferences$42.save();
 	};
 	/**
 	* Process shortcut
@@ -257686,7 +256402,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Switch window size
 	*/
 	BasicInfoV5.toggleMode = function toggleMode() {
-		const root = _getRoot$43();
+		const root = this.getRoot();
 		const inner = root.querySelector("#BasicInfoV5");
 		if (!inner) return;
 		inner.classList.toggle("small");
@@ -257694,7 +256410,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$39.buttons) {
+		if (_preferences$42.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -257708,13 +256424,13 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* Toggle the list of buttons
 	*/
 	BasicInfoV5.toggleButtons = function toggleButtons(event) {
-		const root = _getRoot$43();
+		const root = this.getRoot();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
-		_preferences$39.buttons = buttons.style.display === "none";
+		_preferences$42.buttons = buttons.style.display === "none";
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$39.buttons) {
+		if (_preferences$42.buttons) {
 			buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -257733,7 +256449,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* @param {number} val2 (optional)
 	*/
 	BasicInfoV5.update = function update(type, val1, val2) {
-		const root = _getRoot$43();
+		const root = this.getRoot();
 		if (!root) return;
 		let perc = 100;
 		let color = "blue";
@@ -257875,7 +256591,7 @@ var init_BasicInfoV5 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo.js
-var publicName$6, versionInfo$6, BasicInfoController;
+var publicName$7, versionInfo$7, BasicInfoController;
 var init_BasicInfo = __esmMin((() => {
 	init_BasicInfo$1();
 	init_BasicInfoV0();
@@ -257883,8 +256599,8 @@ var init_BasicInfo = __esmMin((() => {
 	init_BasicInfoV4();
 	init_BasicInfoV5();
 	init_UIVersionManager();
-	publicName$6 = "BasicInfo";
-	versionInfo$6 = {
+	publicName$7 = "BasicInfo";
+	versionInfo$7 = {
 		default: BasicInfoV0_default,
 		common: {
 			20200520: BasicInfoV5_default,
@@ -257899,7 +256615,7 @@ var init_BasicInfo = __esmMin((() => {
 			default: BasicInfoV4_default
 		}
 	};
-	BasicInfoController = UIVersionManager.getUIController(publicName$6, versionInfo$6);
+	BasicInfoController = UIVersionManager.getUIController(publicName$7, versionInfo$7);
 }));
 //#endregion
 //#region src/UI/Components/Rodex/WriteRodex.html?raw
@@ -257977,7 +256693,7 @@ function onClickValidateName(e) {
 *
 * @param {event}
 */
-function onDrop$19(event) {
+function onDrop$22(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -258012,14 +256728,14 @@ function onDrop$19(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$12(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$15() {
+function onItemOver$18() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(idx);
 	if (!item) return;
@@ -258037,13 +256753,13 @@ function onItemOver$15() {
 /**
 * Hide the item name
 */
-function onItemOut$16() {
+function onItemOut$19() {
 	WriteRodex.ui.find(".overlay").hide();
 }
 /**
 * Start dragging an item
 */
-function onItemDragStart$11(event) {
+function onItemDragStart$14(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(index);
 	if (!item) return;
@@ -258057,19 +256773,19 @@ function onItemDragStart$11(event) {
 		from: "WriteRodex",
 		data: item
 	}));
-	onItemOut$16();
+	onItemOut$19();
 }
 /**
 * Stop dragging an item
 *
 */
-function onItemDragEnd$12() {
+function onItemDragEnd$15() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$19(event) {
+function onItemInfo$22(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(index);
@@ -258137,7 +256853,7 @@ var init_WriteRodex = __esmMin((() => {
 		WriteRodex.ui.find(".tax-text").html("0");
 		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
 		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$19).on("dragover", stopPropagation$12);
+		WriteRodex.ui.find(".items").on("drop", onDrop$22).on("dragover", stopPropagation$11);
 		WriteRodex.ui.show();
 		WriteRodex.ui.focus();
 	};
@@ -258176,7 +256892,7 @@ var init_WriteRodex = __esmMin((() => {
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
 			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
 		});
-		content.find(".item[data-index=\"" + item.index + "\"]").on("mouseover", onItemOver$15).on("mouseout", onItemOut$16).on("dragstart", onItemDragStart$11).on("dragend", onItemDragEnd$12).on("contextmenu", onItemInfo$19);
+		content.find(".item[data-index=\"" + item.index + "\"]").on("mouseover", onItemOver$18).on("mouseout", onItemOut$19).on("dragstart", onItemDragStart$14).on("dragend", onItemDragEnd$15).on("contextmenu", onItemInfo$22);
 		WriteRodex.updateWeight(item.weight);
 		WriteRodex.updateTax();
 	};
@@ -258227,9 +256943,6 @@ var init_WriteRodex = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV0/InventoryV0.js
-function _getRoot$42() {
-	return InventoryV0._shadow || InventoryV0._host;
-}
 function _sanitizeHtml$10(str) {
 	const whitelist = [
 		"font",
@@ -258242,9 +256955,6 @@ function _sanitizeHtml$10(str) {
 		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
 	});
 	return div.innerHTML;
-}
-function _getBasicInfoRoot$3(ui) {
-	return ui._shadow || ui._host || document;
 }
 /**
 * Get the TAB constant for a given item based on its type.
@@ -258272,7 +256982,7 @@ function getItemTab$3(item) {
 /**
 * Extend inventory window size
 */
-function onResize$9() {
+function onResize$12() {
 	const top = InventoryV0._host.offsetTop;
 	const left = InventoryV0._host.offsetLeft;
 	let lastWidth = 0;
@@ -258301,28 +257011,28 @@ function onResize$9() {
 /**
 * Modify tab, filter display entries
 */
-function onSwitchTab$3() {
-	const root = _getRoot$42();
+function onSwitchTab$5() {
+	const root = InventoryV0.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$38.tab = parseInt(idx, 10);
+	_preferences$41.tab = parseInt(idx, 10);
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", (data) => {
 		const tabSprite = root.querySelector(".tab-sprite");
 		if (tabSprite) tabSprite.style.backgroundImage = `url(${data})`;
-		requestFilter$3();
+		requestFilter$5();
 	});
 }
 /**
 * Hide/show inventory's content
 */
-function onToggleReduction$3() {
-	const panel = _getRoot$42().querySelector(".panel");
-	if (_realSize$4) {
+function onToggleReduction$4() {
+	const panel = InventoryV0.getRoot().querySelector(".panel");
+	if (_realSize$5) {
 		if (panel) panel.style.display = "flex";
-		InventoryV0._host.style.height = `${_realSize$4}px`;
-		_realSize$4 = 0;
+		InventoryV0._host.style.height = `${_realSize$5}px`;
+		_realSize$5 = 0;
 	} else {
-		_realSize$4 = InventoryV0._host.getBoundingClientRect().height;
+		_realSize$5 = InventoryV0._host.getBoundingClientRect().height;
 		InventoryV0._host.style.height = "17px";
 		if (panel) panel.style.display = "none";
 	}
@@ -258330,8 +257040,8 @@ function onToggleReduction$3() {
 /**
 * Update tab, reset inventory content
 */
-function requestFilter$3() {
-	const root = _getRoot$42();
+function requestFilter$5() {
+	const root = InventoryV0.getRoot();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -258345,7 +257055,7 @@ function requestFilter$3() {
 *
 * @param {event}
 */
-function onDrop$18(event) {
+function onDrop$21(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -258396,13 +257106,13 @@ function onDrop$18(event) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$14(_e) {
+function onItemOver$17(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV0.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$42();
+	const root = InventoryV0.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV0") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -258419,14 +257129,14 @@ function onItemOver$14(_e) {
 /**
 * Hide the item name
 */
-function onItemOut$15() {
-	const overlay = _getRoot$42().querySelector(".overlay");
+function onItemOut$18() {
+	const overlay = InventoryV0.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
 */
-function onItemDragStart$10(event) {
+function onItemDragStart$13(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV0.getItemByIndex(index);
 	if (!item) return;
@@ -258441,25 +257151,25 @@ function onItemDragStart$10(event) {
 		from: "Inventory",
 		data: item
 	}));
-	onItemOut$15();
+	onItemOut$18();
 }
 /**
 * Stop dragging an item
 */
-function onItemDragEnd$11() {
+function onItemDragEnd$14() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$18(event) {
+function onItemInfo$21(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV0.getItemByIndex(index);
 	if (!item) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		transferItemToOtherUI$3(item);
+		transferItemToOtherUI$5(item);
 		return false;
 	}
 	if (ItemInfo_default.uid === item.ITID) {
@@ -258474,7 +257184,7 @@ function onItemInfo$18(event) {
 /**
 * Alt Right Click Request Transfer
 */
-function transferItemToOtherUI$3(item) {
+function transferItemToOtherUI$5(item) {
 	const storageUI = StorageController.getUI();
 	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
 	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
@@ -258487,12 +257197,12 @@ function transferItemToOtherUI$3(item) {
 /**
 * Ask to use an item
 */
-function onItemUsed$4(event) {
+function onItemUsed$5(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV0.getItemByIndex(index);
 	if (item) {
 		InventoryV0.useItem(item);
-		onItemOut$15();
+		onItemOut$18();
 	}
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -258516,7 +257226,7 @@ function onItemClick$3(event) {
 	}
 	return false;
 }
-var InventoryV0, _realSize$4, _preferences$38, InventoryV0_default;
+var InventoryV0, _realSize$5, _preferences$41, InventoryV0_default;
 var init_InventoryV0 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -258558,8 +257268,8 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.newItems = [];
 	InventoryV0.equippedItems = [];
-	_realSize$4 = 0;
-	_preferences$38 = Preferences.get("InventoryV0", {
+	_realSize$5 = 0;
+	_preferences$41 = Preferences.get("InventoryV0", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -258576,46 +257286,46 @@ var init_InventoryV0 = __esmMin((() => {
 	* Initialize UI
 	*/
 	InventoryV0.init = function Init() {
-		const root = _getRoot$42();
+		const root = InventoryV0.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$3);
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$4);
 		root.querySelectorAll(".tabs button").forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$3);
+			btn.addEventListener("mousedown", onSwitchTab$5);
 		});
 		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$9);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$12);
 		const closeBtn = root.querySelector(".titlebar .close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV0._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$18);
+		this._host.addEventListener("drop", onDrop$21);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("mouseover", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemOver$14.call(item, e);
+				if (item) onItemOver$17.call(item, e);
 			});
 			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$15();
+				if (e.target.closest(".item")) onItemOut$18();
 			});
 			content.addEventListener("dragstart", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemDragStart$10.call(item, e);
+				if (item) onItemDragStart$13.call(item, e);
 			});
 			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$11();
+				if (e.target.closest(".item")) onItemDragEnd$14();
 			});
 			content.addEventListener("contextmenu", (e) => {
 				e.preventDefault();
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$18.call(item, e);
+				if (item) onItemInfo$21.call(item, e);
 			});
 			content.addEventListener("dblclick", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemUsed$4.call(item, e);
+				if (item) onItemUsed$5.call(item, e);
 			});
 			content.addEventListener("click", (e) => {
 				const item = e.target.closest(".item");
@@ -258632,21 +257342,21 @@ var init_InventoryV0 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV0.onAppend = function OnAppend() {
-		const root = _getRoot$42();
-		if (!_preferences$38.show) this._host.style.display = "none";
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$38.tab + 1) + ".bmp", (data) => {
+		const root = InventoryV0.getRoot();
+		if (!_preferences$41.show) this._host.style.display = "none";
+		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$41.tab + 1) + ".bmp", (data) => {
 			const tabSprite = root.querySelector(".tab-sprite");
 			if (tabSprite) tabSprite.style.backgroundImage = `url("${data}")`;
 		});
-		this.resize(_preferences$38.width, _preferences$38.height);
+		this.resize(_preferences$41.width, _preferences$41.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$38.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$38.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$38.magnet_top;
-		this.magnet.BOTTOM = _preferences$38.magnet_bottom;
-		this.magnet.LEFT = _preferences$38.magnet_left;
-		this.magnet.RIGHT = _preferences$38.magnet_right;
-		_realSize$4 = _preferences$38.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$41.magnet_top;
+		this.magnet.BOTTOM = _preferences$41.magnet_bottom;
+		this.magnet.LEFT = _preferences$41.magnet_left;
+		this.magnet.RIGHT = _preferences$41.magnet_right;
+		_realSize$5 = _preferences$41.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = root.querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -258654,23 +257364,23 @@ var init_InventoryV0 = __esmMin((() => {
 	* Remove Inventory from window (and so clean up items)
 	*/
 	InventoryV0.onRemove = function OnRemove() {
-		const content = _getRoot$42().querySelector(".container .content");
+		const content = InventoryV0.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		InventoryV0.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$38.show = this._host.style.display !== "none";
-		_preferences$38.reduce = !!_realSize$4;
-		_preferences$38.y = parseInt(this._host.style.top, 10);
-		_preferences$38.x = parseInt(this._host.style.left, 10);
+		_preferences$41.show = this._host.style.display !== "none";
+		_preferences$41.reduce = !!_realSize$5;
+		_preferences$41.y = parseInt(this._host.style.top, 10);
+		_preferences$41.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$38.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$38.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$38.magnet_top = this.magnet.TOP;
-		_preferences$38.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$38.magnet_left = this.magnet.LEFT;
-		_preferences$38.magnet_right = this.magnet.RIGHT;
-		_preferences$38.save();
+		_preferences$41.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$41.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$41.magnet_top = this.magnet.TOP;
+		_preferences$41.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$41.magnet_left = this.magnet.LEFT;
+		_preferences$41.magnet_right = this.magnet.RIGHT;
+		_preferences$41.save();
 	};
 	/**
 	* Process shortcut
@@ -258686,7 +257396,7 @@ var init_InventoryV0 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$42().querySelectorAll(".new_item").forEach((el) => {
+					InventoryV0.getRoot().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -258695,7 +257405,7 @@ var init_InventoryV0 = __esmMin((() => {
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot$3(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -258709,14 +257419,14 @@ var init_InventoryV0 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$42().querySelectorAll(".new_item").forEach((el) => {
+			InventoryV0.getRoot().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot$3(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -258735,7 +257445,7 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 8);
 		height = Math.min(Math.max(height, 2), 5);
-		const content = _getRoot$42().querySelector(".container .content");
+		const content = InventoryV0.getRoot().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${59 + width * 32}px`;
 		this._host.style.height = `${62 + height * 32}px`;
@@ -258745,7 +257455,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* Force scroll clamping
 	*/
 	InventoryV0.updateScroll = function updateScroll() {
-		const root = _getRoot$42();
+		const root = InventoryV0.getRoot();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -258791,7 +257501,7 @@ var init_InventoryV0 = __esmMin((() => {
 	* if the item index is exist you should clear it;[skybook888]
 	*/
 	InventoryV0.setItems = function SetItems(items) {
-		const root = _getRoot$42();
+		const root = InventoryV0.getRoot();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -258810,14 +257520,14 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const root = _getRoot$42();
+		const root = InventoryV0.getRoot();
 		const equippedIndex = InventoryV0.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV0.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV0.newItems.push(item.index);
 			const basicInfoUI = BasicInfoController.getUI();
 			if (basicInfoUI._host) {
-				const changeUI = _getBasicInfoRoot$3(basicInfoUI).querySelector("#item .btn_overlay");
+				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 				if (changeUI) changeUI.style.display = "block";
 			}
 		}
@@ -258829,7 +257539,7 @@ var init_InventoryV0 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV0.newItems.indexOf(item.index) === -1) InventoryV0.newItems.push(item.index);
-			if (getItemTab$3(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$3(item) === _preferences$41.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -258860,9 +257570,9 @@ var init_InventoryV0 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$38.tab) {
+		if (tab === _preferences$41.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$42();
+			const root = InventoryV0.getRoot();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -258889,7 +257599,7 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$42();
+		const root = InventoryV0.getRoot();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -258920,7 +257630,7 @@ var init_InventoryV0 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$42();
+		const root = InventoryV0.getRoot();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -258984,9 +257694,6 @@ var init_InventoryV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV1/InventoryV1.js
-function _getRoot$41() {
-	return InventoryV1._shadow || InventoryV1._host;
-}
 function _sanitizeHtml$9(str) {
 	const whitelist = [
 		"font",
@@ -258999,9 +257706,6 @@ function _sanitizeHtml$9(str) {
 		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
 	});
 	return div.innerHTML;
-}
-function _getBasicInfoRoot$2(ui) {
-	return ui._shadow || ui._host || document;
 }
 /**
 * Get the TAB constant for a given item based on its type.
@@ -259026,7 +257730,7 @@ function getItemTab$2(item) {
 /**
 * Extend inventory window size
 */
-function onResize$8() {
+function onResize$11() {
 	const left = InventoryV1._host.offsetLeft;
 	let lastWidth = 0;
 	function resizing() {
@@ -259048,15 +257752,15 @@ function onResize$8() {
 /**
 * Modify tab, filter display entries
 */
-function onSwitchTab$2() {
-	const root = _getRoot$41();
+function onSwitchTab$4() {
+	const root = InventoryV1.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$37.tab = parseInt(idx, 10);
-	requestFilter$2();
+	_preferences$40.tab = parseInt(idx, 10);
+	requestFilter$4();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$37.tab !== InventoryV1.TAB.FAV) {
+	if (_preferences$40.tab !== InventoryV1.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -259068,7 +257772,7 @@ function onSwitchTab$2() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$37.npcsalelock) {
+		if (_preferences$40.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -259092,14 +257796,14 @@ function onSwitchTab$2() {
 /**
 * Hide/show inventory's content
 */
-function onToggleReduction$2() {
-	const panel = _getRoot$41().querySelector(".panel");
-	if (_realSize$3) {
+function onToggleReduction$3() {
+	const panel = InventoryV1.getRoot().querySelector(".panel");
+	if (_realSize$4) {
 		if (panel) panel.style.display = "flex";
-		InventoryV1._host.style.height = `${_realSize$3}px`;
-		_realSize$3 = 0;
+		InventoryV1._host.style.height = `${_realSize$4}px`;
+		_realSize$4 = 0;
 	} else {
-		_realSize$3 = InventoryV1._host.getBoundingClientRect().height;
+		_realSize$4 = InventoryV1._host.getBoundingClientRect().height;
 		InventoryV1._host.style.height = "17px";
 		if (panel) panel.style.display = "none";
 	}
@@ -259107,8 +257811,8 @@ function onToggleReduction$2() {
 /**
 * Update tab, reset inventory content
 */
-function requestFilter$2() {
-	const root = _getRoot$41();
+function requestFilter$4() {
+	const root = InventoryV1.getRoot();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -259120,7 +257824,7 @@ function requestFilter$2() {
 /**
 * Drop an item from storage to inventory
 */
-function onDrop$17(event) {
+function onDrop$20(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -259171,13 +257875,13 @@ function onDrop$17(event) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$13(_e) {
+function onItemOver$16(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV1.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$41();
+	const root = InventoryV1.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV1") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -259194,14 +257898,14 @@ function onItemOver$13(_e) {
 /**
 * Hide the item name
 */
-function onItemOut$14() {
-	const overlay = _getRoot$41().querySelector(".overlay");
+function onItemOut$17() {
+	const overlay = InventoryV1.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
 */
-function onItemDragStart$9(event) {
+function onItemDragStart$12(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV1.getItemByIndex(index);
 	if (!item) return;
@@ -259216,25 +257920,25 @@ function onItemDragStart$9(event) {
 		from: "Inventory",
 		data: item
 	}));
-	onItemOut$14();
+	onItemOut$17();
 }
 /**
 * Stop dragging an item
 */
-function onItemDragEnd$10() {
+function onItemDragEnd$13() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$17(event) {
+function onItemInfo$20(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV1.getItemByIndex(index);
 	if (!item) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		transferItemToOtherUI$2(item);
+		transferItemToOtherUI$4(item);
 		return false;
 	}
 	if (ItemInfo_default.uid === item.ITID) {
@@ -259258,7 +257962,7 @@ function onItemInfo$17(event) {
 /**
 * Alt Right Click Request Transfer
 */
-function transferItemToOtherUI$2(item) {
+function transferItemToOtherUI$4(item) {
 	const storageUI = StorageController.getUI();
 	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
 	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
@@ -259271,12 +257975,12 @@ function transferItemToOtherUI$2(item) {
 /**
 * Ask to use an item
 */
-function onItemUsed$3(event) {
+function onItemUsed$4(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV1.getItemByIndex(index);
 	if (item) {
 		InventoryV1.useItem(item);
-		onItemOut$14();
+		onItemOut$17();
 	}
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -259324,11 +258028,11 @@ function onTabDrop$2(event) {
 * Toggle the item drop lock preference
 */
 function onItemLock$2() {
-	_preferences$37.itemlock = !_preferences$37.itemlock;
-	InventoryV1.itemlock = _preferences$37.itemlock;
-	const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$40.itemlock = !_preferences$40.itemlock;
+	InventoryV1.itemlock = _preferences$40.itemlock;
+	const lockImg = _preferences$40.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const lockBtn = _getRoot$41().querySelector(".item_drop_lock");
+		const lockBtn = InventoryV1.getRoot().querySelector(".item_drop_lock");
 		if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 	});
 }
@@ -259336,11 +258040,11 @@ function onItemLock$2() {
 * Toggles the value of Item Compare
 */
 function onItemCompare$2() {
-	_preferences$37.itemcomp = !_preferences$37.itemcomp;
-	InventoryV1.itemcomp = _preferences$37.itemcomp;
-	const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$40.itemcomp = !_preferences$40.itemcomp;
+	InventoryV1.itemcomp = _preferences$40.itemcomp;
+	const compImg = _preferences$40.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const compBtn = _getRoot$41().querySelector(".item_compare");
+		const compBtn = InventoryV1.getRoot().querySelector(".item_compare");
 		if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 	});
 }
@@ -259348,10 +258052,10 @@ function onItemCompare$2() {
 * Toggles the value of Item Lock NPCSale
 */
 function onNPCLock$2() {
-	_preferences$37.npcsalelock = !_preferences$37.npcsalelock;
-	InventoryV1.npcsalelock = _preferences$37.npcsalelock;
-	const root = _getRoot$41();
-	if (_preferences$37.npcsalelock) {
+	_preferences$40.npcsalelock = !_preferences$40.npcsalelock;
+	InventoryV1.npcsalelock = _preferences$40.npcsalelock;
+	const root = InventoryV1.getRoot();
+	if (_preferences$40.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -259375,7 +258079,7 @@ function onNPCLock$2() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV1, _realSize$3, _preferences$37, lockOverlayTimeout$2, InventoryV1_default;
+var InventoryV1, _realSize$4, _preferences$40, lockOverlayTimeout$2, InventoryV1_default;
 var init_InventoryV1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -259421,8 +258125,8 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.newItems = [];
 	InventoryV1.equippedItems = [];
-	_realSize$3 = 0;
-	_preferences$37 = Preferences.get("InventoryV1", {
+	_realSize$4 = 0;
+	_preferences$40 = Preferences.get("InventoryV1", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -259441,54 +258145,54 @@ var init_InventoryV1 = __esmMin((() => {
 	/**
 	* Store variables from preferences
 	*/
-	InventoryV1.itemlock = _preferences$37.itemlock;
-	InventoryV1.itemcomp = _preferences$37.itemcomp;
-	InventoryV1.npcsalelock = _preferences$37.npcsalelock;
+	InventoryV1.itemlock = _preferences$40.itemlock;
+	InventoryV1.itemcomp = _preferences$40.itemcomp;
+	InventoryV1.npcsalelock = _preferences$40.npcsalelock;
 	/**
 	* Initialize UI
 	*/
 	InventoryV1.init = function Init() {
-		const root = _getRoot$41();
+		const root = InventoryV1.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$2);
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$3);
 		const tabButtons = root.querySelectorAll(".tabs button");
 		tabButtons.forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$2);
+			btn.addEventListener("mousedown", onSwitchTab$4);
 		});
 		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$8);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$11);
 		const closeBtn = root.querySelector(".titlebar .close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV1._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$17);
+		this._host.addEventListener("drop", onDrop$20);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("mouseover", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemOver$13.call(item, e);
+				if (item) onItemOver$16.call(item, e);
 			});
 			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$14();
+				if (e.target.closest(".item")) onItemOut$17();
 			});
 			content.addEventListener("dragstart", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemDragStart$9.call(item, e);
+				if (item) onItemDragStart$12.call(item, e);
 			});
 			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$10();
+				if (e.target.closest(".item")) onItemDragEnd$13();
 			});
 			content.addEventListener("contextmenu", (e) => {
 				e.preventDefault();
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$17.call(item, e);
+				if (item) onItemInfo$20.call(item, e);
 			});
 			content.addEventListener("dblclick", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemUsed$3.call(item, e);
+				if (item) onItemUsed$4.call(item, e);
 			});
 			content.addEventListener("click", (e) => {
 				const item = e.target.closest(".item");
@@ -259506,19 +258210,19 @@ var init_InventoryV1 = __esmMin((() => {
 		});
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$37.tab]) allTabs[_preferences$37.tab].classList.add("selected");
-		const lockImg = _preferences$37.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$40.tab]) allTabs[_preferences$40.tab].classList.add("selected");
+		const lockImg = _preferences$40.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const lockBtn = root.querySelector(".item_drop_lock");
 			if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$37.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$40.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const compBtn = root.querySelector(".item_compare");
 			if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$37.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$37.tab !== InventoryV1.TAB.FAV) {
+		const lockSale = _preferences$40.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$40.tab !== InventoryV1.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -259540,46 +258244,46 @@ var init_InventoryV1 = __esmMin((() => {
 		});
 		const sortBtn = root.querySelector(".sort");
 		if (sortBtn) sortBtn.addEventListener("click", () => {
-			requestFilter$2();
+			requestFilter$4();
 		});
 	};
 	/**
 	* Apply preferences once append to body
 	*/
 	InventoryV1.onAppend = function OnAppend() {
-		if (!_preferences$37.show) this._host.style.display = "none";
-		this.resize(_preferences$37.width, _preferences$37.height);
+		if (!_preferences$40.show) this._host.style.display = "none";
+		this.resize(_preferences$40.width, _preferences$40.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$37.magnet_top;
-		this.magnet.BOTTOM = _preferences$37.magnet_bottom;
-		this.magnet.LEFT = _preferences$37.magnet_left;
-		this.magnet.RIGHT = _preferences$37.magnet_right;
-		_realSize$3 = _preferences$37.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = _getRoot$41().querySelector(".titlebar .mini");
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$40.magnet_top;
+		this.magnet.BOTTOM = _preferences$40.magnet_bottom;
+		this.magnet.LEFT = _preferences$40.magnet_left;
+		this.magnet.RIGHT = _preferences$40.magnet_right;
+		_realSize$4 = _preferences$40.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = InventoryV1.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	InventoryV1.onRemove = function OnRemove() {
-		const content = _getRoot$41().querySelector(".container .content");
+		const content = InventoryV1.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		InventoryV1.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$37.show = this._host.style.display !== "none";
-		_preferences$37.reduce = !!_realSize$3;
-		_preferences$37.y = parseInt(this._host.style.top, 10);
-		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$40.show = this._host.style.display !== "none";
+		_preferences$40.reduce = !!_realSize$4;
+		_preferences$40.y = parseInt(this._host.style.top, 10);
+		_preferences$40.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$37.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$37.magnet_top = this.magnet.TOP;
-		_preferences$37.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$37.magnet_left = this.magnet.LEFT;
-		_preferences$37.magnet_right = this.magnet.RIGHT;
-		_preferences$37.save();
+		_preferences$40.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$40.magnet_top = this.magnet.TOP;
+		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$40.magnet_left = this.magnet.LEFT;
+		_preferences$40.magnet_right = this.magnet.RIGHT;
+		_preferences$40.save();
 	};
 	/**
 	* Process shortcut
@@ -259595,7 +258299,7 @@ var init_InventoryV1 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$41().querySelectorAll(".new_item").forEach((el) => {
+					InventoryV1.getRoot().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -259604,7 +258308,7 @@ var init_InventoryV1 = __esmMin((() => {
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot$2(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -259618,14 +258322,14 @@ var init_InventoryV1 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$41().querySelectorAll(".new_item").forEach((el) => {
+			InventoryV1.getRoot().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot$2(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -259642,7 +258346,7 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = _getRoot$41().querySelector(".container .content");
+		const content = InventoryV1.getRoot().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
@@ -259651,7 +258355,7 @@ var init_InventoryV1 = __esmMin((() => {
 	* Force scroll clamping
 	*/
 	InventoryV1.updateScroll = function updateScroll() {
-		const root = _getRoot$41();
+		const root = InventoryV1.getRoot();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -259696,7 +258400,7 @@ var init_InventoryV1 = __esmMin((() => {
 	* Add items to the list
 	*/
 	InventoryV1.setItems = function SetItems(items) {
-		const root = _getRoot$41();
+		const root = InventoryV1.getRoot();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -259713,14 +258417,14 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const root = _getRoot$41();
+		const root = InventoryV1.getRoot();
 		const equippedIndex = InventoryV1.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV1.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV1.newItems.push(item.index);
 			const basicInfoUI = BasicInfoController.getUI();
 			if (basicInfoUI._host) {
-				const changeUI = _getBasicInfoRoot$2(basicInfoUI).querySelector("#item .btn_overlay");
+				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 				if (changeUI) changeUI.style.display = "block";
 			}
 		}
@@ -259732,7 +258436,7 @@ var init_InventoryV1 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV1.newItems.indexOf(item.index) === -1) InventoryV1.newItems.push(item.index);
-			if (getItemTab$2(item) === _preferences$37.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$2(item) === _preferences$40.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -259762,9 +258466,9 @@ var init_InventoryV1 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$37.tab) {
+		if (tab === _preferences$40.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$41();
+			const root = InventoryV1.getRoot();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -259788,7 +258492,7 @@ var init_InventoryV1 = __esmMin((() => {
 	*/
 	InventoryV1.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$41();
+		const root = InventoryV1.getRoot();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -259816,7 +258520,7 @@ var init_InventoryV1 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$41();
+		const root = InventoryV1.getRoot();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -259883,7 +258587,7 @@ var init_InventoryV1 = __esmMin((() => {
 			}
 			item.PlaceETCTab = favoriteval;
 		} else item.PlaceETCTab = newValue;
-		requestFilter$2();
+		requestFilter$4();
 	};
 	/**
 	* functions to define
@@ -259909,12 +258613,6 @@ var init_SwitchEquip$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SwitchEquip/SwitchEquip.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$40() {
-	return SwitchEquip._shadow || SwitchEquip._host;
-}
 /**
 * Escape HTML entities
 */
@@ -259964,7 +258662,7 @@ function onDragOver$6(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$6("location" in item ? item.location : item.WearLocation);
-				const el = _getRoot$40().querySelector(selector);
+				const el = SwitchEquip.getRoot().querySelector(selector);
 				if (el) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					el.style.backgroundImage = `url(${_data})`;
 				});
@@ -259979,7 +258677,7 @@ function onDragOver$6(event) {
 * Drag out the window
 */
 function onDragLeave$5(event) {
-	_getRoot$40().querySelectorAll("td").forEach((td) => {
+	SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -259988,7 +258686,7 @@ function onDragLeave$5(event) {
 /**
 * Drop an item in the equipment, equip it if possible
 */
-function onDrop$16(event) {
+function onDrop$19(event) {
 	let data;
 	try {
 		data = JSON.parse(event.dataTransfer.getData("Text"));
@@ -259996,7 +258694,7 @@ function onDrop$16(event) {
 	if (data && data.type === "item") {
 		const item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$40().querySelectorAll("td").forEach((td) => {
+			SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			SwitchEquip.onAddSwitchEquip(item.index, "location" in item ? item.location : item.WearState);
@@ -260027,7 +258725,7 @@ function onSwitchEquipInfo(event) {
 function onSwitchEquipUnEquip() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	SwitchEquip.onRemoveSwitchEquip(index);
-	const overlay = _getRoot$40().querySelector(".switchoverlay");
+	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -260037,7 +258735,7 @@ function onSwitchEquipOver() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = SwitchEquip._list[idx];
 	if (!item) return;
-	const overlay = _getRoot$40().querySelector(".switchoverlay");
+	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
 	if (!overlay) return;
 	const posTop = this.offsetTop;
 	const posLeft = this.offsetLeft;
@@ -260051,7 +258749,7 @@ function onSwitchEquipOver() {
 * Remove the item name
 */
 function onSwitchEquipOut() {
-	const overlay = _getRoot$40().querySelector(".switchoverlay");
+	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -260092,7 +258790,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* Initialize UI
 	*/
 	SwitchEquip.init = function init() {
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		const canvases = root.querySelectorAll("canvas");
 		_swapctx.push(canvases[0].getContext("2d"));
 		_swapctx.push(canvases[1].getContext("2d"));
@@ -260100,7 +258798,7 @@ var init_SwitchEquip = __esmMin((() => {
 		if (panel) {
 			panel.addEventListener("dragover", onDragOver$6);
 			panel.addEventListener("dragleave", onDragLeave$5);
-			panel.addEventListener("drop", onDrop$16);
+			panel.addEventListener("drop", onDrop$19);
 		}
 		const closeBtn = root.querySelector(".closeswap");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
@@ -260137,7 +258835,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* @param {string} tabId - The ID of the tab to show.
 	*/
 	SwitchEquip.showSwapTab = function showSwapTab(tabId) {
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		if (!root) return;
 		const swapTabId = "swap" + tabId;
 		const swapContentDivs = {
@@ -260153,7 +258851,7 @@ var init_SwitchEquip = __esmMin((() => {
 	SwitchEquip.onAppend = function onAppend() {
 		const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
 		SwitchEquip.showSwapTab(currentEquipTabId);
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		if ((root ? root.querySelector("canvas") : null) && this._host.style.display !== "none") Renderer.render(swaprender);
 	};
 	/**
@@ -260162,7 +258860,7 @@ var init_SwitchEquip = __esmMin((() => {
 	SwitchEquip.onRemove = function onRemove() {
 		Renderer.stop(swaprender);
 		SwitchEquip._list = {};
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		if (root) root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -260208,7 +258906,7 @@ var init_SwitchEquip = __esmMin((() => {
 			if (string.length > limit) return string.substring(0, limit) + "...";
 			return string;
 		};
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		const selector = getSelectorFromLocation$6(location);
 		const el = root.querySelector(selector);
 		if (el) el.innerHTML = `<div class="item" data-index="${item.index}"><button></button><span class="itemName">${add3Dots(_escapeHtml(DB.getItemName(item)), 19)}</span></div>`;
@@ -260227,7 +258925,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* @param {number} item location
 	*/
 	SwitchEquip.unEquip = function unEquip(index, location) {
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		const selector = getSelectorFromLocation$6(location);
 		const item = SwitchEquip._list[index];
 		item.equipped = 0;
@@ -260296,7 +258994,7 @@ var init_SwitchEquip = __esmMin((() => {
 	* Update the owner name for the equipment items
 	*/
 	SwitchEquip.onUpdateOwnerName = function() {
-		const root = _getRoot$40();
+		const root = SwitchEquip.getRoot();
 		for (const index in SwitchEquip._list) {
 			const item = SwitchEquip._list[index];
 			if (item.slot && [
@@ -260339,7 +259037,7 @@ var init_SwitchEquip = __esmMin((() => {
 	*/
 	SwitchEquip.RequestSwitch = function() {
 		sendEquipSwitchRequest();
-		const button = _getRoot$40().querySelector("#swap-button");
+		const button = SwitchEquip.getRoot().querySelector("#swap-button");
 		if (!button) return;
 		button.disabled = true;
 		button.classList.add("disabled");
@@ -260375,9 +259073,6 @@ var init_InventoryV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV2/InventoryV2.js
-function _getRoot$39() {
-	return InventoryV2._shadow || InventoryV2._host;
-}
 function _sanitizeHtml$8(str) {
 	const whitelist = [
 		"font",
@@ -260390,9 +259085,6 @@ function _sanitizeHtml$8(str) {
 		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
 	});
 	return div.innerHTML;
-}
-function _getBasicInfoRoot$1(ui) {
-	return ui._shadow || ui._host || document;
 }
 function getItemTab$1(item) {
 	switch (item.type) {
@@ -260411,7 +259103,7 @@ function getItemTab$1(item) {
 		case ItemType_default.AMMO: return InventoryV2.TAB.ETC;
 	}
 }
-function onResize$7() {
+function onResize$10() {
 	const left = InventoryV2._host.offsetLeft;
 	let lastWidth = 0;
 	function resizing() {
@@ -260430,15 +259122,15 @@ function onResize$7() {
 	};
 	window.addEventListener("mouseup", onMouseUp);
 }
-function onSwitchTab$1() {
-	const root = _getRoot$39();
+function onSwitchTab$3() {
+	const root = InventoryV2.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$36.tab = parseInt(idx, 10);
-	requestFilter$1();
+	_preferences$39.tab = parseInt(idx, 10);
+	requestFilter$3();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$36.tab !== InventoryV2.TAB.FAV) {
+	if (_preferences$39.tab !== InventoryV2.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -260450,7 +259142,7 @@ function onSwitchTab$1() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$36.npcsalelock) {
+		if (_preferences$39.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -260471,20 +259163,20 @@ function onSwitchTab$1() {
 		if (sort) sort.style.display = "";
 	}
 }
-function onToggleReduction$1() {
-	const panel = _getRoot$39().querySelector(".panel");
-	if (_realSize$2) {
+function onToggleReduction$2() {
+	const panel = InventoryV2.getRoot().querySelector(".panel");
+	if (_realSize$3) {
 		if (panel) panel.style.display = "flex";
-		InventoryV2._host.style.height = `${_realSize$2}px`;
-		_realSize$2 = 0;
+		InventoryV2._host.style.height = `${_realSize$3}px`;
+		_realSize$3 = 0;
 	} else {
-		_realSize$2 = InventoryV2._host.getBoundingClientRect().height;
+		_realSize$3 = InventoryV2._host.getBoundingClientRect().height;
 		InventoryV2._host.style.height = "17px";
 		if (panel) panel.style.display = "none";
 	}
 }
-function requestFilter$1() {
-	const root = _getRoot$39();
+function requestFilter$3() {
+	const root = InventoryV2.getRoot();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -260493,7 +259185,7 @@ function requestFilter$1() {
 	for (let i = 0, count = list.length; i < count; ++i) InventoryV2.addItemSub(list[i]);
 	InventoryV2.updateScroll();
 }
-function onDrop$15(event) {
+function onDrop$18(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -260541,13 +259233,13 @@ function onDrop$15(event) {
 	}
 	return false;
 }
-function onItemOver$12(_e) {
+function onItemOver$15(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$39();
+	const root = InventoryV2.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV2") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -260561,11 +259253,11 @@ function onItemOver$12(_e) {
 		else overlay.classList.add("grey");
 	}
 }
-function onItemOut$13() {
-	const overlay = _getRoot$39().querySelector(".overlay");
+function onItemOut$16() {
+	const overlay = InventoryV2.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-function onItemDragStart$8(event) {
+function onItemDragStart$11(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(index);
 	if (!item) return;
@@ -260580,19 +259272,19 @@ function onItemDragStart$8(event) {
 		from: "Inventory",
 		data: item
 	}));
-	onItemOut$13();
+	onItemOut$16();
 }
-function onItemDragEnd$9() {
+function onItemDragEnd$12() {
 	delete window._OBJ_DRAG_;
 }
-function onItemInfo$16(event) {
+function onItemInfo$19(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(index);
 	if (!item) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		transferItemToOtherUI$1(item);
+		transferItemToOtherUI$3(item);
 		return false;
 	}
 	if (ItemInfo_default.uid === item.ITID) {
@@ -260613,7 +259305,7 @@ function onItemInfo$16(event) {
 	}
 	return false;
 }
-function transferItemToOtherUI$1(item) {
+function transferItemToOtherUI$3(item) {
 	const storageUI = StorageController.getUI();
 	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
 	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
@@ -260623,12 +259315,12 @@ function transferItemToOtherUI$1(item) {
 	else if (isCartOpen) InventoryV2.reqMoveItemToCart(item.index, count);
 	return true;
 }
-function onItemUsed$2(event) {
+function onItemUsed$3(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV2.getItemByIndex(index);
 	if (item) {
 		InventoryV2.useItem(item);
-		onItemOut$13();
+		onItemOut$16();
 	}
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -260667,28 +259359,28 @@ function onTabDrop$1(event) {
 	Network.sendPacket(pkt);
 }
 function onItemLock$1() {
-	_preferences$36.itemlock = !_preferences$36.itemlock;
-	InventoryV2.itemlock = _preferences$36.itemlock;
-	const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$39.itemlock = !_preferences$39.itemlock;
+	InventoryV2.itemlock = _preferences$39.itemlock;
+	const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const btn = _getRoot$39().querySelector(".item_drop_lock");
+		const btn = InventoryV2.getRoot().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onItemCompare$1() {
-	_preferences$36.itemcomp = !_preferences$36.itemcomp;
-	InventoryV2.itemcomp = _preferences$36.itemcomp;
-	const compImg = _preferences$36.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$39.itemcomp = !_preferences$39.itemcomp;
+	InventoryV2.itemcomp = _preferences$39.itemcomp;
+	const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const btn = _getRoot$39().querySelector(".item_compare");
+		const btn = InventoryV2.getRoot().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock$1() {
-	_preferences$36.npcsalelock = !_preferences$36.npcsalelock;
-	InventoryV2.npcsalelock = _preferences$36.npcsalelock;
-	const root = _getRoot$39();
-	if (_preferences$36.npcsalelock) {
+	_preferences$39.npcsalelock = !_preferences$39.npcsalelock;
+	InventoryV2.npcsalelock = _preferences$39.npcsalelock;
+	const root = InventoryV2.getRoot();
+	if (_preferences$39.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -260712,7 +259404,7 @@ function onNPCLock$1() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV2, _realSize$2, _preferences$36, lockOverlayTimeout$1, InventoryV2_default;
+var InventoryV2, _realSize$3, _preferences$39, lockOverlayTimeout$1, InventoryV2_default;
 var init_InventoryV2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -260751,8 +259443,8 @@ var init_InventoryV2 = __esmMin((() => {
 	InventoryV2.equipswitchlist = [];
 	InventoryV2.newItems = [];
 	InventoryV2.equippedItems = [];
-	_realSize$2 = 0;
-	_preferences$36 = Preferences.get("InventoryV2", {
+	_realSize$3 = 0;
+	_preferences$39 = Preferences.get("InventoryV2", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -260768,52 +259460,52 @@ var init_InventoryV2 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	InventoryV2.itemlock = _preferences$36.itemlock;
-	InventoryV2.itemcomp = _preferences$36.itemcomp;
-	InventoryV2.npcsalelock = _preferences$36.npcsalelock;
+	InventoryV2.itemlock = _preferences$39.itemlock;
+	InventoryV2.itemcomp = _preferences$39.itemcomp;
+	InventoryV2.npcsalelock = _preferences$39.npcsalelock;
 	InventoryV2.init = function Init() {
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$1);
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$2);
 		root.querySelectorAll(".tabs button").forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$1);
+			btn.addEventListener("mousedown", onSwitchTab$3);
 			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 			btn.addEventListener("drop", onTabDrop$1);
 		});
 		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$7);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$10);
 		const closeBtn = root.querySelector(".titlebar .close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV2._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$15);
+		this._host.addEventListener("drop", onDrop$18);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("mouseover", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemOver$12.call(item, e);
+				if (item) onItemOver$15.call(item, e);
 			});
 			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$13();
+				if (e.target.closest(".item")) onItemOut$16();
 			});
 			content.addEventListener("dragstart", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemDragStart$8.call(item, e);
+				if (item) onItemDragStart$11.call(item, e);
 			});
 			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$9();
+				if (e.target.closest(".item")) onItemDragEnd$12();
 			});
 			content.addEventListener("contextmenu", (e) => {
 				e.preventDefault();
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$16.call(item, e);
+				if (item) onItemInfo$19.call(item, e);
 			});
 			content.addEventListener("dblclick", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemUsed$2.call(item, e);
+				if (item) onItemUsed$3.call(item, e);
 			});
 			content.addEventListener("click", (e) => {
 				const item = e.target.closest(".item");
@@ -260827,19 +259519,19 @@ var init_InventoryV2 = __esmMin((() => {
 		this.draggable(".titlebar");
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$36.tab]) allTabs[_preferences$36.tab].classList.add("selected");
-		const lockImg = _preferences$36.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$39.tab]) allTabs[_preferences$39.tab].classList.add("selected");
+		const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const btn = root.querySelector(".item_drop_lock");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$36.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$36.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$36.tab !== InventoryV2.TAB.FAV) {
+		const lockSale = _preferences$39.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$39.tab !== InventoryV2.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -260860,40 +259552,40 @@ var init_InventoryV2 = __esmMin((() => {
 			clearTimeout(lockOverlayTimeout$1);
 		});
 		const sortBtn = root.querySelector(".sort");
-		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$1());
+		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$3());
 	};
 	InventoryV2.onAppend = function OnAppend() {
-		if (!_preferences$36.show) this._host.style.display = "none";
-		this.resize(_preferences$36.width, _preferences$36.height);
+		if (!_preferences$39.show) this._host.style.display = "none";
+		this.resize(_preferences$39.width, _preferences$39.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$36.magnet_top;
-		this.magnet.BOTTOM = _preferences$36.magnet_bottom;
-		this.magnet.LEFT = _preferences$36.magnet_left;
-		this.magnet.RIGHT = _preferences$36.magnet_right;
-		_realSize$2 = _preferences$36.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = _getRoot$39().querySelector(".titlebar .mini");
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$39.magnet_top;
+		this.magnet.BOTTOM = _preferences$39.magnet_bottom;
+		this.magnet.LEFT = _preferences$39.magnet_left;
+		this.magnet.RIGHT = _preferences$39.magnet_right;
+		_realSize$3 = _preferences$39.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = InventoryV2.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	InventoryV2.onRemove = function OnRemove() {
-		const content = _getRoot$39().querySelector(".container .content");
+		const content = InventoryV2.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		this.equipswitchlist.length = 0;
 		InventoryV2.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$36.show = this._host.style.display !== "none";
-		_preferences$36.reduce = !!_realSize$2;
-		_preferences$36.y = parseInt(this._host.style.top, 10);
-		_preferences$36.x = parseInt(this._host.style.left, 10);
+		_preferences$39.show = this._host.style.display !== "none";
+		_preferences$39.reduce = !!_realSize$3;
+		_preferences$39.y = parseInt(this._host.style.top, 10);
+		_preferences$39.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$36.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$36.magnet_top = this.magnet.TOP;
-		_preferences$36.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$36.magnet_left = this.magnet.LEFT;
-		_preferences$36.magnet_right = this.magnet.RIGHT;
-		_preferences$36.save();
+		_preferences$39.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$39.magnet_top = this.magnet.TOP;
+		_preferences$39.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$39.magnet_left = this.magnet.LEFT;
+		_preferences$39.magnet_right = this.magnet.RIGHT;
+		_preferences$39.save();
 	};
 	InventoryV2.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
@@ -260904,7 +259596,7 @@ var init_InventoryV2 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$39().querySelectorAll(".new_item").forEach((el) => {
+					InventoryV2.getRoot().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -260913,7 +259605,7 @@ var init_InventoryV2 = __esmMin((() => {
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot$1(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -260924,14 +259616,14 @@ var init_InventoryV2 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$39().querySelectorAll(".new_item").forEach((el) => {
+			InventoryV2.getRoot().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot$1(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -260940,13 +259632,13 @@ var init_InventoryV2 = __esmMin((() => {
 	};
 	InventoryV2.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = _getRoot$39().querySelector(".container .content");
+		const content = InventoryV2.getRoot().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
 	InventoryV2.updateScroll = function updateScroll() {
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -260976,7 +259668,7 @@ var init_InventoryV2 = __esmMin((() => {
 		return null;
 	};
 	InventoryV2.setItems = function SetItems(items) {
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -260990,14 +259682,14 @@ var init_InventoryV2 = __esmMin((() => {
 	};
 	InventoryV2.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		const equippedIndex = InventoryV2.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV2.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV2.newItems.push(item.index);
 			const basicInfoUI = BasicInfoController.getUI();
 			if (basicInfoUI._host) {
-				const changeUI = _getBasicInfoRoot$1(basicInfoUI).querySelector("#item .btn_overlay");
+				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 				if (changeUI) changeUI.style.display = "block";
 			}
 		}
@@ -261009,7 +259701,7 @@ var init_InventoryV2 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV2.newItems.indexOf(item.index) === -1) InventoryV2.newItems.push(item.index);
-			if (getItemTab$1(item) === _preferences$36.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$1(item) === _preferences$39.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -261035,9 +259727,9 @@ var init_InventoryV2 = __esmMin((() => {
 		}
 		const isInSwitchList = InventoryV2.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$36.tab) {
+		if (tab === _preferences$39.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$39();
+			const root = InventoryV2.getRoot();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -261071,7 +259763,7 @@ var init_InventoryV2 = __esmMin((() => {
 	};
 	InventoryV2.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -261096,7 +259788,7 @@ var init_InventoryV2 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -261157,7 +259849,7 @@ var init_InventoryV2 = __esmMin((() => {
 			}
 			item.PlaceETCTab = favoriteval;
 		} else item.PlaceETCTab = newValue;
-		requestFilter$1();
+		requestFilter$3();
 	};
 	InventoryV2.addItemtoSwitch = function(index) {
 		const item = this.getItemByIndex(index);
@@ -261172,7 +259864,7 @@ var init_InventoryV2 = __esmMin((() => {
 			this.equipswitchlist.splice(existingItemIndex, 1);
 		}
 		this.equipswitchlist.push(item);
-		const root = _getRoot$39();
+		const root = InventoryV2.getRoot();
 		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
 			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -261192,7 +259884,7 @@ var init_InventoryV2 = __esmMin((() => {
 		}
 		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
 		if (existingItemIndex > -1) {
-			const root = _getRoot$39();
+			const root = InventoryV2.getRoot();
 			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (sw1) sw1.style.backgroundImage = "none";
 			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
@@ -261270,7 +259962,7 @@ function clearRefineStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$11(event) {
+function stopPropagation$10(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -261522,7 +260214,7 @@ function selectMaterial(material, item) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$11() {
+function onItemOver$14() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const it = DB.getItemInfo(idx);
 	if (!idx) return false;
@@ -261550,7 +260242,7 @@ function onItemOver$11() {
 /**
 * Hide the item name
 */
-function onItemOut$12() {
+function onItemOut$15() {
 	Refine.ui.find(".overlay").hide();
 }
 /**
@@ -261800,7 +260492,7 @@ function onCancelContRefine() {
 /**
 * Get item info (open description window)
 */
-function onItemInfo$15(event) {
+function onItemInfo$18(event) {
 	event.stopImmediatePropagation();
 	const ITID = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemById(ITID) ? InventoryController.getUI().getItemById(ITID) : InventoryController.getUI().getItemByIndex(ITID);
@@ -261826,13 +260518,13 @@ function onItemInfo$15(event) {
 /**
 * Start dragging an item
 */
-function onItemDragStart$7(event) {
+function onItemDragStart$10(event) {
 	event.originalEvent.dataTransfer.setData("text", event.target.id);
 }
 /**
 * End of dragging an item
 */
-function onItemDragEnd$8(event) {
+function onItemDragEnd$11(event) {
 	if (refine_ongoing) return;
 	const rect = Refine.ui[0].getBoundingClientRect();
 	const mouseX = event.clientX || event.originalEvent.clientX;
@@ -262022,18 +260714,18 @@ var init_Refine = __esmMin((() => {
 			top: 200,
 			left: 300
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$11);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$10);
 		this.ui.find(".titlebar .close").click(onRefineClose);
 		this.ui.find(".footer .cancel").click(onRefineClose);
 		this.draggable(this.ui.find(".titlebar"));
 		const successdiv = this.ui.find(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
 		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$11).on("dragstart", ".item", onItemDragStart$7).on("dragend", ".item", onItemDragEnd$8);
-		this.ui.find(".materials").on("mouseover", ".item", onItemOver$11).on("mouseout", onItemOut$12);
-		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$15);
-		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$15);
-		this.ui.find(".refine_cont").on("mouseover", onItemOver$11).on("mouseout", onItemOut$12);
+		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$10).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11);
+		this.ui.find(".materials").on("mouseover", ".item", onItemOver$14).on("mouseout", onItemOut$15);
+		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$18);
+		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$18);
+		this.ui.find(".refine_cont").on("mouseover", onItemOver$14).on("mouseout", onItemOut$15);
 		this.ui.find(".panel .item_to_refine").on("dblclick", ".item", function() {
 			if (refine_ongoing === 0) onRemoveItem$1(true);
 		});
@@ -262151,7 +260843,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$10(event) {
+function stopPropagation$9(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -262505,7 +261197,7 @@ function setMessages(...scenarioKeys) {
 /**
 * Get item info (open description window)
 */
-function onItemInfo$14(event) {
+function onItemInfo$17(event) {
 	event.stopImmediatePropagation();
 	const ITID = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemById(ITID) ? InventoryController.getUI().getItemById(ITID) : InventoryController.getUI().getItemByIndex(ITID);
@@ -262531,13 +261223,13 @@ function onItemInfo$14(event) {
 /**
 * Start dragging an item
 */
-function onItemDragStart$6(event) {
+function onItemDragStart$9(event) {
 	event.originalEvent.dataTransfer.setData("text", event.target.id);
 }
 /**
 * End of dragging an item
 */
-function onItemDragEnd$7(event) {
+function onItemDragEnd$10(event) {
 	const rect = EnchantGrade.ui[0].getBoundingClientRect();
 	const mouseX = event.clientX || event.originalEvent.clientX;
 	const mouseY = event.clientY || event.originalEvent.clientY;
@@ -262676,11 +261368,11 @@ var init_EnchantGrade = __esmMin((() => {
 		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
 		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
 		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$10);
-		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$6).on("dragend", ".item", onItemDragEnd$7);
-		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$14);
-		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$14);
-		this.ui.find(".BED_container").on("contextmenu", ".item", onItemInfo$14);
+		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$9);
+		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10);
+		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$17);
+		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$17);
+		this.ui.find(".BED_container").on("contextmenu", ".item", onItemInfo$17);
 		this.ui.find(".enchant_container").on("dblclick", ".item", function() {
 			onRemoveItem();
 		});
@@ -264360,9 +263052,6 @@ var init_Enchant = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/InventoryV3/InventoryV3.js
-function _getRoot$38() {
-	return InventoryV3._shadow || InventoryV3._host;
-}
 function _sanitizeHtml$7(str) {
 	const whitelist = [
 		"font",
@@ -264375,9 +263064,6 @@ function _sanitizeHtml$7(str) {
 		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
 	});
 	return div.innerHTML;
-}
-function _getBasicInfoRoot(ui) {
-	return ui._shadow || ui._host || document;
 }
 function getItemTab(item) {
 	switch (item.type) {
@@ -264396,7 +263082,7 @@ function getItemTab(item) {
 		case ItemType_default.AMMO: return InventoryV3.TAB.ETC;
 	}
 }
-function onResize$6() {
+function onResize$9() {
 	const left = InventoryV3._host.offsetLeft;
 	let lastWidth = 0;
 	function resizing() {
@@ -264415,15 +263101,15 @@ function onResize$6() {
 	};
 	window.addEventListener("mouseup", onMouseUp);
 }
-function onSwitchTab() {
-	const root = _getRoot$38();
+function onSwitchTab$2() {
+	const root = InventoryV3.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$35.tab = parseInt(idx, 10);
-	requestFilter();
+	_preferences$38.tab = parseInt(idx, 10);
+	requestFilter$2();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$35.tab !== InventoryV3.TAB.FAV) {
+	if (_preferences$38.tab !== InventoryV3.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -264435,7 +263121,7 @@ function onSwitchTab() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$35.npcsalelock) {
+		if (_preferences$38.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -264456,20 +263142,20 @@ function onSwitchTab() {
 		if (sort) sort.style.display = "";
 	}
 }
-function onToggleReduction() {
-	const panel = _getRoot$38().querySelector(".panel");
-	if (_realSize$1) {
+function onToggleReduction$1() {
+	const panel = InventoryV3.getRoot().querySelector(".panel");
+	if (_realSize$2) {
 		if (panel) panel.style.display = "flex";
-		InventoryV3._host.style.height = `${_realSize$1}px`;
-		_realSize$1 = 0;
+		InventoryV3._host.style.height = `${_realSize$2}px`;
+		_realSize$2 = 0;
 	} else {
-		_realSize$1 = InventoryV3._host.getBoundingClientRect().height;
+		_realSize$2 = InventoryV3._host.getBoundingClientRect().height;
 		InventoryV3._host.style.height = "17px";
 		if (panel) panel.style.display = "none";
 	}
 }
-function requestFilter() {
-	const root = _getRoot$38();
+function requestFilter$2() {
+	const root = InventoryV3.getRoot();
 	const host = root.querySelector(".scroll-host");
 	if (host) host.scrollTop = 0;
 	const content = root.querySelector(".container .content");
@@ -264478,7 +263164,7 @@ function requestFilter() {
 	for (let i = 0, count = list.length; i < count; ++i) InventoryV3.addItemSub(list[i]);
 	InventoryV3.updateScroll();
 }
-function onDrop$14(event) {
+function onDrop$17(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -264526,13 +263212,13 @@ function onDrop$14(event) {
 	}
 	return false;
 }
-function onItemOver$10(_e) {
+function onItemOver$13(_e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(idx);
 	if (!item) return;
 	let quantity = " ea";
 	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = _getRoot$38();
+	const root = InventoryV3.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#InventoryV3") || root;
 	const itemRect = this.getBoundingClientRect();
@@ -264546,11 +263232,11 @@ function onItemOver$10(_e) {
 		else overlay.classList.add("grey");
 	}
 }
-function onItemOut$11() {
-	const overlay = _getRoot$38().querySelector(".overlay");
+function onItemOut$14() {
+	const overlay = InventoryV3.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-function onItemDragStart$5(event) {
+function onItemDragStart$8(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(index);
 	if (!item) return;
@@ -264565,19 +263251,19 @@ function onItemDragStart$5(event) {
 		from: "Inventory",
 		data: item
 	}));
-	onItemOut$11();
+	onItemOut$14();
 }
-function onItemDragEnd$6() {
+function onItemDragEnd$9() {
 	delete window._OBJ_DRAG_;
 }
-function onItemInfo$13(event) {
+function onItemInfo$16(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(index);
 	if (!item) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		transferItemToOtherUI(item);
+		transferItemToOtherUI$2(item);
 		return false;
 	}
 	if (ItemInfo_default.uid === item.ITID) {
@@ -264598,7 +263284,7 @@ function onItemInfo$13(event) {
 	}
 	return false;
 }
-function transferItemToOtherUI(item) {
+function transferItemToOtherUI$2(item) {
 	const storageUI = StorageController.getUI();
 	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
 	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
@@ -264608,12 +263294,12 @@ function transferItemToOtherUI(item) {
 	else if (isCartOpen) InventoryV3.reqMoveItemToCart(item.index, count);
 	return true;
 }
-function onItemUsed$1(event) {
+function onItemUsed$2(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryV3.getItemByIndex(index);
 	if (item) {
 		InventoryV3.useItem(item);
-		onItemOut$11();
+		onItemOut$14();
 	}
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -264675,7 +263361,7 @@ function onRequestInventoryExpandResult(pkt) {
 			const item = InventoryV3.getItemById(pkt.itemId);
 			if (!item) return false;
 			const itemname = DB.getItemName(item);
-			const mcntEl = _getRoot$38().querySelector(".mcnt");
+			const mcntEl = InventoryV3.getRoot().querySelector(".mcnt");
 			const currentlimit = mcntEl ? parseInt(mcntEl.textContent, 10) : 100;
 			const newlimit = currentlimit + 10;
 			UIManager.showPromptBox(DB.getMessage(3561).replace("%s", itemname).replace("%d", currentlimit).replace("%d", newlimit), "ok", "cancel", InventoryExpandReq, InventoryExpandCancel);
@@ -264725,28 +263411,28 @@ function onFinalReqInventoryExpandResult(pkt) {
 	}
 }
 function onItemLock() {
-	_preferences$35.itemlock = !_preferences$35.itemlock;
-	InventoryV3.itemlock = _preferences$35.itemlock;
-	const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$38.itemlock = !_preferences$38.itemlock;
+	InventoryV3.itemlock = _preferences$38.itemlock;
+	const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const btn = _getRoot$38().querySelector(".item_drop_lock");
+		const btn = InventoryV3.getRoot().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onItemCompare() {
-	_preferences$35.itemcomp = !_preferences$35.itemcomp;
-	InventoryV3.itemcomp = _preferences$35.itemcomp;
-	const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$38.itemcomp = !_preferences$38.itemcomp;
+	InventoryV3.itemcomp = _preferences$38.itemcomp;
+	const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const btn = _getRoot$38().querySelector(".item_compare");
+		const btn = InventoryV3.getRoot().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock() {
-	_preferences$35.npcsalelock = !_preferences$35.npcsalelock;
-	InventoryV3.npcsalelock = _preferences$35.npcsalelock;
-	const root = _getRoot$38();
-	if (_preferences$35.npcsalelock) {
+	_preferences$38.npcsalelock = !_preferences$38.npcsalelock;
+	InventoryV3.npcsalelock = _preferences$38.npcsalelock;
+	const root = InventoryV3.getRoot();
+	if (_preferences$38.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -264770,7 +263456,7 @@ function onNPCLock() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV3, _realSize$1, _preferences$35, lockOverlayTimeout, InventoryV3_default;
+var InventoryV3, _realSize$2, _preferences$38, lockOverlayTimeout, InventoryV3_default;
 var init_InventoryV3 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -264814,8 +263500,8 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.equipswitchlist = [];
 	InventoryV3.newItems = [];
 	InventoryV3.equippedItems = [];
-	_realSize$1 = 0;
-	_preferences$35 = Preferences.get("InventoryV3", {
+	_realSize$2 = 0;
+	_preferences$38 = Preferences.get("InventoryV3", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -264831,52 +263517,52 @@ var init_InventoryV3 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	InventoryV3.itemlock = _preferences$35.itemlock;
-	InventoryV3.itemcomp = _preferences$35.itemcomp;
-	InventoryV3.npcsalelock = _preferences$35.npcsalelock;
+	InventoryV3.itemlock = _preferences$38.itemlock;
+	InventoryV3.itemcomp = _preferences$38.itemcomp;
+	InventoryV3.npcsalelock = _preferences$38.npcsalelock;
 	InventoryV3.init = function Init() {
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction);
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$1);
 		root.querySelectorAll(".tabs button").forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab);
+			btn.addEventListener("mousedown", onSwitchTab$2);
 			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 			btn.addEventListener("drop", onTabDrop);
 		});
 		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$6);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$9);
 		const closeBtn = root.querySelector(".titlebar .close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV3._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$14);
+		this._host.addEventListener("drop", onDrop$17);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("mouseover", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemOver$10.call(item, e);
+				if (item) onItemOver$13.call(item, e);
 			});
 			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$11();
+				if (e.target.closest(".item")) onItemOut$14();
 			});
 			content.addEventListener("dragstart", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemDragStart$5.call(item, e);
+				if (item) onItemDragStart$8.call(item, e);
 			});
 			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$6();
+				if (e.target.closest(".item")) onItemDragEnd$9();
 			});
 			content.addEventListener("contextmenu", (e) => {
 				e.preventDefault();
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$13.call(item, e);
+				if (item) onItemInfo$16.call(item, e);
 			});
 			content.addEventListener("dblclick", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemUsed$1.call(item, e);
+				if (item) onItemUsed$2.call(item, e);
 			});
 			content.addEventListener("click", (e) => {
 				const item = e.target.closest(".item");
@@ -264890,19 +263576,19 @@ var init_InventoryV3 = __esmMin((() => {
 		this.draggable(".titlebar");
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$35.tab]) allTabs[_preferences$35.tab].classList.add("selected");
-		const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$38.tab]) allTabs[_preferences$38.tab].classList.add("selected");
+		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const btn = root.querySelector(".item_drop_lock");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$35.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$35.tab !== InventoryV3.TAB.FAV) {
+		const lockSale = _preferences$38.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$38.tab !== InventoryV3.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -264925,40 +263611,40 @@ var init_InventoryV3 = __esmMin((() => {
 			clearTimeout(lockOverlayTimeout);
 		});
 		const sortBtn = root.querySelector(".sort");
-		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter());
+		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$2());
 	};
 	InventoryV3.onAppend = function OnAppend() {
-		if (!_preferences$35.show) this._host.style.display = "none";
-		this.resize(_preferences$35.width, _preferences$35.height);
+		if (!_preferences$38.show) this._host.style.display = "none";
+		this.resize(_preferences$38.width, _preferences$38.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$35.magnet_top;
-		this.magnet.BOTTOM = _preferences$35.magnet_bottom;
-		this.magnet.LEFT = _preferences$35.magnet_left;
-		this.magnet.RIGHT = _preferences$35.magnet_right;
-		_realSize$1 = _preferences$35.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = _getRoot$38().querySelector(".titlebar .mini");
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$38.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$38.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$38.magnet_top;
+		this.magnet.BOTTOM = _preferences$38.magnet_bottom;
+		this.magnet.LEFT = _preferences$38.magnet_left;
+		this.magnet.RIGHT = _preferences$38.magnet_right;
+		_realSize$2 = _preferences$38.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = InventoryV3.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
 	InventoryV3.onRemove = function OnRemove() {
-		const content = _getRoot$38().querySelector(".container .content");
+		const content = InventoryV3.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		this.equipswitchlist.length = 0;
 		InventoryV3.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$35.show = this._host.style.display !== "none";
-		_preferences$35.reduce = !!_realSize$1;
-		_preferences$35.y = parseInt(this._host.style.top, 10);
-		_preferences$35.x = parseInt(this._host.style.left, 10);
+		_preferences$38.show = this._host.style.display !== "none";
+		_preferences$38.reduce = !!_realSize$2;
+		_preferences$38.y = parseInt(this._host.style.top, 10);
+		_preferences$38.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$35.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$35.magnet_top = this.magnet.TOP;
-		_preferences$35.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$35.magnet_left = this.magnet.LEFT;
-		_preferences$35.magnet_right = this.magnet.RIGHT;
-		_preferences$35.save();
+		_preferences$38.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$38.magnet_top = this.magnet.TOP;
+		_preferences$38.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$38.magnet_left = this.magnet.LEFT;
+		_preferences$38.magnet_right = this.magnet.RIGHT;
+		_preferences$38.save();
 	};
 	InventoryV3.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
@@ -264969,7 +263655,7 @@ var init_InventoryV3 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					_getRoot$38().querySelectorAll(".new_item").forEach((el) => {
+					InventoryV3.getRoot().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -264978,7 +263664,7 @@ var init_InventoryV3 = __esmMin((() => {
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -264989,14 +263675,14 @@ var init_InventoryV3 = __esmMin((() => {
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			_getRoot$38().querySelectorAll(".new_item").forEach((el) => {
+			InventoryV3.getRoot().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
 		}
 		const basicInfoUI = BasicInfoController.getUI();
 		if (basicInfoUI._host) {
-			const changeUI = _getBasicInfoRoot(basicInfoUI).querySelector("#item .btn_overlay");
+			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
@@ -265005,13 +263691,13 @@ var init_InventoryV3 = __esmMin((() => {
 	};
 	InventoryV3.resize = function Resize(width) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = _getRoot$38().querySelector(".container .content");
+		const content = InventoryV3.getRoot().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
 		this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
 	InventoryV3.updateScroll = function updateScroll() {
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -265041,7 +263727,7 @@ var init_InventoryV3 = __esmMin((() => {
 		return null;
 	};
 	InventoryV3.setItems = function SetItems(items) {
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
@@ -265056,14 +263742,14 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
 		const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		const equippedIndex = InventoryV3.equippedItems.indexOf(item.index);
 		if (equippedIndex !== -1) InventoryV3.equippedItems.splice(equippedIndex, 1);
 		else {
 			InventoryV3.newItems.push(item.index);
 			const basicInfoUI = BasicInfoController.getUI();
 			if (basicInfoUI._host) {
-				const changeUI = _getBasicInfoRoot(basicInfoUI).querySelector("#item .btn_overlay");
+				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 				if (changeUI) changeUI.style.display = "block";
 			}
 		}
@@ -265082,7 +263768,7 @@ var init_InventoryV3 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV3.newItems.indexOf(item.index) === -1) InventoryV3.newItems.push(item.index);
-			if (getItemTab(item) === _preferences$35.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (el) el.style.backgroundImage = `url(${data})`;
 			});
@@ -265108,9 +263794,9 @@ var init_InventoryV3 = __esmMin((() => {
 		}
 		const isInSwitchList = InventoryV3.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$35.tab) {
+		if (tab === _preferences$38.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = _getRoot$38();
+			const root = InventoryV3.getRoot();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
 			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
@@ -265148,7 +263834,7 @@ var init_InventoryV3 = __esmMin((() => {
 	};
 	InventoryV3.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -265173,7 +263859,7 @@ var init_InventoryV3 = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -265249,7 +263935,7 @@ var init_InventoryV3 = __esmMin((() => {
 			}
 			item.PlaceETCTab = favoriteval;
 		} else item.PlaceETCTab = newValue;
-		requestFilter();
+		requestFilter$2();
 	};
 	InventoryV3.addItemtoSwitch = function(index) {
 		const item = this.getItemByIndex(index);
@@ -265264,7 +263950,7 @@ var init_InventoryV3 = __esmMin((() => {
 			this.equipswitchlist.splice(existingItemIndex, 1);
 		}
 		this.equipswitchlist.push(item);
-		const root = _getRoot$38();
+		const root = InventoryV3.getRoot();
 		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
 			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -265284,7 +263970,7 @@ var init_InventoryV3 = __esmMin((() => {
 		}
 		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
 		if (existingItemIndex > -1) {
-			const root = _getRoot$38();
+			const root = InventoryV3.getRoot();
 			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
 			if (sw1) sw1.style.backgroundImage = "none";
 			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
@@ -265314,7 +264000,7 @@ var init_InventoryV3 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Inventory/Inventory.js
-var publicName$5, versionInfo$5, InventoryController, _selectUIVersion$2;
+var publicName$6, versionInfo$6, InventoryController, _selectUIVersion$3;
 var init_Inventory = __esmMin((() => {
 	init_InventoryV0();
 	init_InventoryV1();
@@ -265323,8 +264009,8 @@ var init_Inventory = __esmMin((() => {
 	init_UIVersionManager();
 	init_DBManager();
 	init_KeyEventHandler();
-	publicName$5 = "Inventory";
-	versionInfo$5 = {
+	publicName$6 = "Inventory";
+	versionInfo$6 = {
 		default: InventoryV0_default,
 		common: {
 			20181219: InventoryV3_default,
@@ -265334,10 +264020,10 @@ var init_Inventory = __esmMin((() => {
 		re: {},
 		prere: {}
 	};
-	InventoryController = UIVersionManager.getUIController(publicName$5, versionInfo$5);
-	_selectUIVersion$2 = InventoryController.selectUIVersion;
+	InventoryController = UIVersionManager.getUIController(publicName$6, versionInfo$6);
+	_selectUIVersion$3 = InventoryController.selectUIVersion;
 	InventoryController.selectUIVersion = function() {
-		_selectUIVersion$2();
+		_selectUIVersion$3();
 		const component = InventoryController.getUI();
 		DB.UpdateOwnerName.Inventory = component.onUpdateOwnerName;
 		component.onKeyDown = function onKeyDown(e) {
@@ -265348,63 +264034,15 @@ var init_Inventory = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Components/ItemInfo/ItemInfo.js
-var ItemInfo_exports = /* @__PURE__ */ __exportAll({ default: () => ItemInfo_default });
-function _getRoot$37() {
-	return ItemInfo._shadow || ItemInfo._host;
-}
-/**
-* Helper: escape HTML keeping whitelisted tags
-*/
-function _escapeHTML$3(text) {
-	const div = document.createElement("div");
-	div.textContent = text;
-	return div.innerHTML;
-}
-/**
-* Add a card into a slot
-*
-* @param {Element} cardList DOM element
-* @param {number} item id
-* @param {number} index
-* @param {number} slot count
-*/
-function addCard(cardList, itemId, index, slotCount) {
-	let file, name = "";
-	const card = DB.getItemInfo(itemId);
-	if (itemId && card) {
-		file = "item/" + card.identifiedResourceName + ".bmp";
-		name = `<div class="name">${_escapeHTML$3(card.identifiedDisplayName)}</div>`;
-	} else if (index < slotCount) file = "empty_card_slot.bmp";
-	else file = "basic_interface/coparison_disable_card_slot.bmp";
-	if (!cardList) return;
-	cardList.insertAdjacentHTML("beforeend", `<div class="item" data-index="${index}"><div class="icon"></div>${name}</div>`);
-	Client.loadFile(DB.INTERFACE_PATH + file, (data) => {
-		const element = _getRoot$37().querySelector(`.cardlist .item[data-index="${index}"] .icon`);
-		if (element) {
-			element.style.backgroundImage = `url(${data})`;
-			if (itemId && card) element.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				e.stopImmediatePropagation();
-				ItemInfo.setItem({
-					ITID: itemId,
-					IsIdentified: true,
-					type: 6
-				});
-			});
-		}
-	});
-}
-/**
-* Extend ItemInfo window size
-*/
-function onResize$5() {
-	const top = ItemInfo._host.offsetTop;
+//#region src/UI/Components/Storage/StorageV0/Storage.js
+function onResize$8() {
+	const top = Storage$1._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
-		const h = Math.floor(Mouse.screen.y - top);
+		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
+		h = Math.min(Math.max(h, 8), 17);
 		if (h === lastHeight) return;
-		resize$3(h);
+		resizeHeight$3(h);
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
@@ -265416,475 +264054,1673 @@ function onResize$5() {
 	};
 	window.addEventListener("mouseup", onMouseUp);
 }
-/**
-* Extend ItemInfo window size
-*
-* @param {number} height
-*/
-function resize$3(height) {
-	const root = _getRoot$37();
-	const container = root.querySelector(".container");
-	const description = root.querySelector(".description");
-	const descriptionInner = root.querySelector(".description-inner");
-	let containerHeight = height;
-	const minHeight = 140;
-	const innerH = descriptionInner ? descriptionInner.offsetHeight : 0;
-	const maxHeight = innerH + 45 > 140 ? Math.min(innerH + 45, 448) : 140;
-	if (containerHeight <= minHeight) containerHeight = minHeight;
-	if (containerHeight >= maxHeight) containerHeight = maxHeight;
-	if (container) container.style.height = `${containerHeight}px`;
-	if (description) description.style.height = `${containerHeight - 45}px`;
+function resizeHeight$3(height) {
+	height = Math.min(Math.max(height, 8), 17);
+	const content = Storage$1.getRoot().querySelector(".container .content");
+	if (content) content.style.height = `${height * 32}px`;
+	Storage$1._host.style.height = `${50 + height * 32}px`;
 }
-function addEvent(item) {
-	const root = _getRoot$37();
-	let event = root.querySelector(".event_view");
-	if (!event) {
-		if (!validateFieldsExist(event)) event = root.querySelector(".event_view");
-	}
-	if (!event) return;
-	const viewBtn = event.querySelector(".view");
-	if (viewBtn) viewBtn.style.display = "none";
-	event.querySelectorAll("canvas").forEach((c) => c.remove());
-	Renderer.stop(rendering$2);
-	switch (item.type) {
-		case ItemType_default.CARD:
-			if (viewBtn) viewBtn.style.display = "block";
-			break;
-		case ItemType_default.ETC: {
-			const filenameBook = `data/book/${item.ITID}.txt`;
-			Client.loadFile(filenameBook, (data) => {
-				try {
-					MakeReadBook_default.startBook(data, item);
-				} catch (e) {
-					console.error("ItemInfo::addEvent() - startBook failed:", e.message);
-				}
-				eventsBooks();
-			});
-			break;
-		}
-		default:
-			if (viewBtn) viewBtn.style.display = "none";
-			break;
-	}
-}
-function updatePreviewButton(item) {
-	const previewButton = _getRoot$37().querySelector(".btn_mounting");
-	if (!previewButton) return;
-	if (!canPreviewItem(item)) {
-		previewButton.style.display = "none";
-		return;
-	}
-	previewButton.style.display = "block";
-	const newBtn = previewButton.cloneNode(true);
-	previewButton.parentNode.replaceChild(newBtn, previewButton);
-	newBtn.addEventListener("click", (e) => {
-		e.stopImmediatePropagation();
-		toggleItemPreview(item);
+function onSwitchTab$1(idx) {
+	_preferences$37.tab = idx;
+	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
+		const tabs = Storage$1.getRoot().querySelector(".tabs");
+		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
+		requestFilter$1();
 	});
 }
-function canPreviewItem(item) {
-	if (!item) return false;
-	if (!(getPreviewLocation(item) & (EquipmentLocation_default.HEAD_BOTTOM | EquipmentLocation_default.HEAD_MID | EquipmentLocation_default.HEAD_TOP | EquipmentLocation_default.COSTUME_HEAD_BOTTOM | EquipmentLocation_default.COSTUME_HEAD_MID | EquipmentLocation_default.COSTUME_HEAD_TOP | EquipmentLocation_default.COSTUME_ROBE))) return false;
-	return getPreviewSpriteId(item, DB.getItemInfo(item.ITID)) > 0;
-}
-function getPreviewLocation(item) {
-	if ("location" in item) return item.location;
-	if ("WearState" in item) return item.WearState;
-	if ("WearLocation" in item) return item.WearLocation;
-	return 0;
-}
-function getPreviewSpriteId(item, it) {
-	if (item && item.wItemSpriteNumber) return item.wItemSpriteNumber;
-	if (it && it.ClassNum) return it.ClassNum;
-	return 0;
-}
-function toggleItemPreview(item) {
-	if (ItemPreview_default.ui && ItemPreview_default._host && ItemPreview_default._host.style.display !== "none" && ItemPreview_default.uid === item.ITID) {
-		ItemPreview_default.remove();
-		return;
-	}
-	ItemPreview_default.append();
-	ItemPreview_default.uid = item.ITID;
-	ItemPreview_default.setItem(item);
-}
-function eventsBooks() {
-	const root = _getRoot$37();
-	const event = root.querySelector(".event_view");
-	if (!event) return;
-	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
-		try {
-			_sprite$3 = new SPR(spr);
-			_action$3 = new ACT(act);
-		} catch (e) {
-			console.error("Book::init() - " + e.message);
-			return;
-		}
-		const canvas = _sprite$3.getCanvasFromFrame(0);
-		canvas.className = "book_open event_add_cursor";
-		event.appendChild(canvas);
-		const bookOpen = root.querySelector(".book_open");
-		if (bookOpen) {
-			bookOpen.addEventListener("mouseover", (e) => {
-				e.stopImmediatePropagation();
-				const overlayOpen = root.querySelector(".overlay_open");
-				if (overlayOpen) overlayOpen.style.display = "block";
-			});
-			bookOpen.addEventListener("mouseout", (e) => {
-				e.stopImmediatePropagation();
-				const overlayOpen = root.querySelector(".overlay_open");
-				if (overlayOpen) overlayOpen.style.display = "none";
-			});
-			bookOpen.addEventListener("click", (e) => {
-				e.stopImmediatePropagation();
-				MakeReadBook_default.openBook();
-			});
-		}
-		const readCanvas = document.createElement("canvas");
-		readCanvas.width = 21;
-		readCanvas.height = 15;
-		readCanvas.className = "book_read event_add_cursor";
-		event.appendChild(readCanvas);
-		_ctx$10 = readCanvas.getContext("2d");
-		const bookRead = root.querySelector(".book_read");
-		if (bookRead) {
-			bookRead.addEventListener("mouseover", (e) => {
-				e.stopImmediatePropagation();
-				const overlayRead = root.querySelector(".overlay_read");
-				if (overlayRead) overlayRead.style.display = "block";
-			});
-			bookRead.addEventListener("mouseout", (e) => {
-				e.stopImmediatePropagation();
-				const overlayRead = root.querySelector(".overlay_read");
-				if (overlayRead) overlayRead.style.display = "none";
-			});
-			bookRead.addEventListener("click", (e) => {
-				e.stopImmediatePropagation();
-				MakeReadBook_default.highlighter();
-			});
-		}
-		Renderer.render(rendering$2);
-	});
-}
-function validateFieldsExist(event) {
-	const root = _getRoot$37();
-	if (!event) {
-		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span></div>";
-		const collection = root.querySelector(".collection");
-		if (collection) collection.insertAdjacentHTML("afterend", validExitElement);
+function onDrop$16(event) {
+	let data;
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (e) {}
+	event.stopImmediatePropagation();
+	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
+	const item = data.data;
+	if (item.count > 1) {
+		InputBox_default.append();
+		InputBox_default.setType("number", false, item.count);
+		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+			InputBox_default.remove();
+			if (data.from === "CartItems") Storage$1.reqAddItemFromCart(item.index, parseInt(count, 10));
+			else Storage$1.reqAddItem(item.index, parseInt(count, 10));
+		};
 		return false;
 	}
-	if (!root.querySelector(".overlay_open") && !root.querySelector(".overlay_read")) event.insertAdjacentHTML("beforeend", "<span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span>");
-	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
-	return true;
+	if (data.from === "CartItems") Storage$1.reqAddItemFromCart(item.index, 1);
+	else Storage$1.reqAddItem(item.index, 1);
+	return false;
 }
-/**
-* A function that handles previewing an item.
-*
-* @param {object} pkt - The packet containing information about the item
-* @return {boolean} Indicates success or failure of the preview action
-*/
-function onItemPreview(pkt) {
-	if (pkt) {
-		const item = InventoryController.getUI().getItemByIndex(pkt.index);
-		if (!item) return false;
-		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		if (ItemInfo.uid === item.ITID) {
-			ItemInfo.remove();
-			if (ItemCompare_default.ui) ItemCompare_default.remove();
-			return false;
-		}
-		ItemInfo.append();
-		ItemInfo.uid = item.ITID;
-		ItemInfo.setItem(item);
-		const compareItem = EquipmentController.getUI().isInEquipList(item.location);
-		if (compareItem && InventoryController.getUI().itemcomp) {
-			ItemCompare_default.prepare();
-			ItemCompare_default.append();
-			ItemCompare_default.uid = compareItem.ITID;
-			ItemCompare_default.setItem(compareItem);
-		}
+function requestFilter$1() {
+	const content = Storage$1.getRoot().querySelector(".container .content");
+	if (content) content.innerHTML = "";
+	for (let i = 0, count = _list$13.length; i < count; ++i) Storage$1.addItemSub(_list$13[i]);
+}
+function getItemIndexById$3(index) {
+	for (let i = 0, count = _list$13.length; i < count; ++i) if (_list$13[i].index === index) return i;
+	return -1;
+}
+function onScroll$7(event, contentEl) {
+	let delta;
+	if (event.wheelDelta) delta = event.wheelDelta / 120;
+	else if (event.detail) delta = -event.detail;
+	else if (event.deltaY) delta = -event.deltaY / 100;
+	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
+	event.preventDefault();
+}
+function onItemOver$12(itemEl, root) {
+	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
+	if (i < 0) return;
+	const item = _list$13[i];
+	const overlay = root.querySelector(".overlay");
+	if (overlay) {
+		overlay.style.display = "";
+		overlay.style.top = `${itemEl.offsetTop - 10}px`;
+		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
 	}
 }
-/**
-* Build moveInfo tooltip html content
-* @param {object} moveInfo
-* @returns {string} html content
-*/
-function buildMoveInfoTooltip(moveInfo) {
-	const lines = [];
-	for (const entry of MOVE_INFO_MESSAGES) if (moveInfo[entry.key] === true) lines.push(DB.getMessage(entry.msgId));
-	return lines.map((l) => `<div>${l}</div>`).join("");
+function onItemOut$13(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
-var ItemInfo, _sprite$3, _action$3, _ctx$10, _type$5, _start$1, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
-var init_ItemInfo = __esmMin((() => {
+function onItemDragStart$7(event, itemEl) {
+	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
+	if (i === -1) return;
+	const img = new Image();
+	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+	url = url.replace(/^"/, "").replace(/"$/, "");
+	img.decoding = "async";
+	img.src = url;
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+		type: "item",
+		from: "Storage",
+		data: _list$13[i]
+	}));
+}
+function onItemDragEnd$8() {
+	delete window._OBJ_DRAG_;
+}
+function onItemInfo$15(event, itemEl) {
+	event.stopImmediatePropagation();
+	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
+	if (i === -1) return false;
+	if (event.altKey && event.which === 3) {
+		event.stopImmediatePropagation();
+		transferItemToOtherUI$1(_list$13[i]);
+		return false;
+	}
+	if (ItemInfo_default.uid === _list$13[i].ITID) ItemInfo_default.remove();
+	ItemInfo_default.append();
+	ItemInfo_default.uid = _list$13[i].ITID;
+	ItemInfo_default.setItem(_list$13[i]);
+	return false;
+}
+function transferItemToOtherUI$1(item) {
+	const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
+	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+	if (!item) return false;
+	const count = item.count || 1;
+	if (isInventoryOpen) Storage$1.reqRemoveItem(item.index, count);
+	else if (isCartOpen) Storage$1.reqMoveItemToCart(item.index, count);
+	return true;
+}
+var Storage$1, _list$13, _preferences$37, Storage_default$3;
+var init_Storage$5 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
-	init_EquipmentLocation();
 	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_MouseEventHandler();
 	init_KeyEventHandler();
-	init_CardIllustration();
 	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_InputBox();
+	init_ItemInfo();
+	init_Storage$7();
+	init_Storage$6();
+	init_CartItems();
+	init_Inventory();
+	Storage$1 = new GUIComponent("Storage", Storage_default$4);
+	Storage$1.render = () => Storage_default$5;
+	Storage$1.TAB = {
+		ITEM: 0,
+		KAFRA: 1,
+		ARMOR: 2,
+		ARMS: 3,
+		AMMO: 4,
+		CARD: 5,
+		ETC: 6
+	};
+	_list$13 = [];
+	_preferences$37 = Preferences.get("Storage", {
+		x: 200,
+		y: 500,
+		height: 8,
+		tab: Storage$1.TAB.ITEM
+	}, 1);
+	Storage$1.init = function init() {
+		const root = this.getRoot();
+		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
+			btn.addEventListener("mousedown", () => onSwitchTab$1(idx));
+		});
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$8());
+		const closeBtn = root.querySelector(".footer .close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
+			});
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$37.tab + 1}.bmp`, (data) => {
+			const tabs = root.querySelector(".tabs");
+			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
+		});
+		resizeHeight$3(_preferences$37.height);
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", (e) => onScroll$7(e, content));
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemOver$12(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$13(root);
+			});
+			content.addEventListener("dragstart", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					onItemDragStart$7(e, itemEl);
+					onItemOut$13(root);
+				}
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$8();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					e.preventDefault();
+					onItemInfo$15(e, itemEl);
+				}
+			});
+		}
+		this._host.addEventListener("drop", (e) => onDrop$16(e));
+		this._host.addEventListener("dragover", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+		});
+		this.draggable(".titlebar");
+		this.ui.hide();
+	};
+	Storage$1.onAppend = function onAppend() {
+		this.ui.show();
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+	};
+	Storage$1.onRemove = function onRemove() {
+		const content = this.getRoot().querySelector(".container .content");
+		if (content) content.innerHTML = "";
+		_list$13.length = 0;
+		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$37.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$37.save();
+	};
+	Storage$1.setItems = function setItems(items) {
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$13.push(items[i]);
+	};
+	Storage$1.addItem = function addItem(item) {
+		const i = getItemIndexById$3(item.index);
+		if (i > -1) {
+			_list$13[i].count += item.count;
+			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = _list$13[i].count;
+			return;
+		}
+		if (this.addItemSub(item)) _list$13.push(item);
+	};
+	Storage$1.addItemSub = function addItemSub(item) {
+		let tab;
+		switch (item.type) {
+			case ItemType_default.HEALING:
+			case ItemType_default.USABLE:
+			case ItemType_default.DELAYCONSUME:
+				tab = Storage$1.TAB.ITEM;
+				break;
+			case ItemType_default.CASH:
+				tab = Storage$1.TAB.KAFRA;
+				break;
+			case ItemType_default.ARMOR:
+			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.PETEGG:
+				tab = Storage$1.TAB.ARMOR;
+				break;
+			case ItemType_default.WEAPON:
+			case ItemType_default.PETARMOR:
+				tab = Storage$1.TAB.ARMS;
+				break;
+			case ItemType_default.AMMO:
+				tab = Storage$1.TAB.AMMO;
+				break;
+			case ItemType_default.CARD:
+				tab = Storage$1.TAB.CARD;
+				break;
+			default:
+			case ItemType_default.ETC:
+				tab = Storage$1.TAB.ETC;
+				break;
+		}
+		if (tab === _preferences$37.tab) {
+			const it = DB.getItemInfo(item.ITID);
+			const root = this.getRoot();
+			const content = root.querySelector(".container .content");
+			const itemEl = document.createElement("div");
+			itemEl.className = "item";
+			itemEl.setAttribute("data-index", item.index);
+			itemEl.setAttribute("draggable", "true");
+			const iconDiv = document.createElement("div");
+			iconDiv.className = "icon";
+			itemEl.appendChild(iconDiv);
+			const amountDiv = document.createElement("div");
+			amountDiv.className = "amount";
+			if (item.count) {
+				const countSpan = document.createElement("span");
+				countSpan.className = "count";
+				countSpan.textContent = item.count;
+				amountDiv.appendChild(countSpan);
+				amountDiv.appendChild(document.createTextNode(" "));
+			}
+			itemEl.appendChild(amountDiv);
+			const nameSpan = document.createElement("span");
+			nameSpan.className = "name";
+			nameSpan.innerHTML = DB.getItemName(item);
+			itemEl.appendChild(nameSpan);
+			if (content) content.appendChild(itemEl);
+			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
+			});
+		}
+		return true;
+	};
+	Storage$1.removeItem = function removeItem(index, count) {
+		const i = getItemIndexById$3(index);
+		if (i < 0) return null;
+		const root = this.getRoot();
+		if (_list$13[i].count) {
+			_list$13[i].count -= count;
+			if (_list$13[i].count > 0) {
+				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
+				if (countEl) countEl.textContent = _list$13[i].count;
+				return _list$13[i];
+			}
+		}
+		const item = _list$13[i];
+		_list$13.splice(i, 1);
+		const el = root.querySelector(`.item[data-index="${index}"]`);
+		if (el) el.remove();
+		return item;
+	};
+	Storage$1.setItemInfo = function setItemInfo(current, limit) {
+		const root = this.getRoot();
+		const currentEl = root.querySelector(".footer .current");
+		const limitEl = root.querySelector(".footer .limit");
+		if (currentEl) currentEl.textContent = current;
+		if (limitEl) limitEl.textContent = limit;
+	};
+	Storage$1.onKeyDown = function onKeyDown(event) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
+		}
+	};
+	Storage$1.onClosePressed = function onClosedPressed() {};
+	Storage$1.reqAddItem = function reqAddItem() {};
+	Storage$1.reqAddItemFromCart = function reqAddItemFromCart() {};
+	Storage$1.reqRemoveItem = function reqRemoveItem() {};
+	Storage$1.reqMoveItemToCart = function reqMoveItemToCart() {};
+	Storage$1.mouseMode = GUIComponent.MouseMode.STOP;
+	Storage_default$3 = UIManager.addComponent(Storage$1);
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV3/StorageFilter.html?raw
+var StorageFilter_default$1;
+var init_StorageFilter$2 = __esmMin((() => {
+	StorageFilter_default$1 = "<div id=\"StorageFilter\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\">Item Filter</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n	</div>\r\n\r\n	<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n		<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV3/StorageFilter.css?raw
+var StorageFilter_default;
+var init_StorageFilter$1 = __esmMin((() => {
+	StorageFilter_default = ":host {\r\n	width: 220px;\r\n	height: 164px;\r\n	top: 150px;\r\n	left: 150px;\r\n}\r\n\r\n#StorageFilter {\r\n	position: absolute;\r\n	width: 220px;\r\n}\r\n#StorageFilter .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#StorageFilter .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#StorageFilter .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#StorageFilter .titlebar .right {\r\n	margin-right: 3px;\r\n	float: right;\r\n}\r\n#StorageFilter .titlebar .clear {\r\n	clear: both;\r\n}\r\n#StorageFilter .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#StorageFilter .panel {\r\n	border: 1px solid #ccc;\r\n	border-bottom: none;\r\n	background: white;\r\n	padding-left: 16px;\r\n}\r\n\r\n#StorageFilter .content {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	min-height: 128px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#StorageFilter .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#StorageFilter .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#StorageFilter .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#StorageFilter .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#StorageFilter .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#StorageFilter .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 160px;\r\n}\r\n\r\n#StorageFilter .footer {\r\n	width: 100%;\r\n	height: 19px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border: 1px solid #ccc;\r\n	border-top: none;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#StorageFilter .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: se-resize;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV3/StorageFilter.js
+function StorageFilter(tabId) {
+	const prefName = "StorageFilter_" + tabId;
+	GUIComponent.call(this, prefName, StorageFilter_default);
+	this.render = () => StorageFilter_default$1;
+	this.onRemove = function() {
+		const root = this.getRoot();
+		const content = root.querySelector(".content");
+		if (content) content.innerHTML = "";
+		this._list.length = 0;
+		this._currentTabId = -1;
+		this._preferences.y = parseInt(this._host.style.top, 10);
+		this._preferences.x = parseInt(this._host.style.left, 10);
+		this._preferences.height = Math.floor((root.querySelector(".content") ? root.querySelector(".content").offsetHeight : 128) / 32);
+		this._preferences.save();
+		if (typeof this.onCloseCallback === "function") this.onCloseCallback();
+	};
+	this._list = [];
+	this._currentTabId = -1;
+	this._preferences = Preferences.get(prefName, {
+		x: 300 + tabId * 20,
+		y: 200 + tabId * 20,
+		height: 4
+	}, 1);
+	this.onCloseCallback = null;
+}
+var init_StorageFilter = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
 	init_MouseEventHandler();
 	init_GUIComponent();
 	init_Elements();
-	init_CursorManager();
-	init_ItemCompare();
-	init_ItemPreview();
-	init_MakeReadBook();
+	init_ItemInfo();
+	init_StorageFilter$2();
+	init_StorageFilter$1();
+	StorageFilter.prototype = Object.create(GUIComponent.prototype);
+	StorageFilter.prototype.constructor = StorageFilter;
+	StorageFilter.prototype.init = function init() {
+		const self = this;
+		const root = this.getRoot();
+		const closeBtn = root.querySelector(".titlebar .right .close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				self.remove();
+			});
+		}
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => this.onResize());
+		this.resizeHeight(this._preferences.height);
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) this.onItemOver(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) this.onItemOut(root);
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					e.preventDefault();
+					this.onItemInfo(e, itemEl);
+				}
+			});
+			content.addEventListener("dragstart", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					this.onItemDragStart(e, itemEl);
+					this.onItemOut(root);
+				}
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) this.onItemDragEnd();
+			});
+		}
+		this.draggable(".titlebar");
+		this.ui.hide();
+	};
+	StorageFilter.prototype.onAppend = function onAppend() {
+		this.ui.show();
+		this._host.style.left = `${Math.min(Math.max(0, this._preferences.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, this._preferences.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+	};
+	StorageFilter.prototype.setItems = function setItems(title, items, tabId) {
+		this._list = items.slice(0);
+		this._currentTabId = tabId;
+		const root = this.getRoot();
+		const titleEl = root.querySelector(".titlebar .text");
+		if (titleEl) titleEl.textContent = title;
+		const content = root.querySelector(".content");
+		if (content) content.innerHTML = "";
+		for (let i = 0, count = this._list.length; i < count; ++i) this.renderItem(this._list[i]);
+	};
+	StorageFilter.prototype.renderItem = function renderItem(item) {
+		const it = DB.getItemInfo(item.ITID);
+		const root = this.getRoot();
+		const content = root.querySelector(".content");
+		const itemEl = document.createElement("div");
+		itemEl.className = "item";
+		itemEl.setAttribute("data-index", item.index);
+		itemEl.setAttribute("draggable", "true");
+		const iconDiv = document.createElement("div");
+		iconDiv.className = "icon";
+		itemEl.appendChild(iconDiv);
+		const amountDiv = document.createElement("div");
+		amountDiv.className = "amount";
+		if (item.count) {
+			const countSpan = document.createElement("span");
+			countSpan.className = "count";
+			countSpan.textContent = item.count;
+			amountDiv.appendChild(countSpan);
+			amountDiv.appendChild(document.createTextNode(" "));
+		}
+		itemEl.appendChild(amountDiv);
+		const nameSpan = document.createElement("span");
+		nameSpan.className = "name";
+		nameSpan.innerHTML = DB.getItemName(item);
+		itemEl.appendChild(nameSpan);
+		if (content) content.appendChild(itemEl);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
+		});
+	};
+	StorageFilter.prototype.getItemFromIndex = function getItemFromIndex(index) {
+		return this._list.filter((item) => item.index === index)[0];
+	};
+	StorageFilter.prototype.onItemOver = function onItemOver(itemEl, root) {
+		const index = parseInt(itemEl.getAttribute("data-index"), 10);
+		const item = this.getItemFromIndex(index);
+		if (!item) return;
+		const overlay = root.querySelector(".overlay");
+		if (overlay) {
+			overlay.style.display = "";
+			overlay.style.top = `${itemEl.offsetTop - 10}px`;
+			overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+			overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+			if (item.IsIdentified) overlay.classList.remove("grey");
+			else overlay.classList.add("grey");
+		}
+	};
+	StorageFilter.prototype.onItemOut = function onItemOut(root) {
+		if (!root) root = this.getRoot();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	};
+	StorageFilter.prototype.onItemDragStart = function onItemDragStart(event, itemEl) {
+		const index = parseInt(itemEl.getAttribute("data-index"), 10);
+		const item = this.getItemFromIndex(index);
+		if (!item) return;
+		const img = new Image();
+		let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+		url = url.replace(/^"/, "").replace(/"$/, "");
+		img.src = url;
+		event.dataTransfer.setDragImage(img, 12, 12);
+		event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+			type: "item",
+			from: "Storage",
+			data: item
+		}));
+	};
+	StorageFilter.prototype.onItemDragEnd = function onItemDragEnd() {
+		delete window._OBJ_DRAG_;
+	};
+	StorageFilter.prototype.onItemInfo = function onItemInfo(event, itemEl) {
+		event.stopImmediatePropagation();
+		const index = parseInt(itemEl.getAttribute("data-index"), 10);
+		const item = this.getItemFromIndex(index);
+		if (!item) return false;
+		if (event.altKey && event.which === 3) {
+			if (typeof this.onTransferItemToOtherUI === "function") this.onTransferItemToOtherUI(item);
+			return false;
+		}
+		if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
+		ItemInfo_default.append();
+		ItemInfo_default.uid = item.ITID;
+		ItemInfo_default.setItem(item);
+		return false;
+	};
+	StorageFilter.prototype.resizeHeight = function resizeHeight(height) {
+		height = Math.min(Math.max(height, 4), 10);
+		const content = this.getRoot().querySelector(".content");
+		if (content) content.style.height = `${height * 32}px`;
+		this._host.style.height = `${height * 32 + 17 + 19}px`;
+	};
+	StorageFilter.prototype.onResize = function onResize() {
+		const self = this;
+		const top = this._host.offsetTop;
+		let lastHeight = 0;
+		const extraY = 36;
+		function resizing() {
+			let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
+			h = Math.min(Math.max(h, 4), 10);
+			if (h === lastHeight) return;
+			self.resizeHeight(h);
+			lastHeight = h;
+		}
+		const _Interval = setInterval(resizing, 30);
+		const onMouseUp = (event) => {
+			if (event.which === 1) {
+				clearInterval(_Interval);
+				window.removeEventListener("mouseup", onMouseUp);
+			}
+		};
+		window.addEventListener("mouseup", onMouseUp);
+	};
+	StorageFilter.prototype.getCurrentTab = function getCurrentTab() {
+		return this._currentTabId;
+	};
+	StorageFilter.prototype.removeItem = function removeItem(index, count) {
+		let i = -1;
+		for (let j = 0, count_ = this._list.length; j < count_; ++j) if (this._list[j].index === index) {
+			i = j;
+			break;
+		}
+		if (i < 0) return;
+		const item = this._list[i];
+		const root = this.getRoot();
+		if (item.count) {
+			item.count -= count;
+			if (item.count > 0) {
+				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
+				return;
+			}
+		}
+		this._list.splice(i, 1);
+		const el = root.querySelector(`.item[data-index="${index}"]`);
+		if (el) el.remove();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	};
+	StorageFilter.prototype.addItem = function addItem(item) {
+		for (let j = 0, count_ = this._list.length; j < count_; ++j) if (this._list[j].index === item.index) {
+			this._list[j].count += item.count;
+			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = this._list[j].count;
+			return;
+		}
+		this._list.push(JSON.parse(JSON.stringify(item)));
+		this.renderItem(item);
+	};
+	StorageFilter.prototype.mouseMode = GUIComponent.MouseMode.STOP;
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV3/Storage.html?raw
+var Storage_default$2;
+var init_Storage$4 = __esmMin((() => {
+	Storage_default$2 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\"><ui-text msg=\"169\">Storage</ui-text></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tbody>\r\n				<tr>\r\n					<td\r\n						colspan=\"2\"\r\n						class=\"tabs\"\r\n						data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n						data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n					>\r\n						<button class=\"item\"></button>\r\n						<button class=\"kafra\"></button>\r\n						<button class=\"armor\"></button>\r\n						<button class=\"arms\"></button>\r\n						<button class=\"ammo\"></button>\r\n						<button class=\"card\"></button>\r\n						<button class=\"etc\"></button>\r\n					</td>\r\n					<td class=\"container\">\r\n						<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n					</td>\r\n				</tr>\r\n			</tbody>\r\n			<tfoot class=\"footer\" data-background=\"basic_interface/btnbar_mid3.bmp\">\r\n				<tr>\r\n					<td colspan=\"3\" class=\"filter-buttons\">\r\n						<button\r\n							class=\"filter-use\"\r\n							data-tab-id=\"0\"\r\n							data-title=\"Use\"\r\n							data-background=\"basic_interface/¼Òºñ-2.bmp\"\r\n							data-down=\"basic_interface/¼Òºñ-1.bmp\"\r\n							data-active=\"basic_interface/¼Òºñ-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-kafra\"\r\n							data-tab-id=\"1\"\r\n							data-title=\"Cash\"\r\n							data-background=\"basic_interface/Ä³½Ã-2.bmp\"\r\n							data-down=\"basic_interface/Ä³½Ã-1.bmp\"\r\n							data-active=\"basic_interface/Ä³½Ã-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-armor\"\r\n							data-tab-id=\"2\"\r\n							data-title=\"Armor\"\r\n							data-background=\"basic_interface/ÀÇ»ó-2.bmp\"\r\n							data-down=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n							data-active=\"basic_interface/ÀÇ»ó-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-arms\"\r\n							data-tab-id=\"3\"\r\n							data-title=\"Weapon\"\r\n							data-background=\"basic_interface/¹«±â-2.bmp\"\r\n							data-down=\"basic_interface/¹«±â-1.bmp\"\r\n							data-active=\"basic_interface/¹«±â-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-ammo\"\r\n							data-tab-id=\"4\"\r\n							data-title=\"Ammo\"\r\n							data-background=\"basic_interface/Åõ»çÃ¼-2.bmp\"\r\n							data-down=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n							data-active=\"basic_interface/Åõ»çÃ¼-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-card\"\r\n							data-tab-id=\"5\"\r\n							data-title=\"Card\"\r\n							data-background=\"basic_interface/Ä«µå-2.bmp\"\r\n							data-down=\"basic_interface/Ä«µå-1.bmp\"\r\n							data-active=\"basic_interface/Ä«µå-1.bmp\"\r\n						></button>\r\n						<button\r\n							class=\"filter-etc\"\r\n							data-tab-id=\"6\"\r\n							data-title=\"Etc\"\r\n							data-background=\"basic_interface/±âÅ¸-2.bmp\"\r\n							data-down=\"basic_interface/±âÅ¸-1.bmp\"\r\n							data-active=\"basic_interface/±âÅ¸-1.bmp\"\r\n						></button>\r\n						<select class=\"storage-order-by\">\r\n							<option value=\"BASE\">Base</option>\r\n							<option value=\"UPGRADE\">Upgrade</option>\r\n							<option value=\"DOWNGRADE\">Downgrade</option>\r\n						</select>\r\n					</td>\r\n				</tr>\r\n				<tr>\r\n					<td colspan=\"2\">\r\n						<div class=\"item_num_display\">\r\n							<button class=\"item_num\" data-background=\"inventory/icon_num.bmp\"></button>\r\n							<span class=\"current\">0</span><span class=\"divider\">/</span><span class=\"limit\">0</span>\r\n						</div>\r\n					</td>\r\n					<td>\r\n						<div class=\"search-container\">\r\n							<input id=\"storage-search-input\" type=\"text\" class=\"search-input\" />\r\n							<ui-button\r\n								class=\"search-button\"\r\n								bg=\"bt_search_normal.bmp\"\r\n								hover=\"bt_search_over.bmp\"\r\n								down=\"bt_search_press.bmp\"\r\n							></ui-button>\r\n						</div>\r\n						<ui-button\r\n							class=\"close\"\r\n							bg=\"btn_close.bmp\"\r\n							hover=\"btn_close_a.bmp\"\r\n							down=\"btn_close_b.bmp\"\r\n						></ui-button>\r\n						<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n					</td>\r\n				</tr>\r\n			</tfoot>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV3/Storage.css?raw
+var Storage_default$1;
+var init_Storage$3 = __esmMin((() => {
+	Storage_default$1 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n	border-radius: 3px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	width: 100%;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 55px;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 2px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Storage .footer .divider-bar {\r\n	left: 0;\r\n	right: 0;\r\n	height: 10px;\r\n}\r\n\r\n#Storage .footer .filter-buttons {\r\n	padding-left: 5px;\r\n	height: 28px;\r\n}\r\n\r\n#Storage .footer .filter-buttons button {\r\n	width: 23px;\r\n	height: 23px;\r\n	border: 1px solid #cfcfcf;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	padding: 0;\r\n	border-radius: 2px;\r\n	margin: 2px 1px 0px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .filter-buttons button:hover {\r\n	background-color: #f5f5f5;\r\n}\r\n\r\n#Storage .footer .item_num_display {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 3px;\r\n}\r\n\r\n#Storage .footer .item_num {\r\n	display: inline-block;\r\n	height: 14px;\r\n	width: 11px;\r\n	margin-right: 2px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Storage .footer .current {\r\n	margin-left: 2px;\r\n}\r\n\r\n#Storage .footer .current,\r\n#Storage .footer .divider,\r\n#Storage .footer .limit {\r\n	font-size: 12px;\r\n}\r\n\r\n/* Search */\r\n#Storage .footer .search-container {\r\n	display: flex;\r\n	align-items: center;\r\n	padding-left: 18px;\r\n}\r\n\r\n#Storage .footer .search-input {\r\n	border: 1px solid #ccc;\r\n	border-radius: 5px;\r\n	padding: 2px;\r\n	width: 130px;\r\n	height: 14px;\r\n}\r\n\r\n#Storage .footer .search-button {\r\n	width: 23px;\r\n	height: 18px;\r\n	background-color: #eee;\r\n	background-repeat: no-repeat;\r\n	background-position: center center;\r\n	border: none;\r\n	margin-left: -23px;\r\n	cursor: pointer;\r\n}\r\n\r\n#Storage .footer .storage-order-by {\r\n	margin-left: 2px;\r\n	width: 70px;\r\n	vertical-align: super;\r\n	border-radius: 3px;\r\n}\r\n\r\n/* add blue border to options */\r\n#Storage .footer .storage-order-by option {\r\n	border: 1px solid blue;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV3/Storage.js
+function onResize$7() {
+	const top = Storage._host.offsetTop;
+	let lastHeight = 0;
+	function resizing() {
+		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
+		h = Math.min(Math.max(h, 8), 17);
+		if (h === lastHeight) return;
+		resizeHeight$2(h);
+		lastHeight = h;
+	}
+	const _Interval = setInterval(resizing, 30);
+	const onMouseUp = (event) => {
+		if (event.which === 1) {
+			clearInterval(_Interval);
+			window.removeEventListener("mouseup", onMouseUp);
+		}
+	};
+	window.addEventListener("mouseup", onMouseUp);
+}
+function resizeHeight$2(height) {
+	height = Math.min(Math.max(height, 8), 17);
+	const content = Storage.getRoot().querySelector(".container .content");
+	if (content) content.style.height = `${height * 32}px`;
+	Storage._host.style.height = `${50 + height * 32}px`;
+}
+function onSwitchTab(idx) {
+	_preferences$36.tab = idx;
+	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
+		const tabs = Storage.getRoot().querySelector(".tabs");
+		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
+		requestFilter();
+	});
+}
+function onDrop$15(event) {
+	let data;
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (e) {}
+	event.stopImmediatePropagation();
+	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
+	const item = data.data;
+	if (item.count > 1) {
+		InputBox_default.append();
+		InputBox_default.setType("number", false, item.count);
+		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+			InputBox_default.remove();
+			if (data.from === "CartItems") Storage.reqAddItemFromCart(item.index, parseInt(count, 10));
+			else Storage.reqAddItem(item.index, parseInt(count, 10));
+		};
+		return false;
+	}
+	if (data.from === "CartItems") Storage.reqAddItemFromCart(item.index, 1);
+	else Storage.reqAddItem(item.index, 1);
+	return false;
+}
+function requestFilter() {
+	const root = Storage.getRoot();
+	const content = root.querySelector(".container .content");
+	if (content) content.innerHTML = "";
+	let list = _list$12;
+	const orderBySelect = root.querySelector(".storage-order-by");
+	const orderBy = orderBySelect ? orderBySelect.value : "BASE";
+	if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
+		list = _list$12.slice(0);
+		list.sort((a, b) => {
+			const nameA = DB.getItemName(a);
+			const nameB = DB.getItemName(b);
+			return orderBy === "UPGRADE" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+		});
+	}
+	for (let i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
+}
+function getItemIndexById$2(index) {
+	for (let i = 0, count = _list$12.length; i < count; ++i) if (_list$12[i].index === index) return i;
+	return -1;
+}
+function onScroll$6(event, contentEl) {
+	let delta;
+	if (event.wheelDelta) delta = event.wheelDelta / 120;
+	else if (event.detail) delta = -event.detail;
+	else if (event.deltaY) delta = -event.deltaY / 100;
+	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
+	event.preventDefault();
+}
+function onFilterWindowOpen(button) {
+	const tabId = parseInt(button.getAttribute("data-tab-id"), 10);
+	const title = button.getAttribute("data-title") || "Items";
+	button.classList.toggle("active");
+	if (_openFilters[tabId]) {
+		_openFilters[tabId].remove();
+		delete _openFilters[tabId];
+		return;
+	}
+	const filtered_list = [];
+	for (let i = 0, count = _list$12.length; i < count; ++i) {
+		const item = _list$12[i];
+		let tab;
+		switch (item.type) {
+			case ItemType_default.HEALING:
+			case ItemType_default.USABLE:
+			case ItemType_default.DELAYCONSUME:
+				tab = Storage.TAB.ITEM;
+				break;
+			case ItemType_default.CASH:
+				tab = Storage.TAB.KAFRA;
+				break;
+			case ItemType_default.ARMOR:
+			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.PETEGG:
+				tab = Storage.TAB.ARMOR;
+				break;
+			case ItemType_default.WEAPON:
+			case ItemType_default.PETARMOR:
+				tab = Storage.TAB.ARMS;
+				break;
+			case ItemType_default.AMMO:
+				tab = Storage.TAB.AMMO;
+				break;
+			case ItemType_default.CARD:
+				tab = Storage.TAB.CARD;
+				break;
+			default:
+			case ItemType_default.ETC:
+				tab = Storage.TAB.ETC;
+				break;
+		}
+		if (tab === tabId) filtered_list.push(item);
+	}
+	const newFilter = new StorageFilter(tabId);
+	_openFilters[tabId] = newFilter;
+	newFilter.onCloseCallback = function() {
+		button.classList.remove("active");
+		if (_openFilters[tabId]) delete _openFilters[tabId];
+	};
+	newFilter.onTransferItemToOtherUI = function(item) {
+		Storage.transferItemToOtherUI(item);
+	};
+	newFilter.append();
+	newFilter.setItems(title, filtered_list, tabId);
+}
+function onFilterWindowHover(button, root) {
+	const title = button.getAttribute("data-title");
+	const overlay = root.querySelector(".overlay");
+	if (overlay) {
+		overlay.textContent = title;
+		const height = Storage._host.getBoundingClientRect().height;
+		overlay.style.top = `${height - 50}px`;
+		overlay.style.left = `${button.offsetLeft}px`;
+		overlay.style.display = "";
+	}
+}
+function onFilterWindowHoverOut(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
+}
+function onItemOver$11(itemEl, root) {
+	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
+	if (i < 0) return;
+	const item = _list$12[i];
+	const overlay = root.querySelector(".overlay");
+	if (overlay) {
+		overlay.style.display = "";
+		overlay.style.top = `${itemEl.offsetTop - 10}px`;
+		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
+}
+function onItemOut$12(root) {
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
+}
+function onItemDragStart$6(event, itemEl) {
+	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
+	if (i === -1) return;
+	const img = new Image();
+	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+	url = url.replace(/^"/, "").replace(/"$/, "");
+	img.src = url;
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+		type: "item",
+		from: "Storage",
+		data: _list$12[i]
+	}));
+}
+function onItemDragEnd$7() {
+	delete window._OBJ_DRAG_;
+}
+function onItemInfo$14(event, itemEl) {
+	event.stopImmediatePropagation();
+	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
+	if (i === -1) return false;
+	if (event.altKey && event.which === 3) {
+		event.stopImmediatePropagation();
+		Storage.transferItemToOtherUI(_list$12[i]);
+		return false;
+	}
+	if (ItemInfo_default.uid === _list$12[i].ITID) ItemInfo_default.remove();
+	ItemInfo_default.append();
+	ItemInfo_default.uid = _list$12[i].ITID;
+	ItemInfo_default.setItem(_list$12[i]);
+	return false;
+}
+var Storage, _list$12, _openFilters, _preferences$36, Storage_default;
+var init_Storage$2 = __esmMin((() => {
+	init_DBManager();
+	init_ItemType();
+	init_Client();
+	init_Preferences$1();
 	init_Renderer();
-	init_SpriteRenderer();
-	init_Sprite();
-	init_Action();
-	init_ItemInfo$2();
-	init_ItemInfo$1();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_Entity$1();
-	init_Equipment();
+	init_MouseEventHandler();
+	init_KeyEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_InputBox();
+	init_ItemInfo();
+	init_StorageFilter();
+	init_Storage$4();
+	init_Storage$3();
+	init_CartItems();
 	init_Inventory();
-	ItemInfo = new GUIComponent("ItemInfo", ItemInfo_default$1);
-	ItemInfo.render = () => ItemInfo_default$2;
-	_type$5 = 0;
-	_start$1 = 0;
-	/**
-	* @let {number} ItemInfo unique id
-	*/
-	ItemInfo.uid = -1;
-	MOVE_INFO_MESSAGES = [
-		{
-			key: "Drop",
-			msgId: 2788
-		},
-		{
-			key: "Storage",
-			msgId: 2789
-		},
-		{
-			key: "Cart",
-			msgId: 2790
-		},
-		{
-			key: "Mail",
-			msgId: 2791
-		},
-		{
-			key: "Exchange",
-			msgId: 2792
-		},
-		{
-			key: "GuildStorage",
-			msgId: 2794
-		},
-		{
-			key: "NPCSale",
-			msgId: 2795
+	Storage = new GUIComponent("Storage", Storage_default$1);
+	Storage.render = () => Storage_default$2;
+	Storage.TAB = {
+		ITEM: 0,
+		KAFRA: 1,
+		ARMOR: 2,
+		ARMS: 3,
+		AMMO: 4,
+		CARD: 5,
+		ETC: 6
+	};
+	_list$12 = [];
+	_openFilters = {};
+	_preferences$36 = Preferences.get("Storage", {
+		x: 200,
+		y: 500,
+		height: 8,
+		tab: Storage.TAB.ITEM
+	}, 1);
+	Storage.init = function init() {
+		const root = this.getRoot();
+		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
+			btn.addEventListener("mousedown", () => onSwitchTab(idx));
+		});
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$7());
+		const closeBtn = root.querySelector(".footer .close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
+			});
 		}
-	];
-	/**
-	* Once append to the DOM
-	*/
-	ItemInfo.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			ItemInfo.hideMoveInfoTooltip();
-			ItemInfo.remove();
-			if (ItemCompare_default.ui) ItemCompare_default.remove();
-			if (ItemPreview_default.ui) ItemPreview_default.remove();
+		root.querySelectorAll(".filter-buttons button").forEach((btn) => {
+			btn.addEventListener("mousedown", () => onFilterWindowOpen(btn));
+			btn.addEventListener("mouseover", () => onFilterWindowHover(btn, root));
+			btn.addEventListener("mouseout", () => onFilterWindowHoverOut(root));
+		});
+		const searchBtn = root.querySelector(".search-button");
+		if (searchBtn) {
+			searchBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			searchBtn.addEventListener("click", () => Storage.onSearch());
+		}
+		const orderBySelect = root.querySelector(".storage-order-by");
+		if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter());
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$36.tab + 1}.bmp`, (data) => {
+			const tabs = root.querySelector(".tabs");
+			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
+		});
+		resizeHeight$2(_preferences$36.height);
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", (e) => onScroll$6(e, content));
+			content.addEventListener("mouseover", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) onItemOver$11(itemEl, root);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$12(root);
+			});
+			content.addEventListener("dragstart", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					onItemDragStart$6(e, itemEl);
+					onItemOut$12(root);
+				}
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$7();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const itemEl = e.target.closest(".item");
+				if (itemEl) {
+					e.preventDefault();
+					onItemInfo$14(e, itemEl);
+				}
+			});
+		}
+		this._host.addEventListener("drop", (e) => onDrop$15(e));
+		this._host.addEventListener("dragover", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+		});
+		this.draggable(".titlebar");
+		this.ui.hide();
+	};
+	Storage.onAppend = function onAppend() {
+		this.ui.show();
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+	};
+	Storage.onRemove = function onRemove() {
+		const root = this.getRoot();
+		const content = root.querySelector(".container .content");
+		if (content) content.innerHTML = "";
+		_list$12.length = 0;
+		_preferences$36.y = parseInt(this._host.style.top, 10);
+		_preferences$36.x = parseInt(this._host.style.left, 10);
+		_preferences$36.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$36.save();
+		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
+		_openFilters = {};
+		const searchInput = root.querySelector("#storage-search-input");
+		if (searchInput) searchInput.value = "";
+	};
+	Storage.setItems = function setItems(items) {
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$12.push(items[i]);
+	};
+	Storage.addItem = function addItem(item) {
+		const i = getItemIndexById$2(item.index);
+		let itemTab;
+		switch (item.type) {
+			case ItemType_default.HEALING:
+			case ItemType_default.USABLE:
+			case ItemType_default.DELAYCONSUME:
+				itemTab = Storage.TAB.ITEM;
+				break;
+			case ItemType_default.CASH:
+				itemTab = Storage.TAB.KAFRA;
+				break;
+			case ItemType_default.ARMOR:
+			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.PETEGG:
+				itemTab = Storage.TAB.ARMOR;
+				break;
+			case ItemType_default.WEAPON:
+			case ItemType_default.PETARMOR:
+				itemTab = Storage.TAB.ARMS;
+				break;
+			case ItemType_default.AMMO:
+				itemTab = Storage.TAB.AMMO;
+				break;
+			case ItemType_default.CARD:
+				itemTab = Storage.TAB.CARD;
+				break;
+			default:
+			case ItemType_default.ETC:
+				itemTab = Storage.TAB.ETC;
+				break;
+		}
+		if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
+		if (i > -1) {
+			_list$12[i].count += item.count;
+			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = _list$12[i].count;
+			return;
+		}
+		if (this.addItemSub(item)) _list$12.push(item);
+	};
+	Storage.addItemSub = function addItemSub(item) {
+		let tab;
+		switch (item.type) {
+			case ItemType_default.HEALING:
+			case ItemType_default.USABLE:
+			case ItemType_default.DELAYCONSUME:
+				tab = Storage.TAB.ITEM;
+				break;
+			case ItemType_default.CASH:
+				tab = Storage.TAB.KAFRA;
+				break;
+			case ItemType_default.ARMOR:
+			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.PETEGG:
+				tab = Storage.TAB.ARMOR;
+				break;
+			case ItemType_default.WEAPON:
+			case ItemType_default.PETARMOR:
+				tab = Storage.TAB.ARMS;
+				break;
+			case ItemType_default.AMMO:
+				tab = Storage.TAB.AMMO;
+				break;
+			case ItemType_default.CARD:
+				tab = Storage.TAB.CARD;
+				break;
+			default:
+			case ItemType_default.ETC:
+				tab = Storage.TAB.ETC;
+				break;
+		}
+		if (tab === _preferences$36.tab) {
+			const it = DB.getItemInfo(item.ITID);
+			const root = this.getRoot();
+			const content = root.querySelector(".container .content");
+			const itemEl = document.createElement("div");
+			itemEl.className = "item";
+			itemEl.setAttribute("data-index", item.index);
+			itemEl.setAttribute("draggable", "true");
+			const iconDiv = document.createElement("div");
+			iconDiv.className = "icon";
+			itemEl.appendChild(iconDiv);
+			const amountDiv = document.createElement("div");
+			amountDiv.className = "amount";
+			if (item.count) {
+				const countSpan = document.createElement("span");
+				countSpan.className = "count";
+				countSpan.textContent = item.count;
+				amountDiv.appendChild(countSpan);
+				amountDiv.appendChild(document.createTextNode(" "));
+			}
+			itemEl.appendChild(amountDiv);
+			const nameSpan = document.createElement("span");
+			nameSpan.className = "name";
+			nameSpan.innerHTML = DB.getItemName(item);
+			itemEl.appendChild(nameSpan);
+			if (content) content.appendChild(itemEl);
+			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${data})`;
+			});
+		}
+		return true;
+	};
+	Storage.removeItem = function removeItem(index, count) {
+		const i = getItemIndexById$2(index);
+		if (i < 0) return null;
+		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].removeItem(index, count);
+		const root = this.getRoot();
+		if (_list$12[i].count) {
+			_list$12[i].count -= count;
+			if (_list$12[i].count > 0) {
+				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
+				if (countEl) countEl.textContent = _list$12[i].count;
+				return _list$12[i];
+			}
+		}
+		const item = _list$12[i];
+		_list$12.splice(i, 1);
+		const el = root.querySelector(`.item[data-index="${index}"]`);
+		if (el) el.remove();
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+		return item;
+	};
+	Storage.setItemInfo = function setItemInfo(current, limit) {
+		const root = this.getRoot();
+		const currentEl = root.querySelector(".footer .current");
+		const limitEl = root.querySelector(".footer .limit");
+		if (currentEl) currentEl.textContent = current;
+		if (limitEl) limitEl.textContent = limit;
+	};
+	Storage.onKeyDown = function onKeyDown(event) {
+		if (this._host.style.display !== "none") {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
+			}
+			if (event.which === KEYS.ENTER || event.key === "Enter") {
+				if (typeof Storage.onEnterPressed === "function") Storage.onEnterPressed();
+			}
 		}
 	};
-	/**
-	* Once append
-	*/
-	ItemInfo.onAppend = function onAppend() {
-		const descInner = _getRoot$37().querySelector(".description-inner");
-		if (descInner) resize$3(descInner.offsetHeight + 45);
+	Storage.onSearch = function onSearch() {
+		const searchInput = this.getRoot().querySelector("#storage-search-input");
+		if (!searchInput) return;
+		const searchTerm = searchInput.value.toLowerCase();
+		const filteredItems = _list$12.filter((item) => {
+			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
+		});
+		if (!_openFilters[ItemType_default.SEARCH]) {
+			const newFilter = new StorageFilter(ItemType_default.SEARCH);
+			_openFilters[ItemType_default.SEARCH] = newFilter;
+			newFilter.onCloseCallback = function() {
+				if (_openFilters[ItemType_default.SEARCH]) delete _openFilters[ItemType_default.SEARCH];
+			};
+			newFilter.onTransferItemToOtherUI = function(item) {
+				Storage.transferItemToOtherUI(item);
+			};
+			newFilter.append();
+			newFilter.setItems("Search", filteredItems, ItemType_default.SEARCH);
+		} else _openFilters[ItemType_default.SEARCH].setItems("Search", filteredItems, ItemType_default.SEARCH);
 	};
-	/**
-	* Once removed from html
-	*/
-	ItemInfo.onRemove = function onRemove() {
-		this.uid = -1;
-		ItemInfo.hideMoveInfoTooltip();
+	Storage.transferItemToOtherUI = function transferItemToOtherUI(item) {
+		const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
+		const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+		if (!item) return false;
+		const count = item.count || 1;
+		if (isInventoryOpen) Storage.reqRemoveItem(item.index, count);
+		else if (isCartOpen) Storage.reqMoveItemToCart(item.index, count);
+		return true;
+	};
+	Storage.onClosePressed = function onClosedPressed() {};
+	Storage.reqAddItem = function reqAddItem() {};
+	Storage.reqAddItemFromCart = function reqAddItemFromCart() {};
+	Storage.reqRemoveItem = function reqRemoveItem() {};
+	Storage.reqMoveItemToCart = function reqMoveItemToCart() {};
+	Storage.mouseMode = GUIComponent.MouseMode.STOP;
+	Storage_default = UIManager.addComponent(Storage);
+}));
+//#endregion
+//#region src/UI/Components/Storage/Storage.js
+var publicName$5, versionInfo$5, StorageController, _selectUIVersion$2;
+var init_Storage$1 = __esmMin((() => {
+	init_Storage$5();
+	init_Storage$2();
+	init_UIVersionManager();
+	publicName$5 = "Storage";
+	versionInfo$5 = {
+		default: Storage_default$3,
+		common: { 20181219: Storage_default },
+		re: {},
+		prere: {}
+	};
+	StorageController = UIVersionManager.getUIController(publicName$5, versionInfo$5);
+	_selectUIVersion$2 = StorageController.selectUIVersion;
+	StorageController.selectUIVersion = function() {
+		_selectUIVersion$2();
+	};
+	[
+		"reqAddItem",
+		"reqAddItemFromCart",
+		"reqRemoveItem",
+		"reqMoveItemToCart",
+		"onClosePressed"
+	].forEach(function(method) {
+		Object.defineProperty(StorageController, method, {
+			set: function(value) {
+				Storage_default$3[method] = value;
+				Storage_default[method] = value;
+			},
+			get: function() {
+				return (StorageController.getUI() || Storage_default$3)[method];
+			}
+		});
+	});
+}));
+//#endregion
+//#region src/UI/Components/CartItems/CartItems.js
+/**
+* Extend inventory window size
+*/
+function onResize$6() {
+	const content = CartItems.getRoot().querySelector(".container .content");
+	const hideEl = CartItems.getRoot().querySelector(".hide");
+	const top = CartItems._host.offsetTop;
+	const left = CartItems._host.offsetLeft;
+	let lastWidth = 0;
+	let lastHeight = 0;
+	function resizing() {
+		const extraX = 25;
+		const extraY = 20;
+		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
+		let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
+		w = Math.min(Math.max(w, 6), 9);
+		h = Math.min(Math.max(h, 2), 6);
+		if (w === lastWidth && h === lastHeight) return;
+		CartItems.resize(w, h);
+		lastWidth = w;
+		lastHeight = h;
+		if (content && hideEl) if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
+		else hideEl.style.display = "none";
+	}
+	const _Interval = setInterval(resizing, 30);
+	const onMouseUp = (event) => {
+		if (event.which === 1) {
+			clearInterval(_Interval);
+			window.removeEventListener("mouseup", onMouseUp);
+		}
+	};
+	window.addEventListener("mouseup", onMouseUp);
+}
+/**
+* Hide/show inventory's content
+*/
+function onToggleReduction() {
+	const panel = CartItems.getRoot().querySelector(".panel");
+	if (_realSize$1) {
+		if (panel) panel.style.display = "block";
+		CartItems._host.style.height = `${_realSize$1}px`;
+		_realSize$1 = 0;
+	} else {
+		_realSize$1 = CartItems._host.getBoundingClientRect().height;
+		CartItems._host.style.height = "17px";
+		if (panel) panel.style.display = "none";
+	}
+}
+/**
+* Drop an item from storage to inventory
+*
+* @param {event}
+*/
+function onDrop$14(event) {
+	let item, data;
+	event.stopImmediatePropagation();
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+		item = data.data;
+	} catch (_e) {
+		return false;
+	}
+	if (data.type !== "item" || data.from !== "Storage" && data.from !== "Inventory") return false;
+	if (item.count > 1) {
+		InputBox_default.append();
+		InputBox_default.setType("number", false, item.count);
+		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+			InputBox_default.remove();
+			switch (data.from) {
+				case "Storage":
+					StorageController.reqMoveItemToCart(item.index, parseInt(count, 10));
+					break;
+				case "Inventory":
+					InventoryController.getUI().reqMoveItemToCart(item.index, parseInt(count, 10));
+					break;
+			}
+		};
+		return false;
+	}
+	switch (data.from) {
+		case "Storage":
+			StorageController.reqMoveItemToCart(item.index, 1);
+			break;
+		case "Inventory":
+			InventoryController.getUI().reqMoveItemToCart(item.index, 1);
+			break;
+	}
+	return false;
+}
+/**
+* Block the scroll to move 32px at each move
+*/
+function onScroll$5(event) {
+	const delta = event.deltaY > 0 ? -1 : 1;
+	const el = event.currentTarget;
+	el.scrollTop = Math.floor(el.scrollTop / 32) * 32 - delta * 32;
+	if (el._roScrollbarRestart) el._roScrollbarRestart();
+	event.stopImmediatePropagation();
+	event.preventDefault();
+}
+/**
+* Show item name when mouse is over
+*/
+function onItemOver$10(_e) {
+	const idx = parseInt(this.getAttribute("data-index"), 10);
+	const item = CartItems.getItemByIndex(idx);
+	if (!item) return;
+	let quantity = " ea";
+	if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.Options && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
+	const root = CartItems.getRoot();
+	const overlay = root.querySelector(".overlay");
+	const rootEl = root.querySelector("#cartitems") || root;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = rootEl.getBoundingClientRect();
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.style.top = `${itemRect.top - rootRect.top}px`;
+		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+		overlay.textContent = `${DB.getItemName(item)}: ${item.count || 1}${quantity}`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
+	}
+}
+/**
+* Hide the item name
+*/
+function onItemOut$11() {
+	const overlay = CartItems.getRoot().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
+}
+/**
+* Start dragging an item
+*/
+function onItemDragStart$5(event) {
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	const item = CartItems.getItemByIndex(index);
+	if (!item) return;
+	const img = new Image();
+	const iconEl = this.querySelector(".icon");
+	const url = iconEl ? iconEl.style.backgroundImage.match(/\(([^)]+)/)?.[1] : "";
+	img.decoding = "async";
+	img.src = url ? url.replace(/^["']/, "").replace(/["']$/, "") : "";
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+		type: "item",
+		from: "CartItems",
+		data: item
+	}));
+	onItemOut$11();
+}
+/**
+* Stop dragging an item
+*
+*/
+function onItemDragEnd$6() {
+	delete window._OBJ_DRAG_;
+}
+/**
+* Get item info (open description window)
+*/
+function onItemInfo$13(event) {
+	event.stopImmediatePropagation();
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	const item = CartItems.getItemByIndex(index);
+	if (!item) return false;
+	if (event.altKey && event.which === 3) {
+		event.stopImmediatePropagation();
+		transferItemToOtherUI(item);
+		return false;
+	}
+	if (ItemInfo_default.uid === item.ITID) {
+		ItemInfo_default.remove();
 		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		if (ItemPreview_default.ui) ItemPreview_default.remove();
-	};
+		return false;
+	}
+	if (ItemCompare_default.ui) ItemCompare_default.remove();
+	ItemInfo_default.append();
+	ItemInfo_default.uid = item.ITID;
+	ItemInfo_default.setItem(item);
+	const compareItem = EquipmentController.getUI().isInEquipList(item.location);
+	if (compareItem && InventoryController.getUI().itemcomp) {
+		ItemCompare_default.prepare();
+		ItemCompare_default.append();
+		ItemCompare_default.uid = compareItem.ITID;
+		ItemCompare_default.setItem(compareItem);
+	}
+	return false;
+}
+/**
+* Alt Right Click Request Transfer
+*/
+function transferItemToOtherUI(item) {
+	const storageUI = StorageController.getUI();
+	const inventoryUI = InventoryController.getUI();
+	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+	const isInventoryOpen = inventoryUI._host ? inventoryUI._host.style.display !== "none" : false;
+	if (!item) return false;
+	const count = item.count || 1;
+	if (isStorageOpen) StorageController.reqAddItemFromCart(item.index, count);
+	else if (isInventoryOpen) CartItems.reqRemoveItem(item.index, count);
+	return true;
+}
+/**
+* Ask to use an item
+*/
+function onItemUsed$1(event) {
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	const item = CartItems.getItemByIndex(index);
+	if (item) {
+		CartItems.useItem(item);
+		onItemOut$11();
+	}
+	event.stopImmediatePropagation();
+	event.preventDefault();
+}
+var CartItems, _realSize$1, _preferences$35, CartItems_default;
+var init_CartItems = __esmMin((() => {
+	init_DBManager();
+	init_ItemType();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_MouseEventHandler();
+	init_KeyEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_InputBox();
+	init_ItemInfo();
+	init_ItemCompare();
+	init_SessionStorage();
+	init_CartItems$2();
+	init_CartItems$1();
+	init_Storage$1();
+	init_Inventory();
+	init_Equipment();
+	CartItems = new GUIComponent("CartItems", CartItems_default$1);
+	CartItems.render = () => CartItems_default$2;
+	/**
+	* Store inventory items
+	*/
+	CartItems.list = [];
+	_realSize$1 = 0;
+	_preferences$35 = Preferences.get("CartItems", {
+		x: 200,
+		y: 200,
+		width: 7,
+		height: 4,
+		show: false,
+		reduce: false
+	}, 1);
 	/**
 	* Initialize UI
 	*/
-	ItemInfo.init = function init() {
-		const root = _getRoot$37();
-		this._host.style.top = "200px";
-		this._host.style.left = "480px";
-		const extendBtn = root.querySelector(".extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$5);
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => {
-				e.stopImmediatePropagation();
+	CartItems.init = function Init() {
+		const root = this.getRoot();
+		const baseBtn = root.querySelector(".titlebar .base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		const miniBtn = root.querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction);
+		const extendBtn = root.querySelector(".footer .extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$6);
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			CartItems._host.style.display = "none";
+		});
+		this._host.addEventListener("drop", onDrop$14);
+		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", onScroll$5);
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$10.call(item, e);
 			});
-			closeBtn.addEventListener("click", () => {
-				this.remove();
-				if (ItemCompare_default.ui) ItemCompare_default.remove();
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item")) onItemOut$11();
+			});
+			content.addEventListener("dragstart", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$5.call(item, e);
+			});
+			content.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$6();
+			});
+			content.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$13.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemUsed$1.call(item, e);
 			});
 		}
-		const viewBtn = root.querySelector(".view");
-		if (viewBtn) viewBtn.addEventListener("click", () => {
-			CardIllustration_default.append();
-			CardIllustration_default.setCard(this.item);
-		});
-		this.draggable(".title");
+		this.draggable(".titlebar");
 	};
 	/**
-	* Bind component
+	* Apply preferences once append to body
+	*/
+	CartItems.onAppend = function OnAppend() {
+		if (SessionStorage_default.Entity.hasCart === false) this._host.style.display = "none";
+		if (!_preferences$35.show) this._host.style.display = "none";
+		this.resize(_preferences$35.width, _preferences$35.height);
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
+		_realSize$1 = _preferences$35.reduce ? 0 : hostRect.height;
+		const miniBtn = this.getRoot().querySelector(".titlebar .mini");
+		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
+	};
+	/**
+	* Remove Inventory from window (and so clean up items)
+	*/
+	CartItems.onRemove = function OnRemove() {
+		const content = this.getRoot().querySelector(".container .content");
+		if (content) content.innerHTML = "";
+		this.list.length = 0;
+		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
+		_preferences$35.show = this._host.style.display !== "none";
+		_preferences$35.reduce = !!_realSize$1;
+		_preferences$35.y = parseInt(this._host.style.top, 10);
+		_preferences$35.x = parseInt(this._host.style.left, 10);
+		const hostRect = this._host.getBoundingClientRect();
+		_preferences$35.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$35.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$35.save();
+	};
+	/**
+	* Process shortcut
 	*
-	* @param {object} item
+	* @param {object} key
 	*/
-	ItemInfo.setItem = function setItem(item) {
+	CartItems.onShortCut = function onShurtCut(key) {
+		if (SessionStorage_default.Entity.hasCart === false) return;
+		switch (key.cmd) {
+			case "TOGGLE":
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else {
+					this._host.style.display = "none";
+					this._host.dispatchEvent(new Event("mouseleave"));
+				}
+				break;
+		}
+	};
+	CartItems.onKeyDown = function onKeyDown(event) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this._host.style.display = this._host.style.display === "none" ? "" : "none";
+	};
+	/**
+	* Extend inventory window size
+	*
+	* @param {number} width
+	* @param {number} height
+	*/
+	CartItems.resize = function Resize(width, height) {
+		width = Math.min(Math.max(width, 6), 9);
+		height = Math.min(Math.max(height, 2), 6);
+		const content = this.getRoot().querySelector(".container .content");
+		if (content) {
+			content.style.width = `${width * 32 + 13}px`;
+			content.style.height = `${height * 32}px`;
+		}
+		this._host.style.width = `${55 + width * 32}px`;
+		this._host.style.height = `${50 + height * 32}px`;
+	};
+	/**
+	* Get item object
+	*
+	* @param {number} id
+	* @returns {Item}
+	*/
+	CartItems.getItemById = function GetItemById(id) {
+		const list = CartItems.list;
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
+		return null;
+	};
+	/**
+	* Search in a list for an item by its index
+	*
+	* @param {number} index
+	* @returns {Item}
+	*/
+	CartItems.getItemByIndex = function getItemByIndex(index) {
+		const list = CartItems.list;
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		return null;
+	};
+	/**
+	* Add items to the list
+	* if the item index is exist you should clear it;[skybook888]
+	*/
+	CartItems.setItems = function SetItems(items) {
+		for (let i = 0, count = items.length; i < count; ++i) {
+			const object = this.getItemByIndex(items[i].index);
+			if (object) this.removeItem(object.index, object.count);
+			if (this.addItemSub(items[i])) this.list.push(items[i]);
+		}
+	};
+	CartItems.setCartInfo = function SetCartInfo(curCount, maxCount, curWeight, maxWeight) {
+		const root = this.getRoot();
+		const ncnt = root.querySelector(".ncnt");
+		const mcnt = root.querySelector(".mcnt");
+		const nwt = root.querySelector(".nwt");
+		const mwt = root.querySelector(".mwt");
+		if (ncnt) ncnt.textContent = curCount;
+		if (mcnt) mcnt.textContent = maxCount;
+		if (nwt) nwt.textContent = curWeight / 10;
+		if (mwt) mwt.textContent = maxWeight / 10;
+	};
+	/**
+	* Insert Item to inventory
+	*
+	* @param {object} Item
+	*/
+	CartItems.addItem = function AddItem(item) {
+		let object = this.getItemByIndex(item.index);
+		if (object) {
+			object.count += item.count;
+			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
+			return;
+		}
+		object = Object.assign({}, item);
+		if (this.addItemSub(object)) this.list.push(object);
+	};
+	/**
+	* Add item to inventory
+	*
+	* @param {object} Item
+	*/
+	CartItems.addItemSub = function AddItemSub(item) {
+		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
-		const root = _getRoot$37();
-		const cardList = root.querySelector(".cardlist .border");
-		const optionContainer = root.querySelector(".option-container");
-		this.item = it;
-		Client.loadFile(DB.INTERFACE_PATH + "collection/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
-			const collection = root.querySelector(".collection");
-			if (collection) collection.style.backgroundImage = `url(${data})`;
+		const root = this.getRoot();
+		const content = root.querySelector(".container .content");
+		if (!content) return true;
+		content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		const hideEl = root.querySelector(".hide");
+		if (hideEl) if (content.offsetHeight < content.scrollHeight) hideEl.style.display = "none";
+		else hideEl.style.display = "block";
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
-		const itemName = DB.getItemName(item, { showItemOptions: false });
-		const title = root.querySelector(".title");
-		if (title) {
-			if (item.IsDamaged) title.classList.add("damaged");
-			else title.classList.remove("damaged");
-			title.textContent = itemName;
-		}
-		if (item.Options && item.IsIdentified) {
-			if (optionContainer) optionContainer.innerHTML = "";
-			for (let i = 1; i <= 5; i++) if (item.Options[i].index > 0) {
-				const optionList = "<div class=\"optionlist\"><div class=\"border\">" + DB.getOptionName(item.Options[i].index).replace("%d", item.Options[i].value).replace("%%", "%") + "</div></div>";
-				if (optionContainer) optionContainer.insertAdjacentHTML("beforeend", optionList);
-			}
-			if (optionContainer) optionContainer.style.display = "block";
-		} else if (optionContainer) optionContainer.style.display = "none";
-		const container = root.querySelector(".container");
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg_g" + item.enchantgrade + ".bmp", (data) => {
-			if (container) container.style.backgroundImage = `url(${data})`;
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+			const grade = root.querySelector(`.item[data-index="${item.index}"] .grade`);
+			if (grade) grade.style.backgroundImage = `url(${data})`;
 		});
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg.bmp", (data) => {
-			if (container) container.style.backgroundImage = `url(${data})`;
-		});
-		const descInner = root.querySelector(".description-inner");
-		if (descInner) {
-			const rawDesc = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
-			descInner.innerHTML = DB.formatMsgToHtml(_escapeHTML$3(rawDesc));
-		}
-		if (item.HireExpireDate) {
-			const dateText = DB.formatUnixDate(item.HireExpireDate);
-			let msg = DB.getMessage(1255).replace("%s", dateText);
-			msg = DB.formatMsgToHtml(msg);
-			if (descInner) {
-				const div = document.createElement("div");
-				div.innerHTML = msg;
-				descInner.insertBefore(div, descInner.firstChild);
-			}
-		}
-		if (it.moveInfo) {
-			const tooltipHtml = buildMoveInfoTooltip(it.moveInfo);
-			if (tooltipHtml) {
-				const label = document.createElement("span");
-				label.textContent = DB.getMessage(2796);
-				label.className = "moveinfo-label";
-				if (descInner) descInner.appendChild(label);
-				let tooltip = document.getElementById("moveinfo-tooltip");
-				if (!tooltip) {
-					tooltip = document.createElement("div");
-					tooltip.id = "moveinfo-tooltip";
-					document.body.appendChild(tooltip);
-				}
-				label.addEventListener("mouseenter", (e) => {
-					Cursor.setType(Cursor.ACTION.CLICK);
-					tooltip.innerHTML = tooltipHtml;
-					tooltip.style.display = "block";
-					tooltip.style.left = `${e.pageX + 15}px`;
-					tooltip.style.top = `${e.pageY + 2}px`;
-				});
-				label.addEventListener("mouseleave", () => {
-					tooltip.style.display = "none";
-					Cursor.setType(Cursor.ACTION.DEFAULT);
-				});
-				label.addEventListener("mousemove", (e) => {
-					tooltip.style.left = `${e.pageX + 20}px`;
-					tooltip.style.top = `${e.pageY + 2}px`;
-				});
-			}
-		}
-		updatePreviewButton(item);
-		addEvent(item);
-		let hideslots = false;
-		if (item.slot) {
-			switch (item.slot["card1"]) {
-				case 255:
-				case 254:
-				case 65280:
-					hideslots = true;
-					break;
-			}
-			switch (item.slot["card4"]) {
-				case 1:
-					hideslots = true;
-					break;
-			}
-		}
-		const cardListParent = cardList ? cardList.parentElement : null;
-		switch (item.type) {
-			default:
-				if (cardListParent) cardListParent.style.display = "none";
-				break;
-			case ItemType_default.ARMOR: if (DB.isPetEgg(item.ITID)) hideslots = true;
-			case ItemType_default.WEAPON:
-			case ItemType_default.SHADOWGEAR: {
-				if (hideslots) {
-					if (cardListParent) cardListParent.style.display = "none";
-					break;
-				}
-				const slotCount = it.slotCount || 0;
-				if (cardListParent) cardListParent.style.display = "block";
-				if (cardList) cardList.innerHTML = "";
-				for (let i = 0; i < 4; ++i) addCard(cardList, item.slot && item.slot["card" + (i + 1)] || 0, i, slotCount);
-				if (!item.IsIdentified && cardListParent) cardListParent.style.display = "none";
-				break;
-			}
-			case ItemType_default.PETEGG:
-				if (cardListParent) cardListParent.style.display = "none";
-				break;
-		}
-		if (descInner) resize$3(descInner.offsetHeight + 45);
-	};
-	rendering$2 = (function renderingClosure() {
-		const position = new Uint16Array([0, 0]);
-		return function render() {
-			const _entity = new Entity();
-			const action = _action$3.actions[_type$5];
-			const anim = Math.floor((Renderer.tick - _start$1) / action.delay);
-			const animation = action.animations[anim % action.animations.length];
-			let i, count;
-			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$10, 10, 25);
-			_ctx$10.clearRect(0, 0, _ctx$10.canvas.width, _ctx$10.canvas.height);
-			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$3, _sprite$3, 1, position, false);
-		};
-	})();
-	/**
-	* Cleanup moveInfo tooltip and restore cursor state.
-	* Called when ItemInfo UI is removed.
-	*/
-	ItemInfo.hideMoveInfoTooltip = function hideMoveInfoTooltip() {
-		const tooltip = document.getElementById("moveinfo-tooltip");
-		if (tooltip) tooltip.style.display = "none";
-		Cursor.setType(Cursor.ACTION.DEFAULT);
+		return true;
 	};
 	/**
-	* Packet Hooks to functions
+	* Remove item from inventory
+	*
+	* @param {number} index in inventory
+	* @param {number} count
 	*/
-	Network.hookPacket(PACKET.ZC.CHANGE_ITEM_OPTION, onItemPreview);
-	ItemInfo_default = UIManager.addComponent(ItemInfo);
+	CartItems.removeItem = function RemoveItem(index, count) {
+		const item = this.getItemByIndex(index);
+		if (!item || count <= 0) return null;
+		if (item.count) {
+			item.count -= count;
+			if (item.count > 0) {
+				const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
+				return item;
+			}
+		}
+		this.list.splice(this.list.indexOf(item), 1);
+		const root = this.getRoot();
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const content = root.querySelector(".container .content");
+		const hideEl = root.querySelector(".hide");
+		if (content && hideEl) {
+			if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
+		}
+		return item;
+	};
+	/**
+	* Remove item from inventory
+	*
+	* @param {number} index in inventory
+	* @param {number} count
+	*/
+	CartItems.updateItem = function UpdateItem(index, count) {
+		const item = this.getItemByIndex(index);
+		if (!item) return;
+		item.count = count;
+		const root = this.getRoot();
+		if (item.count > 0) {
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = item.count;
+			return;
+		}
+		this.list.splice(this.list.indexOf(item), 1);
+		const el = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.remove();
+		const content = root.querySelector(".container .content");
+		const hideEl = root.querySelector(".hide");
+		if (content && hideEl) {
+			if (content.offsetHeight === content.scrollHeight) hideEl.style.display = "block";
+		}
+	};
+	CartItems.reqRemoveItem = function reqRemoveItem() {};
+	CartItems.mouseMode = GUIComponent.MouseMode.STOP;
+	CartItems_default = UIManager.addComponent(CartItems);
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.html?raw
@@ -265900,9 +265736,6 @@ var init_EquipmentV0$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.js
-function _getRoot$36() {
-	return EquipmentV0._shadow || EquipmentV0._host;
-}
 function escapeHTML$5(str) {
 	const div = document.createElement("div");
 	div.textContent = str;
@@ -265921,7 +265754,7 @@ function hideStatus$2() {
 	if (winStats.isEmbedded()) winStats.unembed();
 }
 function toggleStatus$5() {
-	const self = _getRoot$36().querySelector(".view_status");
+	const self = EquipmentV0.getRoot().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -265961,7 +265794,7 @@ function onDragOver$5(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$5("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$36().querySelectorAll(selector);
+				const cells = EquipmentV0.getRoot().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -265974,7 +265807,7 @@ function onDragOver$5(event) {
 	return false;
 }
 function onDragLeave$4(event) {
-	_getRoot$36().querySelectorAll("td").forEach((td) => {
+	EquipmentV0.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -265991,7 +265824,7 @@ function onDrop$13(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$36().querySelectorAll("td").forEach((td) => {
+			EquipmentV0.getRoot().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV0.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -266014,14 +265847,14 @@ function onEquipmentInfo$4(event) {
 function onEquipmentUnEquip$4() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV0.onUnEquip(index);
-	const overlay = _getRoot$36().querySelector(".overlay");
+	const overlay = EquipmentV0.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$4() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$11[idx];
 	if (!item) return;
-	const root = _getRoot$36();
+	const root = EquipmentV0.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV0") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -266037,10 +265870,10 @@ function onEquipmentOver$4() {
 	}
 }
 function onEquipmentOut$4() {
-	const overlay = _getRoot$36().querySelector(".overlay");
+	const overlay = EquipmentV0.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var EquipmentV0, _preferences$34, _list$11, _ctx$9, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
+var EquipmentV0, _preferences$34, _list$11, _ctx$10, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
 var init_EquipmentV0 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -266076,9 +265909,9 @@ var init_EquipmentV0 = __esmMin((() => {
 	_list$11 = {};
 	_showEquip$4 = false;
 	EquipmentV0.init = function init() {
-		const root = _getRoot$36();
+		const root = EquipmentV0.getRoot();
 		const canvas = root.querySelector("canvas");
-		if (canvas) _ctx$9 = canvas.getContext("2d");
+		if (canvas) _ctx$10 = canvas.getContext("2d");
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			const lvlupEl = root.querySelector("#lvlup_base");
 			if (lvlupEl) {
@@ -266151,21 +265984,21 @@ var init_EquipmentV0 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$34.show) this._host.style.display = "none";
 		if (_preferences$34.reduce) {
-			const panel = _getRoot$36().querySelector(".panel");
+			const panel = EquipmentV0.getRoot().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV0._host);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = _getRoot$36().querySelector(".view_status");
+			const btn = EquipmentV0.getRoot().querySelector(".view_status");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (_getRoot$36().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$4);
+		if (EquipmentV0.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$4);
 	};
 	EquipmentV0.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$4 && _btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
 		Renderer.stop(renderCharacter$4);
 		_list$11 = {};
-		const root = _getRoot$36();
+		const root = EquipmentV0.getRoot();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -266203,7 +266036,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	EquipmentV0.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$4 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$36().querySelector(".show_equip");
+			const btn = EquipmentV0.getRoot().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -266225,7 +266058,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$36();
+		const root = EquipmentV0.getRoot();
 		const selector = getSelectorFromLocation$5(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$5(add3Dots(DB.getItemName(item, {
@@ -266243,7 +266076,7 @@ var init_EquipmentV0 = __esmMin((() => {
 	};
 	EquipmentV0.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$5(location);
-		const root = _getRoot$36();
+		const root = EquipmentV0.getRoot();
 		const item = _list$11[index];
 		root.querySelectorAll(selector).forEach((el) => {
 			el.innerHTML = "";
@@ -266284,7 +266117,7 @@ var init_EquipmentV0 = __esmMin((() => {
 			if (character.effectState !== _lastState || _hasCart !== character.hasCart) {
 				_lastState = character.effectState;
 				_hasCart = character.hasCart;
-				const root = _getRoot$36();
+				const root = EquipmentV0.getRoot();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -266301,8 +266134,8 @@ var init_EquipmentV0 = __esmMin((() => {
 			character.animation = _animation;
 			_savedColor.set(character.effectColor);
 			character.effectColor.set(_cleanColor);
-			SpriteRenderer.bind2DContext(_ctx$9, 30, 130);
-			_ctx$9.clearRect(0, 0, _ctx$9.canvas.width, _ctx$9.canvas.height);
+			SpriteRenderer.bind2DContext(_ctx$10, 30, 130);
+			_ctx$10.clearRect(0, 0, _ctx$10.canvas.width, _ctx$10.canvas.height);
 			character.renderEntity();
 			character.direction = direction;
 			character.headDir = headDir;
@@ -266312,7 +266145,7 @@ var init_EquipmentV0 = __esmMin((() => {
 		};
 	})();
 	EquipmentV0.onUpdateOwnerName = function() {
-		const root = _getRoot$36();
+		const root = EquipmentV0.getRoot();
 		for (const index in _list$11) {
 			const item = _list$11[index];
 			if (item.slot && [
@@ -266355,9 +266188,6 @@ var init_EquipmentV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.js
-function _getRoot$35() {
-	return EquipmentV1._shadow || EquipmentV1._host;
-}
 function escapeHTML$4(str) {
 	const div = document.createElement("div");
 	div.textContent = str;
@@ -266395,7 +266225,7 @@ function hideStatus$1() {
 	if (winStats.isEmbedded()) winStats.unembed();
 }
 function toggleStatus$4() {
-	const self = _getRoot$35().querySelector(".view_status");
+	const self = EquipmentV1.getRoot().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -266445,7 +266275,7 @@ function onDragOver$4(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$4("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$35().querySelectorAll(selector);
+				const cells = EquipmentV1.getRoot().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -266458,7 +266288,7 @@ function onDragOver$4(event) {
 	return false;
 }
 function onDragLeave$3(event) {
-	_getRoot$35().querySelectorAll("td").forEach((td) => {
+	EquipmentV1.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -266475,7 +266305,7 @@ function onDrop$12(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$35().querySelectorAll("td").forEach((td) => {
+			EquipmentV1.getRoot().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV1.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -266498,14 +266328,14 @@ function onEquipmentInfo$3(event) {
 function onEquipmentUnEquip$3() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV1.onUnEquip(index);
-	const overlay = _getRoot$35().querySelector(".overlay");
+	const overlay = EquipmentV1.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$3() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$10[idx];
 	if (!item) return;
-	const root = _getRoot$35();
+	const root = EquipmentV1.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV1") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -266521,10 +266351,10 @@ function onEquipmentOver$3() {
 	}
 }
 function onEquipmentOut$3() {
-	const overlay = _getRoot$35().querySelector(".overlay");
+	const overlay = EquipmentV1.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var EquipmentV1, _preferences$33, _list$10, _ctx$8, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
+var EquipmentV1, _preferences$33, _list$10, _ctx$9, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
 var init_EquipmentV1 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -266559,16 +266389,16 @@ var init_EquipmentV1 = __esmMin((() => {
 		stats: true
 	}, 1);
 	_list$10 = {};
-	_ctx$8 = [];
+	_ctx$9 = [];
 	_showEquip$3 = false;
 	tabLinks$3 = {};
 	contentDivs$3 = {};
 	currentTabId$3 = "general";
 	EquipmentV1.init = function init() {
-		const root = _getRoot$35();
+		const root = EquipmentV1.getRoot();
 		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$8.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$8.push(canvases[1].getContext("2d"));
+		if (canvases[0]) _ctx$9.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$9.push(canvases[1].getContext("2d"));
 		const tabsEl = root.querySelector("#tabs");
 		if (tabsEl) {
 			const tabListItems = tabsEl.childNodes;
@@ -266670,21 +266500,21 @@ var init_EquipmentV1 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$33.show) this._host.style.display = "none";
 		if (_preferences$33.reduce) {
-			const panel = _getRoot$35().querySelector(".panel");
+			const panel = EquipmentV1.getRoot().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$33.stats && _preferences$33.show) WinStatsController.getUI().embed(EquipmentV1._host);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = _getRoot$35().querySelector(".view_status");
+			const btn = EquipmentV1.getRoot().querySelector(".view_status");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (_getRoot$35().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$3);
+		if (EquipmentV1.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$3);
 	};
 	EquipmentV1.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$3 && _btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
 		Renderer.stop(renderCharacter$3);
 		_list$10 = {};
-		const root = _getRoot$35();
+		const root = EquipmentV1.getRoot();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -266722,7 +266552,7 @@ var init_EquipmentV1 = __esmMin((() => {
 	EquipmentV1.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$3 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$35().querySelector(".show_equip");
+			const btn = EquipmentV1.getRoot().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -266741,7 +266571,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$35();
+		const root = EquipmentV1.getRoot();
 		const selector = getSelectorFromLocation$4(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$4(add3Dots(DB.getItemName(item, {
@@ -266759,7 +266589,7 @@ var init_EquipmentV1 = __esmMin((() => {
 	};
 	EquipmentV1.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$4(location);
-		const root = _getRoot$35();
+		const root = EquipmentV1.getRoot();
 		const item = _list$10[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -266812,7 +266642,7 @@ var init_EquipmentV1 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$35();
+				const root = EquipmentV1.getRoot();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -266840,8 +266670,8 @@ var init_EquipmentV1 = __esmMin((() => {
 			equip_character.headDir = 0;
 			equip_character.action = equip_character.ACTION.IDLE;
 			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$8.length; i++) {
-				const ctx = _ctx$8[i];
+			for (let i = 0; i < _ctx$9.length; i++) {
+				const ctx = _ctx$9[i];
 				SpriteRenderer.bind2DContext(ctx, 30, 130);
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				equip_character.renderEntity(ctx);
@@ -266849,7 +266679,7 @@ var init_EquipmentV1 = __esmMin((() => {
 		};
 	})();
 	EquipmentV1.onUpdateOwnerName = function() {
-		const root = _getRoot$35();
+		const root = EquipmentV1.getRoot();
 		for (const index in _list$10) {
 			const item = _list$10[index];
 			if (item.slot && [
@@ -266889,9 +266719,6 @@ var init_EquipmentV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.js
-function _getRoot$34() {
-	return EquipmentV2._shadow || EquipmentV2._host;
-}
 function escapeHTML$3(str) {
 	const div = document.createElement("div");
 	div.textContent = str;
@@ -266929,7 +266756,7 @@ function hideStatus() {
 	if (winStats.isEmbedded()) winStats.unembed();
 }
 function toggleStatus$3() {
-	const self = _getRoot$34().querySelector(".view_status");
+	const self = EquipmentV2.getRoot().querySelector(".view_status");
 	const winStats = WinStatsController.getUI();
 	const isVisible = winStats.isEmbedded();
 	const state = isVisible ? "on" : "off";
@@ -266979,7 +266806,7 @@ function onDragOver$3(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$3("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$34().querySelectorAll(selector);
+				const cells = EquipmentV2.getRoot().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -266992,7 +266819,7 @@ function onDragOver$3(event) {
 	return false;
 }
 function onDragLeave$2(event) {
-	_getRoot$34().querySelectorAll("td").forEach((td) => {
+	EquipmentV2.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -267009,7 +266836,7 @@ function onDrop$11(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$34().querySelectorAll("td").forEach((td) => {
+			EquipmentV2.getRoot().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV2.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -267032,14 +266859,14 @@ function onEquipmentInfo$2(event) {
 function onEquipmentUnEquip$2() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV2.onUnEquip(index);
-	const overlay = _getRoot$34().querySelector(".overlay");
+	const overlay = EquipmentV2.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$2() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = _list$9[idx];
 	if (!item) return;
-	const root = _getRoot$34();
+	const root = EquipmentV2.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV2") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -267055,10 +266882,10 @@ function onEquipmentOver$2() {
 	}
 }
 function onEquipmentOut$2() {
-	const overlay = _getRoot$34().querySelector(".overlay");
+	const overlay = EquipmentV2.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var EquipmentV2, _preferences$32, _list$9, _ctx$7, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
+var EquipmentV2, _preferences$32, _list$9, _ctx$8, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
 var init_EquipmentV2 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -267093,16 +266920,16 @@ var init_EquipmentV2 = __esmMin((() => {
 		stats: true
 	}, 1);
 	_list$9 = {};
-	_ctx$7 = [];
+	_ctx$8 = [];
 	_showEquip$2 = false;
 	tabLinks$2 = {};
 	contentDivs$2 = {};
 	currentTabId$2 = "general";
 	EquipmentV2.init = function init() {
-		const root = _getRoot$34();
+		const root = EquipmentV2.getRoot();
 		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$7.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$7.push(canvases[1].getContext("2d"));
+		if (canvases[0]) _ctx$8.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$8.push(canvases[1].getContext("2d"));
 		const tabsEl = root.querySelector("#tabs");
 		if (tabsEl) {
 			const tabListItems = tabsEl.childNodes;
@@ -267204,21 +267031,21 @@ var init_EquipmentV2 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$32.show) this._host.style.display = "none";
 		if (_preferences$32.reduce) {
-			const panel = _getRoot$34().querySelector(".panel");
+			const panel = EquipmentV2.getRoot().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$32.stats && _preferences$32.show) WinStatsController.getUI().embed(EquipmentV2._host);
 		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = _getRoot$34().querySelector(".view_status");
+			const btn = EquipmentV2.getRoot().querySelector(".view_status");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		if (_getRoot$34().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$2);
+		if (EquipmentV2.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$2);
 	};
 	EquipmentV2.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
 		Renderer.stop(renderCharacter$2);
 		_list$9 = {};
-		const root = _getRoot$34();
+		const root = EquipmentV2.getRoot();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -267256,7 +267083,7 @@ var init_EquipmentV2 = __esmMin((() => {
 	EquipmentV2.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$2 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$34().querySelector(".show_equip");
+			const btn = EquipmentV2.getRoot().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -267275,7 +267102,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$34();
+		const root = EquipmentV2.getRoot();
 		const selector = getSelectorFromLocation$3(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$3(add3Dots(DB.getItemName(item, {
@@ -267293,7 +267120,7 @@ var init_EquipmentV2 = __esmMin((() => {
 	};
 	EquipmentV2.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$3(location);
-		const root = _getRoot$34();
+		const root = EquipmentV2.getRoot();
 		const item = _list$9[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -267346,7 +267173,7 @@ var init_EquipmentV2 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$34();
+				const root = EquipmentV2.getRoot();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -267374,8 +267201,8 @@ var init_EquipmentV2 = __esmMin((() => {
 			equip_character.headDir = 0;
 			equip_character.action = equip_character.ACTION.IDLE;
 			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$7.length; i++) {
-				const ctx = _ctx$7[i];
+			for (let i = 0; i < _ctx$8.length; i++) {
+				const ctx = _ctx$8[i];
 				SpriteRenderer.bind2DContext(ctx, 30, 130);
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				equip_character.renderEntity(ctx);
@@ -267383,7 +267210,7 @@ var init_EquipmentV2 = __esmMin((() => {
 		};
 	})();
 	EquipmentV2.onUpdateOwnerName = function() {
-		const root = _getRoot$34();
+		const root = EquipmentV2.getRoot();
 		for (const index in _list$9) {
 			const item = _list$9[index];
 			if (item.slot && [
@@ -267423,9 +267250,6 @@ var init_EquipmentV3$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.js
-function _getRoot$33() {
-	return EquipmentV3._shadow || EquipmentV3._host;
-}
 function escapeHTML$2(str) {
 	const div = document.createElement("div");
 	div.textContent = str;
@@ -267433,7 +267257,7 @@ function escapeHTML$2(str) {
 }
 function showTab$1() {
 	const selectedId = getHash$1(this.getAttribute("href"));
-	const root = _getRoot$33();
+	const root = EquipmentV3.getRoot();
 	for (const id in contentDivs$1) if (id === selectedId) {
 		tabLinks$1[id].className = "tab selected";
 		if (contentDivs$1[id]) contentDivs$1[id].className = "content";
@@ -267477,7 +267301,7 @@ function onRemoveOption$2() {
 	Network.sendPacket(pkt);
 }
 function toggleStatus$2() {
-	const self = _getRoot$33().querySelector(".view_status");
+	const self = EquipmentV3.getRoot().querySelector(".view_status");
 	const winStatsUI = WinStatsController.getUI();
 	const statusHost = winStatsUI._host || winStatsUI.ui;
 	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
@@ -267522,7 +267346,7 @@ function onDragOver$2(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$33().querySelectorAll(selector);
+				const cells = EquipmentV3.getRoot().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -267535,7 +267359,7 @@ function onDragOver$2(event) {
 	return false;
 }
 function onDragLeave$1(event) {
-	_getRoot$33().querySelectorAll("td").forEach((td) => {
+	EquipmentV3.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -267552,7 +267376,7 @@ function onDrop$10(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$33().querySelectorAll("td").forEach((td) => {
+			EquipmentV3.getRoot().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV3.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -267575,14 +267399,14 @@ function onEquipmentInfo$1(event) {
 function onEquipmentUnEquip$1() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV3.onUnEquip(index);
-	const overlay = _getRoot$33().querySelector(".overlay");
+	const overlay = EquipmentV3.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver$1() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = EquipmentV3._itemlist[idx];
 	if (!item) return;
-	const root = _getRoot$33();
+	const root = EquipmentV3.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV3") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -267598,7 +267422,7 @@ function onEquipmentOver$1() {
 	}
 }
 function onEquipmentOut$1() {
-	const overlay = _getRoot$33().querySelector(".overlay");
+	const overlay = EquipmentV3.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onSwtichEquip$1() {
@@ -267613,7 +267437,7 @@ function onSwtichEquip$1() {
 		}
 	}
 }
-var EquipmentV3, _preferences$31, _ctx$6, _showEquip$1, _btnLevelUp$1, tabLinks$1, contentDivs$1, currentTabId$1, switchappend$1, switchUIopen$1, _currentTitleId$1, renderCharacter$1, EquipmentV3_default;
+var EquipmentV3, _preferences$31, _ctx$7, _showEquip$1, _btnLevelUp$1, tabLinks$1, contentDivs$1, currentTabId$1, switchappend$1, switchUIopen$1, _currentTitleId$1, renderCharacter$1, EquipmentV3_default;
 var init_EquipmentV3 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -267650,17 +267474,17 @@ var init_EquipmentV3 = __esmMin((() => {
 		stats: true
 	}, 1);
 	EquipmentV3._itemlist = {};
-	_ctx$6 = [];
+	_ctx$7 = [];
 	_showEquip$1 = false;
 	tabLinks$1 = {};
 	contentDivs$1 = {};
 	currentTabId$1 = "general";
 	_currentTitleId$1 = 0;
 	EquipmentV3.init = function init() {
-		const root = _getRoot$33();
+		const root = EquipmentV3.getRoot();
 		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$6.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$6.push(canvases[1].getContext("2d"));
+		if (canvases[0]) _ctx$7.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$7.push(canvases[1].getContext("2d"));
 		const tabsEl = root.querySelector("#tabs");
 		if (tabsEl) {
 			const tabListItems = tabsEl.childNodes;
@@ -267764,20 +267588,20 @@ var init_EquipmentV3 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$31.show) this._host.style.display = "none";
 		if (_preferences$31.reduce) {
-			const panel = _getRoot$33().querySelector(".panel");
+			const panel = EquipmentV3.getRoot().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			if (!_preferences$31.stats) {
-				const statusComp = _getRoot$33().querySelector(".status_component");
+				const statusComp = EquipmentV3.getRoot().querySelector(".status_component");
 				if (statusComp) statusComp.style.display = "none";
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-					const btn = _getRoot$33().querySelector(".view_status");
+					const btn = EquipmentV3.getRoot().querySelector(".view_status");
 					if (btn) btn.style.backgroundImage = `url(${data})`;
 				});
 			}
 		}
-		if (_getRoot$33().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$1);
+		if (EquipmentV3.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$1);
 		SwitchEquip_default.append(switchappend$1);
 		if (SwitchEquip_default.ui) {
 			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
@@ -267788,7 +267612,7 @@ var init_EquipmentV3 = __esmMin((() => {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
 		Renderer.stop(renderCharacter$1);
 		EquipmentV3._itemlist = {};
-		const root = _getRoot$33();
+		const root = EquipmentV3.getRoot();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -267824,7 +267648,7 @@ var init_EquipmentV3 = __esmMin((() => {
 	EquipmentV3.setEquipConfig = function setEquipConfig(on) {
 		_showEquip$1 = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$33().querySelector(".show_equip");
+			const btn = EquipmentV3.getRoot().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -267843,7 +267667,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$33();
+		const root = EquipmentV3.getRoot();
 		const selector = getSelectorFromLocation$2(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$2(add3Dots(DB.getItemName(item, {
@@ -267869,7 +267693,7 @@ var init_EquipmentV3 = __esmMin((() => {
 	};
 	EquipmentV3.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$2(location);
-		const root = _getRoot$33();
+		const root = EquipmentV3.getRoot();
 		const item = EquipmentV3._itemlist[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -267922,7 +267746,7 @@ var init_EquipmentV3 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$33();
+				const root = EquipmentV3.getRoot();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -267950,8 +267774,8 @@ var init_EquipmentV3 = __esmMin((() => {
 			equip_character.headDir = 0;
 			equip_character.action = equip_character.ACTION.IDLE;
 			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$6.length; i++) {
-				const ctx = _ctx$6[i];
+			for (let i = 0; i < _ctx$7.length; i++) {
+				const ctx = _ctx$7[i];
 				SpriteRenderer.bind2DContext(ctx, 30, 130);
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				equip_character.renderEntity(ctx);
@@ -267959,7 +267783,7 @@ var init_EquipmentV3 = __esmMin((() => {
 		};
 	})();
 	EquipmentV3.onUpdateOwnerName = function() {
-		const root = _getRoot$33();
+		const root = EquipmentV3.getRoot();
 		for (const index in EquipmentV3._itemlist) {
 			const item = EquipmentV3._itemlist[index];
 			if (item.slot && [
@@ -267977,7 +267801,7 @@ var init_EquipmentV3 = __esmMin((() => {
 		return num;
 	};
 	EquipmentV3.loadTitles = function() {
-		const titleList = _getRoot$33().querySelector("#title_list");
+		const titleList = EquipmentV3.getRoot().querySelector("#title_list");
 		if (!titleList) return;
 		titleList.innerHTML = "";
 		const removeTitleText = DB.getMessage(2686) || "Remove Title";
@@ -268048,9 +267872,6 @@ var init_EquipmentV4$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.js
-function _getRoot$32() {
-	return EquipmentV4._shadow || EquipmentV4._host;
-}
 function escapeHTML$1(str) {
 	const div = document.createElement("div");
 	div.textContent = str;
@@ -268058,7 +267879,7 @@ function escapeHTML$1(str) {
 }
 function showTab() {
 	const selectedId = getHash(this.getAttribute("href"));
-	const root = _getRoot$32();
+	const root = EquipmentV4.getRoot();
 	for (const id in contentDivs) if (id === selectedId) {
 		tabLinks[id].className = "tab selected";
 		if (contentDivs[id]) contentDivs[id].className = "content";
@@ -268125,7 +267946,7 @@ function onRemoveOption$1() {
 	Network.sendPacket(pkt);
 }
 function toggleStatus$1() {
-	const self = _getRoot$32().querySelector(".view_status");
+	const self = EquipmentV4.getRoot().querySelector(".view_status");
 	const winStatsUI = WinStatsController.getUI();
 	const statusHost = winStatsUI._host || winStatsUI.ui;
 	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
@@ -268173,7 +267994,7 @@ function onDragOver$1(event) {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
 				const selector = getSelectorFromLocation$1("location" in item ? item.location : item.WearLocation);
-				const cells = _getRoot$32().querySelectorAll(selector);
+				const cells = EquipmentV4.getRoot().querySelectorAll(selector);
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					cells.forEach((c) => {
 						c.style.backgroundImage = `url(${_data})`;
@@ -268186,7 +268007,7 @@ function onDragOver$1(event) {
 	return false;
 }
 function onDragLeave(event) {
-	_getRoot$32().querySelectorAll("td").forEach((td) => {
+	EquipmentV4.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
 	event.stopImmediatePropagation();
@@ -268203,7 +268024,7 @@ function onDrop$9(event) {
 	if (data && data.type === "item") {
 		item = data.data;
 		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			_getRoot$32().querySelectorAll("td").forEach((td) => {
+			EquipmentV4.getRoot().querySelectorAll("td").forEach((td) => {
 				td.style.backgroundImage = "none";
 			});
 			EquipmentV4.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
@@ -268226,14 +268047,14 @@ function onEquipmentInfo(event) {
 function onEquipmentUnEquip() {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	EquipmentV4.onUnEquip(index);
-	const overlay = _getRoot$32().querySelector(".overlay");
+	const overlay = EquipmentV4.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onEquipmentOver() {
 	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
 	const item = EquipmentV4._itemlist[idx];
 	if (!item) return;
-	const root = _getRoot$32();
+	const root = EquipmentV4.getRoot();
 	const overlay = root.querySelector(".overlay");
 	const rootEl = root.querySelector("#EquipmentV4") || root;
 	const btnRect = this.getBoundingClientRect();
@@ -268249,7 +268070,7 @@ function onEquipmentOver() {
 	}
 }
 function onEquipmentOut() {
-	const overlay = _getRoot$32().querySelector(".overlay");
+	const overlay = EquipmentV4.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 function onSwtichEquip() {
@@ -268264,7 +268085,7 @@ function onSwtichEquip() {
 		}
 	}
 }
-var EquipmentV4, _preferences$30, _ctx$5, _showEquip, _hideCostume, _currentTitleId, _btnLevelUp, tabLinks, contentDivs, currentTabId, switchappend, switchUIopen, renderCharacter, EquipmentV4_default;
+var EquipmentV4, _preferences$30, _ctx$6, _showEquip, _hideCostume, _currentTitleId, _btnLevelUp, tabLinks, contentDivs, currentTabId, switchappend, switchUIopen, renderCharacter, EquipmentV4_default;
 var init_EquipmentV4 = __esmMin((() => {
 	init_DBManager();
 	init_StatusState();
@@ -268302,7 +268123,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		stats: true
 	}, 1);
 	EquipmentV4._itemlist = {};
-	_ctx$5 = [];
+	_ctx$6 = [];
 	_showEquip = false;
 	_hideCostume = false;
 	_currentTitleId = 0;
@@ -268310,10 +268131,10 @@ var init_EquipmentV4 = __esmMin((() => {
 	contentDivs = {};
 	currentTabId = "general";
 	EquipmentV4.init = function init() {
-		const root = _getRoot$32();
+		const root = EquipmentV4.getRoot();
 		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$5.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$5.push(canvases[1].getContext("2d"));
+		if (canvases[0]) _ctx$6.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx$6.push(canvases[1].getContext("2d"));
 		const tabsEl = root.querySelector("#tabs");
 		if (tabsEl) {
 			const tabListItems = tabsEl.childNodes;
@@ -268446,7 +268267,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		EquipmentV4.setDamageMotion(savedMotion);
 	};
 	EquipmentV4.loadTitles = function() {
-		const titleList = _getRoot$32().querySelector("#title_list");
+		const titleList = EquipmentV4.getRoot().querySelector("#title_list");
 		if (!titleList) return;
 		titleList.innerHTML = "";
 		const removeTitleText = DB.getMessage(2686) || "Remove Title";
@@ -268494,20 +268315,20 @@ var init_EquipmentV4 = __esmMin((() => {
 		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
 		if (!_preferences$30.show) this._host.style.display = "none";
 		if (_preferences$30.reduce) {
-			const panel = _getRoot$32().querySelector(".panel");
+			const panel = EquipmentV4.getRoot().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
 		if (UIVersionManager.getEquipmentVersion() > 0) {
 			if (!_preferences$30.stats) {
-				const statusComp = _getRoot$32().querySelector(".status_component");
+				const statusComp = EquipmentV4.getRoot().querySelector(".status_component");
 				if (statusComp) statusComp.style.display = "none";
 				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-					const btn = _getRoot$32().querySelector(".view_status");
+					const btn = EquipmentV4.getRoot().querySelector(".view_status");
 					if (btn) btn.style.backgroundImage = `url(${data})`;
 				});
 			}
 		}
-		if (_getRoot$32().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
+		if (EquipmentV4.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
 		SwitchEquip_default.append(switchappend);
 		if (SwitchEquip_default.ui) {
 			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
@@ -268518,7 +268339,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		Renderer.stop(renderCharacter);
 		EquipmentV4._itemlist = {};
-		const root = _getRoot$32();
+		const root = EquipmentV4.getRoot();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -268554,14 +268375,14 @@ var init_EquipmentV4 = __esmMin((() => {
 	EquipmentV4.setEquipConfig = function setEquipConfig(on) {
 		_showEquip = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = _getRoot$32().querySelector(".show_equip");
+			const btn = EquipmentV4.getRoot().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
 	EquipmentV4.setCostumeConfig = function setCostumeConfig(on) {
 		_hideCostume = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "0" : "1") + ".bmp", (data) => {
-			const btn = _getRoot$32().querySelector(".show_costume");
+			const btn = EquipmentV4.getRoot().querySelector(".show_costume");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -268579,7 +268400,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = _getRoot$32();
+		const root = EquipmentV4.getRoot();
 		const selector = getSelectorFromLocation$1(location);
 		root.querySelectorAll(selector).forEach((cell) => {
 			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$1(add3Dots(DB.getItemName(item, {
@@ -268605,7 +268426,7 @@ var init_EquipmentV4 = __esmMin((() => {
 	};
 	EquipmentV4.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$1(location);
-		const root = _getRoot$32();
+		const root = EquipmentV4.getRoot();
 		const item = EquipmentV4._itemlist[index];
 		item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
@@ -268658,7 +268479,7 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
 				_lastState = SessionStorage_default.Entity.effectState;
 				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = _getRoot$32();
+				const root = EquipmentV4.getRoot();
 				const removeOpt = root.querySelector(".removeOption");
 				const cartBtn = root.querySelector(".cartitems");
 				if (_lastState & HasAttachmentState || _hasCart) {
@@ -268686,8 +268507,8 @@ var init_EquipmentV4 = __esmMin((() => {
 			equip_character.headDir = 0;
 			equip_character.action = equip_character.ACTION.IDLE;
 			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$5.length; i++) {
-				const ctx = _ctx$5[i];
+			for (let i = 0; i < _ctx$6.length; i++) {
+				const ctx = _ctx$6[i];
 				SpriteRenderer.bind2DContext(ctx, 30, 130);
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				equip_character.renderEntity(ctx);
@@ -268695,7 +268516,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		};
 	})();
 	EquipmentV4.onUpdateOwnerName = function() {
-		const root = _getRoot$32();
+		const root = EquipmentV4.getRoot();
 		for (const index in EquipmentV4._itemlist) {
 			const item = EquipmentV4._itemlist[index];
 			if (item.slot && [
@@ -268713,7 +268534,7 @@ var init_EquipmentV4 = __esmMin((() => {
 		return num;
 	};
 	EquipmentV4.setDamageSkin = function setDamageSkin(skinId) {
-		const root = _getRoot$32();
+		const root = EquipmentV4.getRoot();
 		const buttons = root.querySelectorAll("#damageskin .skin-option");
 		const buttonSelected = root.querySelector(`#damageskin .skin-option[data-skin="${skinId}"]`);
 		GraphicsSettings.damageSkin = skinId;
@@ -268742,7 +268563,7 @@ var init_EquipmentV4 = __esmMin((() => {
 	EquipmentV4.setDamageMotion = function setDamageMotion(motionId) {
 		GraphicsSettings.damageMotion = motionId;
 		GraphicsSettings.save();
-		_getRoot$32().querySelectorAll(".motion-check").forEach((btn) => {
+		EquipmentV4.getRoot().querySelectorAll(".motion-check").forEach((btn) => {
 			const bgImage = parseInt(btn.getAttribute("data-motion"), 10) === motionId ? "checkbox_1.bmp" : "checkbox_0.bmp";
 			Client.loadFile(DB.INTERFACE_PATH + bgImage, (data) => {
 				btn.style.backgroundImage = `url(${data})`;
@@ -268805,6 +268626,993 @@ var init_Equipment = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/Components/ItemInfo/ItemInfo.js
+var ItemInfo_exports = /* @__PURE__ */ __exportAll({ default: () => ItemInfo_default });
+/**
+* Helper: escape HTML keeping whitelisted tags
+*/
+function _escapeHTML$2(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+/**
+* Add a card into a slot
+*
+* @param {Element} cardList DOM element
+* @param {number} item id
+* @param {number} index
+* @param {number} slot count
+*/
+function addCard(cardList, itemId, index, slotCount) {
+	let file, name = "";
+	const card = DB.getItemInfo(itemId);
+	if (itemId && card) {
+		file = "item/" + card.identifiedResourceName + ".bmp";
+		name = `<div class="name">${_escapeHTML$2(card.identifiedDisplayName)}</div>`;
+	} else if (index < slotCount) file = "empty_card_slot.bmp";
+	else file = "basic_interface/coparison_disable_card_slot.bmp";
+	if (!cardList) return;
+	cardList.insertAdjacentHTML("beforeend", `<div class="item" data-index="${index}"><div class="icon"></div>${name}</div>`);
+	Client.loadFile(DB.INTERFACE_PATH + file, (data) => {
+		const element = ItemInfo.getRoot().querySelector(`.cardlist .item[data-index="${index}"] .icon`);
+		if (element) {
+			element.style.backgroundImage = `url(${data})`;
+			if (itemId && card) element.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				ItemInfo.setItem({
+					ITID: itemId,
+					IsIdentified: true,
+					type: 6
+				});
+			});
+		}
+	});
+}
+/**
+* Extend ItemInfo window size
+*/
+function onResize$5() {
+	const top = ItemInfo._host.offsetTop;
+	let lastHeight = 0;
+	function resizing() {
+		const h = Math.floor(Mouse.screen.y - top);
+		if (h === lastHeight) return;
+		resize$3(h);
+		lastHeight = h;
+	}
+	const _Interval = setInterval(resizing, 30);
+	const onMouseUp = (event) => {
+		if (event.which === 1) {
+			clearInterval(_Interval);
+			window.removeEventListener("mouseup", onMouseUp);
+		}
+	};
+	window.addEventListener("mouseup", onMouseUp);
+}
+/**
+* Extend ItemInfo window size
+*
+* @param {number} height
+*/
+function resize$3(height) {
+	const root = ItemInfo.getRoot();
+	const container = root.querySelector(".container");
+	const description = root.querySelector(".description");
+	const descriptionInner = root.querySelector(".description-inner");
+	let containerHeight = height;
+	const minHeight = 140;
+	const innerH = descriptionInner ? descriptionInner.offsetHeight : 0;
+	const maxHeight = innerH + 45 > 140 ? Math.min(innerH + 45, 448) : 140;
+	if (containerHeight <= minHeight) containerHeight = minHeight;
+	if (containerHeight >= maxHeight) containerHeight = maxHeight;
+	if (container) container.style.height = `${containerHeight}px`;
+	if (description) description.style.height = `${containerHeight - 45}px`;
+}
+function addEvent(item) {
+	const root = ItemInfo.getRoot();
+	let event = root.querySelector(".event_view");
+	if (!event) {
+		if (!validateFieldsExist(event)) event = root.querySelector(".event_view");
+	}
+	if (!event) return;
+	const viewBtn = event.querySelector(".view");
+	if (viewBtn) viewBtn.style.display = "none";
+	event.querySelectorAll("canvas").forEach((c) => c.remove());
+	Renderer.stop(rendering$2);
+	switch (item.type) {
+		case ItemType_default.CARD:
+			if (viewBtn) viewBtn.style.display = "block";
+			break;
+		case ItemType_default.ETC: {
+			const filenameBook = `data/book/${item.ITID}.txt`;
+			Client.loadFile(filenameBook, (data) => {
+				try {
+					MakeReadBook_default.startBook(data, item);
+				} catch (e) {
+					console.error("ItemInfo::addEvent() - startBook failed:", e.message);
+				}
+				eventsBooks();
+			});
+			break;
+		}
+		default:
+			if (viewBtn) viewBtn.style.display = "none";
+			break;
+	}
+}
+function updatePreviewButton(item) {
+	const previewButton = ItemInfo.getRoot().querySelector(".btn_mounting");
+	if (!previewButton) return;
+	if (!canPreviewItem(item)) {
+		previewButton.style.display = "none";
+		return;
+	}
+	previewButton.style.display = "block";
+	const newBtn = previewButton.cloneNode(true);
+	previewButton.parentNode.replaceChild(newBtn, previewButton);
+	newBtn.addEventListener("click", (e) => {
+		e.stopImmediatePropagation();
+		toggleItemPreview(item);
+	});
+}
+function canPreviewItem(item) {
+	if (!item) return false;
+	if (!(getPreviewLocation(item) & (EquipmentLocation_default.HEAD_BOTTOM | EquipmentLocation_default.HEAD_MID | EquipmentLocation_default.HEAD_TOP | EquipmentLocation_default.COSTUME_HEAD_BOTTOM | EquipmentLocation_default.COSTUME_HEAD_MID | EquipmentLocation_default.COSTUME_HEAD_TOP | EquipmentLocation_default.COSTUME_ROBE))) return false;
+	return getPreviewSpriteId(item, DB.getItemInfo(item.ITID)) > 0;
+}
+function getPreviewLocation(item) {
+	if ("location" in item) return item.location;
+	if ("WearState" in item) return item.WearState;
+	if ("WearLocation" in item) return item.WearLocation;
+	return 0;
+}
+function getPreviewSpriteId(item, it) {
+	if (item && item.wItemSpriteNumber) return item.wItemSpriteNumber;
+	if (it && it.ClassNum) return it.ClassNum;
+	return 0;
+}
+function toggleItemPreview(item) {
+	if (ItemPreview_default.ui && ItemPreview_default._host && ItemPreview_default._host.style.display !== "none" && ItemPreview_default.uid === item.ITID) {
+		ItemPreview_default.remove();
+		return;
+	}
+	ItemPreview_default.append();
+	ItemPreview_default.uid = item.ITID;
+	ItemPreview_default.setItem(item);
+}
+function eventsBooks() {
+	const root = ItemInfo.getRoot();
+	const event = root.querySelector(".event_view");
+	if (!event) return;
+	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
+		try {
+			_sprite$3 = new SPR(spr);
+			_action$3 = new ACT(act);
+		} catch (e) {
+			console.error("Book::init() - " + e.message);
+			return;
+		}
+		const canvas = _sprite$3.getCanvasFromFrame(0);
+		canvas.className = "book_open event_add_cursor";
+		event.appendChild(canvas);
+		const bookOpen = root.querySelector(".book_open");
+		if (bookOpen) {
+			bookOpen.addEventListener("mouseover", (e) => {
+				e.stopImmediatePropagation();
+				const overlayOpen = root.querySelector(".overlay_open");
+				if (overlayOpen) overlayOpen.style.display = "block";
+			});
+			bookOpen.addEventListener("mouseout", (e) => {
+				e.stopImmediatePropagation();
+				const overlayOpen = root.querySelector(".overlay_open");
+				if (overlayOpen) overlayOpen.style.display = "none";
+			});
+			bookOpen.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				MakeReadBook_default.openBook();
+			});
+		}
+		const readCanvas = document.createElement("canvas");
+		readCanvas.width = 21;
+		readCanvas.height = 15;
+		readCanvas.className = "book_read event_add_cursor";
+		event.appendChild(readCanvas);
+		_ctx$5 = readCanvas.getContext("2d");
+		const bookRead = root.querySelector(".book_read");
+		if (bookRead) {
+			bookRead.addEventListener("mouseover", (e) => {
+				e.stopImmediatePropagation();
+				const overlayRead = root.querySelector(".overlay_read");
+				if (overlayRead) overlayRead.style.display = "block";
+			});
+			bookRead.addEventListener("mouseout", (e) => {
+				e.stopImmediatePropagation();
+				const overlayRead = root.querySelector(".overlay_read");
+				if (overlayRead) overlayRead.style.display = "none";
+			});
+			bookRead.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				MakeReadBook_default.highlighter();
+			});
+		}
+		Renderer.render(rendering$2);
+	});
+}
+function validateFieldsExist(event) {
+	const root = ItemInfo.getRoot();
+	if (!event) {
+		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span></div>";
+		const collection = root.querySelector(".collection");
+		if (collection) collection.insertAdjacentHTML("afterend", validExitElement);
+		return false;
+	}
+	if (!root.querySelector(".overlay_open") && !root.querySelector(".overlay_read")) event.insertAdjacentHTML("beforeend", "<span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span>");
+	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
+	return true;
+}
+/**
+* A function that handles previewing an item.
+*
+* @param {object} pkt - The packet containing information about the item
+* @return {boolean} Indicates success or failure of the preview action
+*/
+function onItemPreview(pkt) {
+	if (pkt) {
+		const item = InventoryController.getUI().getItemByIndex(pkt.index);
+		if (!item) return false;
+		if (ItemCompare_default.ui) ItemCompare_default.remove();
+		if (ItemInfo.uid === item.ITID) {
+			ItemInfo.remove();
+			if (ItemCompare_default.ui) ItemCompare_default.remove();
+			return false;
+		}
+		ItemInfo.append();
+		ItemInfo.uid = item.ITID;
+		ItemInfo.setItem(item);
+		const compareItem = EquipmentController.getUI().isInEquipList(item.location);
+		if (compareItem && InventoryController.getUI().itemcomp) {
+			ItemCompare_default.prepare();
+			ItemCompare_default.append();
+			ItemCompare_default.uid = compareItem.ITID;
+			ItemCompare_default.setItem(compareItem);
+		}
+	}
+}
+/**
+* Build moveInfo tooltip html content
+* @param {object} moveInfo
+* @returns {string} html content
+*/
+function buildMoveInfoTooltip(moveInfo) {
+	const lines = [];
+	for (const entry of MOVE_INFO_MESSAGES) if (moveInfo[entry.key] === true) lines.push(DB.getMessage(entry.msgId));
+	return lines.map((l) => `<div>${l}</div>`).join("");
+}
+var ItemInfo, _sprite$3, _action$3, _ctx$5, _type$5, _start$1, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
+var init_ItemInfo = __esmMin((() => {
+	init_DBManager();
+	init_ItemType();
+	init_EquipmentLocation();
+	init_Client();
+	init_KeyEventHandler();
+	init_CardIllustration();
+	init_UIManager();
+	init_MouseEventHandler();
+	init_GUIComponent();
+	init_Elements();
+	init_CursorManager();
+	init_ItemCompare();
+	init_ItemPreview();
+	init_MakeReadBook();
+	init_Renderer();
+	init_SpriteRenderer();
+	init_Sprite();
+	init_Action();
+	init_ItemInfo$2();
+	init_ItemInfo$1();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_Entity$1();
+	init_Equipment();
+	init_Inventory();
+	ItemInfo = new GUIComponent("ItemInfo", ItemInfo_default$1);
+	ItemInfo.render = () => ItemInfo_default$2;
+	_type$5 = 0;
+	_start$1 = 0;
+	/**
+	* @let {number} ItemInfo unique id
+	*/
+	ItemInfo.uid = -1;
+	MOVE_INFO_MESSAGES = [
+		{
+			key: "Drop",
+			msgId: 2788
+		},
+		{
+			key: "Storage",
+			msgId: 2789
+		},
+		{
+			key: "Cart",
+			msgId: 2790
+		},
+		{
+			key: "Mail",
+			msgId: 2791
+		},
+		{
+			key: "Exchange",
+			msgId: 2792
+		},
+		{
+			key: "GuildStorage",
+			msgId: 2794
+		},
+		{
+			key: "NPCSale",
+			msgId: 2795
+		}
+	];
+	/**
+	* Once append to the DOM
+	*/
+	ItemInfo.onKeyDown = function onKeyDown(event) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			ItemInfo.hideMoveInfoTooltip();
+			ItemInfo.remove();
+			if (ItemCompare_default.ui) ItemCompare_default.remove();
+			if (ItemPreview_default.ui) ItemPreview_default.remove();
+		}
+	};
+	/**
+	* Once append
+	*/
+	ItemInfo.onAppend = function onAppend() {
+		const descInner = ItemInfo.getRoot().querySelector(".description-inner");
+		if (descInner) resize$3(descInner.offsetHeight + 45);
+	};
+	/**
+	* Once removed from html
+	*/
+	ItemInfo.onRemove = function onRemove() {
+		this.uid = -1;
+		ItemInfo.hideMoveInfoTooltip();
+		if (ItemCompare_default.ui) ItemCompare_default.remove();
+		if (ItemPreview_default.ui) ItemPreview_default.remove();
+	};
+	/**
+	* Initialize UI
+	*/
+	ItemInfo.init = function init() {
+		const root = ItemInfo.getRoot();
+		this._host.style.top = "200px";
+		this._host.style.left = "480px";
+		const extendBtn = root.querySelector(".extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$5);
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+			});
+			closeBtn.addEventListener("click", () => {
+				this.remove();
+				if (ItemCompare_default.ui) ItemCompare_default.remove();
+			});
+		}
+		const viewBtn = root.querySelector(".view");
+		if (viewBtn) viewBtn.addEventListener("click", () => {
+			CardIllustration_default.append();
+			CardIllustration_default.setCard(this.item);
+		});
+		this.draggable(".title");
+	};
+	/**
+	* Bind component
+	*
+	* @param {object} item
+	*/
+	ItemInfo.setItem = function setItem(item) {
+		const it = DB.getItemInfo(item.ITID);
+		const root = ItemInfo.getRoot();
+		const cardList = root.querySelector(".cardlist .border");
+		const optionContainer = root.querySelector(".option-container");
+		this.item = it;
+		Client.loadFile(DB.INTERFACE_PATH + "collection/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+			const collection = root.querySelector(".collection");
+			if (collection) collection.style.backgroundImage = `url(${data})`;
+		});
+		const itemName = DB.getItemName(item, { showItemOptions: false });
+		const title = root.querySelector(".title");
+		if (title) {
+			if (item.IsDamaged) title.classList.add("damaged");
+			else title.classList.remove("damaged");
+			title.textContent = itemName;
+		}
+		if (item.Options && item.IsIdentified) {
+			if (optionContainer) optionContainer.innerHTML = "";
+			for (let i = 1; i <= 5; i++) if (item.Options[i].index > 0) {
+				const optionList = "<div class=\"optionlist\"><div class=\"border\">" + DB.getOptionName(item.Options[i].index).replace("%d", item.Options[i].value).replace("%%", "%") + "</div></div>";
+				if (optionContainer) optionContainer.insertAdjacentHTML("beforeend", optionList);
+			}
+			if (optionContainer) optionContainer.style.display = "block";
+		} else if (optionContainer) optionContainer.style.display = "none";
+		const container = root.querySelector(".container");
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg_g" + item.enchantgrade + ".bmp", (data) => {
+			if (container) container.style.backgroundImage = `url(${data})`;
+		});
+		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/collection_bg.bmp", (data) => {
+			if (container) container.style.backgroundImage = `url(${data})`;
+		});
+		const descInner = root.querySelector(".description-inner");
+		if (descInner) {
+			const rawDesc = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
+			descInner.innerHTML = DB.formatMsgToHtml(_escapeHTML$2(rawDesc));
+		}
+		if (item.HireExpireDate) {
+			const dateText = DB.formatUnixDate(item.HireExpireDate);
+			let msg = DB.getMessage(1255).replace("%s", dateText);
+			msg = DB.formatMsgToHtml(msg);
+			if (descInner) {
+				const div = document.createElement("div");
+				div.innerHTML = msg;
+				descInner.insertBefore(div, descInner.firstChild);
+			}
+		}
+		if (it.moveInfo) {
+			const tooltipHtml = buildMoveInfoTooltip(it.moveInfo);
+			if (tooltipHtml) {
+				const label = document.createElement("span");
+				label.textContent = DB.getMessage(2796);
+				label.className = "moveinfo-label";
+				if (descInner) descInner.appendChild(label);
+				let tooltip = document.getElementById("moveinfo-tooltip");
+				if (!tooltip) {
+					tooltip = document.createElement("div");
+					tooltip.id = "moveinfo-tooltip";
+					document.body.appendChild(tooltip);
+				}
+				label.addEventListener("mouseenter", (e) => {
+					Cursor.setType(Cursor.ACTION.CLICK);
+					tooltip.innerHTML = tooltipHtml;
+					tooltip.style.display = "block";
+					tooltip.style.left = `${e.pageX + 15}px`;
+					tooltip.style.top = `${e.pageY + 2}px`;
+				});
+				label.addEventListener("mouseleave", () => {
+					tooltip.style.display = "none";
+					Cursor.setType(Cursor.ACTION.DEFAULT);
+				});
+				label.addEventListener("mousemove", (e) => {
+					tooltip.style.left = `${e.pageX + 20}px`;
+					tooltip.style.top = `${e.pageY + 2}px`;
+				});
+			}
+		}
+		updatePreviewButton(item);
+		addEvent(item);
+		let hideslots = false;
+		if (item.slot) {
+			switch (item.slot["card1"]) {
+				case 255:
+				case 254:
+				case 65280:
+					hideslots = true;
+					break;
+			}
+			switch (item.slot["card4"]) {
+				case 1:
+					hideslots = true;
+					break;
+			}
+		}
+		const cardListParent = cardList ? cardList.parentElement : null;
+		switch (item.type) {
+			default:
+				if (cardListParent) cardListParent.style.display = "none";
+				break;
+			case ItemType_default.ARMOR: if (DB.isPetEgg(item.ITID)) hideslots = true;
+			case ItemType_default.WEAPON:
+			case ItemType_default.SHADOWGEAR: {
+				if (hideslots) {
+					if (cardListParent) cardListParent.style.display = "none";
+					break;
+				}
+				const slotCount = it.slotCount || 0;
+				if (cardListParent) cardListParent.style.display = "block";
+				if (cardList) cardList.innerHTML = "";
+				for (let i = 0; i < 4; ++i) addCard(cardList, item.slot && item.slot["card" + (i + 1)] || 0, i, slotCount);
+				if (!item.IsIdentified && cardListParent) cardListParent.style.display = "none";
+				break;
+			}
+			case ItemType_default.PETEGG:
+				if (cardListParent) cardListParent.style.display = "none";
+				break;
+		}
+		if (descInner) resize$3(descInner.offsetHeight + 45);
+	};
+	rendering$2 = (function renderingClosure() {
+		const position = new Uint16Array([0, 0]);
+		return function render() {
+			const _entity = new Entity();
+			const action = _action$3.actions[_type$5];
+			const anim = Math.floor((Renderer.tick - _start$1) / action.delay);
+			const animation = action.animations[anim % action.animations.length];
+			let i, count;
+			count = animation.layers.length;
+			SpriteRenderer.bind2DContext(_ctx$5, 10, 25);
+			_ctx$5.clearRect(0, 0, _ctx$5.canvas.width, _ctx$5.canvas.height);
+			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$3, _sprite$3, 1, position, false);
+		};
+	})();
+	/**
+	* Cleanup moveInfo tooltip and restore cursor state.
+	* Called when ItemInfo UI is removed.
+	*/
+	ItemInfo.hideMoveInfoTooltip = function hideMoveInfoTooltip() {
+		const tooltip = document.getElementById("moveinfo-tooltip");
+		if (tooltip) tooltip.style.display = "none";
+		Cursor.setType(Cursor.ACTION.DEFAULT);
+	};
+	/**
+	* Packet Hooks to functions
+	*/
+	Network.hookPacket(PACKET.ZC.CHANGE_ITEM_OPTION, onItemPreview);
+	ItemInfo_default = UIManager.addComponent(ItemInfo);
+}));
+//#endregion
+//#region src/UI/Components/NpcBox/NpcBox.html?raw
+var NpcBox_default$2;
+var init_NpcBox$2 = __esmMin((() => {
+	NpcBox_default$2 = "<div id=\"NpcBox\">\r\n	<div class=\"border\">\r\n		<div class=\"content\"></div>\r\n		<div class=\"btns\">\r\n			<ui-button class=\"btn close\" bg=\"btn_close.bmp\" hover=\"btn_close_a.bmp\" down=\"btn_close_b.bmp\"></ui-button>\r\n			<ui-button class=\"btn next\" bg=\"btn_next.bmp\" hover=\"btn_next_a.bmp\" down=\"btn_next_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcBox/NpcBox.css?raw
+var NpcBox_default$1;
+var init_NpcBox$1 = __esmMin((() => {
+	NpcBox_default$1 = ":host {\r\n	width: 276px;\r\n	height: 176px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#NpcBox {\r\n	position: absolute;\r\n	width: 276px;\r\n	height: 176px;\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n}\r\n#NpcBox .border {\r\n	border: 1px solid #c1c6c2;\r\n	width: 264px;\r\n	height: 164px;\r\n	padding: 5px;\r\n	border-radius: 5px;\r\n}\r\n#NpcBox .content {\r\n	white-space: pre-wrap;\r\n	background-color: #eff4f0;\r\n	width: 254px;\r\n	height: 130px;\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n}\r\n#NpcBox .btns {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 8px;\r\n}\r\n#NpcBox .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	display: none;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcBox/NpcBox.js
+/**
+* Process NAVI tags in text
+*/
+function processNAVITags(text) {
+	if (!text) return "";
+	text = String(text);
+	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
+		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
+	});
+}
+/**
+* Process ITEM tags in text
+*/
+function processItemTags(text) {
+	if (!text) return "";
+	if (typeof text !== "string") text = String(text);
+	return text.replace(/<(ITEMLINK|ITEM)>([\s\S]*?)<INFO>([\s\S]*?)<\/INFO><\/\1>/g, (match, tag, itemName, itemId) => {
+		return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
+	});
+}
+/**
+* Process color codes in text (^RRGGBB)
+*/
+function processColorCodes(text) {
+	if (!text) return "";
+	text = String(text);
+	return text.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => {
+		return `<span style="color:#${color}">`;
+	}).replace(/\^000000/g, "</span>");
+}
+/**
+* Process all text formatting
+*/
+function processText(text) {
+	if (!text) return "";
+	text = processItemTags(text);
+	text = processNAVITags(text);
+	text = processColorCodes(text);
+	return text;
+}
+function _isVisible(el) {
+	return !!el && getComputedStyle(el).display !== "none";
+}
+var NpcBox, _needCleanUp, NpcBox_default;
+var init_NpcBox = __esmMin((() => {
+	init_KeyEventHandler();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_ItemInfo();
+	init_Navigation();
+	init_NpcBox$2();
+	init_NpcBox$1();
+	init_NpcMenu();
+	init_InputBox();
+	NpcBox = new GUIComponent("NpcBox", NpcBox_default$1);
+	NpcBox.render = () => NpcBox_default$2;
+	/**
+	* Freeze mouse — NPC dialog blocks interaction
+	*/
+	NpcBox.mouseMode = GUIComponent.MouseMode.FREEZE;
+	_needCleanUp = false;
+	/**
+	* @var {integer} NPC GID
+	*/
+	NpcBox.ownerID = 0;
+	/**
+	* Initialize Component
+	*/
+	NpcBox.init = function init() {
+		this._host.style.top = `${Math.max(100, Renderer.height / 2 - 200)}px`;
+		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
+		const root = NpcBox.getRoot();
+		const nextBtn = root.querySelector(".next");
+		if (nextBtn) nextBtn.addEventListener("click", () => NpcBox.next());
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => NpcBox.close());
+		const content = root.querySelector(".content");
+		if (content) content.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		root.addEventListener("click", (e) => {
+			const itemLink = e.target.closest(".item-link");
+			if (itemLink) {
+				const itemId = parseInt(itemLink.dataset.itemId, 10);
+				if (!itemId) return;
+				if (ItemInfo_default.uid === itemId) {
+					ItemInfo_default.remove();
+					return;
+				}
+				ItemInfo_default.append();
+				ItemInfo_default.uid = itemId;
+				ItemInfo_default.setItem({
+					ITID: itemId,
+					IsIdentified: true
+				});
+				return;
+			}
+			const naviLink = e.target.closest(".navi-link");
+			if (naviLink) {
+				const naviInfo = naviLink.dataset.naviInfo;
+				const displayName = naviLink.dataset.naviName;
+				if (!naviInfo) return;
+				if (Navigation_default.uid === naviInfo && Navigation_default._host && Navigation_default._host.style.display !== "none") {
+					Navigation_default.hide();
+					return;
+				}
+				Navigation_default.show();
+				Navigation_default.uid = naviInfo;
+				Navigation_default.setNaviInfo(naviInfo, displayName);
+			}
+		});
+		this.draggable();
+	};
+	/**
+	* Once NPC Box is removed from HTML, clean up data
+	*/
+	NpcBox.onRemove = function onRemove() {
+		const root = NpcBox.getRoot();
+		const nextBtn = root.querySelector(".next");
+		if (nextBtn) nextBtn.style.display = "none";
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.style.display = "none";
+		const content = root.querySelector(".content");
+		if (content) content.textContent = "";
+		_needCleanUp = false;
+		NpcBox.ownerID = 0;
+		const cutin = document.getElementById("cutin");
+		if (cutin) document.body.removeChild(cutin);
+	};
+	/**
+	* Add support for Enter key
+	*/
+	NpcBox.onKeyDown = function onKeyDown(event) {
+		if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (this._host.style.display === "none") return true;
+		const root = NpcBox.getRoot();
+		switch (event.which) {
+			case KEYS.SPACE:
+			case KEYS.ENTER:
+				if (_isVisible(root.querySelector(".next"))) {
+					this.next();
+					break;
+				}
+				if (_isVisible(root.querySelector(".close"))) {
+					this.close();
+					break;
+				}
+				return true;
+			case KEYS.ESCAPE:
+				if (_isVisible(root.querySelector(".close"))) {
+					this.close();
+					break;
+				}
+				return true;
+			default: return true;
+		}
+		event.stopImmediatePropagation();
+		return false;
+	};
+	/**
+	* Add text to box
+	*
+	* @param {string} text to display
+	* @param {number} gid - npc id
+	*/
+	NpcBox.setText = function setText(text, gid) {
+		const content = NpcBox.getRoot().querySelector(".content");
+		NpcBox.ownerID = gid;
+		if (_needCleanUp) {
+			_needCleanUp = false;
+			content.textContent = "";
+		}
+		const div = document.createElement("div");
+		div.innerHTML = processText(text);
+		content.appendChild(div);
+	};
+	/**
+	* Add next button
+	*
+	* @param {number} gid - npc id
+	*/
+	NpcBox.addNext = function addNext(gid) {
+		NpcBox.ownerID = gid;
+		const nextBtn = NpcBox.getRoot().querySelector(".next");
+		if (nextBtn) nextBtn.style.display = "block";
+	};
+	/**
+	* Add close button
+	*
+	* @param {number} gid - npc id
+	*/
+	NpcBox.addClose = function addClose(gid) {
+		NpcBox.ownerID = gid;
+		const closeBtn = NpcBox.getRoot().querySelector(".close");
+		if (closeBtn) closeBtn.style.display = "block";
+	};
+	/**
+	* Press "next" button
+	*/
+	NpcBox.next = function next() {
+		_needCleanUp = true;
+		const nextBtn = NpcBox.getRoot().querySelector(".next");
+		if (nextBtn) nextBtn.style.display = "none";
+		this.onNextPressed(NpcBox.ownerID);
+	};
+	/**
+	* Press "close" button
+	*/
+	NpcBox.close = function close() {
+		_needCleanUp = true;
+		const closeBtn = NpcBox.getRoot().querySelector(".close");
+		if (closeBtn) closeBtn.style.display = "none";
+		this.onClosePressed(NpcBox.ownerID);
+	};
+	/**
+	* Callback
+	*/
+	NpcBox.onClosePressed = function onClosePressed() {};
+	NpcBox.onNextPressed = function onNextPressed() {};
+	NpcBox_default = UIManager.addComponent(NpcBox);
+}));
+//#endregion
+//#region src/UI/Components/ChatRoomCreate/ChatRoomCreate.js
+/**
+* Parse and send chat room request
+*/
+function parseChatSetup() {
+	const root = ChatRoomCreate.getRoot();
+	this.title = root.querySelector("input[name=title]").value;
+	this.limit = parseInt(root.querySelector("select[name=limit]").value, 10);
+	this.type = parseInt(root.querySelector("input[name=public]:checked").value, 10);
+	this.password = root.querySelector("input[name=password]").value;
+	if (this.title.length < 1) {
+		const overlay = document.createElement("div");
+		overlay.className = "win_popup_overlay";
+		document.body.appendChild(overlay);
+		const popup = UIManager.showMessageBox(DB.getMessage(13), "ok", () => {
+			document.body.removeChild(overlay);
+		}, true);
+		popup._host.style.top = parseInt(this._host.style.top, 10) - 120 + "px";
+		popup._host.style.left = parseInt(this._host.style.left, 10) + "px";
+		return;
+	}
+	this.requestRoom();
+	this.hide();
+}
+var ChatRoomCreate, _preferences$29, ChatRoomCreate_default;
+var init_ChatRoomCreate = __esmMin((() => {
+	init_DBManager();
+	init_KeyEventHandler();
+	init_Renderer();
+	init_Preferences$1();
+	init_UIManager();
+	init_GUIComponent();
+	init_ChatRoomCreate$2();
+	init_ChatRoomCreate$1();
+	init_NpcBox();
+	init_NpcMenu();
+	init_InputBox();
+	ChatRoomCreate = new GUIComponent("ChatRoomCreate", ChatRoomCreate_default$1);
+	/**
+	* Render HTML
+	*/
+	ChatRoomCreate.render = () => ChatRoomCreate_default$2;
+	/**
+	* @var {string} chat room title
+	*/
+	ChatRoomCreate.title = "";
+	/**
+	* @var {number} chat room limit
+	*/
+	ChatRoomCreate.limit = 20;
+	/**
+	* @var {number} type
+	* 0 = Private
+	* 1 = Public
+	*/
+	ChatRoomCreate.type = 1;
+	/**
+	* @var {string} password
+	*/
+	ChatRoomCreate.password = "";
+	_preferences$29 = Preferences.get("ChatRoomCreate", {
+		x: 480,
+		y: 200,
+		show: false
+	}, 1);
+	/**
+	* Initialize UI
+	*/
+	ChatRoomCreate.init = function init() {
+		const root = this.getRoot();
+		root.querySelector(".close").addEventListener("mousedown", (event) => {
+			event.stopImmediatePropagation();
+		});
+		root.querySelector(".close").addEventListener("click", () => ChatRoomCreate.hide());
+		root.querySelector(".cancel").addEventListener("mousedown", (event) => {
+			event.stopImmediatePropagation();
+		});
+		root.querySelector(".cancel").addEventListener("click", () => ChatRoomCreate.hide());
+		root.querySelector(".ok").addEventListener("click", () => parseChatSetup.call(ChatRoomCreate));
+		root.querySelector(".setup").addEventListener("submit", (event) => {
+			event.preventDefault();
+		});
+		root.querySelectorAll("input, select").forEach((el) => {
+			el.addEventListener("mousedown", (event) => {
+				event.stopImmediatePropagation();
+			});
+		});
+		this.draggable(".titlebar");
+		this._host.style.display = "none";
+	};
+	/**
+	* Once append to body
+	*/
+	ChatRoomCreate.onAppend = function onAppend() {
+		if (!_preferences$29.show) this._host.style.display = "none";
+		this._host.style.top = Math.min(Math.max(0, _preferences$29.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$29.x), Renderer.width - this._host.offsetWidth) + "px";
+	};
+	/**
+	* Once removed from DOM, save preferences
+	*/
+	ChatRoomCreate.onRemove = function onRemove() {
+		_preferences$29.show = this._host.style.display !== "none";
+		_preferences$29.y = parseInt(this._host.style.top, 10);
+		_preferences$29.x = parseInt(this._host.style.left, 10);
+		_preferences$29.save();
+		ChatRoomCreate.editMode = false;
+	};
+	/**
+	* Show the setup for room creation
+	*/
+	ChatRoomCreate.show = function showSetup() {
+		this._host.style.display = "";
+		this.getRoot().querySelector(".title").focus();
+		this._fixPositionOverflow();
+		_preferences$29.show = true;
+	};
+	/**
+	* Hide the setup ui
+	*/
+	ChatRoomCreate.hide = function hideSetup() {
+		this._host.style.display = "none";
+		this.getRoot().querySelector(".setup").reset();
+		ChatRoomCreate.editMode = false;
+		_preferences$29.show = false;
+	};
+	/**
+	* Pre-fill form with values (used by ChatRoom.openRoomSettings)
+	* @param {string} title
+	* @param {number} limit
+	* @param {number} type
+	* @param {string} password
+	*/
+	ChatRoomCreate.prefill = function prefill(title, limit, type) {
+		const root = this.getRoot();
+		root.querySelector("input[name=title]").value = title ?? "";
+		root.querySelector("select[name=limit]").value = limit ?? 20;
+		const radio = root.querySelector("input[name=public][value=\"" + (type ?? 1) + "\"]");
+		if (radio) radio.checked = true;
+		root.querySelector("input[name=password]").value = "";
+	};
+	/**
+	* Key Listener
+	*
+	* @param {object} event
+	* @return {boolean}
+	*/
+	ChatRoomCreate.onKeyDown = function onKeyDown(event) {
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+		if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
+		if (this._host.style.display === "none") return true;
+		if (this.isEditableFocused()) {
+			if (event.which === KEYS.ENTER) {
+				parseChatSetup.call(this);
+				event.stopImmediatePropagation();
+				return false;
+			}
+			if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+				ChatRoomCreate.hide();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			ChatRoomCreate.hide();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
+	};
+	/**
+	* Process shortcut
+	*
+	* @param {object} key
+	*/
+	ChatRoomCreate.onShortCut = function onShortCut(key) {
+		switch (key.cmd) {
+			case "TOGGLE":
+				ChatRoomCreate.toggle();
+				break;
+		}
+	};
+	ChatRoomCreate.toggle = function toggle() {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			this._fixPositionOverflow();
+			this.focus();
+		} else this._host.style.display = "none";
+	};
+	/**
+	* Pseudo functions :)
+	*/
+	ChatRoomCreate.requestRoom = function requestRoom() {};
+	ChatRoomCreate.mouseMode = GUIComponent.MouseMode.STOP;
+	ChatRoomCreate.captureKeyEvents = true;
+	ChatRoomCreate.needFocus = true;
+	ChatRoomCreate.editMode = false;
+	ChatRoomCreate_default = UIManager.addComponent(ChatRoomCreate);
+}));
+//#endregion
+//#region src/UI/Components/ChatRoom/ChatRoom.html?raw
+var ChatRoom_default$2;
+var init_ChatRoom$3 = __esmMin((() => {
+	ChatRoom_default$2 = "<div id=\"ChatRoom\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\"><span class=\"title\"></span> (<span class=\"count\"></span>)</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"content resize\">\r\n			<div class=\"messages resize\"></div>\r\n			<div class=\"members resize\"></div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"send\">\r\n			<input type=\"text\" name=\"message\" class=\"sendmsg\" />\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/ChatRoom/ChatRoom.css?raw
+var ChatRoom_default$1;
+var init_ChatRoom$2 = __esmMin((() => {
+	ChatRoom_default$1 = ":host {\r\n	width: 279px;\r\n	height: 200px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#ChatRoom {\r\n	position: absolute;\r\n	width: 279px;\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#ChatRoom table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#ChatRoom .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0px 0px;\r\n}\r\n#ChatRoom .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ChatRoom .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ChatRoom .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	padding-left: 5px;\r\n	padding-top: 2px;\r\n	text-shadow: 1px 1px 1px white;\r\n}\r\n#ChatRoom .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ChatRoom .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .panel {\r\n	background-color: white;\r\n}\r\n#ChatRoom .content {\r\n	height: 120px;\r\n}\r\n#ChatRoom .content .messages {\r\n	width: 70%;\r\n	height: 120px;\r\n	float: left;\r\n	border-right: 1px solid #ccc;\r\n	overflow-y: auto;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .messages .self {\r\n	color: #315937;\r\n}\r\n#ChatRoom .content .messages .join {\r\n	color: #416d6c;\r\n}\r\n#ChatRoom .content .messages .leave {\r\n	color: #481b22;\r\n}\r\n#ChatRoom .content .clear {\r\n	clear: both;\r\n}\r\n\r\n#ChatRoom .content .members {\r\n	width: 26%;\r\n	height: 120px;\r\n	float: left;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding-top: 5px;\r\n	padding-left: 3px;\r\n}\r\n#ChatRoom .content .owner {\r\n	color: #36716d;\r\n}\r\n\r\n#ChatRoom .send {\r\n	height: 30px;\r\n	position: relative;\r\n	padding-left: 5px;\r\n}\r\n#ChatRoom .send input {\r\n	width: 100%;\r\n	height: 20px;\r\n	padding: 0px;\r\n	border: none;\r\n	border-top: 1px solid #ccc;\r\n}\r\n\r\n#ChatRoom .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#ChatRoom .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#ChatRoom .extend {\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#ChatRoom .content .members span.member {\r\n	cursor: pointer;\r\n}\r\n#ChatRoom .content .members span.member:hover {\r\n	text-decoration: underline;\r\n}\r\n#ChatRoom .content .members span.owner {\r\n	font-weight: bold;\r\n}\r\n";
+}));
+//#endregion
 //#region src/UI/Components/ChatRoom/ChatRoom.js
 function viewMemberEquip(name) {
 	let found = null;
@@ -268865,7 +269673,7 @@ function onMemberContextMenu(event) {
 * Parse and send chat room messages
 */
 function sendChatMessage() {
-	const input = (ChatRoom._shadow || ChatRoom._host).querySelector(".send input[name=message]");
+	const input = ChatRoom.getRoot().querySelector(".send input[name=message]");
 	const message = input.value;
 	if (message.length < 1) return false;
 	if (message[0] === "/") {
@@ -268914,7 +269722,7 @@ function resize$2(width, height) {
 	height = Math.min(Math.max(height, 3), 8);
 	_gridWidth = width;
 	_gridHeight = height;
-	const root = ChatRoom._shadow || ChatRoom._host;
+	const root = ChatRoom.getRoot();
 	const inner = root.querySelector("#ChatRoom");
 	if (inner) inner.style.width = 55 + width * 32 + "px";
 	root.querySelectorAll(".resize").forEach(function(el) {
@@ -268925,7 +269733,7 @@ function resize$2(width, height) {
 		if (inner) ChatRoom._host.style.height = inner.offsetHeight + "px";
 	}
 }
-var ChatRoom, _gridWidth, _gridHeight, _preferences$29, ChatRoom_default;
+var ChatRoom, _gridWidth, _gridHeight, _preferences$28, ChatRoom_default;
 var init_ChatRoom$1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -268944,6 +269752,9 @@ var init_ChatRoom$1 = __esmMin((() => {
 	init_EntityManager();
 	init_Equipment();
 	init_Friends();
+	init_NpcBox();
+	init_NpcMenu();
+	init_InputBox();
 	ChatRoom = new GUIComponent("ChatRoom", ChatRoom_default$1);
 	/**
 	* Render HTML
@@ -268979,7 +269790,7 @@ var init_ChatRoom$1 = __esmMin((() => {
 	ChatRoom.isOpen = false;
 	_gridWidth = 7;
 	_gridHeight = 3;
-	_preferences$29 = Preferences.get("ChatRoom", {
+	_preferences$28 = Preferences.get("ChatRoom", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -268989,7 +269800,7 @@ var init_ChatRoom$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	ChatRoom.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const closeBtn = root.querySelector(".close");
 		closeBtn.addEventListener("mousedown", (event) => {
 			event.stopImmediatePropagation();
@@ -269006,13 +269817,13 @@ var init_ChatRoom$1 = __esmMin((() => {
 	* Once appended to DOM
 	*/
 	ChatRoom.onAppend = function onAppend() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		this.isOpen = true;
-		_gridWidth = _preferences$29.width;
-		_gridHeight = _preferences$29.height;
+		_gridWidth = _preferences$28.width;
+		_gridHeight = _preferences$28.height;
 		resize$2(_gridWidth, _gridHeight);
-		this._host.style.top = Math.min(Math.max(0, _preferences$29.y), Renderer.height - this._host.getBoundingClientRect().height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$29.x), Renderer.width - this._host.getBoundingClientRect().width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$28.y), Renderer.height - this._host.getBoundingClientRect().height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$28.x), Renderer.width - this._host.getBoundingClientRect().width) + "px";
 		root.querySelector(".sendmsg").focus();
 		this.updateChat();
 	};
@@ -269027,20 +269838,20 @@ var init_ChatRoom$1 = __esmMin((() => {
 		this.members.length = 0;
 		this.owner = "";
 		this.isOpen = false;
-		const messages = (this._shadow || this._host).querySelector(".messages");
+		const messages = this.getRoot().querySelector(".messages");
 		if (messages) messages.innerHTML = "";
-		_preferences$29.y = parseInt(this._host.style.top, 10);
-		_preferences$29.x = parseInt(this._host.style.left, 10);
-		_preferences$29.width = _gridWidth;
-		_preferences$29.height = _gridHeight;
-		_preferences$29.save();
+		_preferences$28.y = parseInt(this._host.style.top, 10);
+		_preferences$28.x = parseInt(this._host.style.left, 10);
+		_preferences$28.width = _gridWidth;
+		_preferences$28.height = _gridHeight;
+		_preferences$28.save();
 		this.exitRoom();
 	};
 	/**
 	* Update ChatRoom parameters (title, count, members list)
 	*/
 	ChatRoom.updateChat = function updateChat() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const titleEl = root.querySelector(".titlebar .title");
 		const countEl = root.querySelector(".titlebar .count");
 		const membersEl = root.querySelector(".members");
@@ -269074,7 +269885,7 @@ var init_ChatRoom$1 = __esmMin((() => {
 	* @param {string} type
 	*/
 	ChatRoom.message = function displayMessage(message, type) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const element = document.createElement("div");
 		element.textContent = message;
 		if (type) element.className = type;
@@ -269100,15 +269911,17 @@ var init_ChatRoom$1 = __esmMin((() => {
 	* Key Event Handler
 	*/
 	ChatRoom.onKeyDown = function onKeyDown(event) {
-		const active = (this._shadow || this._host).activeElement;
-		if (active && active.tagName && active.tagName.match(/input|textarea|select/i)) {
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+		if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
+		if (ChatRoom.isEditableFocused()) {
 			if (event.which === KEYS.ENTER) {
 				sendChatMessage();
 				event.stopImmediatePropagation();
 				return false;
 			}
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-				active.blur();
+				ChatRoom.getRoot().activeElement.blur();
 				event.stopImmediatePropagation();
 				return false;
 			}
@@ -271097,15 +271910,9 @@ var init_SkillListMH$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/SkillListMH/SkillListMH.js
 /**
-* Helper: query inside shadow root
-*/
-function _root$1(comp) {
-	return comp._shadow || comp._host;
-}
-/**
 * Helper: escape HTML
 */
-function _escapeHTML$2(text) {
+function _escapeHTML$1(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -271133,7 +271940,7 @@ function createSkillListMH(type) {
 	comp._lArrow = null;
 	comp._rArrow = null;
 	comp.init = function init() {
-		const root = _root$1(this);
+		const root = this.getRoot();
 		root.querySelector(".titlebar .text").textContent = this._skillType === "homunculus" ? "Homunculus Skills" : "Mercenary Skills";
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
@@ -271273,7 +272080,7 @@ function createSkillListMH(type) {
 	comp.setSize = function setSize(width, height) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
-		const content = _root$1(this).querySelector(".content");
+		const content = this.getRoot().querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 32}px`;
 			content.style.height = `${height * 32}px`;
@@ -271284,7 +272091,7 @@ function createSkillListMH(type) {
 		_preferences.show = this.ui.is(":visible");
 		_preferences.y = parseInt(this._host.style.top, 10) || 0;
 		_preferences.x = parseInt(this._host.style.left, 10) || 0;
-		const content = _root$1(this).querySelector(".content");
+		const content = this.getRoot().querySelector(".content");
 		if (content) {
 			_preferences.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
 			_preferences.height = Math.floor(parseInt(content.style.height, 10) / 32) || 5;
@@ -271306,13 +272113,13 @@ function createSkillListMH(type) {
 	comp.setSkills = function setSkills(skills) {
 		for (let i = 0, count = this.list.length; i < count; ++i) this.onUpdateSkill(this.list[i].SKID, 0);
 		this.list.length = 0;
-		const table = _root$1(this).querySelector(".content table");
+		const table = this.getRoot().querySelector(".content table");
 		if (table) table.innerHTML = "";
 		for (let i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
 	};
 	comp.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		const root = _root$1(this);
+		const root = this.getRoot();
 		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
@@ -271328,7 +272135,7 @@ function createSkillListMH(type) {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$1(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !this.points) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const currentUp = tr.querySelector(".level .currentUp");
@@ -271364,7 +272171,7 @@ function createSkillListMH(type) {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
+		const element = this.getRoot().querySelector(`.skill.id${skill.SKID}`);
 		if (!element) return;
 		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 		if (skill.selectedLevel) {
@@ -271393,7 +272200,7 @@ function createSkillListMH(type) {
 		}
 	};
 	comp.setPoints = function setPoints(amount) {
-		const root = _root$1(this);
+		const root = this.getRoot();
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!this.points === !amount) {
@@ -271419,7 +272226,7 @@ function createSkillListMH(type) {
 		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 		if (level < skill.level) {
 			skill.selectedLevel = level + 1;
-			const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
+			const element = this.getRoot().querySelector(`.skill.id${skill.SKID}`);
 			if (element) {
 				const current = element.querySelector(".level .current");
 				if (current) current.textContent = skill.selectedLevel;
@@ -271430,7 +272237,7 @@ function createSkillListMH(type) {
 		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 		if (level > 1) {
 			skill.selectedLevel = level - 1;
-			const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
+			const element = this.getRoot().querySelector(`.skill.id${skill.SKID}`);
 			if (element) {
 				const current = element.querySelector(".level .current");
 				if (current) current.textContent = skill.selectedLevel;
@@ -271853,16 +272660,10 @@ var init_HomunInformations$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/HomunInformations/HomunInformations.js
 /**
-* Helper to get the shadow root
-*/
-function _getRoot$31() {
-	return HomunInformations._shadow || HomunInformations._host;
-}
-/**
 * Checks if homun should be fed or not
 */
 function autoFeedCheck() {
-	if (_preferences$28.autoFeed != 1) return;
+	if (_preferences$27.autoFeed != 1) return;
 	const player = SessionStorage_default.Entity;
 	if (!player) return;
 	if (player.life.hp <= 0) return;
@@ -271877,11 +272678,11 @@ function autoFeedCheck() {
 * Toggle AutoFeed
 */
 function homunToggleAutoFeed() {
-	HomunInformations.setFeedConfig(_preferences$28.autoFeed == 1 ? 0 : 1);
+	HomunInformations.setFeedConfig(_preferences$27.autoFeed == 1 ? 0 : 1);
 	if (PacketVerManager_default.value < 20170920) return;
-	HomunInformations.onConfigUpdate(3, _preferences$28.autoFeed ? 1 : 0);
+	HomunInformations.onConfigUpdate(3, _preferences$27.autoFeed ? 1 : 0);
 }
-var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$28, HomunInformations_default;
+var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$27, HomunInformations_default;
 var init_HomunInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -271904,7 +272705,7 @@ var init_HomunInformations = __esmMin((() => {
 	HomunInformations = new GUIComponent("HomunInformations", HomunInformations_default$1);
 	HomunInformations.render = () => HomunInformations_default$2;
 	HomunInformations.captureKeyEvents = true;
-	_preferences$28 = Preferences.get("HomunInformations", {
+	_preferences$27 = Preferences.get("HomunInformations", {
 		x: 100,
 		y: 200,
 		show: false,
@@ -271916,7 +272717,7 @@ var init_HomunInformations = __esmMin((() => {
 	* Initialize component
 	*/
 	HomunInformations.init = function init() {
-		const root = _getRoot$31();
+		const root = HomunInformations.getRoot();
 		this.draggable(".content");
 		const baseEl = root.querySelector(".base");
 		if (baseEl) baseEl.addEventListener("mousedown", (e) => {
@@ -271944,7 +272745,7 @@ var init_HomunInformations = __esmMin((() => {
 		if (autoFeedBtn) autoFeedBtn.addEventListener("click", () => {
 			homunToggleAutoFeed();
 		});
-		if (!_preferences$28.show) this._host.style.display = "none";
+		if (!_preferences$27.show) this._host.style.display = "none";
 		const skillBtn = root.querySelector(".skill");
 		if (skillBtn) skillBtn.addEventListener("mousedown", () => {
 			SkillListMH_default.homunculus.toggle();
@@ -271953,8 +272754,8 @@ var init_HomunInformations = __esmMin((() => {
 		this.toggleAggressive();
 	};
 	HomunInformations.onAppend = function onAppend() {
-		const root = _getRoot$31();
-		Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$28.autoFeed ? "1" : "0"}.bmp`, (data) => {
+		const root = HomunInformations.getRoot();
+		Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$27.autoFeed ? "1" : "0"}.bmp`, (data) => {
 			const el = root.querySelector(".homun_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
@@ -271963,8 +272764,8 @@ var init_HomunInformations = __esmMin((() => {
 			const feeding = root.querySelector(".feeding");
 			if (feeding) feeding.style.display = "none";
 		}
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$28.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$28.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$27.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$27.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	HomunInformations.startAutoFeed = function startAutoFeed() {
 		window.clearInterval(autoFeedInterval);
@@ -271978,10 +272779,10 @@ var init_HomunInformations = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	HomunInformations.onRemove = function onRemove() {
-		_preferences$28.show = this._host.style.display !== "none";
-		_preferences$28.y = parseInt(this._host.style.top, 10);
-		_preferences$28.x = parseInt(this._host.style.left, 10);
-		_preferences$28.save();
+		_preferences$27.show = this._host.style.display !== "none";
+		_preferences$27.y = parseInt(this._host.style.top, 10);
+		_preferences$27.x = parseInt(this._host.style.left, 10);
+		_preferences$27.save();
 		HomunInformations.stopAutoFeed();
 		this.stopAI();
 	};
@@ -272015,8 +272816,8 @@ var init_HomunInformations = __esmMin((() => {
 	* Protects input fields from being consumed by global handlers
 	*/
 	HomunInformations.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+		const focused = this.getRoot().activeElement;
+		if (this.isEditableFocused()) {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				focused.blur();
 				event.stopImmediatePropagation();
@@ -272039,7 +272840,7 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {object} homunculus info
 	*/
 	HomunInformations.setInformations = function setInformations(info) {
-		const root = _getRoot$31();
+		const root = HomunInformations.getRoot();
 		if (!this.__loaded) {
 			this.append();
 			this._host.style.display = "none";
@@ -272122,7 +272923,7 @@ var init_HomunInformations = __esmMin((() => {
 	* Set hp and sp bar
 	*/
 	HomunInformations.setHpSpBar = function setHpSpBar(type, val, val2) {
-		const root = _getRoot$31();
+		const root = HomunInformations.getRoot();
 		const perc = Math.floor(val * 100 / val2);
 		const color = perc < 25 ? "red" : "blue";
 		const valueEl = root.querySelector(`.${type}_value`);
@@ -272161,14 +272962,14 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {number} intimacy
 	*/
 	HomunInformations.setIntimacy = function setIntimacy(val) {
-		const el = _getRoot$31().querySelector(".intimacy");
+		const el = HomunInformations.getRoot().querySelector(".intimacy");
 		if (el) el.textContent = DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675);
 	};
 	/**
 	* Set exp value
 	*/
 	HomunInformations.setExp = function setExp(exp, maxEXP) {
-		const root = _getRoot$31();
+		const root = HomunInformations.getRoot();
 		if (!root) return;
 		const canvas = root.querySelector(".block2 canvas.life.title_exp");
 		if (!canvas) return;
@@ -272188,7 +272989,7 @@ var init_HomunInformations = __esmMin((() => {
 	* @param {number} hunger
 	*/
 	HomunInformations.setHunger = function setHunger(val) {
-		const root = _getRoot$31();
+		const root = HomunInformations.getRoot();
 		if (!root) return;
 		const canvas = root.querySelector(".block2 canvas.life.title_hunger");
 		if (!canvas) return;
@@ -272225,10 +273026,10 @@ var init_HomunInformations = __esmMin((() => {
 		this.startAI();
 	};
 	HomunInformations.setFeedConfig = function setFeedConfig(flag) {
-		_preferences$28.autoFeed = flag;
-		_preferences$28.save();
-		const root = _getRoot$31();
-		if (root) Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$28.autoFeed ? "1" : "0"}.bmp`, (data) => {
+		_preferences$27.autoFeed = flag;
+		_preferences$27.save();
+		const root = HomunInformations.getRoot();
+		if (root) Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$27.autoFeed ? "1" : "0"}.bmp`, (data) => {
 			const el = root.querySelector(".homun_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
@@ -272260,13 +273061,7 @@ var init_MercenaryInformations$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MercenaryInformations/MercenaryInformations.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$30() {
-	return MercenaryInformations._shadow || MercenaryInformations._host;
-}
-var MercenaryInformations, _preferences$27, MercenaryInformations_default;
+var MercenaryInformations, _preferences$26, MercenaryInformations_default;
 var init_MercenaryInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -272284,7 +273079,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	init_MercenaryInformations$1();
 	MercenaryInformations = new GUIComponent("MercenaryInformations", MercenaryInformations_default$1);
 	MercenaryInformations.render = () => MercenaryInformations_default$2;
-	_preferences$27 = Preferences.get("MercenaryInformations", {
+	_preferences$26 = Preferences.get("MercenaryInformations", {
 		x: 100,
 		y: 100,
 		show: false,
@@ -272294,7 +273089,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Initialize UI
 	*/
 	MercenaryInformations.init = function init() {
-		const root = _getRoot$30();
+		const root = MercenaryInformations.getRoot();
 		this.draggable(".content");
 		const contentEl = root.querySelector(".content");
 		if (contentEl) contentEl.addEventListener("mousedown", (e) => {
@@ -272313,7 +273108,7 @@ var init_MercenaryInformations = __esmMin((() => {
 		if (dismissBtn) dismissBtn.addEventListener("click", () => {
 			MercenaryInformations.reqDeleteMercenary();
 		});
-		if (!_preferences$27.show) this._host.style.display = "none";
+		if (!_preferences$26.show) this._host.style.display = "none";
 		const skillBtn = root.querySelector(".skill");
 		if (skillBtn) skillBtn.addEventListener("mousedown", () => {
 			SkillListMH_default.mercenary.toggle();
@@ -272325,18 +273120,18 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Once append to body
 	*/
 	MercenaryInformations.onAppend = function onAppend() {
-		if (!_preferences$27.show) this._host.style.display = "none";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$27.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$27.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		if (!_preferences$26.show) this._host.style.display = "none";
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$26.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$26.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body
 	*/
 	MercenaryInformations.onRemove = function onRemove() {
-		_preferences$27.show = this._host.style.display !== "none";
-		_preferences$27.y = parseInt(this._host.style.top, 10);
-		_preferences$27.x = parseInt(this._host.style.left, 10);
-		_preferences$27.save();
+		_preferences$26.show = this._host.style.display !== "none";
+		_preferences$26.y = parseInt(this._host.style.top, 10);
+		_preferences$26.x = parseInt(this._host.style.left, 10);
+		_preferences$26.save();
 		this.stopAI();
 	};
 	/**
@@ -272388,7 +273183,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* @param {number} timestamp - Unix timestamp for expiration
 	*/
 	MercenaryInformations.setTimeLeft = function setTimeLeft(timestamp) {
-		const root = _getRoot$30();
+		const root = MercenaryInformations.getRoot();
 		if (!timestamp) {
 			const timeleftEl = root.querySelector(".block2 .timeleft");
 			if (timeleftEl) timeleftEl.textContent = "0";
@@ -272413,7 +273208,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* @param {number} kills - Number of monsters killed
 	*/
 	MercenaryInformations.setKills = function setKills(kills) {
-		const root = _getRoot$30();
+		const root = MercenaryInformations.getRoot();
 		if (kills === void 0) {
 			const killsEl = root.querySelector(".block2 .kills");
 			if (killsEl) killsEl.textContent = "0";
@@ -272436,7 +273231,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Update UI with mercenary data
 	*/
 	MercenaryInformations.setInformations = function setInformations(info) {
-		const root = _getRoot$30();
+		const root = MercenaryInformations.getRoot();
 		const nameEl = root.querySelector(".name");
 		if (nameEl) nameEl.textContent = info.name || "";
 		const levelEl = root.querySelector(".level");
@@ -272465,7 +273260,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Set hp and sp bar
 	*/
 	MercenaryInformations.setHpSpBar = function setHpSpBar(type, val, val2) {
-		const root = _getRoot$30();
+		const root = MercenaryInformations.getRoot();
 		const perc = Math.floor(val * 100 / val2);
 		const color = perc < 25 ? "red" : "blue";
 		const valueEl = root.querySelector(`.${type}_bar_perc .${type}_value`);
@@ -272539,7 +273334,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Set faith value
 	*/
 	MercenaryInformations.setFaith = function setFaith(faith) {
-		const el = _getRoot$30().querySelector(".block2 .faith");
+		const el = MercenaryInformations.getRoot().querySelector(".block2 .faith");
 		if (el) el.textContent = faith;
 	};
 	/**
@@ -272565,7 +273360,7 @@ var init_CaptchaUpload$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaUpload.js
-var CaptchaUpload, _preferences$26, CaptchaUpload_default;
+var CaptchaUpload, _preferences$25, CaptchaUpload_default;
 var init_CaptchaUpload = __esmMin((() => {
 	init_jquery();
 	init_UIManager();
@@ -272576,7 +273371,7 @@ var init_CaptchaUpload = __esmMin((() => {
 	init_CaptchaUpload$2();
 	init_CaptchaUpload$1();
 	CaptchaUpload = new UIComponent("CaptchaUpload", CaptchaUpload_default$2, CaptchaUpload_default$1);
-	_preferences$26 = Preferences.get("CaptchaUpload", {
+	_preferences$25 = Preferences.get("CaptchaUpload", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -272629,17 +273424,17 @@ var init_CaptchaUpload = __esmMin((() => {
 	*/
 	CaptchaUpload.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$26.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$26.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$25.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$25.x), Renderer.width - this.ui.width())
 		});
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaUpload.onRemove = function OnRemove() {
-		_preferences$26.y = parseInt(this.ui.css("top"), 10);
-		_preferences$26.x = parseInt(this.ui.css("left"), 10);
-		_preferences$26.save();
+		_preferences$25.y = parseInt(this.ui.css("top"), 10);
+		_preferences$25.x = parseInt(this.ui.css("left"), 10);
+		_preferences$25.save();
 		this.ui.find(".preview_box").empty();
 		this.ui.find("input").val("");
 		this.answer = null;
@@ -272673,7 +273468,7 @@ var init_CaptchaSelector$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaSelector.js
-var CaptchaSelector, _preferences$25, _aidList, _aidInformation, _range, _active$2, CaptchaSelector_default;
+var CaptchaSelector, _preferences$24, _aidList, _aidInformation, _range, _active$2, CaptchaSelector_default;
 var init_CaptchaSelector = __esmMin((() => {
 	init_jquery();
 	init_UIManager();
@@ -272687,7 +273482,7 @@ var init_CaptchaSelector = __esmMin((() => {
 	init_DBManager();
 	init_MonsterTable();
 	CaptchaSelector = new UIComponent("CaptchaSelector", CaptchaSelector_default$2, CaptchaSelector_default$1);
-	_preferences$25 = Preferences.get("CaptchaSelector", {
+	_preferences$24 = Preferences.get("CaptchaSelector", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -272736,17 +273531,17 @@ var init_CaptchaSelector = __esmMin((() => {
 	*/
 	CaptchaSelector.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$25.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$25.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$24.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$24.x), Renderer.width - this.ui.width())
 		});
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaSelector.onRemove = function OnRemove() {
-		_preferences$25.y = parseInt(this.ui.css("top"), 10);
-		_preferences$25.x = parseInt(this.ui.css("left"), 10);
-		_preferences$25.save();
+		_preferences$24.y = parseInt(this.ui.css("top"), 10);
+		_preferences$24.x = parseInt(this.ui.css("left"), 10);
+		_preferences$24.save();
 		this.ui.find(".character_info").hide();
 		this.cleanUIList();
 		_aidList = [];
@@ -278704,7 +279499,7 @@ var init_EntitySignboard = __esmMin((() => {
 	* Once in HTML
 	*/
 	EntitySignboard.onAppend = function onAppend() {
-		const btn = (this._shadow || this._host).querySelector("button");
+		const btn = this.getRoot().querySelector("button");
 		if (btn) {
 			if (this._dblclickHandler) btn.removeEventListener("dblclick", this._dblclickHandler);
 			if (this._mousedownHandler) btn.removeEventListener("mousedown", this._mousedownHandler);
@@ -278726,7 +279521,7 @@ var init_EntitySignboard = __esmMin((() => {
 	* Remove data from UI
 	*/
 	EntitySignboard.onRemove = function onRemove() {
-		const btn = (this._shadow || this._host).querySelector("button");
+		const btn = this.getRoot().querySelector("button");
 		if (btn) {
 			if (this._dblclickHandler) {
 				btn.removeEventListener("dblclick", this._dblclickHandler);
@@ -278745,7 +279540,7 @@ var init_EntitySignboard = __esmMin((() => {
 	* @param {string} icon_location - icon url
 	*/
 	EntitySignboard.setTitle = function setTitle(title, icon_location) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const signboard = root.querySelector(".EntitySignboard");
 		Client.loadFile(`${DB.INTERFACE_PATH}signboard/bg_signboard.bmp`, (url) => {
 			signboard.style.backgroundImage = `url('${url}')`;
@@ -278777,7 +279572,7 @@ var init_EntitySignboard = __esmMin((() => {
 	* @param {string} icon_location - icon url
 	*/
 	EntitySignboard.setIconOnly = function setIconOnly(icon_location) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		root.querySelector(".title").style.display = "none";
 		root.querySelector(".overlay").style.display = "none";
 		Client.loadFile(icon_location, (url) => {
@@ -280001,16 +280796,10 @@ var init_ShortCut$1 = __esmMin((() => {
 //#region src/UI/Components/ShortCut/ShortCut.js
 var ShortCut_exports = /* @__PURE__ */ __exportAll({ default: () => ShortCut_default });
 /**
-* Helper to get the shadow root
-*/
-function _getRoot$29() {
-	return ShortCut._shadow || ShortCut._host;
-}
-/**
 * Update tooltip for empty slots with hotkey only
 */
 function updateEmptySlotTooltips() {
-	const containers = _getRoot$29().querySelectorAll(".container");
+	const containers = ShortCut.getRoot().querySelectorAll(".container");
 	for (let i = 0; i < containers.length; ++i) if (!_list$5[i] || !_list$5[i].isSkill && !_list$5[i].ID) {
 		const hotkey = getHotKeyString(i);
 		if (hotkey) containers[i].setAttribute("data-tooltip", hotkey);
@@ -280083,7 +280872,7 @@ function getHotKeyString(index) {
 function onContainerMouseEnter(event) {
 	const tooltipText = event.currentTarget.getAttribute("data-tooltip");
 	if (tooltipText) {
-		const tooltip = _getRoot$29().querySelector(".shortcut-tooltip");
+		const tooltip = ShortCut.getRoot().querySelector(".shortcut-tooltip");
 		const hostRect = ShortCut._host.getBoundingClientRect();
 		tooltip.textContent = tooltipText;
 		tooltip.classList.add("show");
@@ -280101,7 +280890,7 @@ function onContainerMouseEnter(event) {
 * Hide fixed tooltip on container leave
 */
 function onContainerMouseLeave() {
-	const tooltip = _getRoot$29().querySelector(".shortcut-tooltip");
+	const tooltip = ShortCut.getRoot().querySelector(".shortcut-tooltip");
 	if (tooltip) tooltip.classList.remove("show");
 }
 /**
@@ -280116,8 +280905,8 @@ function onResize$3(event) {
 		h = Math.min(Math.max(h, 1), _rowCount);
 		if (h === lastHeight) return;
 		host.style.height = `${h * 34}px`;
-		_preferences$24.size = h;
-		_preferences$24.save();
+		_preferences$23.size = h;
+		_preferences$23.save();
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
@@ -280140,7 +280929,7 @@ function onResize$3(event) {
 function setDelayOnIndex(index, delay) {
 	if (_list$5[index].Delay && _list$5[index].Delay >= Renderer.tick + delay) return;
 	_list$5[index].Delay = Renderer.tick + delay;
-	const ui = _getRoot$29().querySelector(`.container[data-index="${index}"]`);
+	const ui = ShortCut.getRoot().querySelector(`.container[data-index="${index}"]`);
 	if (!ui) return;
 	const existing = ui.querySelector(".cooldown-overlay");
 	if (existing) existing.remove();
@@ -280278,10 +281067,10 @@ function clickElement(index) {
 /**
 * Closing the window
 */
-function onClose$6() {
+function onClose$5() {
 	ShortCut._host.style.height = "0px";
-	_preferences$24.size = 0;
-	_preferences$24.save();
+	_preferences$23.size = 0;
+	_preferences$23.save();
 }
 /**
 * Hook Inventory, get informations when there is a change
@@ -280456,7 +281245,7 @@ function haveHotkeysChanged(currentData) {
 	if (!_lastServerHotkeys) return true;
 	return JSON.stringify(currentData) !== JSON.stringify(_lastServerHotkeys);
 }
-var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _preferences$24, ShortCut_default;
+var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _preferences$23, ShortCut_default;
 var init_ShortCut = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -280486,7 +281275,7 @@ var init_ShortCut = __esmMin((() => {
 	_list$5 = [];
 	_rowCount = 0;
 	_lastServerHotkeys = null;
-	_preferences$24 = Preferences.get("ShortCut", {
+	_preferences$23 = Preferences.get("ShortCut", {
 		x: 480,
 		y: 0,
 		size: 1,
@@ -280499,7 +281288,7 @@ var init_ShortCut = __esmMin((() => {
 	* Initialize UI
 	*/
 	ShortCut.init = function init() {
-		const root = _getRoot$29();
+		const root = ShortCut.getRoot();
 		const resizeBtn = root.querySelector(".resize");
 		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$3);
 		const closeBtn = root.querySelector(".close");
@@ -280508,7 +281297,7 @@ var init_ShortCut = __esmMin((() => {
 				e.stopImmediatePropagation();
 				e.preventDefault();
 			});
-			closeBtn.addEventListener("click", onClose$6);
+			closeBtn.addEventListener("click", onClose$5);
 		}
 		const container = root.querySelector("#ShortCut");
 		container.addEventListener("drop", (e) => {
@@ -280552,14 +281341,14 @@ var init_ShortCut = __esmMin((() => {
 	* Append to body
 	*/
 	ShortCut.onAppend = function onAppend() {
-		this._host.style.height = `${34 * _preferences$24.size}px`;
+		this._host.style.height = `${34 * _preferences$23.size}px`;
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$24.y), Renderer.height - rect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$24.x), Renderer.width - rect.width)}px`;
-		this.magnet.TOP = _preferences$24.magnet_top;
-		this.magnet.BOTTOM = _preferences$24.magnet_bottom;
-		this.magnet.LEFT = _preferences$24.magnet_left;
-		this.magnet.RIGHT = _preferences$24.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$23.y), Renderer.height - rect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$23.x), Renderer.width - rect.width)}px`;
+		this.magnet.TOP = _preferences$23.magnet_top;
+		this.magnet.BOTTOM = _preferences$23.magnet_bottom;
+		this.magnet.LEFT = _preferences$23.magnet_left;
+		this.magnet.RIGHT = _preferences$23.magnet_right;
 		Controller$4.getUI().onUpdateSkill = onUpdateSkill;
 		updateEmptySlotTooltips();
 	};
@@ -280567,16 +281356,16 @@ var init_ShortCut = __esmMin((() => {
 	* When removed, clean up
 	*/
 	ShortCut.onRemove = function onRemove() {
-		const tooltip = _getRoot$29().querySelector(".shortcut-tooltip");
+		const tooltip = ShortCut.getRoot().querySelector(".shortcut-tooltip");
 		if (tooltip) tooltip.classList.remove("show");
-		_preferences$24.y = parseInt(this._host.style.top, 10);
-		_preferences$24.x = parseInt(this._host.style.left, 10);
-		_preferences$24.size = Math.floor(parseInt(this._host.style.height, 10) / 34);
-		_preferences$24.magnet_top = this.magnet.TOP;
-		_preferences$24.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$24.magnet_left = this.magnet.LEFT;
-		_preferences$24.magnet_right = this.magnet.RIGHT;
-		_preferences$24.save();
+		_preferences$23.y = parseInt(this._host.style.top, 10);
+		_preferences$23.x = parseInt(this._host.style.left, 10);
+		_preferences$23.size = Math.floor(parseInt(this._host.style.height, 10) / 34);
+		_preferences$23.magnet_top = this.magnet.TOP;
+		_preferences$23.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$23.magnet_left = this.magnet.LEFT;
+		_preferences$23.magnet_right = this.magnet.RIGHT;
+		_preferences$23.save();
 	};
 	/**
 	* Request to clean the list
@@ -280584,7 +281373,7 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.clean = function clean() {
 		_list$5.length = 0;
-		_getRoot$29().querySelectorAll(".container").forEach((el) => {
+		ShortCut.getRoot().querySelectorAll(".container").forEach((el) => {
 			el.innerHTML = "";
 		});
 	};
@@ -280599,9 +281388,9 @@ var init_ShortCut = __esmMin((() => {
 				clickElement(parseInt(key.cmd.match(/\d+$/).toString(), 10));
 				break;
 			case "EXTEND":
-				_preferences$24.size = (_preferences$24.size + 1) % (_rowCount + 1);
-				_preferences$24.save();
-				this._host.style.height = `${_preferences$24.size * 34}px`;
+				_preferences$23.size = (_preferences$23.size + 1) % (_rowCount + 1);
+				_preferences$23.save();
+				this._host.style.height = `${_preferences$23.size * 34}px`;
 				break;
 		}
 	};
@@ -280628,7 +281417,7 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.setList = function setList(list) {
 		let skill;
-		_getRoot$29().querySelectorAll(".container").forEach((el) => {
+		ShortCut.getRoot().querySelectorAll(".container").forEach((el) => {
 			el.innerHTML = "";
 		});
 		_list$5.length = list.length;
@@ -280649,7 +281438,7 @@ var init_ShortCut = __esmMin((() => {
 	* Called when hotkey settings change
 	*/
 	ShortCut.updateAllTooltips = function updateAllTooltips() {
-		const root = _getRoot$29();
+		const root = ShortCut.getRoot();
 		for (let i = 0, size = _list$5.length; i < size; ++i) {
 			const container = root.querySelector(`.container[data-index="${i}"]`);
 			if (!container) continue;
@@ -280684,7 +281473,7 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.addElement = function addElement(index, isSkill, ID, count) {
 		let file, name;
-		const ui = _getRoot$29().querySelector(`.container[data-index="${index}"]`);
+		const ui = ShortCut.getRoot().querySelector(`.container[data-index="${index}"]`);
 		if (!ui) return;
 		ui.innerHTML = "";
 		if (!_list$5[index]) _list$5[index] = {};
@@ -280747,7 +281536,7 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.removeElement = function removeElement(isSkill, ID, row, amount) {
 		if (!ID) return;
-		const root = _getRoot$29();
+		const root = ShortCut.getRoot();
 		for (let i = row * 9, count = Math.min(_list$5.length, row * 9 + 9); i < count; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID && (!isSkill || _list$5[i].count == amount)) {
 			const container = root.querySelector(`.container[data-index="${i}"]`);
 			if (container) container.innerHTML = "";
@@ -281493,13 +282282,6 @@ function setClickInterval() {
 function isLocked() {
 	return clickLock$1 !== null;
 }
-/**
-* Get internal root (shadow)
-* @returns {ShadowRoot|HTMLElement}
-*/
-function _getRoot$28() {
-	return JoystickSelectionUI._shadow || JoystickSelectionUI._host;
-}
 function getJoystickComboForSlot(slotIndex) {
 	return {
 		0: "L1+Y",
@@ -281541,7 +282323,7 @@ function getJoystickComboForSlot(slotIndex) {
 	}[slotIndex];
 }
 function updateGrid() {
-	const grid = _getRoot$28().querySelector(".shortcut-grid");
+	const grid = JoystickSelectionUI.getRoot().querySelector(".shortcut-grid");
 	if (!grid) return;
 	grid.innerHTML = "";
 	const startIdx = currentTab * 9;
@@ -281560,21 +282342,21 @@ function updateGrid() {
 	updateSelection();
 }
 function updateSelection() {
-	const grid = _getRoot$28().querySelector(".shortcut-grid");
+	const grid = JoystickSelectionUI.getRoot().querySelector(".shortcut-grid");
 	if (!grid) return;
 	grid.querySelectorAll(".slot-btn").forEach((el) => el.classList.remove("selected"));
 	const selected = grid.querySelector(`.slot-btn[data-index="${slotInTab}"]`);
 	if (selected) selected.classList.add("selected");
 }
 function updateTabButtons() {
-	const tabButtons = _getRoot$28().querySelector(".tab-buttons");
+	const tabButtons = JoystickSelectionUI.getRoot().querySelector(".tab-buttons");
 	if (!tabButtons) return;
 	tabButtons.querySelectorAll(".tab-btn").forEach((el) => el.classList.remove("active"));
 	const active = tabButtons.querySelector(`.tab-btn[data-tab="${currentTab}"]`);
 	if (active) active.classList.add("active");
 }
 function createTabButtons() {
-	const tabButtons = _getRoot$28().querySelector(".tab-buttons");
+	const tabButtons = JoystickSelectionUI.getRoot().querySelector(".tab-buttons");
 	if (!tabButtons) return;
 	tabButtons.innerHTML = "";
 	for (let t = 0; t < 4; t++) {
@@ -283517,13 +284299,7 @@ var init_PetInformations$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PetInformations/PetInformations.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$27() {
-	return PetInformations._shadow || PetInformations._host;
-}
-var PetInformations, _preferences$23, petAutoFeeding, PetInformations_default;
+var PetInformations, _preferences$22, petAutoFeeding, PetInformations_default;
 var init_PetInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -283538,7 +284314,7 @@ var init_PetInformations = __esmMin((() => {
 	PetInformations = new GUIComponent("PetInformations", PetInformations_default$1);
 	PetInformations.render = () => PetInformations_default$2;
 	PetInformations.captureKeyEvents = true;
-	_preferences$23 = Preferences.get("PetInformations", {
+	_preferences$22 = Preferences.get("PetInformations", {
 		x: 100,
 		y: 200,
 		show: true
@@ -283549,7 +284325,7 @@ var init_PetInformations = __esmMin((() => {
 	*/
 	PetInformations.init = function init() {
 		this.draggable(".titlebar");
-		const root = _getRoot$27();
+		const root = PetInformations.getRoot();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -283594,7 +284370,7 @@ var init_PetInformations = __esmMin((() => {
 		});
 	};
 	PetInformations.onAppend = function onAppend() {
-		const root = _getRoot$27();
+		const root = PetInformations.getRoot();
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
 			const el = root.querySelector(".pet_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -283603,17 +284379,17 @@ var init_PetInformations = __esmMin((() => {
 			const feeding = root.querySelector(".feeding");
 			if (feeding) feeding.style.display = "none";
 		}
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$23.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$23.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$22.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$22.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body, save user preferences
 	*/
 	PetInformations.onRemove = function onRemove() {
-		_preferences$23.show = this._host.style.display !== "none";
-		_preferences$23.y = parseInt(this._host.style.top, 10);
-		_preferences$23.x = parseInt(this._host.style.left, 10);
-		_preferences$23.save();
+		_preferences$22.show = this._host.style.display !== "none";
+		_preferences$22.y = parseInt(this._host.style.top, 10);
+		_preferences$22.x = parseInt(this._host.style.left, 10);
+		_preferences$22.save();
 	};
 	/**
 	* Process shortcut
@@ -283636,7 +284412,7 @@ var init_PetInformations = __esmMin((() => {
 	* @param {object} pet info
 	*/
 	PetInformations.setInformations = function setInformations(info) {
-		const root = _getRoot$27();
+		const root = PetInformations.getRoot();
 		const nameInput = root.querySelector(".name");
 		if (nameInput) nameInput.value = info.szName;
 		const levelEl = root.querySelector(".level");
@@ -283692,12 +284468,12 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} intimacy
 	*/
 	PetInformations.setIntimacy = function setIntimacy(val) {
-		const el = _getRoot$27().querySelector(".intimacy");
+		const el = PetInformations.getRoot().querySelector(".intimacy");
 		if (el) el.textContent = DB.getMessage(val < 100 ? 672 : val < 250 ? 673 : val < 600 ? 669 : val < 900 ? 674 : 675);
 	};
 	PetInformations.setFeedConfig = function setFeedConfig(flag) {
 		petAutoFeeding = flag;
-		const root = _getRoot$27();
+		const root = PetInformations.getRoot();
 		if (root) Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (petAutoFeeding ? "1" : "0") + ".bmp", (data) => {
 			const el = root.querySelector(".pet_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -283709,7 +284485,7 @@ var init_PetInformations = __esmMin((() => {
 	* @param {number} hunger
 	*/
 	PetInformations.setHunger = function setHunger(val) {
-		const el = _getRoot$27().querySelector(".hunger");
+		const el = PetInformations.getRoot().querySelector(".hunger");
 		if (el) el.textContent = DB.getMessage(val < 10 ? 667 : val < 25 ? 668 : val < 75 ? 669 : val < 90 ? 670 : 671);
 	};
 	/**
@@ -283717,8 +284493,8 @@ var init_PetInformations = __esmMin((() => {
 	* Protects input fields from being consumed by global handlers
 	*/
 	PetInformations.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+		const focused = this.getRoot().activeElement;
+		if (this.isEditableFocused()) {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				focused.blur();
 				event.stopImmediatePropagation();
@@ -283778,7 +284554,7 @@ function resetUI() {
 	_tmpCount = {};
 	_recv.length = 0;
 	_send.length = 0;
-	const root = this._shadow || this._host;
+	const root = Trade.getRoot();
 	const overlay = root.querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 	const okDisabled = root.querySelector(".ok.disabled");
@@ -283840,7 +284616,7 @@ function onCancel() {
 * Conclude our part
 */
 function onConclude() {
-	const zenySend = (Trade._shadow || Trade._host).querySelector(".zeny.send");
+	const zenySend = Trade.getRoot().querySelector(".zeny.send");
 	let zeny = parseInt(zenySend ? zenySend.value : "0", 10) || 0;
 	zeny = Math.min(Math.max(0, zeny), SessionStorage_default.zeny);
 	onRequestAddItem(0, zeny);
@@ -283851,7 +284627,7 @@ function onConclude() {
 */
 function onTrade() {
 	Trade.onTradeSubmit();
-	const root = Trade._shadow || Trade._host;
+	const root = Trade.getRoot();
 	const tradeEnabled = root.querySelector(".trade.enabled");
 	const tradeDisabled = root.querySelector(".trade.disabled");
 	if (tradeEnabled) tradeEnabled.style.display = "none";
@@ -283892,7 +284668,7 @@ function onItemOver$9(itemEl) {
 	const idx = parseInt(itemEl.getAttribute("data-index"), 10);
 	const item = itemEl.parentNode.className.match(/send/i) ? _send[idx] : _recv[idx];
 	if (!item) return;
-	const overlay = (Trade._shadow || Trade._host).querySelector(".overlay");
+	const overlay = Trade.getRoot().querySelector(".overlay");
 	if (!overlay) return;
 	const itemRect = itemEl.getBoundingClientRect();
 	const hostRect = Trade._host.getBoundingClientRect();
@@ -283909,7 +284685,7 @@ function onItemOver$9(itemEl) {
 * Hide the item title when mouse is not over anymore
 */
 function onItemOut$10() {
-	const overlay = (Trade._shadow || Trade._host).querySelector(".overlay");
+	const overlay = Trade.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -283968,7 +284744,7 @@ var init_Trade$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	Trade.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const okBtn = root.querySelector(".ok.enabled");
 		if (okBtn) {
 			okBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -284015,8 +284791,7 @@ var init_Trade$1 = __esmMin((() => {
 	* Guard keyboard input for the zeny <input> inside Shadow DOM
 	*/
 	Trade.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+		if (this.isEditableFocused()) {
 			event.stopImmediatePropagation();
 			return true;
 		}
@@ -284027,7 +284802,7 @@ var init_Trade$1 = __esmMin((() => {
 	*/
 	Trade.onAppend = function onAppend() {
 		resetUI.call(this);
-		const titleEl = (this._shadow || this._host).querySelector(".titlebar .title");
+		const titleEl = this.getRoot().querySelector(".titlebar .title");
 		if (titleEl) titleEl.textContent = this.title;
 		const width = this._host.getBoundingClientRect().width;
 		const height = this._host.getBoundingClientRect().height;
@@ -284051,7 +284826,7 @@ var init_Trade$1 = __esmMin((() => {
 			delete _tmpCount[index];
 			return;
 		}
-		const root = this._shadow || this._host;
+		const root = Trade.getRoot();
 		if (index === 0) {
 			const zenySend = root.querySelector(".zeny.send");
 			if (zenySend) zenySend.value = prettifyZeny$2(_tmpCount[index]);
@@ -284079,7 +284854,7 @@ var init_Trade$1 = __esmMin((() => {
 	* @param {object} item
 	*/
 	Trade.addItem = function addItem(item) {
-		const root = this._shadow || this._host;
+		const root = Trade.getRoot();
 		if (item.ITID === 0) {
 			const zenyRecv = root.querySelector(".zeny.recv");
 			if (zenyRecv) zenyRecv.textContent = prettifyZeny$2(item.count);
@@ -284104,7 +284879,7 @@ var init_Trade$1 = __esmMin((() => {
 	* @param {string} element - 'send' or 'recv'
 	*/
 	Trade.conclude = function conclude(element) {
-		const root = this._shadow || this._host;
+		const root = Trade.getRoot();
 		const box = root.querySelector(`.box.${element}`);
 		if (box) box.classList.add("disabled");
 		if (element === "send") {
@@ -284139,246 +284914,6 @@ var init_Trade$1 = __esmMin((() => {
 	*/
 	Trade.mouseMode = GUIComponent.MouseMode.STOP;
 	Trade_default = UIManager.addComponent(Trade);
-}));
-//#endregion
-//#region src/UI/Components/NpcBox/NpcBox.html?raw
-var NpcBox_default$2;
-var init_NpcBox$2 = __esmMin((() => {
-	NpcBox_default$2 = "<div id=\"NpcBox\">\r\n	<div class=\"border\">\r\n		<div class=\"content\"></div>\r\n		<div class=\"btns\">\r\n			<ui-button class=\"btn close\" bg=\"btn_close.bmp\" hover=\"btn_close_a.bmp\" down=\"btn_close_b.bmp\"></ui-button>\r\n			<ui-button class=\"btn next\" bg=\"btn_next.bmp\" hover=\"btn_next_a.bmp\" down=\"btn_next_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcBox/NpcBox.css?raw
-var NpcBox_default$1;
-var init_NpcBox$1 = __esmMin((() => {
-	NpcBox_default$1 = ":host {\r\n	width: 276px;\r\n	height: 176px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#NpcBox {\r\n	position: absolute;\r\n	width: 276px;\r\n	height: 176px;\r\n	border-radius: 5px;\r\n	background: white;\r\n	padding: 2px;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n}\r\n#NpcBox .border {\r\n	border: 1px solid #c1c6c2;\r\n	width: 264px;\r\n	height: 164px;\r\n	padding: 5px;\r\n	border-radius: 5px;\r\n}\r\n#NpcBox .content {\r\n	white-space: pre-wrap;\r\n	background-color: #eff4f0;\r\n	width: 254px;\r\n	height: 130px;\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n}\r\n#NpcBox .btns {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 8px;\r\n}\r\n#NpcBox .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	display: none;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcBox/NpcBox.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$26() {
-	return NpcBox._shadow || NpcBox._host;
-}
-/**
-* Process NAVI tags in text
-*/
-function processNAVITags(text) {
-	if (!text) return "";
-	text = String(text);
-	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
-		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
-	});
-}
-/**
-* Process ITEM tags in text
-*/
-function processItemTags(text) {
-	if (!text) return "";
-	if (typeof text !== "string") text = String(text);
-	return text.replace(/<(ITEMLINK|ITEM)>([\s\S]*?)<INFO>([\s\S]*?)<\/INFO><\/\1>/g, (match, tag, itemName, itemId) => {
-		return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
-	});
-}
-/**
-* Process color codes in text (^RRGGBB)
-*/
-function processColorCodes(text) {
-	if (!text) return "";
-	text = String(text);
-	return text.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => {
-		return `<span style="color:#${color}">`;
-	}).replace(/\^000000/g, "</span>");
-}
-/**
-* Process all text formatting
-*/
-function processText(text) {
-	if (!text) return "";
-	text = processItemTags(text);
-	text = processNAVITags(text);
-	text = processColorCodes(text);
-	return text;
-}
-var NpcBox, _needCleanUp, NpcBox_default;
-var init_NpcBox = __esmMin((() => {
-	init_KeyEventHandler();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_Navigation();
-	init_NpcBox$2();
-	init_NpcBox$1();
-	NpcBox = new GUIComponent("NpcBox", NpcBox_default$1);
-	NpcBox.render = () => NpcBox_default$2;
-	/**
-	* Freeze mouse — NPC dialog blocks interaction
-	*/
-	NpcBox.mouseMode = GUIComponent.MouseMode.FREEZE;
-	_needCleanUp = false;
-	/**
-	* @var {integer} NPC GID
-	*/
-	NpcBox.ownerID = 0;
-	/**
-	* Initialize Component
-	*/
-	NpcBox.init = function init() {
-		this._host.style.top = `${Math.max(100, Renderer.height / 2 - 200)}px`;
-		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
-		const root = _getRoot$26();
-		const nextBtn = root.querySelector(".next");
-		if (nextBtn) nextBtn.addEventListener("click", () => NpcBox.next());
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", () => NpcBox.close());
-		const content = root.querySelector(".content");
-		if (content) content.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		root.addEventListener("click", (e) => {
-			const itemLink = e.target.closest(".item-link");
-			if (itemLink) {
-				const itemId = parseInt(itemLink.dataset.itemId, 10);
-				if (!itemId) return;
-				if (ItemInfo_default.uid === itemId) {
-					ItemInfo_default.remove();
-					return;
-				}
-				ItemInfo_default.append();
-				ItemInfo_default.uid = itemId;
-				ItemInfo_default.setItem({
-					ITID: itemId,
-					IsIdentified: true
-				});
-				return;
-			}
-			const naviLink = e.target.closest(".navi-link");
-			if (naviLink) {
-				const naviInfo = naviLink.dataset.naviInfo;
-				const displayName = naviLink.dataset.naviName;
-				if (!naviInfo) return;
-				if (Navigation_default.uid === naviInfo && Navigation_default._host && Navigation_default._host.style.display !== "none") {
-					Navigation_default.hide();
-					return;
-				}
-				Navigation_default.show();
-				Navigation_default.uid = naviInfo;
-				Navigation_default.setNaviInfo(naviInfo, displayName);
-			}
-		});
-		this.draggable();
-	};
-	/**
-	* Once NPC Box is removed from HTML, clean up data
-	*/
-	NpcBox.onRemove = function onRemove() {
-		const root = _getRoot$26();
-		const nextBtn = root.querySelector(".next");
-		if (nextBtn) nextBtn.style.display = "none";
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.style.display = "none";
-		const content = root.querySelector(".content");
-		if (content) content.textContent = "";
-		_needCleanUp = false;
-		NpcBox.ownerID = 0;
-		const cutin = document.getElementById("cutin");
-		if (cutin) document.body.removeChild(cutin);
-	};
-	/**
-	* Add support for Enter key
-	*/
-	NpcBox.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display === "none") return true;
-		const root = _getRoot$26();
-		switch (event.which) {
-			case KEYS.SPACE:
-			case KEYS.ENTER: {
-				const nextBtn = root.querySelector(".next");
-				if (nextBtn && nextBtn.style.display !== "none") {
-					this.next();
-					break;
-				}
-				const closeBtn = root.querySelector(".close");
-				if (closeBtn && closeBtn.style.display !== "none") {
-					this.close();
-					break;
-				}
-				return true;
-			}
-			case KEYS.ESCAPE: {
-				const closeBtn = root.querySelector(".close");
-				if (closeBtn && closeBtn.style.display !== "none") {
-					this.close();
-					break;
-				}
-				return true;
-			}
-			default: return true;
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	/**
-	* Add text to box
-	*
-	* @param {string} text to display
-	* @param {number} gid - npc id
-	*/
-	NpcBox.setText = function setText(text, gid) {
-		const content = _getRoot$26().querySelector(".content");
-		NpcBox.ownerID = gid;
-		if (_needCleanUp) {
-			_needCleanUp = false;
-			content.textContent = "";
-		}
-		const div = document.createElement("div");
-		div.innerHTML = processText(text);
-		content.appendChild(div);
-	};
-	/**
-	* Add next button
-	*
-	* @param {number} gid - npc id
-	*/
-	NpcBox.addNext = function addNext(gid) {
-		NpcBox.ownerID = gid;
-		const nextBtn = _getRoot$26().querySelector(".next");
-		if (nextBtn) nextBtn.style.display = "block";
-	};
-	/**
-	* Add close button
-	*
-	* @param {number} gid - npc id
-	*/
-	NpcBox.addClose = function addClose(gid) {
-		NpcBox.ownerID = gid;
-		const closeBtn = _getRoot$26().querySelector(".close");
-		if (closeBtn) closeBtn.style.display = "block";
-	};
-	/**
-	* Press "next" button
-	*/
-	NpcBox.next = function next() {
-		_needCleanUp = true;
-		const nextBtn = _getRoot$26().querySelector(".next");
-		if (nextBtn) nextBtn.style.display = "none";
-		this.onNextPressed(NpcBox.ownerID);
-	};
-	/**
-	* Press "close" button
-	*/
-	NpcBox.close = function close() {
-		_needCleanUp = true;
-		const closeBtn = _getRoot$26().querySelector(".close");
-		if (closeBtn) closeBtn.style.display = "none";
-		this.onClosePressed(NpcBox.ownerID);
-	};
-	/**
-	* Callback
-	*/
-	NpcBox.onClosePressed = function onClosePressed() {};
-	NpcBox.onNextPressed = function onNextPressed() {};
-	NpcBox_default = UIManager.addComponent(NpcBox);
 }));
 //#endregion
 //#region src/Controls/EntityControl.js
@@ -287916,7 +288451,7 @@ var init_EntityRoom$1 = __esmMin((() => {
 	* Once in HTML
 	*/
 	EntityRoom.onAppend = function onAppend() {
-		const btn = (this._shadow || this._host).querySelector("button");
+		const btn = this.getRoot().querySelector("button");
 		if (btn) {
 			if (this._dblclickHandler) btn.removeEventListener("dblclick", this._dblclickHandler);
 			if (this._mousedownHandler) btn.removeEventListener("mousedown", this._mousedownHandler);
@@ -287938,7 +288473,7 @@ var init_EntityRoom$1 = __esmMin((() => {
 	* Remove data from UI
 	*/
 	EntityRoom.onRemove = function onRemove() {
-		const btn = (this._shadow || this._host).querySelector("button");
+		const btn = this.getRoot().querySelector("button");
 		if (btn) {
 			if (this._dblclickHandler) {
 				btn.removeEventListener("dblclick", this._dblclickHandler);
@@ -287957,7 +288492,7 @@ var init_EntityRoom$1 = __esmMin((() => {
 	* @param {string} url - icon url
 	*/
 	EntityRoom.setTitle = function setTitle(title, url) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const imgEl = root.querySelector("button img");
 		const titleEl = root.querySelector(".title");
 		const overlayEl = root.querySelector(".overlay");
@@ -311758,7 +312293,8 @@ var init_DBManager = __esmMin((() => {
 		* @returns {?Object} Reputation group list or null if not found
 		*/
 		static getReputeGroupList(repute_group) {
-			return ReputeGroup[repute_group].ReputeList || null;
+			const group = ReputeGroup[repute_group];
+			return group && group.ReputeList || null;
 		}
 		/**
 		* Get the entire reputation information list
@@ -312550,12 +313086,6 @@ var init_MobileUI$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/MobileUI/MobileUI.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$25() {
-	return MobileUI._shadow || MobileUI._host;
-}
-/**
 * Helper to bind click+touchstart on an element
 */
 function bindButton(root, selector, handler) {
@@ -312596,7 +313126,7 @@ function keyPress(k) {
 * Toggles MobileUI button bars visibility (and thus buttons)
 */
 function toggleButtons() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	if (showButtons) {
 		[
 			"#topBar",
@@ -312695,7 +313225,7 @@ function toggleButtons() {
 * Toggles switch skill
 */
 function switchSkillButtons() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	const skillSets = [
 		[
 			"#f1Button",
@@ -312764,7 +313294,7 @@ function toggleStatus() {
 * Toggles touch targeting
 */
 function toggleTouchTargeting() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	if (SessionStorage_default.TouchTargeting) {
 		root.querySelector("#toggleTargetingButton").classList.remove("active");
 		root.querySelector("#toggleAutoFollowButton").classList.add("disabled");
@@ -312782,7 +313312,7 @@ function toggleTouchTargeting() {
 * Toggles automatic targeting
 */
 function toggleAutoTargeting() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	if (SessionStorage_default.AutoTargeting) {
 		root.querySelector("#toggleAutoTargetButton").classList.remove("active");
 		SessionStorage_default.AutoTargeting = false;
@@ -312796,7 +313326,7 @@ function toggleAutoTargeting() {
 * Toggles auto follow
 */
 function toggleAutoFollow() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	if (SessionStorage_default.autoFollow) {
 		root.querySelector("#toggleAutoFollowButton").classList.remove("active");
 		SessionStorage_default.autoFollow = false;
@@ -312870,7 +313400,7 @@ function startAutoTarget() {
 /**
 * Stop event propagation
 */
-function stopPropagation$9(event) {
+function stopPropagation$8(event) {
 	if (event && typeof event.preventDefault === "function") event.preventDefault();
 	event.stopImmediatePropagation();
 	return false;
@@ -312879,7 +313409,7 @@ function stopPropagation$9(event) {
 * Auto follow logic
 */
 function onAutoFollow$1() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	if (SessionStorage_default.autoFollow) {
 		const player = SessionStorage_default.Entity;
 		const target = SessionStorage_default.autoFollowTarget;
@@ -312930,7 +313460,7 @@ function pickUpItem() {
 * Joystick handling for both mouse and touch input - MicromeX
 */
 function setupJoystick() {
-	const root = _getRoot$25();
+	const root = MobileUI.getRoot();
 	_joystickBase = root.querySelector("#joystickBase");
 	_joystickThumb = root.querySelector("#joystickThumb");
 	maxDistance = _joystickBase.offsetWidth / 2;
@@ -313026,7 +313556,7 @@ function moveCharacter(x, y, tileSize) {
 * Talk to NPC Button Function - MicromeX
 */
 function setupTalkToNpcButton() {
-	const talkButton = _getRoot$25().querySelector("#talktonpcButton");
+	const talkButton = MobileUI.getRoot().querySelector("#talktonpcButton");
 	function findNearestNpc() {
 		const player = SessionStorage_default.Entity;
 		if (!player) return null;
@@ -313092,7 +313622,7 @@ function isFreeCell$2(x, y) {
 	});
 	return free;
 }
-var vec2, mat2, direction, rotate, targetPos, movementTimer, MobileUI, _preferences$22, showButtons, C_AUTOTARGET_DELAY, centerX, centerY, maxDistance, normalizedX, normalizedY, _joystickBase, _joystickThumb, MobileUI_default;
+var vec2, mat2, direction, rotate, targetPos, movementTimer, MobileUI, _preferences$21, showButtons, C_AUTOTARGET_DELAY, centerX, centerY, maxDistance, normalizedX, normalizedY, _joystickBase, _joystickThumb, MobileUI_default;
 var init_MobileUI = __esmMin((() => {
 	init_Context();
 	init_UIManager();
@@ -313120,7 +313650,7 @@ var init_MobileUI = __esmMin((() => {
 	movementTimer = null;
 	MobileUI = new GUIComponent("MobileUI", MobileUI_default$1);
 	MobileUI.render = () => MobileUI_default$2;
-	_preferences$22 = Preferences.get("MobileUI", {
+	_preferences$21 = Preferences.get("MobileUI", {
 		x: 0,
 		y: 0,
 		zIndex: 1e3,
@@ -313139,14 +313669,14 @@ var init_MobileUI = __esmMin((() => {
 	* Initialize UI
 	*/
 	MobileUI.init = function init() {
-		const root = _getRoot$25();
+		const root = MobileUI.getRoot();
 		bindButton(root, "#toggleUIButton", (e) => {
 			toggleButtons();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#fullscreenButton", (e) => {
 			toggleFullScreen();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		const fKeyMap = [
 			["#f1Button", 112],
@@ -313197,48 +313727,48 @@ var init_MobileUI = __esmMin((() => {
 		].forEach(([selector, keyCode]) => {
 			bindButton(root, selector, (e) => {
 				logKeyPress(keyCode);
-				stopPropagation$9(e);
+				stopPropagation$8(e);
 			});
 		});
 		bindButton(root, "#f10Button", (e) => {
 			logKeyPress(121);
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#f12Button", (e) => {
 			logKeyPress(123);
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#insButton", (e) => {
 			logKeyPress(45);
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#toggleStatusButton", (e) => {
 			toggleStatus();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#toggleTargetingButton", (e) => {
 			toggleTouchTargeting();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#toggleAutoFollowButton", (e) => {
 			toggleAutoFollow();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#toggleAutoTargetButton", (e) => {
 			toggleAutoTargeting();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#attackButton", (e) => {
 			attackTargeted();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#pickupButton", (e) => {
 			pickUpItem();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		bindButton(root, "#switchshorcutButton", (e) => {
 			switchSkillButtons();
-			stopPropagation$9(e);
+			stopPropagation$8(e);
 		});
 		root.querySelectorAll(".buttons").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.target.classList.add("pressed"));
@@ -313294,12 +313824,12 @@ var init_MobileUI = __esmMin((() => {
 	* Removes MobileUI
 	*/
 	MobileUI.onRemove = function onRemove() {
-		_preferences$22.y = 0;
-		_preferences$22.x = 0;
-		_preferences$22.zIndex = 1e3;
-		_preferences$22.width = Renderer.width;
-		_preferences$22.height = Renderer.height;
-		_preferences$22.save();
+		_preferences$21.y = 0;
+		_preferences$21.x = 0;
+		_preferences$21.zIndex = 1e3;
+		_preferences$21.width = Renderer.width;
+		_preferences$21.height = Renderer.height;
+		_preferences$21.save();
 		if (SessionStorage_default.AutoTargeting) toggleAutoTargeting();
 	};
 	/**
@@ -315560,9 +316090,6 @@ var init_Vending$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Vending/Vending.js
-function _getRoot$24() {
-	return Vending._shadow || Vending._host;
-}
 function escapeHtml(text) {
 	const div = document.createElement("div");
 	div.appendChild(document.createTextNode(text));
@@ -315627,7 +316154,7 @@ function addItem$1(content, item, isinput) {
 		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
 		itemObj = container;
 		if (_type$3 === Vending.Type.BUYING_STORE) {
-			const limitInput = _getRoot$24().querySelector(".limitZeny");
+			const limitInput = Vending.getRoot().querySelector(".limitZeny");
 			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
 			limitInput.value = limit;
@@ -315645,7 +316172,8 @@ function addItem$1(content, item, isinput) {
 	});
 }
 function requestMoveItem$1(index, fromContent, toContent, isAdding) {
-	let count, item_price;
+	let count;
+	const item_price = 0;
 	const item = isAdding ? _input$1[index] : _output$1[index];
 	if (isAdding) {
 		if (!(countSlotsUsed() < _slots$4)) return false;
@@ -315698,7 +316226,7 @@ function onDrop$5(event) {
 		return;
 	}
 	if (data.type !== "item" || data.from !== "Vending" || data.container === this.className) return;
-	const fromContent = _getRoot$24().querySelector(`.${data.container} .content`);
+	const fromContent = Vending.getRoot().querySelector(`.${data.container} .content`);
 	const toContent = this.querySelector(".content");
 	requestMoveItem$1(data.index, fromContent, toContent, this.className === "OutputWindow");
 }
@@ -315717,7 +316245,7 @@ function onItemInfo$11(event) {
 }
 function onItemSelected$1() {
 	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
-	const root = _getRoot$24();
+	const root = Vending.getRoot();
 	const inputWin = root.querySelector(".InputWindow");
 	let from, to;
 	if (inputWin.contains(this)) {
@@ -315730,7 +316258,7 @@ function onItemSelected$1() {
 	requestMoveItem$1(parseInt(this.getAttribute("data-index"), 10), from.querySelector(".content"), to.querySelector(".content"), from === inputWin);
 }
 function onItemFocus$1() {
-	_getRoot$24().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	Vending.getRoot().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
 	this.classList.add("selected");
 }
 function onScroll$4(event) {
@@ -315743,7 +316271,7 @@ function onScroll$4(event) {
 	event.preventDefault();
 }
 function onDragStart$1(event) {
-	const root = _getRoot$24();
+	const root = Vending.getRoot();
 	const inputWin = root.querySelector(".InputWindow");
 	const outputWin = root.querySelector(".OutputWindow");
 	const container = (inputWin.contains(this) ? inputWin : outputWin).className;
@@ -315760,7 +316288,7 @@ function onDragStart$1(event) {
 	}));
 }
 function onResizeInput() {
-	const inputWin = _getRoot$24().querySelector(".InputWindow");
+	const inputWin = Vending.getRoot().querySelector(".InputWindow");
 	const content = inputWin.querySelector(".container .content");
 	const top = inputWin.offsetTop;
 	let lastHeight = 0;
@@ -315795,17 +316323,17 @@ function onItemOver$8() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const overlay = _getRoot$24().querySelector(".overlay");
+	const overlay = Vending.getRoot().querySelector(".overlay");
 	overlay.style.display = "";
 	overlay.style.top = `${this.offsetTop - 20}px`;
 	overlay.style.left = `${this.offsetLeft - 10}px`;
 	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
 }
 function onItemOut$9() {
-	const overlay = _getRoot$24().querySelector(".overlay");
+	const overlay = Vending.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var Vending, _preferences$21, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
+var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
 var init_Vending = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -315835,7 +316363,7 @@ var init_Vending = __esmMin((() => {
 		VENDING_STORE: 0,
 		BUYING_STORE: 1
 	};
-	_preferences$21 = Preferences.get("Vending", {
+	_preferences$20 = Preferences.get("Vending", {
 		inputWindow: {
 			x: 100,
 			y: 100,
@@ -315853,7 +316381,7 @@ var init_Vending = __esmMin((() => {
 	_slots$4 = 0;
 	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		const sellBtn = root.querySelector(".btn.sell");
 		if (sellBtn) {
 			sellBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -315943,21 +316471,21 @@ var init_Vending = __esmMin((() => {
 		});
 	};
 	Vending.onAppend = function onAppend() {
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		const inputContent = inputWin.querySelector(".content");
 		const outputContent = outputWin.querySelector(".content");
-		inputWin.style.top = `${Math.min(Math.max(0, _preferences$21.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
-		inputWin.style.left = `${Math.min(Math.max(0, _preferences$21.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
-		outputWin.style.top = `${Math.min(Math.max(0, _preferences$21.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
-		outputWin.style.left = `${Math.min(Math.max(0, _preferences$21.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
-		resize$1(inputContent, _preferences$21.inputWindow.height);
-		resize$1(outputContent, _preferences$21.outputWindow.height);
+		inputWin.style.top = `${Math.min(Math.max(0, _preferences$20.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
+		inputWin.style.left = `${Math.min(Math.max(0, _preferences$20.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
+		outputWin.style.top = `${Math.min(Math.max(0, _preferences$20.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
+		outputWin.style.left = `${Math.min(Math.max(0, _preferences$20.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
+		resize$1(inputContent, _preferences$20.inputWindow.height);
+		resize$1(outputContent, _preferences$20.outputWindow.height);
 		this._host.style.display = "none";
 	};
 	Vending.setType = function setType(type) {
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		const winBuyEls = root.querySelectorAll(".WinBuy");
 		const winSellEls = root.querySelectorAll(".WinSell");
 		switch (type) {
@@ -315985,18 +316513,18 @@ var init_Vending = __esmMin((() => {
 	};
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		const inputWin = root.querySelector(".InputWindow");
 		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
 		_output$1.length = 0;
-		_preferences$21.inputWindow.x = parseInt(inputWin.style.left, 10);
-		_preferences$21.inputWindow.y = parseInt(inputWin.style.top, 10);
-		_preferences$21.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$21.outputWindow.x = parseInt(outputWin.style.left, 10);
-		_preferences$21.outputWindow.y = parseInt(outputWin.style.top, 10);
-		_preferences$21.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$21.save();
+		_preferences$20.inputWindow.x = parseInt(inputWin.style.left, 10);
+		_preferences$20.inputWindow.y = parseInt(inputWin.style.top, 10);
+		_preferences$20.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$20.outputWindow.x = parseInt(outputWin.style.left, 10);
+		_preferences$20.outputWindow.y = parseInt(outputWin.style.top, 10);
+		_preferences$20.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$20.save();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -316004,8 +316532,7 @@ var init_Vending = __esmMin((() => {
 		Vending.isOpen = false;
 	};
 	Vending.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+		if (this.isEditableFocused()) {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				this.remove();
 				event.stopImmediatePropagation();
@@ -316018,7 +316545,7 @@ var init_Vending = __esmMin((() => {
 		return true;
 	};
 	Vending.setList = function setList(items) {
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -316065,7 +316592,7 @@ var init_Vending = __esmMin((() => {
 		if (Vending.isOpen) return;
 		_slots$4 = pkt.itemcount;
 		this.setList(CartItems_default.list);
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -316081,7 +316608,7 @@ var init_Vending = __esmMin((() => {
 			if (isItemStackable(item) && DB.isBuyable(item.ITID)) buyable.push(item);
 		}
 		this.setList(buyable);
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
@@ -316095,7 +316622,7 @@ var init_Vending = __esmMin((() => {
 	Vending.onSubmit = function onSubmit() {
 		const output = [];
 		const count = _output$1.length;
-		const root = _getRoot$24();
+		const root = Vending.getRoot();
 		const shopname = root.querySelector(".shopname").value;
 		let limitZeny;
 		let ctr = 0;
@@ -316262,12 +316789,12 @@ function onItemUsed(event, itemEl) {
 	const item = VendingShop.getItemByIndex(index);
 	if (item) {
 		VendingShop.useItem(item);
-		onItemOut$8(VendingShop._shadow || VendingShop._host);
+		onItemOut$8(VendingShop.getRoot());
 	}
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-var VendingShop, _realSize, _type$2, _preferences$20, VendingShop_default;
+var VendingShop, _realSize, _type$2, _preferences$19, VendingShop_default;
 var init_VendingShop = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -316299,7 +316826,7 @@ var init_VendingShop = __esmMin((() => {
 	*/
 	VendingShop.list = [];
 	_realSize = 0;
-	_preferences$20 = Preferences.get("VendingShop", {
+	_preferences$19 = Preferences.get("VendingShop", {
 		x: 200,
 		y: 200,
 		width: 8,
@@ -316310,7 +316837,7 @@ var init_VendingShop = __esmMin((() => {
 	* Initialize UI
 	*/
 	VendingShop.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const closeBtn = root.querySelector(".btn.close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
@@ -316353,14 +316880,14 @@ var init_VendingShop = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	VendingShop.onAppend = function onAppend() {
-		this.resize(_preferences$20.width, _preferences$20.height);
+		this.resize(_preferences$19.width, _preferences$19.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$20.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$20.x), Renderer.width - hostRect.width)}px`;
-		_realSize = _preferences$20.reduce ? 0 : hostRect.height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$19.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$19.x), Renderer.width - hostRect.width)}px`;
+		_realSize = _preferences$19.reduce ? 0 : hostRect.height;
 		const messageText = DB.getMessage(226);
 		const titleShop = Vending_default._shopname.length > 25 ? `${Vending_default._shopname.substring(0, 25)}...` : Vending_default._shopname;
-		const shopnameEl = (this._shadow || this._host).querySelector(".text.shopname");
+		const shopnameEl = this.getRoot().querySelector(".text.shopname");
 		if (shopnameEl) shopnameEl.textContent = `${messageText} : ${titleShop}`;
 	};
 	/**
@@ -316375,17 +316902,17 @@ var init_VendingShop = __esmMin((() => {
 	* Remove Inventory from window (and so clean up items)
 	*/
 	VendingShop.onRemove = function onRemove() {
-		const content = (this._shadow || this._host).querySelector(".container .content");
+		const content = this.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		const itemInfoEl = document.querySelector(".ItemInfo");
 		if (itemInfoEl) itemInfoEl.remove();
-		_preferences$20.reduce = !!_realSize;
-		_preferences$20.y = parseInt(this._host.style.top, 10);
-		_preferences$20.x = parseInt(this._host.style.left, 10);
-		_preferences$20.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
-		_preferences$20.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$20.save();
+		_preferences$19.reduce = !!_realSize;
+		_preferences$19.y = parseInt(this._host.style.top, 10);
+		_preferences$19.x = parseInt(this._host.style.left, 10);
+		_preferences$19.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
+		_preferences$19.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$19.save();
 		this._host.style.display = "none";
 	};
 	/**
@@ -316397,7 +316924,7 @@ var init_VendingShop = __esmMin((() => {
 	VendingShop.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.style.width = `${width * 32 + 13}px`;
@@ -316452,7 +316979,7 @@ var init_VendingShop = __esmMin((() => {
 		let object = this.getItemByIndex(item.index);
 		if (object) {
 			object.count += item.count;
-			const countEl = (this._shadow || this._host).querySelector(`.item[data-index="${item.index}"] .count`);
+			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = object.count;
 			return;
 		}
@@ -316466,7 +316993,7 @@ var init_VendingShop = __esmMin((() => {
 	*/
 	VendingShop.addItemSub = function addItemSub(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const content = root.querySelector(".container .content");
 		if (!content) return false;
 		const itemDiv = document.createElement("div");
@@ -316495,7 +317022,7 @@ var init_VendingShop = __esmMin((() => {
 		if (!item || count <= 0) return null;
 		const msg = DB.getMessage(231).replace("%s", DB.getItemName(item)).replace("%d", count);
 		ChatBox_default.addText(msg, ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
@@ -316522,7 +317049,7 @@ var init_VendingShop = __esmMin((() => {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -316673,7 +317200,7 @@ function formatUnixDate(unixTimestamp) {
 	const d = /* @__PURE__ */ new Date(unixTimestamp * 1e3);
 	return String(d.getMonth() + 1).padStart(2, "0") + "/" + String(d.getDate()).padStart(2, "0") + " - " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + ":" + String(d.getSeconds()).padStart(2, "0");
 }
-var VendingReport, VendingReportTable, _preferences$19, VendingReport_default;
+var VendingReport, VendingReportTable, _preferences$18, VendingReport_default;
 var init_VendingReport = __esmMin((() => {
 	init_DBManager();
 	init_jquery();
@@ -316697,7 +317224,7 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport._resizing = false;
 	VendingReport._startY = 0;
 	VendingReport._startHeight = 0;
-	_preferences$19 = Preferences.get("VendingReport", {
+	_preferences$18 = Preferences.get("VendingReport", {
 		x: 200,
 		y: 200,
 		width: 400,
@@ -316733,9 +317260,9 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport.onRemove = function OnRemove() {
 		VendingReport.reset();
 		jquery_default(".ItemInfo").remove();
-		_preferences$19.y = parseInt(this.ui.css("top"), 10);
-		_preferences$19.x = parseInt(this.ui.css("left"), 10);
-		_preferences$19.save();
+		_preferences$18.y = parseInt(this.ui.css("top"), 10);
+		_preferences$18.x = parseInt(this.ui.css("left"), 10);
+		_preferences$18.save();
 		this.ui.hide();
 	};
 	VendingReport.reset = function reset() {
@@ -316874,7 +317401,7 @@ function onCart(num) {
 }
 function updateList(blvl) {
 	if (SessionStorage_default.Entity.hasCart == false) return;
-	const root = ChangeCart._shadow || ChangeCart._host;
+	const root = ChangeCart.getRoot();
 	root.querySelectorAll(".cart").forEach((el) => {
 		el.style.display = "none";
 	});
@@ -316909,7 +317436,7 @@ function drawActionToCanvas$3(ctx, act, spr, actionId, x, y) {
 * Rendering the Carts
 */
 function render$12(tick) {
-	(ChangeCart._shadow || ChangeCart._host).querySelectorAll(".canvas").forEach((el) => {
+	ChangeCart.getRoot().querySelectorAll(".canvas").forEach((el) => {
 		if (el.offsetParent === null) return;
 		const data = _carts$1[el.getAttribute("data-id")];
 		if (!data || !data.spr || !data.act) return;
@@ -316947,7 +317474,7 @@ var init_ChangeCart = __esmMin((() => {
 	* Initialize UI
 	*/
 	ChangeCart.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const carts = root.querySelectorAll(".cart");
 		this._host.style.top = (Renderer.height - 100) / 2 + "px";
 		this._host.style.left = (Renderer.width - 400) / 2 + "px";
@@ -317071,7 +317598,7 @@ function drawActionToCanvas$2(ctx, act, spr, actionId, x, y) {
 * Render loop
 */
 function render$11() {
-	(CartDecoration._shadow || CartDecoration._host).querySelectorAll(".canvas").forEach((el) => {
+	CartDecoration.getRoot().querySelectorAll(".canvas").forEach((el) => {
 		if (el.offsetParent === null) return;
 		const data = _carts[parseInt(el.getAttribute("data-id"), 10)];
 		if (!data || !data.spr || !data.act) return;
@@ -317111,7 +317638,7 @@ var init_CartDecoration = __esmMin((() => {
 	* Initialize UI
 	*/
 	CartDecoration.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		this._host.style.top = (Renderer.height - 100) / 2 + "px";
 		this._host.style.left = (Renderer.width - 255) / 2 + "px";
 		root.querySelector(".titlebar .close").addEventListener("click", () => {
@@ -317138,7 +317665,7 @@ var init_CartDecoration = __esmMin((() => {
 	* @param {object} pkt - parsed ZC_SELECTCART packet
 	*/
 	CartDecoration.onSelectCart = function onSelectCart(pkt) {
-		const root = CartDecoration._shadow || CartDecoration._host;
+		const root = CartDecoration.getRoot();
 		_identity = pkt.identity;
 		root.querySelectorAll(".cart").forEach((el) => {
 			el.style.display = "none";
@@ -317247,7 +317774,7 @@ function refreshList(contentEl) {
 		index++;
 	}
 }
-var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$18, Emoticons_default;
+var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$17, Emoticons_default;
 var init_Emoticons = __esmMin((() => {
 	init_Emotions();
 	init_Client();
@@ -317271,7 +317798,7 @@ var init_Emoticons = __esmMin((() => {
 	TOTAL_PAGES = 0;
 	EMOTICONS_COUNT = Object.keys(Emotions_default.order).length;
 	_entity$1 = new Entity();
-	_preferences$18 = Preferences.get("Emoticons", {
+	_preferences$17 = Preferences.get("Emoticons", {
 		x: 600,
 		y: 200,
 		show: false
@@ -317280,7 +317807,7 @@ var init_Emoticons = __esmMin((() => {
 	* Initialize UI
 	*/
 	Emoticons.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const contentEl = root.querySelector(".content");
 		Client.loadFiles(["data/sprite/ÀÌÆÑÆ®/emotion.act", "data/sprite/ÀÌÆÑÆ®/emotion.spr"], (act, spr) => {
 			_action$1 = act;
@@ -317317,18 +317844,18 @@ var init_Emoticons = __esmMin((() => {
 	* Appending to html
 	*/
 	Emoticons.onAppend = function onAppend() {
-		if (!_preferences$18.show) this._host.style.display = "none";
-		this._host.style.top = Math.min(Math.max(0, _preferences$18.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$18.x), Renderer.width - this._host.offsetWidth) + "px";
+		if (!_preferences$17.show) this._host.style.display = "none";
+		this._host.style.top = Math.min(Math.max(0, _preferences$17.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$17.x), Renderer.width - this._host.offsetWidth) + "px";
 	};
 	/**
 	* Once removed from DOM, save preferences
 	*/
 	Emoticons.onRemove = function onRemove() {
-		_preferences$18.show = this._host.style.display !== "none";
-		_preferences$18.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$18.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$18.save();
+		_preferences$17.show = this._host.style.display !== "none";
+		_preferences$17.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$17.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$17.save();
 	};
 	/**
 	* Update page
@@ -317336,7 +317863,7 @@ var init_Emoticons = __esmMin((() => {
 	* @param {number} direction
 	*/
 	Emoticons.movePage = function movePage(direction) {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		const prevBtn = root.querySelector(".prev");
 		const nextBtn = root.querySelector(".next");
 		prevBtn.classList.remove("disabled");
@@ -317387,15 +317914,9 @@ var init_ShortCuts$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/ShortCuts/ShortCuts.js
 /**
-* Helper to get the shadow root
-*/
-function _getRoot$23() {
-	return ShortCuts._shadow || ShortCuts._host;
-}
-/**
 * Exit window
 */
-function onClose$5() {
+function onClose$4() {
 	ShortCuts._host.style.display = "none";
 }
 function executeCmd(value) {
@@ -317415,7 +317936,7 @@ function executeFlag(value) {
 	Network.sendPacket(pkt);
 }
 function loadValuesAlt() {
-	const root = _getRoot$23();
+	const root = ShortCuts.getRoot();
 	const length = Object.keys(_MACRO_INIT).length - 3;
 	for (let index = 0; index < length; index++) {
 		const element = _MACRO_INIT[`Num_${index}`];
@@ -317424,7 +317945,7 @@ function loadValuesAlt() {
 	}
 }
 function addValuesAlt() {
-	_getRoot$23().querySelectorAll(".macro input").forEach((input) => {
+	ShortCuts.getRoot().querySelectorAll(".macro input").forEach((input) => {
 		input.addEventListener("blur", () => {
 			const index = input.id.split("macro_")[1];
 			_MACRO_INIT[`Num_${index}`] = input.value;
@@ -317447,7 +317968,7 @@ function onDropText(event) {
 	if (data.type === "item") return;
 	event.currentTarget.value = data;
 }
-var ShortCuts, _MACRO_INIT, _FLAG_INIT, _preferences$17, ShortCuts_default;
+var ShortCuts, _MACRO_INIT, _FLAG_INIT, _preferences$16, ShortCuts_default;
 var init_ShortCuts = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -317491,7 +318012,7 @@ var init_ShortCuts = __esmMin((() => {
 	* Store ShortCuts items
 	*/
 	ShortCuts.list = [];
-	_preferences$17 = Preferences.get("ShortCuts", {
+	_preferences$16 = Preferences.get("ShortCuts", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -317511,8 +318032,8 @@ var init_ShortCuts = __esmMin((() => {
 	* Key handler: let typing work in macro inputs, handle Enter/Escape
 	*/
 	ShortCuts.onKeyDown = function onKeyDown(event) {
-		const focused = (this._shadow || this._host).activeElement;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+		const focused = this.getRoot().activeElement;
+		if (this.isEditableFocused()) {
 			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 				focused.blur();
 				event.stopImmediatePropagation();
@@ -317527,14 +318048,14 @@ var init_ShortCuts = __esmMin((() => {
 	* Initialize UI
 	*/
 	ShortCuts.init = function init() {
-		const root = _getRoot$23();
+		const root = ShortCuts.getRoot();
 		root.querySelectorAll(".footer button").forEach((btn) => {
 			btn.addEventListener("mousedown", () => {
 				if (btn.classList.contains("emoticons")) Emoticons_default.onShortCut({ cmd: "TOGGLE" });
 			});
 		});
 		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$5);
+		if (closeBtn) closeBtn.addEventListener("click", onClose$4);
 		root.querySelectorAll(".macro input").forEach((input) => {
 			input.addEventListener("mousedown", () => {
 				root.querySelectorAll(".macro_").forEach((el) => el.classList.remove("input_macro_focus"));
@@ -317557,31 +318078,31 @@ var init_ShortCuts = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCuts.onAppend = function onAppend() {
-		if (!_preferences$17.show) this._host.style.display = "none";
+		if (!_preferences$16.show) this._host.style.display = "none";
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$17.y), Renderer.height - rect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$17.x), Renderer.width - rect.width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$16.y), Renderer.height - rect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$16.x), Renderer.width - rect.width)}px`;
 	};
 	/**
 	* Remove ShortCuts from window (and so clean up items)
 	*/
 	ShortCuts.onRemove = function onRemove() {
-		const content = _getRoot$23().querySelector(".container .content");
+		const content = ShortCuts.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$17.show = this._host.style.display !== "none";
-		_preferences$17.reduce = false;
-		_preferences$17.y = parseInt(this._host.style.top, 10);
-		_preferences$17.x = parseInt(this._host.style.left, 10);
+		_preferences$16.show = this._host.style.display !== "none";
+		_preferences$16.reduce = false;
+		_preferences$16.y = parseInt(this._host.style.top, 10);
+		_preferences$16.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$17.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$17.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$17.magnet_top = this.magnet.TOP;
-		_preferences$17.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$17.magnet_left = this.magnet.LEFT;
-		_preferences$17.magnet_right = this.magnet.RIGHT;
-		_preferences$17.save();
+		_preferences$16.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$16.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$16.magnet_top = this.magnet.TOP;
+		_preferences$16.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$16.magnet_left = this.magnet.LEFT;
+		_preferences$16.magnet_right = this.magnet.RIGHT;
+		_preferences$16.save();
 	};
 	/**
 	* Process shortcut
@@ -317595,7 +318116,7 @@ var init_ShortCuts = __esmMin((() => {
 					this._host.style.display = "";
 					this._fixPositionOverflow();
 				} else this._host.style.display = "none";
-				_getRoot$23().querySelectorAll(".macro_").forEach((el) => el.classList.remove("input_macro_focus"));
+				this.getRoot().querySelectorAll(".macro_").forEach((el) => el.classList.remove("input_macro_focus"));
 				if (this._host.style.display !== "none") this.focus();
 				break;
 			case "EXECUTE_MACRO_1":
@@ -317666,7 +318187,7 @@ var init_ShortCuts = __esmMin((() => {
 	ShortCuts.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
-		const content = _getRoot$23().querySelector(".container .content");
+		const content = ShortCuts.getRoot().querySelector(".container .content");
 		if (content) {
 			content.style.width = `${width * 32 + 13}px`;
 			content.style.height = `${height * 32}px`;
@@ -317690,12 +318211,6 @@ var init_StatusIcons$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/StatusIcons/StatusIcons.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$22() {
-	return StatusIcons._shadow || StatusIcons._host;
-}
 function addResizedStatusIcon(img, index) {
 	if (img.width < 33 && img.height < 33) {
 		_status[index].img = img;
@@ -317729,7 +318244,7 @@ function addResizedStatusIcon(img, index) {
 * Used when one element is removed.
 */
 function resetElementsPosition() {
-	const elements = _getRoot$22().querySelectorAll(".state");
+	const elements = StatusIcons.getRoot().querySelectorAll(".state");
 	const count = elements.length;
 	let x = 0;
 	let y = 0;
@@ -317796,7 +318311,7 @@ function createElement(index) {
 * @param {CanvasElement}
 */
 function addElement$4(element) {
-	const root = _getRoot$22();
+	const root = StatusIcons.getRoot();
 	const elements = root.querySelectorAll(".state");
 	const max = (Renderer.height - 166) / 36 | 0;
 	const count = elements.length;
@@ -317897,7 +318412,7 @@ var init_StatusIcons = __esmMin((() => {
 	* Clean up component
 	*/
 	StatusIcons.clean = function clean() {
-		const container = _getRoot$22().querySelector("#StatusIcons");
+		const container = StatusIcons.getRoot().querySelector("#StatusIcons");
 		if (container) container.innerHTML = "";
 		_status = {};
 		ScreenEffectManager.clean();
@@ -318244,11 +318759,11 @@ function onItemInfo$8(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$8(event) {
+function stopPropagation$7(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
-var CashShop, _preferences$16, CashShop_default;
+var CashShop, _preferences$15, CashShop_default;
 var init_CashShop$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -318271,7 +318786,7 @@ var init_CashShop$1 = __esmMin((() => {
 	* Store cash shop items
 	*/
 	CashShop.list = [];
-	_preferences$16 = Preferences.get("CashShop", {
+	_preferences$15 = Preferences.get("CashShop", {
 		x: 80,
 		y: 100,
 		magnet_top: false,
@@ -318332,7 +318847,7 @@ var init_CashShop$1 = __esmMin((() => {
 	CashShop.currentBannerIndex = 0;
 	CashShop.bannerRotationTime = 5e3;
 	CashShop.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$8);
+		this.ui.find(".titlebar .base").mousedown(stopPropagation$7);
 		this.ui.find(".titlebar .close").click(function() {
 			const pkt = new PACKET.CZ.CASH_SHOP_CLOSE();
 			Network.sendPacket(pkt);
@@ -318350,7 +318865,7 @@ var init_CashShop$1 = __esmMin((() => {
 		this.ui.on("click", "#cart-list .items .item .counter-btn", onClickActionCounterButtonCart);
 		this.ui.on("click", "#cart-list .items .item .delete-item", onClickDeleteItemInCart);
 		if (this.ui.find("#cart-list items").length > 0) CashShop.onResetCartListCashShop();
-		this.ui.on("dragover", stopPropagation$8).find(".panel-cart-body").on("drop", onDropToCart).on("dragover", stopPropagation$8).end().on("click", ".banner-dot", function(e) {
+		this.ui.on("dragover", stopPropagation$7).find(".panel-cart-body").on("drop", onDropToCart).on("dragover", stopPropagation$7).end().on("click", ".banner-dot", function(e) {
 			const index = parseInt(this.getAttribute("data-index"), 10);
 			CashShop.goToBanner(index);
 		}).on("click", ".banner-slide", function() {
@@ -318364,26 +318879,26 @@ var init_CashShop$1 = __esmMin((() => {
 	};
 	CashShop.onAppend = function OnAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$16.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$16.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$15.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$15.x), Renderer.width - this.ui.width())
 		});
-		this.magnet.TOP = _preferences$16.magnet_top;
-		this.magnet.BOTTOM = _preferences$16.magnet_bottom;
-		this.magnet.LEFT = _preferences$16.magnet_left;
-		this.magnet.RIGHT = _preferences$16.magnet_right;
+		this.magnet.TOP = _preferences$15.magnet_top;
+		this.magnet.BOTTOM = _preferences$15.magnet_bottom;
+		this.magnet.LEFT = _preferences$15.magnet_left;
+		this.magnet.RIGHT = _preferences$15.magnet_right;
 		CashShop.loadComponentCashShop();
 	};
 	/**
 	* Remove Cash shop
 	*/
 	CashShop.onRemove = function onRemove() {
-		_preferences$16.x = parseInt(this.ui.css("left"), 10);
-		_preferences$16.y = parseInt(this.ui.css("top"), 10);
-		_preferences$16.magnet_top = this.magnet.TOP;
-		_preferences$16.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$16.magnet_left = this.magnet.LEFT;
-		_preferences$16.magnet_right = this.magnet.RIGHT;
-		_preferences$16.save();
+		_preferences$15.x = parseInt(this.ui.css("left"), 10);
+		_preferences$15.y = parseInt(this.ui.css("top"), 10);
+		_preferences$15.magnet_top = this.magnet.TOP;
+		_preferences$15.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$15.magnet_left = this.magnet.LEFT;
+		_preferences$15.magnet_right = this.magnet.RIGHT;
+		_preferences$15.save();
 		CashShop.stopBannerRotation();
 		CashShop.csListItemSearchResult = [];
 		CashShop.cashShopBannerTable = [];
@@ -319357,7 +319872,7 @@ function onItemOut$4() {
 /**
 * Stop event propagation
 */
-function stopPropagation$7(event) {
+function stopPropagation$6(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -319535,7 +320050,7 @@ var init_LaphineSys = __esmMin((() => {
 		});
 		this.draggable(this.ui.find(".titlebar"));
 		this.ui.find(".close, .cancel").click(onRequestLaphineClose);
-		this.ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$7).on("dragstart", ".item", onItemDragStart$3).on("dragend", ".item", onItemDragEnd$3);
+		this.ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$6).on("dragstart", ".item", onItemDragStart$3).on("dragend", ".item", onItemDragEnd$3);
 		this.ui.find(".submit_button_enabled").click(onSubmitItem$1);
 		this.ui.find(".available_mat_list").on("click", ".item", onItemSelect$1).on("drop", onRemoveSubmitDrop$1);
 		this.ui.find(".left_panel").on("drop", onSubmitItemDrop$1);
@@ -319868,7 +320383,7 @@ function onItemOut$3() {
 /**
 * Stop event propagation
 */
-function stopPropagation$6(event) {
+function stopPropagation$5(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -320033,7 +320548,7 @@ var init_LaphineUpg = __esmMin((() => {
 		});
 		this.draggable(ui.find(".titlebar"));
 		ui.find(".close, .cancel").click(onRequestLaphineUpgClose);
-		ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$6).on("dragstart", ".item", onItemDragStart$2).on("dragend", ".item", onItemDragEnd$2);
+		ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$5).on("dragstart", ".item", onItemDragStart$2).on("dragend", ".item", onItemDragEnd$2);
 		ui.find(".submit_button_enabled").click(onSubmitItem);
 		ui.find(".available_mat_list").on("click", ".item", onItemSelect).on("drop", onRemoveSubmitDrop);
 		ui.find(".left_panel").on("drop", onSubmitItemDrop);
@@ -320133,6 +320648,10 @@ var init_Roulette$2 = __esmMin((() => {
 * Click on roulette icon
 */
 function onClickIcon() {
+	if (Roulette.ui.is(":visible")) {
+		Roulette.onClose();
+		return;
+	}
 	const pkt = new PACKET.CZ.REQ_OPEN_ROULETTE();
 	Network.sendPacket(pkt);
 	if (_responseTimeout) clearTimeout(_responseTimeout);
@@ -320141,33 +320660,36 @@ function onClickIcon() {
 	}, 2e3);
 }
 /**
-* Add button to MiniMap UI element
+* Create the roulette icon as a standalone light-DOM button.
+* NOTE: temporary light-DOM solution — should become its own
+* GUIComponent (like CashShopIcon) when Roulette is migrated.
 */
-function addButtonToMiniMap(miniMapUI) {
-	try {
-		if (miniMapUI.find(".rouletteIcon").length === 0) {
-			miniMapUI.append("<button class=\"rouletteIcon\"></button>");
-			miniMapUI.on("click", ".rouletteIcon", onClickIcon);
-			Client.loadFile(DB.INTERFACE_PATH + "basic_interface/roullette/RoulletteIcon.bmp", function(data) {
-				miniMapUI.find(".rouletteIcon").css({
-					backgroundImage: "url(" + data + ")",
-					backgroundSize: "contain",
-					backgroundRepeat: "no-repeat",
-					backgroundPosition: "center",
-					position: "absolute",
-					top: "57px",
-					left: "-45px",
-					width: "43px",
-					height: "43px",
-					border: "none"
-				});
-			});
-		}
-	} catch (e) {
-		console.error("[Roulette] Failed to add button:", e);
-	}
+function addRouletteIcon() {
+	if (_iconBtn) return;
+	_iconBtn = document.createElement("button");
+	_iconBtn.className = "rouletteIcon";
+	Object.assign(_iconBtn.style, {
+		position: "absolute",
+		top: "74px",
+		right: "145px",
+		width: "43px",
+		height: "43px",
+		border: "none",
+		backgroundColor: "transparent",
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "contain",
+		backgroundPosition: "center",
+		zIndex: "50",
+		cursor: "pointer"
+	});
+	_iconBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+	_iconBtn.addEventListener("click", onClickIcon);
+	document.body.appendChild(_iconBtn);
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/roullette/RoulletteIcon.bmp", function(data) {
+		if (_iconBtn) _iconBtn.style.backgroundImage = "url(" + data + ")";
+	});
 }
-var Roulette, _preferences$15, _rouletteInfo, _isSpinning, _responseTimeout, Roulette_default;
+var Roulette, _preferences$14, _rouletteInfo, _isSpinning, _responseTimeout, _iconBtn, Roulette_default;
 var init_Roulette$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -320183,7 +320705,7 @@ var init_Roulette$1 = __esmMin((() => {
 	init_Roulette$3();
 	init_Roulette$2();
 	Roulette = new UIComponent("Roulette", Roulette_default$2, Roulette_default$1);
-	_preferences$15 = Preferences.get("Roulette", {
+	_preferences$14 = Preferences.get("Roulette", {
 		x: 200,
 		y: 200,
 		show: false
@@ -320222,32 +320744,27 @@ var init_Roulette$1 = __esmMin((() => {
 	*/
 	Roulette.onAppend = function onAppend() {
 		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$15.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$15.x), Renderer.width - this.ui.width())
+			top: Math.min(Math.max(0, _preferences$14.y), Renderer.height - this.ui.height()),
+			left: Math.min(Math.max(0, _preferences$14.x), Renderer.width - this.ui.width())
 		});
-		if (!_preferences$15.show) this.ui.hide();
+		if (!_preferences$14.show) this.ui.hide();
 		if (ROConfig.enableRoulette === false) return;
 		if (PacketVerManager_default.value < 20141008) return;
-		let attempts = 0;
-		const maxAttempts = 20;
-		const tryAddButton = function() {
-			attempts++;
-			const miniMapComponent = Controller$5.getUI();
-			if (miniMapComponent && miniMapComponent.ui) {
-				clearTimeout(retryTimeout);
-				addButtonToMiniMap(miniMapComponent.ui);
-			} else if (attempts < maxAttempts) retryTimeout = setTimeout(tryAddButton, 500);
-		};
-		let retryTimeout = setTimeout(tryAddButton, 100);
+		addRouletteIcon();
 	};
+	_iconBtn = null;
 	/**
 	* Remove from DOM
 	*/
 	Roulette.onRemove = function onRemove() {
-		_preferences$15.show = this.ui.is(":visible");
-		_preferences$15.x = parseInt(this.ui.css("left"), 10);
-		_preferences$15.y = parseInt(this.ui.css("top"), 10);
-		_preferences$15.save();
+		if (_iconBtn) {
+			_iconBtn.remove();
+			_iconBtn = null;
+		}
+		_preferences$14.show = this.ui.is(":visible");
+		_preferences$14.x = parseInt(this.ui.css("left"), 10);
+		_preferences$14.y = parseInt(this.ui.css("top"), 10);
+		_preferences$14.save();
 	};
 	/**
 	* Open Roulette Window
@@ -320431,14 +320948,14 @@ var init_PCGoldTimer$1 = __esmMin((() => {
 	* Initialize component and bind click event
 	*/
 	PCGoldTimer.init = function init() {
-		const container = (this._shadow || this._host).querySelector(".container");
+		const container = this.getRoot().querySelector(".container");
 		if (container) container.addEventListener("click", onClickPCGoldTimer);
 	};
 	/**
 	* Apply preferences once append to body
 	*/
 	PCGoldTimer.onAppend = function onAppend() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/${_data.backgroundImage}`, function(url) {
 			const container = root.querySelector(".container");
 			if (container) container.style.backgroundImage = `url(${url})`;
@@ -320466,7 +320983,7 @@ var init_PCGoldTimer$1 = __esmMin((() => {
 		SessionStorage_default.PCGoldTimer = _data;
 	};
 	PCGoldTimer.startTimer = function startTimer() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		this.timer = setInterval(function() {
 			const millisecondsMissing = 3600 * 1e3 - (Date.now() - _data.startTime + _data.playedTime * 1e3);
 			let text = PCGoldTimer.formatTime(millisecondsMissing);
@@ -320497,480 +321014,6 @@ var init_PCGoldTimer$1 = __esmMin((() => {
 	};
 	PCGoldTimer.needFocus = false;
 	PCGoldTimer_default = UIManager.addComponent(PCGoldTimer);
-}));
-//#endregion
-//#region src/UI/Components/Reputation/Reputation.html?raw
-var Reputation_default$2;
-var init_Reputation$2 = __esmMin((() => {
-	Reputation_default$2 = "<div id=\"Reputation\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"3827\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overall_container\">\r\n		<div class=\"header\">\r\n			<div class=\"select-wrapper\">\r\n				<select id=\"repute_groups\" class=\"rep_group_selector\">\r\n					<option value=\"all\" data-text=\"3829\"></option>\r\n				</select>\r\n				<button\r\n					type=\"button\"\r\n					class=\"select-arrow\"\r\n					data-background=\"basic_interface/txtbox_btn_a.bmp\"\r\n					data-hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n					data-down=\"basic_interface/txtbox_btn_c.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"search_wrapper\">\r\n				<input class=\"rep_group_searchbar\" type=\"text\" />\r\n				<button\r\n					class=\"search\"\r\n					data-background=\"reputation/btn_search.bmp\"\r\n					data-hover=\"reputation/btn_search_over.bmp\"\r\n					data-down=\"reputation/btn_search_press.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"rep_group_total_points_wrapper\">\r\n				<div class=\"rep_group_text\">GROUP:</div>\r\n				<div class=\"rep_indicator\"></div>\r\n				<div class=\"rep_group_total_points_value\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"content\"></div>\r\n		<div class=\"paginator\">\r\n			<button class=\"page_prev\" data-background=\"reputation/arrow_prev.bmp\"></button>\r\n			<span class=\"page_text\">1 / 1</span>\r\n			<button class=\"page_next\" data-background=\"reputation/arrow_next.bmp\"></button>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button\r\n				class=\"big_btn_close\"\r\n				data-background=\"basic_interface/btn_close.bmp\"\r\n				data-hover=\"basic_interface/btn_close_a.bmp\"\r\n				data-down=\"basic_interface/btn_close_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Reputation/Reputation.css?raw
-var Reputation_default$1;
-var init_Reputation$1 = __esmMin((() => {
-	Reputation_default$1 = "#Reputation {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 665px;\r\n	height: 450px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Reputation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Reputation .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Reputation .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Reputation .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Reputation .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Reputation .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Reputation .overall_container {\r\n	display: flex;\r\n	flex-direction: column;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Reputation .header {\r\n	display: flex;\r\n	gap: 6px;\r\n}\r\n\r\n#Reputation .select-wrapper {\r\n	position: relative;\r\n	display: inline-block;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_selector {\r\n	width: 140px;\r\n	padding-right: 36px;\r\n	height: 18px;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .select-arrow {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 18px;\r\n	height: 18px;\r\n	border: none;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n#Reputation .search_wrapper {\r\n	height: 18px;\r\n	width: 235px;\r\n	margin-top: 5px;\r\n	display: inline-block;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_searchbar {\r\n	height: 14px;\r\n	width: 196px;\r\n	border: 1px solid black;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .search {\r\n	height: 18px;\r\n	width: 33px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#Reputation .rep_group_total_points_wrapper {\r\n	width: 245px;\r\n	border: 1px solid black;\r\n	margin-top: 5px;\r\n	background-color: #eeeeef;\r\n	align-items: center;\r\n	display: flex;\r\n}\r\n\r\n#Reputation .rep_group_text {\r\n	width: 50px;\r\n}\r\n\r\n#Reputation .rep_indicator {\r\n	width: 40px;\r\n	height: 100%;\r\n	background: no-repeat center;\r\n}\r\n\r\n#Reputation .rep_group_total_points_value {\r\n	margin-left: 5px;\r\n	margin-right: 5px;\r\n	width: 100%;\r\n	text-align: right;\r\n}\r\n\r\n#Reputation .content {\r\n	min-height: 350px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-wrap: wrap;\r\n	flex-basis: content;\r\n	align-content: flex-start;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Reputation .rep_group_wrapper {\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	width: 313px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_name {\r\n	margin-left: 5px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_indicator_wrapper {\r\n	display: flex;\r\n	height: 17px;\r\n	gap: 2px;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n\r\n#Reputation .rep_group_indicator {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#Reputation .rep_group_progess_bar {\r\n	height: 8px;\r\n	margin-top: 10px;\r\n	margin-left: 3px;\r\n	width: 97%;\r\n}\r\n\r\n#Reputation .rep_id_points {\r\n	width: 80px;\r\n	height: 20px;\r\n	margin-top: 5px;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n	text-align: center;\r\n}\r\n\r\n#Reputation .paginator {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	gap: 8px;\r\n	height: 30px;\r\n	margin-right: 25px;\r\n}\r\n\r\n#Reputation .paginator button {\r\n	width: 7px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .footer {\r\n	height: 28px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 3px 3px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n}\r\n\r\n#Reputation .big_btn_close {\r\n	height: 20px;\r\n	width: 42px;\r\n	border: none;\r\n	margin-top: 5px;\r\n	margin-right: 10px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Reputation/Reputation.js
-/**
-* Build the group selector based on the ReputeGroupTable in DB
-* Append a new <option> element for each group in the table
-* The option element will have the class 'repute_group_<groupIndex>'
-* The option element will have the value '<groupIndex>'
-* The option element will have the text content '<group.Name>'
-*/
-function buildGroupSelector() {
-	const groupSelector = Reputation.ui.find("#repute_groups");
-	const ReputeGroupTable = DB.getReputeGroup();
-	Object.entries(ReputeGroupTable).forEach(([groupIndex, group]) => {
-		const option = document.createElement("option");
-		option.className = "repute_group_" + groupIndex;
-		option.value = groupIndex;
-		option.textContent = group.Name;
-		groupSelector.append(option);
-	});
-}
-/**
-* Bind the group selector with the reputation page
-*
-* When the group selector changes, it will update the total points display
-* and re-render the reputation entries for the selected group
-*/
-function bindGroupSelector() {
-	Reputation.ui.find("#repute_groups").on("change", function() {
-		const selectedGroup = this.value;
-		updateGroupTotalPoints(selectedGroup);
-		Reputation.ui.find(".rep_group_searchbar").val("");
-		filterByGroup(selectedGroup);
-	});
-}
-/**
-* Bind search functionality to the input field and button
-*
-* Listens for the enter key on the search input field and performs a search
-* when the enter key is pressed. Listens for a click on the search button and
-* performs a search when the button is clicked.
-*
-*/
-function bindSearch() {
-	const input = Reputation.ui.find(".rep_group_searchbar");
-	const button = Reputation.ui.find(".search");
-	input.on("keydown", function(e) {
-		if (e.key === "Enter") performSearch(this.value.trim());
-	});
-	button.on("click", function() {
-		performSearch(input.val().trim());
-	});
-}
-/**
-* Build all reputation entries once
-*
-* Empties the content container and re-renders all reputation entries
-* using the createReputationEntry function. It also updates the UI state
-* of each entry with the current points value.
-*
-* @return {void}
-*/
-function buildAllReputeEntries() {
-	const content = Reputation.ui.find(".content");
-	const reputeIds = Object.keys(DB.getReputeInfo()).map(Number);
-	Reputation.page.reputeIds = reputeIds;
-	content.empty();
-	reputeIds.forEach((reputeId) => {
-		const info = DB.getReputeData(reputeId);
-		if (!info) return;
-		const points = Reputation.reputeState?.[reputeId] || 0;
-		const entry = createReputeEntry(reputeId, info);
-		entry.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
-		content.append(entry);
-		updateReputeUI(reputeId, points);
-	});
-}
-/**
-* Update the total points display for a given group id
-* @param {string} groupId - The ID of the group to update (or 'all' for all entries)
-*/
-function updateGroupTotalPoints(groupId) {
-	const wrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	const indicator = wrapper.find(".rep_indicator");
-	const pointsValue = wrapper.find(".rep_group_total_points_value");
-	if (groupId === "all") {
-		wrapper.hide();
-		return;
-	}
-	wrapper.show();
-	let reputeIds = DB.getReputeGroupList(groupId);
-	if (reputeIds && typeof reputeIds === "object") reputeIds = Object.values(reputeIds);
-	if (!reputeIds || !reputeIds.length) {
-		indicator.css("background-image", `url(${indicator_empty})`);
-		pointsValue.text("0");
-		return;
-	}
-	let totalPoints = 0;
-	reputeIds.forEach((reputeId) => {
-		totalPoints += Reputation.reputeState?.[reputeId] || 0;
-	});
-	if (totalPoints > 0) indicator.css("background-image", `url(${indicator_blue})`);
-	else if (totalPoints < 0) indicator.css("background-image", `url(${indicator_red})`);
-	else indicator.css("background-image", `url(${indicator_empty})`);
-	pointsValue.text(`${totalPoints} P`);
-}
-/**
-* Checks if a reputation entry is visible based on the info.Invisible value and the current points value
-* @param {object} info - The reputation entry info object
-* @param {number} points - The current points value of the reputation entry
-* @returns {boolean} True if the reputation entry is visible, false otherwise
-*/
-function isReputeVisible(info, points) {
-	switch (info.Invisible) {
-		case "VISIBLE_FALSE": return false;
-		case "VISIBLE_EXIST": return points !== 0;
-		default: return true;
-	}
-}
-/**
-* Filters the reputation entries based on the given group ID
-* If the group ID is 'all', shows all entries
-* If the group ID is not 'all', shows only the entries that belong to the group and updates the total points wrapper
-* @param {string} groupId - The ID of the group to filter by
-*/
-function filterByGroup(groupId) {
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	if (groupId === "all") {
-		items.each(function() {
-			const el = this;
-			const reputeId = Number(el.dataset.reputeId);
-			const info = DB.getReputeData(reputeId);
-			const points = Reputation.reputeState?.[reputeId] || 0;
-			el.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
-		});
-		totalWrapper.hide();
-	} else {
-		const groupList = Object.values(DB.getReputeGroupList(groupId) || {});
-		items.each(function() {
-			const el = this;
-			const reputeId = Number(el.dataset.reputeId);
-			const info = DB.getReputeData(reputeId);
-			const points = Reputation.reputeState?.[reputeId] || 0;
-			el.dataset.visible = groupList.includes(reputeId) && isReputeVisible(info, points) ? "true" : "false";
-		});
-		updateGroupTotalPoints(groupId);
-		totalWrapper.show();
-	}
-	const visibleIds = items.filter((i, el) => el.dataset.visible === "true").map((i, el) => Number(el.dataset.reputeId)).get();
-	Reputation.page.reputeIds = visibleIds;
-	Reputation.page.current = 0;
-	renderReputePage(0);
-}
-/**
-* Update the reputation pager UI.
-*
-* This function is called after the reputation entries have been updated.
-* It updates the pager UI to reflect the current page and total number of pages.
-*/
-function updateReputePager() {
-	const total = Reputation.page.reputeIds.length;
-	const perPage = Reputation.page.perPage;
-	const totalPages = Math.max(1, Math.ceil(total / perPage));
-	const current = Reputation.page.current + 1;
-	const paginator = Reputation.ui.find(".paginator");
-	const prevBtn = paginator.find(".page_prev");
-	const nextBtn = paginator.find(".page_next");
-	paginator.find(".page_text").text(`${current} / ${totalPages}`);
-	prevBtn.css("visibility", current === 1 ? "hidden" : "visible");
-	nextBtn.css("visibility", current === totalPages ? "hidden" : "visible");
-	if (totalPages === 1) prevBtn.add(nextBtn).css("visibility", "hidden");
-}
-/**
-* Render a page of reputation entries based on current page index.
-*
-* Hides all entries first, then shows only visible entries within the current page.
-* Updates the pager afterwards.
-*
-* @param {number} pageIndex - current page index (starts from 0)
-*/
-function renderReputePage(pageIndex) {
-	const { perPage } = Reputation.page;
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	Reputation.page.current = pageIndex;
-	items.hide();
-	const visibleItems = items.filter((i, el) => el.dataset.visible === "true");
-	const start = pageIndex * perPage;
-	const end = start + perPage;
-	const pageItems = visibleItems.slice(start, end);
-	pageItems.show();
-	if (Reputation.highlight.active && !Reputation.highlight.consumed) pageItems.each(function() {
-		const el = this;
-		if (Number(el.dataset.reputeId) === Reputation.highlight.reputeId) {
-			el.style.backgroundImage = `url(${bg_highlight})`;
-			Reputation.highlight.consumed = true;
-			Reputation.highlight.active = false;
-		}
-	});
-	else clearHighlights();
-	updateReputePager();
-}
-/**
-* Create a reputation entry element from given info
-* @param {number} reputeId - reputation id
-* @param {object} info - reputation info
-* @returns {HTMLDivElement} created element
-*/
-function createReputeEntry(reputeId, info) {
-	const wrapper = document.createElement("div");
-	wrapper.className = "rep_group_wrapper";
-	wrapper.dataset.reputeId = reputeId;
-	wrapper.style.backgroundImage = "url(" + bg + ")";
-	const name = document.createElement("div");
-	name.className = "rep_group_name";
-	name.textContent = info.Name;
-	wrapper.appendChild(name);
-	const indicatorWrapper = document.createElement("div");
-	indicatorWrapper.className = "rep_group_indicator_wrapper";
-	const indicatorCount = info.MaxPoint_Positive / 1e3;
-	for (let i = 1; i <= indicatorCount; i++) {
-		const indicator = document.createElement("div");
-		indicator.className = `rep_group_indicator indicator_${i}`;
-		indicator.dataset.index = i;
-		indicator.style.backgroundImage = `url(${indicator_empty})`;
-		indicatorWrapper.appendChild(indicator);
-	}
-	wrapper.appendChild(indicatorWrapper);
-	const progress = document.createElement("div");
-	progress.className = "rep_group_progess_bar";
-	wrapper.appendChild(progress);
-	const points = document.createElement("div");
-	points.className = "rep_id_points";
-	points.textContent = "0 / 1000";
-	wrapper.appendChild(points);
-	return wrapper;
-}
-/**
-* Update the UI of a specific Repute entry
-* @param {string} reputeId - The ID of the Repute entry to update
-* @param {number} points - The points to update the UI with
-*/
-function updateReputeUI(reputeId, points) {
-	const wrapper = Reputation.ui.find(`.rep_group_wrapper[data-repute-id="${reputeId}"]`);
-	if (!wrapper.length) return;
-	const indicators = wrapper.find(".rep_group_indicator");
-	const absPoints = Math.abs(points);
-	const fullIndicators = Math.floor(absPoints / 1e3);
-	const remainder = absPoints % 1e3;
-	indicators.each(function(index) {
-		this.style.backgroundImage = index < fullIndicators ? points >= 0 ? `url(${indicator_blue})` : `url(${indicator_red})` : `url(${indicator_empty})`;
-	});
-	wrapper.find(".rep_id_points").text(`${remainder} / 1000`);
-	const progress = wrapper.find(".rep_group_progess_bar");
-	const percent = remainder / 1e3 * 100;
-	const fillColor = points >= 0 ? "#7b95ce" : "#f60206";
-	progress.css("background-image", `linear-gradient(
-				to right,
-				${fillColor} 0%,
-				${fillColor} ${percent}%,
-				transparent ${percent}%
-			)`);
-}
-/**
-* Perform search on the reputation entries based on the given query.
-* If the query is empty, reset the search and show all entries.
-* Otherwise, filter the entries based on whether the entry name matches the query (case-insensitive) and whether the entry is visible.
-* @param {string} query - The search query to filter the reputation entries with
-*/
-function performSearch(query) {
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	const groupSelector = Reputation.ui.find("#repute_groups");
-	if (!query) {
-		groupSelector.val("all");
-		totalWrapper.hide();
-		filterByGroup("all");
-		return;
-	}
-	const lowerQuery = query.toLowerCase();
-	const visibleIds = [];
-	items.each(function() {
-		const el = this;
-		const reputeId = Number(el.dataset.reputeId);
-		const info = DB.getReputeData(reputeId);
-		const points = Reputation.reputeState?.[reputeId] || 0;
-		const show = info?.Name.toLowerCase().includes(lowerQuery) && isReputeVisible(info, points);
-		el.dataset.visible = show ? "true" : "false";
-		if (show) visibleIds.push(reputeId);
-	});
-	Reputation.page.reputeIds = visibleIds;
-	Reputation.page.current = 0;
-	renderReputePage(0);
-}
-/**
-* Closing window
-*/
-function onClose$4() {
-	Reputation.ui.hide();
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$5(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Packet received from server
-* Initializes the Reputation UI
-* Store the initial values received from the server and update UI
-* If UI is open, update UI
-* @param {object} pkt - PACKET.ZC.REPUTE_INFO
-*/
-function onReputeInfo(pkt) {
-	if (!Reputation.__active) {
-		Reputation.append();
-		Reputation.ui.hide();
-	}
-	const selectedGroup = Reputation.ui.find("#repute_groups").val();
-	let updateSelectedGroup = false;
-	pkt.reputeInfo.forEach((entry) => {
-		Reputation.reputeState[entry.type] = entry.points;
-		updateReputeUI(entry.type, entry.points);
-		if (selectedGroup && selectedGroup !== "all") {
-			if (Object.values(DB.getReputeGroupList(selectedGroup) || {}).includes(entry.type)) updateSelectedGroup = true;
-		}
-	});
-	if (updateSelectedGroup) updateGroupTotalPoints(selectedGroup);
-}
-/**
-* Sets up Highlight, selects the given group,
-* and filters the reputation entries normally
-*
-* @param {object} pkt - PACKET.ZC.REPUTE_OPEN
-*/
-function onReputeOpen(pkt) {
-	const groupId = pkt.table === 0 ? "all" : pkt.table;
-	const highlightId = pkt.type || null;
-	Reputation.highlight.reputeId = highlightId;
-	Reputation.highlight.active = !!highlightId;
-	Reputation.highlight.consumed = false;
-	Reputation.ui.find("#repute_groups").val(groupId);
-	filterByGroup(groupId);
-	Reputation.ui.show();
-}
-/**
-* Clears all highlight effects from the reputation entries.
-* This function is called when the reputation window is opened.
-* It resets the background image and removes the highlight property from all entries.
-*/
-function clearHighlights() {
-	Reputation.ui.find(".rep_group_wrapper").each(function() {
-		this.style.backgroundImage = `url(${bg})`;
-		this.dataset.highlight = "false";
-	});
-}
-var Reputation, _preferences$14, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
-var init_Reputation = __esmMin((() => {
-	init_DBManager();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_Client();
-	init_Preferences$1();
-	init_UIManager();
-	init_UIComponent();
-	init_Reputation$2();
-	init_Reputation$1();
-	Reputation = new UIComponent("Reputation", Reputation_default$2, Reputation_default$1);
-	_preferences$14 = Preferences.get("Reputation", {
-		x: 400,
-		y: 200,
-		show: true
-	}, 1);
-	/**
-	* @var Reputation UI
-	* Store Pagination Data
-	*/
-	Reputation.page = {
-		current: 0,
-		perPage: 8,
-		reputeIds: []
-	};
-	/**
-	* @var Reputation UI
-	* Store ReputeID and Points
-	*/
-	Reputation.reputeState = {};
-	/**
-	* @var Reputation UI
-	* Store Variables for Highlighted ReputeID
-	*/
-	Reputation.highlight = {
-		reputeId: null,
-		active: false,
-		consumed: false
-	};
-	/**
-	* Initialize component
-	*/
-	Reputation.init = function init() {
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_info.bmp", (d) => bg = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_highlight.bmp", (d) => bg_highlight = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_empty.bmp", (d) => indicator_empty = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
-		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
-		this.draggable(this.ui);
-		this.ui.find(".base").mousedown(stopPropagation$5);
-		this.ui.find(".close").click(onClose$4);
-		this.ui.find(".big_btn_close").click(onClose$4);
-		const paginator = Reputation.ui.find(".paginator");
-		paginator.find(".page_prev").on("click", () => {
-			if (Reputation.page.current > 0) renderReputePage(Reputation.page.current - 1);
-		});
-		paginator.find(".page_next").on("click", () => {
-			const maxPage = Math.ceil(Reputation.page.reputeIds.length / Reputation.page.perPage);
-			if (Reputation.page.current < maxPage - 1) renderReputePage(Reputation.page.current + 1);
-		});
-	};
-	/**
-	* Called when the component is appended to the body.
-	* Initializes the reputation system by building the group selector,
-	* binding group selector events and rendering the default view.
-	*/
-	Reputation.onAppend = function onAppend() {
-		buildGroupSelector();
-		bindGroupSelector();
-		bindSearch();
-		buildAllReputeEntries();
-		filterByGroup("all");
-	};
-	/**
-	* Once remove from body, save user preferences
-	*/
-	Reputation.onRemove = function onRemove() {
-		_preferences$14.show = this.ui.is(":visible");
-		_preferences$14.y = parseInt(this.ui.css("top"), 10);
-		_preferences$14.x = parseInt(this.ui.css("left"), 10);
-		_preferences$14.save();
-	};
-	/**
-	* Request to toggle open/close reputation
-	*/
-	Reputation.toggle = function toggle() {
-		const selector = Reputation.ui.find("#repute_groups");
-		const searchInput = Reputation.ui.find(".rep_group_searchbar");
-		if (Reputation.ui.is(":visible")) {
-			Reputation.ui.hide();
-			return;
-		}
-		selector.val("all");
-		searchInput.val("");
-		filterByGroup("all");
-		Reputation.page.current = 0;
-		Reputation.ui.show();
-	};
-	/**
-	* Packet Hooks to functions
-	*/
-	Network.hookPacket(PACKET.ZC.REPUTE_INFO, onReputeInfo);
-	Network.hookPacket(PACKET.ZC_REPUTE_OPEN, onReputeOpen);
-	Reputation_default = UIManager.addComponent(Reputation);
 }));
 //#endregion
 //#region src/UI/Components/MapName/MapName.html?raw
@@ -321037,7 +321080,7 @@ var init_MapName = __esmMin((() => {
 	*/
 	MapName.setMap = function setMap(mapname) {
 		if (!this.__loaded) this.prepare();
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		_prevMap = _currMap;
 		_currMap = mapname;
 		_newMap = _currMap !== _prevMap;
@@ -321058,8 +321101,8 @@ var init_MapName = __esmMin((() => {
 	* Remove MapName from window (and so clean up items)
 	*/
 	MapName.onRemove = function OnRemove() {
-		if (!this._shadow && !this._host) return;
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
+		if (!root) return;
 		root.querySelector(".mapbg").style.backgroundImage = "none";
 		root.querySelector(".mapsubtitle").textContent = "";
 		root.querySelector(".maptitle").textContent = "";
@@ -321282,7 +321325,7 @@ var init_Clan$1 = __esmMin((() => {
 	Clan.render = () => Clan_default$2;
 	Clan.init = function init() {
 		this.draggable(".titlebar");
-		const closeBtn = (this._shadow || this._host).querySelector(".close");
+		const closeBtn = this.getRoot().querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => Clan.toggle());
@@ -321318,8 +321361,9 @@ var init_Clan$1 = __esmMin((() => {
 		this.ui.hide();
 	};
 	Clan.setData = function setData(clan) {
-		if (!this._shadow && !this._host) return;
-		const info = (this._shadow || this._host).querySelector(".content.info");
+		const root = this.getRoot();
+		if (!root) return;
+		const info = root.querySelector(".content.info");
 		if (!info) return;
 		info.querySelector(".name .value").textContent = clan.name;
 		info.querySelector(".level .value").textContent = clan.level;
@@ -321330,38 +321374,41 @@ var init_Clan$1 = __esmMin((() => {
 		info.querySelector(".territory .value").textContent = territory.charAt(0).toUpperCase() + territory.slice(1);
 	};
 	Clan.setMembersCount = function setMembersCount(members) {
-		if (!this._shadow && !this._host) return;
-		const info = (this._shadow || this._host).querySelector(".content.info");
+		const root = this.getRoot();
+		if (!root) return;
+		const info = root.querySelector(".content.info");
 		if (!info) return;
 		info.querySelector(".members .online").textContent = members.membersOnline;
 		info.querySelector(".members .maxMember").textContent = members.membersTotal;
 	};
 	Clan.setIllust = function setIllust(id) {
-		if (!this._shadow && !this._host) return;
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
+		if (!root) return;
 		Client.loadFile(`${DB.INTERFACE_PATH}clan_system/clan_illust${id.toString().padStart(2, "0")}.bmp`, (data) => {
 			const el = root.querySelector(".clan_illust");
 			if (el) el.style.backgroundImage = "url(" + data + ")";
 		});
 	};
 	Clan.setEmblem = function setEmblem(id) {
-		if (!this._shadow && !this._host) return;
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
+		if (!root) return;
 		Client.loadFile(`${DB.INTERFACE_PATH}clan_system/clan_emblem${id.toString().padStart(2, "0")}.bmp`, (data) => {
 			const el = root.querySelector(".emblem_container");
 			if (el) el.style.backgroundImage = "url(" + data + ")";
 		});
 	};
 	Clan.setRelations = function setRelations(type, clans) {
-		if (!this._shadow && !this._host) return;
-		const list = (this._shadow || this._host).querySelector(`.${type === 0 ? "ally" : "hostile"}_list`);
+		const root = this.getRoot();
+		if (!root) return;
+		const list = root.querySelector(`.${type === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		list.innerHTML = "";
 		for (let i = 0; i < clans.length; i++) this.addRelation(type, clans[i]);
 	};
 	Clan.addRelation = function addRelation(type, clan) {
-		if (!this._shadow && !this._host) return;
-		const list = (this._shadow || this._host).querySelector(`.${type === 0 ? "ally" : "hostile"}_list`);
+		const root = this.getRoot();
+		if (!root) return;
+		const list = root.querySelector(`.${type === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const div = document.createElement("div");
 		div.dataset.clanId = clan;
@@ -321437,12 +321484,6 @@ var init_PvPTimer$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PvPTimer/PvPTimer.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$21() {
-	return PvPTimer._shadow || PvPTimer._host;
-}
 /**
 * Pick layers from act
 * @param {Object} act
@@ -321555,7 +321596,7 @@ var init_PvPTimer = __esmMin((() => {
 			_timeAtkAct = aAct;
 			_timeAtkSpr = aSpr;
 		});
-		const root = _getRoot$21();
+		const root = this.getRoot();
 		_timerCanvas = root.querySelector(".pvp-timer-canvas");
 		_taCanvas = root.querySelector(".pvp-timeattack-canvas");
 		if (!_timerCanvas || !_taCanvas) return;
@@ -321612,12 +321653,6 @@ var init_PvPCount$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PvPCount/PvPCount.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$20() {
-	return PvPCount._shadow || PvPCount._host;
-}
 /**
 * Pick layers from act
 * @param {Object} act
@@ -321697,7 +321732,7 @@ var init_PvPCount = __esmMin((() => {
 			_rankfontAct = rAct;
 			_rankfontSpr = rSpr;
 		});
-		_rankCanvas = _getRoot$20().querySelector(".pvp-rank-canvas");
+		_rankCanvas = this.getRoot().querySelector(".pvp-rank-canvas");
 		if (!_rankCanvas) return;
 		_rankCanvas.width = RANK_W;
 		_rankCanvas.height = RANK_H;
@@ -321911,7 +321946,7 @@ function createPlayerViewEquip({ name, cssText, hasTabs, costumeRows, costumeTab
 	let charName, jobID, headID, sexID, bodypalID, headpalID;
 	let _root, _overlay, _panel;
 	Component.init = function init() {
-		_root = this._shadow || this._host;
+		_root = this.getRoot();
 		_overlay = _root.querySelector(".overlay");
 		_panel = _root.querySelector(".panel");
 		_vieweqctx.length = 0;
@@ -322333,7 +322368,7 @@ var init_CashShopIcon = __esmMin((() => {
 	* One-time setup — bind events here (runs once during prepare)
 	*/
 	CashShopIcon.init = function init() {
-		const btn = (this._shadow || this._host).querySelector(".cashshop-icon");
+		const btn = this.getRoot().querySelector(".cashshop-icon");
 		if (btn) {
 			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			btn.addEventListener("click", onClickCashShopIcon);
@@ -323368,170 +323403,6 @@ var init_MapState = __esmMin((() => {
 	MapFlag = MapState_default.MapFlag;
 }));
 //#endregion
-//#region src/UI/Components/NpcMenu/NpcMenu.html?raw
-var NpcMenu_default$2;
-var init_NpcMenu$2 = __esmMin((() => {
-	NpcMenu_default$2 = "<div id=\"NpcMenu\">\r\n	<div class=\"container\">\r\n		<div class=\"middle\">\r\n			<span class=\"title\"></span>\r\n			<div class=\"content\"></div>\r\n		</div>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcMenu/NpcMenu.css?raw
-var NpcMenu_default$1;
-var init_NpcMenu$1 = __esmMin((() => {
-	NpcMenu_default$1 = ":host {\r\n	width: 276px;\r\n	height: 116px;\r\n	top: 285px;\r\n	left: 100px;\r\n}\r\n\r\n#NpcMenu {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	width: 276px;\r\n	height: 116px;\r\n	background-color: white;\r\n	padding: 2px;\r\n}\r\n\r\n#NpcMenu .title {\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	display: block;\r\n	width: 260px;\r\n	padding-left: 3px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#NpcMenu .container {\r\n	border-radius: 5px;\r\n	border: 1px solid #c1c6c2;\r\n	width: 269px;\r\n	height: 109px;\r\n	padding-left: 5px;\r\n	padding-top: 5px;\r\n}\r\n\r\n#NpcMenu .middle {\r\n	overflow-x: hidden;\r\n	overflow-y: scroll;\r\n}\r\n\r\n#NpcMenu .content {\r\n	white-space: pre-wrap;\r\n	background-color: #f9f9f9;\r\n	width: 260px;\r\n	height: 80px;\r\n	padding-left: 3px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#NpcMenu .content div {\r\n	width: auto;\r\n	height: 17px;\r\n	display: block;\r\n	padding-top: 3px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#NpcMenu .content div.selected {\r\n	background-color: #cde0ff;\r\n}\r\n\r\n#NpcMenu .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 5px;\r\n}\r\n\r\n#NpcMenu .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#NpcMenu .ok {\r\n	right: 50px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcMenu/NpcMenu.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$19() {
-	return NpcMenu._shadow || NpcMenu._host;
-}
-/**
-* Helper: escape HTML
-*/
-function _escapeHTML$1(text) {
-	const div = document.createElement("div");
-	div.textContent = text;
-	return div.innerHTML;
-}
-/**
-* Submit an index
-*/
-function validate() {
-	NpcMenu.onSelectMenu(_ownerID, _index$4 + 1);
-}
-/**
-* Pressed cancel, client send "255" as value
-*/
-function cancel$9() {
-	NpcMenu.onSelectMenu(_ownerID, 255);
-}
-/**
-* Select an index, change background color
-*/
-function selectIndex(div) {
-	_getRoot$19().querySelector(".content").querySelectorAll("div").forEach((d) => d.classList.remove("selected"));
-	div.classList.add("selected");
-	_index$4 = parseInt(div.dataset.index, 10);
-}
-var NpcMenu, _index$4, _ownerID, NpcMenu_default;
-var init_NpcMenu = __esmMin((() => {
-	init_KeyEventHandler();
-	init_DBManager();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_NpcMenu$2();
-	init_NpcMenu$1();
-	NpcMenu = new GUIComponent("NpcMenu", NpcMenu_default$1);
-	NpcMenu.render = () => NpcMenu_default$2;
-	/**
-	* Freeze mouse — NPC menu blocks interaction
-	*/
-	NpcMenu.mouseMode = GUIComponent.MouseMode.FREEZE;
-	_index$4 = 0;
-	_ownerID = 0;
-	/**
-	* Initialize component
-	*/
-	NpcMenu.init = function init() {
-		const root = _getRoot$19();
-		const okBtn = root.querySelector(".ok");
-		if (okBtn) okBtn.addEventListener("click", () => validate());
-		const cancelBtn = root.querySelector(".cancel");
-		if (cancelBtn) cancelBtn.addEventListener("click", () => cancel$9());
-		this._host.style.top = `${Math.max(376, Renderer.height / 2 + 76)}px`;
-		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
-		this.draggable();
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("mousedown", (e) => {
-				const div = e.target.closest("div");
-				if (div && content.contains(div)) selectIndex(div);
-				e.stopImmediatePropagation();
-			});
-			content.addEventListener("dblclick", (e) => {
-				const div = e.target.closest("div");
-				if (div && content.contains(div)) validate();
-			});
-		}
-	};
-	/**
-	* Clean up events
-	*/
-	NpcMenu.onRemove = function onRemove() {
-		const content = _getRoot$19().querySelector(".content");
-		if (content) content.innerHTML = "";
-	};
-	/**
-	* Bind KeyDown event
-	*/
-	NpcMenu.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display === "none") return true;
-		const content = _getRoot$19().querySelector(".content");
-		switch (event.which) {
-			case KEYS.SPACE:
-			case KEYS.ENTER:
-				validate();
-				break;
-			case KEYS.ESCAPE:
-				cancel$9();
-				break;
-			case KEYS.UP: {
-				const divs = content.querySelectorAll("div");
-				_index$4 = Math.max(_index$4 - 1, 0);
-				divs.forEach((d) => d.classList.remove("selected"));
-				if (divs[_index$4]) divs[_index$4].classList.add("selected");
-				const top = _index$4 * 20;
-				if (top < content.scrollTop) content.scrollTop = top;
-				break;
-			}
-			case KEYS.DOWN: {
-				const divs = content.querySelectorAll("div");
-				const count = divs.length;
-				_index$4 = Math.min(_index$4 + 1, count - 1);
-				divs.forEach((d) => d.classList.remove("selected"));
-				if (divs[_index$4]) divs[_index$4].classList.add("selected");
-				const top = _index$4 * 20;
-				if (top >= content.scrollTop + 80) content.scrollTop = top - 60;
-				break;
-			}
-			default: return true;
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	/**
-	* Initialize menu
-	*
-	* @param {string} menu
-	* @param {number} gid - npc id
-	*/
-	NpcMenu.setMenu = function setMenu(menu, gid) {
-		const content = _getRoot$19().querySelector(".content");
-		const list = menu.split(":");
-		_ownerID = gid;
-		_index$4 = 0;
-		content.innerHTML = "";
-		let j = 0;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].length) {
-			const div = document.createElement("div");
-			div.innerHTML = DB.formatMsgToHtml(_escapeHTML$1(list[i]));
-			div.dataset.index = j++;
-			content.appendChild(div);
-		}
-		const first = content.querySelector("div");
-		if (first) first.classList.add("selected");
-	};
-	/**
-	* Abstract callback to define
-	*/
-	NpcMenu.onSelectMenu = function onSelectMenu() {};
-	NpcMenu_default = UIManager.addComponent(NpcMenu);
-}));
-//#endregion
 //#region src/UI/Components/WinPopup/WinPopup.html?raw
 var WinPopup_default$2;
 var init_WinPopup$2 = __esmMin((() => {
@@ -323657,16 +323528,6 @@ function onMenuAppear(pkt) {
 function onInputAppear(pkt) {
 	const type = pkt instanceof PACKET.ZC.OPEN_EDITDLGSTR ? "text" : "number";
 	const id = pkt.NAID;
-	InputBox_default.onAppend = function OnAppend() {
-		InputBox_default.setType(type, true);
-		this.ui.find("input").select();
-		this.ui.find("input").focus();
-		this.ui.find("input").keydown(function(e) {
-			if (e.keyCode !== 13) return;
-			const text = InputBox_default.ui.find("input").val();
-			if (text.length > 0) InputBox_default.onSubmitRequest(text);
-		});
-	};
 	InputBox_default.onSubmitRequest = function OnSubmitRequest(data) {
 		InputBox_default.remove();
 		let _pkt;
@@ -323685,6 +323546,7 @@ function onInputAppear(pkt) {
 		Network.sendPacket(_pkt);
 	};
 	InputBox_default.append();
+	InputBox_default.setType(type, true);
 }
 /**
 * On Shop selection (buy/sell)
@@ -326492,12 +326354,6 @@ var init_ItemObtain$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/ItemObtain/ItemObtain.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$18() {
-	return ItemObtain._shadow || ItemObtain._host;
-}
-/**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
 function _sanitizeHtml$6(str) {
@@ -326543,7 +326399,7 @@ var init_ItemObtain = __esmMin((() => {
 	* Once append to body
 	*/
 	ItemObtain.onAppend = function onAppend() {
-		const el = _getRoot$18().querySelector("#ItemObtain");
+		const el = this.getRoot().querySelector("#ItemObtain");
 		this._host.style.left = `${Renderer.width - (el ? el.offsetWidth : 0) >> 1}px`;
 	};
 	/**
@@ -326567,7 +326423,7 @@ var init_ItemObtain = __esmMin((() => {
 	* @param {object} item
 	*/
 	ItemObtain.set = function set(item) {
-		const root = _getRoot$18();
+		const root = this.getRoot();
 		const it = DB.getItemInfo(item.ITID);
 		const display = DB.getItemName(item, {
 			showItemSlots: false,
@@ -326603,12 +326459,6 @@ var init_ItemSelection$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/ItemSelection/ItemSelection.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$17() {
-	return ItemSelection._shadow || ItemSelection._host;
-}
-/**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
 function _sanitizeHtml$5(str) {
@@ -326632,7 +326482,7 @@ function _sanitizeHtml$5(str) {
 * @param {string} element name
 */
 function addElement$3(url, index, name) {
-	const root = _getRoot$17();
+	const root = ItemSelection.getRoot();
 	const listEl = root.querySelector(".list");
 	const div = document.createElement("div");
 	div.className = "item";
@@ -326662,7 +326512,7 @@ var init_ItemSelection = __esmMin((() => {
 	* Initialize UI
 	*/
 	ItemSelection.init = function init() {
-		const root = _getRoot$17();
+		const root = ItemSelection.getRoot();
 		this.list = root.querySelector(".list");
 		this.index = 0;
 		this.draggable(root.querySelector(".head"));
@@ -326694,7 +326544,7 @@ var init_ItemSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	ItemSelection.setList = function setList(list, isSkill) {
-		const listEl = _getRoot$17().querySelector(".list");
+		const listEl = ItemSelection.getRoot().querySelector(".list");
 		listEl.innerHTML = "";
 		for (let i = 0, count = list.length; i < count; ++i) if (isSkill) {
 			if (list[i] > 0 && list[i] in SkillInfo) {
@@ -326726,7 +326576,7 @@ var init_ItemSelection = __esmMin((() => {
 	* @param {number} id in list
 	*/
 	ItemSelection.setIndex = function setIndex(id) {
-		const root = _getRoot$17();
+		const root = ItemSelection.getRoot();
 		const prev = root.querySelector(`div[data-index="${this.index}"]`);
 		if (prev) prev.style.backgroundColor = "transparent";
 		const next = root.querySelector(`div[data-index="${id}"]`);
@@ -326752,7 +326602,7 @@ var init_ItemSelection = __esmMin((() => {
 	* @param {string} title
 	*/
 	ItemSelection.setTitle = function setTitle(title) {
-		const text = _getRoot$17().querySelector(".head .text");
+		const text = ItemSelection.getRoot().querySelector(".head .text");
 		if (text) text.textContent = title;
 	};
 	/**
@@ -326775,12 +326625,6 @@ var init_MakeItemSelection$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MakeItemSelection/MakeItemSelection.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$16() {
-	return MakeItemSelection._shadow || MakeItemSelection._host;
-}
 /**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
@@ -326805,7 +326649,7 @@ function _sanitizeHtml$4(str) {
 * @param {string} element name
 */
 function addElement$2(url, index, name) {
-	const root = _getRoot$16();
+	const root = MakeItemSelection.getRoot();
 	const listEl = root.querySelector(".list");
 	const div = document.createElement("div");
 	div.className = "item";
@@ -326843,7 +326687,7 @@ function stopPropagation$4(event) {
 	event.stopImmediatePropagation();
 }
 function bindSelectEvents(showMaterials) {
-	const root = _getRoot$16();
+	const root = MakeItemSelection.getRoot();
 	const okBtn = root.querySelector("ui-button.ok");
 	const mainEl = root.querySelector("#MakeItemSelection");
 	if (_okHandler) okBtn.removeEventListener("click", _okHandler);
@@ -326888,7 +326732,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* Initialize UI
 	*/
 	MakeItemSelection.init = function init() {
-		const root = _getRoot$16();
+		const root = MakeItemSelection.getRoot();
 		this.list = root.querySelector(".list");
 		this.index = 0;
 		this.mkType = 0;
@@ -326914,7 +326758,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	MakeItemSelection.setList = function setList(list) {
-		const root = _getRoot$16();
+		const root = MakeItemSelection.getRoot();
 		const listEl = root.querySelector(".list");
 		listEl.innerHTML = "";
 		listEl.style.backgroundColor = "#f7f7f7";
@@ -326941,7 +326785,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	MakeItemSelection.setCookingList = function setCookingList(list, mkType) {
-		const root = _getRoot$16();
+		const root = MakeItemSelection.getRoot();
 		const listEl = root.querySelector(".list");
 		listEl.innerHTML = "";
 		listEl.style.backgroundColor = "#f7f7f7";
@@ -326965,7 +326809,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* @param {number} index in list
 	*/
 	MakeItemSelection.advance = function advance() {
-		const root = _getRoot$16();
+		const root = MakeItemSelection.getRoot();
 		const listEl = root.querySelector(".list");
 		listEl.innerHTML = "";
 		const it = DB.getItemInfo(this.index);
@@ -326986,7 +326830,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* @param {number} id in list
 	*/
 	MakeItemSelection.setIndex = function setIndex(id) {
-		const root = _getRoot$16();
+		const root = MakeItemSelection.getRoot();
 		id = id === 0 ? this.index : id;
 		const prev = root.querySelector(`.list div[data-index="${this.index}"]`);
 		if (prev) prev.classList.remove("select");
@@ -327017,7 +326861,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* @param {string} title
 	*/
 	MakeItemSelection.setTitle = function setTitle(title) {
-		const text = _getRoot$16().querySelector(".head .text");
+		const text = MakeItemSelection.getRoot().querySelector(".head .text");
 		if (text) text.textContent = title;
 	};
 	/**
@@ -327051,7 +326895,7 @@ var init_MakeItemSelection = __esmMin((() => {
 	* @param {object} Item
 	*/
 	MakeItemSelection.addItemSub = function AddItemSub(item) {
-		const root = _getRoot$16();
+		const root = MakeItemSelection.getRoot();
 		const it = DB.getItemInfo(item.ITID);
 		const content = root.querySelector(".materials");
 		const div = document.createElement("div");
@@ -327082,12 +326926,6 @@ var init_MakeModelMessage$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MakeItemSelection/ItemConvertSelection/MakeModelMessage/MakeModelMessage.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$15() {
-	return MakeModelMessage._shadow || MakeModelMessage._host;
-}
 function onSendMaterial(event) {
 	event.stopImmediatePropagation();
 	ConvertItems_default.validItemSend(true);
@@ -327111,7 +326949,7 @@ var init_MakeModelMessage = __esmMin((() => {
 	* Initialize UI
 	*/
 	MakeModelMessage.init = function init() {
-		const root = _getRoot$15();
+		const root = this.getRoot();
 		this._host.style.top = `${(Renderer.height - 200) / 2}px`;
 		this._host.style.left = `${(Renderer.width - 200) / 2}px`;
 		root.querySelector("ui-button.ok").addEventListener("click", onSendMaterial);
@@ -327134,12 +326972,6 @@ var init_ConvertItems$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MakeItemSelection/ItemConvertSelection/ConvertItems.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$14() {
-	return ConvertItems._shadow || ConvertItems._host;
-}
 /**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
@@ -327190,7 +327022,7 @@ function onResize$2() {
 * Extend ConvertItems window size
 */
 function resizeHeight$1(height) {
-	const root = _getRoot$14();
+	const root = ConvertItems.getRoot();
 	height = Math.min(Math.max(height, 8), 17);
 	const content = root.querySelector(".container .content");
 	if (content) content.style.height = `${height * 32}px`;
@@ -327200,7 +327032,7 @@ function resizeHeight$1(height) {
 * Mouse mouve out of an item, hide title description
 */
 function onItemOut$2() {
-	const overlay = _getRoot$14().querySelector(".overlay");
+	const overlay = ConvertItems.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -327303,7 +327135,7 @@ function onScroll$2(event) {
 * Mouse over item, display name and informations
 */
 function onItemOver$2() {
-	const root = _getRoot$14();
+	const root = ConvertItems.getRoot();
 	const i = getItemIndexById$1(parseInt(this.getAttribute("data-index"), 10));
 	if (i < 0) return;
 	const item = ConvertItems.material[i];
@@ -327348,7 +327180,7 @@ var init_ConvertItems = __esmMin((() => {
 	* Initialize UI
 	*/
 	ConvertItems.init = function init() {
-		const root = _getRoot$14();
+		const root = ConvertItems.getRoot();
 		this._host.style.top = `${(Renderer.height - 200) / 2}px`;
 		this._host.style.left = `${(Renderer.width - 10) / 2}px`;
 		this.material = [];
@@ -327386,12 +327218,12 @@ var init_ConvertItems = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ConvertItems.onAppend = function OnAppend() {
-		const root = _getRoot$14();
+		const root = ConvertItems.getRoot();
 		this.material = [];
 		root.querySelectorAll(".container .content .item").forEach((el) => el.remove());
 	};
 	ConvertItems.addItem = function addItem(item) {
-		const root = _getRoot$14();
+		const root = ConvertItems.getRoot();
 		const it = DB.getItemInfo(item.ITID);
 		const content = root.querySelector(".container .content");
 		const div = document.createElement("div");
@@ -327413,7 +327245,7 @@ var init_ConvertItems = __esmMin((() => {
 	* @param {number} count
 	*/
 	ConvertItems.updateItem = function UpdateItem(index, count) {
-		const root = _getRoot$14();
+		const root = ConvertItems.getRoot();
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = item.count + count;
@@ -327460,7 +327292,7 @@ var init_ConvertItems = __esmMin((() => {
 	* @param {string} title
 	*/
 	ConvertItems.setTitle = function setTitle(title) {
-		const text = _getRoot$14().querySelector(".head .text");
+		const text = ConvertItems.getRoot().querySelector(".head .text");
 		if (text) text.textContent = title;
 	};
 	/**
@@ -327479,7 +327311,7 @@ var init_ConvertItems = __esmMin((() => {
 	* @param {number} index in Storage
 	*/
 	ConvertItems.removeItem = function removeItem(index, count) {
-		const root = _getRoot$14();
+		const root = ConvertItems.getRoot();
 		const i = getItemIndexById$1(index);
 		if (i < 0) return null;
 		if (ConvertItems.material[i].count) {
@@ -327512,12 +327344,6 @@ var init_ItemListWindowSelection$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MakeItemSelection/ItemListWindowSelection.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$13() {
-	return ItemListWindowSelection._shadow || ItemListWindowSelection._host;
-}
 /**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
@@ -327560,7 +327386,7 @@ function onResize$1() {
 * Extend ItemListWindowSelection window size
 */
 function resizeHeight(height) {
-	const root = _getRoot$13();
+	const root = ItemListWindowSelection.getRoot();
 	height = Math.min(Math.max(height, 8), 17);
 	const content = root.querySelector(".container .content");
 	if (content) content.style.height = `${height * 32}px`;
@@ -327570,7 +327396,7 @@ function resizeHeight(height) {
 * Mouse mouve out of an item, hide title description
 */
 function onItemOut$1() {
-	const overlay = _getRoot$13().querySelector(".overlay");
+	const overlay = ItemListWindowSelection.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -327596,7 +327422,7 @@ function onItemDragStart(event) {
 * Option to automatically buy/sell alls items instead of specify the amount
 */
 function onToggleSelectAmount$1() {
-	const root = _getRoot$13();
+	const root = ItemListWindowSelection.getRoot();
 	_preferences$9.select_all = !_preferences$9.select_all;
 	Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$9.select_all ? 1 : 0) + ".bmp", (data) => {
 		const btn = root.querySelector(".selectall");
@@ -327684,7 +327510,7 @@ function onScroll$1(event) {
 * Mouse over item, display name and informations
 */
 function onItemOver$1() {
-	const root = _getRoot$13();
+	const root = ItemListWindowSelection.getRoot();
 	const i = getItemIndexById(parseInt(this.getAttribute("data-index"), 10));
 	if (i < 0) return;
 	const item = ItemListWindowSelection.list[i];
@@ -327730,7 +327556,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	* Initialize UI
 	*/
 	ItemListWindowSelection.init = function init() {
-		const root = _getRoot$13();
+		const root = ItemListWindowSelection.getRoot();
 		this._host.style.top = `${(Renderer.height - 200) / 2}px`;
 		this._host.style.left = `${(Renderer.width - 655) / 2}px`;
 		this.list = [];
@@ -327777,13 +327603,13 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	ItemListWindowSelection.setList = function setList(listItems) {
-		const root = _getRoot$13();
+		const root = ItemListWindowSelection.getRoot();
 		root.querySelector(".container .content").innerHTML = "";
 		this.list = listItems;
 		for (let i = 0, count = listItems.length; i < count; ++i) this.addItem(listItems[i]);
 	};
 	ItemListWindowSelection.addItem = function addItem(item) {
-		const root = _getRoot$13();
+		const root = ItemListWindowSelection.getRoot();
 		const it = DB.getItemInfo(item.ITID);
 		const content = root.querySelector(".container .content");
 		const div = document.createElement("div");
@@ -327803,7 +327629,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	ItemListWindowSelection.updateList = function UpdateList(item) {
-		const root = _getRoot$13();
+		const root = ItemListWindowSelection.getRoot();
 		this.list.push(item);
 		root.querySelectorAll(".item").forEach((el) => el.remove());
 		for (let i = 0, count = this.list.length; i < count; ++i) this.addItem(this.list[i]);
@@ -327814,7 +327640,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	* @param {string} title
 	*/
 	ItemListWindowSelection.setTitle = function setTitle(title) {
-		const text = _getRoot$13().querySelector(".head .text");
+		const text = ItemListWindowSelection.getRoot().querySelector(".head .text");
 		if (text) text.textContent = title;
 	};
 	/**
@@ -327832,7 +327658,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	* @param {number} index in Storage
 	*/
 	ItemListWindowSelection.removeItem = function removeItem(index, count) {
-		const root = _getRoot$13();
+		const root = ItemListWindowSelection.getRoot();
 		const i = getItemIndexById(index);
 		if (i < 0) return null;
 		if (this.list[i].count) {
@@ -327856,7 +327682,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	* @param {number} count
 	*/
 	ItemListWindowSelection.updateItem = function UpdateItem(index, count) {
-		const root = _getRoot$13();
+		const root = ItemListWindowSelection.getRoot();
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = item.count + count;
@@ -329222,12 +329048,6 @@ var init_MakeArrowSelection$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/MakeArrowSelection/MakeArrowSelection.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$12() {
-	return MakeArrowSelection._shadow || MakeArrowSelection._host;
-}
-/**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
 function _sanitizeHtml$1(str) {
@@ -329251,7 +329071,7 @@ function _sanitizeHtml$1(str) {
 * @param {string} element name
 */
 function addElement$1(url, index, name) {
-	const root = _getRoot$12();
+	const root = MakeArrowSelection.getRoot();
 	const listEl = root.querySelector(".list");
 	const div = document.createElement("div");
 	div.className = "item";
@@ -329280,7 +329100,7 @@ var init_MakeArrowSelection = __esmMin((() => {
 	* Initialize UI
 	*/
 	MakeArrowSelection.init = function init() {
-		const root = _getRoot$12();
+		const root = MakeArrowSelection.getRoot();
 		this.list = root.querySelector(".list");
 		this.index = 0;
 		this.draggable(root.querySelector(".head"));
@@ -329312,7 +329132,7 @@ var init_MakeArrowSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	MakeArrowSelection.setList = function setList(list) {
-		const listEl = _getRoot$12().querySelector(".list");
+		const listEl = MakeArrowSelection.getRoot().querySelector(".list");
 		listEl.innerHTML = "";
 		for (let i = 0, count = list.length; i < count; ++i) {
 			const item = list[i];
@@ -329329,7 +329149,7 @@ var init_MakeArrowSelection = __esmMin((() => {
 	* @param {number} id in list
 	*/
 	MakeArrowSelection.setIndex = function setIndex(id) {
-		const root = _getRoot$12();
+		const root = MakeArrowSelection.getRoot();
 		const prev = root.querySelector(`div[data-index="${this.index}"]`);
 		if (prev) prev.style.backgroundColor = "transparent";
 		const next = root.querySelector(`div[data-index="${id}"]`);
@@ -329355,7 +329175,7 @@ var init_MakeArrowSelection = __esmMin((() => {
 	* @param {string} title
 	*/
 	MakeArrowSelection.setTitle = function setTitle(title) {
-		const text = _getRoot$12().querySelector(".head .text");
+		const text = MakeArrowSelection.getRoot().querySelector(".head .text");
 		if (text) text.textContent = title;
 	};
 	/**
@@ -329382,12 +329202,6 @@ var init_RefineWeaponSelection$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/RefineWeaponSelection/RefineWeaponSelection.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$11() {
-	return RefineWeaponSelection._shadow || RefineWeaponSelection._host;
-}
-/**
 * Sanitize HTML, allowing only whitelisted tags (font, i, b)
 */
 function _sanitizeHtml(str) {
@@ -329411,7 +329225,7 @@ function _sanitizeHtml(str) {
 * @param {string} element name
 */
 function addElement(url, index, name) {
-	const root = _getRoot$11();
+	const root = RefineWeaponSelection.getRoot();
 	const listEl = root.querySelector(".list");
 	const div = document.createElement("div");
 	div.className = "item";
@@ -329439,7 +329253,7 @@ var init_RefineWeaponSelection = __esmMin((() => {
 	* Initialize UI
 	*/
 	RefineWeaponSelection.init = function init() {
-		const root = _getRoot$11();
+		const root = RefineWeaponSelection.getRoot();
 		this.list = root.querySelector(".list");
 		this.index = 0;
 		this.draggable(root.querySelector(".head"));
@@ -329471,7 +329285,7 @@ var init_RefineWeaponSelection = __esmMin((() => {
 	* @param {Array} list object to display
 	*/
 	RefineWeaponSelection.setList = function setList(list) {
-		const listEl = _getRoot$11().querySelector(".list");
+		const listEl = RefineWeaponSelection.getRoot().querySelector(".list");
 		listEl.innerHTML = "";
 		RefineWeaponSelection.ItemList = [];
 		for (let i = 0, count = list.length; i < count; ++i) {
@@ -329490,7 +329304,7 @@ var init_RefineWeaponSelection = __esmMin((() => {
 	* @param {number} id in list
 	*/
 	RefineWeaponSelection.setIndex = function setIndex(id) {
-		const root = _getRoot$11();
+		const root = RefineWeaponSelection.getRoot();
 		const prev = root.querySelector(`div[data-index="${this.index}"]`);
 		if (prev) prev.style.backgroundColor = "transparent";
 		const next = root.querySelector(`div[data-index="${id}"]`);
@@ -329523,7 +329337,7 @@ var init_RefineWeaponSelection = __esmMin((() => {
 	* @param {string} title
 	*/
 	RefineWeaponSelection.setTitle = function setTitle(title) {
-		const text = _getRoot$11().querySelector(".head .text");
+		const text = RefineWeaponSelection.getRoot().querySelector(".head .text");
 		if (text) text.textContent = title;
 	};
 	/**
@@ -329546,12 +329360,6 @@ var init_Sense$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Sense/Sense.js
-/**
-* Helper to get the shadow root
-*/
-function _getRoot$10() {
-	return Sense._shadow || Sense._host;
-}
 /**
 * Set element class based on property value
 */
@@ -329597,7 +329405,7 @@ var init_Sense = __esmMin((() => {
 		this._host.style.top = `${(Renderer.height - 120) / 1.5 - 120}px`;
 		this._host.style.left = `${(Renderer.width - 280) / 2}px`;
 		this._host.style.zIndex = "100";
-		const root = _getRoot$10();
+		const root = this.getRoot();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => {
@@ -329643,7 +329451,7 @@ var init_Sense = __esmMin((() => {
 	* @param {object} pkt
 	*/
 	Sense.setWindow = function setWindow(pkt) {
-		const root = _getRoot$10();
+		const root = this.getRoot();
 		root.querySelector(".header .title").textContent = DB.getMessage(406);
 		_model$3.entity.set({
 			job: pkt.job,
@@ -330651,7 +330459,7 @@ var init_SlotMachine = __esmMin((() => {
 	* Initialize UI
 	*/
 	SlotMachine.init = function init() {
-		const canvas = (this._shadow || this._host).querySelector("canvas");
+		const canvas = this.getRoot().querySelector("canvas");
 		_ctx$4 = canvas.getContext("2d");
 		this._host.style.zIndex = "500";
 		Client.loadFiles(["data/sprite/slotmachine.spr", "data/sprite/slotmachine.act"], (spr, act) => {
@@ -331663,12 +331471,6 @@ var init_NpcStore$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/NpcStore/NpcStore.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$9() {
-	return NpcStore._shadow || NpcStore._host;
-}
-/**
 * Make a sub-window element draggable by its handle
 */
 function _makeDraggable(element, handle) {
@@ -331888,7 +331690,7 @@ function onDrop(event) {
 		return false;
 	}
 	if (data.type !== "item" || data.from !== "NpcStore" || data.container === this.className) return false;
-	const root = _getRoot$9();
+	const root = NpcStore.getRoot();
 	requestMoveItem(data.index, root.querySelector("." + data.container + " .content"), this.querySelector(".content"), this.className.indexOf("OutputWindow") !== -1);
 	return false;
 }
@@ -331914,7 +331716,7 @@ function onItemInfo(event) {
 function onItemSelected() {
 	let from, to;
 	if ((_type === NpcStore.Type.BUY || _type === NpcStore.Type.VENDING_STORE) && !SessionStorage_default.isTouchDevice) return;
-	const root = _getRoot$9();
+	const root = NpcStore.getRoot();
 	const input = root.querySelector(".InputWindow");
 	if (input.contains(this)) {
 		from = input;
@@ -331929,7 +331731,7 @@ function onItemSelected() {
 * Focus an item
 */
 function onItemFocus() {
-	_getRoot$9().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
+	NpcStore.getRoot().querySelectorAll(".item.selected").forEach((el) => el.classList.remove("selected"));
 	this.classList.add("selected");
 }
 /**
@@ -331947,7 +331749,7 @@ function onScroll(event) {
 * Start dragging an item
 */
 function onDragStart(event) {
-	const root = _getRoot$9();
+	const root = NpcStore.getRoot();
 	const InputWindow = root.querySelector(".InputWindow");
 	const OutputWindow = root.querySelector(".OutputWindow");
 	const AvailableItemsWindow = root.querySelector(".AvailableItemsWindow");
@@ -332083,7 +331885,7 @@ var init_NpcStore = __esmMin((() => {
 	* Initialize component
 	*/
 	NpcStore.init = function init() {
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		root.querySelector(".btn.cancel").addEventListener("click", () => this.remove());
 		root.querySelector(".btn.buy").addEventListener("click", () => this.submit());
 		root.querySelector(".btn.sell").addEventListener("click", () => this.submit());
@@ -332157,7 +331959,7 @@ var init_NpcStore = __esmMin((() => {
 	NpcStore.onAppend = function onAppend() {
 		_closePacketSent = false;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$6.select_all ? 1 : 0) + ".bmp", function(data) {
-			const selectall = _getRoot$9().querySelector(".selectall");
+			const selectall = NpcStore.getRoot().querySelector(".selectall");
 			if (selectall) selectall.style.backgroundImage = `url(${data})`;
 		});
 	};
@@ -332165,7 +331967,7 @@ var init_NpcStore = __esmMin((() => {
 	* Released movement and save preferences
 	*/
 	NpcStore.onRemove = function onRemove() {
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		const InputWindow = root.querySelector(".InputWindow");
 		const OutputWindow = root.querySelector(".OutputWindow");
 		const AvailableItemsWindow = root.querySelector(".AvailableItemsWindow");
@@ -332209,7 +332011,7 @@ var init_NpcStore = __esmMin((() => {
 	* @param {number} type (see NpcStore.Type.*)
 	*/
 	NpcStore.setType = function setType(type) {
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		switch (type) {
 			case NpcStore.Type.BUY:
 			case NpcStore.Type.MARKETSHOP:
@@ -332274,7 +332076,7 @@ var init_NpcStore = __esmMin((() => {
 	NpcStore.setList = function setList(items) {
 		let i, count;
 		let it, item, out;
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		root.querySelectorAll(".content").forEach((c) => {
 			c.innerHTML = "";
 		});
@@ -332363,7 +332165,7 @@ var init_NpcStore = __esmMin((() => {
 	NpcStore.setPriceLimit = function setPriceLimit(price) {
 		const prettyPrice = prettyZeny(price);
 		const result = DB.getMessage(1735).replace("%s", prettyPrice);
-		const priceLimit = _getRoot$9().querySelector(".priceLimit");
+		const priceLimit = NpcStore.getRoot().querySelector(".priceLimit");
 		if (priceLimit) priceLimit.textContent = result;
 	};
 	/**
@@ -332374,7 +332176,7 @@ var init_NpcStore = __esmMin((() => {
 		const count = _output.length;
 		for (let i = 0; i < count; ++i) if (_output[i] && _output[i].count) output.push(_output[i]);
 		NpcStore.onSubmit(output);
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		const outputContent = root.querySelector(".OutputWindow .content");
 		if (outputContent) outputContent.innerHTML = "";
 		const resultP = root.querySelector(".totalP .resultP");
@@ -332390,7 +332192,7 @@ var init_NpcStore = __esmMin((() => {
 		let i, total = 0;
 		const count = _output.length;
 		for (i = 0; i < count; ++i) if (_output[i]) total += (_output[i].discountprice || _output[i].overchargeprice || _output[i].price) * _output[i].count;
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		root.querySelectorAll(".total .result").forEach((r) => {
 			r.textContent = prettyZeny(total);
 		});
@@ -332428,7 +332230,7 @@ var init_NpcStore = __esmMin((() => {
 		return function(fromContent, toContent, isAdding, index, count) {
 			const inputItem = _input[index];
 			const outputItem = _output[index];
-			const root = _getRoot$9();
+			const root = NpcStore.getRoot();
 			if (isAdding) {
 				if ((_type === NpcStore.Type.BUY || _type === NpcStore.Type.VENDING_STORE || _type === NpcStore.Type.MARKETSHOP) && NpcStore.calculateCost() + (inputItem.discountprice || inputItem.price) * count > SessionStorage_default.zeny) {
 					ChatBox_default.addText(DB.getMessage(55), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
@@ -332494,7 +332296,7 @@ var init_NpcStore = __esmMin((() => {
 	*/
 	NpcStore.closeStore = function() {
 		NpcStore.remove();
-		_getRoot$9().querySelectorAll(".total").forEach((el) => {
+		NpcStore.getRoot().querySelectorAll(".total").forEach((el) => {
 			el.style.display = "";
 		});
 	};
@@ -332502,7 +332304,7 @@ var init_NpcStore = __esmMin((() => {
 	* Handles packet to close store based on the store type
 	*/
 	NpcStore.StoreClosePacket = function(type) {
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		const inputWindow = root.querySelector(".InputWindow");
 		const outputWindow = root.querySelector(".OutputWindow");
 		InputBox_default.remove();
@@ -332542,7 +332344,7 @@ var init_NpcStore = __esmMin((() => {
 	* Update Marketshop Result UI
 	*/
 	NpcStore.onMarketShopResultUI = function(itemList) {
-		const root = _getRoot$9();
+		const root = NpcStore.getRoot();
 		const InputWindow = root.querySelector(".InputWindow");
 		const OutputWindow = root.querySelector(".OutputWindow");
 		const OutputWindowContent = OutputWindow.querySelector(".content");
@@ -335548,7 +335350,7 @@ var init_PincodeWindow$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/PincodeWindow/PincodeWindow.js
 function shuffleUsingKeypad(keypad) {
-	const root = PincodeWindow._shadow || PincodeWindow._host;
+	const root = PincodeWindow.getRoot();
 	if (!root || !keypad) return;
 	const originalPositions = {};
 	for (let loc = 0; loc < 10; loc++) {
@@ -335680,7 +335482,7 @@ function keyNum(num) {
 	}
 }
 function render$9() {
-	const root = PincodeWindow._shadow || PincodeWindow._host;
+	const root = PincodeWindow.getRoot();
 	if (!root) return;
 	let str = "";
 	for (let x = 0; x < PincodeWindow._newpass.length; x++) str += "*";
@@ -335744,7 +335546,7 @@ var init_PincodeWindow = __esmMin((() => {
 	* Initialize UI
 	*/
 	PincodeWindow.init = function init() {
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		this._host.style.top = (Renderer.height - 358) / 2 + "px";
 		this._host.style.left = (Renderer.width - 576) / 2 + "px";
 		root.querySelector(".pass").disabled = true;
@@ -335821,7 +335623,7 @@ var init_PincodeWindow = __esmMin((() => {
 	};
 	PincodeWindow.selectInput = function selectInput(selection) {
 		PincodeWindow.sel_input = selection;
-		const root = PincodeWindow._shadow || PincodeWindow._host;
+		const root = PincodeWindow.getRoot();
 		if (!root) return;
 		const passEl = root.querySelector(".pass");
 		const newpassEl = root.querySelector(".newpass");
@@ -335858,7 +335660,7 @@ var init_PincodeWindow = __esmMin((() => {
 	* Called by the parent when we have received a pincode reset request from the server.
 	*/
 	PincodeWindow.onParentPincodeResetReq = function onParentPincodeResetReq() {
-		const root = PincodeWindow._shadow || PincodeWindow._host;
+		const root = PincodeWindow.getRoot();
 		if (!root) return;
 		if (PincodeWindow._resetstate === 3) if (typeof PincodeWindow.onPincodeReset === "function" && PincodeWindow._pass !== PincodeWindow._newpass && PincodeWindow._newpass.length > 3 && PincodeWindow._newpass.length < 7 && PincodeWindow._newpass === PincodeWindow._checkpass) success();
 		else UIManager.showMessageBox(DB.getMessage(1887), "ok");
@@ -335919,7 +335721,7 @@ var init_PincodeWindow = __esmMin((() => {
 	* Called by us when the user clicks on the change button in the UI.
 	*/
 	PincodeWindow.userChangePin = function userChangePin() {
-		const root = PincodeWindow._shadow || PincodeWindow._host;
+		const root = PincodeWindow.getRoot();
 		if (!root) return;
 		if (PincodeWindow._resetstate === 3) if (typeof PincodeWindow.onPincodeReset === "function" && PincodeWindow._pass !== PincodeWindow._newpass && PincodeWindow._newpass.length > 3 && PincodeWindow._newpass.length < 7 && PincodeWindow._newpass === PincodeWindow._checkpass) success();
 		else UIManager.showMessageBox(DB.getMessage(1887), "ok");
@@ -336009,12 +335811,6 @@ var init_CharSelect$2 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelect/CharSelect.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$8() {
-	return CharSelect._shadow || CharSelect._host;
-}
-/**
 * Generic method to handle mousedown on arrow
 *
 * @param {number} value to move
@@ -336081,7 +335877,7 @@ function suppress$3() {
 * @param {number} index
 */
 function moveCursorTo$3(index) {
-	const root = _getRoot$8();
+	const root = CharSelect.getRoot();
 	const charinfo = root.querySelector(".charinfo");
 	let entity = _entitySlots$3[_index$3];
 	if (entity) entity.setAction({
@@ -336175,7 +335971,7 @@ var init_CharSelect$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharSelect.init = function init() {
-		const root = _getRoot$8();
+		const root = this.getRoot();
 		this.draggable();
 		root.querySelector(".ok").addEventListener("click", connect$3);
 		root.querySelector(".cancel").addEventListener("click", cancel$7);
@@ -336198,7 +335994,7 @@ var init_CharSelect$1 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelect.onAppend = function onAppend() {
-		const root = _getRoot$8();
+		const root = this.getRoot();
 		this._host.style.top = `${(Renderer.height - 342) / 2}px`;
 		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
 		_index$3 = _preferences$4.index;
@@ -336250,7 +336046,7 @@ var init_CharSelect$1 = __esmMin((() => {
 	* @param {object} pkt - packet structure
 	*/
 	CharSelect.setInfo = function setInfo(pkt) {
-		const root = _getRoot$8();
+		const root = this.getRoot();
 		_maxSlots$3 = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
 		_sex$3 = pkt.sex;
 		_slots$3.length = 0;
@@ -336274,7 +336070,7 @@ var init_CharSelect$1 = __esmMin((() => {
 		switch (error) {
 			case -2: return;
 			case -1: {
-				const root = _getRoot$8();
+				const root = this.getRoot();
 				delete _slots$3[_index$3];
 				delete _entitySlots$3[_index$3];
 				let i = 0;
@@ -336337,12 +336133,6 @@ var init_CharSelectV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$7() {
-	return CharSelectV2._shadow || CharSelectV2._host;
-}
 /**
 * Generic method to handle mousedown on arrow
 *
@@ -336411,7 +336201,7 @@ function formatDatetime$1(epoch) {
 * Update UI and add timer
 */
 function requestdelete$2(index, timer) {
-	const root = _getRoot$7();
+	const root = CharSelectV2.getRoot();
 	const entity = _entitySlots$2[index];
 	let action;
 	const countdown = root.querySelector(`.timedelete.slot${index % 3 + 1}`);
@@ -336441,7 +336231,7 @@ function requestdelete$2(index, timer) {
 */
 function removedelete$2() {
 	if (_slots$2[_index$2]) {
-		const root = _getRoot$7();
+		const root = CharSelectV2.getRoot();
 		_slots$2[_index$2].DeleteDate = 0;
 		_entitySlots$2[_index$2].action = _entitySlots$2[_index$2].ACTION.READYFIGHT;
 		render$7();
@@ -336483,7 +336273,7 @@ function suppress$2() {
 * @param {number} index
 */
 function moveCursorTo$2(index) {
-	const root = _getRoot$7();
+	const root = CharSelectV2.getRoot();
 	const charinfo = root.querySelector(".charinfo");
 	let entity = _entitySlots$2[_index$2];
 	let info = _slots$2[_index$2];
@@ -336638,7 +336428,7 @@ var init_CharSelectV2 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharSelectV2.init = function init() {
-		const root = _getRoot$7();
+		const root = this.getRoot();
 		this.draggable();
 		root.querySelector(".ok").addEventListener("click", connect$2);
 		root.querySelector(".cancel").addEventListener("click", cancel$6);
@@ -336663,7 +336453,7 @@ var init_CharSelectV2 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelectV2.onAppend = function onAppend() {
-		const root = _getRoot$7();
+		const root = this.getRoot();
 		this._host.style.top = `${(Renderer.height - 358) / 2}px`;
 		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
 		_index$2 = _preferences$3.index;
@@ -336676,7 +336466,7 @@ var init_CharSelectV2 = __esmMin((() => {
 	* Stop rendering
 	*/
 	CharSelectV2.onRemove = function onRemove() {
-		const root = _getRoot$7();
+		const root = this.getRoot();
 		_preferences$3.index = _index$2;
 		_preferences$3.save();
 		root.querySelectorAll(".timedelete").forEach((el) => {
@@ -336720,7 +336510,7 @@ var init_CharSelectV2 = __esmMin((() => {
 	* @param {object} pkt - packet structure
 	*/
 	CharSelectV2.setInfo = function setInfo(pkt) {
-		const root = _getRoot$7();
+		const root = this.getRoot();
 		_maxSlots$2 = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
 		_sex$2 = pkt.sex;
 		_slots$2.length = 0;
@@ -336745,7 +336535,7 @@ var init_CharSelectV2 = __esmMin((() => {
 			case -1:
 			case -2: return;
 			case 1: {
-				const root = _getRoot$7();
+				const root = this.getRoot();
 				delete _slots$2[_index$2];
 				delete _entitySlots$2[_index$2];
 				let i = 0;
@@ -336780,7 +336570,7 @@ var init_CharSelectV2 = __esmMin((() => {
 		else switch (error) {
 			case -2: return;
 			case -1: {
-				const root = _getRoot$7();
+				const root = this.getRoot();
 				delete _slots$2[_index$2];
 				delete _entitySlots$2[_index$2];
 				let i = 0;
@@ -336805,7 +336595,7 @@ var init_CharSelectV2 = __esmMin((() => {
 	* @param {object} character data
 	*/
 	CharSelectV2.addCharacter = function addCharacter(character) {
-		const root = _getRoot$7();
+		const root = this.getRoot();
 		if (!("sex" in character) || character.sex === 99) character.sex = _sex$2;
 		if (character.DeleteDate) {
 			const now = Math.floor(Date.now() / 1e3);
@@ -336896,12 +336686,6 @@ var init_CharSelectV3$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.js
-/**
-* Helper to get shadow root
-*/
-function _getRoot$6() {
-	return CharSelectV3._shadow || CharSelectV3._host;
-}
 function drawBall(btnContainer, index, sel) {
 	const btn = document.createElement("button");
 	btn.className = `btn_pageinfo btn_pageinfo${index}`;
@@ -336991,7 +336775,7 @@ function formatDatetime(epoch) {
 * Update UI and add timer
 */
 function requestdelete$1(index, timer) {
-	const root = _getRoot$6();
+	const root = CharSelectV3.getRoot();
 	const entity = _entitySlots$1[index];
 	let action;
 	const countdown = root.querySelector(`.timedelete.slot${index % 3 + 1}`);
@@ -337021,7 +336805,7 @@ function requestdelete$1(index, timer) {
 */
 function removedelete$1() {
 	if (_slots$1[_index$1]) {
-		const root = _getRoot$6();
+		const root = CharSelectV3.getRoot();
 		_slots$1[_index$1].DeleteDate = 0;
 		_entitySlots$1[_index$1].action = _entitySlots$1[_index$1].ACTION.READYFIGHT;
 		render$6();
@@ -337063,7 +336847,7 @@ function suppress$1() {
 * @param {number} index
 */
 function moveCursorTo$1(index) {
-	const root = _getRoot$6();
+	const root = CharSelectV3.getRoot();
 	const charinfo = root.querySelector(".charinfo");
 	let entity = _entitySlots$1[_index$1];
 	let info = _slots$1[_index$1];
@@ -337222,7 +337006,7 @@ var init_CharSelectV3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharSelectV3.init = function init() {
-		const root = _getRoot$6();
+		const root = this.getRoot();
 		this.draggable();
 		root.querySelector(".ok").addEventListener("click", connect$1);
 		root.querySelector(".cancel").addEventListener("click", cancel$5);
@@ -337259,7 +337043,7 @@ var init_CharSelectV3 = __esmMin((() => {
 	* Once append to body
 	*/
 	CharSelectV3.onAppend = function onAppend() {
-		const root = _getRoot$6();
+		const root = this.getRoot();
 		this._host.style.top = `${(Renderer.height - 358) / 2}px`;
 		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
 		_index$1 = _preferences$2.index;
@@ -337271,7 +337055,7 @@ var init_CharSelectV3 = __esmMin((() => {
 	* Stop rendering
 	*/
 	CharSelectV3.onRemove = function onRemove() {
-		const root = _getRoot$6();
+		const root = this.getRoot();
 		_preferences$2.index = _index$1;
 		_preferences$2.save();
 		root.querySelectorAll(".timedelete").forEach((el) => {
@@ -337315,7 +337099,7 @@ var init_CharSelectV3 = __esmMin((() => {
 	* @param {object} pkt - packet structure
 	*/
 	CharSelectV3.setInfo = function setInfo(pkt) {
-		const root = _getRoot$6();
+		const root = this.getRoot();
 		_maxSlots$1 = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
 		_sex$1 = pkt.sex;
 		_slots$1.length = 0;
@@ -337334,7 +337118,7 @@ var init_CharSelectV3 = __esmMin((() => {
 	* @param {number} error id
 	*/
 	CharSelectV3.deleteAnswer = function deleteAnswer(error) {
-		const root = _getRoot$6();
+		const root = this.getRoot();
 		this.on("keydown");
 		switch (error) {
 			case -1:
@@ -337378,7 +337162,7 @@ var init_CharSelectV3 = __esmMin((() => {
 	* @param {object} character data
 	*/
 	CharSelectV3.addCharacter = function addCharacter(character) {
-		const root = _getRoot$6();
+		const root = this.getRoot();
 		if (!("sex" in character) || character.sex === 99) character.sex = _sex$1;
 		if (character.DeleteDate) {
 			const now = Math.floor(Date.now() / 1e3);
@@ -337468,12 +337252,6 @@ var init_CharSelectV4$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$5() {
-	return CharSelectV4._shadow || CharSelectV4._host;
-}
-/**
 * Format delay duration
 */
 function formatDuration(seconds) {
@@ -337487,7 +337265,7 @@ function formatDuration(seconds) {
 * Countdown for delay in deletion
 */
 function updateAllVisibleCountdowns() {
-	_getRoot$5().querySelectorAll(".timedelete:not(.hidden)").forEach((countdownDiv) => {
+	CharSelectV4.getRoot().querySelectorAll(".timedelete:not(.hidden)").forEach((countdownDiv) => {
 		const deleteReservedDuration = parseInt(countdownDiv.dataset.duration, 10);
 		const updatedDuration = Math.max(0, deleteReservedDuration - 1);
 		countdownDiv.textContent = formatDuration(updatedDuration);
@@ -337516,7 +337294,7 @@ function stopCountdownInterval() {
 * Update UI and add timer
 */
 function requestdelete(index, timer) {
-	const root = _getRoot$5();
+	const root = CharSelectV4.getRoot();
 	_entitySlots[index].action = 2;
 	const countdown = root.querySelector(`.timedelete.slot${index}`);
 	if (countdown) {
@@ -337534,7 +337312,7 @@ function requestdelete(index, timer) {
 */
 function removedelete() {
 	if (_slots[_index]) {
-		const root = _getRoot$5();
+		const root = CharSelectV4.getRoot();
 		_slots[_index].DeleteDate = 0;
 		_entitySlots[_index].action = 0;
 		render$5();
@@ -337621,7 +337399,7 @@ function suppress() {
 * @param {number} index
 */
 function moveCursorTo(index) {
-	const root = _getRoot$5();
+	const root = CharSelectV4.getRoot();
 	const charinfo = root.querySelector(".charinfo");
 	const prevIndex = _index;
 	let entity = _slots[_index];
@@ -337677,7 +337455,7 @@ function moveCursorTo(index) {
 	charinfo.querySelector(".luk").textContent = info.Luk;
 }
 function changeBackgroundEverySecond() {
-	const backgroundchange = _getRoot$5().querySelector(`#slot${_curindex}`);
+	const backgroundchange = CharSelectV4.getRoot().querySelector(`#slot${_curindex}`);
 	if (backgroundchange && shouldRunBackgroundChange === true) {
 		Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot_select${img}.bmp`, (dataURI) => {
 			backgroundchange.style.backgroundImage = `url(${dataURI})`;
@@ -337740,7 +337518,7 @@ var init_CharSelectV4 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharSelectV4.init = function init() {
-		const root = _getRoot$5();
+		const root = this.getRoot();
 		root.querySelector(".ok").addEventListener("click", connect);
 		root.querySelector(".cancel").addEventListener("click", cancel$4);
 		root.querySelector(".delete").addEventListener("click", reserve);
@@ -337935,7 +337713,7 @@ var init_CharSelectV4 = __esmMin((() => {
 	CharSelectV4.onConnectRequest = function onConnectRequest() {};
 	CharSelectV4.onCancelDeleteRequest = function onCancelDeleteRequest() {};
 	CharSelectV4.updateCharSlot = function updateCharSlot(slotId) {
-		const root = _getRoot$5();
+		const root = this.getRoot();
 		let start = 0;
 		let loopMax = Math.max(_maxSlots, _slots.length);
 		if (typeof slotId !== "undefined") {
@@ -338027,12 +337805,6 @@ var init_CharCreate$2 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreate/CharCreate.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$4() {
-	return CharCreate._shadow || CharCreate._host;
-}
-/**
 * Generic function to get a direct proxy to updateCharacter
 *
 * @param {string} type
@@ -338049,7 +337821,7 @@ function updateCharacterGeneric$2(type, value) {
 * Send back informations to send the packet
 */
 function create$3() {
-	const root = _getRoot$4();
+	const root = CharCreate.getRoot();
 	CharCreate.onCharCreationRequest(root.querySelector("input").value, parseInt(root.querySelector(".info .str").textContent, 10), parseInt(root.querySelector(".info .agi").textContent, 10), parseInt(root.querySelector(".info .vit").textContent, 10), parseInt(root.querySelector(".info .int").textContent, 10), parseInt(root.querySelector(".info .dex").textContent, 10), parseInt(root.querySelector(".info .luk").textContent, 10), _chargen$2.entity.head, _chargen$2.entity.headpalette);
 }
 /**
@@ -338084,7 +337856,7 @@ function updateCharacter$3(type, increment) {
 * Update the stats and polygon
 */
 function updateStats() {
-	const root = _getRoot$4();
+	const root = CharCreate.getRoot();
 	if (root.querySelector(`.info .${this.className}`).textContent === "9") return;
 	const group = {
 		str: "int",
@@ -338102,7 +337874,7 @@ function updateStats() {
 * Update the polygon
 */
 function updateGraphic() {
-	const root = _getRoot$4();
+	const root = CharCreate.getRoot();
 	const ctx = _graph;
 	const width = ctx.canvas.width;
 	const height = ctx.canvas.height;
@@ -338169,7 +337941,7 @@ var init_CharCreate$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharCreate.init = function init() {
-		const root = _getRoot$4();
+		const root = this.getRoot();
 		_graph = root.querySelector(".graph canvas").getContext("2d");
 		_chargen$2.ctx = root.querySelector(".chargen canvas").getContext("2d");
 		this.draggable();
@@ -338210,7 +337982,7 @@ var init_CharCreate$1 = __esmMin((() => {
 			head: 2,
 			action: 0
 		});
-		const input = _getRoot$4().querySelector("input");
+		const input = this.getRoot().querySelector("input");
 		input.value = "";
 		input.focus();
 		Renderer.render(render$4);
@@ -338262,12 +338034,6 @@ var init_CharCreatev2$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$3() {
-	return CharCreatev2._shadow || CharCreatev2._host;
-}
-/**
 * Generic function to get a direct proxy to updateCharacter
 *
 * @param {string} type
@@ -338284,7 +338050,7 @@ function updateCharacterGeneric$1(type, value) {
 * Send back informations to send the packet
 */
 function create$2() {
-	const root = _getRoot$3();
+	const root = CharCreatev2.getRoot();
 	CharCreatev2.onCharCreationRequest(root.querySelector("input").value, 1, 1, 1, 1, 1, 1, _chargen$1.entity.head, _chargen$1.entity.headpalette);
 }
 /**
@@ -338353,7 +338119,7 @@ var init_CharCreatev2 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharCreatev2.init = function init() {
-		const root = _getRoot$3();
+		const root = this.getRoot();
 		_chargen$1.ctx = root.querySelector(".content canvas").getContext("2d");
 		this.draggable();
 		root.querySelector(".content .styleleft").addEventListener("mousedown", updateCharacterGeneric$1("head", -1));
@@ -338389,7 +338155,7 @@ var init_CharCreatev2 = __esmMin((() => {
 			head: 2,
 			action: 0
 		});
-		const input = _getRoot$3().querySelector("input");
+		const input = this.getRoot().querySelector("input");
 		input.value = "";
 		input.focus();
 		Renderer.render(render$3);
@@ -338440,16 +338206,10 @@ var init_CharCreatev3$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$2() {
-	return CharCreatev3._shadow || CharCreatev3._host;
-}
-/**
 * Send back informations to send the packet
 */
 function create$1() {
-	const charname = _getRoot$2().querySelector("#char_name").value;
+	const charname = CharCreatev3.getRoot().querySelector("#char_name").value;
 	CharCreatev3.onCharCreationRequest(charname, 1, 1, 1, 1, 1, 1, _model$2.entity.head, _model$2.entity.headpalette, _model$2.entity.job, _model$2.entity.sex);
 }
 function setDefault() {
@@ -338469,7 +338229,7 @@ function cancel$1() {
 * @param {number} value
 */
 function updateCharacter$1(type, value) {
-	const root = _getRoot$2();
+	const root = CharCreatev3.getRoot();
 	switch (type) {
 		case TYPE.GENDER:
 			_model$2.entity.sex = value;
@@ -338559,7 +338319,7 @@ function render$2(tick) {
 	SpriteRenderer.bind2DContext(_model$2.ctx, 32, 115);
 	_model$2.ctx.clearRect(0, 0, _model$2.ctx.canvas.width, _model$2.ctx.canvas.height);
 	_model$2.entity.renderEntity();
-	_getRoot$2().querySelector("#char_name").focus();
+	CharCreatev3.getRoot().querySelector("#char_name").focus();
 }
 var CharCreatev3, _accountSex$1, TYPE, GENDER, RACE, DIRECTION, VALUE, CAP, RACE_MARK, _human, _doram$1, _model$2, CharCreatev3_default;
 var init_CharCreatev3 = __esmMin((() => {
@@ -338646,7 +338406,7 @@ var init_CharCreatev3 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharCreatev3.init = function init() {
-		const root = _getRoot$2();
+		const root = this.getRoot();
 		_human.ctx = root.querySelector("#canvas_human").getContext("2d");
 		_doram$1.ctx = root.querySelector("#canvas_doram").getContext("2d");
 		_model$2.ctx = root.querySelector("#canvas_model").getContext("2d");
@@ -338742,7 +338502,7 @@ var init_CharCreatev3 = __esmMin((() => {
 			direction: 4
 		});
 		_model$2.render = true;
-		const charNameInput = _getRoot$2().querySelector("#char_name");
+		const charNameInput = this.getRoot().querySelector("#char_name");
 		charNameInput.value = "";
 		charNameInput.focus();
 		setDefault();
@@ -338794,16 +338554,10 @@ var init_CharCreatev4$1 = __esmMin((() => {
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreatev4/CharCreatev4.js
 /**
-* Helper to get shadow root
-*/
-function _getRoot$1() {
-	return CharCreatev4._shadow || CharCreatev4._host;
-}
-/**
 * Update model hairstyle
 */
 function updateHStyle(target) {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	const type = "head";
 	const value = parseInt(target.getAttribute("for"));
 	_prevhead = _model$1.entity.head;
@@ -338818,7 +338572,7 @@ function updateHStyle(target) {
 * Update model haircolor
 */
 function updateHColor(target) {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	const type = "headpalette";
 	const value = parseInt(target.getAttribute("for"));
 	_prevcolor = _model$1.entity.headpalette;
@@ -338833,7 +338587,7 @@ function updateHColor(target) {
 * Update model race
 */
 function updateRace() {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	const select = root.querySelector(".race:checked");
 	const type = "race";
 	let value = 0;
@@ -338877,7 +338631,7 @@ function updateCharacterGeneric(type, value) {
 	};
 }
 function updateHstyleList(type, value) {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	switch (type) {
 		case "gender":
 			if (value === 1) _gender = "male";
@@ -338907,11 +338661,11 @@ function updateHstyleList(type, value) {
 * Send back informations to send the packet
 */
 function create() {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	CharCreatev4.onCharCreationRequest(root.querySelector("#char_name").value, 1, 1, 1, 1, 1, 1, _model$1.entity.head, _model$1.entity.headpalette, _model$1.entity.job, _model$1.entity.sex);
 }
 function cleanup() {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	_race = "human";
 	_gender = "male";
 	_prevhead = 1;
@@ -338980,7 +338734,7 @@ function updateCharacter(type, increment) {
 * Rendering the Character
 */
 function render$1(tick) {
-	const root = _getRoot$1();
+	const root = CharCreatev4.getRoot();
 	if (_race === "human") {
 		if (_chargen.tick + 500 < tick) {
 			_chargen.entity.set({
@@ -339072,7 +338826,7 @@ var init_CharCreatev4 = __esmMin((() => {
 	* Initialize UI
 	*/
 	CharCreatev4.init = function init() {
-		const root = _getRoot$1();
+		const root = CharCreatev4.getRoot();
 		_chargen.ctx = root.querySelector("#human").getContext("2d");
 		_doram.ctx = root.querySelector("#doram").getContext("2d");
 		_model$1.ctx = root.querySelector("#style_model").getContext("2d");
@@ -339164,7 +338918,7 @@ var init_CharCreatev4 = __esmMin((() => {
 			action: 0,
 			direction: 4
 		});
-		const charNameInput = _getRoot$1().querySelector("#char_name");
+		const charNameInput = CharCreatev4.getRoot().querySelector("#char_name");
 		charNameInput.value = "";
 		charNameInput.focus();
 		_race = "human";
@@ -339862,7 +339616,7 @@ var init_WinList = __esmMin((() => {
 		this._host.style.top = `${(Renderer.height - 280) / 1.5}px`;
 		this._host.style.left = `${(Renderer.width - 280) / 2}px`;
 		this.draggable();
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		this._listEl = root.querySelector(".list");
 		this.list = null;
 		this.index = 0;
@@ -342745,7 +342499,7 @@ function createWinLogin({ name, htmlText, cssText }) {
 	let _buttonSave;
 	Component.init = function init() {
 		this.draggable();
-		const root = this._shadow || this._host;
+		const root = this.getRoot();
 		_inputUsername = root.querySelector(".user");
 		_inputPassword = root.querySelector(".pass");
 		_buttonSave = root.querySelector(".save");
@@ -344721,6 +344475,7 @@ var init_UIManager = __esmMin((() => {
 	init_GUIComponent();
 	init_UIVersionManager();
 	init_KeyEventHandler();
+	init_ClampToViewport();
 	init_preload_helper();
 	(function injectOverlayCSS() {
 		let style = document.querySelector("style[data-overlay]");
@@ -344789,21 +344544,7 @@ var init_UIManager = __esmMin((() => {
 				const component = this.components[keys[i]];
 				const el = component.ui ? component.ui[0] : null;
 				if (!el) continue;
-				if (component._isDraggable !== void 0 && !component._isDraggable) {
-					if (component.onResize) component.onResize();
-					continue;
-				}
-				const rect = el.getBoundingClientRect();
-				const x = rect.left;
-				const y = rect.top;
-				const width = rect.width;
-				const height = rect.height;
-				if (y + height > HEIGHT) el.style.top = `${HEIGHT - Math.min(height, HEIGHT)}px`;
-				if (y < 0) el.style.top = "0px";
-				if (x + width > WIDTH) el.style.left = `${WIDTH - Math.min(width, WIDTH)}px`;
-				if (x < 0) el.style.left = "0px";
-				if (component.magnet.BOTTOM) el.style.top = `${HEIGHT - height}px`;
-				if (component.magnet.RIGHT) el.style.left = `${WIDTH - width}px`;
+				UIClamp(el, WIDTH, HEIGHT, component.magnet);
 				if (component.onResize) component.onResize();
 			}
 		}
@@ -346716,12 +346457,6 @@ var _model = null;
 var Viewer = new GUIComponent("GrannyModelViewer", GrannyModelViewer_default);
 Viewer.render = () => GrannyModelViewer_default$1;
 /**
-* Helper to get shadow root
-*/
-function _getRoot() {
-	return Viewer._shadow || Viewer._host;
-}
-/**
 * Initialize Component
 */
 Viewer.init = function init() {
@@ -346733,7 +346468,7 @@ Viewer.init = function init() {
 		premultipliedAlpha: false
 	});
 	Renderer.show();
-	const root = _getRoot();
+	const root = this.getRoot();
 	if (!Configs.get("API")) initDropDown(root.querySelector("select"));
 	else {
 		const hash = decodeURIComponent(location.hash);
@@ -346772,7 +346507,7 @@ function initDropDown(select) {
 			loadModel(hash.substr(1));
 			select.value = hash.substr(1);
 		} else loadModel(select.value);
-		const root = _getRoot();
+		const root = Viewer.getRoot();
 		root.querySelector(".head").style.display = "block";
 		select.focus();
 	});
