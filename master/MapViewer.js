@@ -280979,6 +280979,7 @@ function onResize$3(event) {
 * @param {number} delay in ms
 */
 function setDelayOnIndex(index, delay) {
+	if (!_list$5[index]) return;
 	if (_list$5[index].Delay && _list$5[index].Delay >= Renderer.tick + delay) return;
 	_list$5[index].Delay = Renderer.tick + delay;
 	const ui = ShortCut.getRoot().querySelector(`.container[data-index="${index}"]`);
@@ -280993,21 +280994,37 @@ function setDelayOnIndex(index, delay) {
 		const img = icon.querySelector(".img");
 		if (img) img.style.filter = "none";
 	}
-	let animationId;
+	if (_activeAnimations.has(index)) {
+		cancelAnimationFrame(_activeAnimations.get(index));
+		_activeAnimations.delete(index);
+	}
 	function updateCooldown() {
+		if (!_list$5 || !_list$5[index]) {
+			overlay.remove();
+			if (_activeAnimations.has(index)) {
+				cancelAnimationFrame(_activeAnimations.get(index));
+				_activeAnimations.delete(index);
+			}
+			return;
+		}
 		const now = Renderer.tick;
 		const remaining = _list$5[index].Delay - now;
 		if (remaining <= 0 || !_list$5[index].Delay) {
 			overlay.remove();
 			_list$5[index].Delay = 0;
-			if (animationId) cancelAnimationFrame(animationId);
+			if (_activeAnimations.has(index)) {
+				cancelAnimationFrame(_activeAnimations.get(index));
+				_activeAnimations.delete(index);
+			}
 			return;
 		}
 		const degrees = (1 - remaining / delay) * 360;
 		overlay.style.background = `conic-gradient(transparent 0deg, transparent ${degrees}deg, rgba(0,0,0,0.75) ${degrees}deg)`;
-		animationId = requestAnimationFrame(updateCooldown);
+		const animationId = requestAnimationFrame(updateCooldown);
+		_activeAnimations.set(index, animationId);
 	}
-	animationId = requestAnimationFrame(updateCooldown);
+	const animationId = requestAnimationFrame(updateCooldown);
+	_activeAnimations.set(index, animationId);
 }
 /**
 * Drop something in the shortcut
@@ -281297,7 +281314,7 @@ function haveHotkeysChanged(currentData) {
 	if (!_lastServerHotkeys) return true;
 	return JSON.stringify(currentData) !== JSON.stringify(_lastServerHotkeys);
 }
-var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _preferences$23, ShortCut_default;
+var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _activeAnimations, _preferences$23, ShortCut_default;
 var init_ShortCut = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -281327,6 +281344,7 @@ var init_ShortCut = __esmMin((() => {
 	_list$5 = [];
 	_rowCount = 0;
 	_lastServerHotkeys = null;
+	_activeAnimations = /* @__PURE__ */ new Map();
 	_preferences$23 = Preferences.get("ShortCut", {
 		x: 480,
 		y: 0,
@@ -281410,6 +281428,8 @@ var init_ShortCut = __esmMin((() => {
 	ShortCut.onRemove = function onRemove() {
 		const tooltip = ShortCut.getRoot().querySelector(".shortcut-tooltip");
 		if (tooltip) tooltip.classList.remove("show");
+		for (const [index, animationId] of _activeAnimations.entries()) cancelAnimationFrame(animationId);
+		_activeAnimations.clear();
 		_preferences$23.y = parseInt(this._host.style.top, 10);
 		_preferences$23.x = parseInt(this._host.style.left, 10);
 		_preferences$23.size = Math.floor(parseInt(this._host.style.height, 10) / 34);
@@ -281424,6 +281444,8 @@ var init_ShortCut = __esmMin((() => {
 	* Used only from MapEngine when exiting the game
 	*/
 	ShortCut.clean = function clean() {
+		for (const [index, animationId] of _activeAnimations.entries()) cancelAnimationFrame(animationId);
+		_activeAnimations.clear();
 		_list$5.length = 0;
 		ShortCut.getRoot().querySelectorAll(".container").forEach((el) => {
 			el.innerHTML = "";
