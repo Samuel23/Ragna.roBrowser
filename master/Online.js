@@ -89259,6 +89259,10 @@ var init_BGM = __esmMin((() => {
 		static extension = "mp3";
 		static isInit = false;
 		static audio = document.createElement("audio");
+		static cache = {
+			filename: null,
+			currentTime: 0
+		};
 		/**
 		* Initialize player
 		* Fixed a known bug
@@ -89272,6 +89276,7 @@ var init_BGM = __esmMin((() => {
 			}
 			BGM.audio.addEventListener("ended", () => {
 				BGM.audio.currentTime = 0;
+				if (BGM.cache.filename === BGM.filename) BGM.cache.currentTime = 0;
 				BGM.audio.play();
 			}, false);
 		}
@@ -89302,6 +89307,10 @@ var init_BGM = __esmMin((() => {
 				if (!filename) return;
 			}
 			if (BGM.filename === filename && BGM.audio && !BGM.audio.paused) return;
+			if (BGM.filename && BGM.audio) {
+				BGM.cache.filename = BGM.filename;
+				BGM.cache.currentTime = BGM.audio.currentTime;
+			}
 			BGM.filename = filename;
 			const myToken = ++_playToken;
 			if (Audio_default.BGM.play) Client.loadFile(`BGM/${filename}`, (url) => {
@@ -89317,8 +89326,10 @@ var init_BGM = __esmMin((() => {
 		static load(url) {
 			if (!Audio_default.BGM.play) return;
 			if (!url.match(/^(blob|data):/)) url = url.replace(/mp3$/i, BGM.extension);
+			const targetTime = BGM.cache.filename === BGM.filename ? BGM.cache.currentTime : 0;
 			BGM.audio.src = url;
 			BGM.audio.volume = BGM.volume;
+			BGM.audio.currentTime = targetTime;
 			const playPromise = BGM.audio.play();
 			if (playPromise) playPromise.catch((err) => {
 				if (err.name !== "AbortError") console.warn("Failed to play:", err);
@@ -89329,7 +89340,11 @@ var init_BGM = __esmMin((() => {
 		*/
 		static stop() {
 			_playToken++;
-			if (BGM.audio) BGM.audio.pause();
+			if (BGM.audio) {
+				BGM.cache.filename = BGM.filename;
+				BGM.cache.currentTime = BGM.audio.currentTime;
+				BGM.audio.pause();
+			}
 		}
 		/**
 		* Change the volume of the BGM
