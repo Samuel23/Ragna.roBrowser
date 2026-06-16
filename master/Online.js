@@ -228476,10 +228476,11 @@ var init_EffectTable = __esmMin((() => {
 				type: "SPR",
 				attachedEntity: true,
 				delayFrame: 30,
-				duplicate: 4,
 				file: "Ãàº¹",
 				frame: 0,
-				timeBetweenDupli: 100,
+				repeat: true,
+				duration: 1500,
+				stackable: true,
 				head: true,
 				yOffset: -120
 			},
@@ -244677,13 +244678,16 @@ function spamSprite(Params) {
 		entity.objecttype = entity.constructor.TYPE_EFFECT;
 		isNewEntity = true;
 	}
+	const baseUid = Params.Inst.effectID || Params.effect.effectID;
+	const uid = Params.Inst.duplicateID > 0 ? `${baseUid}_${Params.Inst.duplicateID}` : baseUid;
 	entity.attachments.add({
-		uid: Params.Inst.effectID || Params.effect.effectID,
+		uid,
 		file: Params.effect.file,
 		head: !!Params.effect.head,
 		direction: !!Params.effect.direction,
 		repeat: Params.effect.repeat || Params.Inst.persistent,
-		duplicate: Params.effect.duplicate,
+		duration: Params.effect.duration,
+		stackable: !!Params.effect.stackable,
 		stopAtEnd: Params.effect.stopAtEnd,
 		xOffset: Params.effect.xOffset,
 		yOffset: Params.effect.yOffset,
@@ -254970,7 +254974,7 @@ var init_EntityAttachments = __esmMin((() => {
 		* @param {object} attachment options
 		*/
 		add(attachment) {
-			if (attachment.uid) this.remove(attachment.uid);
+			if (attachment.uid && !attachment.stackable) this.remove(attachment.uid);
 			attachment.startTick = Date.now();
 			attachment.opacity = !isNaN(attachment.opacity) ? attachment.opacity : 1;
 			attachment.direction = attachment.hasOwnProperty("frame") ? false : true;
@@ -254984,7 +254988,7 @@ var init_EntityAttachments = __esmMin((() => {
 				if (attachment.yOffset) attachment.position[1] = attachment.yOffset;
 			}
 			attachment.repeat = attachment.repeat || false;
-			attachment.duplicate = attachment.duplicate || 0;
+			attachment.duration = attachment.duration || 0;
 			attachment.stopAtEnd = attachment.stopAtEnd || false;
 			attachment.delay = attachment.delay || false;
 			attachment.renderBefore = attachment.renderBefore || false;
@@ -255139,11 +255143,9 @@ var init_EntityAttachments = __esmMin((() => {
 			const delay = attachment.delay || act.actions[frame].delay;
 			SpriteRenderer.depth = attachment.depth || 0;
 			if ("animationId" in attachment) layers = animations[attachment.animationId].layers;
-			else if (attachment.repeat) layers = animations[Math.floor((tick - attachment.startTick) / delay) % animations.length].layers;
-			else if (attachment.duplicate > 0) {
-				const index = Math.floor((tick - attachment.startTick) / delay) % animations.length;
-				layers = animations[index].layers;
-				if (index == animations.length - 1) attachment.duplicate--;
+			else if (attachment.repeat) {
+				if (attachment.duration > 0 && tick - attachment.startTick >= attachment.duration) return true;
+				layers = animations[Math.floor((tick - attachment.startTick) / delay) % animations.length].layers;
 			} else {
 				animation = Math.min(Math.floor((tick - attachment.startTick) / delay), animations.length - 1);
 				layers = animations[animation].layers;
