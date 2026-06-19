@@ -260073,6 +260073,8 @@ function clearRefineStates() {
 	refine_no_zeny = 0;
 	refine_no_bsb = 0;
 	refine_new_mats = 0;
+	refine_current_chance = 0;
+	refine_current_zeny = 0;
 }
 /**
 * Stop event propagation
@@ -260255,6 +260257,8 @@ function onPopulateMaterials$1() {
 			Refine.ui.find(".chance_rate").text(DB.getMessage(3285).replace("%d%", material.chance));
 			Refine.ui.find(".refine_zeny").text(material.zeny);
 			Refine.ui.find(".refine_zeny_cont").text(material.zeny);
+			refine_current_chance = material.chance;
+			refine_current_zeny = material.zeny;
 			refine_item_mat = material.itemId;
 			refine_fee = material.zeny;
 			Refine.ui.find(".refine_cont").addClass("item").attr("data-index", material.itemId);
@@ -260318,6 +260322,8 @@ function selectMaterial(material, item) {
 		refine_can_cont = 0;
 	}
 	if (onCheckItemBroken()) refine_can_cont = 0;
+	refine_current_chance = material.chance;
+	refine_current_zeny = material.zeny;
 	Refine.ui.find(".chance_rate").text(DB.getMessage(3285).replace("%d%", material.chance));
 	Refine.ui.find(".refine_zeny_cont").text(material.zeny);
 	if (refine_can_cont && !refine_new_mats && !refine_item_broken) refine_result_div = refine_result ? "fail_refine_cont_enabled" : "success_refine_cont_enabled";
@@ -260549,6 +260555,8 @@ function onUpdateRefineUI(result) {
 	Refine.ui.find(".refine_text_cont").show();
 	if (refine_result_div) Refine.ui.find("." + refine_result_div).show();
 	if (refine_can_cont && !refine_new_mats && !refine_item_broken) {
+		Refine.ui.find(".chance_rate").text(DB.getMessage(3285).replace("%d%", refine_current_chance));
+		Refine.ui.find(".refine_zeny_cont").text(refine_current_zeny);
 		Refine.ui.find(".chance_rate").show();
 		Refine.ui.find(".refine_zeny_cont").show();
 	}
@@ -260557,6 +260565,10 @@ function onUpdateRefineUI(result) {
 	if (refine_no_bsb) showMessage$3(3245, 3, "error");
 	Refine.ui.find(".back_button").show();
 	Refine.ui.find(".refine_cont").show();
+	if (!refine_item_broken) {
+		const refineditem = InventoryController.getUI().getItemByIndex(refine_item_index);
+		if (refineditem) Refine.ui.find(".item_to_refine_name").text(DB.getItemName(refineditem));
+	}
 	Refine.ui.find(".item_to_refine_name").show();
 	refine_ongoing = 0;
 }
@@ -260669,7 +260681,7 @@ function onBroadcastRefineResult(pkt) {
 		Announce_default.set(message, "#FFB563");
 	}
 }
-var Refine, BSB_ITID, refiningMaterials, blacksmithBlessing, refine_item_index, refine_item_mat, refine_fee, refine_bsb, refine_result, refine_result_div, refine_can_cont, refine_no_mats, refine_no_zeny, refine_no_bsb, refine_item_broken, refine_new_mats, refine_ongoing, initialsuccess, currentLoopHandle, itemMessageMapping, images$1, Refine_default;
+var Refine, BSB_ITID, refiningMaterials, blacksmithBlessing, refine_item_index, refine_item_mat, refine_fee, refine_bsb, refine_result, refine_result_div, refine_can_cont, refine_no_mats, refine_no_zeny, refine_no_bsb, refine_item_broken, refine_new_mats, refine_ongoing, refine_current_chance, refine_current_zeny, initialsuccess, currentLoopHandle, itemMessageMapping, images$1, Refine_default;
 var init_Refine = __esmMin((() => {
 	init_DBManager();
 	init_Configs();
@@ -260706,6 +260718,8 @@ var init_Refine = __esmMin((() => {
 	refine_item_broken = 0;
 	refine_new_mats = 0;
 	refine_ongoing = 0;
+	refine_current_chance = 0;
+	refine_current_zeny = 0;
 	Refine.imageLoopTimeout = 0;
 	Refine.messageTimeOut = 0;
 	Refine.hammer = 0;
@@ -272512,7 +272526,7 @@ var init_AIDriver = __esmMin((() => {
 				function distance(x1, y1, x2, y2) {
 					const dx = x2 - x1;
 					const dy = y2 - y1;
-					return dx * dx + dy * dy;
+					return Math.sqrt(dx * dx + dy * dy);
 				}
 				ctx.GetActors = function() {
 					AIDriver.exec("status = MyState", isHoAI);
@@ -272523,7 +272537,7 @@ var init_AIDriver = __esmMin((() => {
 					if (res.length > 3) {
 						if (isHoAI ? AIDriver.HOM_AGGRESSIVE : AIDriver.MER_AGGRESSIVE) {
 							let closest = 0;
-							let lastDist = 1e3;
+							let lastDist = 32;
 							const thisentity = EntityManager.get(isHoAI ? SessionStorage_default.homunId : SessionStorage_default.mercId);
 							for (const item of res) if (item !== 0 && item !== SessionStorage_default.AID && item !== SessionStorage_default.homunId && item !== SessionStorage_default.mercId) {
 								const entity = EntityManager.get(item);
