@@ -143661,7 +143661,8 @@ function deserializeObject(buffer, index, options, isArray = false) {
 			const stringSize = NumberUtils.getInt32LE(buffer, index);
 			index += 4;
 			if (stringSize <= 0 || stringSize > buffer.length - index || buffer[index + stringSize - 1] !== 0) throw new BSONError("bad string length in bson");
-			value = new Code(ByteUtils.toUTF8(buffer, index, index + stringSize - 1, shouldValidateKey));
+			const functionString = ByteUtils.toUTF8(buffer, index, index + stringSize - 1, shouldValidateKey);
+			value = new Code(functionString);
 			index = index + stringSize;
 		} else if (elementType === BSON_DATA_CODE_W_SCOPE) {
 			const totalSize = NumberUtils.getInt32LE(buffer, index);
@@ -144196,8 +144197,10 @@ function serializeValue(value, options) {
 			const alreadySeen = props[index];
 			const circularPart = " -> " + props.slice(index + 1, props.length - 1).map((prop) => `${prop} -> `).join("");
 			const current = props[props.length - 1];
+			const leadingSpace = " ".repeat(leadingPart.length + alreadySeen.length / 2);
+			const dashes = "-".repeat(circularPart.length + (alreadySeen.length + current.length) / 2 - 1);
 			throw new BSONError(`Converting circular structure to EJSON:
-    ${leadingPart}${alreadySeen}${circularPart}${current}\n    ${" ".repeat(leadingPart.length + alreadySeen.length / 2)}\\${"-".repeat(circularPart.length + (alreadySeen.length + current.length) / 2 - 1)}/`);
+    ${leadingPart}${alreadySeen}${circularPart}${current}\n    ${leadingSpace}\\${dashes}/`);
 		}
 		options.seenObjects[options.seenObjects.length - 1].obj = value;
 	}
@@ -145115,7 +145118,8 @@ var init_bson = __esmMin((() => {
 			return input._bsontype === "Binary" && input.sub_type === this.SUBTYPE_UUID && input.buffer.byteLength === 16;
 		}
 		static createFromHexString(hexString) {
-			return new UUID(UUID.bytesFromString(hexString));
+			const buffer = UUID.bytesFromString(hexString);
+			return new UUID(buffer);
 		}
 		static createFromBase64(base64) {
 			return new UUID(ByteUtils.fromBase64(base64));
@@ -146882,8 +146886,9 @@ var init_bson = __esmMin((() => {
 		}
 		static fromExtendedJSON(doc) {
 			const i = Long.isLong(doc.$timestamp.i) ? doc.$timestamp.i.getLowBitsUnsigned() : doc.$timestamp.i;
+			const t = Long.isLong(doc.$timestamp.t) ? doc.$timestamp.t.getLowBitsUnsigned() : doc.$timestamp.t;
 			return new Timestamp({
-				t: Long.isLong(doc.$timestamp.t) ? doc.$timestamp.t.getLowBitsUnsigned() : doc.$timestamp.t,
+				t,
 				i
 			});
 		}
@@ -220082,7 +220087,8 @@ var init_ChatBox = __esmMin((() => {
 				let pastedText = clipboard ? clipboard.getData("text/plain") : "";
 				if (!pastedText) return;
 				pastedText = pastedText.replace(/\u00A0/g, " ");
-				const remaining = MAX_LENGTH - extractChatMessage$1(inputChatbox).length;
+				const currentText = extractChatMessage$1(inputChatbox);
+				const remaining = MAX_LENGTH - currentText.length;
 				if (remaining <= 0) return;
 				const toInsert = pastedText.substr(0, remaining);
 				if (document.queryCommandSupported && document.queryCommandSupported("insertText")) document.execCommand("insertText", false, toInsert);
@@ -229627,7 +229633,8 @@ var init_Guild$1 = __esmMin((() => {
 			membersBody.addEventListener("contextmenu", (e) => {
 				const td = e.target.closest("td.name");
 				if (!td) return;
-				const member = _members[td.parentNode.getAttribute("data-index")];
+				const index = td.parentNode.getAttribute("data-index");
+				const member = _members[index];
 				const isSelf = member.AID === SessionStorage_default.AID && member.GID === SessionStorage_default.GID;
 				ContextMenu_default.remove();
 				ContextMenu_default.append();
@@ -233360,7 +233367,8 @@ var init_Quest$2 = __esmMin((() => {
 	* Removing the UI from window, save preferences
 	*/
 	Quest.onRemove = function onRemove() {
-		_preferences$53.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
+		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
+		_preferences$53.show = hostDisplay !== "none";
 		_preferences$53.y = parseInt(this._host.style.top, 10);
 		_preferences$53.x = parseInt(this._host.style.left, 10);
 		_preferences$53.save();
@@ -233929,7 +233937,8 @@ var init_QuestV1 = __esmMin((() => {
 	* Removing the UI from window, save preferences
 	*/
 	QuestV1.onRemove = function onRemove() {
-		_preferences$51.show = (this._host ? getComputedStyle(this._host).display : "none") !== "none";
+		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
+		_preferences$51.show = hostDisplay !== "none";
 		_preferences$51.y = parseInt(this._host.style.top, 10);
 		_preferences$51.x = parseInt(this._host.style.left, 10);
 		_preferences$51.save();
@@ -242808,7 +242817,9 @@ function spawnEnchantEffect(effectId) {
 	const startTick = Renderer && Renderer.tick ? Renderer.tick : Date.now();
 	effectList.forEach(function(effect) {
 		if (!effect || effect.type !== "STR" || !effect.file) return;
-		const strEffect = new StrEffect("data/texture/effect/" + effect.file + ".str", anchor, startTick, effect.texturePath || "");
+		const filename = "data/texture/effect/" + effect.file + ".str";
+		const texturePath = effect.texturePath || "";
+		const strEffect = new StrEffect(filename, anchor, startTick, texturePath);
 		EnchantEffectState.activeEffects.push(strEffect);
 	});
 	ensureEffectRenderActive();
@@ -242888,7 +242899,8 @@ function playEffect(effectId) {
 	spawnEnchantEffect(effectId);
 }
 function playIntroEffect(action) {
-	const effects = EnchantEffectGroups[getEffectGroup(action)];
+	const group = getEffectGroup(action);
+	const effects = EnchantEffectGroups[group];
 	if (!effects || !effects.intro) return;
 	if (EnchantEffectState.resultTimer) {
 		clearTimeout(EnchantEffectState.resultTimer);
@@ -242901,7 +242913,8 @@ function playIntroEffect(action) {
 	scheduleEffectOverlayHide(getEffectDuration(effects.intro) + DEFAULT_INTRO_DURATION_MS);
 }
 function playResultEffect(action, success) {
-	const effects = EnchantEffectGroups[getEffectGroup(action)];
+	const group = getEffectGroup(action);
+	const effects = EnchantEffectGroups[group];
 	if (!effects) return;
 	const effectId = success ? effects.success : effects.fail;
 	if (!effectId) return;
@@ -243188,9 +243201,12 @@ function refreshActionContent() {
 			if (orderSlot >= baseSlots && getSlotValue(item, orderSlot)) hasEnchant = true;
 		});
 		if (group.reset && group.reset.enabled && hasEnchant) availability.reset = true;
-		if (!availability[EnchantState.action]) EnchantState.action = Object.keys(availability).find(function(key) {
-			return availability[key];
-		}) || EnchantState.action;
+		if (!availability[EnchantState.action]) {
+			const nextAction = Object.keys(availability).find(function(key) {
+				return availability[key];
+			});
+			EnchantState.action = nextAction || EnchantState.action;
+		}
 		updateTabs(availability);
 		updateActionSections();
 		if (EnchantState.action === "random") {
@@ -246752,7 +246768,8 @@ var init_EquipmentV0 = __esmMin((() => {
 		_preferences$34.show = this._host.style.display !== "none";
 		const panel = root.querySelector(".panel");
 		_preferences$34.reduce = panel ? panel.style.display === "none" : false;
-		_preferences$34.stats = WinStatsController.getUI().isEmbedded();
+		const winStats = WinStatsController.getUI();
+		_preferences$34.stats = winStats.isEmbedded();
 		hideStatus$2();
 		_preferences$34.y = parseInt(this._host.style.top, 10);
 		_preferences$34.x = parseInt(this._host.style.left, 10);
@@ -247268,7 +247285,8 @@ var init_EquipmentV1 = __esmMin((() => {
 		_preferences$33.show = this._host.style.display !== "none";
 		const panel = root.querySelector(".panel");
 		_preferences$33.reduce = panel ? panel.style.display === "none" : false;
-		_preferences$33.stats = WinStatsController.getUI().isEmbedded();
+		const winStats = WinStatsController.getUI();
+		_preferences$33.stats = winStats.isEmbedded();
 		hideStatus$1();
 		_preferences$33.y = parseInt(this._host.style.top, 10);
 		_preferences$33.x = parseInt(this._host.style.left, 10);
@@ -247799,7 +247817,8 @@ var init_EquipmentV2 = __esmMin((() => {
 		_preferences$32.show = this._host.style.display !== "none";
 		const panel = root.querySelector(".panel");
 		_preferences$32.reduce = panel ? panel.style.display === "none" : false;
-		_preferences$32.stats = WinStatsController.getUI().isEmbedded();
+		const winStats = WinStatsController.getUI();
+		_preferences$32.stats = winStats.isEmbedded();
 		hideStatus();
 		_preferences$32.y = parseInt(this._host.style.top, 10);
 		_preferences$32.x = parseInt(this._host.style.left, 10);
@@ -255439,8 +255458,10 @@ function processCommand(text) {
 	const cmd = text.split(" ")[0];
 	let pkt, matches;
 	if (CommandStore[cmd]) CommandStore[cmd].callback.call(this, text);
-	else if (aliases[cmd]) CommandStore[aliases[cmd]].callback.call(this, text);
-	else {
+	else if (aliases[cmd]) {
+		const parentCommand = aliases[cmd];
+		CommandStore[parentCommand].callback.call(this, text);
+	} else {
 		matches = text.match(/^(\w{3})\+ (\d+)$/);
 		if (matches) {
 			const pos = [
@@ -268923,7 +268944,7 @@ var init_EntityRender = __esmMin((() => {
 	init_Ground();
 	init_Altitude();
 	init_SessionStorage();
-	init_JobConst();
+	init_DBManager();
 	init_Graphics();
 	WALK_DIST_TO_MOTION = 4.6 * .37 * 4 * 25;
 	renderGUI = (function renderGUIClosure() {
@@ -269063,13 +269084,7 @@ var init_EntityRender = __esmMin((() => {
 						});
 						if (!(direction > 2 && direction < 6)) {
 							if (SessionStorage_default.Playing == true && self.hasCart == true) {
-								cartidx = [
-									JobConst_default.NOVICE,
-									JobConst_default.SUPERNOVICE,
-									JobConst_default.SUPERNOVICE_B,
-									JobConst_default.SUPERNOVICE2,
-									JobConst_default.SUPERNOVICE2_B
-								].includes(self._job) ? 0 : self.CartNum;
+								cartidx = DB.isSuperNovice(self._job) ? 0 : self.CartNum;
 								SpriteRenderer.runWithDepth(true, false, false, function() {
 									SpriteRenderer.zIndex = -1;
 									renderElement(self, self.files.cart_shadow, "cartshadow", _position, false);
@@ -269111,13 +269126,7 @@ var init_EntityRender = __esmMin((() => {
 							}
 							if (SessionStorage_default.Playing == true && self.hasCart == true) {
 								SpriteRenderer.zIndex = bodyZOffset + 500;
-								cartidx = [
-									JobConst_default.NOVICE,
-									JobConst_default.SUPERNOVICE,
-									JobConst_default.SUPERNOVICE_B,
-									JobConst_default.SUPERNOVICE2,
-									JobConst_default.SUPERNOVICE2_B
-								].includes(self._job) ? 0 : self.CartNum;
+								cartidx = DB.isSuperNovice(self._job) ? 0 : self.CartNum;
 								SpriteRenderer.runWithDepth(true, false, false, function() {
 									renderElement(self, self.files.cart_shadow, "cartshadow", _position, false);
 									renderElement(self, self.files.cart[cartidx], "cart", _position, false);
@@ -272384,7 +272393,8 @@ var init_RainWeather = __esmMin((() => {
 		}
 		spawnDrop(spawnTick) {
 			if (!SessionStorage_default.Entity) return;
-			const layer = LAYERS[pickLayerIndex()];
+			const layerIndex = pickLayerIndex();
+			const layer = LAYERS[layerIndex];
 			const px = SessionStorage_default.Entity.position[0];
 			const py = SessionStorage_default.Entity.position[1];
 			const theta = Math.random() * Math.PI * 2;
@@ -290756,7 +290766,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					} else {
 						var stack = new Stack();
 						if (customizer) var result = customizer(objValue, srcValue, key, object, source, stack);
-						if (!(result === undefined ? baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG, customizer, stack) : result)) return false;
+						if (!(result === undefined ? baseIsEqual(srcValue, objValue, 3, customizer, stack) : result)) return false;
 					}
 				}
 				return true;
@@ -290895,7 +290905,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				if (isKey(path) && isStrictComparable(srcValue)) return matchesStrictComparable(toKey(path), srcValue);
 				return function(object) {
 					var objValue = get(object, path);
-					return objValue === undefined && objValue === srcValue ? hasIn(object, path) : baseIsEqual(srcValue, objValue, COMPARE_PARTIAL_FLAG | COMPARE_UNORDERED_FLAG);
+					return objValue === undefined && objValue === srcValue ? hasIn(object, path) : baseIsEqual(srcValue, objValue, 3);
 				};
 			}
 			/**
@@ -291387,7 +291397,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 				if (isArray(value)) return arrayMap(value, baseToString) + "";
 				if (isSymbol(value)) return symbolToString ? symbolToString.call(value) : "";
 				var result = value + "";
-				return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+				return result == "0" && 1 / value == -Infinity ? "-0" : result;
 			}
 			/**
 			* The base implementation of `_.uniqBy` without support for iteratee shorthands.
@@ -293260,7 +293270,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			function toKey(value) {
 				if (typeof value == "string" || isSymbol(value)) return value;
 				var result = value + "";
-				return result == "0" && 1 / value == -INFINITY ? "-0" : result;
+				return result == "0" && 1 / value == -Infinity ? "-0" : result;
 			}
 			/**
 			* Converts `func` to its source code.
@@ -297153,7 +297163,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			* // => false
 			*/
 			function cloneDeep(value) {
-				return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG);
+				return baseClone(value, 5);
 			}
 			/**
 			* This method is like `_.cloneWith` except that it recursively clones `value`.
@@ -297185,7 +297195,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			*/
 			function cloneDeepWith(value, customizer) {
 				customizer = typeof customizer == "function" ? customizer : undefined;
-				return baseClone(value, CLONE_DEEP_FLAG | CLONE_SYMBOLS_FLAG, customizer);
+				return baseClone(value, 5, customizer);
 			}
 			/**
 			* Checks if `object` conforms to `source` by invoking the predicate
@@ -298093,7 +298103,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			* // => false
 			*/
 			function isSafeInteger(value) {
-				return isInteger(value) && value >= -MAX_SAFE_INTEGER && value <= MAX_SAFE_INTEGER;
+				return isInteger(value) && value >= -9007199254740991 && value <= MAX_SAFE_INTEGER;
 			}
 			/**
 			* Checks if `value` is classified as a `Set` object.
@@ -298337,7 +298347,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			function toFinite(value) {
 				if (!value) return value === 0 ? value : 0;
 				value = toNumber(value);
-				if (value === INFINITY || value === -INFINITY) return (value < 0 ? -1 : 1) * MAX_INTEGER;
+				if (value === INFINITY || value === -Infinity) return (value < 0 ? -1 : 1) * MAX_INTEGER;
 				return value === value ? value : 0;
 			}
 			/**
@@ -298487,7 +298497,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			* // => 3
 			*/
 			function toSafeInteger(value) {
-				return value ? baseClamp(toInteger(value), -MAX_SAFE_INTEGER, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
+				return value ? baseClamp(toInteger(value), -9007199254740991, MAX_SAFE_INTEGER) : value === 0 ? value : 0;
 			}
 			/**
 			* Converts `value` to a string. An empty string is returned for `null`
@@ -299396,7 +299406,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 					return path;
 				});
 				copyObject(object, getAllKeysIn(object), result);
-				if (isDeep) result = baseClone(result, CLONE_DEEP_FLAG | CLONE_FLAT_FLAG | CLONE_SYMBOLS_FLAG, customOmitClone);
+				if (isDeep) result = baseClone(result, 7, customOmitClone);
 				var length = paths.length;
 				while (length--) baseUnset(result, paths[length]);
 				return result;
@@ -306711,14 +306721,15 @@ var init_wasmoon_lua5_1 = __esmMin((() => {
 	})();
 	LuaApi = class LuaApi {
 		static async initialize(customWasmFileLocation, environmentVariables) {
-			return new LuaApi(await initWasmModule({
+			const module = await initWasmModule({
 				locateFile: (path, scriptDirectory) => {
 					return customWasmFileLocation || scriptDirectory + path;
 				},
 				preRun: (initializedModule) => {
 					if (typeof environmentVariables === "object") Object.entries(environmentVariables).forEach(([k, v]) => initializedModule.ENV[k] = v);
 				}
-			}));
+			});
+			return new LuaApi(module);
 		}
 		constructor(module) {
 			this.pointerRefs = /* @__PURE__ */ new Map();
@@ -307345,7 +307356,8 @@ var init_wasmoon_lua5_1 = __esmMin((() => {
 			if (!options.customWasmUri) {
 				if (typeof window === "object" && typeof window.document !== "undefined" || typeof self === "object" && ((_a = self === null || self === void 0 ? void 0 : self.constructor) === null || _a === void 0 ? void 0 : _a.name) === "DedicatedWorkerGlobalScope") options.customWasmUri = `https://unpkg.com/wasmoon-lua5.1@${version}/dist/liblua5.1.wasm`;
 			}
-			return new Lua(await LuaApi.initialize(options.customWasmUri, options.environmentVariables), options);
+			const luaApi = await LuaApi.initialize(options.customWasmUri, options.environmentVariables);
+			return new Lua(luaApi, options);
 		}
 		constructor(luaApi, options) {
 			if (!options) throw new Error("Lua.create(options) must be used to create a Lua instance");
@@ -308725,11 +308737,13 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.AddEnchantSlot = (enchantId, slotNum) => {
-				ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				ensureSlot(group, slotNum);
 				return 1;
 			};
 			ctx.SetEnchantRequire = (enchantId, slotNum, zeny) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				slot.require = {
 					zeny,
 					materials: []
@@ -308737,7 +308751,8 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.AddEnchantRequireMaterial = (enchantId, slotNum, itemDb, count) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				const baseName = decodeLuaString(itemDb);
 				slot.require.materials.push({
 					...resolveItem(baseName),
@@ -308746,17 +308761,20 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.SetEnchantSuccessRate = (enchantId, slotNum, rate) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				slot.successRate = rate;
 				return 1;
 			};
 			ctx.AddEnchantGradeBonus = (enchantId, slotNum, grade, bonus) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				slot.gradeBonus[grade] = bonus;
 				return 1;
 			};
 			ctx.AddEnchantRate = (enchantId, slotNum, grade, itemDb, rate) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				const baseName = decodeLuaString(itemDb);
 				if (!slot.random[grade]) slot.random[grade] = [];
 				slot.random[grade].push({
@@ -308766,7 +308784,8 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.AddPerfectEnchant = (enchantId, slotNum, itemDb, zeny) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				const baseName = decodeLuaString(itemDb);
 				slot.perfect[baseName] = {
 					...resolveItem(baseName),
@@ -308776,7 +308795,8 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.AddPerfectEnchantMaterial = (enchantId, slotNum, itemDb, matDb, count) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				const baseName = decodeLuaString(itemDb);
 				const matName = decodeLuaString(matDb);
 				if (!slot.perfect[baseName]) slot.perfect[baseName] = {
@@ -308791,7 +308811,8 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.AddUpgradeEnchant = (enchantId, slotNum, itemDb, resultDb, zeny) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				const baseName = decodeLuaString(itemDb);
 				const resultName = decodeLuaString(resultDb);
 				slot.upgrade[baseName] = {
@@ -308803,7 +308824,8 @@ function loadEnchantListFile(basePath, onEnd) {
 				return 1;
 			};
 			ctx.AddUpgradeEnchantMaterial = (enchantId, slotNum, itemDb, matDb, count) => {
-				const slot = ensureSlot(ensureGroup(enchantId), slotNum);
+				const group = ensureGroup(enchantId);
+				const slot = ensureSlot(group, slotNum);
 				const baseName = decodeLuaString(itemDb);
 				const matName = decodeLuaString(matDb);
 				if (!slot.upgrade[baseName]) slot.upgrade[baseName] = {
@@ -309061,7 +309083,8 @@ function loadSignBoardData(filename, callback, onEnd) {
 			const ctx = lua.ctx;
 			ctx.AddSignBoardData = (key, translation) => {
 				const decoded_key = key && key.length > 1 ? userStringDecoder.decode(key) : null;
-				SignBoardTranslatedTable[decoded_key] = translation && translation.length > 1 ? userStringDecoder.decode(translation) : null;
+				const decoded_translation = translation && translation.length > 1 ? userStringDecoder.decode(translation) : null;
+				SignBoardTranslatedTable[decoded_key] = decoded_translation;
 				return 1;
 			};
 			lua.mountFile("Sign_Data.lub", buffer);
@@ -309856,7 +309879,8 @@ function loadPetInfo(filename, callback, onEnd) {
 				const ctx = lua.ctx;
 				ctx.__push_kv = (k, v) => {
 					const key = k instanceof Uint8Array ? userStringDecoder.decode(k) : k;
-					result[key] = v instanceof Uint8Array ? userStringDecoder.decode(v) : v;
+					const val = v instanceof Uint8Array ? userStringDecoder.decode(v) : v;
+					result[key] = val;
 					return 1;
 				};
 				lua.doStringSync(`
@@ -310465,18 +310489,184 @@ var init_DBManager = __esmMin((() => {
 			return BabyTable_default.indexOf(jobid) > -1;
 		}
 		/**
-		* Is character a TaeKwon-tree job (TaeKwon → Star Gladiator /
-		* Soul Linker → Star Emperor / Soul Reaper / Sky Emperor /
-		* Soul Ascetic, incl. baby and union variants) ?
+		* Is character a Assassin class
 		*
 		* @param {number} jobid
 		* @return {boolean}
 		*/
-		static isTaeKwon(jobid) {
-			return jobid >= 4046 && jobid <= 4049 || jobid >= 4225 && jobid <= 4227 || jobid >= 4238 && jobid <= 4246 || jobid == 4302 || jobid == 4303 || jobid == 4316;
+		static S_JOBS_ASSASSIN = /* @__PURE__ */ new Set([
+			JobConst_default.ASSASSIN,
+			JobConst_default.ASSASSIN_H,
+			JobConst_default.GUILLOTINE_CROSS,
+			JobConst_default.GUILLOTINE_CROSS_H,
+			JobConst_default.SHADOW_CROSS,
+			JobConst_default.ASSASSIN_B,
+			JobConst_default.GUILLOTINE_CROSS_B,
+			JobConst_default.DOG_ASSASSIN,
+			JobConst_default.DOG_ASSA_X,
+			JobConst_default.DOG_G_CROSS,
+			JobConst_default.DOG_ASSASSIN_B,
+			JobConst_default.DOG_G_CROSS_B,
+			JobConst_default.SHADOW_CROSS_RIDING
+		]);
+		static isAssassin(jobid) {
+			return this.S_JOBS_ASSASSIN.has(jobid);
 		}
+		/**
+		* Is character a Hunter class
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_HUNTER = /* @__PURE__ */ new Set([
+			JobConst_default.HUNTER,
+			JobConst_default.HUNTER_H,
+			JobConst_default.RANGER,
+			JobConst_default.RANGER_H,
+			JobConst_default.WINDHAWK,
+			JobConst_default.WINDHAWK2,
+			JobConst_default.HUNTER_B,
+			JobConst_default.RANGER_B,
+			JobConst_default.OSTRICH_HUNTER,
+			JobConst_default.OSTRICH_SNIPER,
+			JobConst_default.OSTRICH_RANGER,
+			JobConst_default.OSTRICH_HUNTER_B,
+			JobConst_default.OSTRICH_RANGER_B,
+			JobConst_default.WINDHAWK_RIDING
+		]);
+		static isHunter(jobid) {
+			return this.S_JOBS_HUNTER.has(jobid);
+		}
+		/**
+		* Is character a Monk class
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_MONK = /* @__PURE__ */ new Set([
+			JobConst_default.MONK,
+			JobConst_default.MONK_H,
+			JobConst_default.SURA,
+			JobConst_default.SURA_H,
+			JobConst_default.INQUISITOR,
+			JobConst_default.MONK_B,
+			JobConst_default.SURA_B,
+			JobConst_default.SHEEP_MONK,
+			JobConst_default.SHEEP_CHAMP,
+			JobConst_default.SHEEP_SURA,
+			JobConst_default.SHEEP_MONK_B,
+			JobConst_default.SHEEP_SURA_B,
+			JobConst_default.INQUISITOR_RIDING
+		]);
+		static isMonk(jobid) {
+			return this.S_JOBS_MONK.has(jobid);
+		}
+		/**
+		* Is character a SN class
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_SN = /* @__PURE__ */ new Set([
+			JobConst_default.SUPERNOVICE,
+			JobConst_default.SUPERNOVICE2,
+			JobConst_default.HYPER_NOVICE,
+			JobConst_default.SUPERNOVICE_B,
+			JobConst_default.SUPERNOVICE2_B,
+			JobConst_default.PORING_SNOVICE,
+			JobConst_default.PORING_SNOVICE2,
+			JobConst_default.PORING_SNOVICE_B,
+			JobConst_default.PORING_SNOVICE2_B
+		]);
+		static isSuperNovice(jobid) {
+			return this.S_JOBS_SN.has(jobid);
+		}
+		/**
+		* Is character a TaeKwon class
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_TAEKWON = /* @__PURE__ */ new Set([
+			JobConst_default.TAEKWON,
+			JobConst_default.STAR,
+			JobConst_default.STAR2,
+			JobConst_default.LINKER,
+			JobConst_default.STAR_EMPEROR,
+			JobConst_default.STAR_EMPEROR2,
+			JobConst_default.SOUL_REAPER,
+			JobConst_default.SOUL_REAPER2,
+			JobConst_default.SKY_EMPEROR,
+			JobConst_default.SKY_EMPEROR2,
+			JobConst_default.SOUL_ASCETIC,
+			JobConst_default.TAEKWON_B,
+			JobConst_default.STAR_B,
+			JobConst_default.STAR2_B,
+			JobConst_default.LINKER_B,
+			JobConst_default.STAR_EMPEROR_B,
+			JobConst_default.STAR_EMPEROR2_B,
+			JobConst_default.SOUL_REAPER_B,
+			JobConst_default.SOUL_REAPER2_B,
+			JobConst_default.PORING_TAEKWON,
+			JobConst_default.PORING_STAR,
+			JobConst_default.FROG_LINKER
+		]);
+		static isTaeKwon(jobid) {
+			return this.S_JOBS_TAEKWON.has(jobid);
+		}
+		/**
+		* Is character a Gunslinger class
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_GS = /* @__PURE__ */ new Set([
+			JobConst_default.GUNSLINGER,
+			JobConst_default.REBELLION,
+			JobConst_default.NIGHT_WATCH,
+			JobConst_default.GUNSLINGER_B,
+			JobConst_default.REBELLION_B,
+			JobConst_default.PECO_GUNNER,
+			JobConst_default.PECO_REBELLION
+		]);
+		static isGunslinger(jobid) {
+			return this.S_JOBS_GS.has(jobid);
+		}
+		/**
+		* Is character a Royal Guard class
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_RG = /* @__PURE__ */ new Set([
+			JobConst_default.ROYAL_GUARD,
+			JobConst_default.ROYAL_GUARD_H,
+			JobConst_default.ROYAL_GUARD2,
+			JobConst_default.ROYAL_GUARD2_H,
+			JobConst_default.IMPERIAL_GUARD,
+			JobConst_default.ROYAL_GUARD_B,
+			JobConst_default.ROYAL_GUARD2_B,
+			JobConst_default.LION_ROYAL_GUARD,
+			JobConst_default.LION_ROYAL_GUARD_B,
+			JobConst_default.IMPERIAL_GUARD_RIDING
+		]);
+		static isRoyalGuard(jobid) {
+			return this.S_JOBS_RG.has(jobid);
+		}
+		/**
+		* Is character using Madogear
+		*
+		* @param {number} jobid
+		* @return {boolean}
+		*/
+		static S_JOBS_MADO = /* @__PURE__ */ new Set([
+			JobConst_default.MECHANIC2,
+			JobConst_default.MECHANIC2_H,
+			JobConst_default.MECHANIC2_B,
+			JobConst_default.MEISTER2
+		]);
 		static isMadogear(jobid) {
-			return jobid == 4086 || jobid == 4087 || jobid == 4112 || jobid == 4279;
+			return this.S_JOBS_MADO.has(jobid);
 		}
 		static isElem(jobid) {
 			return jobid >= 2114 && jobid <= 2125 || jobid >= 20816 && jobid <= 20820;
@@ -311351,9 +311541,6 @@ var init_DBManager = __esmMin((() => {
 		static isKatar(weaponType) {
 			return weaponType == WeaponType_default.KATAR;
 		}
-		static isAssassin(jobID) {
-			return jobID == JobConst_default.ASSASSIN || jobID == JobConst_default.ASSASSIN_H || jobID == JobConst_default.ASSASSIN_B || jobID == JobConst_default.GUILLOTINE_CROSS || jobID == JobConst_default.GUILLOTINE_CROSS_H || jobID == JobConst_default.GUILLOTINE_CROSS_B || jobID == JobConst_default.SHADOW_CROSS;
-		}
 		/**
 		* Get back informations from id
 		*
@@ -311562,7 +311749,8 @@ var init_DBManager = __esmMin((() => {
 		* @return {object}
 		*/
 		static getMap(mapname) {
-			return MapTable[mapname.replace(".gat", ".rsw")] || null;
+			const map = mapname.replace(".gat", ".rsw");
+			return MapTable[map] || null;
 		}
 		/**
 		* Get a message from msgstringtable
@@ -316507,7 +316695,8 @@ function onDrop$5(event) {
 function onItemInfo$11(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
-	const item = _input$1[parseInt(this.parentNode.getAttribute("data-index"), 10)];
+	const index = parseInt(this.parentNode.getAttribute("data-index"), 10);
+	const item = _input$1[index];
 	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
@@ -317712,7 +317901,8 @@ function drawActionToCanvas$3(ctx, act, spr, actionId, x, y) {
 function render$11(tick) {
 	ChangeCart.getRoot().querySelectorAll(".canvas").forEach((el) => {
 		if (el.offsetParent === null) return;
-		const data = _carts$1[el.getAttribute("data-id")];
+		const id = el.getAttribute("data-id");
+		const data = _carts$1[id];
 		if (!data || !data.spr || !data.act) return;
 		const ctx = el.getContext("2d");
 		ctx.clearRect(0, 0, el.width, el.height);
@@ -317874,7 +318064,8 @@ function drawActionToCanvas$2(ctx, act, spr, actionId, x, y) {
 function render$10() {
 	CartDecoration.getRoot().querySelectorAll(".canvas").forEach((el) => {
 		if (el.offsetParent === null) return;
-		const data = _carts[parseInt(el.getAttribute("data-id"), 10)];
+		const id = parseInt(el.getAttribute("data-id"), 10);
+		const data = _carts[id];
 		if (!data || !data.spr || !data.act) return;
 		const ctx = el.getContext("2d");
 		ctx.clearRect(0, 0, el.width, el.height);
@@ -318953,7 +319144,8 @@ function onClickActionAddCartItem(e) {
 * purchase item list in cart
 */
 function onClickActionBuyItem() {
-	CashShop.cartItemLen = CashShop.cartItem.length;
+	const itemlist = CashShop.cartItem;
+	CashShop.cartItemLen = itemlist.length;
 	UIManager.showPromptBox("Are you sure you want to buy this items?", "ok", "cancel", function() {
 		if (CashShop.cartItem.length > 0) {
 			const pkt = new PACKET.CZ.SE_PC_BUY_CASHITEM_LIST();
@@ -321977,7 +322169,8 @@ function renderRankText(text) {
 	const totalStr = parts[1];
 	const step = 28;
 	const slashStep = 28;
-	let x = RANK_W - (rankingStr.length * step + slashStep + totalStr.length * step) >> 1;
+	const totalWidth = rankingStr.length * step + slashStep + totalStr.length * step;
+	let x = RANK_W - totalWidth >> 1;
 	let i, a;
 	for (i = 0; i < rankingStr.length; i++) {
 		a = rankCharToAction(rankingStr[i]);
@@ -324651,17 +324844,7 @@ function onEntitySpam(pkt) {
 			}
 		}
 	}
-	if (pkt.effectState & StatusState_default.EffectState.FALCON && [
-		11,
-		4012,
-		4034,
-		4056,
-		4062,
-		4098,
-		4257,
-		4270,
-		4278
-	].includes(pkt.job)) {
+	if (pkt.effectState & StatusState_default.EffectState.FALCON && DB.isHunter(pkt.job)) {
 		if (!entity.falcon) entity.falcon = new Entity();
 		entity.falcon.set({
 			objecttype: entity.falcon.constructor.TYPE_FALCON,
@@ -329709,7 +329892,8 @@ var init_Sense = __esmMin((() => {
 			closeBtn.addEventListener("click", () => Sense.remove());
 		}
 		this.draggable(".header");
-		_model$2.ctx = root.querySelector("#canvas_model").getContext("2d");
+		const canvas = root.querySelector("#canvas_model");
+		_model$2.ctx = canvas.getContext("2d");
 		Elements = [
 			DB.getMessage(414),
 			DB.getMessage(415),
@@ -330271,36 +330455,14 @@ function onSpiritSphere(pkt) {
 	if (pkt.num > 0) {
 		const entity = EntityManager.get(pkt.AID);
 		if (entity) {
-			const isMonk = entity._job && [
-				15,
-				4016,
-				4038,
-				4070,
-				4077,
-				4106
-			].includes(entity._job);
-			const isGS = entity._job && [
-				24,
-				4215,
-				4216,
-				4228,
-				4229
-			].includes(entity._job);
-			const isRG = entity._job && [
-				4066,
-				4082,
-				4083,
-				4102,
-				4110
-			].includes(entity._job);
 			const EF_Init_Par = {
 				effectId: EffectConst_default.EF_CHOOKGI,
 				ownerAID: pkt.AID,
 				spiritNum: pkt.num
 			};
-			if (isMonk) EF_Init_Par.effectId = EffectConst_default.EF_CHOOKGI2;
-			else if (isGS) EF_Init_Par.effectId = EffectConst_default.EF_CHOOKGI3;
-			else if (isRG) EF_Init_Par.effectId = EffectConst_default.EF_CHOOKGI_N;
+			if (DB.isMonk(entity._job)) EF_Init_Par.effectId = EffectConst_default.EF_CHOOKGI2;
+			else if (DB.isGunslinger(entity._job)) EF_Init_Par.effectId = EffectConst_default.EF_CHOOKGI3;
+			else if (DB.isRoyalGuard(entity._job)) EF_Init_Par.effectId = EffectConst_default.EF_CHOOKGI_N;
 			EffectManager.spam(EF_Init_Par);
 		}
 	}
@@ -331993,7 +332155,8 @@ function onDrop(event) {
 * Get informations about an item
 */
 function onItemInfo(event) {
-	const item = _input[parseInt(this.parentNode.getAttribute("data-index"), 10)];
+	const index = parseInt(this.parentNode.getAttribute("data-index"), 10);
+	const item = _input[index];
 	event.stopImmediatePropagation();
 	if (!item) return false;
 	if (ItemInfo_default.uid === item.ITID) {
@@ -335074,16 +335237,7 @@ function onRequestTalk(user, text, target) {
 	}
 	pkt.msg = SessionStorage_default.Entity.display.name + " : " + text;
 	Network.sendPacket(pkt);
-	if (chatLines > 7 && [
-		23,
-		4045,
-		4128,
-		4172,
-		4190,
-		4191,
-		4192,
-		4193
-	].includes(SessionStorage_default.Entity._job)) {
+	if (chatLines > 7 && DB.isSuperNovice(SessionStorage_default.Entity._job)) {
 		if (Math.floor(BasicInfoController.getUI().base_exp / BasicInfoController.getUI().base_exp_next * 1e3) % 100 == 0) if (text == DB.getMessage(790)) snCounter = 1;
 		else if (snCounter == 1 && text == DB.getMessage(791) + " " + SessionStorage_default.Entity.display.name + " " + DB.getMessage(792)) snCounter = 2;
 		else if (snCounter == 2 && text == DB.getMessage(793)) snCounter = 3;
@@ -345714,7 +345868,8 @@ function showContextMenu(iconElement, event) {
 			overlay.onmousedown();
 		};
 		Client.getFile(path, (buffer) => {
-			saveLink.href = URL.createObjectURL(new Blob([buffer], { type: "application/octet-stream" }));
+			const url = URL.createObjectURL(new Blob([buffer], { type: "application/octet-stream" }));
+			saveLink.href = url;
 			saveLink.download = iconElement.textContent.trim();
 		});
 	}
