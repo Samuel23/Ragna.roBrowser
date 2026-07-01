@@ -82457,6 +82457,9 @@ var init_JobConst = __esmMin((() => {
 		NINJA: 25,
 		XMAS: 26,
 		SUMMER: 27,
+		HANBOK: 28,
+		OKTOBERFEST: 29,
+		SUMMER2: 30,
 		NOVICE_H: 4001,
 		SWORDMAN_H: 4002,
 		MAGICIAN_H: 4003,
@@ -82543,6 +82546,14 @@ var init_JobConst = __esmMin((() => {
 		RANGER2_H: 4085,
 		MECHANIC2: 4086,
 		MECHANIC2_H: 4087,
+		RUNE_CHICKEN2: 4088,
+		RUNE_CHICKEN2_H: 4089,
+		RUNE_CHICKEN3: 4090,
+		RUNE_CHICKEN3_H: 4091,
+		RUNE_CHICKEN4: 4092,
+		RUNE_CHICKEN4_H: 4093,
+		RUNE_CHICKEN5: 4094,
+		RUNE_CHICKEN5_H: 4095,
 		RUNE_KNIGHT_B: 4096,
 		WARLOCK_B: 4097,
 		RANGER_B: 4098,
@@ -82663,7 +82674,9 @@ var init_JobConst = __esmMin((() => {
 		FROG_OBORO: 4214,
 		REBELLION: 4215,
 		PECO_REBELLION: 4216,
+		TRIBE_DORAM: 4217,
 		DO_SUMMONER: 4218,
+		DO_CART_SUMMONER1: 4219,
 		DO_SUMMONER_B: 4220,
 		NINJA_B: 4222,
 		KAGEROU_B: 4223,
@@ -82673,6 +82686,14 @@ var init_JobConst = __esmMin((() => {
 		LINKER_B: 4227,
 		GUNSLINGER_B: 4228,
 		REBELLION_B: 4229,
+		FROG_NINJA_B: 4230,
+		FROG_KAGEROU_B: 4231,
+		FROG_OBORO_B: 4232,
+		PORING_TAEKWON_B: 4233,
+		PORING_STAR_B: 4234,
+		FROG_LINKER_B: 4235,
+		PECO_GUNNER_B: 4236,
+		PECO_REBELLION_B: 4237,
 		STAR2_B: 4238,
 		STAR_EMPEROR: 4239,
 		SOUL_REAPER: 4240,
@@ -82680,8 +82701,10 @@ var init_JobConst = __esmMin((() => {
 		SOUL_REAPER_B: 4242,
 		STAR_EMPEROR2: 4243,
 		STAR_EMPEROR2_B: 4244,
-		SOUL_REAPER2: 4245,
-		SOUL_REAPER2_B: 4246,
+		HAETAE_STAR_EMPEROR: 4245,
+		HAETAE_SOUL_REAPER: 4246,
+		HAETAE_STAR_EMPEROR_B: 4247,
+		HAETAE_SOUL_REAPER_B: 4248,
 		DRAGON_KNIGHT: 4252,
 		MEISTER: 4253,
 		SHADOW_CROSS: 4254,
@@ -82719,6 +82742,13 @@ var init_JobConst = __esmMin((() => {
 		NIGHT_WATCH: 4306,
 		HYPER_NOVICE: 4307,
 		SPIRIT_HANDLER: 4308,
+		SKY_EMPEROR_RIDING: 4309,
+		SOUL_ASCETIC_RIDING: 4310,
+		SHINKIRO_RIDING: 4311,
+		SHIRANUI_RIDING: 4312,
+		NIGHT_WATCH_RIDING: 4313,
+		HYPER_NOVICE_RIDING: 4314,
+		SPIRIT_HANDLER_RIDING1: 4315,
 		SKY_EMPEROR2: 4316,
 		COSTUME_SECOND_JOB_START: 4331,
 		RUNE_KNIGHT_2ND: 4332,
@@ -219627,7 +219657,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$7() {
+function _root$20() {
 	return ChatBox._shadow || ChatBox._host;
 }
 /**
@@ -219649,7 +219679,7 @@ function extractChatMessage$1(inputEl) {
 */
 function flushMessageBuffer() {
 	if (_messageBuffer.length === 0) return;
-	const root = _root$7();
+	const root = _root$20();
 	const messages = _messageBuffer.slice();
 	_messageBuffer = [];
 	const messagesByTab = {};
@@ -219769,7 +219799,7 @@ function onDropText$2(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$15(event) {
+function stopPropagation$12(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
@@ -219778,7 +219808,7 @@ function stopPropagation$15(event) {
 */
 function onPrivateMessageUserSelection(name) {
 	return function onPrivateMessageUserSelectionClosure() {
-		const nickBox = _root$7().querySelector(".input .username");
+		const nickBox = _root$20().querySelector(".input .username");
 		if (nickBox) nickBox.value = name;
 	};
 }
@@ -219787,7 +219817,7 @@ function onPrivateMessageUserSelection(name) {
 */
 function onChangeTargetMessage(type) {
 	return function onChangeTargetMessageClosure() {
-		const $input = _root$7().querySelector(".input-chatbox");
+		const $input = _root$20().querySelector(".input-chatbox");
 		if ($input) {
 			$input.classList.remove("guild", "party", "clan");
 			if (type & ChatBox.TYPE.PARTY) $input.classList.add("party");
@@ -219833,7 +219863,7 @@ function getScrollLineHeightPx(element) {
 	return 14;
 }
 function makeResizableDiv() {
-	const root = _root$7();
+	const root = _root$20();
 	const resizer = root.querySelector(".event_add_cursor");
 	if (!resizer) return;
 	let originalHeight = 0;
@@ -219977,7 +220007,7 @@ var init_ChatBox = __esmMin((() => {
 	* Initialize UI
 	*/
 	ChatBox.init = function init() {
-		const root = _root$7();
+		const root = _root$20();
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
 		_heightIndex = _preferences$71.height - 1;
 		ChatBox.updateHeight();
@@ -220113,7 +220143,7 @@ var init_ChatBox = __esmMin((() => {
 		});
 		root.querySelectorAll("input[type=text]").forEach((input) => {
 			input.addEventListener("drop", onDropText$2);
-			input.addEventListener("dragover", stopPropagation$15);
+			input.addEventListener("dragover", stopPropagation$12);
 		});
 		root.querySelectorAll(".header input").forEach((input) => {
 			input.addEventListener("dblclick", function() {
@@ -220314,7 +220344,7 @@ var init_ChatBox = __esmMin((() => {
 	* Clean up the box
 	*/
 	ChatBox.clean = function Clean() {
-		const root = _root$7();
+		const root = _root$20();
 		root.querySelectorAll(".content").forEach((content) => {
 			const matches = content.innerHTML.match(/(blob:[^"]+)/g);
 			if (matches) for (let i = 0, count = matches.length; i < count; ++i) window.URL.revokeObjectURL(matches[i]);
@@ -220328,13 +220358,13 @@ var init_ChatBox = __esmMin((() => {
 		_historyNickName.clear();
 	};
 	ChatBox.toggleChatBattleOption = function toggleChatBattleOption() {
-		const onInput = _root$7().querySelector(".header tr td div.on input");
+		const onInput = _root$20().querySelector(".header tr td div.on input");
 		const tabName = onInput ? onInput.value : "";
 		ChatBoxSettings_default.toggle();
 		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
 	};
 	ChatBox.removeTab = function removeTab() {
-		const root = _root$7();
+		const root = _root$20();
 		const tabEl = root.querySelector(`table.header tr td.tab[data-tab="${this.activeTab}"]`);
 		if (tabEl) tabEl.remove();
 		const contentEl = root.querySelector(`.body .content[data-content="${this.activeTab}"]`);
@@ -220350,7 +220380,7 @@ var init_ChatBox = __esmMin((() => {
 		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
 	};
 	ChatBox.addNewTab = function addNewTab(name, settings) {
-		const root = _root$7();
+		const root = _root$20();
 		if (!name) name = "New Tab";
 		if (!settings) settings = [
 			ChatBox.FILTER.PUBLIC_LOG,
@@ -220407,7 +220437,7 @@ var init_ChatBox = __esmMin((() => {
 		return tabID;
 	};
 	ChatBox.switchTab = function switchTab(tabID) {
-		const root = _root$7();
+		const root = _root$20();
 		root.querySelectorAll("table.header tr td.tab div").forEach((el) => el.classList.remove("on"));
 		root.querySelectorAll(".body .content").forEach((el) => el.classList.remove("active"));
 		this.activeTab = tabID;
@@ -220426,7 +220456,7 @@ var init_ChatBox = __esmMin((() => {
 	* Once append to HTML
 	*/
 	ChatBox.onAppend = function OnAppend() {
-		const root = _root$7();
+		const root = _root$20();
 		const inputEl = root.querySelector(".input");
 		if (inputEl) inputEl.style.display = "none";
 		const bmEl = root.querySelector(".battlemode");
@@ -220457,7 +220487,7 @@ var init_ChatBox = __esmMin((() => {
 	* @return {boolean} found a shortcut ?
 	*/
 	ChatBox.processBattleMode = function processBattleMode(keyId) {
-		const bmEl = _root$7().querySelector(".battlemode");
+		const bmEl = _root$20().querySelector(".battlemode");
 		if (bmEl && bmEl.style.display !== "none" || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL || keyId >= KEYS.F1 && keyId <= KEYS.F24 || KEYS.INSERT) return BattleMode.process(keyId);
 		return false;
 	};
@@ -220465,7 +220495,7 @@ var init_ChatBox = __esmMin((() => {
 	* Key Event Handler
 	*/
 	ChatBox.onKeyDown = function OnKeyDown(event) {
-		const root = _root$7();
+		const root = _root$20();
 		const messageBox = root.querySelector(".input-chatbox");
 		const nickBox = root.querySelector(".input .username");
 		const onInput = root.querySelector(".header tr td div.on input");
@@ -220603,7 +220633,7 @@ var init_ChatBox = __esmMin((() => {
 		return false;
 	};
 	ChatBox.toggleChat = function toggleChat() {
-		const messageBox = _root$7().querySelector(".input-chatbox");
+		const messageBox = _root$20().querySelector(".input-chatbox");
 		const activeElement = KEYS.getDeepActiveElement();
 		if (activeElement.tagName === "INPUT" && activeElement !== messageBox) return true;
 		if (document.querySelector("#NpcMenu, #NpcBox")) return true;
@@ -220614,7 +220644,7 @@ var init_ChatBox = __esmMin((() => {
 	* Process ChatBox message
 	*/
 	ChatBox.submit = function Submit() {
-		const root = _root$7();
+		const root = _root$20();
 		const inputEl = root.querySelector(".input");
 		const $user = root.querySelector(".input .username");
 		const $text = root.querySelector(".input-chatbox");
@@ -220680,7 +220710,7 @@ var init_ChatBox = __esmMin((() => {
 	* Change chatbox's height
 	*/
 	ChatBox.updateHeight = function changeHeight(AlwaysVisible) {
-		const root = _root$7();
+		const root = _root$20();
 		const HeightList = [
 			0,
 			0,
@@ -220737,7 +220767,7 @@ var init_ChatBox = __esmMin((() => {
 	* Save chat from current tab into a file.
 	*/
 	ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
-		const root = _root$7();
+		const root = _root$20();
 		let data;
 		const tzoffset = (/* @__PURE__ */ new Date()).getTimezoneOffset() * 6e4;
 		let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
@@ -220752,7 +220782,7 @@ var init_ChatBox = __esmMin((() => {
 		ChatBox.addText(`Chat History [${ChatBox.tabs[ChatBox.activeTab].name}] ${date} can be saved by <a style="color:#F88" download="ChatHistory [${ChatBox.tabs[ChatBox.activeTab].name}] (${date.replace("/", "-")}).html" href="${url}" target="_blank">clicking here</a>.`, ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, null, true);
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
-		const root = _root$7();
+		const root = _root$20();
 		const scale = clampChatFontScale(_preferences$71.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
@@ -220773,7 +220803,7 @@ var init_ChatBox = __esmMin((() => {
 		if (message) message.style.lineHeight = `${inputLineHeight}px`;
 	};
 	ChatBox._setupItemLinkHandler = function _setupItemLinkHandler() {
-		const root = _root$7();
+		const root = _root$20();
 		if (!root) return;
 		root.addEventListener("click", (event) => {
 			const link = event.target.closest(".item-link");
@@ -220801,7 +220831,7 @@ var init_ChatBox = __esmMin((() => {
 		ItemInfo.setItem(item);
 	});
 	ChatBox.insertText = function(text) {
-		const input = _root$7().querySelector(".input-chatbox");
+		const input = _root$20().querySelector(".input-chatbox");
 		if (!input) return;
 		input.appendChild(document.createTextNode(text));
 		input.focus();
@@ -221115,14 +221145,22 @@ var init_ItemCompare$2 = __esmMin((() => {
 //#region src/UI/Components/ItemCompare/ItemCompare.css?raw
 var ItemCompare_default$1;
 var init_ItemCompare$1 = __esmMin((() => {
-	ItemCompare_default$1 = ".ItemCompare {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 280px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemCompare .container {\r\n	height: 120px;\r\n	position: relative;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n	background-repeat: no-repeat;\r\n	background-color: #c5ddf6;\r\n	border-radius: 5px;\r\n}\r\n.ItemCompare .event_view {\r\n	position: absolute;\r\n}\r\n.ItemCompare .event_view .view {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	top: 6px;\r\n	left: 6px;\r\n}\r\n.ItemCompare .collection {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 10px;\r\n	width: 75px;\r\n	height: 100px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemCompare .title {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 86px;\r\n	width: 185px;\r\n	height: 14px;\r\n	padding-left: 4px;\r\n	padding-top: 6px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n.ItemCompare .close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	display: block;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n.ItemCompare .description {\r\n	position: absolute;\r\n	background-color: white;\r\n	top: 35px;\r\n	left: 100px;\r\n	line-height: 18px;\r\n	width: 170px;\r\n	height: 75px;\r\n	overflow-y: auto;\r\n}\r\n.ItemCompare .description .description-inner {\r\n	width: 150px;\r\n}\r\n.ItemCompare .extend {\r\n	position: absolute;\r\n	right: 4px;\r\n	bottom: 3px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.ItemCompare .cardlist {\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemCompare .cardlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	background-color: #c5ddf6;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemCompare .cardlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemCompare .cardlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemCompare .cardlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemCompare .cardlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemCompare .book_open {\r\n	margin-top: 6px;\r\n	margin-left: 7px;\r\n}\r\n.ItemCompare .book_read {\r\n	position: absolute;\r\n	margin-top: 7px;\r\n}\r\n\r\n.ItemCompare .overlay_open {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 7px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n.ItemCompare .overlay_read {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 27px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n\r\n.ItemCompare .optionlist {\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemCompare .optionlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	background-color: #c5ddf6;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemCompare .optionlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemCompare .optionlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemCompare .optionlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemCompare .optionlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemCompare .title.damaged {\r\n	text-shadow: red 1px 1px 0px;\r\n}\r\n";
+	ItemCompare_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n.ItemCompare {\r\n	position: relative;\r\n	width: 280px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemCompare .container {\r\n	height: 120px;\r\n	position: relative;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n	background-repeat: no-repeat;\r\n	background-color: #c5ddf6;\r\n	border-radius: 5px;\r\n}\r\n.ItemCompare .event_view {\r\n	position: absolute;\r\n}\r\n.ItemCompare .event_view .view {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	top: 6px;\r\n	left: 6px;\r\n}\r\n.ItemCompare .collection {\r\n	position: absolute;\r\n	top: 11px;\r\n	left: 10px;\r\n	width: 75px;\r\n	height: 100px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemCompare .title {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 86px;\r\n	width: 185px;\r\n	height: 14px;\r\n	padding-left: 4px;\r\n	padding-top: 6px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n.ItemCompare .close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	display: block;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n}\r\n.ItemCompare .description {\r\n	position: absolute;\r\n	background-color: white;\r\n	top: 35px;\r\n	left: 100px;\r\n	line-height: 18px;\r\n	width: 170px;\r\n	height: 75px;\r\n	overflow-y: auto;\r\n}\r\n.ItemCompare .description .description-inner {\r\n	width: 150px;\r\n}\r\n.ItemCompare .extend {\r\n	position: absolute;\r\n	right: 4px;\r\n	bottom: 3px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n.ItemCompare .cardlist {\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemCompare .cardlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	background-color: #c5ddf6;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemCompare .cardlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemCompare .cardlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemCompare .cardlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemCompare .cardlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemCompare .book_open {\r\n	margin-top: 6px;\r\n	margin-left: 7px;\r\n}\r\n.ItemCompare .book_read {\r\n	position: absolute;\r\n	margin-top: 7px;\r\n}\r\n\r\n.ItemCompare .overlay_open {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 7px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n.ItemCompare .overlay_read {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	color: white;\r\n	text-shadow: black 1px 1px;\r\n	top: -7px;\r\n	left: 27px;\r\n	text-align: center;\r\n	padding: 3px 4px 1px 4px;\r\n	display: none;\r\n}\r\n\r\n.ItemCompare .optionlist {\r\n	border-radius: 5px;\r\n	background-color: white;\r\n	padding: 2px;\r\n	margin-top: 3px;\r\n}\r\n.ItemCompare .optionlist .border {\r\n	border: 1px solid #c1c6c2;\r\n	background-color: #c5ddf6;\r\n	padding-top: 2px;\r\n	padding-left: 5px;\r\n	border-radius: 5px;\r\n}\r\n.ItemCompare .optionlist .item {\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n.ItemCompare .optionlist .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n}\r\n.ItemCompare .optionlist .item .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: -20px;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n.ItemCompare .optionlist .item:hover .name {\r\n	display: block;\r\n}\r\n\r\n.ItemCompare .title.damaged {\r\n	text-shadow: red 1px 1px 0px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ItemCompare/ItemCompare.js
 /**
+* Helper: escape HTML
+*/
+function _escapeHTML$9(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+/**
 * Add a card into a slot
 *
-* @param {object} jquery cart list DOM
+* @param {Element} cardList DOM element
 * @param {number} item id
 * @param {number} index
 * @param {number} slot count
@@ -221132,28 +221170,32 @@ function addCard$1(cardList, itemId, index, slotCount) {
 	const card = DB.getItemInfo(itemId);
 	if (itemId && card) {
 		file = "item/" + card.identifiedResourceName + ".bmp";
-		name = "<div class=\"name\">" + jquery_default.escape(card.identifiedDisplayName) + "</div>";
+		name = `<div class="name">${_escapeHTML$9(card.identifiedDisplayName)}</div>`;
 	} else if (index < slotCount) file = "empty_card_slot.bmp";
 	else file = "basic_interface/coparison_disable_card_slot.bmp";
-	cardList.append("<div class=\"item\" data-index=\"" + index + "\"><div class=\"icon\"></div>" + name + "</div>");
-	Client.loadFile(DB.INTERFACE_PATH + file, function(data) {
-		const element = cardList.find(".item[data-index=\"" + index + "\"] .icon");
-		element.css("backgroundImage", "url(" + data + ")");
-		if (itemId && card) element.on("contextmenu", function() {
-			ItemCompare.setItem({
-				ITID: itemId,
-				IsIdentified: true,
-				type: 6
+	if (!cardList) return;
+	cardList.insertAdjacentHTML("beforeend", `<div class="item" data-index="${index}"><div class="icon"></div>${name}</div>`);
+	Client.loadFile(DB.INTERFACE_PATH + file, (data) => {
+		const element = ItemCompare.getRoot().querySelector(`.cardlist .item[data-index="${index}"] .icon`);
+		if (element) {
+			element.style.backgroundImage = `url(${data})`;
+			if (itemId && card) element.addEventListener("contextmenu", (e) => {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				ItemCompare.setItem({
+					ITID: itemId,
+					IsIdentified: true,
+					type: 6
+				});
 			});
-			return false;
-		});
+		}
 	});
 }
 /**
 * Extend ItemCompare window size
 */
 function onResize$17() {
-	const top = ItemCompare.ui.position().top;
+	const top = ItemCompare._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		const h = Math.floor(Mouse.screen.y - top);
@@ -221162,12 +221204,13 @@ function onResize$17() {
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
-	jquery_default(window).on("mouseup.resize", function(event) {
+	const onMouseUp = (event) => {
 		if (event.which === 1) {
 			clearInterval(_Interval);
-			jquery_default(window).off("mouseup.resize");
+			window.removeEventListener("mouseup", onMouseUp);
 		}
-	});
+	};
+	window.addEventListener("mouseup", onMouseUp);
 }
 /**
 * Extend ItemCompare window size
@@ -221175,43 +221218,55 @@ function onResize$17() {
 * @param {number} height
 */
 function resize$6(height) {
-	const container = ItemCompare.ui.find(".container");
-	const description = ItemCompare.ui.find(".description");
-	const descriptionInner = ItemCompare.ui.find(".description-inner");
+	const root = ItemCompare.getRoot();
+	const container = root.querySelector(".container");
+	const description = root.querySelector(".description");
+	const descriptionInner = root.querySelector(".description-inner");
 	let containerHeight = height;
 	const minHeight = 120;
-	const maxHeight = descriptionInner.height() + 45 > 120 ? Math.min(descriptionInner.height() + 45, 448) : 120;
+	const innerH = descriptionInner ? descriptionInner.offsetHeight : 0;
+	const maxHeight = innerH + 45 > 120 ? Math.min(innerH + 45, 448) : 120;
 	if (containerHeight <= minHeight) containerHeight = minHeight;
 	if (containerHeight >= maxHeight) containerHeight = maxHeight;
-	container.css({ height: containerHeight });
-	description.css({ height: containerHeight - 45 });
+	if (container) container.style.height = `${containerHeight}px`;
+	if (description) description.style.height = `${containerHeight - 45}px`;
 }
 function addEvent$1(item) {
-	const event = ItemCompare.ui.find(".event_view");
-	if (!validateFieldsExist$1(event)) addEvent$1(item);
-	event.find(".view").hide();
-	event.find("canvas").remove();
+	const root = ItemCompare.getRoot();
+	let event = root.querySelector(".event_view");
+	if (!event) {
+		if (!validateFieldsExist$1(event)) event = root.querySelector(".event_view");
+	}
+	if (!event) return;
+	const viewBtn = event.querySelector(".view");
+	if (viewBtn) viewBtn.style.display = "none";
+	event.querySelectorAll("canvas").forEach((c) => c.remove());
 	Renderer.stop(rendering$3);
 	switch (item.type) {
 		case ItemType_default.CARD:
-			event.find(".view").show();
+			if (viewBtn) viewBtn.style.display = "block";
 			break;
 		case ItemType_default.ETC: {
 			const filenameBook = `data/book/${item.ITID}.txt`;
-			Client.loadFile(filenameBook, function(data) {
-				MakeReadBook_default.startBook(data, item);
+			Client.loadFile(filenameBook, (data) => {
+				try {
+					MakeReadBook_default.startBook(data, item);
+				} catch (e) {
+					console.error("ItemCompare::addEvent() - startBook failed:", e.message);
+				}
 				eventsBooks$1();
 			});
 			break;
 		}
 		default:
-			event.find(".view").hide();
-			event.find("canvas").remove();
+			if (viewBtn) viewBtn.style.display = "none";
 			break;
 	}
 }
 function eventsBooks$1() {
-	const event = ItemCompare.ui.find(".event_view");
+	const root = ItemCompare.getRoot();
+	const event = root.querySelector(".event_view");
+	if (!event) return;
 	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
 		try {
 			_sprite$4 = new SPR(spr);
@@ -221220,62 +221275,74 @@ function eventsBooks$1() {
 			console.error("Book::init() - " + e.message);
 			return;
 		}
-		let canvas;
-		canvas = _sprite$4.getCanvasFromFrame(0);
+		const canvas = _sprite$4.getCanvasFromFrame(0);
 		canvas.className = "book_open event_add_cursor";
-		event.append(canvas);
-		const bookOpen = ItemCompare.ui.find(".book_open");
-		bookOpen.mouseover(function(e) {
-			e.stopImmediatePropagation();
-			ItemCompare.ui.find(".overlay_open").show();
-		}).mouseout(function(e) {
-			e.stopImmediatePropagation();
-			ItemCompare.ui.find(".overlay_open").hide();
-		});
-		bookOpen.click(function(e) {
-			e.stopImmediatePropagation();
-			MakeReadBook_default.openBook();
-		}.bind(this));
-		event.append("<canvas width=\"21\" height=\"15\" class=\"book_read event_add_cursor\"/>");
-		canvas = event.find(".book_read");
-		canvas.width = 21;
-		canvas.height = 15;
-		_ctx$15 = canvas[0].getContext("2d");
-		const bookRead = ItemCompare.ui.find(".book_read");
-		bookRead.mouseover(function(e) {
-			e.stopImmediatePropagation();
-			ItemCompare.ui.find(".overlay_read").show();
-		}).mouseout(function(e) {
-			e.stopImmediatePropagation();
-			ItemCompare.ui.find(".overlay_read").hide();
-		});
-		bookRead.click(function(e) {
-			e.stopImmediatePropagation();
-			MakeReadBook_default.highlighter();
-		}.bind(this));
+		event.appendChild(canvas);
+		const bookOpen = root.querySelector(".book_open");
+		if (bookOpen) {
+			bookOpen.addEventListener("mouseover", (e) => {
+				e.stopImmediatePropagation();
+				const overlayOpen = root.querySelector(".overlay_open");
+				if (overlayOpen) overlayOpen.style.display = "block";
+			});
+			bookOpen.addEventListener("mouseout", (e) => {
+				e.stopImmediatePropagation();
+				const overlayOpen = root.querySelector(".overlay_open");
+				if (overlayOpen) overlayOpen.style.display = "none";
+			});
+			bookOpen.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				MakeReadBook_default.openBook();
+			});
+		}
+		const readCanvas = document.createElement("canvas");
+		readCanvas.width = 21;
+		readCanvas.height = 15;
+		readCanvas.className = "book_read event_add_cursor";
+		event.appendChild(readCanvas);
+		_ctx$15 = readCanvas.getContext("2d");
+		const bookRead = root.querySelector(".book_read");
+		if (bookRead) {
+			bookRead.addEventListener("mouseover", (e) => {
+				e.stopImmediatePropagation();
+				const overlayRead = root.querySelector(".overlay_read");
+				if (overlayRead) overlayRead.style.display = "block";
+			});
+			bookRead.addEventListener("mouseout", (e) => {
+				e.stopImmediatePropagation();
+				const overlayRead = root.querySelector(".overlay_read");
+				if (overlayRead) overlayRead.style.display = "none";
+			});
+			bookRead.addEventListener("click", (e) => {
+				e.stopImmediatePropagation();
+				MakeReadBook_default.highlighter();
+			});
+		}
 		Renderer.render(rendering$3);
-	}.bind(this));
+	});
 }
 function validateFieldsExist$1(event) {
-	if (event.length === 0) {
-		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\" data-text=\"1294\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\" data-text=\"1295\">" + DB.getMessage(1295) + "</span></div>";
-		ItemCompare.ui.find(".collection").after(validExitElement);
+	const root = ItemCompare.getRoot();
+	if (!event) {
+		const validExitElement = "<div class=\"event_view\"><button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button><span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span></div>";
+		const collection = root.querySelector(".collection");
+		if (collection) collection.insertAdjacentHTML("afterend", validExitElement);
 		return false;
 	}
-	if (ItemCompare.ui.find(".overlay_open").length == 0 && ItemCompare.ui.find(".overlay_read").length == 0) event.append("<span class=\"overlay_open\" data-text=\"1294\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\" data-text=\"1295\">" + DB.getMessage(1295) + "</span>");
-	if (ItemCompare.ui.find("button").length == 0) event.append("<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
+	if (!root.querySelector(".overlay_open") && !root.querySelector(".overlay_read")) event.insertAdjacentHTML("beforeend", "<span class=\"overlay_open\">" + DB.getMessage(1294) + "</span><span class=\"overlay_read\">" + DB.getMessage(1295) + "</span>");
+	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
 	return true;
 }
 var _sprite$4, _action$4, _ctx$15, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
 var init_ItemCompare = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_ItemType();
 	init_Client();
 	init_CardIllustration();
 	init_UIManager();
 	init_MouseEventHandler();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_MakeReadBook();
 	init_Renderer();
 	init_SpriteRenderer();
@@ -221287,28 +221354,24 @@ var init_ItemCompare = __esmMin((() => {
 	init_Entity$1();
 	_type$7 = 0;
 	_start$2 = 0;
-	ItemCompare = new UIComponent("ItemCompare", ItemCompare_default$2, ItemCompare_default$1);
+	ItemCompare = new GUIComponent("ItemCompare", ItemCompare_default$1);
+	ItemCompare.render = () => ItemCompare_default$2;
 	/**
 	* @let {number} ItemCompare unique id
 	*/
 	ItemCompare.uid = -1;
 	/**
-	* Once append to the DOM
-	*/
-	/**
 	* Once append
 	*/
 	ItemCompare.onAppend = function onAppend() {
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		resize$6(ItemCompare.ui.find(".description-inner").height() + 45);
-		const itemInfoPosition = ItemInfo_default.ui.offset();
-		const itemInfoWidth = ItemInfo_default.ui.outerWidth();
-		ItemCompare.ui.css({
-			position: "absolute",
-			top: itemInfoPosition.top ? itemInfoPosition.top : 200,
-			left: itemInfoPosition.left ? itemInfoPosition.left - itemInfoWidth : 200
-		});
+		const descInner = ItemCompare.getRoot().querySelector(".description-inner");
+		if (descInner) resize$6(descInner.offsetHeight + 45);
+		if (ItemInfo_default._host) {
+			const itemInfoRect = ItemInfo_default._host.getBoundingClientRect();
+			const itemInfoWidth = itemInfoRect.width;
+			this._host.style.top = `${itemInfoRect.top ? itemInfoRect.top : 200}px`;
+			this._host.style.left = `${itemInfoRect.left ? itemInfoRect.left - itemInfoWidth : 200}px`;
+		}
 	};
 	/**
 	* Once removed from html
@@ -221320,16 +221383,19 @@ var init_ItemCompare = __esmMin((() => {
 	* Initialize UI
 	*/
 	ItemCompare.init = function init() {
-		this.ui.css({
-			top: 200,
-			left: 200
-		});
-		this.ui.find(".extend").mousedown(onResize$17);
-		this.ui.find(".view").click(function() {
+		const root = ItemCompare.getRoot();
+		this._host.style.top = "200px";
+		this._host.style.left = "200px";
+		const extendBtn = root.querySelector(".extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$17);
+		const viewBtn = root.querySelector(".view");
+		if (viewBtn) viewBtn.addEventListener("click", () => {
 			CardIllustration_default.append();
 			CardIllustration_default.setCard(this.item);
-		}.bind(this));
-		this.draggable(ItemInfo_default.ui.find(".title"));
+		});
+		const itemInfoRoot = ItemInfo_default.getRoot();
+		const itemInfoTitle = itemInfoRoot ? itemInfoRoot.querySelector(".title") : null;
+		this.draggable(itemInfoTitle || ".title");
 	};
 	/**
 	* Bind component
@@ -221338,26 +221404,31 @@ var init_ItemCompare = __esmMin((() => {
 	*/
 	ItemCompare.setItem = function setItem(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const ui = this.ui;
-		const cardList = ui.find(".cardlist .border");
-		const optionContainer = ui.find(".option-container");
+		const root = ItemCompare.getRoot();
+		const cardList = root.querySelector(".cardlist .border");
+		const optionContainer = root.querySelector(".option-container");
 		this.item = it;
-		Client.loadFile(DB.INTERFACE_PATH + "collection/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			ui.find(".collection").css("backgroundImage", "url(" + data + ")");
+		Client.loadFile(DB.INTERFACE_PATH + "collection/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+			const collection = root.querySelector(".collection");
+			if (collection) collection.style.backgroundImage = `url(${data})`;
 		});
 		const itemName = DB.getItemName(item, { showItemOptions: false });
-		if (item.IsDamaged) ui.find(".title").addClass("damaged");
-		else ui.find(".title").removeClass("damaged");
-		ui.find(".title").text(itemName);
+		const title = root.querySelector(".title");
+		if (title) {
+			if (item.IsDamaged) title.classList.add("damaged");
+			else title.classList.remove("damaged");
+			title.textContent = itemName;
+		}
 		if (item.Options && item.IsIdentified) {
-			optionContainer.html("");
+			if (optionContainer) optionContainer.innerHTML = "";
 			for (let i = 1; i <= 5; i++) if (item.Options[i].index > 0) {
 				const optionList = "<div class=\"optionlist\"><div class=\"border\">" + DB.getOptionName(item.Options[i].index).replace("%d", item.Options[i].value).replace("%%", "%") + "</div></div>";
-				optionContainer.append(optionList);
+				if (optionContainer) optionContainer.insertAdjacentHTML("beforeend", optionList);
 			}
-			optionContainer.show();
-		} else optionContainer.hide();
-		ui.find(".description-inner").text(item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName);
+			if (optionContainer) optionContainer.style.display = "block";
+		} else if (optionContainer) optionContainer.style.display = "none";
+		const descInner = root.querySelector(".description-inner");
+		if (descInner) descInner.textContent = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
 		addEvent$1(item);
 		let hideslots = false;
 		if (item.slot) {
@@ -221374,30 +221445,30 @@ var init_ItemCompare = __esmMin((() => {
 					break;
 			}
 		}
+		const cardListParent = cardList ? cardList.parentElement : null;
 		switch (item.type) {
 			default:
-				cardList.parent().hide();
+				if (cardListParent) cardListParent.style.display = "none";
 				break;
 			case ItemType_default.WEAPON:
 			case ItemType_default.ARMOR:
 			case ItemType_default.SHADOWGEAR: {
-				if (hideslots || item.type == ItemType_default.ARMOR && item.location == 0) {
-					cardList.parent().hide();
+				if (hideslots || item.type === ItemType_default.ARMOR && item.location === 0) {
+					if (cardListParent) cardListParent.style.display = "none";
 					break;
 				}
 				const slotCount = it.slotCount || 0;
-				let i;
-				cardList.parent().show();
-				cardList.empty();
-				for (i = 0; i < 4; ++i) addCard$1(cardList, item.slot && item.slot["card" + (i + 1)] || 0, i, slotCount);
-				if (!item.IsIdentified) cardList.parent().hide();
+				if (cardListParent) cardListParent.style.display = "block";
+				if (cardList) cardList.innerHTML = "";
+				for (let i = 0; i < 4; ++i) addCard$1(cardList, item.slot && item.slot["card" + (i + 1)] || 0, i, slotCount);
+				if (!item.IsIdentified && cardListParent) cardListParent.style.display = "none";
 				break;
 			}
 			case ItemType_default.PETEGG:
-				cardList.parent().hide();
+				if (cardListParent) cardListParent.style.display = "none";
 				break;
 		}
-		resize$6(ItemCompare.ui.find(".description-inner").height() + 45);
+		if (descInner) resize$6(descInner.offsetHeight + 45);
 	};
 	rendering$3 = (function renderingClosure() {
 		const position = new Uint16Array([0, 0]);
@@ -221419,13 +221490,13 @@ var init_ItemCompare = __esmMin((() => {
 //#region src/UI/Components/ItemPreview/ItemPreview.html?raw
 var ItemPreview_default$2;
 var init_ItemPreview$2 = __esmMin((() => {
-	ItemPreview_default$2 = "<div id=\"ItemPreview\" class=\"ItemPreview\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<span class=\"title\" data-text=\"2960\"></span>\r\n		<button\r\n			class=\"close\"\r\n			data-background=\"basic_interface/sys_close_off.bmp\"\r\n			data-hover=\"basic_interface/sys_close_on.bmp\"\r\n		></button>\r\n	</div>\r\n	<div class=\"content\">\r\n		<canvas width=\"55\" height=\"145\"></canvas>\r\n		<div class=\"controls\">\r\n			<button\r\n				class=\"rot_left\"\r\n				data-background=\"make_character/chr_arrow_rotate_l_out.bmp\"\r\n				data-hover=\"make_character/chr_arrow_rotate_l_over.bmp\"\r\n				data-down=\"make_character/chr_arrow_rotate_l_press.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"reset\"\r\n				data-background=\"equip_preview\\btn_mounting_normal.bmp\"\r\n				data-down=\"equip_preview\\btn_mounting_press.bmp\"\r\n				data-hover=\"equip_preview\\btn_mounting_over.bmp\"\r\n				data-text=\"2975\"\r\n			></button>\r\n			<button\r\n				class=\"rot_right\"\r\n				data-background=\"make_character/chr_arrow_rotate_r_out.bmp\"\r\n				data-hover=\"make_character/chr_arrow_rotate_r_over.bmp\"\r\n				data-down=\"make_character/chr_arrow_rotate_r_press.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	ItemPreview_default$2 = "<div id=\"ItemPreview\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<ui-text class=\"title\" msg=\"2960\"></ui-text>\r\n		<ui-button\r\n			class=\"close\"\r\n			bg=\"basic_interface/sys_close_off.bmp\"\r\n			hover=\"basic_interface/sys_close_on.bmp\"\r\n		></ui-button>\r\n	</div>\r\n	<div class=\"content\">\r\n		<canvas width=\"55\" height=\"145\"></canvas>\r\n		<div class=\"controls\">\r\n			<ui-button\r\n				class=\"rot_left\"\r\n				bg=\"make_character/chr_arrow_rotate_l_out.bmp\"\r\n				hover=\"make_character/chr_arrow_rotate_l_over.bmp\"\r\n				down=\"make_character/chr_arrow_rotate_l_press.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"reset\"\r\n				bg=\"equip_preview/btn_mounting_normal.bmp\"\r\n				down=\"equip_preview/btn_mounting_press.bmp\"\r\n				hover=\"equip_preview/btn_mounting_over.bmp\"\r\n				><ui-text msg=\"2975\"></ui-text\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"rot_right\"\r\n				bg=\"make_character/chr_arrow_rotate_r_out.bmp\"\r\n				hover=\"make_character/chr_arrow_rotate_r_over.bmp\"\r\n				down=\"make_character/chr_arrow_rotate_r_press.bmp\"\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ItemPreview/ItemPreview.css?raw
 var ItemPreview_default$1;
 var init_ItemPreview$1 = __esmMin((() => {
-	ItemPreview_default$1 = ".ItemPreview {\r\n	position: absolute;\r\n	width: 170px;\r\n	height: 210px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n}\r\n.ItemPreview .titlebar {\r\n	position: relative;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0 0;\r\n}\r\n.ItemPreview .titlebar .title {\r\n	position: absolute;\r\n	left: 6px;\r\n	top: 2px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	max-width: 130px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n.ItemPreview .titlebar .close {\r\n	position: absolute;\r\n	right: 3px;\r\n	top: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.ItemPreview .content {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	text-align: center;\r\n}\r\n.ItemPreview .controls {\r\n	margin-top: 6px;\r\n}\r\n.ItemPreview .controls button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	vertical-align: middle;\r\n}\r\n.ItemPreview .controls .rot_left,\r\n.ItemPreview .controls .rot_right {\r\n	width: 20px;\r\n	height: 20px;\r\n}\r\n.ItemPreview .controls .reset {\r\n	border: 0;\r\n	width: 80px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	margin: 0 2px;\r\n}\r\n";
+	ItemPreview_default$1 = ":host {\r\n	width: 170px;\r\n	height: 210px;\r\n	top: 200px;\r\n	left: 520px;\r\n}\r\n\r\n#ItemPreview {\r\n	position: absolute;\r\n	width: 170px;\r\n	height: 210px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n	box-shadow:\r\n		white 0px 0px 0px 3px inset,\r\n		rgb(192, 192, 192) 0px 0px 0px 4px inset;\r\n}\r\n#ItemPreview .titlebar {\r\n	position: relative;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	border-radius: 4px 4px 0 0;\r\n}\r\n#ItemPreview .titlebar .title {\r\n	position: absolute;\r\n	left: 6px;\r\n	top: 2px;\r\n	text-shadow: 1px 1px 0px white;\r\n	white-space: nowrap;\r\n	max-width: 130px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#ItemPreview .titlebar .close {\r\n	position: absolute;\r\n	right: 3px;\r\n	top: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#ItemPreview .content {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	text-align: center;\r\n}\r\n#ItemPreview .controls {\r\n	margin-top: 6px;\r\n}\r\n#ItemPreview .controls ui-button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	vertical-align: middle;\r\n}\r\n#ItemPreview .controls .rot_left,\r\n#ItemPreview .controls .rot_right {\r\n	width: 20px;\r\n	height: 20px;\r\n}\r\n#ItemPreview .controls .reset {\r\n	border: 0;\r\n	width: 80px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	margin: 0 2px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ItemPreview/ItemPreview.js
@@ -221492,12 +221563,17 @@ var init_ItemPreview = __esmMin((() => {
 	init_Camera();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_ItemPreview$2();
 	init_ItemPreview$1();
 	init_ItemInfo();
 	init_Entity$1();
-	ItemPreview = new UIComponent("ItemPreview", ItemPreview_default$2, ItemPreview_default$1);
+	ItemPreview = new GUIComponent("ItemPreview", ItemPreview_default$1);
+	/**
+	* Render HTML
+	*/
+	ItemPreview.render = () => ItemPreview_default$2;
 	_direction = 0;
 	_previewLocation = 0;
 	_previewSpriteId = 0;
@@ -221511,27 +221587,24 @@ var init_ItemPreview = __esmMin((() => {
 	* Initialize UI
 	*/
 	ItemPreview.init = function init() {
-		this.ui.css({
-			top: 200,
-			left: 520
-		});
-		_ctx$14 = this.ui.find("canvas")[0].getContext("2d");
-		this.ui.find(".close").click(function() {
+		const root = this.getRoot();
+		_ctx$14 = root.querySelector("canvas").getContext("2d");
+		root.querySelector(".close").addEventListener("click", () => {
 			ItemPreview.remove();
 		});
-		this.ui.find(".rot_left").click(function(event) {
+		root.querySelector(".rot_left").addEventListener("click", (event) => {
 			event.stopImmediatePropagation();
 			rotatePreview(1);
 		});
-		this.ui.find(".rot_right").click(function(event) {
+		root.querySelector(".rot_right").addEventListener("click", (event) => {
 			event.stopImmediatePropagation();
 			rotatePreview(-1);
 		});
-		this.ui.find(".reset").click(function(event) {
+		root.querySelector(".reset").addEventListener("click", (event) => {
 			event.stopImmediatePropagation();
 			resetPreview();
 		});
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(".titlebar");
 	};
 	/**
 	* Once append
@@ -221539,14 +221612,16 @@ var init_ItemPreview = __esmMin((() => {
 	ItemPreview.onAppend = function onAppend() {
 		if (ItemInfo_default.ui) {
 			const itemInfoPosition = ItemInfo_default.ui.offset();
-			const itemInfoWidth = ItemInfo_default.ui.outerWidth();
+			const itemInfoWidth = ItemInfo_default.ui.width();
+			const hostWidth = this._host.offsetWidth;
+			const hostHeight = this._host.offsetHeight;
 			let left = itemInfoPosition.left + itemInfoWidth + 10;
 			let top = itemInfoPosition.top;
-			if (left + this.ui.outerWidth() > Renderer.width) left = Math.max(0, itemInfoPosition.left - this.ui.outerWidth() - 10);
-			if (top + this.ui.outerHeight() > Renderer.height) top = Math.max(0, Renderer.height - this.ui.outerHeight());
-			this.ui.css({
-				top: top || 200,
-				left: left || 200
+			if (left + hostWidth > Renderer.width) left = Math.max(0, itemInfoPosition.left - hostWidth - 10);
+			if (top + hostHeight > Renderer.height) top = Math.max(0, Renderer.height - hostHeight);
+			Object.assign(this._host.style, {
+				top: `${top || 200}px`,
+				left: `${left || 200}px`
 			});
 		}
 		if (!_rendering) {
@@ -222606,14 +222681,14 @@ var init_WhisperBox = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$6() {
+function _root$19() {
 	return PartyHelper._shadow || PartyHelper._host;
 }
 /**
 * Validate and process form data
 */
 function onValidate$1() {
-	const root = _root$6();
+	const root = _root$19();
 	const PartyFriends = UIManager.getComponent("PartyFriends");
 	switch (_type$6) {
 		case PartyHelper.Type.CREATE: {
@@ -222676,7 +222751,7 @@ var init_PartyHelper = __esmMin((() => {
 	* Initialize component event listeners
 	*/
 	PartyHelper.init = function init() {
-		const root = _root$6();
+		const root = _root$19();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
@@ -222712,7 +222787,7 @@ var init_PartyHelper = __esmMin((() => {
 				off.classList.remove("off");
 				off.classList.add("on");
 				const prefs = WhisperBox.preferences;
-				const rootEl = _root$6();
+				const rootEl = _root$19();
 				const strangerOn = rootEl.querySelector(".open1to1Stranger .on");
 				const friendOn = rootEl.querySelector(".open1to1Friend .on");
 				const alarmOn = rootEl.querySelector(".alarm1to1 .on");
@@ -222775,7 +222850,7 @@ var init_PartyHelper = __esmMin((() => {
 	*/
 	PartyHelper.onAppend = function onAppend() {
 		const base = UIManager.getComponent("PartyFriends");
-		const root = _root$6();
+		const root = _root$19();
 		const partyContent = root.querySelector(".party-content");
 		const friendContent = root.querySelector(".friend-content");
 		if (partyContent) partyContent.style.display = "none";
@@ -222792,7 +222867,7 @@ var init_PartyHelper = __esmMin((() => {
 	* Cleanup on window removal
 	*/
 	PartyHelper.onRemove = function onRemove() {
-		const root = _root$6();
+		const root = _root$19();
 		const partyContent = root.querySelector(".party-content");
 		const friendContent = root.querySelector(".friend-content");
 		if (partyContent) partyContent.style.display = "none";
@@ -222806,7 +222881,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {number} type
 	*/
 	PartyHelper.setType = function setType(type) {
-		const root = _root$6();
+		const root = _root$19();
 		root.querySelectorAll(".content").forEach((el) => el.classList.remove("disabled"));
 		const footer = root.querySelector(".footer");
 		if (footer) footer.style.display = "block";
@@ -222892,7 +222967,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {boolean} editable
 	*/
 	PartyHelper.setOptions = function setOptions(options, editable) {
-		const root = _root$6();
+		const root = _root$19();
 		function swap(off) {
 			const on = off.parentNode.querySelector(".on");
 			const tmp = on.style.backgroundImage;
@@ -222923,7 +222998,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @param {object} options
 	*/
 	PartyHelper.setFriendOptions = function setFriendOptions(options) {
-		const root = _root$6();
+		const root = _root$19();
 		function swap(off) {
 			const on = off.parentNode.querySelector(".on");
 			on.className = "off";
@@ -222977,11 +223052,11 @@ var init_Mail$2 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$5() {
+function _root$18() {
 	return Mail._shadow || Mail._host;
 }
 function updatePageMailItems() {
-	const root = _root$5();
+	const root = _root$18();
 	const nextBtn = root.querySelector(".next");
 	if (nextBtn) nextBtn.addEventListener("click", (e) => {
 		e.stopImmediatePropagation();
@@ -223006,7 +223081,7 @@ function updatePageMailItems() {
 * Create messages window size
 */
 function onWindowMailbox() {
-	const root = _root$5();
+	const root = _root$18();
 	Mail.parseMailrefreshinbox();
 	const sendBtn = root.querySelector("#create_mail_send");
 	if (sendBtn) sendBtn.disabled = false;
@@ -223034,7 +223109,7 @@ function onWindowMailbox() {
 	if (title) title.textContent = DB.getMessage(1025);
 }
 function createMailList() {
-	const root = _root$5();
+	const root = _root$18();
 	const content = root.querySelector(".list_item_mail");
 	root.querySelectorAll(".item_mail").forEach((el) => el.remove());
 	if (Mail.list.length == 0) return;
@@ -223089,7 +223164,7 @@ function createMailList() {
 	adjustButtons();
 }
 function adjustButtons() {
-	const root = _root$5();
+	const root = _root$18();
 	if (Mail.list.length == 0) return;
 	const mailLength = Mail.list.mailList.length;
 	if (!(Mail.page > mailLength / Mail.pageSize - 1)) addEventNextAndPrevAdd("next");
@@ -223102,7 +223177,7 @@ function adjustButtons() {
 	if (prevSpan) prevSpan.disabled = mailLength <= Mail.pageSize || Mail.page == 0;
 }
 function addEventNextAndPrevAdd(eventName) {
-	const root = _root$5();
+	const root = _root$18();
 	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
 	const text = root.querySelector(`.prev_next .${eventName} span`);
 	if (text) text.classList.add("event_add_cursor");
@@ -223118,7 +223193,7 @@ function addEventNextAndPrevAdd(eventName) {
 	}
 }
 function addEventNextAndPrevRemove(eventName) {
-	const root = _root$5();
+	const root = _root$18();
 	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
 	const text = root.querySelector(`.prev_next .${eventName} span`);
 	if (overlay) overlay.style.display = "none";
@@ -223130,7 +223205,7 @@ function offCreateMessagesOnWindowMailbox(event) {
 	removeCreateAllItem();
 }
 function sendCreateMessagesMail(event) {
-	const root = _root$5();
+	const root = _root$18();
 	event.stopImmediatePropagation();
 	const zenyOk = root.querySelector("#zeny_ok");
 	if (zenyOk && window.getComputedStyle(zenyOk).display !== "none") {
@@ -223165,7 +223240,7 @@ function openWindowCreateMessages(event) {
 * Open Create messages window size
 */
 function onWindowCreateMessages() {
-	const root = _root$5();
+	const root = _root$18();
 	removeCreateAllItem();
 	offWindowListMail();
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist2_bg.bmp", (url) => {
@@ -223176,7 +223251,7 @@ function onWindowCreateMessages() {
 	if (title) title.textContent = DB.getMessage(1026);
 }
 function offWindowListMail() {
-	const root = _root$5();
+	const root = _root$18();
 	const prevNext = root.querySelector(".prev_next");
 	if (prevNext) prevNext.style.display = "none";
 	const blockMail = root.querySelector(".block_mail");
@@ -223187,7 +223262,7 @@ function offWindowListMail() {
 	if (textarea) textarea.focus();
 }
 function onAddZenyInput(event) {
-	const root = _root$5();
+	const root = _root$18();
 	event.stopImmediatePropagation();
 	const zenyAmt = root.querySelector("#zeny_amt");
 	if (zenyAmt) zenyAmt.style.display = "none";
@@ -223202,7 +223277,7 @@ function onAddZenyInput(event) {
 	Mail.parseMailWinopen(2);
 }
 function onValidZenyInput(event) {
-	const root = _root$5();
+	const root = _root$18();
 	event.stopImmediatePropagation();
 	const zenyAmt = root.querySelector("#zeny_amt");
 	if (zenyAmt) zenyAmt.style.display = "inline-block";
@@ -223221,7 +223296,7 @@ function onValidZenyInput(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$14(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
@@ -223264,7 +223339,7 @@ function onDrop$23(event) {
 * Show item name when mouse is over
 */
 function onItemOver$19() {
-	const root = _root$5();
+	const root = _root$18();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(idx);
 	if (!item) return;
@@ -223280,7 +223355,7 @@ function onItemOver$19() {
 * Hide the item name
 */
 function onItemOut$20() {
-	const overlay = _root$5().querySelector(".container_item .overlay");
+	const overlay = _root$18().querySelector(".container_item .overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
@@ -223426,7 +223501,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	Mail.onAppend = function OnAppend() {
-		const root = _root$5();
+		const root = _root$18();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) closeBtn.addEventListener("click", this.onClosePressed.bind(this));
 		const inboxBtn = root.querySelector("#inbox");
@@ -223441,7 +223516,7 @@ var init_Mail$1 = __esmMin((() => {
 		const containerItem = root.querySelector(".container_item");
 		if (containerItem) {
 			containerItem.addEventListener("drop", onDrop$23);
-			containerItem.addEventListener("dragover", stopPropagation$14);
+			containerItem.addEventListener("dragover", stopPropagation$11);
 			containerItem.addEventListener("mouseover", (event) => {
 				const item = event.target.closest(".item");
 				if (item) onItemOver$19.call(item, event);
@@ -223465,12 +223540,12 @@ var init_Mail$1 = __esmMin((() => {
 		}
 		root.querySelectorAll("input[type=text]").forEach((input) => {
 			input.addEventListener("drop", onDropText$1);
-			input.addEventListener("dragover", stopPropagation$14);
+			input.addEventListener("dragover", stopPropagation$11);
 		});
 		const textarea = root.querySelector("textarea");
 		if (textarea) {
 			textarea.addEventListener("drop", onDropText$1);
-			textarea.addEventListener("dragover", stopPropagation$14);
+			textarea.addEventListener("dragover", stopPropagation$11);
 		}
 		const zenyAmtBtn = root.querySelector("#zeny_amt");
 		if (zenyAmtBtn) zenyAmtBtn.addEventListener("click", onAddZenyInput);
@@ -223487,7 +223562,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Add item to inventory
 	*/
 	Mail.addItemSub = function AddItemSub(Index) {
-		const root = _root$5();
+		const root = _root$18();
 		const item = _preferences$68.item_add_email;
 		if (item.index !== Index) return false;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
@@ -223508,14 +223583,14 @@ var init_Mail$1 = __esmMin((() => {
 	* Send from mail to inventory - Remove item
 	*/
 	Mail.removeItem = function removeItem() {
-		const item = _root$5().querySelector(".item");
+		const item = _root$18().querySelector(".item");
 		if (item) item.remove();
 	};
 	/**
 	* Send from mail to inventory - Remove zenys
 	*/
 	Mail.removeZeny = function removeZeny() {
-		const input = _root$5().querySelector(".input_zeny_amt");
+		const input = _root$18().querySelector(".input_zeny_amt");
 		if (input) input.value = "0";
 	};
 	/**
@@ -223537,7 +223612,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Extend Mail window size
 	*/
 	Mail.resize = function Resize(width, height) {
-		const root = _root$5();
+		const root = _root$18();
 		width = Math.min(Math.max(width, 6), 9);
 		height = Math.min(Math.max(height, 2), 6);
 		const mailEl = root.querySelector("#Mail");
@@ -223589,7 +223664,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Responder to a mail.
 	*/
 	Mail.replyNewMail = function replyNewMail(fromName) {
-		const root = _root$5();
+		const root = _root$18();
 		onWindowCreateMessages();
 		const textTo = root.querySelector(".text_to");
 		if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
@@ -223598,7 +223673,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Responder to a mail from friends.
 	*/
 	Mail.replyNewMailFriends = async function replyNewMailFriends(fromName) {
-		const root = _root$5();
+		const root = _root$18();
 		Mail.append();
 		sleep(1).then(() => {
 			onWindowCreateMessages();
@@ -223623,7 +223698,7 @@ var init_Mail$1 = __esmMin((() => {
 		});
 	};
 	Mail.clearFieldsItemZeny = function clearFieldsItemZeny() {
-		const root = _root$5();
+		const root = _root$18();
 		const item = root.querySelector(".item");
 		if (item) item.remove();
 		const zenyInput = root.querySelector(".input_zeny_amt");
@@ -223957,7 +224032,7 @@ var init_PartyFriendsV0$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$4() {
+function _root$17() {
 	return PartyFriendsV0._shadow || PartyFriendsV0._host;
 }
 /**
@@ -224011,7 +224086,7 @@ function onClose$13() {
 function onToggleLock$1() {
 	_preferences$67.lock = !_preferences$67.lock;
 	_preferences$67.save();
-	const root = _root$4();
+	const root = _root$17();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
 	if (_preferences$67.lock) {
@@ -224026,7 +224101,7 @@ function onToggleLock$1() {
 * Move to the other tab (Friend -> Party or Party -> Friend)
 */
 function onChangeTab$2() {
-	const root = _root$4();
+	const root = _root$17();
 	_preferences$67.friend = !_preferences$67.friend;
 	_preferences$67.save();
 	const friendEls = root.querySelectorAll(".friend");
@@ -224143,7 +224218,7 @@ function onRequestPartyDelegation$1() {
 * Change selection (click on a friend/party)
 */
 function onSelectionChange$1(nodeEl) {
-	_root$4().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
+	_root$17().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
 	const nameEl = nodeEl.querySelector(".name");
 	if (nameEl) nameEl.classList.add("selection");
 	const siblings = nodeEl.parentNode.querySelectorAll(".node");
@@ -224255,7 +224330,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	PartyFriendsV0.init = function init() {
-		const root = _root$4();
+		const root = _root$17();
 		PartyHelper_default.prepare();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
@@ -224309,7 +224384,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.onAppend = function onAppend() {
 		_preferences$67.friend = !_preferences$67.friend;
 		onChangeTab$2();
-		const root = _root$4();
+		const root = _root$17();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
 		if (_preferences$67.lock) {
@@ -224334,7 +224409,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		_options$1.exp_share = 0;
 		_options$1.item_share = 0;
 		_options$1.item_sharing_type = 0;
-		const root = _root$4();
+		const root = _root$17();
 		const partyName = root.querySelector(".partyname");
 		if (partyName) partyName.textContent = "";
 		const friendCount = root.querySelector(".friendcount");
@@ -224398,7 +224473,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.setFriends = function setFriends(friends) {
 		const count = friends.length;
-		const root = _root$4();
+		const root = _root$17();
 		const friendContainer = root.querySelector(".content .friend");
 		_friends$1.length = friends.length;
 		if (friendContainer) friendContainer.innerHTML = "";
@@ -224420,7 +224495,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {boolean} state
 	*/
 	PartyFriendsV0.updateFriendState = function updateFriendState(index, state) {
-		const node = _root$4().querySelectorAll(".content .friend .node")[index];
+		const node = _root$17().querySelectorAll(".content .friend .node")[index];
 		_friends$1[index].State = state;
 		if (state) {
 			if (node) node.style.backgroundImage = "";
@@ -224439,7 +224514,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {object} friend data
 	*/
 	PartyFriendsV0.updateFriend = function updateFriend(idx, friend) {
-		const root = _root$4();
+		const root = _root$17();
 		if (!_friends$1[idx]) {
 			_friends$1[idx] = {};
 			const friendContainer = root.querySelector(".content .friend");
@@ -224472,7 +224547,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.removeFriend = function removeFriend(index) {
 		_friends$1.splice(index, 1);
-		const root = _root$4();
+		const root = _root$17();
 		const nodes = root.querySelectorAll(".content .friend .node");
 		if (nodes[index]) nodes[index].remove();
 		const friendCount = root.querySelector(".friendcount");
@@ -224486,7 +224561,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {Array} member list
 	*/
 	PartyFriendsV0.setParty = function setParty(name, members) {
-		const root = _root$4();
+		const root = _root$17();
 		const partyName = root.querySelector(".partyname");
 		if (partyName) partyName.textContent = `(${name})`;
 		const partyContent = root.querySelector(".content .party");
@@ -224509,7 +224584,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.addPartyMember = function addPartyMember(player) {
 		const role = player.role || player.Role || 0;
 		const count = _party$3.length;
-		const root = _root$4();
+		const root = _root$17();
 		let node;
 		if (player.AID === SessionStorage_default.AID) {
 			SessionStorage_default.isPartyLeader = role === 0;
@@ -224566,7 +224641,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* @param {string} character name
 	*/
 	PartyFriendsV0.removePartyMember = function removePartyMember(AID, characterName) {
-		const root = _root$4();
+		const root = _root$17();
 		if (AID === SessionStorage_default.AID) {
 			_party$3.length = 0;
 			const partyContent = root.querySelector(".content .party");
@@ -224602,7 +224677,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		_preferences$67.width = width;
 		_preferences$67.height = height;
 		_preferences$67.save();
-		const content = _root$4().querySelector(".content");
+		const content = _root$17().querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
 			content.style.height = `${height * 20}px`;
@@ -224618,7 +224693,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	*/
 	PartyFriendsV0.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
 		const count = _party$3.length;
-		const nodes = _root$4().querySelectorAll(".content .party .node");
+		const nodes = _root$17().querySelectorAll(".content .party .node");
 		for (let i = 0; i < count; ++i) if (_party$3[i].AID === AID && _party$3[i].state === 0) {
 			const node = nodes[i];
 			if (!node) break;
@@ -226460,7 +226535,7 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$13(event) {
+function stopPropagation$10(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
@@ -226507,7 +226582,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this.getRoot();
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$13));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$10));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -227102,18 +227177,24 @@ var init_Rodex$3 = __esmMin((() => {
 //#region src/UI/Components/Rodex/Rodex.css?raw
 var Rodex_default$1;
 var init_Rodex$2 = __esmMin((() => {
-	Rodex_default$1 = "#Rodex {\r\n	width: 309px;\r\n	height: 416px;\r\n	position: absolute;\r\n}\r\n#Rodex .body {\r\n	width: 309px;\r\n	height: 416px;\r\n	position: absolute;\r\n}\r\n#Rodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Rodex .body .titlebar {\r\n	display: block;\r\n	width: 309px;\r\n	height: 16px;\r\n}\r\n#Rodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Rodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#Rodex .body .iconbar {\r\n	float: left;\r\n	width: 100%;\r\n	height: 40px;\r\n	position: relative;\r\n}\r\n#Rodex .body .iconbar .refresh {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 26px;\r\n	top: 4px;\r\n	right: 37px;\r\n}\r\n#Rodex .body .iconbar .refresh span {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .iconbar .refresh:hover span {\r\n	display: table;\r\n}\r\n#Rodex .body .iconbar .write {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 26px;\r\n	top: 4px;\r\n	right: 10px;\r\n}\r\n#Rodex .body .iconbar .write span {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .iconbar .write:hover span {\r\n	display: table;\r\n}\r\n\r\n#Rodex .body .searchbar {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#Rodex .body .searchbar .search-title {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 23px;\r\n}\r\n#Rodex .body .searchbar .search-title-text {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 35px;\r\n}\r\n#Rodex .body .searchbar .search-sender {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 75px;\r\n}\r\n#Rodex .body .searchbar .search-sender-text {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 87px;\r\n}\r\n#Rodex .body .searchbar .search-text {\r\n	color: #212163;\r\n}\r\n#Rodex .body .searchbar .search {\r\n	position: absolute;\r\n	width: 125px;\r\n	height: 14px;\r\n	top: 10px;\r\n	left: 135px;\r\n	border: none;\r\n}\r\n#Rodex .body .searchbar .search-btn {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 18px;\r\n	top: 9px;\r\n	right: 13px;\r\n}\r\n\r\n#Rodex .body .navbar {\r\n	float: left;\r\n	width: 100%;\r\n	height: 27px;\r\n	position: relative;\r\n}\r\n#Rodex .body .navbar .nav {\r\n	height: 100%;\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	letter-spacing: 1px;\r\n	color: #c6cee7;\r\n}\r\n#Rodex .body .navbar .nav .nav-item {\r\n	float: left;\r\n	width: 25%;\r\n	height: 90%;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n#Rodex .body .navbar .nav .nav-item.active {\r\n	border-bottom: 4px solid;\r\n	font-weight: bolder;\r\n	color: #506dc4;\r\n}\r\n#Rodex .body .navbar .nav .nav-item:hover {\r\n	border-bottom: 4px solid;\r\n	font-weight: bolder;\r\n	color: #506dc4;\r\n}\r\n\r\n#Rodex .body .rodex-list {\r\n	float: left;\r\n	width: 100%;\r\n	height: 275px;\r\n	position: relative;\r\n}\r\n#Rodex .body .rodex-list .mail-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-checkbox {\r\n	float: left;\r\n	width: 10%;\r\n	height: 100%;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-image {\r\n	float: left;\r\n	width: 10%;\r\n	height: 100%;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text {\r\n	float: left;\r\n	width: 51%;\r\n	height: 100%;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 50%;\r\n	display: flex;\r\n	align-items: flex-end;\r\n	color: #0c0c23;\r\n	position: relative;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title .text span {\r\n	position: absolute;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title .text.deleted {\r\n	color: lightgray;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title .text:hover span {\r\n	display: block;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 50%;\r\n	display: flex;\r\n	align-items: center;\r\n	color: darkblue;\r\n	font-weight: bold;\r\n	position: relative;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .sender .text span {\r\n	position: absolute;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .sender .text:hover span {\r\n	display: block;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-content {\r\n	float: left;\r\n	width: 10%;\r\n	height: 100%;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .expire-days {\r\n	float: left;\r\n	width: 19%;\r\n	height: 100%;\r\n	color: red;\r\n	font-weight: bold;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#Rodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n}\r\n#Rodex .body .footer .delete-all {\r\n	position: absolute;\r\n	width: 80px;\r\n	height: 20px;\r\n	top: 5px;\r\n	left: 10px;\r\n	background-size: 100% 100%;\r\n}\r\n#Rodex .body .footer .retrieve-all {\r\n	position: absolute;\r\n	width: 80px;\r\n	height: 20px;\r\n	top: 5px;\r\n	left: 100px;\r\n	background-size: 100% 100%;\r\n}\r\n#Rodex .body .footer .previous-page {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 24px;\r\n	top: 3px;\r\n	right: 30px;\r\n}\r\n#Rodex .body .footer .next-page {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 24px;\r\n	top: 3px;\r\n	right: 5px;\r\n}\r\n";
+	Rodex_default$1 = ":host {\r\n	width: 309px;\r\n	height: 416px;\r\n	position: absolute;\r\n}\r\n#Rodex {\r\n	width: 309px;\r\n	height: 416px;\r\n	position: absolute;\r\n}\r\n#Rodex .body {\r\n	width: 309px;\r\n	height: 416px;\r\n	position: absolute;\r\n}\r\n#Rodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Rodex .body .titlebar {\r\n	display: block;\r\n	width: 309px;\r\n	height: 16px;\r\n}\r\n#Rodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Rodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#Rodex .body .iconbar {\r\n	float: left;\r\n	width: 100%;\r\n	height: 40px;\r\n	position: relative;\r\n}\r\n#Rodex .body .iconbar .refresh {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 26px;\r\n	top: 4px;\r\n	right: 37px;\r\n}\r\n#Rodex .body .iconbar .refresh span {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .iconbar .refresh:hover span {\r\n	display: table;\r\n}\r\n#Rodex .body .iconbar .write {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 26px;\r\n	top: 4px;\r\n	right: 10px;\r\n}\r\n#Rodex .body .iconbar .write span {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .iconbar .write:hover span {\r\n	display: table;\r\n}\r\n\r\n#Rodex .body .searchbar {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#Rodex .body .searchbar .search-title {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 23px;\r\n}\r\n#Rodex .body .searchbar .search-title-text {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 35px;\r\n}\r\n#Rodex .body .searchbar .search-sender {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 75px;\r\n}\r\n#Rodex .body .searchbar .search-sender-text {\r\n	position: absolute;\r\n	width: 10px;\r\n	height: 10px;\r\n	top: 13px;\r\n	left: 87px;\r\n}\r\n#Rodex .body .searchbar .search-text {\r\n	color: #212163;\r\n}\r\n#Rodex .body .searchbar .search {\r\n	position: absolute;\r\n	width: 125px;\r\n	height: 14px;\r\n	top: 10px;\r\n	left: 135px;\r\n	border: none;\r\n}\r\n#Rodex .body .searchbar .search-btn {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 18px;\r\n	top: 9px;\r\n	right: 13px;\r\n}\r\n\r\n#Rodex .body .navbar {\r\n	float: left;\r\n	width: 100%;\r\n	height: 27px;\r\n	position: relative;\r\n}\r\n#Rodex .body .navbar .nav {\r\n	height: 100%;\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	letter-spacing: 1px;\r\n	color: #c6cee7;\r\n}\r\n#Rodex .body .navbar .nav .nav-item {\r\n	float: left;\r\n	width: 25%;\r\n	height: 90%;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n#Rodex .body .navbar .nav .nav-item.active {\r\n	border-bottom: 4px solid;\r\n	font-weight: bolder;\r\n	color: #506dc4;\r\n}\r\n#Rodex .body .navbar .nav .nav-item:hover {\r\n	border-bottom: 4px solid;\r\n	font-weight: bolder;\r\n	color: #506dc4;\r\n}\r\n\r\n#Rodex .body .rodex-list {\r\n	float: left;\r\n	width: 100%;\r\n	height: 275px;\r\n	position: relative;\r\n}\r\n#Rodex .body .rodex-list .mail-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-checkbox {\r\n	float: left;\r\n	width: 10%;\r\n	height: 100%;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-image {\r\n	float: left;\r\n	width: 10%;\r\n	height: 100%;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text {\r\n	float: left;\r\n	width: 51%;\r\n	height: 100%;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 50%;\r\n	display: flex;\r\n	align-items: flex-end;\r\n	color: #0c0c23;\r\n	position: relative;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title .text span {\r\n	position: absolute;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title .text.deleted {\r\n	color: lightgray;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .title .text:hover span {\r\n	display: block;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 50%;\r\n	display: flex;\r\n	align-items: center;\r\n	color: darkblue;\r\n	font-weight: bold;\r\n	position: relative;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .sender .text span {\r\n	position: absolute;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-text .sender .text:hover span {\r\n	display: block;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .mail-content {\r\n	float: left;\r\n	width: 10%;\r\n	height: 100%;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n#Rodex .body .rodex-list .mail-list .mail-item .expire-days {\r\n	float: left;\r\n	width: 19%;\r\n	height: 100%;\r\n	color: red;\r\n	font-weight: bold;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#Rodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n}\r\n#Rodex .body .footer .delete-all {\r\n	position: absolute;\r\n	width: 80px;\r\n	height: 20px;\r\n	top: 5px;\r\n	left: 10px;\r\n	background-size: 100% 100%;\r\n}\r\n#Rodex .body .footer .retrieve-all {\r\n	position: absolute;\r\n	width: 80px;\r\n	height: 20px;\r\n	top: 5px;\r\n	left: 100px;\r\n	background-size: 100% 100%;\r\n}\r\n#Rodex .body .footer .previous-page {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 24px;\r\n	top: 3px;\r\n	right: 30px;\r\n}\r\n#Rodex .body .footer .next-page {\r\n	position: absolute;\r\n	width: 24px;\r\n	height: 24px;\r\n	top: 3px;\r\n	right: 5px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Rodex/Rodex.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$16() {
+	return Rodex._shadow || Rodex._host;
+}
 function onClickClose$4(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
-	_preferences$63.y = parseInt(Rodex.ui.css("top"), 10);
-	_preferences$63.x = parseInt(Rodex.ui.css("left"), 10);
+	_preferences$63.y = parseInt(Rodex._host.style.top, 10);
+	_preferences$63.x = parseInt(Rodex._host.style.left, 10);
 	_preferences$63.save();
-	Rodex.ui.hide();
+	Rodex._host.style.display = "none";
 }
 function onClickRefresh(e) {
 	e.stopImmediatePropagation();
@@ -227125,13 +227206,13 @@ function onClickWriteMail(e) {
 }
 function onClickDeleteAll(e) {
 	e.stopImmediatePropagation();
-	UIManager.showPromptBox(DB.getMessage(3590), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(3590), "ok", "cancel", () => {
 		Rodex.deleteAll();
 	});
 }
 function onClickRetrieveAll(e) {
 	e.stopImmediatePropagation();
-	UIManager.showPromptBox(DB.getMessage(3594), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(3594), "ok", "cancel", () => {
 		Rodex.getAll();
 	});
 }
@@ -227151,69 +227232,76 @@ function onClickNexPage(e) {
 function onClickTab(e) {
 	e.stopImmediatePropagation();
 	Rodex.page = 0;
-	const element = jquery_default(e.currentTarget);
-	const id = element.attr("id").replace("tab_", "");
-	Rodex.ui.find(".nav-item.active").removeClass("active");
-	element.addClass("active");
+	const element = e.currentTarget;
+	const id = element.id.replace("tab_", "");
+	const root = _root$16();
+	root.querySelectorAll(".nav-item.active").forEach((el) => el.classList.remove("active"));
+	element.classList.add("active");
 	if (id >= 0 && id <= 2) {
 		Rodex.openType = id;
 		Rodex.createRodexList(Rodex.openType);
-	} else Rodex.ui.find(".mail-list").html("");
+	} else root.querySelector(".mail-list").innerHTML = "";
 }
 function onClickSearchTitle(e) {
 	e.stopImmediatePropagation();
 	Rodex.searchType = 1;
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_off.bmp", function(data) {
-		Rodex.ui.find(".search-sender").css("backgroundImage", "url(" + data + ")");
+	const root = _root$16();
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_off.bmp", (data) => {
+		const el = root.querySelector(".search-sender");
+		if (el) el.style.backgroundImage = `url(${data})`;
 	});
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_on.bmp", function(data) {
-		Rodex.ui.find(".search-title").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_on.bmp", (data) => {
+		const el = root.querySelector(".search-title");
+		if (el) el.style.backgroundImage = `url(${data})`;
 	});
 }
 function onClickSearchSender(e) {
 	e.stopImmediatePropagation();
 	Rodex.searchType = 2;
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_on.bmp", function(data) {
-		Rodex.ui.find(".search-sender").css("backgroundImage", "url(" + data + ")");
+	const root = _root$16();
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_on.bmp", (data) => {
+		const el = root.querySelector(".search-sender");
+		if (el) el.style.backgroundImage = `url(${data})`;
 	});
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_off.bmp", function(data) {
-		Rodex.ui.find(".search-title").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/rodexsystem/renewal/checkbox_search_off.bmp", (data) => {
+		const el = root.querySelector(".search-title");
+		if (el) el.style.backgroundImage = `url(${data})`;
 	});
 }
 function onClickSearchButton(e) {
 	e.stopImmediatePropagation();
-	const search = Rodex.ui.find(".search").val();
-	Rodex.ui.find(".nav-item.active").removeClass("active");
-	Rodex.ui.find("#tab_3").addClass("active");
+	const root = _root$16();
+	const search = root.querySelector(".search").value;
+	root.querySelectorAll(".nav-item.active").forEach((el) => el.classList.remove("active"));
+	root.querySelector("#tab_3").classList.add("active");
 	if (search.length > 2) Rodex.createRodexList(0, true, search);
 }
 function onClickReadMail(e) {
 	e.stopImmediatePropagation();
-	const element = jquery_default(e.currentTarget);
-	const mid = element.attr("id");
-	const openType = element.attr("openType");
+	const element = e.currentTarget;
+	const mid = element.id;
+	const openType = element.getAttribute("openType");
 	const id = mid.replace("mail_", "");
 	Rodex.requestReadRodex(openType, id);
 }
 function onClickReplyMail(e) {
 	e.stopImmediatePropagation();
-	const sender = jquery_default(e.currentTarget).attr("sender");
+	const sender = e.currentTarget.getAttribute("sender");
 	Rodex.requestOpenWriteRodex(sender);
 }
 var Rodex, _preferences$63, Rodex_default;
 var init_Rodex$1 = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_Renderer();
 	init_KeyEventHandler();
 	init_ChatBox();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Rodex$3();
 	init_Rodex$2();
-	Rodex = new UIComponent("Rodex", Rodex_default$2, Rodex_default$1);
+	Rodex = new GUIComponent("Rodex", Rodex_default$1);
 	/**
 	* Store Rodex items
 	*/
@@ -227251,29 +227339,32 @@ var init_Rodex$1 = __esmMin((() => {
 		show: false
 	}, 2);
 	/**
+	* Render HTML
+	*/
+	Rodex.render = () => Rodex_default$2;
+	/**
 	* Apply preferences once append to body
 	*/
 	Rodex.onAppend = function OnAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$63.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$63.x), Renderer.width - this.ui.width())
-		});
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".close").on("click", onClickClose$4);
-		this.ui.find(".refresh").on("click", onClickRefresh);
-		this.ui.find(".write").on("click", onClickWriteMail);
-		this.ui.find(".delete-all").on("click", onClickDeleteAll);
-		this.ui.find(".retrieve-all").on("click", onClickRetrieveAll);
-		this.ui.find(".previous-page").on("click", onClickPreviousPage);
-		this.ui.find(".next-page").on("click", onClickNexPage);
-		this.ui.find(".nav-item").on("click", onClickTab);
-		this.ui.find(".search-title").on("click", onClickSearchTitle);
-		this.ui.find(".search-sender").on("click", onClickSearchSender);
-		this.ui.find(".search").val("");
-		this.ui.find(".search-btn").on("click", onClickSearchButton);
+		const root = _root$16();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$63.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$63.x), Renderer.width - this._host.offsetWidth)}px`;
+		this.draggable(root.querySelector(".titlebar"));
+		root.querySelector(".close").addEventListener("click", onClickClose$4);
+		root.querySelector(".refresh").addEventListener("click", onClickRefresh);
+		root.querySelector(".write").addEventListener("click", onClickWriteMail);
+		root.querySelector(".delete-all").addEventListener("click", onClickDeleteAll);
+		root.querySelector(".retrieve-all").addEventListener("click", onClickRetrieveAll);
+		root.querySelector(".previous-page").addEventListener("click", onClickPreviousPage);
+		root.querySelector(".next-page").addEventListener("click", onClickNexPage);
+		root.querySelectorAll(".nav-item").forEach((el) => el.addEventListener("click", onClickTab));
+		root.querySelector(".search-title").addEventListener("click", onClickSearchTitle);
+		root.querySelector(".search-sender").addEventListener("click", onClickSearchSender);
+		root.querySelector(".search").value = "";
+		root.querySelector(".search-btn").addEventListener("click", onClickSearchButton);
 		Rodex.openType = 0;
-		Rodex.ui.find(".nav-item.active").removeClass("active");
-		Rodex.ui.find("#tab_0").addClass("active");
+		root.querySelectorAll(".nav-item.active").forEach((el) => el.classList.remove("active"));
+		root.querySelector("#tab_0").classList.add("active");
 		Rodex.searchType = 1;
 		Rodex.page = 0;
 	};
@@ -227282,9 +227373,9 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$63.show = this.ui.is(":visible");
-		_preferences$63.y = parseInt(this.ui.css("top"), 10);
-		_preferences$63.x = parseInt(this.ui.css("left"), 10);
+		_preferences$63.show = this._host.style.display !== "none";
+		_preferences$63.y = parseInt(this._host.style.top, 10);
+		_preferences$63.x = parseInt(this._host.style.left, 10);
 		_preferences$63.save();
 		Rodex.openType = 0;
 	};
@@ -227298,19 +227389,20 @@ var init_Rodex$1 = __esmMin((() => {
 		Rodex.isEnd = pkt.isEnd;
 		Rodex.openType = typeof pkt.openType !== "undefined" ? pkt.openType : 0;
 		Rodex.createRodexList();
-		Rodex.ui.show();
-		Rodex.ui.focus();
+		this._host.style.display = "";
+		this.focus();
 	};
 	Rodex.createRodexList = function createRodexList(tabID = 0, search = false, term = "") {
-		const content = Rodex.ui.find(".mail-list");
-		content.html("");
+		const root = _root$16();
+		const content = root.querySelector(".mail-list");
+		content.innerHTML = "";
 		let mail_list = [];
 		if (search) {
 			Rodex.page = 0;
-			if (Rodex.searchType == 1) mail_list = Rodex.getMailsByTitle(term);
+			if (Rodex.searchType === 1) mail_list = Rodex.getMailsByTitle(term);
 			else mail_list = Rodex.getMailsBySender(term);
 		} else mail_list = Rodex.getMailsByTabID(tabID);
-		if (mail_list.length == 0) return;
+		if (mail_list.length === 0) return;
 		const start = Rodex.pageSize * Rodex.page;
 		let total = 0;
 		for (let i = start; total < Rodex.pageSize && i < mail_list.length; i++) {
@@ -227321,27 +227413,28 @@ var init_Rodex$1 = __esmMin((() => {
 			const mail_image = mail.Isread ? "icon_status_mail_read" : "icon_status_mail_received";
 			const mail_content = Rodex.attachmentType[mail.type];
 			const remaining_days = parseInt(mail.expireDateTime / 60 / 60 / 24);
-			const openType = typeof mail.openType !== "undefined" ? mail.openType : 0;
-			const mail_html = `
-			<li class="mail-item">
+			const mail_html = `<li class="mail-item">
 				<div class="mail-checkbox" data-background="basic_interface/rodexsystem/renewal/checkbox_off.bmp">
 				</div>
-				<div class="mail-image" data-background="basic_interface/rodexsystem/renewal/` + mail_image + `.bmp">
+				<div class="mail-image" data-background="basic_interface/rodexsystem/renewal/${mail_image}.bmp">
 				</div>
 				<div class="mail-text">
-					<div class="title" ><div id="mail_` + mailID + "\" openType=\"" + openType + "\" class=\"text event_add_cursor\"><span data-text=\"2702\"></span>" + title + `</div></div>
-					<div class="sender"><div id="sender_` + mailID + "\" sender=\"" + sender + "\"class=\"text event_add_cursor\"><span data-text=\"2701\"></span>" + sender + `</div></div>
+					<div class="title"><div id="mail_${mailID}" openType="${typeof mail.openType !== "undefined" ? mail.openType : 0}" class="text event_add_cursor"><span data-text="2702"></span>${title}</div></div>
+					<div class="sender"><div id="sender_${mailID}" sender="${sender}" class="text event_add_cursor"><span data-text="2701"></span>${sender}</div></div>
 				</div>
-				<div class="mail-content" data-background="` + mail_content + `"></div>
-				<div class="expire-days">` + remaining_days + ` days</div>
-			</li>
-			`;
-			content.append(mail_html);
-			Rodex.ui.find("#mail_" + mailID).on("click", onClickReadMail);
-			Rodex.ui.find("#sender_" + mailID).on("click", onClickReplyMail);
+				<div class="mail-content" data-background="${mail_content}"></div>
+				<div class="expire-days">${remaining_days} days</div>
+			</li>`;
+			content.insertAdjacentHTML("beforeend", mail_html);
+			const mailEl = root.querySelector(`#mail_${mailID}`);
+			if (mailEl) mailEl.addEventListener("click", onClickReadMail);
+			const senderEl = root.querySelector(`#sender_${mailID}`);
+			if (senderEl) senderEl.addEventListener("click", onClickReplyMail);
 			total++;
 		}
-		content.each(this.parseHTML).find("*").each(this.parseHTML);
+		content.querySelectorAll("[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]").forEach((node) => {
+			GUIComponent.processDataAttrs(node);
+		});
 	};
 	Rodex.getMailsByTabID = function getMailsByTabID(tabID) {
 		return Rodex.list.filter((mail) => mail.openType == tabID);
@@ -227358,38 +227451,43 @@ var init_Rodex$1 = __esmMin((() => {
 	Rodex.getAll = function getAll() {
 		for (let i = 0; i < Rodex.list.length; i++) {
 			const mail = Rodex.list[i];
-			if (mail.type > 0 && (mail.type == 4 || mail.type == 6)) Rodex.requestItemsFromRodex(mail.openType, mail.MailID);
-			if (mail.type > 0 && (mail.type == 2 || mail.type == 6)) Rodex.requestZenyFromRodex(mail.openType, mail.MailID);
+			if (mail.type > 0 && (mail.type === 4 || mail.type === 6)) Rodex.requestItemsFromRodex(mail.openType, mail.MailID);
+			if (mail.type > 0 && (mail.type === 2 || mail.type === 6)) Rodex.requestZenyFromRodex(mail.openType, mail.MailID);
 		}
 	};
 	Rodex.deleteAll = function deleteAll() {
 		for (let i = 0; i < Rodex.list.length; i++) {
 			const mail = Rodex.list[i];
-			if (mail.type == 0) Rodex.requestDeleteRodex(mail.openType, mail.MailID);
+			if (mail.type === 0) Rodex.requestDeleteRodex(mail.openType, mail.MailID);
 			else ChatBox_default.addText(DB.getMessage(2612), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
 		}
 	};
 	Rodex.updateDeletedMailContent = function updateDeletedMailContent(openType, MailID) {
-		Rodex.ui.find("#mail_" + MailID).html(DB.getMessage(2907));
-		Rodex.ui.find("#mail_" + MailID).addClass("deleted");
-		Rodex.ui.find("#sender_" + MailID).html("");
+		const root = _root$16();
+		const mailEl = root.querySelector(`#mail_${MailID}`);
+		if (mailEl) {
+			mailEl.textContent = DB.getMessage(2907);
+			mailEl.classList.add("deleted");
+		}
+		const senderEl = root.querySelector(`#sender_${MailID}`);
+		if (senderEl) senderEl.textContent = "";
 	};
 	/**
 	* Show/Hide UI
 	*/
 	Rodex.toggle = function toggle() {
-		if (this.ui.is(":visible")) {
+		if (this._host && this._host.style.display !== "none") {
 			Rodex.closeRodexBox();
-			Rodex.ui.hide();
+			this._host.style.display = "none";
 		} else {
 			Rodex.openRodexBox();
 			Rodex.append();
-			Rodex.ui.show();
-			Rodex.ui.focus();
+			this._host.style.display = "";
+			this.focus();
 		}
 	};
 	Rodex.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.toggle();
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host && this._host.style.display !== "none") this.toggle();
 	};
 	Rodex_default = UIManager.addComponent(Rodex);
 }));
@@ -227422,7 +227520,7 @@ var init_PartyMemberExternal$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$3(comp) {
+function _root$15(comp) {
 	return comp._shadow || comp._host;
 }
 /**
@@ -227513,7 +227611,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 	*/
 	PartyMemberExternal.init = function init() {
 		const self = this;
-		const root = _root$3(this);
+		const root = _root$15(this);
 		root.addEventListener("mousedown", (event) => {
 			self._lastPos = {
 				top: self._host.offsetTop,
@@ -227606,7 +227704,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 	* @param {object} player
 	*/
 	PartyMemberExternal.update = function update(player) {
-		const root = _root$3(this);
+		const root = _root$15(this);
 		if (!root) return;
 		const level = player.baseLevel || player.level || player.Level || 0;
 		const jobID = player.class_ || player.job || player.Job || 0;
@@ -227656,7 +227754,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 	* @param {number} maxhp
 	*/
 	PartyMemberExternal.updateMemberLife = function updateMemberLife(hp, maxhp) {
-		const root = _root$3(this);
+		const root = _root$15(this);
 		if (root) updateCanvasLife$1(root, hp, maxhp);
 	};
 	PartyMemberExternal_default = UIManager.addComponent(PartyMemberExternal);
@@ -227666,7 +227764,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$2() {
+function _root$14() {
 	return PartyFriendsV1._shadow || PartyFriendsV1._host;
 }
 /**
@@ -227937,7 +228035,7 @@ function onClose$11() {
 * Enable or disable the lock features
 */
 function onToggleLock() {
-	const root = _root$2();
+	const root = _root$14();
 	_preferences$62.lock = !_preferences$62.lock;
 	_preferences$62.save();
 	const lockOn = root.querySelector(".lock.on");
@@ -227954,7 +228052,7 @@ function onToggleLock() {
 * Move to the other tab (Friend -> Party or Party -> Friend)
 */
 function onChangeTab$1() {
-	const root = _root$2();
+	const root = _root$14();
 	_preferences$62.friend = !_preferences$62.friend;
 	_preferences$62.save();
 	const showClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
@@ -228076,7 +228174,7 @@ function onRequestPartyDelegation() {
 * Change selection (click on a friend/party)
 */
 function onSelectionChange(event) {
-	_root$2().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
+	_root$14().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
 	const node = this;
 	node.classList.add("selection");
 	const AID = parseInt(node.dataset.aid, 10);
@@ -228231,7 +228329,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Initialize the component (event listener, etc.)
 	*/
 	PartyFriendsV1.init = function init() {
-		const root = _root$2();
+		const root = _root$14();
 		PartyHelper_default.prepare();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (event) => {
@@ -228316,7 +228414,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Refresh the party list rendering
 	*/
 	PartyFriendsV1.refreshPartyList = function refreshPartyList() {
-		const root = _root$2();
+		const root = _root$14();
 		const partyContent = root.querySelector(".content .party");
 		if (partyContent) partyContent.innerHTML = "";
 		for (let i = 0; i < _party.length; i++) this.renderPartyMember(_party[i]);
@@ -228327,7 +228425,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	PartyFriendsV1.onAppend = function onAppend() {
-		const root = _root$2();
+		const root = _root$14();
 		_preferences$62.friend = !_preferences$62.friend;
 		onChangeTab$1();
 		const lockOn = root.querySelector(".lock.on");
@@ -228355,7 +228453,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Clean up UI
 	*/
 	PartyFriendsV1.clean = function clean() {
-		const root = _root$2();
+		const root = _root$14();
 		_party.length = 0;
 		_friends.length = 0;
 		_skipSaveOnRemove = true;
@@ -228436,7 +228534,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* @param {Array} friends list
 	*/
 	PartyFriendsV1.setFriends = function setFriends(friends) {
-		const root = _root$2();
+		const root = _root$14();
 		const count = friends.length;
 		const friendContent = root.querySelector(".content .friend");
 		_friends.length = friends.length;
@@ -228453,7 +228551,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Update friend (online/offline) state
 	*/
 	PartyFriendsV1.updateFriendState = function updateFriendState(index, state) {
-		const node = _root$2().querySelectorAll(".content .friend .node")[index];
+		const node = _root$14().querySelectorAll(".content .friend .node")[index];
 		_friends[index].State = state;
 		if (state) {
 			if (node) node.style.backgroundImage = "";
@@ -228469,7 +228567,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Update/Add a friend to the list
 	*/
 	PartyFriendsV1.updateFriend = function updateFriend(idx, friend) {
-		const root = _root$2();
+		const root = _root$14();
 		const friendContent = root.querySelector(".content .friend");
 		if (!_friends[idx]) {
 			_friends[idx] = {};
@@ -228494,7 +228592,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Remove friend from list
 	*/
 	PartyFriendsV1.removeFriend = function removeFriend(index) {
-		const root = _root$2();
+		const root = _root$14();
 		_friends.splice(index, 1);
 		const nodes = root.querySelectorAll(".content .friend .node");
 		if (nodes[index]) nodes[index].remove();
@@ -228506,7 +228604,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Add members to party
 	*/
 	PartyFriendsV1.setParty = function setParty(name, members) {
-		const root = _root$2();
+		const root = _root$14();
 		const partyName = root.querySelector(".partyname");
 		if (partyName) partyName.textContent = `(${name})`;
 		SessionStorage_default.isPartyLeader = false;
@@ -228554,7 +228652,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Add a new party member to the list
 	*/
 	PartyFriendsV1.addPartyMember = function addPartyMember(player) {
-		const root = _root$2();
+		const root = _root$14();
 		const role = player.role || 0;
 		const count = _party.length;
 		let i;
@@ -228586,7 +228684,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Render a party member into the UI
 	*/
 	PartyFriendsV1.renderPartyMember = function renderPartyMember(player) {
-		const root = _root$2();
+		const root = _root$14();
 		const role = player.role || player.Role || 0;
 		const job = player.class_ || player.job || player.Job || 0;
 		const level = player.baseLevel || player.level || player.Level || 0;
@@ -228632,7 +228730,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Remove a character from list
 	*/
 	PartyFriendsV1.removePartyMember = function removePartyMember(AID, characterName) {
-		const root = _root$2();
+		const root = _root$14();
 		if (AID === SessionStorage_default.AID) {
 			for (const aid in _detachedMembers) if (_detachedMembers[aid]) {
 				_detachedMembers[aid].onRemove = function() {
@@ -228670,7 +228768,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Extend window size
 	*/
 	PartyFriendsV1.resize = function resize(width, height) {
-		const root = _root$2();
+		const root = _root$14();
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
 		_preferences$62.width = width;
@@ -228700,7 +228798,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Update player life in interface
 	*/
 	PartyFriendsV1.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
-		const root = _root$2();
+		const root = _root$14();
 		const count = _party.length;
 		for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
 			if (!_party[i].life) _party[i].life = {};
@@ -229341,7 +229439,7 @@ var init_WinStats = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$1(comp) {
+function _root$13(comp) {
 	return comp.getRoot();
 }
 /**
@@ -229380,7 +229478,7 @@ function onRequestSkillInfo() {
 function onSkillFocus() {
 	let main = this.parentElement;
 	if (!main.classList.contains("skill")) main = main.parentElement;
-	const root = _root$1(Guild);
+	const root = _root$13(Guild);
 	for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
 	main.classList.add("selected");
 }
@@ -229407,7 +229505,7 @@ function skillLevelSelectUp$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
-		const element = _root$1(Guild).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$13(Guild).querySelector(`.skill.id${skill.SKID}`);
 		if (element) {
 			const current = element.querySelector(".level .current");
 			if (current) current.textContent = skill.selectedLevel;
@@ -229418,7 +229516,7 @@ function skillLevelSelectDown$2(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
-		const element = _root$1(Guild).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$13(Guild).querySelector(`.skill.id${skill.SKID}`);
 		if (element) {
 			const current = element.querySelector(".level .current");
 			if (current) current.textContent = skill.selectedLevel;
@@ -229427,7 +229525,7 @@ function skillLevelSelectDown$2(skill) {
 }
 function onChangeTab(event) {
 	const tab = parseInt(this.getAttribute("data-flag"), 10);
-	const root = _root$1(Guild);
+	const root = _root$13(Guild);
 	if (this.classList.contains("active") || tab && !(_guildAccess & AccessTypeBit[tab])) return false;
 	Guild.onGuildInfoRequest(tab);
 	for (const btn of root.querySelectorAll(".tabs button")) btn.classList.remove("active");
@@ -229443,7 +229541,7 @@ function onChangeTab(event) {
 	return false;
 }
 function renderTendency(honor, virtue) {
-	const canvas = _root$1(Guild).querySelector(".content.info .tendency canvas");
+	const canvas = _root$13(Guild).querySelector(".content.info .tendency canvas");
 	if (!canvas) return;
 	const ctx = canvas.getContext("2d");
 	ctx.fillStyle = "#cecfce";
@@ -229457,7 +229555,7 @@ function renderTendency(honor, virtue) {
 	ctx.fillRect(canvas.width / 2 - 1, canvas.height / 2 - 1, 2, 2);
 }
 function onValidate() {
-	const root = _root$1(Guild);
+	const root = _root$13(Guild);
 	const visibleContent = Array.from(root.querySelectorAll(".content")).find((el) => {
 		return el.style.display !== "none" && getComputedStyle(el).display !== "none";
 	});
@@ -229558,7 +229656,7 @@ var init_Guild$1 = __esmMin((() => {
 	* Initialize component
 	*/
 	Guild.init = function init() {
-		const root = _root$1(this);
+		const root = _root$13(this);
 		_memberViewTemplate = root.querySelector(".MemberView");
 		if (_memberViewTemplate) _memberViewTemplate.remove();
 		_positionViewTemplate = root.querySelector(".PositionView");
@@ -229648,7 +229746,7 @@ var init_Guild$1 = __esmMin((() => {
 				if (isSelf && !SessionStorage_default.isGuildMaster) ContextMenu_default.addElement(DB.getMessage(508), () => {
 					InputBox_default.append();
 					InputBox_default.setType("text");
-					const textEl = (_root$1(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					const textEl = (_root$13(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
 					if (textEl) textEl.textContent = DB.getMessage(523);
 					else InputBox_default.ui.find(".text").text(DB.getMessage(523));
 					InputBox_default.onSubmitRequest = (reason) => {
@@ -229659,7 +229757,7 @@ var init_Guild$1 = __esmMin((() => {
 				if (SessionStorage_default.guildRight & 16 && !isSelf) ContextMenu_default.addElement(DB.getMessage(509), () => {
 					InputBox_default.append();
 					InputBox_default.setType("text");
-					const textEl = (_root$1(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
+					const textEl = (_root$13(InputBox_default) || InputBox_default.ui?.[0])?.querySelector?.(".text");
 					if (textEl) textEl.textContent = DB.getMessage(524);
 					else InputBox_default.ui.find(".text").text(DB.getMessage(524));
 					InputBox_default.onSubmitRequest = (reason) => {
@@ -229764,7 +229862,7 @@ var init_Guild$1 = __esmMin((() => {
 		this.focus();
 		if (this.ui.is(":visible")) return;
 		this.ui.show();
-		const root = _root$1(this);
+		const root = _root$13(this);
 		if (!root.querySelector(".tabs .active")) {
 			const infoBtn = root.querySelector(".tabs .info");
 			if (infoBtn) infoBtn.click();
@@ -229778,7 +229876,7 @@ var init_Guild$1 = __esmMin((() => {
 		Renderer.stop(renderMemberFaces);
 	};
 	Guild.setGuildInformations = function setGuildInformations(info) {
-		const general = _root$1(this).querySelector(".content.info");
+		const general = _root$13(this).querySelector(".content.info");
 		if (!general) return;
 		general.querySelector(".name .value").textContent = info.guildname;
 		general.querySelector(".level .value").textContent = info.level;
@@ -229797,11 +229895,11 @@ var init_Guild$1 = __esmMin((() => {
 		renderTendency(info.honor, info.virtue);
 	};
 	Guild.setEmblem = function setEmblem(image) {
-		const el = _root$1(this).querySelector(".content.info .emblem_container");
+		const el = _root$13(this).querySelector(".content.info .emblem_container");
 		if (el) el.style.backgroundImage = `url(${image.src})`;
 	};
 	Guild.setRelations = function setRelations(guilds) {
-		const root = _root$1(this);
+		const root = _root$13(this);
 		const allyList = root.querySelector(".ally_list");
 		const hostileList = root.querySelector(".hostile_list");
 		if (allyList) allyList.innerHTML = "";
@@ -229809,7 +229907,7 @@ var init_Guild$1 = __esmMin((() => {
 		for (let i = 0, count = guilds.length; i < count; ++i) this.addRelation(guilds[i]);
 	};
 	Guild.addRelation = function addRelation(guild) {
-		const list = _root$1(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
+		const list = _root$13(this).querySelector(`.${guild.relation === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const div = document.createElement("div");
 		div.setAttribute("data-guild-id", guild.GDID);
@@ -229817,7 +229915,7 @@ var init_Guild$1 = __esmMin((() => {
 		list.appendChild(div);
 	};
 	Guild.removeRelation = function removeRelation(guildId, relation) {
-		const list = _root$1(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
+		const list = _root$13(this).querySelector(`.content.info .${relation === 0 ? "ally" : "hostile"}_list`);
 		if (!list) return;
 		const el = list.querySelector(`div[data-guild-id="${guildId}"]`);
 		if (el) el.remove();
@@ -229827,7 +229925,7 @@ var init_Guild$1 = __esmMin((() => {
 		const count = members.length;
 		_members.length = 0;
 		_totalExp = 0;
-		const root = _root$1(this);
+		const root = _root$13(this);
 		const tbody = root.querySelector(".content.members tbody");
 		if (tbody) tbody.innerHTML = "";
 		for (let i = 0; i < count; ++i) {
@@ -229843,7 +229941,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.setMember = function setMember(member) {
 		let i, count;
-		const root = _root$1(this);
+		const root = _root$13(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		let view;
 		if (i < count) view = root.querySelector(`.MemberView[data-index="${i}"]`);
@@ -229911,7 +230009,7 @@ var init_Guild$1 = __esmMin((() => {
 	Guild.updateMemberStatus = function updateMemberStatus(member) {
 		let i, count;
 		let online = 0;
-		const root = _root$1(this);
+		const root = _root$13(this);
 		for (i = 0, count = _members.length; i < count; ++i) if (_members[i].AID === member.AID && _members[i].GID === member.GID) break;
 		if (i >= count) return;
 		const view = root.querySelector(`.MemberView[data-index="${i}"]`);
@@ -229959,7 +230057,7 @@ var init_Guild$1 = __esmMin((() => {
 		Guild.updatePositionView();
 	};
 	Guild.updatePositionView = function updatePositionView() {
-		const container = _root$1(this).querySelector(".content.positions tbody");
+		const container = _root$13(this).querySelector(".content.positions tbody");
 		if (!container) return;
 		container.innerHTML = "";
 		const count = _positions.length;
@@ -229989,7 +230087,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.setSkills = function setSkills(skills) {
-		const root = _root$1(this);
+		const root = _root$13(this);
 		for (let i = 0, count = _skills.length; i < count; ++i) this.onUpdateSkill(_skills[i].SKID, 0);
 		_skills.length = 0;
 		const table = root.querySelector(".content.skills .skill_list table");
@@ -229998,7 +230096,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
-		const root = _root$1(this);
+		const root = _root$13(this);
 		if (root.querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
@@ -230049,7 +230147,7 @@ var init_Guild$1 = __esmMin((() => {
 		target.attackRange = skill.attackRange;
 		target.upgradable = skill.upgradable;
 		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = _root$1(this).querySelector(`.skill.id${skill.SKID}`);
+		const element = _root$13(this).querySelector(`.skill.id${skill.SKID}`);
 		if (!element) return;
 		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
 		if (skill.selectedLevel) {
@@ -230078,7 +230176,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.setPoints = function setPoints(amount) {
-		const root = _root$1(this);
+		const root = _root$13(this);
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
 		if (!_skpoints === !amount) {
@@ -230096,14 +230194,14 @@ var init_Guild$1 = __esmMin((() => {
 		if (_btnLevelUp$7) document.body.appendChild(_btnLevelUp$7);
 	};
 	Guild.setNotice = function setNotice(subject, notice) {
-		const root = _root$1(this);
+		const root = _root$13(this);
 		const subjectInput = root.querySelector(".content.notice .subject");
 		if (subjectInput) subjectInput.value = subject;
 		const noticeTextarea = root.querySelector(".content.notice textarea.notice");
 		if (noticeTextarea) noticeTextarea.value = notice;
 	};
 	Guild.setExpelList = function setExpelList(list) {
-		const container = _root$1(this).querySelector(".content.history tbody");
+		const container = _root$13(this).querySelector(".content.history tbody");
 		if (!container) return;
 		container.innerHTML = "";
 		for (let i = 0, count = list.length; i < count; ++i) {
@@ -230123,7 +230221,7 @@ var init_Guild$1 = __esmMin((() => {
 		return function renderMemberFace(tick) {
 			if (tick < lastTick + 1e3) return;
 			lastTick = tick;
-			const canvases = _root$1(Guild).querySelectorAll(".content.members canvas");
+			const canvases = _root$13(Guild).querySelectorAll(".content.members canvas");
 			Camera.direction = 4;
 			for (let i = 0, count = _members.length; i < count; ++i) {
 				if (!canvases[i]) continue;
@@ -235958,13 +236056,13 @@ var init_BasicInfoV3 = __esmMin((() => {
 //#region src/UI/Components/CheckAttendance/CheckAttendance.html?raw
 var CheckAttendance_default$2;
 var init_CheckAttendance$2 = __esmMin((() => {
-	CheckAttendance_default$2 = "<div id=\"CheckAttendance\">\r\n	<div class=\"titlebar\" data-background=\"check_attendance/attendance_bg.bmp\">\r\n		<div class=\"top-panel\">\r\n			<div class=\"top-panel-reward\">\r\n				<div class=\"text\">Check Reward</div>\r\n			</div>\r\n			<div class=\"top-panel-period\"></div>\r\n		</div>\r\n		<div class=\"left-panel\">\r\n			<ul class=\"days-list\"></ul>\r\n		</div>\r\n		<div class=\"right-panel\">\r\n			<div class=\"total-days\"></div>\r\n			<div class=\"npc\"></div>\r\n			<div class=\"remaining-days\">\r\n				<div class=\"remaining-day\">\r\n					<div class=\"remaining-day-text\"></div>\r\n				</div>\r\n				<div class=\"remaining-text\">\r\n					<div class=\"remaining-text-div\">Day</div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"bottom-panel\">\r\n			<div class=\"close-container\">\r\n				<button\r\n					class=\"close-container-btn\"\r\n					data-background=\"check_attendance/bt_ok_normal.bmp\"\r\n					data-down=\"check_attendance/bt_ok_press.bmp\"\r\n				>\r\n					Close\r\n				</button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	CheckAttendance_default$2 = "<div id=\"CheckAttendance\">\r\n	<div class=\"titlebar\" data-background=\"check_attendance/attendance_bg.bmp\">\r\n		<div class=\"top-panel\">\r\n			<div class=\"top-panel-reward\">\r\n				<div class=\"text\">Check Reward</div>\r\n			</div>\r\n			<div class=\"top-panel-period\"></div>\r\n		</div>\r\n		<div class=\"left-panel\">\r\n			<ul class=\"days-list\"></ul>\r\n		</div>\r\n		<div class=\"right-panel\">\r\n			<div class=\"total-days\"></div>\r\n			<div class=\"npc\"></div>\r\n			<div class=\"remaining-days\">\r\n				<div class=\"remaining-day\">\r\n					<div class=\"remaining-day-text\"></div>\r\n				</div>\r\n				<div class=\"remaining-text\">\r\n					<div class=\"remaining-text-div\">Day</div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"bottom-panel\">\r\n			<div class=\"close-container\">\r\n				<ui-button\r\n					class=\"close-container-btn\"\r\n					bg=\"check_attendance/bt_ok_normal.bmp\"\r\n					down=\"check_attendance/bt_ok_press.bmp\"\r\n					>Close</ui-button\r\n				>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/CheckAttendance/CheckAttendance.css?raw
 var CheckAttendance_default$1;
 var init_CheckAttendance$1 = __esmMin((() => {
-	CheckAttendance_default$1 = "#CheckAttendance {\r\n	position: absolute;\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel {\r\n	width: 100%;\r\n	height: 85px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward {\r\n	width: 100%;\r\n	height: 70px;\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: center;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward .text {\r\n	font-weight: bolder;\r\n	color: #633921;\r\n	display: table;\r\n	position: absolute;\r\n	top: 55%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-period {\r\n	width: 100%;\r\n	height: 15px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #a55239;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel {\r\n	width: 335px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list {\r\n	list-style: none;\r\n	padding-left: 25px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item {\r\n	float: left;\r\n	width: 58px;\r\n	height: 60px;\r\n	margin: 2px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item {\r\n	width: 100%;\r\n	height: 40px;\r\n	position: relative;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .item-quantity {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 15px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -10px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item:hover .name {\r\n	display: table;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .day {\r\n	width: 100%;\r\n	height: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #394aa5;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .completed {\r\n	position: absolute;\r\n	width: 58px;\r\n	height: 60px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel {\r\n	width: 152px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .total-days {\r\n	width: 80%;\r\n	height: 85px;\r\n	text-align: center;\r\n	display: flex;\r\n	align-items: center;\r\n	font-weight: bold;\r\n	color: #a53963;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .npc {\r\n	width: 100%;\r\n	height: 105px;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days {\r\n	width: 100%;\r\n	height: 80px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day {\r\n	height: 100%;\r\n	width: 85px;\r\n	float: left;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day .remaining-day-text {\r\n	position: absolute;\r\n	right: 10px;\r\n	bottom: 20px;\r\n	font-weight: bolder;\r\n	font-size: 20px;\r\n	color: white;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text {\r\n	height: 100%;\r\n	width: 35px;\r\n	float: left;\r\n	position: relative;\r\n	font-weight: bolder;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text .remaining-text-div {\r\n	position: absolute;\r\n	left: 3px;\r\n	bottom: 20px;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel {\r\n	width: 100%;\r\n	height: 58px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container .close-container-btn {\r\n	width: 146px;\r\n	height: 30px;\r\n	border: 0;\r\n	font-weight: bold;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	top: 35%;\r\n	left: 35%;\r\n}\r\n";
+	CheckAttendance_default$1 = ":host {\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance {\r\n	position: absolute;\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel {\r\n	width: 100%;\r\n	height: 85px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward {\r\n	width: 100%;\r\n	height: 70px;\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: center;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward .text {\r\n	font-weight: bolder;\r\n	color: #633921;\r\n	display: table;\r\n	position: absolute;\r\n	top: 55%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-period {\r\n	width: 100%;\r\n	height: 15px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #a55239;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel {\r\n	width: 335px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list {\r\n	list-style: none;\r\n	padding-left: 25px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item {\r\n	float: left;\r\n	width: 58px;\r\n	height: 60px;\r\n	margin: 2px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item {\r\n	width: 100%;\r\n	height: 40px;\r\n	position: relative;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .item-quantity {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 15px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -10px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item:hover .name {\r\n	display: table;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .day {\r\n	width: 100%;\r\n	height: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #394aa5;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .completed {\r\n	position: absolute;\r\n	width: 58px;\r\n	height: 60px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel {\r\n	width: 152px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .total-days {\r\n	width: 80%;\r\n	height: 85px;\r\n	text-align: center;\r\n	display: flex;\r\n	align-items: center;\r\n	font-weight: bold;\r\n	color: #a53963;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .npc {\r\n	width: 100%;\r\n	height: 105px;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days {\r\n	width: 100%;\r\n	height: 80px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day {\r\n	height: 100%;\r\n	width: 85px;\r\n	float: left;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day .remaining-day-text {\r\n	position: absolute;\r\n	right: 10px;\r\n	bottom: 20px;\r\n	font-weight: bolder;\r\n	font-size: 20px;\r\n	color: white;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text {\r\n	height: 100%;\r\n	width: 35px;\r\n	float: left;\r\n	position: relative;\r\n	font-weight: bolder;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text .remaining-text-div {\r\n	position: absolute;\r\n	left: 3px;\r\n	bottom: 20px;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel {\r\n	width: 100%;\r\n	height: 58px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container .close-container-btn {\r\n	width: 146px;\r\n	height: 30px;\r\n	border: 0;\r\n	font-weight: bold;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	top: 35%;\r\n	left: 35%;\r\n	display: inline-block;\r\n	text-align: center;\r\n	line-height: 30px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/CheckAttendance/CheckAttendance.js
@@ -235972,11 +236070,19 @@ var init_CheckAttendance$1 = __esmMin((() => {
 * Request Attendance Item
 */
 function onClickAttendance(e) {
-	const id = jquery_default(e.currentTarget).attr("id");
-	CheckAttendance.ui.find("#" + id + " .checked-hidden").attr("class", "checked");
-	CheckAttendance.ui.find("#" + id).append("<div class=\"completed\" data-background=\"check_attendance/bt_slot_complete.tga\"></div>");
+	const root = CheckAttendance.getRoot();
+	const el = e.currentTarget;
+	const id = el.id;
+	const checkedHidden = root.querySelector(`#${id} .checked-hidden`);
+	if (checkedHidden) checkedHidden.className = "checked";
+	const completedDiv = document.createElement("div");
+	completedDiv.className = "completed";
+	completedDiv.dataset.background = "check_attendance/bt_slot_complete.tga";
+	el.appendChild(completedDiv);
+	GUIComponent.processDataAttrs(completedDiv);
 	const total_days_string = `${parseInt(_checkAttendanceData / 10) + 1} Day attendance success`;
-	CheckAttendance.ui.find(".total-days").html(total_days_string);
+	const totalDaysEl = root.querySelector(".total-days");
+	if (totalDaysEl) totalDaysEl.innerHTML = total_days_string;
 	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
 	Network.sendPacket(_pkt);
 }
@@ -235986,14 +236092,15 @@ var init_CheckAttendance = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_CheckAttendance$2();
 	init_CheckAttendance$1();
-	init_jquery();
 	init_ChatBox();
-	CheckAttendance = new UIComponent("CheckAttendance", CheckAttendance_default$2, CheckAttendance_default$1);
+	init_Elements();
+	CheckAttendance = new GUIComponent("CheckAttendance", CheckAttendance_default$1);
+	CheckAttendance.render = () => CheckAttendance_default$2;
 	_preferences$45 = Preferences.get("CheckAttendance", {
 		x: 200,
 		y: 200
@@ -236003,22 +236110,26 @@ var init_CheckAttendance = __esmMin((() => {
 	*/
 	CheckAttendance.init = function init() {
 		_CheckAttendanceInfo = DB.getCheckAttendanceInfo();
-		this.ui.find(".base").mousedown(function(event) {
+		const root = this.getRoot();
+		const baseEl = root.querySelector(".base");
+		if (baseEl) baseEl.addEventListener("mousedown", (event) => {
 			event.stopImmediatePropagation();
-			return false;
+			event.preventDefault();
 		});
-		this.ui.find(".close-container-btn").click(CheckAttendance.onClose);
-		this.draggable(this.ui.find(".titlebar"));
+		root.querySelector(".close-container-btn").addEventListener("click", () => {
+			CheckAttendance._host.style.display = "none";
+		});
+		this.draggable(root.querySelector(".titlebar"));
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
 	CheckAttendance.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$45.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$45.x), Renderer.width - this.ui.width())
+		Object.assign(this._host.style, {
+			top: `${Math.min(Math.max(0, _preferences$45.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
+			left: `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
 		});
-		if (!_preferences$45.show) this.ui.hide();
+		if (!_preferences$45.show) this._host.style.display = "none";
 		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
 			CheckAttendance.updateUI();
 			this.focus();
@@ -236027,11 +236138,13 @@ var init_CheckAttendance = __esmMin((() => {
 	/**
 	* Window Shortcuts
 	*/
-	CheckAttendance.onShortCut = function onShurtCut(key) {
+	CheckAttendance.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
-				this.ui.toggle();
-				if (this.ui.is(":visible")) this.focus();
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else this._host.style.display = "none";
 				break;
 		}
 	};
@@ -236039,7 +236152,7 @@ var init_CheckAttendance = __esmMin((() => {
 	* Show/Hide UI
 	*/
 	CheckAttendance.toggle = function toggle() {
-		if (this.ui.is(":visible")) this.ui.hide();
+		if (this._host.style.display !== "none") this._host.style.display = "none";
 		else {
 			const _pkt = new PACKET.CZ.UI_OPEN();
 			_pkt.UIType = 5;
@@ -236056,6 +236169,7 @@ var init_CheckAttendance = __esmMin((() => {
 	* Update CheckAttendance UI
 	*/
 	CheckAttendance.updateUI = function updateUI() {
+		const root = this.getRoot();
 		let already_requested = 0;
 		let attendance_count = 0;
 		let current_day = 1;
@@ -236064,7 +236178,8 @@ var init_CheckAttendance = __esmMin((() => {
 			const start = regex.exec(_CheckAttendanceInfo.Config.StartDate);
 			const end = regex.exec(_CheckAttendanceInfo.Config.EndDate);
 			const period_string = `Event Period: From ${start[2]}/${start[3]} ~ Until ${end[2]}/${end[3]} (Month/Day) 24:00`;
-			this.ui.find(".top-panel-period").html(period_string);
+			const periodEl = root.querySelector(".top-panel-period");
+			if (periodEl) periodEl.innerHTML = period_string;
 			if (_checkAttendanceData >= 0) {
 				already_requested = _checkAttendanceData % 10;
 				attendance_count = parseInt(_checkAttendanceData / 10);
@@ -236073,39 +236188,55 @@ var init_CheckAttendance = __esmMin((() => {
 				const end_date = /* @__PURE__ */ new Date(`${end[1]}-${end[2]}-${end[3]}`);
 				const now_date = /* @__PURE__ */ new Date();
 				const remaining_days = Math.round(Math.abs((end_date.getTime() - now_date.getTime()) / (1e3 * 3600 * 24)));
-				this.ui.find(".total-days").html(total_days_string);
-				this.ui.find(".remaining-day-text").html(remaining_days);
+				const totalDaysEl = root.querySelector(".total-days");
+				if (totalDaysEl) totalDaysEl.innerHTML = total_days_string;
+				const remainingEl = root.querySelector(".remaining-day-text");
+				if (remainingEl) remainingEl.textContent = remaining_days;
 			}
 		}
-		if (_CheckAttendanceInfo.Rewards) for (let i = 0; i < 20; i++) {
-			const item = DB.getItemInfo(_CheckAttendanceInfo.Rewards[i].item_id);
-			const day = i + 1;
-			const background = !already_requested && day == current_day ? "data-background=\"check_attendance/bt_slot_a.bmp\" data-down=\"check_attendance/bt_slot_press.bmp\"" : "";
-			const checked = day <= attendance_count ? "checked" : "checked-hidden";
-			const slot_complete_string = day > (already_requested ? attendance_count - 1 : attendance_count) ? "bt_slot_complete" : "bt_slot_off";
-			const item_slot = "<li id=\"attendance_day_" + i + "\" class=\"attendance-item\"" + background + "><div class=\"item\" data-background=\"" + DB.INTERFACE_PATH + "item/" + item.identifiedResourceName + ".bmp\"><span class=\"item-quantity\">" + _CheckAttendanceInfo.Rewards[i].quantity + "</span><span class=\"name\">" + item.identifiedDisplayName + "</span><div class=\"" + checked + "\" data-background=\"check_attendance/" + slot_complete_string + ".tga\"></div></div><div class=\"day\">" + day + " Day</div></li>";
-			this.ui.find(".days-list").append(item_slot);
-			if (!already_requested && day == current_day) {
-				this.ui.find("#attendance_day_" + i).on("click", onClickAttendance);
-				this.ui.find("#attendance_day_" + i).addClass("event_add_cursor");
+		if (_CheckAttendanceInfo.Rewards) {
+			const daysList = root.querySelector(".days-list");
+			for (let i = 0; i < 20; i++) {
+				const item = DB.getItemInfo(_CheckAttendanceInfo.Rewards[i].item_id);
+				const day = i + 1;
+				const background = !already_requested && day == current_day ? `data-background="check_attendance/bt_slot_a.bmp" data-down="check_attendance/bt_slot_press.bmp"` : "";
+				const checked = day <= attendance_count ? "checked" : "checked-hidden";
+				const slot_complete_string = day > (already_requested ? attendance_count - 1 : attendance_count) ? "bt_slot_complete" : "bt_slot_off";
+				const item_slot = `<li id="attendance_day_${i}" class="attendance-item" ${background}><div class="item" data-background="${DB.INTERFACE_PATH}item/${item.identifiedResourceName}.bmp"><span class="item-quantity">${_CheckAttendanceInfo.Rewards[i].quantity}</span><span class="name">${item.identifiedDisplayName}</span><div class="${checked}" data-background="check_attendance/${slot_complete_string}.tga"></div></div><div class="day">${day} Day</div></li>`;
+				if (daysList) daysList.insertAdjacentHTML("beforeend", item_slot);
+				if (!already_requested && day == current_day) {
+					const dayEl = root.querySelector(`#attendance_day_${i}`);
+					if (dayEl) {
+						dayEl.addEventListener("click", onClickAttendance);
+						dayEl.classList.add("event_add_cursor");
+					}
+				}
 			}
+			const dataAttrSelector = "[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]";
+			if (daysList) daysList.querySelectorAll(dataAttrSelector).forEach((node) => {
+				GUIComponent.processDataAttrs(node);
+			});
 		}
-		this.ui.each(this.parseHTML).find("*").each(this.parseHTML);
 	};
 	/**
 	* Clean CheckAttendance UI
 	*/
 	CheckAttendance.cleanUI = function cleanUI() {
-		CheckAttendance.ui.find(".top-panel-period").html("");
-		CheckAttendance.ui.find(".days-list").empty("");
-		CheckAttendance.ui.find(".total-days").html("");
-		CheckAttendance.ui.find(".remaining-days-text").html("");
+		const root = CheckAttendance.getRoot();
+		const periodEl = root.querySelector(".top-panel-period");
+		if (periodEl) periodEl.innerHTML = "";
+		const daysListEl = root.querySelector(".days-list");
+		if (daysListEl) daysListEl.innerHTML = "";
+		const totalDaysEl = root.querySelector(".total-days");
+		if (totalDaysEl) totalDaysEl.innerHTML = "";
+		const remainingEl = root.querySelector(".remaining-day-text");
+		if (remainingEl) remainingEl.innerHTML = "";
 	};
 	/**
 	* Close the window
 	*/
 	CheckAttendance.onClose = function onClose() {
-		CheckAttendance.ui.hide();
+		CheckAttendance._host.style.display = "none";
 	};
 	CheckAttendance_default = UIManager.addComponent(CheckAttendance);
 }));
@@ -236464,124 +236595,120 @@ var init_BasicInfoV4 = __esmMin((() => {
 //#region src/UI/Components/Reputation/Reputation.html?raw
 var Reputation_default$2;
 var init_Reputation$2 = __esmMin((() => {
-	Reputation_default$2 = "<div id=\"Reputation\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"3827\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overall_container\">\r\n		<div class=\"header\">\r\n			<div class=\"select-wrapper\">\r\n				<select id=\"repute_groups\" class=\"rep_group_selector\">\r\n					<option value=\"all\" data-text=\"3829\"></option>\r\n				</select>\r\n				<button\r\n					type=\"button\"\r\n					class=\"select-arrow\"\r\n					data-background=\"basic_interface/txtbox_btn_a.bmp\"\r\n					data-hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n					data-down=\"basic_interface/txtbox_btn_c.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"search_wrapper\">\r\n				<input class=\"rep_group_searchbar\" type=\"text\" />\r\n				<button\r\n					class=\"search\"\r\n					data-background=\"reputation/btn_search.bmp\"\r\n					data-hover=\"reputation/btn_search_over.bmp\"\r\n					data-down=\"reputation/btn_search_press.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"rep_group_total_points_wrapper\">\r\n				<div class=\"rep_group_text\">GROUP:</div>\r\n				<div class=\"rep_indicator\"></div>\r\n				<div class=\"rep_group_total_points_value\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"content\"></div>\r\n		<div class=\"paginator\">\r\n			<button class=\"page_prev\" data-background=\"reputation/arrow_prev.bmp\"></button>\r\n			<span class=\"page_text\">1 / 1</span>\r\n			<button class=\"page_next\" data-background=\"reputation/arrow_next.bmp\"></button>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button\r\n				class=\"big_btn_close\"\r\n				data-background=\"basic_interface/btn_close.bmp\"\r\n				data-hover=\"basic_interface/btn_close_a.bmp\"\r\n				data-down=\"basic_interface/btn_close_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	Reputation_default$2 = "<div id=\"Reputation\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<ui-text class=\"text\" msg=\"3827\"></ui-text>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overall_container\">\r\n		<div class=\"header\">\r\n			<div class=\"select-wrapper\">\r\n				<select id=\"repute_groups\" class=\"rep_group_selector\">\r\n					<option value=\"all\" data-text=\"3829\"></option>\r\n				</select>\r\n				<ui-button\r\n					class=\"select-arrow\"\r\n					bg=\"basic_interface/txtbox_btn_a.bmp\"\r\n					hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n					down=\"basic_interface/txtbox_btn_c.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"search_wrapper\">\r\n				<input class=\"rep_group_searchbar\" type=\"text\" />\r\n				<ui-button\r\n					class=\"search\"\r\n					bg=\"reputation/btn_search.bmp\"\r\n					hover=\"reputation/btn_search_over.bmp\"\r\n					down=\"reputation/btn_search_press.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"rep_group_total_points_wrapper\">\r\n				<div class=\"rep_group_text\">GROUP:</div>\r\n				<div class=\"rep_indicator\"></div>\r\n				<div class=\"rep_group_total_points_value\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"content\"></div>\r\n		<div class=\"paginator\">\r\n			<ui-button class=\"page_prev\" bg=\"reputation/arrow_prev.bmp\"></ui-button>\r\n			<span class=\"page_text\">1 / 1</span>\r\n			<ui-button class=\"page_next\" bg=\"reputation/arrow_next.bmp\"></ui-button>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<ui-button\r\n				class=\"big_btn_close\"\r\n				bg=\"basic_interface/btn_close.bmp\"\r\n				hover=\"basic_interface/btn_close_a.bmp\"\r\n				down=\"basic_interface/btn_close_b.bmp\"\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Reputation/Reputation.css?raw
 var Reputation_default$1;
 var init_Reputation$1 = __esmMin((() => {
-	Reputation_default$1 = "#Reputation {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 665px;\r\n	height: 450px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Reputation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Reputation .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Reputation .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Reputation .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Reputation .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Reputation .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Reputation .overall_container {\r\n	display: flex;\r\n	flex-direction: column;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Reputation .header {\r\n	display: flex;\r\n	gap: 6px;\r\n}\r\n\r\n#Reputation .select-wrapper {\r\n	position: relative;\r\n	display: inline-block;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_selector {\r\n	width: 140px;\r\n	padding-right: 36px;\r\n	height: 18px;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .select-arrow {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 18px;\r\n	height: 18px;\r\n	border: none;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n#Reputation .search_wrapper {\r\n	height: 18px;\r\n	width: 235px;\r\n	margin-top: 5px;\r\n	display: inline-block;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_searchbar {\r\n	height: 14px;\r\n	width: 196px;\r\n	border: 1px solid black;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .search {\r\n	height: 18px;\r\n	width: 33px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n\r\n#Reputation .rep_group_total_points_wrapper {\r\n	width: 245px;\r\n	border: 1px solid black;\r\n	margin-top: 5px;\r\n	background-color: #eeeeef;\r\n	align-items: center;\r\n	display: flex;\r\n}\r\n\r\n#Reputation .rep_group_text {\r\n	width: 50px;\r\n}\r\n\r\n#Reputation .rep_indicator {\r\n	width: 40px;\r\n	height: 100%;\r\n	background: no-repeat center;\r\n}\r\n\r\n#Reputation .rep_group_total_points_value {\r\n	margin-left: 5px;\r\n	margin-right: 5px;\r\n	width: 100%;\r\n	text-align: right;\r\n}\r\n\r\n#Reputation .content {\r\n	min-height: 350px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-wrap: wrap;\r\n	flex-basis: content;\r\n	align-content: flex-start;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Reputation .rep_group_wrapper {\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	width: 313px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_name {\r\n	margin-left: 5px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_indicator_wrapper {\r\n	display: flex;\r\n	height: 17px;\r\n	gap: 2px;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n\r\n#Reputation .rep_group_indicator {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#Reputation .rep_group_progess_bar {\r\n	height: 8px;\r\n	margin-top: 10px;\r\n	margin-left: 3px;\r\n	width: 97%;\r\n}\r\n\r\n#Reputation .rep_id_points {\r\n	width: 80px;\r\n	height: 20px;\r\n	margin-top: 5px;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n	text-align: center;\r\n}\r\n\r\n#Reputation .paginator {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	gap: 8px;\r\n	height: 30px;\r\n	margin-right: 25px;\r\n}\r\n\r\n#Reputation .paginator button {\r\n	width: 7px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .footer {\r\n	height: 28px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 3px 3px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n}\r\n\r\n#Reputation .big_btn_close {\r\n	height: 20px;\r\n	width: 42px;\r\n	border: none;\r\n	margin-top: 5px;\r\n	margin-right: 10px;\r\n}\r\n";
+	Reputation_default$1 = ":host {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 665px;\r\n	height: 450px;\r\n}\r\n\r\n#Reputation {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Reputation .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Reputation .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Reputation .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Reputation .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Reputation .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Reputation .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Reputation .overall_container {\r\n	display: flex;\r\n	flex-direction: column;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#Reputation .header {\r\n	display: flex;\r\n	gap: 6px;\r\n}\r\n\r\n#Reputation .select-wrapper {\r\n	position: relative;\r\n	display: inline-block;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_selector {\r\n	width: 140px;\r\n	padding-right: 36px;\r\n	height: 18px;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .select-arrow {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 18px;\r\n	height: 18px;\r\n	border: none;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n#Reputation .search_wrapper {\r\n	height: 18px;\r\n	width: 235px;\r\n	margin-top: 5px;\r\n	display: inline-block;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_searchbar {\r\n	height: 14px;\r\n	width: 196px;\r\n	border: 1px solid black;\r\n	background-color: #eeeeef;\r\n}\r\n\r\n#Reputation .search {\r\n	height: 18px;\r\n	width: 33px;\r\n	border: none;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .rep_group_total_points_wrapper {\r\n	width: 245px;\r\n	border: 1px solid black;\r\n	margin-top: 5px;\r\n	background-color: #eeeeef;\r\n	align-items: center;\r\n	display: flex;\r\n}\r\n\r\n#Reputation .rep_group_text {\r\n	width: 50px;\r\n}\r\n\r\n#Reputation .rep_indicator {\r\n	width: 40px;\r\n	height: 100%;\r\n	background: no-repeat center;\r\n}\r\n\r\n#Reputation .rep_group_total_points_value {\r\n	margin-left: 5px;\r\n	margin-right: 5px;\r\n	width: 100%;\r\n	text-align: right;\r\n}\r\n\r\n#Reputation .content {\r\n	min-height: 350px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-wrap: wrap;\r\n	flex-basis: content;\r\n	align-content: flex-start;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Reputation .rep_group_wrapper {\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	width: 313px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n}\r\n\r\n#Reputation .rep_group_name {\r\n	margin-left: 5px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#Reputation .rep_group_indicator_wrapper {\r\n	display: flex;\r\n	height: 17px;\r\n	gap: 2px;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n\r\n#Reputation .rep_group_indicator {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#Reputation .rep_group_progess_bar {\r\n	height: 8px;\r\n	margin-top: 10px;\r\n	margin-left: 3px;\r\n	width: 97%;\r\n}\r\n\r\n#Reputation .rep_id_points {\r\n	width: 80px;\r\n	height: 20px;\r\n	margin-top: 5px;\r\n	position: absolute;\r\n	bottom: 0px;\r\n	right: 0px;\r\n	text-align: center;\r\n}\r\n\r\n#Reputation .paginator {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	gap: 8px;\r\n	height: 30px;\r\n	margin-right: 25px;\r\n}\r\n\r\n#Reputation .paginator ui-button {\r\n	width: 7px;\r\n	height: 11px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Reputation .footer {\r\n	height: 28px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 0px 0px 3px 3px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n}\r\n\r\n#Reputation .big_btn_close {\r\n	height: 20px;\r\n	width: 42px;\r\n	border: none;\r\n	margin-top: 5px;\r\n	margin-right: 10px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Reputation/Reputation.js
 /**
+* Helper: query inside shadow root
+*/
+function _root$12() {
+	return Reputation._shadow || Reputation._host;
+}
+/**
 * Build the group selector based on the ReputeGroupTable in DB
-* Append a new <option> element for each group in the table
-* The option element will have the class 'repute_group_<groupIndex>'
-* The option element will have the value '<groupIndex>'
-* The option element will have the text content '<group.Name>'
 */
 function buildGroupSelector() {
-	const groupSelector = Reputation.ui.find("#repute_groups");
+	const groupSelector = _root$12().querySelector("#repute_groups");
+	if (!groupSelector) return;
 	const ReputeGroupTable = DB.getReputeGroup();
 	Object.entries(ReputeGroupTable).forEach(([groupIndex, group]) => {
 		const option = document.createElement("option");
-		option.className = "repute_group_" + groupIndex;
+		option.className = `repute_group_${groupIndex}`;
 		option.value = groupIndex;
 		option.textContent = group.Name;
-		groupSelector.append(option);
+		groupSelector.appendChild(option);
 	});
 }
 /**
 * Bind the group selector with the reputation page
-*
-* When the group selector changes, it will update the total points display
-* and re-render the reputation entries for the selected group
 */
 function bindGroupSelector() {
-	Reputation.ui.find("#repute_groups").on("change", function() {
+	const root = _root$12();
+	const groupSelector = root.querySelector("#repute_groups");
+	if (!groupSelector) return;
+	groupSelector.addEventListener("change", function() {
 		const selectedGroup = this.value;
 		updateGroupTotalPoints(selectedGroup);
-		Reputation.ui.find(".rep_group_searchbar").val("");
+		const searchInput = root.querySelector(".rep_group_searchbar");
+		if (searchInput) searchInput.value = "";
 		filterByGroup(selectedGroup);
 	});
 }
 /**
 * Bind search functionality to the input field and button
-*
-* Listens for the enter key on the search input field and performs a search
-* when the enter key is pressed. Listens for a click on the search button and
-* performs a search when the button is clicked.
-*
 */
 function bindSearch() {
-	const input = Reputation.ui.find(".rep_group_searchbar");
-	const button = Reputation.ui.find(".search");
-	input.on("keydown", function(e) {
+	const root = _root$12();
+	const input = root.querySelector(".rep_group_searchbar");
+	const button = root.querySelector(".search");
+	if (input) input.addEventListener("keydown", function(e) {
 		if (e.key === "Enter") performSearch(this.value.trim());
 	});
-	button.on("click", function() {
-		performSearch(input.val().trim());
+	if (button) button.addEventListener("click", () => {
+		if (input) performSearch(input.value.trim());
 	});
 }
 /**
 * Build all reputation entries once
-*
-* Empties the content container and re-renders all reputation entries
-* using the createReputationEntry function. It also updates the UI state
-* of each entry with the current points value.
-*
-* @return {void}
 */
 function buildAllReputeEntries() {
-	const content = Reputation.ui.find(".content");
+	const content = _root$12().querySelector(".content");
+	if (!content) return;
 	const reputeIds = Object.keys(DB.getReputeInfo()).map(Number);
 	Reputation.page.reputeIds = reputeIds;
-	content.empty();
+	content.innerHTML = "";
 	reputeIds.forEach((reputeId) => {
 		const info = DB.getReputeData(reputeId);
 		if (!info) return;
 		const points = Reputation.reputeState?.[reputeId] || 0;
 		const entry = createReputeEntry(reputeId, info);
 		entry.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
-		content.append(entry);
+		content.appendChild(entry);
 		updateReputeUI(reputeId, points);
 	});
 }
 /**
 * Update the total points display for a given group id
-* @param {string} groupId - The ID of the group to update (or 'all' for all entries)
+* @param {string} groupId
 */
 function updateGroupTotalPoints(groupId) {
-	const wrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	const indicator = wrapper.find(".rep_indicator");
-	const pointsValue = wrapper.find(".rep_group_total_points_value");
+	const wrapper = _root$12().querySelector(".rep_group_total_points_wrapper");
+	if (!wrapper) return;
+	const indicator = wrapper.querySelector(".rep_indicator");
+	const pointsValue = wrapper.querySelector(".rep_group_total_points_value");
 	if (groupId === "all") {
-		wrapper.hide();
+		wrapper.style.display = "none";
 		return;
 	}
-	wrapper.show();
+	wrapper.style.display = "flex";
 	let reputeIds = DB.getReputeGroupList(groupId);
 	if (reputeIds && typeof reputeIds === "object") reputeIds = Object.values(reputeIds);
 	if (!reputeIds || !reputeIds.length) {
-		indicator.css("background-image", `url(${indicator_empty})`);
-		pointsValue.text("0");
+		if (indicator) indicator.style.backgroundImage = `url(${indicator_empty})`;
+		if (pointsValue) pointsValue.textContent = "0";
 		return;
 	}
 	let totalPoints = 0;
 	reputeIds.forEach((reputeId) => {
 		totalPoints += Reputation.reputeState?.[reputeId] || 0;
 	});
-	if (totalPoints > 0) indicator.css("background-image", `url(${indicator_blue})`);
-	else if (totalPoints < 0) indicator.css("background-image", `url(${indicator_red})`);
-	else indicator.css("background-image", `url(${indicator_empty})`);
-	pointsValue.text(`${totalPoints} P`);
+	if (indicator) if (totalPoints > 0) indicator.style.backgroundImage = `url(${indicator_blue})`;
+	else if (totalPoints < 0) indicator.style.backgroundImage = `url(${indicator_red})`;
+	else indicator.style.backgroundImage = `url(${indicator_empty})`;
+	if (pointsValue) pointsValue.textContent = `${totalPoints} P`;
 }
 /**
 * Checks if a reputation entry is visible based on the info.Invisible value and the current points value
-* @param {object} info - The reputation entry info object
-* @param {number} points - The current points value of the reputation entry
-* @returns {boolean} True if the reputation entry is visible, false otherwise
+* @param {object} info
+* @param {number} points
+* @returns {boolean}
 */
 function isReputeVisible(info, points) {
 	switch (info.Invisible) {
@@ -236592,78 +236719,82 @@ function isReputeVisible(info, points) {
 }
 /**
 * Filters the reputation entries based on the given group ID
-* If the group ID is 'all', shows all entries
-* If the group ID is not 'all', shows only the entries that belong to the group and updates the total points wrapper
-* @param {string} groupId - The ID of the group to filter by
+* @param {string} groupId
 */
 function filterByGroup(groupId) {
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
+	const root = _root$12();
+	const items = root.querySelectorAll(".rep_group_wrapper");
+	const totalWrapper = root.querySelector(".rep_group_total_points_wrapper");
 	if (groupId === "all") {
-		items.each(function() {
-			const el = this;
+		items.forEach((el) => {
 			const reputeId = Number(el.dataset.reputeId);
 			const info = DB.getReputeData(reputeId);
 			const points = Reputation.reputeState?.[reputeId] || 0;
 			el.dataset.visible = isReputeVisible(info, points) ? "true" : "false";
 		});
-		totalWrapper.hide();
+		if (totalWrapper) totalWrapper.style.display = "none";
 	} else {
 		const groupList = Object.values(DB.getReputeGroupList(groupId) || {});
-		items.each(function() {
-			const el = this;
+		items.forEach((el) => {
 			const reputeId = Number(el.dataset.reputeId);
 			const info = DB.getReputeData(reputeId);
 			const points = Reputation.reputeState?.[reputeId] || 0;
 			el.dataset.visible = groupList.includes(reputeId) && isReputeVisible(info, points) ? "true" : "false";
 		});
 		updateGroupTotalPoints(groupId);
-		totalWrapper.show();
+		if (totalWrapper) totalWrapper.style.display = "flex";
 	}
-	const visibleIds = items.filter((i, el) => el.dataset.visible === "true").map((i, el) => Number(el.dataset.reputeId)).get();
+	const visibleIds = [];
+	items.forEach((el) => {
+		if (el.dataset.visible === "true") visibleIds.push(Number(el.dataset.reputeId));
+	});
 	Reputation.page.reputeIds = visibleIds;
 	Reputation.page.current = 0;
 	renderReputePage(0);
 }
 /**
 * Update the reputation pager UI.
-*
-* This function is called after the reputation entries have been updated.
-* It updates the pager UI to reflect the current page and total number of pages.
 */
 function updateReputePager() {
+	const root = _root$12();
 	const total = Reputation.page.reputeIds.length;
 	const perPage = Reputation.page.perPage;
 	const totalPages = Math.max(1, Math.ceil(total / perPage));
 	const current = Reputation.page.current + 1;
-	const paginator = Reputation.ui.find(".paginator");
-	const prevBtn = paginator.find(".page_prev");
-	const nextBtn = paginator.find(".page_next");
-	paginator.find(".page_text").text(`${current} / ${totalPages}`);
-	prevBtn.css("visibility", current === 1 ? "hidden" : "visible");
-	nextBtn.css("visibility", current === totalPages ? "hidden" : "visible");
-	if (totalPages === 1) prevBtn.add(nextBtn).css("visibility", "hidden");
+	const prevBtn = root.querySelector(".page_prev");
+	const nextBtn = root.querySelector(".page_next");
+	const text = root.querySelector(".page_text");
+	if (text) text.textContent = `${current} / ${totalPages}`;
+	if (prevBtn) prevBtn.style.visibility = current === 1 ? "hidden" : "visible";
+	if (nextBtn) nextBtn.style.visibility = current === totalPages ? "hidden" : "visible";
+	if (totalPages === 1) {
+		if (prevBtn) prevBtn.style.visibility = "hidden";
+		if (nextBtn) nextBtn.style.visibility = "hidden";
+	}
 }
 /**
 * Render a page of reputation entries based on current page index.
-*
-* Hides all entries first, then shows only visible entries within the current page.
-* Updates the pager afterwards.
-*
-* @param {number} pageIndex - current page index (starts from 0)
+* @param {number} pageIndex
 */
 function renderReputePage(pageIndex) {
+	const root = _root$12();
 	const { perPage } = Reputation.page;
-	const items = Reputation.ui.find(".rep_group_wrapper");
+	const items = root.querySelectorAll(".rep_group_wrapper");
 	Reputation.page.current = pageIndex;
-	items.hide();
-	const visibleItems = items.filter((i, el) => el.dataset.visible === "true");
+	items.forEach((el) => {
+		el.style.display = "none";
+	});
+	const visibleItems = [];
+	items.forEach((el) => {
+		if (el.dataset.visible === "true") visibleItems.push(el);
+	});
 	const start = pageIndex * perPage;
 	const end = start + perPage;
 	const pageItems = visibleItems.slice(start, end);
-	pageItems.show();
-	if (Reputation.highlight.active && !Reputation.highlight.consumed) pageItems.each(function() {
-		const el = this;
+	pageItems.forEach((el) => {
+		el.style.display = "";
+	});
+	if (Reputation.highlight.active && !Reputation.highlight.consumed) pageItems.forEach((el) => {
 		if (Number(el.dataset.reputeId) === Reputation.highlight.reputeId) {
 			el.style.backgroundImage = `url(${bg_highlight})`;
 			Reputation.highlight.consumed = true;
@@ -236675,15 +236806,15 @@ function renderReputePage(pageIndex) {
 }
 /**
 * Create a reputation entry element from given info
-* @param {number} reputeId - reputation id
-* @param {object} info - reputation info
-* @returns {HTMLDivElement} created element
+* @param {number} reputeId
+* @param {object} info
+* @returns {HTMLDivElement}
 */
 function createReputeEntry(reputeId, info) {
 	const wrapper = document.createElement("div");
 	wrapper.className = "rep_group_wrapper";
 	wrapper.dataset.reputeId = reputeId;
-	wrapper.style.backgroundImage = "url(" + bg + ")";
+	wrapper.style.backgroundImage = `url(${bg})`;
 	const name = document.createElement("div");
 	name.className = "rep_group_name";
 	name.textContent = info.Name;
@@ -236710,50 +236841,46 @@ function createReputeEntry(reputeId, info) {
 }
 /**
 * Update the UI of a specific Repute entry
-* @param {string} reputeId - The ID of the Repute entry to update
-* @param {number} points - The points to update the UI with
+* @param {string} reputeId
+* @param {number} points
 */
 function updateReputeUI(reputeId, points) {
-	const wrapper = Reputation.ui.find(`.rep_group_wrapper[data-repute-id="${reputeId}"]`);
-	if (!wrapper.length) return;
-	const indicators = wrapper.find(".rep_group_indicator");
+	const wrapper = _root$12().querySelector(`.rep_group_wrapper[data-repute-id="${reputeId}"]`);
+	if (!wrapper) return;
+	const indicators = wrapper.querySelectorAll(".rep_group_indicator");
 	const absPoints = Math.abs(points);
 	const fullIndicators = Math.floor(absPoints / 1e3);
 	const remainder = absPoints % 1e3;
-	indicators.each(function(index) {
-		this.style.backgroundImage = index < fullIndicators ? points >= 0 ? `url(${indicator_blue})` : `url(${indicator_red})` : `url(${indicator_empty})`;
+	indicators.forEach((el, index) => {
+		el.style.backgroundImage = index < fullIndicators ? points >= 0 ? `url(${indicator_blue})` : `url(${indicator_red})` : `url(${indicator_empty})`;
 	});
-	wrapper.find(".rep_id_points").text(`${remainder} / 1000`);
-	const progress = wrapper.find(".rep_group_progess_bar");
-	const percent = remainder / 1e3 * 100;
-	const fillColor = points >= 0 ? "#7b95ce" : "#f60206";
-	progress.css("background-image", `linear-gradient(
-				to right,
-				${fillColor} 0%,
-				${fillColor} ${percent}%,
-				transparent ${percent}%
-			)`);
+	const pointsEl = wrapper.querySelector(".rep_id_points");
+	if (pointsEl) pointsEl.textContent = `${remainder} / 1000`;
+	const progress = wrapper.querySelector(".rep_group_progess_bar");
+	if (progress) {
+		const percent = remainder / 1e3 * 100;
+		const fillColor = points >= 0 ? "#7b95ce" : "#f60206";
+		progress.style.backgroundImage = `linear-gradient(to right, ${fillColor} 0%, ${fillColor} ${percent}%, transparent ${percent}%)`;
+	}
 }
 /**
 * Perform search on the reputation entries based on the given query.
-* If the query is empty, reset the search and show all entries.
-* Otherwise, filter the entries based on whether the entry name matches the query (case-insensitive) and whether the entry is visible.
-* @param {string} query - The search query to filter the reputation entries with
+* @param {string} query
 */
 function performSearch(query) {
-	const items = Reputation.ui.find(".rep_group_wrapper");
-	const totalWrapper = Reputation.ui.find(".rep_group_total_points_wrapper");
-	const groupSelector = Reputation.ui.find("#repute_groups");
+	const root = _root$12();
+	const items = root.querySelectorAll(".rep_group_wrapper");
+	const totalWrapper = root.querySelector(".rep_group_total_points_wrapper");
+	const groupSelector = root.querySelector("#repute_groups");
 	if (!query) {
-		groupSelector.val("all");
-		totalWrapper.hide();
+		if (groupSelector) groupSelector.value = "all";
+		if (totalWrapper) totalWrapper.style.display = "none";
 		filterByGroup("all");
 		return;
 	}
 	const lowerQuery = query.toLowerCase();
 	const visibleIds = [];
-	items.each(function() {
-		const el = this;
+	items.forEach((el) => {
 		const reputeId = Number(el.dataset.reputeId);
 		const info = DB.getReputeData(reputeId);
 		const points = Reputation.reputeState?.[reputeId] || 0;
@@ -236769,28 +236896,20 @@ function performSearch(query) {
 * Closing window
 */
 function onClose$6() {
-	Reputation.ui.hide();
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$12(event) {
-	event.stopImmediatePropagation();
-	return false;
+	Reputation._host.style.display = "none";
 }
 /**
 * Packet received from server
 * Initializes the Reputation UI
-* Store the initial values received from the server and update UI
-* If UI is open, update UI
 * @param {object} pkt - PACKET.ZC.REPUTE_INFO
 */
 function onReputeInfo(pkt) {
 	if (!Reputation.__active) {
 		Reputation.append();
-		Reputation.ui.hide();
+		Reputation._host.style.display = "none";
 	}
-	const selectedGroup = Reputation.ui.find("#repute_groups").val();
+	const groupSelector = _root$12().querySelector("#repute_groups");
+	const selectedGroup = groupSelector ? groupSelector.value : "all";
 	let updateSelectedGroup = false;
 	pkt.reputeInfo.forEach((entry) => {
 		Reputation.reputeState[entry.type] = entry.points;
@@ -236813,19 +236932,18 @@ function onReputeOpen(pkt) {
 	Reputation.highlight.reputeId = highlightId;
 	Reputation.highlight.active = !!highlightId;
 	Reputation.highlight.consumed = false;
-	Reputation.ui.find("#repute_groups").val(groupId);
+	const groupSelector = _root$12().querySelector("#repute_groups");
+	if (groupSelector) groupSelector.value = groupId;
 	filterByGroup(groupId);
-	Reputation.ui.show();
+	Reputation._host.style.display = "";
 }
 /**
 * Clears all highlight effects from the reputation entries.
-* This function is called when the reputation window is opened.
-* It resets the background image and removes the highlight property from all entries.
 */
 function clearHighlights() {
-	Reputation.ui.find(".rep_group_wrapper").each(function() {
-		this.style.backgroundImage = `url(${bg})`;
-		this.dataset.highlight = "false";
+	_root$12().querySelectorAll(".rep_group_wrapper").forEach((el) => {
+		el.style.backgroundImage = `url(${bg})`;
+		el.dataset.highlight = "false";
 	});
 }
 var Reputation, _preferences$43, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
@@ -236836,10 +236954,11 @@ var init_Reputation = __esmMin((() => {
 	init_Client();
 	init_Preferences$1();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Reputation$2();
 	init_Reputation$1();
-	Reputation = new UIComponent("Reputation", Reputation_default$2, Reputation_default$1);
+	Reputation = new GUIComponent("Reputation", Reputation_default$1);
 	_preferences$43 = Preferences.get("Reputation", {
 		x: 400,
 		y: 200,
@@ -236869,26 +236988,53 @@ var init_Reputation = __esmMin((() => {
 		consumed: false
 	};
 	/**
+	* Render HTML
+	*/
+	Reputation.render = () => Reputation_default$2;
+	/**
+	* Input protection for search field
+	*/
+	Reputation.captureKeyEvents = true;
+	/**
 	* Initialize component
 	*/
 	Reputation.init = function init() {
+		const root = _root$12();
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_info.bmp", (d) => bg = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/bg_highlight.bmp", (d) => bg_highlight = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_empty.bmp", (d) => indicator_empty = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_blue.bmp", (d) => indicator_blue = d);
 		Client.loadFile(DB.INTERFACE_PATH + "reputation/light_red.bmp", (d) => indicator_red = d);
-		this.draggable(this.ui);
-		this.ui.find(".base").mousedown(stopPropagation$12);
-		this.ui.find(".close").click(onClose$6);
-		this.ui.find(".big_btn_close").click(onClose$6);
-		const paginator = Reputation.ui.find(".paginator");
-		paginator.find(".page_prev").on("click", () => {
+		this.draggable(root.querySelector(".titlebar"));
+		root.querySelectorAll(".base").forEach((el) => {
+			el.addEventListener("mousedown", (e) => {
+				e.stopImmediatePropagation();
+				e.preventDefault();
+			});
+		});
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", onClose$6);
+		const bigCloseBtn = root.querySelector(".big_btn_close");
+		if (bigCloseBtn) bigCloseBtn.addEventListener("click", onClose$6);
+		const prevBtn = root.querySelector(".page_prev");
+		if (prevBtn) prevBtn.addEventListener("click", () => {
 			if (Reputation.page.current > 0) renderReputePage(Reputation.page.current - 1);
 		});
-		paginator.find(".page_next").on("click", () => {
+		const nextBtn = root.querySelector(".page_next");
+		if (nextBtn) nextBtn.addEventListener("click", () => {
 			const maxPage = Math.ceil(Reputation.page.reputeIds.length / Reputation.page.perPage);
 			if (Reputation.page.current < maxPage - 1) renderReputePage(Reputation.page.current + 1);
 		});
+	};
+	/**
+	* Guard keyboard events when search input is focused
+	*/
+	Reputation.onKeyDown = function onKeyDown(event) {
+		if (Reputation.isEditableFocused()) {
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
 	};
 	/**
 	* Called when the component is appended to the body.
@@ -236896,6 +237042,8 @@ var init_Reputation = __esmMin((() => {
 	* binding group selector events and rendering the default view.
 	*/
 	Reputation.onAppend = function onAppend() {
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$43.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$43.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
 		buildGroupSelector();
 		bindGroupSelector();
 		bindSearch();
@@ -236906,27 +237054,28 @@ var init_Reputation = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	Reputation.onRemove = function onRemove() {
-		_preferences$43.show = this.ui.is(":visible");
-		_preferences$43.y = parseInt(this.ui.css("top"), 10);
-		_preferences$43.x = parseInt(this.ui.css("left"), 10);
+		_preferences$43.show = this._host.style.display !== "none";
+		_preferences$43.y = parseInt(this._host.style.top, 10);
+		_preferences$43.x = parseInt(this._host.style.left, 10);
 		_preferences$43.save();
 	};
 	/**
 	* Request to toggle open/close reputation
 	*/
 	Reputation.toggle = function toggle() {
-		const selector = Reputation.ui.find("#repute_groups");
-		const searchInput = Reputation.ui.find(".rep_group_searchbar");
-		if (Reputation.ui.is(":visible")) {
-			Reputation.ui.hide();
+		const root = _root$12();
+		const selector = root.querySelector("#repute_groups");
+		const searchInput = root.querySelector(".rep_group_searchbar");
+		if (this._host.style.display !== "none" && this._host.offsetParent !== null) {
+			this._host.style.display = "none";
 			return;
 		}
-		selector.val("all");
-		searchInput.val("");
+		if (selector) selector.value = "all";
+		if (searchInput) searchInput.value = "";
 		filterByGroup("all");
 		Reputation.page.current = 0;
 		Reputation.focus();
-		Reputation.ui.show();
+		this._host.style.display = "";
 	};
 	/**
 	* Packet Hooks to functions
@@ -237361,50 +237510,57 @@ var init_BasicInfo = __esmMin((() => {
 //#region src/UI/Components/Rodex/WriteRodex.html?raw
 var WriteRodex_default$2;
 var init_WriteRodex$2 = __esmMin((() => {
-	WriteRodex_default$2 = "<div id=\"WriteRodex\">\r\n	<div class=\"body\" data-background=\"basic_interface/rodexsystem/renewal/bg_rodex_read.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n		<div class=\"sender\">\r\n			<input class=\"name\" />\r\n			<button\r\n				class=\"base validate-name\"\r\n				data-text=\"3545\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_press.bmp\"\r\n			></button>\r\n			<span class=\"baloon\" data-background=\"basic_interface/rodexsystem/renewal/bg_id_balloon.bmp\"></span>\r\n		</div>\r\n		<div class=\"title\">\r\n			<input class=\"title-text\" />\r\n		</div>\r\n		<div class=\"content\">\r\n			<textarea class=\"content-text\"></textarea>\r\n		</div>\r\n		<div class=\"items\">\r\n			<div class=\"item-list\"></div>\r\n			<span class=\"weigth\" data-background=\"basic_interface/rodexsystem/renewal/bg_weight.bmp\"></span>\r\n			<span class=\"weigth-text\">0 2000</span>\r\n		</div>\r\n		<div class=\"zeny\">\r\n			<span class=\"image\" data-background=\"basic_interface/rodexsystem/renewal/icon_zeny.bmp\"></span>\r\n			<input\r\n				type=\"number\"\r\n				class=\"value [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none\"\r\n			/>\r\n			<span class=\"character-zeny\"></span>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<span type=\"text\" class=\"base tax\" data-background=\"basic_interface/rodexsystem/renewal/bg_tax.bmp\"></span>\r\n			<span class=\"tax-text\">0</span>\r\n			<button\r\n				class=\"base send\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_reply_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_reply_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_reply_press.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	WriteRodex_default$2 = "<div id=\"WriteRodex\">\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"body\" data-background=\"basic_interface/rodexsystem/renewal/bg_rodex_read.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n		<div class=\"sender\">\r\n			<input class=\"name\" />\r\n			<button\r\n				class=\"base validate-name\"\r\n				data-text=\"3545\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_press.bmp\"\r\n			></button>\r\n			<span class=\"baloon\" data-background=\"basic_interface/rodexsystem/renewal/bg_id_balloon.bmp\"></span>\r\n		</div>\r\n		<div class=\"title\">\r\n			<input class=\"title-text\" />\r\n		</div>\r\n		<div class=\"content\">\r\n			<textarea class=\"content-text\"></textarea>\r\n		</div>\r\n		<div class=\"items\">\r\n			<div class=\"item-list\"></div>\r\n			<span class=\"weigth\" data-background=\"basic_interface/rodexsystem/renewal/bg_weight.bmp\"></span>\r\n			<span class=\"weigth-text\">0 2000</span>\r\n		</div>\r\n		<div class=\"zeny\">\r\n			<span class=\"image\" data-background=\"basic_interface/rodexsystem/renewal/icon_zeny.bmp\"></span>\r\n			<input\r\n				type=\"number\"\r\n				class=\"value [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none\"\r\n			/>\r\n			<span class=\"character-zeny\"></span>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<span type=\"text\" class=\"base tax\" data-background=\"basic_interface/rodexsystem/renewal/bg_tax.bmp\"></span>\r\n			<span class=\"tax-text\">0</span>\r\n			<button\r\n				class=\"base send\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_reply_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_reply_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_reply_press.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Rodex/WriteRodex.css?raw
 var WriteRodex_default$1;
 var init_WriteRodex$1 = __esmMin((() => {
-	WriteRodex_default$1 = "#WriteRodex {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n\r\n#WriteRodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#WriteRodex .body .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n#WriteRodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#WriteRodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#WriteRodex .body .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .sender .name {\r\n	margin-left: 10px;\r\n	font-weight: bold;\r\n	color: darkblue;\r\n	width: 135px;\r\n	border: 1px solid gray;\r\n	padding: 3px;\r\n	border-radius: 0px;\r\n}\r\n#WriteRodex .body .sender .validate-name {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 70px;\r\n	color: gray;\r\n	width: 70px;\r\n	height: 18px;\r\n}\r\n#WriteRodex .body .sender .baloon {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 15px;\r\n	color: red;\r\n	width: 130px;\r\n	height: 42px;\r\n	display: none;\r\n}\r\n\r\n#WriteRodex .body .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .title .title-text {\r\n	margin-left: 10px;\r\n	width: 135px;\r\n	border: none;\r\n}\r\n\r\n#WriteRodex .body .content {\r\n	float: left;\r\n	width: 100%;\r\n	height: 230px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .content .content-text {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 10px;\r\n	width: 280px;\r\n	height: 220px;\r\n	background: transparent;\r\n	border: none;\r\n	resize: none;\r\n}\r\n\r\n#WriteRodex .body .items {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .items .item-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	display: table;\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 27px;\r\n}\r\n#WriteRodex .body .items .item-list .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#WriteRodex .body .items .item-list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#WriteRodex .body .items .item-list .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#WriteRodex .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#WriteRodex .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#WriteRodex .body .items .weigth {\r\n	position: absolute;\r\n	width: 82px;\r\n	height: 32px;\r\n	top: 10px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n#WriteRodex .body .items .weigth-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 21px;\r\n	right: 19px;\r\n	border: none;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .zeny {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .zeny .image {\r\n	position: absolute;\r\n	width: 28px;\r\n	height: 25px;\r\n	top: 1px;\r\n	left: 15px;\r\n	z-index: 100;\r\n}\r\n#WriteRodex .body .zeny .value {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 35px;\r\n	width: 100px;\r\n	border: 1px solid gray;\r\n	text-align: end;\r\n}\r\n#WriteRodex .body .zeny .character-zeny {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 150px;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .footer .tax {\r\n	position: absolute;\r\n	width: 112px;\r\n	height: 18px;\r\n	top: 5px;\r\n	left: 10px;\r\n}\r\n#WriteRodex .body .footer .tax-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 8px;\r\n	right: 197px;\r\n}\r\n#WriteRodex .body .footer .send {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	right: 10px;\r\n}\r\n#WriteRodex .red {\r\n	font-weight: bold;\r\n	color: red;\r\n}\r\n";
+	WriteRodex_default$1 = ":host {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n\r\n#WriteRodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#WriteRodex .body .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n#WriteRodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#WriteRodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#WriteRodex .body .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .sender .name {\r\n	margin-left: 10px;\r\n	font-weight: bold;\r\n	color: darkblue;\r\n	width: 135px;\r\n	border: 1px solid gray;\r\n	padding: 3px;\r\n	border-radius: 0px;\r\n}\r\n#WriteRodex .body .sender .validate-name {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 70px;\r\n	color: gray;\r\n	width: 70px;\r\n	height: 18px;\r\n}\r\n#WriteRodex .body .sender .baloon {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 15px;\r\n	color: red;\r\n	width: 130px;\r\n	height: 42px;\r\n	display: none;\r\n}\r\n\r\n#WriteRodex .body .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .title .title-text {\r\n	margin-left: 10px;\r\n	width: 135px;\r\n	border: none;\r\n}\r\n\r\n#WriteRodex .body .content {\r\n	float: left;\r\n	width: 100%;\r\n	height: 230px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .content .content-text {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 10px;\r\n	width: 280px;\r\n	height: 220px;\r\n	background: transparent;\r\n	border: none;\r\n	resize: none;\r\n}\r\n\r\n#WriteRodex .body .items {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .items .item-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	display: table;\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 27px;\r\n}\r\n#WriteRodex .body .items .item-list .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#WriteRodex .body .items .item-list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#WriteRodex .body .items .item-list .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#WriteRodex .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#WriteRodex .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#WriteRodex .body .items .weigth {\r\n	position: absolute;\r\n	width: 82px;\r\n	height: 32px;\r\n	top: 10px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n#WriteRodex .body .items .weigth-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 21px;\r\n	right: 19px;\r\n	border: none;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .zeny {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .zeny .image {\r\n	position: absolute;\r\n	width: 28px;\r\n	height: 25px;\r\n	top: 1px;\r\n	left: 15px;\r\n	z-index: 100;\r\n}\r\n#WriteRodex .body .zeny .value {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 35px;\r\n	width: 100px;\r\n	border: 1px solid gray;\r\n	text-align: end;\r\n}\r\n#WriteRodex .body .zeny .character-zeny {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 150px;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .footer .tax {\r\n	position: absolute;\r\n	width: 112px;\r\n	height: 18px;\r\n	top: 5px;\r\n	left: 10px;\r\n}\r\n#WriteRodex .body .footer .tax-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 8px;\r\n	right: 197px;\r\n}\r\n#WriteRodex .body .footer .send {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	right: 10px;\r\n}\r\n#WriteRodex .red {\r\n	font-weight: bold;\r\n	color: red;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Rodex/WriteRodex.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$11() {
+	return WriteRodex._shadow || WriteRodex._host;
+}
 function onClickClose$1(e) {
 	e.stopImmediatePropagation();
+	const root = _root$11();
 	WriteRodex.receiver = null;
-	WriteRodex.ui.find(".name").val("");
-	WriteRodex.ui.find(".title-text").val("");
-	WriteRodex.ui.find(".content-text").val("");
-	WriteRodex.ui.find(".value").val("");
-	WriteRodex.ui.find(".item-list").html("");
-	WriteRodex.ui.find(".weigth-text").html("0  2000");
-	WriteRodex.ui.find(".tax-text").html("0");
-	WriteRodex.ui.find(".number").val("");
+	root.querySelector(".name").value = "";
+	root.querySelector(".title-text").value = "";
+	root.querySelector(".content-text").value = "";
+	root.querySelector(".value").value = "";
+	root.querySelector(".item-list").innerHTML = "";
+	root.querySelector(".weigth-text").textContent = "0  2000";
+	root.querySelector(".tax-text").textContent = "0";
 	WriteRodex.requestCancelWriteRodex();
 	WriteRodex.list = [];
 	WriteRodex.CharID = 0;
 	WriteRodex.tax = 0;
-	WriteRodex.ui.hide();
+	WriteRodex._host.style.display = "none";
 }
 function onClickSend(e) {
 	e.stopImmediatePropagation();
+	const root = _root$11();
 	if (WriteRodex.receiver == null || typeof WriteRodex.receiver === "string" && WriteRodex.receiver.trim().length === 0) {
 		ChatBox_default.addText(DB.getMessage(2611), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
 		return;
 	}
 	const receiver = WriteRodex.receiver;
 	const sender = SessionStorage_default.Character.name;
-	let zeny = parseInt(WriteRodex.ui.find(".value").val(), 10);
+	let zeny = parseInt(root.querySelector(".value").value, 10);
 	zeny = isNaN(zeny) ? 0 : zeny;
 	zeny = zeny < 0 ? 0 : zeny;
 	if (WriteRodex.tax + zeny > SessionStorage_default.zeny) {
 		ChatBox_default.addText(DB.getMessage(2643), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
 		return;
 	}
-	const title = WriteRodex.ui.find(".title-text").val().replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 23) + String.fromCharCode(0);
-	const body = WriteRodex.ui.find(".content-text").val().replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 499) + String.fromCharCode(0);
+	const title = root.querySelector(".title-text").value.replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 23) + String.fromCharCode(0);
+	const body = root.querySelector(".content-text").value.replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 499) + String.fromCharCode(0);
 	const Titlelength = title.length;
 	const Bodylength = body.length;
 	const CharID = WriteRodex.CharID;
@@ -237425,7 +237581,7 @@ function prettifyZeny$3(value) {
 }
 function onClickValidateName(e) {
 	e.stopImmediatePropagation();
-	const name = WriteRodex.ui.find(".name").val();
+	const name = _root$11().querySelector(".name").value;
 	WriteRodex.validateName(name.replace(/^(\$|\%)/, "").replace(/\t/g, ""));
 }
 /**
@@ -237436,13 +237592,14 @@ function onClickValidateName(e) {
 function onDrop$22(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item" || data.from !== "Inventory") return false;
+	if (data.type !== "item" || data.from !== "Inventory") return;
 	if (item.count > 1) {
 		InputBox_default.append();
 		InputBox_default.setType("item", false, item.count, item.ITID);
@@ -237455,7 +237612,7 @@ function onDrop$22(event) {
 				default:
 			}
 		};
-		return false;
+		return;
 	}
 	switch (data.from) {
 		case "Inventory":
@@ -237463,52 +237620,56 @@ function onDrop$22(event) {
 			break;
 		default:
 	}
-	return false;
 }
 /**
 * Stop event propagation
 */
-function stopPropagation$11(event) {
+function stopPropagation$9(event) {
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$18() {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onItemOver$18(event) {
+	const el = event.currentTarget;
+	const idx = parseInt(el.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(idx);
 	if (!item) return;
-	const pos = jquery_default(this).position();
-	const overlay = WriteRodex.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item) + " " + (item.count || 1) + " ea");
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _root$11();
+	const pos = {
+		top: el.offsetTop,
+		left: el.offsetLeft
+	};
+	const overlay = root.querySelector(".overlay");
+	overlay.style.display = "";
+	overlay.style.top = `${pos.top}px`;
+	overlay.style.left = `${pos.left + 35}px`;
+	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
 }
 /**
 * Hide the item name
 */
 function onItemOut$19() {
-	WriteRodex.ui.find(".overlay").hide();
+	const overlay = _root$11().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
 */
 function onItemDragStart$14(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
+	const el = event.currentTarget;
+	const index = parseInt(el.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.firstChild.style.backgroundImage.match(/\(([^\)]+)/)[1];
+	const url = el.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url.replace(/^"/, "").replace(/"$/, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "WriteRodex",
 		data: item
@@ -237527,17 +237688,18 @@ function onItemDragEnd$15() {
 */
 function onItemInfo$22(event) {
 	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
+	event.preventDefault();
+	const el = event.currentTarget;
+	const index = parseInt(el.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(index);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
 var WriteRodex, WriteRodex_default;
 var init_WriteRodex = __esmMin((() => {
@@ -237545,64 +237707,79 @@ var init_WriteRodex = __esmMin((() => {
 	init_ChatBox();
 	init_SessionStorage();
 	init_MonsterTable();
-	init_jquery();
 	init_Preferences$1();
 	init_Renderer();
 	init_ItemInfo();
 	init_Client();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_WriteRodex$2();
 	init_WriteRodex$1();
 	init_InputBox();
 	init_Rodex$1();
 	init_Inventory();
-	WriteRodex = new UIComponent("WriteRodex", WriteRodex_default$2, WriteRodex_default$1);
+	WriteRodex = new GUIComponent("WriteRodex", WriteRodex_default$1);
 	WriteRodex.list = [];
 	WriteRodex.receiver = null;
 	WriteRodex.tax = 0;
 	Preferences.get("WriteRodex", { show: false }, 1);
 	/**
+	* Render HTML
+	*/
+	WriteRodex.render = () => WriteRodex_default$2;
+	/**
 	* Initialize Component
 	*/
 	WriteRodex.onAppend = function onAppend() {
-		WriteRodex.ui.find(".right .close").on("click", onClickClose$1);
-		WriteRodex.ui.find(".send").on("click", onClickSend);
-		WriteRodex.ui.find(".value").on("input", WriteRodex.updateTax);
-		WriteRodex.ui.css({
-			top: Math.min(Math.max(0, parseInt(Rodex_default.ui.css("top"), 10)) - 20, Renderer.height - WriteRodex.ui.height()),
-			left: Math.min(Math.max(0, parseInt(Rodex_default.ui.css("left"), 10)) + 330, Renderer.width - WriteRodex.ui.width())
-		});
-		WriteRodex.draggable(WriteRodex.ui.find(".titlebar"));
-		WriteRodex.ui.find(".items .item-list");
+		const root = _root$11();
+		root.querySelector(".right .close").addEventListener("click", onClickClose$1);
+		root.querySelector(".send").addEventListener("click", onClickSend);
+		root.querySelector(".value").addEventListener("input", WriteRodex.updateTax);
+		const rodexTop = Rodex_default._host ? parseInt(Rodex_default._host.style.top, 10) || 0 : 0;
+		const rodexLeft = Rodex_default._host ? parseInt(Rodex_default._host.style.left, 10) || 0 : 0;
+		this._host.style.top = `${Math.min(Math.max(0, rodexTop) - 20, Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, rodexLeft) + 330, Renderer.width - this._host.offsetWidth)}px`;
+		this.draggable(root.querySelector(".titlebar"));
 	};
 	WriteRodex.initData = function initData(pkt) {
+		const root = _root$11();
 		WriteRodex.receiver = null;
 		WriteRodex.CharID = 0;
 		WriteRodex.list = [];
 		WriteRodex.tax = 0;
-		WriteRodex.ui.find(".name").prop("type", "text");
-		WriteRodex.ui.find(".name").val(pkt.receiveName);
-		WriteRodex.ui.find(".validate-name").show();
-		WriteRodex.ui.find(".baloon").hide();
-		WriteRodex.ui.find(".title-text").val(DB.getMessage(3575));
-		WriteRodex.ui.find(".content-text").val("");
-		WriteRodex.ui.find(".character-zeny").html(prettifyZeny$3(SessionStorage_default.zeny) + " Zeny");
-		WriteRodex.ui.find(".validate-name").on("click", onClickValidateName);
-		WriteRodex.ui.find(".weigth-text").html("0  2000");
-		WriteRodex.ui.find(".tax-text").html("0");
-		WriteRodex.ui.find(".value").val("").attr("max", SessionStorage_default.zeny);
-		WriteRodex.ui.find(".item-list").html("");
-		WriteRodex.ui.find(".items").on("drop", onDrop$22).on("dragover", stopPropagation$11);
-		WriteRodex.ui.show();
-		WriteRodex.ui.focus();
+		const nameInput = root.querySelector(".name");
+		nameInput.type = "text";
+		nameInput.value = pkt.receiveName;
+		const validateBtn = root.querySelector(".validate-name");
+		validateBtn.style.display = "";
+		const baloon = root.querySelector(".baloon");
+		baloon.style.display = "none";
+		root.querySelector(".title-text").value = DB.getMessage(3575);
+		root.querySelector(".content-text").value = "";
+		root.querySelector(".character-zeny").textContent = `${prettifyZeny$3(SessionStorage_default.zeny)} Zeny`;
+		validateBtn.addEventListener("click", onClickValidateName);
+		root.querySelector(".weigth-text").textContent = "0  2000";
+		root.querySelector(".tax-text").textContent = "0";
+		const valueInput = root.querySelector(".value");
+		valueInput.value = "";
+		valueInput.max = SessionStorage_default.zeny;
+		root.querySelector(".item-list").innerHTML = "";
+		const itemsEl = root.querySelector(".items");
+		itemsEl.addEventListener("drop", onDrop$22);
+		itemsEl.addEventListener("dragover", stopPropagation$9);
+		this._host.style.display = "";
+		this.focus();
 	};
 	WriteRodex.characterInfo = function characterInfo(pkt) {
-		const text = "Lv" + pkt.level + "<br>" + MonsterTable_default[pkt.Job] + "<br>" + pkt.CharID;
-		WriteRodex.ui.find(".validate-name").hide();
-		WriteRodex.ui.find(".baloon").html(text).show();
-		WriteRodex.ui.find(".name").prop("type", "none");
-		WriteRodex.receiver = pkt.name !== void 0 ? pkt.name : WriteRodex.ui.find(".name").val();
+		const root = _root$11();
+		const text = `Lv${pkt.level}<br>${MonsterTable_default[pkt.Job]}<br>${pkt.CharID}`;
+		root.querySelector(".validate-name").style.display = "none";
+		const baloon = root.querySelector(".baloon");
+		baloon.innerHTML = text;
+		baloon.style.display = "";
+		const nameInput = root.querySelector(".name");
+		nameInput.type = "none";
+		WriteRodex.receiver = pkt.name !== void 0 ? pkt.name : nameInput.value;
 		WriteRodex.CharID = pkt.CharID;
 	};
 	/**
@@ -237612,27 +237789,35 @@ var init_WriteRodex = __esmMin((() => {
 	* @returns {Item}
 	*/
 	WriteRodex.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = WriteRodex.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
 	WriteRodex.addItem = function addItem(item) {
+		const root = _root$11();
 		let object = WriteRodex.getItemByIndex(item.index);
 		if (object) {
 			object.count += item.count;
-			this.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(object.count);
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
 			return;
 		}
-		object = jquery_default.extend({}, item);
+		object = Object.assign({}, item);
 		WriteRodex.list.push(object);
 		const it = DB.getItemInfo(item.ITID);
-		const content = this.ui.find(".items .item-list");
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		root.querySelector(".items .item-list").insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
-		content.find(".item[data-index=\"" + item.index + "\"]").on("mouseover", onItemOver$18).on("mouseout", onItemOut$19).on("dragstart", onItemDragStart$14).on("dragend", onItemDragEnd$15).on("contextmenu", onItemInfo$22);
+		const itemDiv = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (itemDiv) {
+			itemDiv.addEventListener("mouseover", onItemOver$18);
+			itemDiv.addEventListener("mouseout", onItemOut$19);
+			itemDiv.addEventListener("dragstart", onItemDragStart$14);
+			itemDiv.addEventListener("dragend", onItemDragEnd$15);
+			itemDiv.addEventListener("contextmenu", onItemInfo$22);
+		}
 		WriteRodex.updateWeight(item.weight);
 		WriteRodex.updateTax();
 	};
@@ -237643,41 +237828,48 @@ var init_WriteRodex = __esmMin((() => {
 	* @param {number} count
 	*/
 	WriteRodex.removeItem = function RemoveItem(index, count, weight) {
+		const root = _root$11();
 		const item = WriteRodex.getItemByIndex(index);
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
 			if (item.count > 0) {
-				WriteRodex.ui.find(".item[data-index=\"" + item.index + "\"] .count").text(item.count);
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
 				return;
 			}
 		}
 		WriteRodex.list.splice(WriteRodex.list.indexOf(item), 1);
-		WriteRodex.ui.find(".item[data-index=\"" + item.index + "\"]").remove();
+		const itemEl = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (itemEl) itemEl.remove();
 		WriteRodex.updateWeight(weight);
 		WriteRodex.updateTax();
 	};
 	WriteRodex.updateWeight = function updateWeight(weight) {
-		WriteRodex.ui.find(".weigth-text").html(weight + "  2000");
+		const el = _root$11().querySelector(".weigth-text");
+		if (el) el.textContent = `${weight}  2000`;
 	};
 	WriteRodex.updateTax = function updateTax() {
+		const root = _root$11();
 		let tax = WriteRodex.list.length * 2500;
-		let zeny = parseInt(WriteRodex.ui.find(".value").val(), 10);
+		let zeny = parseInt(root.querySelector(".value").value, 10);
 		zeny = isNaN(zeny) ? 0 : zeny;
 		zeny = zeny < 0 ? 0 : zeny;
 		tax += parseInt(zeny * .02);
-		WriteRodex.ui.find(".tax-text").html(tax);
+		const taxEl = root.querySelector(".tax-text");
+		if (taxEl) taxEl.textContent = tax;
 		WriteRodex.tax = tax;
+		const valueEl = root.querySelector(".value");
 		if (tax + zeny > SessionStorage_default.zeny) {
-			WriteRodex.ui.find(".tax-text").addClass("red");
-			WriteRodex.ui.find(".value").addClass("red");
+			taxEl.classList.add("red");
+			valueEl.classList.add("red");
 		} else {
-			WriteRodex.ui.find(".tax-text").removeClass("red");
-			WriteRodex.ui.find(".value").removeClass("red");
+			taxEl.classList.remove("red");
+			valueEl.classList.remove("red");
 		}
 	};
 	WriteRodex.close = function close() {
-		WriteRodex.ui.hide();
+		WriteRodex._host.style.display = "none";
 	};
 	WriteRodex_default = UIManager.addComponent(WriteRodex);
 }));
@@ -240669,17 +240861,23 @@ var init_InventoryV3$1 = __esmMin((() => {
 //#region src/UI/Components/Refine/Refine.html?raw
 var Refine_default$2;
 var init_Refine$2 = __esmMin((() => {
-	Refine_default$2 = "<div id=\"Refine\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"3241\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"image-container\" data-background=\"refining_renewal/bg_refining_wait_00.bmp\">\r\n			<div class=\"success\"></div>\r\n			<div class=\"materials\">\r\n				<div class=\"mat_0 mat_overlay\" data-background=\"refining_renewal/slot_select_blue0.bmp\">\r\n					<div class=\"material_0\"></div>\r\n				</div>\r\n				<div class=\"mat_1 mat_overlay\" data-background=\"refining_renewal/slot_select_blue1.bmp\">\r\n					<div class=\"material_1\"></div>\r\n				</div>\r\n				<div class=\"mat_2 mat_overlay\" data-background=\"refining_renewal/slot_select_blue2.bmp\">\r\n					<div class=\"material_2\"></div>\r\n				</div>\r\n				<div class=\"mat_3 mat_overlay\" data-background=\"refining_renewal/slot_select_blue3.bmp\">\r\n					<div class=\"material_3\"></div>\r\n				</div>\r\n				<div class=\"bsb_overlay\" data-background=\"refining_renewal/slot_select_red.bmp\">\r\n					<div class=\"bsb\"></div>\r\n				</div>\r\n				<div class=\"selected_materials\">\r\n					<div class=\"selected_mat\"></div>\r\n					<div class=\"bsb_selected\"></div>\r\n				</div>\r\n			</div>\r\n			<div class=\"item_to_refine\"></div>\r\n			<div class=\"item_to_refine_name\"></div>\r\n			<div class=\"refine_button\">\r\n				<div class=\"refine_disabled\" data-background=\"refining_renewal/bt_refining_disable.bmp\"></div>\r\n				<div\r\n					class=\"refine_enabled\"\r\n					data-background=\"refining_renewal/bt_refining_normal.bmp\"\r\n					data-down=\"refining_renewal/bt_refining_press.bmp\"\r\n				></div>\r\n				<div class=\"refine_text\" data-text=\"3241\"></div>\r\n				<div class=\"refine_zeny\"></div>\r\n			</div>\r\n			<div class=\"back_button\">\r\n				<div\r\n					class=\"back_success\"\r\n					data-text=\"2973\"\r\n					data-background=\"refining_renewal/bt_refining_return_success_normal.bmp\"\r\n					data-down=\"refining_renewal/bt_refining_return_success_press.bmp\"\r\n				></div>\r\n				<div\r\n					class=\"back_fail\"\r\n					data-text=\"2973\"\r\n					data-background=\"refining_renewal/bt_refining_return_fail_normal.bmp\"\r\n					data-down=\"refining_renewal/bt_refining_return_fail_press.bmp\"\r\n				></div>\r\n			</div>\r\n			<div class=\"refine_cont\">\r\n				<div\r\n					class=\"success_refine_cont_enabled\"\r\n					data-background=\"refining_renewal/bt_refining_again_success_normal.bmp\"\r\n					data-down=\"refining_renewal/bt_refining_again_success_press.bmp\"\r\n				></div>\r\n				<div\r\n					class=\"success_refine_cont_disabled\"\r\n					data-background=\"refining_renewal/bt_refining_again_success_disable.bmp\"\r\n				></div>\r\n				<div\r\n					class=\"fail_refine_cont_enabled\"\r\n					data-background=\"refining_renewal/bt_refining_again_fail_normal.bmp\"\r\n					data-down=\"refining_renewal/bt_refining_again_fail_press.bmp\"\r\n				></div>\r\n				<div\r\n					class=\"fail_refine_cont_disabled\"\r\n					data-background=\"refining_renewal/bt_refining_again_fail_disable.bmp\"\r\n				></div>\r\n				<div class=\"refine_text_cont\" data-text=\"3241\"></div>\r\n				<div class=\"chance_rate\"></div>\r\n				<div class=\"refine_zeny_cont\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"some_notifs\">\r\n				<div class=\"notif\" data-background=\"refining_renewal/ico_notice.bmp\"></div>\r\n				<span class=\"info_msg\"></span>\r\n			</div>\r\n			<div\r\n				class=\"cancel\"\r\n				data-background=\"btn_cancel2_normal.bmp\"\r\n				data-hover=\"btn_cancel2_over.bmp\"\r\n				data-down=\"btn_cancel2_press.bmp\"\r\n			></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	Refine_default$2 = "<div id=\"Refine\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text\"><ui-text msg=\"3241\"></ui-text></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"image-container\">\r\n			<div class=\"success\"></div>\r\n			<div class=\"materials\">\r\n				<div class=\"mat_0 mat_overlay\">\r\n					<ui-image src=\"refining_renewal/slot_select_blue0.bmp\"></ui-image>\r\n					<div class=\"material_0\"></div>\r\n				</div>\r\n				<div class=\"mat_1 mat_overlay\">\r\n					<ui-image src=\"refining_renewal/slot_select_blue1.bmp\"></ui-image>\r\n					<div class=\"material_1\"></div>\r\n				</div>\r\n				<div class=\"mat_2 mat_overlay\">\r\n					<ui-image src=\"refining_renewal/slot_select_blue2.bmp\"></ui-image>\r\n					<div class=\"material_2\"></div>\r\n				</div>\r\n				<div class=\"mat_3 mat_overlay\">\r\n					<ui-image src=\"refining_renewal/slot_select_blue3.bmp\"></ui-image>\r\n					<div class=\"material_3\"></div>\r\n				</div>\r\n				<div class=\"bsb_overlay\">\r\n					<ui-image src=\"refining_renewal/slot_select_red.bmp\"></ui-image>\r\n					<div class=\"bsb\"></div>\r\n				</div>\r\n				<div class=\"selected_materials\">\r\n					<div class=\"selected_mat\"></div>\r\n					<div class=\"bsb_selected\"></div>\r\n				</div>\r\n			</div>\r\n			<div class=\"item_to_refine\"></div>\r\n			<div class=\"item_to_refine_name\"></div>\r\n			<div class=\"refine_button\">\r\n				<div class=\"refine_disabled\">\r\n					<ui-image src=\"refining_renewal/bt_refining_disable.bmp\"></ui-image>\r\n				</div>\r\n				<ui-button\r\n					class=\"refine_enabled\"\r\n					bg=\"refining_renewal/bt_refining_normal.bmp\"\r\n					down=\"refining_renewal/bt_refining_press.bmp\"\r\n				></ui-button>\r\n				<div class=\"refine_text\"><ui-text msg=\"3241\"></ui-text></div>\r\n				<div class=\"refine_zeny\"></div>\r\n			</div>\r\n			<div class=\"back_button\">\r\n				<ui-button\r\n					class=\"back_success\"\r\n					bg=\"refining_renewal/bt_refining_return_success_normal.bmp\"\r\n					down=\"refining_renewal/bt_refining_return_success_press.bmp\"\r\n					><ui-text msg=\"2973\"></ui-text\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"back_fail\"\r\n					bg=\"refining_renewal/bt_refining_return_fail_normal.bmp\"\r\n					down=\"refining_renewal/bt_refining_return_fail_press.bmp\"\r\n					><ui-text msg=\"2973\"></ui-text\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"refine_cont\">\r\n				<ui-button\r\n					class=\"success_refine_cont_enabled\"\r\n					bg=\"refining_renewal/bt_refining_again_success_normal.bmp\"\r\n					down=\"refining_renewal/bt_refining_again_success_press.bmp\"\r\n				></ui-button>\r\n				<div class=\"success_refine_cont_disabled\">\r\n					<ui-image src=\"refining_renewal/bt_refining_again_success_disable.bmp\"></ui-image>\r\n				</div>\r\n				<ui-button\r\n					class=\"fail_refine_cont_enabled\"\r\n					bg=\"refining_renewal/bt_refining_again_fail_normal.bmp\"\r\n					down=\"refining_renewal/bt_refining_again_fail_press.bmp\"\r\n				></ui-button>\r\n				<div class=\"fail_refine_cont_disabled\">\r\n					<ui-image src=\"refining_renewal/bt_refining_again_fail_disable.bmp\"></ui-image>\r\n				</div>\r\n				<div class=\"refine_text_cont\"><ui-text msg=\"3241\"></ui-text></div>\r\n				<div class=\"chance_rate\"></div>\r\n				<div class=\"refine_zeny_cont\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"some_notifs\">\r\n				<div class=\"notif\">\r\n					<ui-image src=\"refining_renewal/ico_notice.bmp\"></ui-image>\r\n				</div>\r\n				<span class=\"info_msg\"></span>\r\n			</div>\r\n			<ui-button\r\n				class=\"cancel\"\r\n				bg=\"btn_cancel2_normal.bmp\"\r\n				hover=\"btn_cancel2_over.bmp\"\r\n				down=\"btn_cancel2_press.bmp\"\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Refine/Refine.css?raw
 var Refine_default$1;
 var init_Refine$1 = __esmMin((() => {
-	Refine_default$1 = "#Refine {\r\n	position: absolute;\r\n	height: 350px;\r\n	width: 261px;\r\n}\r\n\r\n#Refine .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Refine .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Refine .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Refine .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Refine .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Refine .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Refine .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#Refine .panel {\r\n	width: 100%;\r\n	height: 100%;\r\n	overflow: hidden;\r\n	position: absolute;\r\n}\r\n\r\n#Refine .image-container {\r\n	position: absolute;\r\n	top: 1px;\r\n	height: 301px;\r\n	width: 262px;\r\n}\r\n\r\n#Refine .success {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 261px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	top: 12px;\r\n}\r\n\r\n#Refine .success .number {\r\n	color: #2963de;\r\n}\r\n\r\n#Refine .item_to_refine {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 50px;\r\n	top: 185px;\r\n	left: 106px;\r\n}\r\n\r\n#Refine .item_to_refine .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n\r\n#Refine .item_to_refine_name {\r\n	position: absolute;\r\n	height: 18px;\r\n	width: 261px;\r\n	text-align: center;\r\n	top: 225px;\r\n	align-content: center;\r\n	font-weight: bold;\r\n	color: #102142;\r\n}\r\n\r\n#Refine .item {\r\n	position: relative;\r\n	float: left;\r\n	height: 24px;\r\n	width: 24px;\r\n	left: 13px;\r\n	top: 7px;\r\n}\r\n\r\n#Refine .item .icon {\r\n	position: absolute;\r\n	top: 0px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#Refine .footer {\r\n	position: absolute;\r\n	height: 30px;\r\n	width: 261px;\r\n	bottom: 18px;\r\n}\r\n\r\n#Refine .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 180px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#Refine .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#Refine .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 170px;\r\n	left: 15px;\r\n	font-size: 0.8em;\r\n	align-content: center;\r\n}\r\n\r\n#Refine .info_msg.red {\r\n	color: red;\r\n}\r\n\r\n#Refine .info_msg.blue {\r\n	color: blue;\r\n}\r\n\r\n#Refine .cancel {\r\n	position: absolute;\r\n	height: 21px;\r\n	width: 57px;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n\r\n#Refine .materials {\r\n	position: absolute;\r\n	height: 78px;\r\n	width: 100%;\r\n	top: 30px;\r\n}\r\n\r\n#Refine .mat_overlay,\r\n#Refine .bsb_overlay {\r\n	position: absolute;\r\n	height: 53px;\r\n	width: 46px;\r\n	background-size: 0px; /* Hide */\r\n}\r\n\r\n#Refine .mat_overlay.selected,\r\n#Refine .bsb_overlay.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#Refine .mat_0 {\r\n	left: 10px;\r\n	top: 8px;\r\n}\r\n\r\n#Refine .mat_1 {\r\n	left: 59px;\r\n	top: 8px;\r\n}\r\n\r\n#Refine .mat_2 {\r\n	top: 8px;\r\n	left: 108px;\r\n}\r\n\r\n#Refine .mat_3 {\r\n	top: 8px;\r\n	left: 157px;\r\n}\r\n\r\n#Refine .bsb_overlay {\r\n	top: 8px;\r\n	left: 206px;\r\n}\r\n\r\n#Refine .material_0,\r\n#Refine .material_1,\r\n#Refine .material_2,\r\n#Refine .material_3 {\r\n	display: block;\r\n}\r\n\r\n#Refine .materials .item .icon {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: -2px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#Refine .mat_count {\r\n	height: 20px;\r\n	position: absolute;\r\n	width: 50px;\r\n	top: 46px;\r\n	text-align: center;\r\n	left: -15px;\r\n}\r\n\r\n#Refine .selected_materials {\r\n	position: absolute;\r\n	height: 50px;\r\n	top: 83px;\r\n	width: 100%;\r\n}\r\n\r\n#Refine .selected_mat {\r\n	position: relative;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 68px;\r\n	top: 6px;\r\n}\r\n\r\n#Refine .bsb_selected {\r\n	position: absolute;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 149px;\r\n	top: 6px;\r\n}\r\n\r\n#Refine .refine_button {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 92px;\r\n	bottom: 9px;\r\n	left: 85px;\r\n}\r\n\r\n#Refine .refine_disabled,\r\n#Refine .refine_enabled {\r\n	position: absolute;\r\n	height: 48px;\r\n	width: 96px;\r\n	top: -2px;\r\n	left: -2px;\r\n}\r\n\r\n#Refine .refine_enabled {\r\n	cursor: pointer;\r\n}\r\n\r\n#Refine .refine_text {\r\n	font-weight: bold;\r\n	position: relative;\r\n	height: 15px;\r\n	width: 92px;\r\n	text-align: center;\r\n	color: #101839;\r\n	top: 5px;\r\n	pointer-events: none;\r\n}\r\n\r\n#Refine .refine_zeny {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 65px;\r\n	top: 9px;\r\n	left: 20px;\r\n	color: white;\r\n	text-align: right;\r\n	font-weight: bold;\r\n	pointer-events: none;\r\n}\r\n\r\n#Refine .back_button {\r\n	position: absolute;\r\n	height: 38px;\r\n	width: 101px;\r\n	bottom: 13px;\r\n	left: 19px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#Refine .back_success,\r\n#Refine .back_fail {\r\n	position: relative;\r\n	height: 38px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#Refine .refine_cont {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	bottom: 1px;\r\n	right: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#Refine .refine_cont.item {\r\n	/* Override conflicting properties */\r\n	position: absolute !important;\r\n	float: none !important;\r\n	height: 50px !important;\r\n	width: 101px !important;\r\n	left: auto !important;\r\n	top: auto !important;\r\n	bottom: 1px !important;\r\n	right: 20px !important;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#Refine .success_refine_cont_enabled,\r\n#Refine .success_refine_cont_disabled,\r\n#Refine .fail_refine_cont_enabled,\r\n#Refine .fail_refine_cont_disabled {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#Refine .refine_text_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n	bottom: 27px;\r\n	left: 0px;\r\n}\r\n\r\n#Refine .chance_rate {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 14px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n}\r\n\r\n#Refine .refine_zeny_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	color: white;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n}\r\n";
+	Refine_default$1 = ":host {\r\n	width: 261px;\r\n	height: 350px;\r\n}\r\n\r\n#Refine {\r\n	position: relative;\r\n	height: 100%;\r\n	width: 100%;\r\n}\r\n\r\n#Refine .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Refine .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Refine .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Refine .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Refine .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Refine .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Refine .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#Refine .panel {\r\n	width: 100%;\r\n	height: 100%;\r\n	overflow: hidden;\r\n	position: absolute;\r\n}\r\n\r\n#Refine .image-container {\r\n	position: absolute;\r\n	top: 1px;\r\n	height: 301px;\r\n	width: 262px;\r\n}\r\n\r\n#Refine .success {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 261px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	top: 12px;\r\n}\r\n\r\n#Refine .success .number {\r\n	color: #2963de;\r\n}\r\n\r\n#Refine .item_to_refine {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 50px;\r\n	top: 185px;\r\n	left: 106px;\r\n}\r\n\r\n#Refine .item_to_refine .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n\r\n#Refine .item_to_refine_name {\r\n	position: absolute;\r\n	height: 18px;\r\n	width: 261px;\r\n	text-align: center;\r\n	top: 225px;\r\n	align-content: center;\r\n	font-weight: bold;\r\n	color: #102142;\r\n}\r\n\r\n#Refine .item {\r\n	position: relative;\r\n	float: left;\r\n	height: 24px;\r\n	width: 24px;\r\n	left: 13px;\r\n	top: 7px;\r\n}\r\n\r\n#Refine .item .icon {\r\n	position: absolute;\r\n	top: 0px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#Refine .footer {\r\n	position: absolute;\r\n	height: 30px;\r\n	width: 261px;\r\n	bottom: 18px;\r\n}\r\n\r\n#Refine .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 180px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#Refine .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#Refine .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 170px;\r\n	left: 15px;\r\n	font-size: 0.8em;\r\n	align-content: center;\r\n}\r\n\r\n#Refine .info_msg.red {\r\n	color: red;\r\n}\r\n\r\n#Refine .info_msg.blue {\r\n	color: blue;\r\n}\r\n\r\n#Refine .cancel {\r\n	position: absolute;\r\n	height: 21px;\r\n	width: 57px;\r\n	bottom: 4px;\r\n	right: 5px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: 0;\r\n}\r\n\r\n#Refine .materials {\r\n	position: absolute;\r\n	height: 78px;\r\n	width: 100%;\r\n	top: 30px;\r\n}\r\n\r\n#Refine .mat_overlay,\r\n#Refine .bsb_overlay {\r\n	position: absolute;\r\n	height: 53px;\r\n	width: 46px;\r\n	background-size: 0px;\r\n}\r\n\r\n#Refine .mat_overlay.selected,\r\n#Refine .bsb_overlay.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#Refine .mat_0 {\r\n	left: 10px;\r\n	top: 8px;\r\n}\r\n\r\n#Refine .mat_1 {\r\n	left: 59px;\r\n	top: 8px;\r\n}\r\n\r\n#Refine .mat_2 {\r\n	top: 8px;\r\n	left: 108px;\r\n}\r\n\r\n#Refine .mat_3 {\r\n	top: 8px;\r\n	left: 157px;\r\n}\r\n\r\n#Refine .bsb_overlay {\r\n	top: 8px;\r\n	left: 206px;\r\n}\r\n\r\n#Refine .material_0,\r\n#Refine .material_1,\r\n#Refine .material_2,\r\n#Refine .material_3 {\r\n	display: block;\r\n}\r\n\r\n#Refine .materials .item .icon {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: -2px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#Refine .mat_count {\r\n	height: 20px;\r\n	position: absolute;\r\n	width: 50px;\r\n	top: 46px;\r\n	text-align: center;\r\n	left: -15px;\r\n}\r\n\r\n#Refine .selected_materials {\r\n	position: absolute;\r\n	height: 50px;\r\n	top: 83px;\r\n	width: 100%;\r\n}\r\n\r\n#Refine .selected_mat {\r\n	position: relative;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 68px;\r\n	top: 6px;\r\n}\r\n\r\n#Refine .bsb_selected {\r\n	position: absolute;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 149px;\r\n	top: 6px;\r\n}\r\n\r\n#Refine .refine_button {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 92px;\r\n	bottom: 9px;\r\n	left: 85px;\r\n}\r\n\r\n#Refine .refine_disabled {\r\n	position: absolute;\r\n	height: 48px;\r\n	width: 96px;\r\n	top: -2px;\r\n	left: -2px;\r\n}\r\n\r\n#Refine .refine_enabled {\r\n	position: absolute;\r\n	height: 48px;\r\n	width: 96px;\r\n	top: -2px;\r\n	left: -2px;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: 0;\r\n}\r\n\r\n#Refine .refine_text {\r\n	font-weight: bold;\r\n	position: relative;\r\n	height: 15px;\r\n	width: 92px;\r\n	text-align: center;\r\n	color: #101839;\r\n	top: 5px;\r\n	pointer-events: none;\r\n}\r\n\r\n#Refine .refine_zeny {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 65px;\r\n	top: 9px;\r\n	left: 20px;\r\n	color: white;\r\n	text-align: right;\r\n	font-weight: bold;\r\n	pointer-events: none;\r\n}\r\n\r\n#Refine .back_button {\r\n	position: absolute;\r\n	height: 38px;\r\n	width: 101px;\r\n	bottom: 13px;\r\n	left: 19px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#Refine .back_success,\r\n#Refine .back_fail {\r\n	position: relative;\r\n	height: 38px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: 0;\r\n}\r\n\r\n#Refine .refine_cont {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	bottom: 1px;\r\n	right: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#Refine .refine_cont.item {\r\n	position: absolute !important;\r\n	float: none !important;\r\n	height: 50px !important;\r\n	width: 101px !important;\r\n	left: auto !important;\r\n	top: auto !important;\r\n	bottom: 1px !important;\r\n	right: 20px !important;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#Refine .success_refine_cont_enabled,\r\n#Refine .success_refine_cont_disabled,\r\n#Refine .fail_refine_cont_enabled,\r\n#Refine .fail_refine_cont_disabled {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#Refine .success_refine_cont_enabled,\r\n#Refine .fail_refine_cont_enabled {\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: 0;\r\n}\r\n\r\n#Refine .refine_text_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n	bottom: 27px;\r\n	left: 0px;\r\n}\r\n\r\n#Refine .chance_rate {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 14px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n}\r\n\r\n#Refine .refine_zeny_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	color: white;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Refine/Refine.js
 var Refine_exports = /* @__PURE__ */ __exportAll({ default: () => Refine_default });
+/**
+* Helper: query inside shadow root
+*/
+function _root$10() {
+	return Refine._shadow || Refine._host;
+}
 /**
 * Completely clean-up variables for refining
 */
@@ -240705,13 +240903,6 @@ function clearRefineStates() {
 	refine_current_zeny = 0;
 }
 /**
-* Stop event propagation
-*/
-function stopPropagation$10(event) {
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
 * Handles packet received from server to open Refine UI
 * PACKET.ZC.OPEN_REFINING_UI
 */
@@ -240722,13 +240913,13 @@ function onOpenRefineUI() {
 	}
 	Refine.append();
 	if (!(InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false)) InventoryController.getUI().toggle();
-	const RefineInfoPos = Refine.ui.offset();
-	const RefineWidth = Refine.ui.outerWidth();
-	const RefineHeight = Refine.ui.outerHeight() - InventoryController.getUI().ui.outerHeight();
+	const refineRect = Refine._host.getBoundingClientRect();
+	const refineWidth = Refine._host.offsetWidth;
+	const refineHeight = Refine._host.offsetHeight - InventoryController.getUI().ui.height();
 	InventoryController.getUI().ui.css({
 		position: "absolute",
-		top: RefineInfoPos.top ? RefineInfoPos.top + RefineHeight : 200,
-		left: RefineInfoPos.left ? RefineInfoPos.left + RefineWidth : 300
+		top: refineRect.top ? refineRect.top + refineHeight : 200,
+		left: refineRect.left ? refineRect.left + refineWidth : 300
 	});
 	return false;
 }
@@ -240739,7 +240930,6 @@ function onRefineClose() {
 	Refine.remove();
 	const pkt = new PACKET.CZ.CLOSE_REFINING_UI();
 	Network.sendPacket(pkt);
-	return false;
 }
 /**
 * Function to control phases and image looping
@@ -240757,7 +240947,8 @@ function controlPhase$1(phase, shouldLoop, interval, callback) {
 	}
 	function showImages() {
 		Client.loadFile(DB.INTERFACE_PATH + "refining_renewal/" + imageArray[currentImageIndex], function(data) {
-			Refine.ui.find(".image-container").css("backgroundImage", "url(" + data + ")");
+			const container = _root$10().querySelector(".image-container");
+			if (container) container.style.backgroundImage = `url(${data})`;
 			currentImageIndex++;
 			if (currentImageIndex >= imageArray.length) if (shouldLoop) currentImageIndex = 0;
 			else {
@@ -240771,19 +240962,18 @@ function controlPhase$1(phase, shouldLoop, interval, callback) {
 }
 /**
 * Drop an item from inventory to Refine UI
-*
-* @param {event}
 */
 function onItemDrop$1(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item" || data.from !== "Inventory") return false;
+	if (data.type !== "item" || data.from !== "Inventory") return;
 	if (item) Refine.onRequestItemRefine(item);
 }
 /**
@@ -240795,8 +240985,9 @@ function onRefineUIUpdateMaterials(pkt) {
 		console.warn("Renewal Refine is enabled in your server. Please enable refine UI in your configs.");
 		return false;
 	}
+	const root = _root$10();
 	if (pkt && pkt.MaterialInfo.length > 0) {
-		if (Refine.ui.find(".item_to_refine .item").length > 0) onRemoveItem$1(false);
+		if (root.querySelector(".item_to_refine .item")) onRemoveItem$1(false);
 		refine_item_index = pkt.itemIndex;
 		const item = InventoryController.getUI().getItemByIndex(pkt.itemIndex);
 		refiningMaterials = pkt.MaterialInfo;
@@ -240804,18 +240995,21 @@ function onRefineUIUpdateMaterials(pkt) {
 		if (!Refine.hammer) {
 			onPopulateMaterials$1();
 			clearTimeout(Refine.imageLoopTimeout);
-			controlPhase$1("ready" + (blacksmithBlessing ? "a" : "b"), false, 250);
+			controlPhase$1(`ready${blacksmithBlessing ? "a" : "b"}`, false, 250);
 		}
 		const it = DB.getItemInfo(item.ITID);
-		const content = Refine.ui.find(".item_to_refine");
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"grade\"></div></div>");
+		const content = root.querySelector(".item_to_refine");
+		content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="grade"></div></div>`);
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const icon = content.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .grade").css("backgroundImage", "url(" + data + ")");
+		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + `grade_enchant/grade_icon${item.enchantgrade}.bmp`, function(data) {
+			const grade = content.querySelector(`.item[data-index="${item.index}"] .grade`);
+			if (grade) grade.style.backgroundImage = `url(${data})`;
 		});
-		Refine.ui.find(".item_to_refine_name").text(DB.getItemName(item));
+		const itemname = root.querySelector(".item_to_refine_name");
+		if (itemname) itemname.textContent = DB.getItemName(item);
 		if (Refine.hammer >= 1 && refine_item_mat) {
 			let materialFound = false;
 			let foundItem, foundMaterial;
@@ -240848,76 +241042,103 @@ function onRefineUIUpdateMaterials(pkt) {
 }
 /**
 * Handles populating materials needed for refining
-* Controls for selecting and de-selecting materials
 */
 function onPopulateMaterials$1() {
-	Refine.ui.find(".materials .mat_overlay .material").empty();
-	Refine.ui.find(".bsb_overlay .bsb").empty();
+	const root = _root$10();
+	root.querySelectorAll(".materials .mat_overlay .material_0, .materials .mat_overlay .material_1, .materials .mat_overlay .material_2, .materials .mat_overlay .material_3").forEach((el) => {
+		el.innerHTML = "";
+	});
+	const bsbContainer = root.querySelector(".bsb_overlay .bsb");
+	if (bsbContainer) bsbContainer.innerHTML = "";
 	for (let i = 0; i < refiningMaterials.length; i++) (function(idx) {
-		const material = refiningMaterials[i];
+		const material = refiningMaterials[idx];
 		const it = DB.getItemInfo(material.itemId);
 		const item = InventoryController.getUI().getItemById(material.itemId);
-		const materialDiv = Refine.ui.find(".material_" + i);
-		materialDiv.empty();
-		materialDiv.append("<div class=\"item\" data-index=\"" + material.itemId + "\" draggable=\"false\"><div class=\"icon\"></div><div class=\"mat_count\"></div></div>");
+		const materialDiv = root.querySelector(`.material_${idx}`);
+		if (!materialDiv) return;
+		materialDiv.innerHTML = "";
+		materialDiv.insertAdjacentHTML("beforeend", `<div class="item" data-index="${material.itemId}" draggable="false"><div class="icon"></div><div class="mat_count"></div></div>`);
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (it.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			materialDiv.find(".item[data-index=\"" + material.itemId + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const icon = materialDiv.querySelector(`.item[data-index="${material.itemId}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 		const count = item ? item.count : 0;
-		const countmsg = materialDiv.find(".item[data-index=\"" + material.itemId + "\"] .mat_count");
-		if (count === 0) countmsg.html("<span style=\"color: #ce1029;\">" + count + "</span>/1");
-		else countmsg.text(count + "/1");
-		materialDiv.find(".icon").click(function() {
+		const countmsg = materialDiv.querySelector(`.item[data-index="${material.itemId}"] .mat_count`);
+		if (countmsg) if (count === 0) countmsg.innerHTML = `<span style="color: #ce1029;">${count}</span>/1`;
+		else countmsg.textContent = `${count}/1`;
+		const iconEl = materialDiv.querySelector(".icon");
+		if (iconEl) iconEl.addEventListener("click", () => {
 			const clickedItemId = material.itemId;
 			const clickedItem = InventoryController.getUI().getItemById(clickedItemId);
-			if ((clickedItem ? clickedItem.count : 0) === 0) return false;
+			if ((clickedItem ? clickedItem.count : 0) === 0) return;
 			for (const messageID in itemMessageMapping) if (itemMessageMapping[messageID].includes(clickedItemId)) {
 				showMessage$3(messageID, 0, "info");
 				break;
 			}
-			Refine.ui.find(".mat_overlay").removeClass("selected");
-			materialDiv.closest(".mat_overlay").addClass("selected");
-			const clonedMaterial = materialDiv.find(".item").clone();
-			clonedMaterial.find(".mat_count").remove();
-			Refine.ui.find(".selected_mat").empty().append(clonedMaterial);
-			Refine.ui.find(".refine_enabled").show();
-			Refine.ui.find(".success .number").text(material.chance);
-			Refine.ui.find(".chance_rate").text(DB.getMessage(3285).replace("%d%", material.chance));
-			Refine.ui.find(".refine_zeny").text(material.zeny);
-			Refine.ui.find(".refine_zeny_cont").text(material.zeny);
+			root.querySelectorAll(".mat_overlay").forEach((el) => el.classList.remove("selected"));
+			materialDiv.closest(".mat_overlay").classList.add("selected");
+			const clonedMaterial = materialDiv.querySelector(".item").cloneNode(true);
+			const matCount = clonedMaterial.querySelector(".mat_count");
+			if (matCount) matCount.remove();
+			const selectedMat = root.querySelector(".selected_mat");
+			selectedMat.innerHTML = "";
+			selectedMat.appendChild(clonedMaterial);
+			const refineEnabled = root.querySelector(".refine_enabled");
+			if (refineEnabled) refineEnabled.style.display = "block";
+			const numberEl = root.querySelector(".success .number");
+			if (numberEl) numberEl.textContent = material.chance;
+			const chanceRate = root.querySelector(".chance_rate");
+			if (chanceRate) chanceRate.textContent = DB.getMessage(3285).replace("%d%", material.chance);
+			const refineZeny = root.querySelector(".refine_zeny");
+			if (refineZeny) refineZeny.textContent = material.zeny;
+			const refineZenyCont = root.querySelector(".refine_zeny_cont");
+			if (refineZenyCont) refineZenyCont.textContent = material.zeny;
 			refine_current_chance = material.chance;
 			refine_current_zeny = material.zeny;
 			refine_item_mat = material.itemId;
 			refine_fee = material.zeny;
-			Refine.ui.find(".refine_cont").addClass("item").attr("data-index", material.itemId);
+			const refineCont = root.querySelector(".refine_cont");
+			if (refineCont) {
+				refineCont.classList.add("item");
+				refineCont.setAttribute("data-index", material.itemId);
+			}
 		});
 	})(i);
 	if (blacksmithBlessing) {
-		const bsbDiv = Refine.ui.find(".bsb_overlay .bsb");
+		const bsbDiv = root.querySelector(".bsb_overlay .bsb");
 		const bsbItem = DB.getItemInfo(BSB_ITID);
 		const item = InventoryController.getUI().getItemById(BSB_ITID);
-		bsbDiv.append("<div class=\"item\" data-index=\"6635\" draggable=\"false\"><div class=\"icon\"></div><div class=\"mat_count\"></div>");
+		bsbDiv.insertAdjacentHTML("beforeend", `<div class="item" data-index="${BSB_ITID}" draggable="false"><div class="icon"></div><div class="mat_count"></div></div>`);
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (bsbItem.IsIdentified ? bsbItem.identifiedResourceName : bsbItem.unidentifiedResourceName) + ".bmp", function(data) {
-			bsbDiv.find(".item[data-index=\"6635\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const icon = bsbDiv.querySelector(`.item[data-index="${BSB_ITID}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 		const bsbCountOuter = item ? item.count : 0;
-		const bsbcountmsg = bsbDiv.find(".item[data-index=\"6635\"] .mat_count");
-		if (bsbCountOuter === 0) bsbcountmsg.html("<span style=\"color: #ce1029;\">" + bsbCountOuter + "</span>/" + blacksmithBlessing);
-		else bsbcountmsg.text(bsbCountOuter + "/" + blacksmithBlessing);
-		bsbDiv.find(".icon").click(function() {
+		const bsbcountmsg = bsbDiv.querySelector(`.item[data-index="${BSB_ITID}"] .mat_count`);
+		if (bsbcountmsg) if (bsbCountOuter === 0) bsbcountmsg.innerHTML = `<span style="color: #ce1029;">${bsbCountOuter}</span>/${blacksmithBlessing}`;
+		else bsbcountmsg.textContent = `${bsbCountOuter}/${blacksmithBlessing}`;
+		const bsbIcon = bsbDiv.querySelector(".icon");
+		if (bsbIcon) bsbIcon.addEventListener("click", () => {
 			const bsbInventoryItem = InventoryController.getUI().getItemById(BSB_ITID);
 			if ((bsbInventoryItem ? bsbInventoryItem.count : 0) >= blacksmithBlessing) {
 				const bsbOverlay = bsbDiv.closest(".bsb_overlay");
-				if (bsbOverlay.hasClass("selected")) {
-					bsbOverlay.removeClass("selected");
-					Refine.ui.find(".bsb_selected").empty();
-					Refine.ui.find(".some_notifs").hide();
+				if (bsbOverlay.classList.contains("selected")) {
+					bsbOverlay.classList.remove("selected");
+					const bsbSelected = root.querySelector(".bsb_selected");
+					if (bsbSelected) bsbSelected.innerHTML = "";
+					const someNotifs = root.querySelector(".some_notifs");
+					if (someNotifs) someNotifs.style.display = "none";
 				} else {
-					Refine.ui.find(".bsb_overlay").removeClass("selected");
-					bsbOverlay.addClass("selected");
-					const clonedBSB = bsbDiv.find(".item").clone();
-					clonedBSB.find(".mat_count").remove();
-					Refine.ui.find(".bsb_selected").empty().append(clonedBSB);
+					root.querySelectorAll(".bsb_overlay").forEach((el) => el.classList.remove("selected"));
+					bsbOverlay.classList.add("selected");
+					const clonedBSB = bsbDiv.querySelector(".item").cloneNode(true);
+					const matCount = clonedBSB.querySelector(".mat_count");
+					if (matCount) matCount.remove();
+					const bsbSelected = root.querySelector(".bsb_selected");
+					if (bsbSelected) {
+						bsbSelected.innerHTML = "";
+						bsbSelected.appendChild(clonedBSB);
+					}
 					refine_bsb = blacksmithBlessing;
 					showMessage$3(2967, 0, "info");
 				}
@@ -240929,6 +241150,7 @@ function onPopulateMaterials$1() {
 * Handles update of variables for UI changes based on Refine result
 */
 function selectMaterial(material, item) {
+	const root = _root$10();
 	const count = item ? item.count || 0 : 0;
 	refine_can_cont = 1;
 	if (count) refine_no_mats = 0;
@@ -240952,64 +241174,83 @@ function selectMaterial(material, item) {
 	if (onCheckItemBroken()) refine_can_cont = 0;
 	refine_current_chance = material.chance;
 	refine_current_zeny = material.zeny;
-	Refine.ui.find(".chance_rate").text(DB.getMessage(3285).replace("%d%", material.chance));
-	Refine.ui.find(".refine_zeny_cont").text(material.zeny);
+	const chanceRate = root.querySelector(".chance_rate");
+	if (chanceRate) chanceRate.textContent = DB.getMessage(3285).replace("%d%", material.chance);
+	const refineZenyCont = root.querySelector(".refine_zeny_cont");
+	if (refineZenyCont) refineZenyCont.textContent = material.zeny;
 	if (refine_can_cont && !refine_new_mats && !refine_item_broken) refine_result_div = refine_result ? "fail_refine_cont_enabled" : "success_refine_cont_enabled";
 	else {
 		refine_result_div = refine_result ? "fail_refine_cont_disabled" : "success_refine_cont_disabled";
-		Refine.ui.find(".refine_cont").removeClass("item").removeAttr("data-index");
+		const refineCont = root.querySelector(".refine_cont");
+		if (refineCont) {
+			refineCont.classList.remove("item");
+			refineCont.removeAttribute("data-index");
+		}
 	}
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$14() {
+function onItemOver$14(event) {
+	const root = _root$10();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const it = DB.getItemInfo(idx);
-	if (!idx) return false;
-	const pos = jquery_default(this).offset();
-	const overlay = Refine.ui.find(".overlay");
-	const parentContainer = jquery_default(this).closest(".materials, .refine_cont");
-	const containerOffset = parentContainer.offset();
+	if (!idx) return;
+	const itemRect = this.getBoundingClientRect();
+	const overlay = root.querySelector(".overlay");
+	if (!overlay) return;
+	const parentContainer = this.closest(".materials") || this.closest(".refine_cont");
+	if (!parentContainer) return;
+	const containerRect = parentContainer.getBoundingClientRect();
 	let top, left;
-	if (parentContainer.hasClass("materials")) {
-		top = pos.top - containerOffset.top + 30;
-		left = pos.left - containerOffset.left + jquery_default(this).outerWidth() - 39;
-	} else if (parentContainer.hasClass("refine_cont")) {
-		top = pos.top - containerOffset.top + 242;
-		left = pos.left - containerOffset.left + jquery_default(this).outerWidth() + 41;
+	if (parentContainer.classList.contains("materials")) {
+		top = itemRect.top - containerRect.top + 30;
+		left = itemRect.left - containerRect.left + this.offsetWidth - 39;
+	} else if (parentContainer.classList.contains("refine_cont")) {
+		top = itemRect.top - containerRect.top + 242;
+		left = itemRect.left - containerRect.left + this.offsetWidth + 41;
 	}
-	overlay.show();
-	overlay.css({
-		top,
-		left
-	});
-	overlay.text(it.identifiedDisplayName);
-	if (it.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	overlay.style.display = "block";
+	overlay.style.top = `${top}px`;
+	overlay.style.left = `${left}px`;
+	overlay.textContent = it.identifiedDisplayName;
+	if (it.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
 }
 /**
 * Hide the item name
 */
 function onItemOut$15() {
-	Refine.ui.find(".overlay").hide();
+	const overlay = _root$10().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Handles clearance of variables and UI components when changing Item
 */
 function onRemoveItem$1(backtowait) {
+	const root = _root$10();
 	refiningMaterials = [];
 	blacksmithBlessing = 0;
-	Refine.ui.find(".item_to_refine").empty();
-	Refine.ui.find(".item_to_refine_name").text("");
-	Refine.ui.find(".success .number").text("0");
-	Refine.ui.find(".refine_zeny").empty();
-	Refine.ui.find(".selected_mat").empty();
-	Refine.ui.find(".bsb_selected").empty();
-	Refine.ui.find(".materials .item").empty();
-	Refine.ui.find(".bsb .item").empty();
-	Refine.ui.find(".mat_overlay").removeClass("selected");
-	Refine.ui.find(".bsb_overlay").removeClass("selected");
+	const itemToRefine = root.querySelector(".item_to_refine");
+	if (itemToRefine) itemToRefine.innerHTML = "";
+	const itemToRefineName = root.querySelector(".item_to_refine_name");
+	if (itemToRefineName) itemToRefineName.textContent = "";
+	const successNumber = root.querySelector(".success .number");
+	if (successNumber) successNumber.textContent = "0";
+	const refineZeny = root.querySelector(".refine_zeny");
+	if (refineZeny) refineZeny.innerHTML = "";
+	const selectedMat = root.querySelector(".selected_mat");
+	if (selectedMat) selectedMat.innerHTML = "";
+	const bsbSelected = root.querySelector(".bsb_selected");
+	if (bsbSelected) bsbSelected.innerHTML = "";
+	root.querySelectorAll(".materials .item").forEach((el) => {
+		el.innerHTML = "";
+	});
+	root.querySelectorAll(".bsb .item").forEach((el) => {
+		el.innerHTML = "";
+	});
+	root.querySelectorAll(".mat_overlay").forEach((el) => el.classList.remove("selected"));
+	root.querySelectorAll(".bsb_overlay").forEach((el) => el.classList.remove("selected"));
 	if (backtowait === true) {
 		if (currentLoopHandle) {
 			clearTimeout(currentLoopHandle);
@@ -241020,9 +241261,15 @@ function onRemoveItem$1(backtowait) {
 			Refine.imageLoopTimeout = null;
 		}
 		controlPhase$1("waiting", true, 250);
-		Refine.ui.find(".some_notifs").hide();
-		Refine.ui.find(".refine_button").show();
-		Refine.ui.find(".success").empty().html(initialsuccess);
+		const someNotifs = root.querySelector(".some_notifs");
+		if (someNotifs) someNotifs.style.display = "none";
+		const refineButton = root.querySelector(".refine_button");
+		if (refineButton) refineButton.style.display = "block";
+		const successEl = root.querySelector(".success");
+		if (successEl) {
+			successEl.innerHTML = initialsuccess;
+			successEl.style.display = "block";
+		}
 		onHideContRefineButtons();
 		clearRefineStates();
 	}
@@ -241031,15 +241278,28 @@ function onRemoveItem$1(backtowait) {
 * Handles clearing of material components after requesting to refine
 */
 function clearMaterials() {
-	Refine.ui.find(".success").empty().hide();
-	Refine.ui.find(".refine_zeny").empty();
-	Refine.ui.find(".materials .item").hide();
-	Refine.ui.find(".bsb .item").hide();
-	Refine.ui.find(".selected_mat").empty();
-	Refine.ui.find(".bsb_selected").empty();
-	Refine.ui.find(".mat_overlay").removeClass("selected");
-	Refine.ui.find(".bsb_overlay").removeClass("selected");
-	Refine.ui.find(".refine_button").hide();
+	const root = _root$10();
+	const successEl = root.querySelector(".success");
+	if (successEl) {
+		successEl.innerHTML = "";
+		successEl.style.display = "none";
+	}
+	const refineZeny = root.querySelector(".refine_zeny");
+	if (refineZeny) refineZeny.innerHTML = "";
+	root.querySelectorAll(".materials .item").forEach((el) => {
+		el.style.display = "none";
+	});
+	root.querySelectorAll(".bsb .item").forEach((el) => {
+		el.style.display = "none";
+	});
+	const selectedMat = root.querySelector(".selected_mat");
+	if (selectedMat) selectedMat.innerHTML = "";
+	const bsbSelected = root.querySelector(".bsb_selected");
+	if (bsbSelected) bsbSelected.innerHTML = "";
+	root.querySelectorAll(".mat_overlay").forEach((el) => el.classList.remove("selected"));
+	root.querySelectorAll(".bsb_overlay").forEach((el) => el.classList.remove("selected"));
+	const refineButton = root.querySelector(".refine_button");
+	if (refineButton) refineButton.style.display = "none";
 }
 /**
 * Show a message in .info_msg
@@ -241048,6 +241308,7 @@ function clearMaterials() {
 * @param {string} type - The type of message ('error' or 'info')
 */
 function showMessage$3(messageID, timeout, type) {
+	const root = _root$10();
 	const message = DB.getMessage(messageID);
 	let messageClass;
 	switch (type) {
@@ -241062,31 +241323,40 @@ function showMessage$3(messageID, timeout, type) {
 			break;
 	}
 	if (Refine.messageTimeOut) clearTimeout(Refine.messageTimeOut);
-	Refine.ui.find(".info_msg").removeClass("red blue");
-	Refine.ui.find(".info_msg").text(message).addClass(messageClass);
-	Refine.ui.find(".some_notifs").show();
-	if (timeout > 0) Refine.messageTimeOut = setTimeout(function() {
-		Refine.ui.find(".info_msg").removeClass(messageClass);
-		Refine.ui.find(".some_notifs").hide();
+	const infoMsg = root.querySelector(".info_msg");
+	if (infoMsg) {
+		infoMsg.classList.remove("red", "blue");
+		infoMsg.textContent = message;
+		infoMsg.classList.add(messageClass);
+	}
+	const someNotifs = root.querySelector(".some_notifs");
+	if (someNotifs) someNotifs.style.display = "block";
+	if (timeout > 0) Refine.messageTimeOut = setTimeout(() => {
+		if (infoMsg) infoMsg.classList.remove(messageClass);
+		if (someNotifs) someNotifs.style.display = "none";
 	}, timeout * 1e3);
 }
 /**
 * Send the server request to refine the item
 */
 function onRequestRefine() {
+	const root = _root$10();
 	const item = InventoryController.getUI().getItemByIndex(refine_item_index);
 	const material = InventoryController.getUI().getItemById(refine_item_mat);
-	if (!item) return false;
-	if (!material) return false;
+	if (!item) return;
+	if (!material) return;
 	if (SessionStorage_default.zeny < refine_fee) {
 		showMessage$3(2968, 3, "error");
-		return false;
+		return;
 	}
 	if (!Refine.hammer) clearMaterials();
 	Refine.hammer++;
-	Refine.ui.find(".refine_button").hide();
-	Refine.ui.find(".item_to_refine_name").hide();
-	Refine.ui.find(".success").hide();
+	const refineButton = root.querySelector(".refine_button");
+	if (refineButton) refineButton.style.display = "none";
+	const itemToRefineName = root.querySelector(".item_to_refine_name");
+	if (itemToRefineName) itemToRefineName.style.display = "none";
+	const successEl = root.querySelector(".success");
+	if (successEl) successEl.style.display = "none";
 	refine_ongoing = 1;
 	const pkt = new PACKET.CZ.REQ_REFINING();
 	pkt.index = refine_item_index;
@@ -241099,7 +241369,7 @@ function onRequestRefine() {
 */
 function onShowFailure(result) {
 	const showResult = result === 2 ? "downgrade" : "fail";
-	onAnimateResult("fail", function() {
+	onAnimateResult("fail", () => {
 		onUpdateRefineUI(showResult);
 		startLoopingPhase("fail_wait");
 	});
@@ -241109,18 +241379,18 @@ function onShowFailure(result) {
 */
 function onAnimateResult(result, callback) {
 	function runSuccessSequence() {
-		if (refine_bsb) controlPhase$1("processa", false, 50, function() {
+		if (refine_bsb) controlPhase$1("processa", false, 50, () => {
 			controlPhase$1("success", false, 50, callback);
 		});
-		else controlPhase$1("processb", false, 50, function() {
+		else controlPhase$1("processb", false, 50, () => {
 			controlPhase$1("success", false, 50, callback);
 		});
 	}
 	function runFailSequence() {
-		if (refine_bsb) controlPhase$1("processa", false, 50, function() {
+		if (refine_bsb) controlPhase$1("processa", false, 50, () => {
 			controlPhase$1("fail", false, 50, callback);
 		});
-		else controlPhase$1("processb", false, 50, function() {
+		else controlPhase$1("processb", false, 50, () => {
 			controlPhase$1("fail", false, 50, callback);
 		});
 	}
@@ -241159,70 +241429,119 @@ function stopCurrentLoop() {
 * Handles how the UI changes depending on Refine result
 */
 function onUpdateRefineUI(result) {
+	const root = _root$10();
 	onHideContRefineButtons();
 	switch (result) {
-		case "success":
-			Refine.ui.find(".back_success").show();
-			Refine.ui.find(".success").text(DB.getMessage(2971)).show();
+		case "success": {
+			const backSuccess = root.querySelector(".back_success");
+			if (backSuccess) backSuccess.style.display = "block";
+			const successEl = root.querySelector(".success");
+			if (successEl) {
+				successEl.textContent = DB.getMessage(2971);
+				successEl.style.display = "block";
+			}
 			ChatBox_default.addText(DB.getMessage(498), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 			break;
-		case "fail":
+		}
+		case "fail": {
 			onCheckItemBroken();
-			Refine.ui.find(".back_fail").show();
-			Refine.ui.find(".success").text(DB.getMessage(2972)).show();
+			const backFail = root.querySelector(".back_fail");
+			if (backFail) backFail.style.display = "block";
+			const successEl = root.querySelector(".success");
+			if (successEl) {
+				successEl.textContent = DB.getMessage(2972);
+				successEl.style.display = "block";
+			}
 			ChatBox_default.addText(DB.getMessage(499), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 			break;
-		case "downgrade":
+		}
+		case "downgrade": {
 			onCheckItemBroken();
-			Refine.ui.find(".back_fail").show();
-			Refine.ui.find(".success").text(DB.getMessage(2972)).show();
+			const backFail = root.querySelector(".back_fail");
+			if (backFail) backFail.style.display = "block";
+			const successEl = root.querySelector(".success");
+			if (successEl) {
+				successEl.textContent = DB.getMessage(2972);
+				successEl.style.display = "block";
+			}
 			ChatBox_default.addText(DB.getMessage(1537), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
 			break;
+		}
 		default: break;
 	}
-	Refine.ui.find(".refine_text_cont").show();
-	if (refine_result_div) Refine.ui.find("." + refine_result_div).show();
+	const refineTextCont = root.querySelector(".refine_text_cont");
+	if (refineTextCont) refineTextCont.style.display = "block";
+	if (refine_result_div) {
+		const resultEl = root.querySelector(`.${refine_result_div}`);
+		if (resultEl) resultEl.style.display = "block";
+	}
 	if (refine_can_cont && !refine_new_mats && !refine_item_broken) {
-		Refine.ui.find(".chance_rate").text(DB.getMessage(3285).replace("%d%", refine_current_chance));
-		Refine.ui.find(".refine_zeny_cont").text(refine_current_zeny);
-		Refine.ui.find(".chance_rate").show();
-		Refine.ui.find(".refine_zeny_cont").show();
+		const chanceRate = root.querySelector(".chance_rate");
+		if (chanceRate) {
+			chanceRate.textContent = DB.getMessage(3285).replace("%d%", refine_current_chance);
+			chanceRate.style.display = "block";
+		}
+		const refineZenyCont = root.querySelector(".refine_zeny_cont");
+		if (refineZenyCont) {
+			refineZenyCont.textContent = refine_current_zeny;
+			refineZenyCont.style.display = "block";
+		}
 	}
 	if (refine_no_mats) showMessage$3(3243, 3, "error");
 	if (refine_no_zeny) showMessage$3(3244, 3, "error");
 	if (refine_no_bsb) showMessage$3(3245, 3, "error");
-	Refine.ui.find(".back_button").show();
-	Refine.ui.find(".refine_cont").show();
+	const backButton = root.querySelector(".back_button");
+	if (backButton) backButton.style.display = "block";
+	const refineCont = root.querySelector(".refine_cont");
+	if (refineCont) refineCont.style.display = "block";
 	if (!refine_item_broken) {
 		const refineditem = InventoryController.getUI().getItemByIndex(refine_item_index);
-		if (refineditem) Refine.ui.find(".item_to_refine_name").text(DB.getItemName(refineditem));
+		if (refineditem) {
+			const itemToRefineName = root.querySelector(".item_to_refine_name");
+			if (itemToRefineName) itemToRefineName.textContent = DB.getItemName(refineditem);
+		}
 	}
-	Refine.ui.find(".item_to_refine_name").show();
+	const itemToRefineName = root.querySelector(".item_to_refine_name");
+	if (itemToRefineName) itemToRefineName.style.display = "block";
 	refine_ongoing = 0;
 }
 /**
 * Handles hiding all buttons used in Continous Refine
 */
 function onHideContRefineButtons() {
-	Refine.ui.find(".back_button").hide();
-	Refine.ui.find(".refine_cont").hide();
-	Refine.ui.find(".back_success").hide();
-	Refine.ui.find(".back_fail").hide();
-	Refine.ui.find(".success_refine_cont_enabled").hide();
-	Refine.ui.find(".success_refine_cont_disabled").hide();
-	Refine.ui.find(".fail_refine_cont_enabled").hide();
-	Refine.ui.find(".fail_refine_cont_disabled").hide();
-	Refine.ui.find(".refine_text_cont").hide();
-	Refine.ui.find(".chance_rate").hide();
-	Refine.ui.find(".refine_zeny_cont").hide();
+	const root = _root$10();
+	const backButton = root.querySelector(".back_button");
+	if (backButton) backButton.style.display = "none";
+	const refineCont = root.querySelector(".refine_cont");
+	if (refineCont) refineCont.style.display = "none";
+	const backSuccess = root.querySelector(".back_success");
+	if (backSuccess) backSuccess.style.display = "none";
+	const backFail = root.querySelector(".back_fail");
+	if (backFail) backFail.style.display = "none";
+	const successContEnabled = root.querySelector(".success_refine_cont_enabled");
+	if (successContEnabled) successContEnabled.style.display = "none";
+	const successContDisabled = root.querySelector(".success_refine_cont_disabled");
+	if (successContDisabled) successContDisabled.style.display = "none";
+	const failContEnabled = root.querySelector(".fail_refine_cont_enabled");
+	if (failContEnabled) failContEnabled.style.display = "none";
+	const failContDisabled = root.querySelector(".fail_refine_cont_disabled");
+	if (failContDisabled) failContDisabled.style.display = "none";
+	const refineTextCont = root.querySelector(".refine_text_cont");
+	if (refineTextCont) refineTextCont.style.display = "none";
+	const chanceRate = root.querySelector(".chance_rate");
+	if (chanceRate) chanceRate.style.display = "none";
+	const refineZenyCont = root.querySelector(".refine_zeny_cont");
+	if (refineZenyCont) refineZenyCont.style.display = "none";
 }
 /**
 * Check if the item being refined is broken
 */
 function onCheckItemBroken() {
+	const root = _root$10();
 	if (!InventoryController.getUI().getItemByIndex(refine_item_index)) {
 		refine_result_div = "fail_refine_cont_disabled";
-		Refine.ui.find(".item_to_refine_name").text(DB.getMessage(3246));
+		const itemToRefineName = root.querySelector(".item_to_refine_name");
+		if (itemToRefineName) itemToRefineName.textContent = DB.getMessage(3246);
 		refine_item_broken = 1;
 		return true;
 	} else {
@@ -241234,29 +241553,36 @@ function onCheckItemBroken() {
 * Handles event when Back button was pressed during Continous Refine
 */
 function onCancelContRefine() {
+	const root = _root$10();
 	Refine.hammer = 0;
 	onHideContRefineButtons();
 	stopCurrentLoop();
 	if (!refine_item_broken) {
 		onPopulateMaterials$1();
-		controlPhase$1("ready" + (blacksmithBlessing ? "a" : "b"), false, 250);
+		controlPhase$1(`ready${blacksmithBlessing ? "a" : "b"}`, false, 250);
 	} else onRemoveItem$1(true);
-	Refine.ui.find(".refine_button").show();
-	Refine.ui.find(".success").empty().html(initialsuccess);
+	const refineButton = root.querySelector(".refine_button");
+	if (refineButton) refineButton.style.display = "block";
+	const successEl = root.querySelector(".success");
+	if (successEl) {
+		successEl.innerHTML = initialsuccess;
+		successEl.style.display = "block";
+	}
 }
 /**
 * Get item info (open description window)
 */
 function onItemInfo$18(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const ITID = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemById(ITID) ? InventoryController.getUI().getItemById(ITID) : InventoryController.getUI().getItemByIndex(ITID);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemCompare_default.ui) ItemCompare_default.remove();
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
 		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
@@ -241268,22 +241594,21 @@ function onItemInfo$18(event) {
 		ItemCompare_default.uid = compareItem.ITID;
 		ItemCompare_default.setItem(compareItem);
 	}
-	return false;
 }
 /**
 * Start dragging an item
 */
 function onItemDragStart$10(event) {
-	event.originalEvent.dataTransfer.setData("text", event.target.id);
+	event.dataTransfer.setData("text", event.target.id);
 }
 /**
 * End of dragging an item
 */
 function onItemDragEnd$11(event) {
 	if (refine_ongoing) return;
-	const rect = Refine.ui[0].getBoundingClientRect();
-	const mouseX = event.clientX || event.originalEvent.clientX;
-	const mouseY = event.clientY || event.originalEvent.clientY;
+	const rect = Refine._host.getBoundingClientRect();
+	const mouseX = event.clientX;
+	const mouseY = event.clientY;
 	if (mouseX < rect.left || mouseX > rect.right || mouseY < rect.top || mouseY > rect.bottom) onRemoveItem$1(true);
 }
 /**
@@ -241316,20 +241641,20 @@ var init_Refine = __esmMin((() => {
 	init_NetworkManager();
 	init_PacketStructure();
 	init_PacketVerManager();
-	init_jquery();
 	init_Client();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Announce();
 	init_ChatBox();
 	init_Equipment();
 	init_Inventory();
 	init_ItemCompare();
 	init_ItemInfo();
+	init_Elements();
 	init_Refine$2();
 	init_Refine$1();
-	Refine = new UIComponent("Refine", Refine_default$2, Refine_default$1);
+	Refine = new GUIComponent("Refine", Refine_default$1);
 	BSB_ITID = 6635;
 	refiningMaterials = [];
 	blacksmithBlessing = 0;
@@ -241464,42 +241789,93 @@ var init_Refine = __esmMin((() => {
 		]
 	};
 	/**
+	* Render HTML
+	*/
+	Refine.render = () => Refine_default$2;
+	/**
 	* Initialize UI
 	*/
 	Refine.init = function init() {
-		this.ui.css({
-			top: 200,
-			left: 300
+		const root = _root$10();
+		this._host.style.top = "200px";
+		this._host.style.left = "300px";
+		const titlebarBase = root.querySelector(".titlebar .base");
+		if (titlebarBase) titlebarBase.addEventListener("mousedown", (event) => {
+			event.stopImmediatePropagation();
 		});
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$10);
-		this.ui.find(".titlebar .close").click(onRefineClose);
-		this.ui.find(".footer .cancel").click(onRefineClose);
-		this.draggable(this.ui.find(".titlebar"));
-		const successdiv = this.ui.find(".success");
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", onRefineClose);
+		const cancelBtn = root.querySelector(".cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", onRefineClose);
+		this.draggable(".titlebar");
+		const successdiv = root.querySelector(".success");
 		initialsuccess = DB.getMessage(3724).replace("%d%", `<span class="number">0</span>`);
-		successdiv.html(initialsuccess);
-		this.ui.find(".item_to_refine").on("drop", onItemDrop$1).on("dragover", stopPropagation$10).on("dragstart", ".item", onItemDragStart$10).on("dragend", ".item", onItemDragEnd$11);
-		this.ui.find(".materials").on("mouseover", ".item", onItemOver$14).on("mouseout", onItemOut$15);
-		this.ui.find(".materials").on("contextmenu", ".item", onItemInfo$18);
-		this.ui.find(".item_to_refine").on("contextmenu", ".item", onItemInfo$18);
-		this.ui.find(".refine_cont").on("mouseover", onItemOver$14).on("mouseout", onItemOut$15);
-		this.ui.find(".panel .item_to_refine").on("dblclick", ".item", function() {
-			if (refine_ongoing === 0) onRemoveItem$1(true);
-		});
-		this.ui.find(".refine_enabled").click(onRequestRefine);
-		this.ui.find(".success_refine_cont_enabled").click(onRequestRefine);
-		this.ui.find(".fail_refine_cont_enabled").click(onRequestRefine);
-		this.ui.find(".back_button").click(onCancelContRefine);
-		this.ui.find(".refine_enabled").hide();
-		this.ui.find(".some_notifs").hide();
+		if (successdiv) successdiv.innerHTML = initialsuccess;
+		const itemToRefine = root.querySelector(".item_to_refine");
+		if (itemToRefine) {
+			itemToRefine.addEventListener("drop", onItemDrop$1);
+			itemToRefine.addEventListener("dragover", (event) => {
+				event.preventDefault();
+				event.stopImmediatePropagation();
+			});
+			itemToRefine.addEventListener("dragstart", (event) => {
+				if (event.target.closest(".item")) onItemDragStart$10(event);
+			});
+			itemToRefine.addEventListener("dragend", (event) => {
+				if (event.target.closest(".item")) onItemDragEnd$11(event);
+			});
+			itemToRefine.addEventListener("dblclick", (event) => {
+				if (event.target.closest(".item") && refine_ongoing === 0) onRemoveItem$1(true);
+			});
+			itemToRefine.addEventListener("contextmenu", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemInfo$18.call(item, event);
+			});
+		}
+		const materials = root.querySelector(".materials");
+		if (materials) {
+			materials.addEventListener("mouseover", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemOver$14.call(item, event);
+			});
+			materials.addEventListener("mouseout", () => {
+				onItemOut$15();
+			});
+			materials.addEventListener("contextmenu", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemInfo$18.call(item, event);
+			});
+		}
+		const refineCont = root.querySelector(".refine_cont");
+		if (refineCont) {
+			refineCont.addEventListener("mouseover", (event) => {
+				onItemOver$14.call(refineCont, event);
+			});
+			refineCont.addEventListener("mouseout", () => {
+				onItemOut$15();
+			});
+		}
+		const refineEnabled = root.querySelector(".refine_enabled");
+		if (refineEnabled) refineEnabled.addEventListener("click", onRequestRefine);
+		const successContEnabled = root.querySelector(".success_refine_cont_enabled");
+		if (successContEnabled) successContEnabled.addEventListener("click", onRequestRefine);
+		const failContEnabled = root.querySelector(".fail_refine_cont_enabled");
+		if (failContEnabled) failContEnabled.addEventListener("click", onRequestRefine);
+		const backButton = root.querySelector(".back_button");
+		if (backButton) backButton.addEventListener("click", onCancelContRefine);
+		if (refineEnabled) refineEnabled.style.display = "none";
+		const someNotifs = root.querySelector(".some_notifs");
+		if (someNotifs) someNotifs.style.display = "none";
 		onHideContRefineButtons();
 	};
 	/**
 	* Append to body
 	*/
 	Refine.onAppend = function onAppend() {
+		const root = _root$10();
 		Refine.hammer = 0;
-		Refine.ui.find(".refine_button").show();
+		const refineButton = root.querySelector(".refine_button");
+		if (refineButton) refineButton.style.display = "block";
 		clearTimeout(Refine.imageLoopTimeout);
 		controlPhase$1("waiting", true, 250);
 	};
@@ -241526,9 +241902,12 @@ var init_Refine = __esmMin((() => {
 	* @param {pkt} - PACKET.ZC.ACK_ITEMREFINING
 	*/
 	Refine.onRefineResult = function onRefineResult(pkt) {
+		const root = _root$10();
 		if (pkt) {
-			Refine.ui.find(".back_button").hide();
-			Refine.ui.find(".refine_cont").hide();
+			const backButton = root.querySelector(".back_button");
+			if (backButton) backButton.style.display = "none";
+			const refineCont = root.querySelector(".refine_cont");
+			if (refineCont) refineCont.style.display = "none";
 			const item = InventoryController.getUI().removeItem(pkt.itemIndex, 1);
 			if (item) {
 				item.RefiningLevel = pkt.RefiningLevel;
@@ -241539,7 +241918,7 @@ var init_Refine = __esmMin((() => {
 			switch (pkt.result) {
 				case 0:
 					refine_can_cont = 1;
-					onAnimateResult("success", function() {
+					onAnimateResult("success", () => {
 						onUpdateRefineUI("success");
 						startLoopingPhase("success_wait");
 					});
@@ -241558,8 +241937,7 @@ var init_Refine = __esmMin((() => {
 	* Check if Refine UI is open
 	*/
 	Refine.isRefineOpen = function isRefineOpen() {
-		if (Refine.ui && Refine.ui.is(":visible")) return true;
-		else return false;
+		return !!(Refine._host && Refine._host.isConnected);
 	};
 	/**
 	* Packet Hooks to functions
@@ -241573,16 +241951,22 @@ var init_Refine = __esmMin((() => {
 //#region src/UI/Components/EnchantGrade/EnchantGrade.html?raw
 var EnchantGrade_default$2;
 var init_EnchantGrade$2 = __esmMin((() => {
-	EnchantGrade_default$2 = "<div id=\"EnchantGrade\">\r\n	<div class=\"container\" data-background=\"grade_enchant/bg_grade_enchant.bmp\">\r\n		<div class=\"left_panel\">\r\n			<div class=\"enchant_drop_proxy\"></div>\r\n			<div class=\"grade_tank_container\" data-background=\"grade_enchant/bg_gradeitem1.bmp\">\r\n				<div class=\"probability\"></div>\r\n				<div class=\"enchant_container\"></div>\r\n			</div>\r\n			<div class=\"grade-wheel\" data-background=\"grade_enchant/gradewheel1.bmp\"></div>\r\n			<button class=\"start_grade\" data-background=\"grade_enchant/btn_start_disable.bmp\"></button>\r\n		</div>\r\n		<div class=\"right_panel\">\r\n			<div class=\"titlebar\">\r\n				<button\r\n					class=\"close_btn\"\r\n					data-background=\"cashemotion/btn_close_normal.bmp\"\r\n					data-hover=\"cashemotion/btn_close_over.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"notification_container\">\r\n				<div class=\"notification_text\"></div>\r\n			</div>\r\n			<div class=\"materials_container\">\r\n				<button class=\"material_slot1 material_slot\" data-background=\"grade_enchant/btn_material.bmp\"></button>\r\n				<button class=\"material_slot2 material_slot\" data-background=\"grade_enchant/btn_material.bmp\"></button>\r\n				<button class=\"material_slot3 material_slot\" data-background=\"grade_enchant/btn_material.bmp\"></button>\r\n			</div>\r\n			<div class=\"additional_materials\">\r\n				<div class=\"chance_panel\">\r\n					<button\r\n						class=\"add_material_btn\"\r\n						data-background=\"grade_enchant/btn_chance_up.bmp\"\r\n						data-hover=\"grade_enchant/btn_chance_up_over.bmp\"\r\n						data-down=\"grade_enchant/btn_chance_up_pick.bmp\"\r\n					></button>\r\n					<button\r\n						class=\"remove_material_btn\"\r\n						data-background=\"grade_enchant/btn_chance_down.bmp\"\r\n						data-hover=\"grade_enchant/btn_chance_down_over.bmp\"\r\n						data-down=\"grade_enchant/btn_chance_down_pick.bmp\"\r\n					></button>\r\n				</div>\r\n				<div class=\"BED_container\"></div>\r\n			</div>\r\n			<div class=\"footer\">\r\n				<div class=\"zeny_cost_container\"></div>\r\n				<div class=\"big_close_container\">\r\n					<button\r\n						class=\"big_close_btn\"\r\n						data-background=\"inventory/btn_close_out.bmp\"\r\n						data-hover=\"inventory/btn_close_over.bmp\"\r\n						data-down=\"inventory/btn_close_press.bmp\"\r\n					></button>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div id=\"enchant_tooltip\" class=\"enchant_tooltip\"></div>\r\n</div>\r\n";
+	EnchantGrade_default$2 = "<div id=\"EnchantGrade\">\r\n	<div class=\"container\">\r\n		<ui-image src=\"grade_enchant/bg_grade_enchant.bmp\"></ui-image>\r\n		<div class=\"left_panel\">\r\n			<div class=\"enchant_drop_proxy\"></div>\r\n			<div class=\"grade_tank_container\">\r\n				<div class=\"probability\"></div>\r\n				<div class=\"enchant_container\"></div>\r\n			</div>\r\n			<div class=\"grade-wheel\"></div>\r\n			<button class=\"start_grade\"></button>\r\n		</div>\r\n		<div class=\"right_panel\">\r\n			<div class=\"titlebar\">\r\n				<ui-button\r\n					class=\"close_btn\"\r\n					bg=\"cashemotion/btn_close_normal.bmp\"\r\n					hover=\"cashemotion/btn_close_over.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"notification_container\">\r\n				<div class=\"notification_text\"></div>\r\n			</div>\r\n			<div class=\"materials_container\">\r\n				<button class=\"material_slot1 material_slot\"></button>\r\n				<button class=\"material_slot2 material_slot\"></button>\r\n				<button class=\"material_slot3 material_slot\"></button>\r\n			</div>\r\n			<div class=\"additional_materials\">\r\n				<div class=\"chance_panel\">\r\n					<ui-button\r\n						class=\"add_material_btn\"\r\n						bg=\"grade_enchant/btn_chance_up.bmp\"\r\n						hover=\"grade_enchant/btn_chance_up_over.bmp\"\r\n						down=\"grade_enchant/btn_chance_up_pick.bmp\"\r\n					></ui-button>\r\n					<ui-button\r\n						class=\"remove_material_btn\"\r\n						bg=\"grade_enchant/btn_chance_down.bmp\"\r\n						hover=\"grade_enchant/btn_chance_down_over.bmp\"\r\n						down=\"grade_enchant/btn_chance_down_pick.bmp\"\r\n					></ui-button>\r\n				</div>\r\n				<div class=\"BED_container\"></div>\r\n			</div>\r\n			<div class=\"footer\">\r\n				<div class=\"zeny_cost_container\"></div>\r\n				<div class=\"big_close_container\">\r\n					<ui-button\r\n						class=\"big_close_btn\"\r\n						bg=\"inventory/btn_close_out.bmp\"\r\n						hover=\"inventory/btn_close_over.bmp\"\r\n						down=\"inventory/btn_close_press.bmp\"\r\n					></ui-button>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"enchant_tooltip\"></div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/EnchantGrade/EnchantGrade.css?raw
 var EnchantGrade_default$1;
 var init_EnchantGrade$1 = __esmMin((() => {
-	EnchantGrade_default$1 = "#EnchantGrade {\r\n	position: absolute;\r\n	height: 330px;\r\n	width: 400px;\r\n}\r\n\r\n#EnchantGrade .container {\r\n	width: 100%;\r\n	height: 100%;\r\n	overflow: hidden;\r\n	position: relative;\r\n}\r\n\r\n#EnchantGrade .left_panel {\r\n	position: absolute;\r\n	height: 100%;\r\n	width: 135px;\r\n	left: 8px;\r\n	top: 0px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-direction: column;\r\n	align-items: center;\r\n}\r\n\r\n#EnchantGrade .grade_tank_container {\r\n	flex-direction: column;\r\n	height: 208px;\r\n	width: 104px;\r\n	background-repeat: no-repeat;\r\n	top: 54px;\r\n	margin-top: 54px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	visibility: hidden;\r\n	margin-bottom: 5px;\r\n}\r\n\r\n#EnchantGrade .probability {\r\n	height: 50px;\r\n	width: 60px;\r\n	align-content: end;\r\n	margin-top: 40px;\r\n	text-align: center;\r\n	color: white;\r\n	font-size: 30px;\r\n	font-weight: 600;\r\n	text-shadow:\r\n		-1px -1px 0 black,\r\n		1px -1px 0 black,\r\n		-1px 1px 0 black,\r\n		1px 1px 0 black;\r\n}\r\n\r\n#EnchantGrade .enchant_container {\r\n	height: 30px;\r\n	width: 30px;\r\n	position: relative;\r\n	margin-bottom: 115px;\r\n	left: 2px;\r\n}\r\n\r\n#EnchantGrade .enchant_drop_proxy {\r\n	height: 30px;\r\n	width: 30px;\r\n	position: absolute;\r\n	top: 122px;\r\n	left: 53px;\r\n}\r\n\r\n#EnchantGrade .item {\r\n	height: 24px;\r\n	width: 24px;\r\n}\r\n\r\n#EnchantGrade .enchant_container .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n\r\n#EnchantGrade .grade-wheel {\r\n	height: 23px;\r\n	width: 43px;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EnchantGrade .start_grade {\r\n	height: 28px;\r\n	width: 82px;\r\n	background: transparent;\r\n	border: none;\r\n}\r\n\r\n#EnchantGrade .right_panel {\r\n	position: absolute;\r\n	height: 100%;\r\n	width: 258px;\r\n	right: 0px;\r\n	top: 0px;\r\n	display: grid;\r\n	grid-template-columns: 1fr;\r\n	gap: 0px;\r\n	align-content: start;\r\n}\r\n\r\n#EnchantGrade .container .right_panel .titlebar {\r\n	width: 100%;\r\n	height: 15px;\r\n	top: 18px;\r\n	left: 0px;\r\n	display: flex;\r\n	justify-content: flex-end; /* Pushes content to the right */\r\n	align-items: center; /* Vertically centers the button */\r\n	border: none;\r\n	position: relative;\r\n}\r\n\r\n#EnchantGrade .close_btn {\r\n	width: 13px;\r\n	height: 13px;\r\n	position: absolute;\r\n	top: 4px;\r\n	background: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n\r\n#EnchantGrade .notification_container {\r\n	position: relative;\r\n	height: 45px;\r\n	top: 33px;\r\n	left: -2px;\r\n	font-size: 8.5px;\r\n	width: 95%;\r\n	margin-left: 15px;\r\n}\r\n\r\n#EnchantGrade .materials_container {\r\n	position: relative;\r\n	height: 125px;\r\n	top: 37px;\r\n	left: 16px;\r\n	width: 241px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	row-gap: 3px;\r\n}\r\n\r\n#EnchantGrade .material_slot1,\r\n.material_slot2,\r\n.material_slot3 {\r\n	height: 37px;\r\n	width: 235px;\r\n	border: none;\r\n	position: relative;\r\n	top: 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	gap: 5px;\r\n}\r\n\r\n#EnchantGrade .material_slot1 .item,\r\n.material_slot2 .item,\r\n.material_slot3 .item {\r\n	height: 24px;\r\n	width: 24px;\r\n	position: relative;\r\n	top: 1px;\r\n	left: 12px;\r\n	margin-right: 15px;\r\n}\r\n\r\n#EnchantGrade .additional_materials {\r\n	position: relative;\r\n	height: 70px;\r\n	top: 40px;\r\n	left: -1px;\r\n	display: flex;\r\n}\r\n\r\n#EnchantGrade .chance_panel {\r\n	position: relative;\r\n	width: 50px;\r\n	height: 30px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-direction: column;\r\n	align-items: end;\r\n}\r\n\r\n#EnchantGrade .add_material_btn,\r\n.remove_material_btn {\r\n	height: 15px;\r\n	width: 32px;\r\n	border: none;\r\n	background-color: transparent;\r\n	z-index: 100;\r\n}\r\n\r\n#EnchantGrade .BED_container {\r\n	height: 30px;\r\n	position: relative;\r\n	width: 80%;\r\n	display: flex;\r\n	align-items: center;\r\n	top: 3px;\r\n	left: 5px;\r\n}\r\n\r\n#EnchantGrade .footer {\r\n	position: relative;\r\n	height: 30px;\r\n	top: 40px;\r\n	left: -1px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	gap: 30px;\r\n}\r\n\r\n#EnchantGrade .zeny_cost_container {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 120px;\r\n	top: 12px;\r\n	left: 41px;\r\n	text-align: end;\r\n	font-weight: bolder;\r\n}\r\n\r\n#EnchantGrade .big_close_container {\r\n	align-items: center;\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n	left: 45px;\r\n}\r\n\r\n#EnchantGrade .big_close_btn {\r\n	height: 20px;\r\n	width: 44px;\r\n	border: none;\r\n}\r\n\r\n#enchant_tooltip {\r\n	position: absolute;\r\n	z-index: 9999;\r\n	pointer-events: none;\r\n	background: rgba(0, 0, 0, 0.85);\r\n	border: 1px solid #8c7b4a;\r\n	padding: 6px 8px;\r\n	color: #fff;\r\n	white-space: nowrap;\r\n}\r\n\r\n.enchant_tooltip.hidden {\r\n	display: none;\r\n}\r\n\r\n#EnchantGrade .image-container {\r\n	position: absolute;\r\n	top: 1px;\r\n	height: 301px;\r\n	width: 262px;\r\n}\r\n\r\n#EnchantGrade .success {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 261px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	top: 12px;\r\n}\r\n\r\n#EnchantGrade .success .number {\r\n	color: #2963de;\r\n}\r\n\r\n#EnchantGrade .item_to_EnchantGrade {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 50px;\r\n	top: 185px;\r\n	left: 106px;\r\n}\r\n\r\n#EnchantGrade .enchant_container .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n\r\n#EnchantGrade .item_to_EnchantGrade_name {\r\n	position: absolute;\r\n	height: 18px;\r\n	width: 261px;\r\n	text-align: center;\r\n	top: 225px;\r\n	align-content: center;\r\n	font-weight: bold;\r\n	color: #102142;\r\n}\r\n\r\n#EnchantGrade .item .icon {\r\n	position: absolute;\r\n	top: 0px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#EnchantGrade .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 180px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#EnchantGrade .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#EnchantGrade .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 170px;\r\n	left: 15px;\r\n	font-size: 0.8em;\r\n	align-content: center;\r\n}\r\n\r\n#EnchantGrade .info_msg.red {\r\n	color: red;\r\n}\r\n\r\n#EnchantGrade .info_msg.blue {\r\n	color: blue;\r\n}\r\n\r\n#EnchantGrade .cancel {\r\n	position: absolute;\r\n	height: 21px;\r\n	width: 57px;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n\r\n#EnchantGrade .materials {\r\n	position: absolute;\r\n	height: 78px;\r\n	width: 100%;\r\n	top: 30px;\r\n}\r\n\r\n#EnchantGrade .mat_overlay,\r\n#EnchantGrade .bsb_overlay {\r\n	position: absolute;\r\n	height: 53px;\r\n	width: 46px;\r\n	background-size: 0px; /* Hide */\r\n}\r\n\r\n#EnchantGrade .mat_overlay.selected,\r\n#EnchantGrade .bsb_overlay.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#EnchantGrade .mat_0 {\r\n	left: 10px;\r\n	top: 8px;\r\n}\r\n\r\n#EnchantGrade .mat_1 {\r\n	left: 59px;\r\n	top: 8px;\r\n}\r\n\r\n#EnchantGrade .mat_2 {\r\n	top: 8px;\r\n	left: 108px;\r\n}\r\n\r\n#EnchantGrade .mat_3 {\r\n	top: 8px;\r\n	left: 157px;\r\n}\r\n\r\n#EnchantGrade .bsb_overlay {\r\n	top: 8px;\r\n	left: 206px;\r\n}\r\n\r\n#EnchantGrade .material_0,\r\n#EnchantGrade .material_1,\r\n#EnchantGrade .material_2,\r\n#EnchantGrade .material_3 {\r\n	display: block;\r\n}\r\n\r\n#EnchantGrade .materials .item .icon {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: -2px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#EnchantGrade .mat_count {\r\n	height: 20px;\r\n	position: absolute;\r\n	width: 50px;\r\n	top: 46px;\r\n	text-align: center;\r\n	left: -15px;\r\n}\r\n\r\n#EnchantGrade .selected_materials {\r\n	position: absolute;\r\n	height: 50px;\r\n	top: 83px;\r\n	width: 100%;\r\n}\r\n\r\n#EnchantGrade .selected_mat {\r\n	position: relative;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 68px;\r\n	top: 6px;\r\n}\r\n\r\n#EnchantGrade .bsb_selected {\r\n	position: absolute;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 149px;\r\n	top: 6px;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_button {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 92px;\r\n	bottom: 9px;\r\n	left: 85px;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_disabled,\r\n#EnchantGrade .EnchantGrade_enabled {\r\n	position: absolute;\r\n	height: 48px;\r\n	width: 96px;\r\n	top: -2px;\r\n	left: -2px;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_enabled {\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_text {\r\n	font-weight: bold;\r\n	position: relative;\r\n	height: 15px;\r\n	width: 92px;\r\n	text-align: center;\r\n	color: #101839;\r\n	top: 5px;\r\n	pointer-events: none;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_zeny {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 65px;\r\n	top: 9px;\r\n	left: 20px;\r\n	color: white;\r\n	text-align: right;\r\n	font-weight: bold;\r\n	pointer-events: none;\r\n}\r\n\r\n#EnchantGrade .back_button {\r\n	position: absolute;\r\n	height: 38px;\r\n	width: 101px;\r\n	bottom: 13px;\r\n	left: 19px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .back_success,\r\n#EnchantGrade .back_fail {\r\n	position: relative;\r\n	height: 38px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_cont {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	bottom: 1px;\r\n	right: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_cont.item {\r\n	/* Override conflicting properties */\r\n	position: absolute !important;\r\n	float: none !important;\r\n	height: 50px !important;\r\n	width: 101px !important;\r\n	left: auto !important;\r\n	top: auto !important;\r\n	bottom: 1px !important;\r\n	right: 20px !important;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#EnchantGrade .success_EnchantGrade_cont_enabled,\r\n#EnchantGrade .success_EnchantGrade_cont_disabled,\r\n#EnchantGrade .fail_EnchantGrade_cont_enabled,\r\n#EnchantGrade .fail_EnchantGrade_cont_disabled {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_text_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n	bottom: 27px;\r\n	left: 0px;\r\n}\r\n\r\n#EnchantGrade .chance_rate {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 14px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_zeny_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	color: white;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n}\r\n";
+	EnchantGrade_default$1 = ":host {\r\n	position: absolute;\r\n	height: 330px;\r\n	width: 400px;\r\n}\r\n\r\n#EnchantGrade {\r\n	height: 100%;\r\n	width: 100%;\r\n	position: relative;\r\n}\r\n\r\n#EnchantGrade .container {\r\n	width: 100%;\r\n	height: 100%;\r\n	overflow: hidden;\r\n	position: relative;\r\n}\r\n\r\n#EnchantGrade .left_panel {\r\n	position: absolute;\r\n	height: 100%;\r\n	width: 135px;\r\n	left: 8px;\r\n	top: 0px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-direction: column;\r\n	align-items: center;\r\n}\r\n\r\n#EnchantGrade .grade_tank_container {\r\n	flex-direction: column;\r\n	height: 208px;\r\n	width: 104px;\r\n	background-repeat: no-repeat;\r\n	top: 54px;\r\n	margin-top: 54px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	visibility: hidden;\r\n	margin-bottom: 5px;\r\n}\r\n\r\n#EnchantGrade .probability {\r\n	height: 50px;\r\n	width: 60px;\r\n	align-content: end;\r\n	margin-top: 40px;\r\n	text-align: center;\r\n	color: white;\r\n	font-size: 30px;\r\n	font-weight: 600;\r\n	text-shadow:\r\n		-1px -1px 0 black,\r\n		1px -1px 0 black,\r\n		-1px 1px 0 black,\r\n		1px 1px 0 black;\r\n}\r\n\r\n#EnchantGrade .enchant_container {\r\n	height: 30px;\r\n	width: 30px;\r\n	position: relative;\r\n	margin-bottom: 115px;\r\n	left: 2px;\r\n}\r\n\r\n#EnchantGrade .enchant_drop_proxy {\r\n	height: 30px;\r\n	width: 30px;\r\n	position: absolute;\r\n	top: 122px;\r\n	left: 53px;\r\n}\r\n\r\n#EnchantGrade .item {\r\n	height: 24px;\r\n	width: 24px;\r\n}\r\n\r\n#EnchantGrade .enchant_container .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n\r\n#EnchantGrade .grade-wheel {\r\n	height: 23px;\r\n	width: 43px;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EnchantGrade .start_grade {\r\n	height: 28px;\r\n	width: 82px;\r\n	background: transparent;\r\n	border: none;\r\n}\r\n\r\n#EnchantGrade .right_panel {\r\n	position: absolute;\r\n	height: 100%;\r\n	width: 258px;\r\n	right: 0px;\r\n	top: 0px;\r\n	display: grid;\r\n	grid-template-columns: 1fr;\r\n	gap: 0px;\r\n	align-content: start;\r\n}\r\n\r\n#EnchantGrade .container .right_panel .titlebar {\r\n	width: 100%;\r\n	height: 15px;\r\n	top: 18px;\r\n	left: 0px;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n	align-items: center;\r\n	border: none;\r\n	position: relative;\r\n}\r\n\r\n#EnchantGrade .close_btn {\r\n	width: 13px;\r\n	height: 13px;\r\n	position: absolute;\r\n	top: 4px;\r\n	background: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n\r\n#EnchantGrade .notification_container {\r\n	position: relative;\r\n	height: 45px;\r\n	top: 33px;\r\n	left: -2px;\r\n	font-size: 8.5px;\r\n	width: 95%;\r\n	margin-left: 15px;\r\n}\r\n\r\n#EnchantGrade .materials_container {\r\n	position: relative;\r\n	height: 125px;\r\n	top: 37px;\r\n	left: 16px;\r\n	width: 241px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	row-gap: 3px;\r\n}\r\n\r\n#EnchantGrade .material_slot1,\r\n#EnchantGrade .material_slot2,\r\n#EnchantGrade .material_slot3 {\r\n	height: 37px;\r\n	width: 235px;\r\n	border: none;\r\n	position: relative;\r\n	top: 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	gap: 5px;\r\n}\r\n\r\n#EnchantGrade .material_slot1 .item,\r\n#EnchantGrade .material_slot2 .item,\r\n#EnchantGrade .material_slot3 .item {\r\n	height: 24px;\r\n	width: 24px;\r\n	position: relative;\r\n	top: 1px;\r\n	left: 12px;\r\n	margin-right: 15px;\r\n}\r\n\r\n#EnchantGrade .additional_materials {\r\n	position: relative;\r\n	height: 70px;\r\n	top: 40px;\r\n	left: -1px;\r\n	display: flex;\r\n}\r\n\r\n#EnchantGrade .chance_panel {\r\n	position: relative;\r\n	width: 50px;\r\n	height: 30px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	flex-direction: column;\r\n	align-items: end;\r\n}\r\n\r\n#EnchantGrade .add_material_btn,\r\n#EnchantGrade .remove_material_btn {\r\n	height: 15px;\r\n	width: 32px;\r\n	border: none;\r\n	background-color: transparent;\r\n	z-index: 100;\r\n}\r\n\r\n#EnchantGrade .BED_container {\r\n	height: 30px;\r\n	position: relative;\r\n	width: 80%;\r\n	display: flex;\r\n	align-items: center;\r\n	top: 3px;\r\n	left: 5px;\r\n}\r\n\r\n#EnchantGrade .footer {\r\n	position: relative;\r\n	height: 30px;\r\n	top: 40px;\r\n	left: -1px;\r\n	display: flex;\r\n	justify-content: flex-start;\r\n	gap: 30px;\r\n}\r\n\r\n#EnchantGrade .zeny_cost_container {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 120px;\r\n	top: 12px;\r\n	left: 41px;\r\n	text-align: end;\r\n	font-weight: bolder;\r\n}\r\n\r\n#EnchantGrade .big_close_container {\r\n	align-items: center;\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: flex-end;\r\n	left: 45px;\r\n}\r\n\r\n#EnchantGrade .big_close_btn {\r\n	height: 20px;\r\n	width: 44px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EnchantGrade .enchant_tooltip {\r\n	position: absolute;\r\n	z-index: 9999;\r\n	pointer-events: none;\r\n	background: rgba(0, 0, 0, 0.85);\r\n	border: 1px solid #8c7b4a;\r\n	padding: 6px 8px;\r\n	color: #fff;\r\n	white-space: nowrap;\r\n	display: none;\r\n}\r\n\r\n#EnchantGrade .image-container {\r\n	position: absolute;\r\n	top: 1px;\r\n	height: 301px;\r\n	width: 262px;\r\n}\r\n\r\n#EnchantGrade .success {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 261px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	top: 12px;\r\n}\r\n\r\n#EnchantGrade .success .number {\r\n	color: #2963de;\r\n}\r\n\r\n#EnchantGrade .item_to_EnchantGrade {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 50px;\r\n	top: 185px;\r\n	left: 106px;\r\n}\r\n\r\n#EnchantGrade .item_to_EnchantGrade_name {\r\n	position: absolute;\r\n	height: 18px;\r\n	width: 261px;\r\n	text-align: center;\r\n	top: 225px;\r\n	align-content: center;\r\n	font-weight: bold;\r\n	color: #102142;\r\n}\r\n\r\n#EnchantGrade .item .icon {\r\n	position: absolute;\r\n	top: 0px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#EnchantGrade .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 180px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#EnchantGrade .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#EnchantGrade .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 170px;\r\n	left: 15px;\r\n	font-size: 0.8em;\r\n	align-content: center;\r\n}\r\n\r\n#EnchantGrade .info_msg.red {\r\n	color: red;\r\n}\r\n\r\n#EnchantGrade .info_msg.blue {\r\n	color: blue;\r\n}\r\n\r\n#EnchantGrade .cancel {\r\n	position: absolute;\r\n	height: 21px;\r\n	width: 57px;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n\r\n#EnchantGrade .materials {\r\n	position: absolute;\r\n	height: 78px;\r\n	width: 100%;\r\n	top: 30px;\r\n}\r\n\r\n#EnchantGrade .mat_overlay,\r\n#EnchantGrade .bsb_overlay {\r\n	position: absolute;\r\n	height: 53px;\r\n	width: 46px;\r\n	background-size: 0px;\r\n}\r\n\r\n#EnchantGrade .mat_overlay.selected,\r\n#EnchantGrade .bsb_overlay.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#EnchantGrade .mat_0 {\r\n	left: 10px;\r\n	top: 8px;\r\n}\r\n\r\n#EnchantGrade .mat_1 {\r\n	left: 59px;\r\n	top: 8px;\r\n}\r\n\r\n#EnchantGrade .mat_2 {\r\n	top: 8px;\r\n	left: 108px;\r\n}\r\n\r\n#EnchantGrade .mat_3 {\r\n	top: 8px;\r\n	left: 157px;\r\n}\r\n\r\n#EnchantGrade .bsb_overlay {\r\n	top: 8px;\r\n	left: 206px;\r\n}\r\n\r\n#EnchantGrade .material_0,\r\n#EnchantGrade .material_1,\r\n#EnchantGrade .material_2,\r\n#EnchantGrade .material_3 {\r\n	display: block;\r\n}\r\n\r\n#EnchantGrade .materials .item .icon {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: -2px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#EnchantGrade .mat_count {\r\n	height: 20px;\r\n	position: absolute;\r\n	width: 50px;\r\n	top: 46px;\r\n	text-align: center;\r\n	left: -15px;\r\n}\r\n\r\n#EnchantGrade .selected_materials {\r\n	position: absolute;\r\n	height: 50px;\r\n	top: 83px;\r\n	width: 100%;\r\n}\r\n\r\n#EnchantGrade .selected_mat {\r\n	position: relative;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 68px;\r\n	top: 6px;\r\n}\r\n\r\n#EnchantGrade .bsb_selected {\r\n	position: absolute;\r\n	height: 30px;\r\n	width: 30px;\r\n	left: 149px;\r\n	top: 6px;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_button {\r\n	position: absolute;\r\n	height: 45px;\r\n	width: 92px;\r\n	bottom: 9px;\r\n	left: 85px;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_disabled,\r\n#EnchantGrade .EnchantGrade_enabled {\r\n	position: absolute;\r\n	height: 48px;\r\n	width: 96px;\r\n	top: -2px;\r\n	left: -2px;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_enabled {\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_text {\r\n	font-weight: bold;\r\n	position: relative;\r\n	height: 15px;\r\n	width: 92px;\r\n	text-align: center;\r\n	color: #101839;\r\n	top: 5px;\r\n	pointer-events: none;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_zeny {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 65px;\r\n	top: 9px;\r\n	left: 20px;\r\n	color: white;\r\n	text-align: right;\r\n	font-weight: bold;\r\n	pointer-events: none;\r\n}\r\n\r\n#EnchantGrade .back_button {\r\n	position: absolute;\r\n	height: 38px;\r\n	width: 101px;\r\n	bottom: 13px;\r\n	left: 19px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .back_success,\r\n#EnchantGrade .back_fail {\r\n	position: relative;\r\n	height: 38px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_cont {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	bottom: 1px;\r\n	right: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_cont.item {\r\n	position: absolute !important;\r\n	float: none !important;\r\n	height: 50px !important;\r\n	width: 101px !important;\r\n	left: auto !important;\r\n	top: auto !important;\r\n	bottom: 1px !important;\r\n	right: 20px !important;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n	z-index: 5;\r\n}\r\n\r\n#EnchantGrade .success_EnchantGrade_cont_enabled,\r\n#EnchantGrade .success_EnchantGrade_cont_disabled,\r\n#EnchantGrade .fail_EnchantGrade_cont_enabled,\r\n#EnchantGrade .fail_EnchantGrade_cont_disabled {\r\n	position: absolute;\r\n	height: 50px;\r\n	width: 101px;\r\n	top: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	align-content: center;\r\n	cursor: pointer;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_text_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n	bottom: 27px;\r\n	left: 0px;\r\n}\r\n\r\n#EnchantGrade .chance_rate {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 14px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	pointer-events: none;\r\n}\r\n\r\n#EnchantGrade .EnchantGrade_zeny_cont {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 100px;\r\n	bottom: 0px;\r\n	left: 0px;\r\n	text-align: center;\r\n	align-content: center;\r\n	color: white;\r\n	pointer-events: none;\r\n	font-weight: bold;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/EnchantGrade/EnchantGrade.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$9() {
+	return EnchantGrade._shadow || EnchantGrade._host;
+}
 /**
 * Completely clean-up variables for grading
 */
@@ -241600,9 +241984,9 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$9(event) {
+function stopPropagation$8(event) {
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Handles sending request to server to close EnchantGrade UI
@@ -241611,7 +241995,6 @@ function onEnchantGradeClose() {
 	EnchantGrade.remove();
 	const pkt = new PACKET.CZ.GRADE_ENCHANT_CLOSE_UI();
 	Network.sendPacket(pkt);
-	return false;
 }
 /**
 * Function to control phases and image looping
@@ -241634,10 +242017,11 @@ function controlPhase(phase, shouldLoop, interval, targetdiv, callback) {
 	}
 	function showImages() {
 		Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/" + imageArray[currentImageIndex], function(data) {
-			EnchantGrade.ui.find(targetdiv).css({
-				backgroundImage: "url(" + data + ")",
-				visibility: "visible"
-			});
+			const target = _root$9().querySelector(targetdiv);
+			if (target) {
+				target.style.backgroundImage = `url(${data})`;
+				target.style.visibility = "visible";
+			}
 			currentImageIndex++;
 			if (currentImageIndex >= imageArray.length) if (shouldLoop) currentImageIndex = 0;
 			else {
@@ -241669,36 +242053,43 @@ function onItemDrop(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item" || data.from !== "Inventory") return false;
+	if (data.type !== "item" || data.from !== "Inventory") return;
 	if (item) EnchantGrade.onRequestItemEnchantGrade(item);
 }
 /**
 * Enables the item drop proxy to add dropped items in the EnchantGrade window
 */
 function enableDropProxy() {
-	EnchantGrade.ui.find(".enchant_drop_proxy").show();
-	EnchantGrade.ui.find(".enchant_container").css("visibility", "hidden");
+	const root = _root$9();
+	const proxy = root.querySelector(".enchant_drop_proxy");
+	if (proxy) proxy.style.display = "block";
+	const container = root.querySelector(".enchant_container");
+	if (container) container.style.visibility = "hidden";
 }
 /**
 * Disable the item drop proxy to add dropped items in the EnchantGrade window
 */
 function disableDropProxy() {
-	EnchantGrade.ui.find(".enchant_drop_proxy").hide();
-	EnchantGrade.ui.find(".enchant_container").css("visibility", "visible");
+	const root = _root$9();
+	const proxy = root.querySelector(".enchant_drop_proxy");
+	if (proxy) proxy.style.display = "none";
+	const container = root.querySelector(".enchant_container");
+	if (container) container.style.visibility = "visible";
 }
 /**
 * Handles the packet received from the server
 * @param {pkt} - PACKET.ZC.REFINING_MATERIAL_LIST
 */
 function onEnchantGradeUIUpdateMaterials(pkt) {
+	const root = _root$9();
 	if (pkt && pkt.materialList.length > 0) {
 		disableDropProxy();
-		if (EnchantGrade.ui.find(".enchant_container .item").length > 0) onRemoveItem();
+		if (root.querySelector(".enchant_container .item")) onRemoveItem();
 		EnchantGrade_item_index = pkt.index;
 		EnchantGrade_current_success = pkt.success_chance;
 		const item = InventoryController.getUI().getItemByIndex(pkt.index);
@@ -241707,84 +242098,94 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 		clearTimeout(EnchantGrade.imageLoopTimeout["idle"]);
 		controlPhase("idle", true, 225, ".grade_tank_container");
 		const it = DB.getItemInfo(item.ITID);
-		const content = EnchantGrade.ui.find(".enchant_container");
-		EnchantGrade_can_cont = EnchantGrade_current_success > 0 ? true : false;
+		const content = root.querySelector(".enchant_container");
+		EnchantGrade_can_cont = EnchantGrade_current_success > 0;
 		setMessages(EnchantGrade_can_cont ? "waiting" : "cannot_proceed");
-		content.append("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"grade\"></div></div>");
+		const itemDiv = document.createElement("div");
+		itemDiv.className = "item";
+		itemDiv.setAttribute("data-index", item.index);
+		itemDiv.setAttribute("draggable", "true");
+		itemDiv.innerHTML = "<div class=\"icon\"></div><div class=\"grade\"></div>";
+		content.appendChild(itemDiv);
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const icon = content.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + item.index + "\"] .grade").css("backgroundImage", "url(" + data + ")");
+			const grade = content.querySelector(`.item[data-index="${item.index}"] .grade`);
+			if (grade) grade.style.backgroundImage = `url(${data})`;
 		});
-		EnchantGrade.ui.find(".probability").text(EnchantGrade_current_success + "%");
-		EnchantGrade.ui.find(".zeny_cost_container").text("0");
+		const gradeChance = root.querySelector(".probability");
+		if (gradeChance) gradeChance.textContent = `${EnchantGrade_current_success}%`;
+		const zenyCost = root.querySelector(".zeny_cost_container");
+		if (zenyCost) zenyCost.textContent = "0";
 		const bless = pkt.blessing_info;
 		if (!bless || !bless.id) return;
 		const blessItem = DB.getItemInfo(bless.id);
 		const invBless = InventoryController.getUI().getItemById(bless.id);
 		const invCount = invBless ? invBless.count : 0;
-		EnchantGrade.ui.find(".BED_container").append(`
-				<div class="item"
-				     data-index="${bless.id}">
-					<div class="icon"></div>
-				</div>
-				<div class="additional_mat_name" style="margin-right: 3px; margin-left: 7px;">${blessItem.identifiedDisplayName}</div>
-				<div class="additonal_mat_amount">${EnchantGrade_currentBlessing} ea</div>
-			`);
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (blessItem.IsIdentified ? blessItem.identifiedResourceName : blessItem.unidentifiedResourceName) + ".bmp", (data) => EnchantGrade.ui.find(".BED_container .icon").css("backgroundImage", `url(${data})`));
-		EnchantGrade.ui.find(".add_material_btn").data("amount", bless.amount).data("max", bless.max_blessing).data("bonus", bless.bonus).off("click").on("click", function() {
-			if (EnchantGrade_currentBlessing >= bless.max_blessing) return;
-			if (invCount < (EnchantGrade_currentBlessing + 1) * bless.amount) return;
-			EnchantGrade_blessing_used = true;
-			EnchantGrade_currentBlessing++;
-			updateBlessing();
-		}).off("mouseenter mousemove mouseleave").on("mouseenter mousemove", function(e) {
-			showTooltip(DB.getMessage(3976).replace("%d", bless.amount), e, this);
-		}).on("mouseleave", hideTooltip);
-		EnchantGrade.ui.find(".remove_material_btn").off("click").on("click", function() {
-			if (EnchantGrade_currentBlessing <= 0) {
-				EnchantGrade_blessing_used = false;
-				return;
-			}
-			EnchantGrade_currentBlessing--;
-			updateBlessing();
+		const bedContainer = root.querySelector(".BED_container");
+		if (bedContainer) bedContainer.innerHTML = `<div class="item" data-index="${bless.id}"><div class="icon"></div></div><div class="additional_mat_name" style="margin-right: 3px; margin-left: 7px;">${blessItem.identifiedDisplayName}</div><div class="additonal_mat_amount">${EnchantGrade_currentBlessing} ea</div>`;
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + (blessItem.IsIdentified ? blessItem.identifiedResourceName : blessItem.unidentifiedResourceName) + ".bmp", (data) => {
+			const icon = root.querySelector(".BED_container .icon");
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
-		/**
-		* Update the enchanting grade interface based on the current blessing amount.
-		*/
+		const addBtn = root.querySelector(".add_material_btn");
+		if (addBtn) {
+			const newAddBtn = addBtn.cloneNode(true);
+			addBtn.parentNode.replaceChild(newAddBtn, addBtn);
+			newAddBtn.addEventListener("click", () => {
+				if (EnchantGrade_currentBlessing >= bless.max_blessing) return;
+				if (invCount < (EnchantGrade_currentBlessing + 1) * bless.amount) return;
+				EnchantGrade_blessing_used = true;
+				EnchantGrade_currentBlessing++;
+				updateBlessing();
+			});
+			newAddBtn.addEventListener("mouseenter", (e) => {
+				showTooltip(DB.getMessage(3976).replace("%d", bless.amount), e, newAddBtn);
+			});
+			newAddBtn.addEventListener("mousemove", (e) => {
+				showTooltip(DB.getMessage(3976).replace("%d", bless.amount), e, newAddBtn);
+			});
+			newAddBtn.addEventListener("mouseleave", hideTooltip);
+		}
+		const removeBtn = root.querySelector(".remove_material_btn");
+		if (removeBtn) {
+			const newRemoveBtn = removeBtn.cloneNode(true);
+			removeBtn.parentNode.replaceChild(newRemoveBtn, removeBtn);
+			newRemoveBtn.addEventListener("click", () => {
+				if (EnchantGrade_currentBlessing <= 0) {
+					EnchantGrade_blessing_used = false;
+					return;
+				}
+				EnchantGrade_currentBlessing--;
+				updateBlessing();
+			});
+		}
 		function updateBlessing() {
 			const addedChance = EnchantGrade_currentBlessing * bless.bonus;
 			const totalBlessing = EnchantGrade_currentBlessing * bless.amount;
-			EnchantGrade.ui.find(".probability").text(EnchantGrade_current_success + addedChance + "%");
-			EnchantGrade.ui.find(".BED_container .additonal_mat_amount").text(totalBlessing + " ea");
+			const prob = root.querySelector(".probability");
+			if (prob) prob.textContent = `${EnchantGrade_current_success + addedChance}%`;
+			const matAmount = root.querySelector(".BED_container .additonal_mat_amount");
+			if (matAmount) matAmount.textContent = `${totalBlessing} ea`;
 		}
-		/**
-		* Show a tooltip at the specified position with the given text
-		* @param {String} text - Text to be displayed in the tooltip
-		* @param {Event} e - Event object used to calculate the tooltip position
-		* @param {HTMLElement} targetEl - Element which the tooltip should be displayed next to
-		*/
 		function showTooltip(text, e, targetEl) {
-			const tooltip = document.getElementById("enchant_tooltip");
-			const root = document.getElementById("EnchantGrade");
-			if (!tooltip || !targetEl || !root) return;
+			const tooltip = root.querySelector(".enchant_tooltip");
+			const rootEl = root.querySelector("#EnchantGrade");
+			if (!tooltip || !targetEl || !rootEl) return;
 			tooltip.innerHTML = text;
 			tooltip.style.display = "block";
 			const btnRect = targetEl.getBoundingClientRect();
-			const rootRect = root.getBoundingClientRect();
+			const rootRect = rootEl.getBoundingClientRect();
 			const x = e.clientX - rootRect.left;
 			const y = btnRect.top - rootRect.top;
-			tooltip.style.left = x - tooltip.offsetWidth / 2 + "px";
-			tooltip.style.top = y - tooltip.offsetHeight - 6 + "px";
+			tooltip.style.left = `${x - tooltip.offsetWidth / 2}px`;
+			tooltip.style.top = `${y - tooltip.offsetHeight - 6}px`;
 		}
-		/**
-		* Hides the tooltip displayed next to the enchanting grade interface.
-		* This function is called when the user's mouse leaves the enchanting grade interface.
-		*/
 		function hideTooltip() {
-			const tooltip = document.getElementById("enchant_tooltip");
-			tooltip.style.display = "none";
+			const tooltip = root.querySelector(".enchant_tooltip");
+			if (tooltip) tooltip.style.display = "none";
 		}
 	} else return false;
 }
@@ -241793,15 +242194,26 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 * Controls for selecting and de-selecting materials
 */
 function onPopulateMaterials() {
-	EnchantGrade.ui.find(".material_slot").empty();
-	for (let i = 0; i < gradingMaterials.length; i++) (function(index) {
+	const root = _root$9();
+	root.querySelectorAll(".material_slot").forEach((slot) => {
+		slot.innerHTML = "";
+	});
+	for (let i = 0; i < gradingMaterials.length; i++) ((index) => {
 		const material = gradingMaterials[index];
 		const it = DB.getItemInfo(material.itemId);
-		const materialDiv = EnchantGrade.ui.find(".material_slot" + (i + 1));
-		materialDiv.empty();
-		materialDiv.attr("data-index", index).attr("data-itemid", material.itemId).attr("data-amount", material.amount).attr("data-price", material.price).attr("data-downgrade", material.downgrade).attr("data-breakable", material.breakable).empty().append("<div class=\"item\" data-index=\"" + material.itemId + "\" \"draggable=\"false\"><div class=\"icon\"></div></div><div class=\"material_name\">" + it.identifiedDisplayName + "</div><div class=\"material_amount\">" + material.amount + " ea</div>");
+		const materialDiv = root.querySelector(`.material_slot${i + 1}`);
+		if (!materialDiv) return;
+		materialDiv.innerHTML = "";
+		materialDiv.dataset.index = index;
+		materialDiv.dataset.itemid = material.itemId;
+		materialDiv.dataset.amount = material.amount;
+		materialDiv.dataset.price = material.price;
+		materialDiv.dataset.downgrade = material.downgrade;
+		materialDiv.dataset.breakable = material.breakable;
+		materialDiv.innerHTML = `<div class="item" data-index="${material.itemId}" draggable="false"><div class="icon"></div></div><div class="material_name">${it.identifiedDisplayName}</div><div class="material_amount">${material.amount} ea</div>`;
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + (it.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			materialDiv.find(".item[data-index=\"" + material.itemId + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const icon = materialDiv.querySelector(`.item[data-index="${material.itemId}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 	})(i);
 	let selectedMaterialBtn = null;
@@ -241810,46 +242222,57 @@ function onPopulateMaterials() {
 	Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/btn_material_pick.bmp", (d) => materialPick = d);
 	Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/btn_start.bmp", (d) => startNormal = d);
 	Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/btn_start_disable.bmp", (d) => startDisable = d);
-	EnchantGrade.ui.find(".material_slot").on("mouseenter", function() {
-		if (this === selectedMaterialBtn) return;
-		this.style.backgroundImage = `url(${materialOver})`;
-	}).on("mouseleave", function() {
-		if (this === selectedMaterialBtn) return;
-		this.style.backgroundImage = `url(${materialNormal})`;
-	}).on("click", function() {
-		if (!this.dataset.index) return;
-		if (EnchantGrade_blessing_used) {
-			UIManager.showMessageBox(DB.getMessage(3831), "ok");
-			onResetBlessing();
-		}
-		if (selectedMaterialBtn && selectedMaterialBtn !== this) selectedMaterialBtn.style.backgroundImage = `url(${materialNormal})`;
-		selectedMaterialBtn = this;
-		this.style.backgroundImage = `url(${materialPick})`;
-		EnchantGrade_item_mat = Number(this.dataset.index);
-		const material_ITID = Number(this.dataset.itemid);
-		const material_amount = Number(this.dataset.amount);
-		const price = Number(this.dataset.price);
-		const breakable = Number(this.dataset.breakable);
-		let insufficent = false;
-		EnchantGrade.ui.find(".zeny_cost_container").text(price);
-		const item = InventoryController.getUI().getItemById(material_ITID);
-		const material_count = item ? item.count : 0;
-		if (!item || material_count < material_amount) insufficent = true;
-		if (SessionStorage_default.zeny < price) insufficent = true;
-		const scenarios = [];
-		scenarios.push(breakable === 1 ? "destroyable" : "non_destroyable");
-		if (insufficent) scenarios.push("insufficient");
-		if (EnchantGrade_can_cont) setMessages(...scenarios);
-		if (insufficent === false) {
-			const startButton = EnchantGrade.ui.find(".start_grade");
-			startButton.off("click");
-			if (EnchantGrade_can_cont === true) {
-				startButton.css("backgroundImage", `url(${startNormal})`);
-				startButton.on("click", function() {
-					onRequestEnchantGrade();
-				});
-			} else startButton.css("backgroundImage", `url(${startDisable})`);
-		}
+	if (_materialSlotAbort) _materialSlotAbort.abort();
+	_materialSlotAbort = new AbortController();
+	const _slotSignal = _materialSlotAbort.signal;
+	root.querySelectorAll(".material_slot").forEach((slot) => {
+		slot.addEventListener("mouseenter", function() {
+			if (this === selectedMaterialBtn) return;
+			this.style.backgroundImage = `url(${materialOver})`;
+		}, { signal: _slotSignal });
+		slot.addEventListener("mouseleave", function() {
+			if (this === selectedMaterialBtn) return;
+			this.style.backgroundImage = `url(${materialNormal})`;
+		}, { signal: _slotSignal });
+		slot.addEventListener("click", function() {
+			if (!this.dataset.index) return;
+			if (EnchantGrade_blessing_used) {
+				UIManager.showMessageBox(DB.getMessage(3831), "ok");
+				onResetBlessing();
+			}
+			if (selectedMaterialBtn && selectedMaterialBtn !== this) selectedMaterialBtn.style.backgroundImage = `url(${materialNormal})`;
+			selectedMaterialBtn = this;
+			this.style.backgroundImage = `url(${materialPick})`;
+			EnchantGrade_item_mat = Number(this.dataset.index);
+			const material_ITID = Number(this.dataset.itemid);
+			const material_amount = Number(this.dataset.amount);
+			const price = Number(this.dataset.price);
+			const breakable = Number(this.dataset.breakable);
+			let insufficent = false;
+			const zenyCost = root.querySelector(".zeny_cost_container");
+			if (zenyCost) zenyCost.textContent = price;
+			const item = InventoryController.getUI().getItemById(material_ITID);
+			const material_count = item ? item.count : 0;
+			if (!item || material_count < material_amount) insufficent = true;
+			if (SessionStorage_default.zeny < price) insufficent = true;
+			const scenarios = [];
+			scenarios.push(breakable === 1 ? "destroyable" : "non_destroyable");
+			if (insufficent) scenarios.push("insufficient");
+			if (EnchantGrade_can_cont) setMessages(...scenarios);
+			if (insufficent === false) {
+				const startButton = root.querySelector(".start_grade");
+				if (startButton) {
+					const newStartBtn = startButton.cloneNode(true);
+					startButton.parentNode.replaceChild(newStartBtn, startButton);
+					if (EnchantGrade_can_cont === true) {
+						newStartBtn.style.backgroundImage = `url(${startNormal})`;
+						newStartBtn.addEventListener("click", () => {
+							onRequestEnchantGrade();
+						});
+					} else newStartBtn.style.backgroundImage = `url(${startDisable})`;
+				}
+			}
+		}, { signal: _slotSignal });
 	});
 }
 /**
@@ -241857,37 +242280,72 @@ function onPopulateMaterials() {
 * Update the UI accordingly.
 */
 function onResetBlessing() {
+	const root = _root$9();
 	EnchantGrade_blessing_used = false;
 	EnchantGrade_currentBlessing = 0;
-	EnchantGrade.ui.find(".probability").text(EnchantGrade_current_success + "%");
-	EnchantGrade.ui.find(".BED_container .additonal_mat_amount").text(EnchantGrade_currentBlessing + " ea");
+	const prob = root.querySelector(".probability");
+	if (prob) prob.textContent = `${EnchantGrade_current_success}%`;
+	const matAmount = root.querySelector(".BED_container .additonal_mat_amount");
+	if (matAmount) matAmount.textContent = `${EnchantGrade_currentBlessing} ea`;
 }
 /**
 * Handles clearance of variables and UI components when changing Item
 */
 function onRemoveItem() {
+	const root = _root$9();
 	gradingMaterials = [];
 	if (EnchantGrade.imageLoopTimeout) Object.keys(EnchantGrade.imageLoopTimeout).forEach(stopPhase);
-	EnchantGrade.ui.find(".grade_tank_container").css("visibility", "hidden");
-	EnchantGrade.ui.find(".enchant_container").empty();
-	EnchantGrade.ui.find(".probability").empty();
-	EnchantGrade.ui.find(".add_material_btn").off("click mouseenter mouseleave mousemove");
-	EnchantGrade.ui.find(".BED_container").empty();
-	EnchantGrade.ui.find(".enchant_tooltip").empty().css("display", "none");
-	EnchantGrade.ui.find(".zeny_cost_container").empty();
-	EnchantGrade.ui.find(".notification_container").empty();
+	const tankContainer = root.querySelector(".grade_tank_container");
+	if (tankContainer) tankContainer.style.visibility = "hidden";
+	const enchantContainer = root.querySelector(".enchant_container");
+	if (enchantContainer) enchantContainer.innerHTML = "";
+	const probability = root.querySelector(".probability");
+	if (probability) probability.textContent = "";
+	const addBtn = root.querySelector(".add_material_btn");
+	if (addBtn) {
+		const newAddBtn = addBtn.cloneNode(true);
+		addBtn.parentNode.replaceChild(newAddBtn, addBtn);
+	}
+	const bedContainer = root.querySelector(".BED_container");
+	if (bedContainer) bedContainer.innerHTML = "";
+	const tooltip = root.querySelector(".enchant_tooltip");
+	if (tooltip) {
+		tooltip.innerHTML = "";
+		tooltip.style.display = "none";
+	}
+	const zenyCost = root.querySelector(".zeny_cost_container");
+	if (zenyCost) zenyCost.textContent = "";
+	const notificationContainer = root.querySelector(".notification_container");
+	if (notificationContainer) notificationContainer.innerHTML = "";
 	setMessages("initial");
-	EnchantGrade.ui.find(".material_slot").removeAttr("data-index data-itemid data-amount data-price data-downgrade data-breakable").empty().removeClass("selected").off("click mouseenter mouseleave").each(function() {
-		this.style.backgroundImage = `url(${materialNormal})`;
+	if (_materialSlotAbort) {
+		_materialSlotAbort.abort();
+		_materialSlotAbort = null;
+	}
+	root.querySelectorAll(".material_slot").forEach((slot) => {
+		delete slot.dataset.index;
+		delete slot.dataset.itemid;
+		delete slot.dataset.amount;
+		delete slot.dataset.price;
+		delete slot.dataset.downgrade;
+		delete slot.dataset.breakable;
+		slot.innerHTML = "";
+		slot.classList.remove("selected");
+		if (materialNormal) slot.style.backgroundImage = `url(${materialNormal})`;
 	});
-	EnchantGrade.ui.find(".start_grade").off("click").css("backgroundImage", `url(${startDisable})`);
+	const startBtn = root.querySelector(".start_grade");
+	if (startBtn) {
+		const newStartBtn = startBtn.cloneNode(true);
+		startBtn.parentNode.replaceChild(newStartBtn, startBtn);
+		newStartBtn.style.backgroundImage = `url(${startDisable})`;
+	}
 	enableDropProxy();
 }
 /**
 * Send the server request to EnchantGrade the item
 */
 function onRequestEnchantGrade() {
-	UIManager.showPromptBox(DB.getMessage(3823), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(3823), "ok", "cancel", () => {
 		const pkt = new PACKET.CZ.GRADE_ENCHANT_REQ();
 		pkt.index = EnchantGrade_item_index;
 		pkt.material_index = EnchantGrade_item_mat;
@@ -241911,16 +242369,16 @@ function onEnchantGradeResult(pkt) {
 	if (pkt) {
 		EnchantGrade_result = pkt.result;
 		controlPhase("process", true, 200, ".grade-wheel");
-		playEffect$1(EffectConst_default.EF_NEW_INTRO, 2e3, function() {
+		playEffect$1(EffectConst_default.EF_NEW_INTRO, 2e3, () => {
 			stopPhase("process");
 			switch (EnchantGrade_result) {
 				case 0:
-					playEffect$1(EffectConst_default.EF_NEW_SUCCESS, 2e3, function() {
+					playEffect$1(EffectConst_default.EF_NEW_SUCCESS, 2e3, () => {
 						onRemoveItem();
 					});
 					break;
 				case 1:
-					playEffect$1(EffectConst_default.EF_NEW_FAILURE, 2e3, function() {
+					playEffect$1(EffectConst_default.EF_NEW_FAILURE, 2e3, () => {
 						onRemoveItem();
 					});
 					break;
@@ -241940,15 +242398,17 @@ function onEnchantGradeResult(pkt) {
 * @param {...scenarioKeys} The keys of the messages to be displayed.
 */
 function setMessages(...scenarioKeys) {
+	const root = _root$9();
 	const messages = [].concat(...scenarioKeys.map((key) => scenarioMsgMapping[key] || []));
-	const notificationArea = EnchantGrade.ui.find(".notification_container");
-	notificationArea.empty();
+	const notificationArea = root.querySelector(".notification_container");
+	if (!notificationArea) return;
+	notificationArea.innerHTML = "";
 	messages.slice(0, 3).forEach((msg) => {
 		const line = document.createElement("div");
 		Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/caution.bmp", function(data) {
 			line.innerHTML = `<img src="${data}" style="margin-right: 2px;"><span style="color: ${msg.color};">${DB.getMessage(msg.id)}</span>`;
 		});
-		notificationArea.append(line);
+		notificationArea.appendChild(line);
 	});
 }
 /**
@@ -241956,6 +242416,7 @@ function setMessages(...scenarioKeys) {
 */
 function onItemInfo$17(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const ITID = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemById(ITID) ? InventoryController.getUI().getItemById(ITID) : InventoryController.getUI().getItemByIndex(ITID);
 	if (!item) return false;
@@ -241981,15 +242442,15 @@ function onItemInfo$17(event) {
 * Start dragging an item
 */
 function onItemDragStart$9(event) {
-	event.originalEvent.dataTransfer.setData("text", event.target.id);
+	event.dataTransfer.setData("text", event.target.id);
 }
 /**
 * End of dragging an item
 */
 function onItemDragEnd$10(event) {
-	const rect = EnchantGrade.ui[0].getBoundingClientRect();
-	const mouseX = event.clientX || event.originalEvent.clientX;
-	const mouseY = event.clientY || event.originalEvent.clientY;
+	const rect = EnchantGrade._host.getBoundingClientRect();
+	const mouseX = event.clientX;
+	const mouseY = event.clientY;
 	if (mouseX < rect.left || mouseX > rect.right || mouseY < rect.top || mouseY > rect.bottom) onRemoveItem();
 }
 /**
@@ -242029,7 +242490,7 @@ function playEffect$1(effectId, duration, onEnd) {
 	EffectManager.spam(EF_Init_Par);
 	if (onEnd) setTimeout(onEnd, duration);
 }
-var EnchantGrade, gradingMaterials, EnchantGrade_item_index, EnchantGrade_item_mat, EnchantGrade_result, EnchantGrade_can_cont, EnchantGrade_blessing_used, EnchantGrade_currentBlessing, EnchantGrade_current_success, materialNormal, materialOver, materialPick, startNormal, startDisable, GradeMapping, scenarioMsgMapping, images, EnchantGrade_default;
+var EnchantGrade, gradingMaterials, EnchantGrade_item_index, EnchantGrade_item_mat, EnchantGrade_result, EnchantGrade_can_cont, EnchantGrade_blessing_used, EnchantGrade_currentBlessing, EnchantGrade_current_success, materialNormal, materialOver, materialPick, startNormal, startDisable, _materialSlotAbort, GradeMapping, scenarioMsgMapping, images, EnchantGrade_default;
 var init_EnchantGrade = __esmMin((() => {
 	init_DBManager();
 	init_EffectConst();
@@ -242039,7 +242500,8 @@ var init_EnchantGrade = __esmMin((() => {
 	init_Client();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Announce();
 	init_ChatBox();
 	init_Equipment();
@@ -242048,7 +242510,11 @@ var init_EnchantGrade = __esmMin((() => {
 	init_ItemInfo();
 	init_EnchantGrade$2();
 	init_EnchantGrade$1();
-	EnchantGrade = new UIComponent("EnchantGrade", EnchantGrade_default$2, EnchantGrade_default$1);
+	EnchantGrade = new GUIComponent("EnchantGrade", EnchantGrade_default$1);
+	/**
+	* Render HTML
+	*/
+	EnchantGrade.render = () => EnchantGrade_default$2;
 	gradingMaterials = [];
 	EnchantGrade_item_index = 0;
 	EnchantGrade_item_mat = 0;
@@ -242057,6 +242523,7 @@ var init_EnchantGrade = __esmMin((() => {
 	EnchantGrade_blessing_used = false;
 	EnchantGrade_currentBlessing = 0;
 	EnchantGrade_current_success = 0;
+	_materialSlotAbort = null;
 	EnchantGrade.imageLoopTimeout = {};
 	GradeMapping = {
 		1: "D",
@@ -242118,28 +242585,66 @@ var init_EnchantGrade = __esmMin((() => {
 	* Initialize UI
 	*/
 	EnchantGrade.init = function init() {
-		this.ui.css({
-			top: 200,
-			left: 300
+		const root = _root$9();
+		this._host.style.top = "200px";
+		this._host.style.left = "300px";
+		const closeBtn = root.querySelector(".close_btn");
+		if (closeBtn) closeBtn.addEventListener("click", onEnchantGradeClose);
+		const bigCloseBtn = root.querySelector(".footer .big_close_btn");
+		if (bigCloseBtn) bigCloseBtn.addEventListener("click", onEnchantGradeClose);
+		this.draggable(".titlebar");
+		const dropProxy = root.querySelector(".enchant_drop_proxy");
+		if (dropProxy) {
+			dropProxy.addEventListener("drop", onItemDrop);
+			dropProxy.addEventListener("dragover", stopPropagation$8);
+		}
+		const enchantContainer = root.querySelector(".enchant_container");
+		if (enchantContainer) {
+			enchantContainer.addEventListener("dragstart", (e) => {
+				if (e.target.closest(".item")) onItemDragStart$9(e);
+			});
+			enchantContainer.addEventListener("dragend", (e) => {
+				if (e.target.closest(".item")) onItemDragEnd$10(e);
+			});
+			enchantContainer.addEventListener("contextmenu", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$17.call(item, e);
+			});
+			enchantContainer.addEventListener("dblclick", (e) => {
+				if (e.target.closest(".item")) onRemoveItem();
+			});
+		}
+		root.querySelectorAll(".material_slot").forEach((slot) => {
+			slot.addEventListener("contextmenu", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$17.call(item, e);
+			});
 		});
-		this.ui.find(".titlebar .close_btn").click(onEnchantGradeClose);
-		this.ui.find(".footer .big_close_btn").click(onEnchantGradeClose);
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".enchant_drop_proxy").on("drop", onItemDrop).on("dragover", stopPropagation$9);
-		this.ui.find(".enchant_container").on("dragstart", ".item", onItemDragStart$9).on("dragend", ".item", onItemDragEnd$10);
-		this.ui.find(".material_slot").on("contextmenu", ".item", onItemInfo$17);
-		this.ui.find(".enchant_container").on("contextmenu", ".item", onItemInfo$17);
-		this.ui.find(".BED_container").on("contextmenu", ".item", onItemInfo$17);
-		this.ui.find(".enchant_container").on("dblclick", ".item", function() {
-			onRemoveItem();
+		const bedContainer = root.querySelector(".BED_container");
+		if (bedContainer) bedContainer.addEventListener("contextmenu", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemInfo$17.call(item, e);
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/btn_material.bmp", (d) => {
+			materialNormal = d;
+			root.querySelectorAll(".material_slot").forEach((slot) => {
+				slot.style.backgroundImage = `url(${d})`;
+			});
+		});
+		Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/btn_start_disable.bmp", (d) => {
+			startDisable = d;
+			const startBtn = root.querySelector(".start_grade");
+			if (startBtn) startBtn.style.backgroundImage = `url(${d})`;
 		});
 	};
 	/**
 	* Append to body
 	*/
 	EnchantGrade.onAppend = function onAppend() {
+		const root = _root$9();
 		EnchantGrade.hammer = 0;
-		EnchantGrade.ui.find(".EnchantGrade_button").show();
+		const enchantGradeButton = root.querySelector(".EnchantGrade_button");
+		if (enchantGradeButton) enchantGradeButton.style.display = "block";
 		setMessages("initial");
 		clearTimeout(EnchantGrade.imageLoopTimeout);
 	};
@@ -242152,19 +242657,19 @@ var init_EnchantGrade = __esmMin((() => {
 	};
 	/**
 	* Open EnchantGrade UI
-	*
 	*/
 	EnchantGrade.onOpenEnchantGradeUI = function onOpenEnchantGradeUI() {
 		EnchantGrade.append();
-		if (!(InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false)) InventoryController.getUI().toggle();
-		const EnchantGradeInfoPos = EnchantGrade.ui.offset();
-		const EnchantGradeWidth = EnchantGrade.ui.outerWidth();
-		const EnchantGradeHeight = EnchantGrade.ui.outerHeight() - InventoryController.getUI().ui.outerHeight();
-		InventoryController.getUI().ui.css({
-			position: "absolute",
-			top: EnchantGradeInfoPos.top ? EnchantGradeInfoPos.top + EnchantGradeHeight : 200,
-			left: EnchantGradeInfoPos.left ? EnchantGradeInfoPos.left + EnchantGradeWidth : 300
-		});
+		const invUI = InventoryController.getUI();
+		if (!(invUI && invUI._host ? invUI._host.isConnected && invUI._host.style.display !== "none" : false)) invUI.toggle();
+		const hostRect = EnchantGrade._host.getBoundingClientRect();
+		const invHost = invUI._host || invUI.ui && invUI.ui[0];
+		const invHeight = invHost ? invHost.offsetHeight : 0;
+		if (invHost) {
+			invHost.style.position = "absolute";
+			invHost.style.top = `${hostRect.top ? hostRect.top + (hostRect.height - invHeight) : 200}px`;
+			invHost.style.left = `${hostRect.left ? hostRect.left + hostRect.width : 300}px`;
+		}
 		return false;
 	};
 	/**
@@ -242179,8 +242684,7 @@ var init_EnchantGrade = __esmMin((() => {
 	* Check if EnchantGrade UI is open
 	*/
 	EnchantGrade.isEnchantGradeOpen = function isEnchantGradeOpen() {
-		if (EnchantGrade.ui && EnchantGrade.ui.is(":visible")) return true;
-		else return false;
+		return !!(EnchantGrade._host && EnchantGrade._host.isConnected);
 	};
 	/**
 	* Packet Hooks to functions
@@ -242541,10 +243045,13 @@ var init_Enchant$2 = __esmMin((() => {
 //#region src/UI/Components/Enchant/Enchant.css?raw
 var Enchant_default$1;
 var init_Enchant$1 = __esmMin((() => {
-	Enchant_default$1 = "#Enchant {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 690px;\r\n	height: 470px;\r\n\r\n	color: #2d3a55;\r\n	box-sizing: border-box;\r\n	--enchant-scroll-up: none;\r\n	--enchant-scroll-down: none;\r\n	--enchant-scroll-track: none;\r\n	--enchant-scroll-thumb: none;\r\n}\r\n\r\n#EnchantEffectOverlay {\r\n	position: fixed;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	background: transparent;\r\n	z-index: 1000;\r\n	display: none;\r\n}\r\n\r\nbody.enchant-effect-active > *:not(canvas):not(.cursor):not(#EnchantEffectOverlay) {\r\n	filter: brightness(0.6);\r\n}\r\n\r\n#Enchant .container {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .titlebar {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 17px;\r\n	background-image: none !important;\r\n	z-index: 5;\r\n}\r\n\r\n#Enchant .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#Enchant .titlebar .base.close {\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n\r\n#Enchant .titlebar .text {\r\n	display: none;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Enchant .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#Enchant .titlebar .right {\r\n	position: absolute;\r\n	right: 6px;\r\n	top: 2px;\r\n}\r\n\r\n#Enchant .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Enchant .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: #ffffff;\r\n	text-shadow: 1px 1px #000000;\r\n}\r\n\r\n#Enchant .overlay.grey {\r\n	color: #aaaaaa;\r\n}\r\n\r\n#Enchant .panel {\r\n	position: absolute;\r\n	inset: 0;\r\n	z-index: 1;\r\n}\r\n\r\n#Enchant .left_panel {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 10px;\r\n	width: 220px;\r\n	height: 405px;\r\n}\r\n\r\n#Enchant .item_list {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 8px;\r\n	width: 200px;\r\n	height: 389px;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar,\r\n#Enchant .item_list::-webkit-scrollbar {\r\n	width: 16px;\r\n	height: 0;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-corner,\r\n#Enchant .item_list::-webkit-scrollbar-corner {\r\n	display: none;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-button:vertical:increment,\r\n#Enchant .item_list::-webkit-scrollbar-button:vertical:increment {\r\n	background: var(--enchant-scroll-down) center center no-repeat;\r\n	height: 16px;\r\n	width: 16px;\r\n	background-color: transparent;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-button:vertical:decrement,\r\n#Enchant .item_list::-webkit-scrollbar-button:vertical:decrement {\r\n	background: var(--enchant-scroll-up) center center no-repeat;\r\n	height: 16px;\r\n	width: 16px;\r\n	background-color: transparent;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-track-piece:vertical,\r\n#Enchant .item_list::-webkit-scrollbar-track-piece:vertical {\r\n	background: var(--enchant-scroll-track) center repeat-y;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical {\r\n	background: var(--enchant-scroll-thumb) center no-repeat;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical:hover,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical:hover {\r\n	background: var(--enchant-scroll-thumb) center no-repeat;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical:active,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical:active {\r\n	background: var(--enchant-scroll-thumb) center no-repeat;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical {\r\n	-webkit-border-image: none;\r\n}\r\n\r\n#Enchant .item_list_empty {\r\n	padding: 10px;\r\n\r\n	color: #6b7893;\r\n	text-align: center;\r\n}\r\n\r\n#Enchant .item_entry {\r\n	position: relative;\r\n	width: 200px;\r\n	height: 50px;\r\n	border: none;\r\n	padding: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .item_entry + .item_entry {\r\n	margin-top: 4px;\r\n}\r\n\r\n#Enchant .item_entry:focus {\r\n	outline: none;\r\n}\r\n\r\n#Enchant .item_entry.active {\r\n	filter: brightness(1.02);\r\n}\r\n\r\n#Enchant .item_entry .item_slot {\r\n	position: absolute;\r\n	left: 6px;\r\n	top: 13px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#Enchant .item_entry .item_grade {\r\n	position: absolute;\r\n	top: -13px;\r\n	left: 130px;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .item_entry .item_info {\r\n	position: absolute;\r\n	left: 36px;\r\n	top: 20px;\r\n}\r\n\r\n#Enchant .item_entry .item_name {\r\n	font-weight: bold;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	color: #2d3a55;\r\n}\r\n\r\n#Enchant .main_panel {\r\n	position: absolute;\r\n	left: 220px;\r\n	top: 40px;\r\n	width: 470px;\r\n	height: 377px;\r\n}\r\n\r\n#Enchant .subpage {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	width: 470px;\r\n	height: 377px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .action_tabs {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: -23px;\r\n	width: 260px;\r\n	height: 23px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .action_tabs .tab {\r\n	position: absolute;\r\n	top: 2px;\r\n	width: 65px;\r\n	height: 23px;\r\n	border: none;\r\n	background-color: transparent;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	font-weight: bold;\r\n	color: #aeaeae;\r\n}\r\n\r\n#Enchant .action_tabs .tab.active {\r\n	color: #375d9d;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='reset'] {\r\n	left: 192px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='upgrade'] {\r\n	left: 131px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='perfect'] {\r\n	left: 68px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action=\\\"random\\\"] {\r\n	left: 0;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action=\\\"perfect\\\"] {\r\n	left: 65px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action=\\\"upgrade\\\"] {\r\n	left: 130px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action=\\\"reset\\\"] {\r\n	left: 195px;\r\n}\r\n\r\n#Enchant .action_tabs .tab.disabled {\r\n	opacity: 0.55;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .action_content {\r\n	display: none;\r\n}\r\n\r\n#Enchant .slot_board {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	width: 300px;\r\n	height: 190px;\r\n}\r\n\r\n#Enchant .preview_item {\r\n	position: absolute;\r\n	left: 116px;\r\n	top: 9px;\r\n	width: 70px;\r\n	height: 94px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .slot_list {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	width: 300px;\r\n	height: 190px;\r\n}\r\n\r\n#Enchant .slot_empty {\r\n	position: absolute;\r\n	inset: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	color: #6b7893;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry {\r\n	position: absolute;\r\n	width: 44px;\r\n	height: 44px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .slot_entry.empty {\r\n	background-image: none !important;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='3'] {\r\n	top: 25px;\r\n	left: 190px;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='2'] {\r\n	top: 110px;\r\n	left: 168px;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='1'] {\r\n	top: 110px;\r\n	left: 88px;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='0'] {\r\n	top: 24px;\r\n	left: 66px;\r\n}\r\n\r\n#Enchant .slot_entry.locked {\r\n	opacity: 0.55;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .slot_entry .slot_ring,\r\n#Enchant .slot_entry .slot_label,\r\n#Enchant .slot_markers {\r\n	display: none;\r\n}\r\n\r\n#Enchant .slot_entry .slot_icon {\r\n	position: absolute;\r\n	left: 12px;\r\n	top: 12px;\r\n	width: 20px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#Enchant .enchant_list {\r\n	position: absolute;\r\n	left: 305px;\r\n	top: 0;\r\n	width: 165px;\r\n	height: 373px;\r\n	overflow: hidden auto;\r\n}\r\n\r\n#Enchant .enchant_entry {\r\n	width: 150px;\r\n	height: 30px;\r\n	display: flex;\r\n	align-items: center;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .enchant_entry + .enchant_entry {\r\n	margin-top: 4px;\r\n}\r\n\r\n#Enchant .enchant_entry.active {\r\n	filter: brightness(1.02);\r\n}\r\n\r\n#Enchant .enchant_entry.disabled {\r\n	opacity: 0.6;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_icon {\r\n	width: 22px;\r\n	height: 22px;\r\n	margin-left: 2px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_text {\r\n	margin-left: 6px;\r\n	width: 110px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	line-height: 1.1;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_name {\r\n	font-weight: bold;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	color: #2d3a55;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_sub {\r\n	color: #6b7893;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#Enchant .materials_panel {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 200px;\r\n	width: 260px;\r\n	height: 60px;\r\n}\r\n\r\n#Enchant .material_list {\r\n	display: flex;\r\n	gap: 6px;\r\n	flex-wrap: wrap;\r\n}\r\n\r\n#Enchant .material {\r\n	position: relative;\r\n	width: 70px;\r\n	height: 50px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .material .icon {\r\n	position: absolute;\r\n	left: 6px;\r\n	top: 6px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#Enchant .material .name {\r\n	display: none;\r\n}\r\n\r\n#Enchant .material .count {\r\n	position: absolute;\r\n	right: 6px;\r\n	bottom: 6px;\r\n\r\n	color: #2d3a55;\r\n	text-shadow: 1px 1px 0 #ffffff;\r\n}\r\n\r\n#Enchant .tax_panel {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 305px;\r\n	width: 300px;\r\n	height: 70px;\r\n}\r\n\r\n#Enchant .cost_panel {\r\n	position: absolute;\r\n	left: 108px;\r\n	top: 4px;\r\n	width: 144px;\r\n	height: 16px;\r\n}\r\n\r\n#Enchant .zeny_label {\r\n	display: none;\r\n}\r\n\r\n#Enchant .zeny_cost {\r\n	width: 100%;\r\n	text-align: right;\r\n\r\n	font-weight: bold;\r\n	color: #2d3a55;\r\n}\r\n\r\n#Enchant .action_btn {\r\n	position: absolute;\r\n	left: 80px;\r\n	top: 26px;\r\n	width: 140px;\r\n	height: 40px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .action_btn:focus {\r\n	outline: none;\r\n}\r\n\r\n#Enchant .action_btn.disabled {\r\n	cursor: default;\r\n}\r\n\r\n#Enchant .log_panel {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 417px;\r\n	width: 690px;\r\n	height: 53px;\r\n	padding: 6px 10px;\r\n	box-sizing: border-box;\r\n	overflow: hidden auto;\r\n}\r\n\r\n#Enchant .caution,\r\n#Enchant .status {\r\n	color: #b13b3b;\r\n	line-height: 1.2;\r\n}\r\n\r\n#Enchant .status.error {\r\n	color: #b13b3b;\r\n}\r\n";
+	Enchant_default$1 = ":host {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 690px;\r\n	height: 470px;\r\n}\r\n\r\n#Enchant {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n\r\n	color: #2d3a55;\r\n	box-sizing: border-box;\r\n	--enchant-scroll-up: none;\r\n	--enchant-scroll-down: none;\r\n	--enchant-scroll-track: none;\r\n	--enchant-scroll-thumb: none;\r\n}\r\n\r\n#Enchant .container {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .titlebar {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 17px;\r\n	background-image: none !important;\r\n	z-index: 5;\r\n}\r\n\r\n#Enchant .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#Enchant .titlebar .base.close {\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n\r\n#Enchant .titlebar .text {\r\n	display: none;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Enchant .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#Enchant .titlebar .right {\r\n	position: absolute;\r\n	right: 6px;\r\n	top: 2px;\r\n}\r\n\r\n#Enchant .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Enchant .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: #ffffff;\r\n	text-shadow: 1px 1px #000000;\r\n}\r\n\r\n#Enchant .overlay.grey {\r\n	color: #aaaaaa;\r\n}\r\n\r\n#Enchant .panel {\r\n	position: absolute;\r\n	inset: 0;\r\n	z-index: 1;\r\n}\r\n\r\n#Enchant .left_panel {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 10px;\r\n	width: 220px;\r\n	height: 405px;\r\n}\r\n\r\n#Enchant .item_list {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 8px;\r\n	width: 200px;\r\n	height: 389px;\r\n	overflow-y: auto;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar,\r\n#Enchant .item_list::-webkit-scrollbar {\r\n	width: 16px;\r\n	height: 0;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-corner,\r\n#Enchant .item_list::-webkit-scrollbar-corner {\r\n	display: none;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-button:vertical:increment,\r\n#Enchant .item_list::-webkit-scrollbar-button:vertical:increment {\r\n	background: var(--enchant-scroll-down) center center no-repeat;\r\n	height: 16px;\r\n	width: 16px;\r\n	background-color: transparent;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-button:vertical:decrement,\r\n#Enchant .item_list::-webkit-scrollbar-button:vertical:decrement {\r\n	background: var(--enchant-scroll-up) center center no-repeat;\r\n	height: 16px;\r\n	width: 16px;\r\n	background-color: transparent;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-track-piece:vertical,\r\n#Enchant .item_list::-webkit-scrollbar-track-piece:vertical {\r\n	background: var(--enchant-scroll-track) center repeat-y;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical {\r\n	background: var(--enchant-scroll-thumb) center no-repeat;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical:hover,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical:hover {\r\n	background: var(--enchant-scroll-thumb) center no-repeat;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical:active,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical:active {\r\n	background: var(--enchant-scroll-thumb) center no-repeat;\r\n}\r\n\r\n#Enchant .enchant_list::-webkit-scrollbar-thumb:vertical,\r\n#Enchant .item_list::-webkit-scrollbar-thumb:vertical {\r\n	-webkit-border-image: none;\r\n}\r\n\r\n#Enchant .item_list_empty {\r\n	padding: 10px;\r\n\r\n	color: #6b7893;\r\n	text-align: center;\r\n}\r\n\r\n#Enchant .item_entry {\r\n	position: relative;\r\n	width: 200px;\r\n	height: 50px;\r\n	border: none;\r\n	padding: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .item_entry + .item_entry {\r\n	margin-top: 4px;\r\n}\r\n\r\n#Enchant .item_entry:focus {\r\n	outline: none;\r\n}\r\n\r\n#Enchant .item_entry.active {\r\n	filter: brightness(1.02);\r\n}\r\n\r\n#Enchant .item_entry .item_slot {\r\n	position: absolute;\r\n	left: 6px;\r\n	top: 13px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#Enchant .item_entry .item_grade {\r\n	position: absolute;\r\n	top: -13px;\r\n	left: 130px;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .item_entry .item_info {\r\n	position: absolute;\r\n	left: 36px;\r\n	top: 20px;\r\n}\r\n\r\n#Enchant .item_entry .item_name {\r\n	font-weight: bold;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	color: #2d3a55;\r\n}\r\n\r\n#Enchant .main_panel {\r\n	position: absolute;\r\n	left: 220px;\r\n	top: 40px;\r\n	width: 470px;\r\n	height: 377px;\r\n}\r\n\r\n#Enchant .subpage {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	width: 470px;\r\n	height: 377px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .action_tabs {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: -23px;\r\n	width: 260px;\r\n	height: 23px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .action_tabs .tab {\r\n	position: absolute;\r\n	top: 2px;\r\n	width: 65px;\r\n	height: 23px;\r\n	border: none;\r\n	background-color: transparent;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	font-weight: bold;\r\n	color: #aeaeae;\r\n}\r\n\r\n#Enchant .action_tabs .tab.active {\r\n	color: #375d9d;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='reset'] {\r\n	left: 192px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='upgrade'] {\r\n	left: 131px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='perfect'] {\r\n	left: 68px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='random'] {\r\n	left: 0;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='perfect'] {\r\n	left: 65px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='upgrade'] {\r\n	left: 130px;\r\n}\r\n\r\n#Enchant .action_tabs .tab[data-action='reset'] {\r\n	left: 195px;\r\n}\r\n\r\n#Enchant .action_tabs .tab.disabled {\r\n	opacity: 0.55;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .action_content {\r\n	display: none;\r\n}\r\n\r\n#Enchant .slot_board {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	width: 300px;\r\n	height: 190px;\r\n}\r\n\r\n#Enchant .preview_item {\r\n	position: absolute;\r\n	left: 116px;\r\n	top: 9px;\r\n	width: 70px;\r\n	height: 94px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .slot_list {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 0;\r\n	width: 300px;\r\n	height: 190px;\r\n}\r\n\r\n#Enchant .slot_empty {\r\n	position: absolute;\r\n	inset: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	color: #6b7893;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry {\r\n	position: absolute;\r\n	width: 44px;\r\n	height: 44px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .slot_entry.empty {\r\n	background-image: none !important;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='3'] {\r\n	top: 25px;\r\n	left: 190px;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='2'] {\r\n	top: 110px;\r\n	left: 168px;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='1'] {\r\n	top: 110px;\r\n	left: 88px;\r\n}\r\n\r\n#Enchant .slot_list .slot_entry[data-slot='0'] {\r\n	top: 24px;\r\n	left: 66px;\r\n}\r\n\r\n#Enchant .slot_entry.locked {\r\n	opacity: 0.55;\r\n	pointer-events: none;\r\n}\r\n\r\n#Enchant .slot_entry .slot_ring,\r\n#Enchant .slot_entry .slot_label,\r\n#Enchant .slot_markers {\r\n	display: none;\r\n}\r\n\r\n#Enchant .slot_entry .slot_icon {\r\n	position: absolute;\r\n	left: 12px;\r\n	top: 12px;\r\n	width: 20px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#Enchant .enchant_list {\r\n	position: absolute;\r\n	left: 305px;\r\n	top: 0;\r\n	width: 165px;\r\n	height: 373px;\r\n	overflow: hidden auto;\r\n}\r\n\r\n#Enchant .enchant_entry {\r\n	width: 150px;\r\n	height: 30px;\r\n	display: flex;\r\n	align-items: center;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .enchant_entry + .enchant_entry {\r\n	margin-top: 4px;\r\n}\r\n\r\n#Enchant .enchant_entry.active {\r\n	filter: brightness(1.02);\r\n}\r\n\r\n#Enchant .enchant_entry.disabled {\r\n	opacity: 0.6;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_icon {\r\n	width: 22px;\r\n	height: 22px;\r\n	margin-left: 2px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_text {\r\n	margin-left: 6px;\r\n	width: 110px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	line-height: 1.1;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_name {\r\n	font-weight: bold;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	color: #2d3a55;\r\n}\r\n\r\n#Enchant .enchant_entry .entry_sub {\r\n	color: #6b7893;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#Enchant .materials_panel {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 200px;\r\n	width: 260px;\r\n	height: 60px;\r\n}\r\n\r\n#Enchant .material_list {\r\n	display: flex;\r\n	gap: 6px;\r\n	flex-wrap: wrap;\r\n}\r\n\r\n#Enchant .material {\r\n	position: relative;\r\n	width: 70px;\r\n	height: 50px;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n}\r\n\r\n#Enchant .material .icon {\r\n	position: absolute;\r\n	left: 6px;\r\n	top: 6px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#Enchant .material .name {\r\n	display: none;\r\n}\r\n\r\n#Enchant .material .count {\r\n	position: absolute;\r\n	right: 6px;\r\n	bottom: 6px;\r\n\r\n	color: #2d3a55;\r\n	text-shadow: 1px 1px 0 #ffffff;\r\n}\r\n\r\n#Enchant .tax_panel {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 305px;\r\n	width: 300px;\r\n	height: 70px;\r\n}\r\n\r\n#Enchant .cost_panel {\r\n	position: absolute;\r\n	left: 108px;\r\n	top: 4px;\r\n	width: 144px;\r\n	height: 16px;\r\n}\r\n\r\n#Enchant .zeny_label {\r\n	display: none;\r\n}\r\n\r\n#Enchant .zeny_cost {\r\n	width: 100%;\r\n	text-align: right;\r\n\r\n	font-weight: bold;\r\n	color: #2d3a55;\r\n}\r\n\r\n#Enchant .action_btn {\r\n	position: absolute;\r\n	left: 80px;\r\n	top: 26px;\r\n	width: 140px;\r\n	height: 40px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	background-size: contain;\r\n	cursor: pointer;\r\n}\r\n\r\n#Enchant .action_btn:focus {\r\n	outline: none;\r\n}\r\n\r\n#Enchant .action_btn.disabled {\r\n	cursor: default;\r\n}\r\n\r\n#Enchant .log_panel {\r\n	position: absolute;\r\n	left: 0;\r\n	top: 417px;\r\n	width: 690px;\r\n	height: 53px;\r\n	padding: 6px 10px;\r\n	box-sizing: border-box;\r\n	overflow: hidden auto;\r\n}\r\n\r\n#Enchant .caution,\r\n#Enchant .status {\r\n	color: #b13b3b;\r\n	line-height: 1.2;\r\n}\r\n\r\n#Enchant .status.error {\r\n	color: #b13b3b;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Enchant/Enchant.js
+function _root$8() {
+	return Enchant._shadow || Enchant._host;
+}
 function clearState() {
 	EnchantState.groupId = 0;
 	EnchantState.group = null;
@@ -242639,29 +243146,39 @@ function getUpgradeCandidates(item, group) {
 	return candidates;
 }
 function setStatus(message, isError) {
-	const status = Enchant.ui.find(".status");
-	status.text(message || "");
-	status.toggleClass("error", !!isError);
+	const root = _root$8();
+	if (!root) return;
+	const status = root.querySelector(".status");
+	if (!status) return;
+	status.textContent = message || "";
+	status.classList.toggle("error", !!isError);
 }
 function setCaution(message) {
-	Enchant.ui.find(".caution").text(message || "");
+	const root = _root$8();
+	if (!root) return;
+	const caution = root.querySelector(".caution");
+	if (caution) caution.textContent = message || "";
 }
 function showHoverOverlay(text, identified, target) {
-	if (!Enchant.ui || !text) return;
-	const overlay = Enchant.ui.find(".overlay");
-	const uiOffset = Enchant.ui.offset();
-	const targetOffset = target.offset();
-	overlay.text(text);
-	overlay.css({
-		top: targetOffset.top - uiOffset.top,
-		left: targetOffset.left - uiOffset.left + 35
+	const root = _root$8();
+	if (!root || !text) return;
+	const overlay = root.querySelector(".overlay");
+	if (!overlay) return;
+	const hostRect = Enchant._host.getBoundingClientRect();
+	const targetRect = target.getBoundingClientRect();
+	overlay.textContent = text;
+	Object.assign(overlay.style, {
+		top: targetRect.top - hostRect.top + "px",
+		left: targetRect.left - hostRect.left + 35 + "px"
 	});
-	overlay.toggleClass("grey", !identified);
-	overlay.show();
+	overlay.classList.toggle("grey", !identified);
+	overlay.style.display = "block";
 }
 function hideHoverOverlay() {
-	if (!Enchant.ui) return;
-	Enchant.ui.find(".overlay").hide();
+	const root = _root$8();
+	if (!root) return;
+	const overlay = root.querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 function showItemInfo(item) {
 	if (!item) return false;
@@ -242675,61 +243192,72 @@ function showItemInfo(item) {
 	return false;
 }
 function updateSubpageSkin() {
-	if (!Enchant.ui) return;
-	const target = Enchant.ui.find(".subpage");
+	const root = _root$8();
+	if (!root) return;
+	const target = root.querySelector(".subpage");
+	if (!target) return;
 	let skin = EnchantAssets.subpage.normal;
 	if (EnchantState.action === "upgrade" && EnchantAssets.subpage.upgrade) skin = EnchantAssets.subpage.upgrade;
 	else if (EnchantState.action === "reset" && EnchantAssets.subpage.reset) skin = EnchantAssets.subpage.reset;
-	if (skin) target.css("backgroundImage", "url(" + skin + ")");
+	if (skin) target.style.backgroundImage = `url(${skin})`;
 }
 function updateMenuSkin() {
-	if (!Enchant.ui) return;
-	const target = Enchant.ui.find(".action_tabs");
+	const root = _root$8();
+	if (!root) return;
+	const target = root.querySelector(".action_tabs");
+	if (!target) return;
 	const skin = EnchantAssets.menuTabs[EnchantState.action] || EnchantAssets.menuTabs.random;
-	if (skin) target.css("backgroundImage", "url(" + skin + ")");
+	if (skin) target.style.backgroundImage = `url(${skin})`;
 }
 function updateActionButtonSkin(button, enabled) {
-	if (!button || !button.length) return;
+	if (!button) return;
 	if (!EnchantAssets.actionButton.normal) return;
 	if (!enabled && EnchantAssets.actionButton.disabled) {
-		button.css("backgroundImage", "url(" + EnchantAssets.actionButton.disabled + ")");
+		button.style.backgroundImage = `url(${EnchantAssets.actionButton.disabled})`;
 		return;
 	}
-	button.css("backgroundImage", "url(" + EnchantAssets.actionButton.normal + ")");
+	button.style.backgroundImage = `url(${EnchantAssets.actionButton.normal})`;
 }
 function bindActionButtonSkin() {
-	const button = Enchant.ui.find(".action_btn");
-	button.off(".enchant_skin");
-	button.on("mouseover.enchant_skin", function() {
-		if (!EnchantAssets.actionButton.hover || button.hasClass("disabled")) return;
-		button.css("backgroundImage", "url(" + EnchantAssets.actionButton.hover + ")");
+	const root = _root$8();
+	if (!root) return;
+	const button = root.querySelector(".action_btn");
+	if (!button) return;
+	button.addEventListener("mouseover", () => {
+		if (!EnchantAssets.actionButton.hover || button.classList.contains("disabled")) return;
+		button.style.backgroundImage = `url(${EnchantAssets.actionButton.hover})`;
 	});
-	button.on("mouseout.enchant_skin", function() {
-		if (button.hasClass("disabled")) return;
-		button.css("backgroundImage", "url(" + EnchantAssets.actionButton.normal + ")");
+	button.addEventListener("mouseout", () => {
+		if (button.classList.contains("disabled")) return;
+		button.style.backgroundImage = `url(${EnchantAssets.actionButton.normal})`;
 	});
-	button.on("mousedown.enchant_skin", function() {
-		if (!EnchantAssets.actionButton.down || button.hasClass("disabled")) return;
-		button.css("backgroundImage", "url(" + EnchantAssets.actionButton.down + ")");
+	button.addEventListener("mousedown", () => {
+		if (!EnchantAssets.actionButton.down || button.classList.contains("disabled")) return;
+		button.style.backgroundImage = `url(${EnchantAssets.actionButton.down})`;
 	});
-	button.on("mouseup.enchant_skin", function() {
-		if (button.hasClass("disabled")) return;
+	button.addEventListener("mouseup", () => {
+		if (button.classList.contains("disabled")) return;
 		const skin = EnchantAssets.actionButton.hover || EnchantAssets.actionButton.normal;
-		button.css("backgroundImage", "url(" + skin + ")");
+		button.style.backgroundImage = `url(${skin})`;
 	});
 }
 function applyScrollSkin(up, down, bg, thumb) {
-	if (!Enchant.ui || !Enchant.ui.length) return;
-	const root = Enchant.ui[0];
-	root.style.setProperty("--enchant-scroll-up", "url(" + up + ")");
-	root.style.setProperty("--enchant-scroll-down", "url(" + down + ")");
-	root.style.setProperty("--enchant-scroll-track", "url(" + bg + ")");
-	root.style.setProperty("--enchant-scroll-thumb", "url(" + thumb + ")");
+	const root = _root$8();
+	if (!root) return;
+	const inner = root.querySelector("#Enchant");
+	if (!inner) return;
+	inner.style.setProperty("--enchant-scroll-up", `url(${up})`);
+	inner.style.setProperty("--enchant-scroll-down", `url(${down})`);
+	inner.style.setProperty("--enchant-scroll-track", `url(${bg})`);
+	inner.style.setProperty("--enchant-scroll-thumb", `url(${thumb})`);
 }
 function ensureEffectOverlay() {
 	if (EnchantEffectState.overlayNode) return EnchantEffectState.overlayNode;
-	EnchantEffectState.overlayNode = jquery_default("<div id=\"EnchantEffectOverlay\"></div>").appendTo("body");
-	return EnchantEffectState.overlayNode;
+	const overlay = document.createElement("div");
+	overlay.id = "EnchantEffectOverlay";
+	document.body.appendChild(overlay);
+	EnchantEffectState.overlayNode = overlay;
+	return overlay;
 }
 function getEffectAnchorPosition() {
 	if (Camera && Camera.target && Camera.target.position) return Camera.target.position;
@@ -242828,15 +243356,22 @@ function spawnEnchantEffect(effectId) {
 	});
 	ensureEffectRenderActive();
 }
+function ensureEffectStyle() {
+	if (_effectStyleNode) return;
+	_effectStyleNode = document.createElement("style");
+	_effectStyleNode.textContent = "#EnchantEffectOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:transparent;z-index:1000;display:none;}body.enchant-effect-active>*:not(canvas):not(.cursor):not(#EnchantEffectOverlay){filter:brightness(0.6);}";
+	document.head.appendChild(_effectStyleNode);
+}
 function showEffectOverlay() {
+	ensureEffectStyle();
 	const overlay = ensureEffectOverlay();
 	if (EnchantEffectState.overlayActive) {
-		overlay.show();
+		overlay.style.display = "block";
 		return;
 	}
-	overlay.show();
+	overlay.style.display = "block";
 	EnchantEffectState.overlayActive = true;
-	jquery_default("body").addClass("enchant-effect-active");
+	document.body.classList.add("enchant-effect-active");
 	ensureEffectRenderActive();
 }
 function hideEffectOverlay() {
@@ -242850,15 +243385,15 @@ function hideEffectOverlay() {
 		Renderer.canvas.style.opacity = EnchantEffectState.canvasStyles.opacity;
 		Renderer.canvas.style.pointerEvents = EnchantEffectState.canvasStyles.pointerEvents;
 	}
-	if (EnchantEffectState.overlayNode) EnchantEffectState.overlayNode.hide();
+	if (EnchantEffectState.overlayNode) EnchantEffectState.overlayNode.style.display = "none";
 	EnchantEffectState.overlayActive = false;
-	jquery_default("body").removeClass("enchant-effect-active");
+	document.body.classList.remove("enchant-effect-active");
 	stopEffectRenderIfIdle();
 }
 function scheduleEffectOverlayHide(delay) {
 	if (EnchantEffectState.overlayTimer) clearTimeout(EnchantEffectState.overlayTimer);
 	const timeout = Math.max(Number(delay) || 0, 0);
-	EnchantEffectState.overlayTimer = setTimeout(function() {
+	EnchantEffectState.overlayTimer = setTimeout(() => {
 		hideEffectOverlay();
 	}, timeout);
 }
@@ -242888,7 +243423,7 @@ function cacheEffectDuration(effectId) {
 	}, null, { texturePath });
 }
 function preloadEnchantEffectDurations() {
-	Object.keys(EnchantEffectGroups).forEach(function(key) {
+	Object.keys(EnchantEffectGroups).forEach((key) => {
 		const group = EnchantEffectGroups[key];
 		cacheEffectDuration(group.intro);
 		cacheEffectDuration(group.success);
@@ -242925,7 +243460,7 @@ function playResultEffect(action, success) {
 	cacheEffectDuration(effectId);
 	const delay = Math.max(EnchantEffectState.introEndAt - Date.now(), 0);
 	if (EnchantEffectState.resultTimer) clearTimeout(EnchantEffectState.resultTimer);
-	if (delay > 0) EnchantEffectState.resultTimer = setTimeout(function() {
+	if (delay > 0) EnchantEffectState.resultTimer = setTimeout(() => {
 		playEffect(effectId);
 	}, delay);
 	else {
@@ -242940,8 +243475,8 @@ function loadItemIcon(target, itemId, isIdentified) {
 	if (!it) return;
 	const name = isIdentified !== false ? it.identifiedResourceName : it.unidentifiedResourceName;
 	if (!name) return;
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + name + ".bmp", function(data) {
-		target.css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "item/" + name + ".bmp", (data) => {
+		target.style.backgroundImage = `url(${data})`;
 	});
 }
 function loadItemCollection(target, itemId, isIdentified) {
@@ -242949,20 +243484,20 @@ function loadItemCollection(target, itemId, isIdentified) {
 	if (!it) return;
 	const name = isIdentified !== false ? it.identifiedResourceName : it.unidentifiedResourceName;
 	if (!name) return;
-	Client.loadFile(DB.INTERFACE_PATH + "collection/" + name + ".bmp", function(data) {
-		target.css("backgroundImage", "url(" + data + ")");
-	}, function() {
+	Client.loadFile(DB.INTERFACE_PATH + "collection/" + name + ".bmp", (data) => {
+		target.style.backgroundImage = `url(${data})`;
+	}, () => {
 		loadItemIcon(target, itemId, isIdentified);
 	});
 }
 function loadGradeIcon(target, grade) {
-	if (!target || !target.length) return;
+	if (!target) return;
 	if (!grade || grade <= 0) {
-		target.css("backgroundImage", "");
+		target.style.backgroundImage = "";
 		return;
 	}
-	Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + grade + ".bmp", function(data) {
-		target.css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + grade + ".bmp", (data) => {
+		target.style.backgroundImage = `url(${data})`;
 	});
 }
 function getItemDisplayName(itemId, fallback) {
@@ -242999,15 +243534,22 @@ function canAffordCost(zeny, materials) {
 	return hasEnoughZeny(zeny) && hasEnoughMaterials(materials);
 }
 function renderMaterials(materials) {
-	const list = Enchant.ui.find(".material_list");
-	list.empty();
+	const root = _root$8();
+	if (!root) return;
+	const list = root.querySelector(".material_list");
+	if (!list) return;
+	list.innerHTML = "";
 	if (!materials || !materials.length) return;
 	const inventoryUI = InventoryController.getUI && InventoryController.getUI();
-	materials.forEach(function(mat) {
-		const entry = jquery_default("<div class=\"material\"></div>");
-		const icon = jquery_default("<div class=\"icon\"></div>");
-		const name = jquery_default("<div class=\"name\"></div>");
-		const count = jquery_default("<div class=\"count\"></div>");
+	materials.forEach((mat) => {
+		const entry = document.createElement("div");
+		entry.className = "material";
+		const icon = document.createElement("div");
+		icon.className = "icon";
+		const nameEl = document.createElement("div");
+		nameEl.className = "name";
+		const count = document.createElement("div");
+		count.className = "count";
 		const matId = resolveMaterialId(mat);
 		const label = matId ? getItemDisplayName(matId, mat.base) : mat.base || "Unknown";
 		let current = 0;
@@ -243016,56 +243558,73 @@ function renderMaterials(materials) {
 			const inventoryItem = inventoryUI.getItemById(matId);
 			current = inventoryItem ? inventoryItem.count : 0;
 		}
-		name.text(label);
-		if (mat.count != null) count.text(matId ? current + "/" + required : "x" + required);
-		entry.attr("data-background", matId && current >= required ? "enchantui/bg_enc_on.bmp" : "enchantui/bg_enc_off.bmp");
-		entry.append(icon).append(name).append(count);
-		list.append(entry);
-		Enchant.parseHTML.call(entry[0]);
-		icon.attr("data-name", label);
+		nameEl.textContent = label;
+		if (mat.count != null) count.textContent = matId ? current + "/" + required : "x" + required;
+		entry.dataset.background = matId && current >= required ? "enchantui/bg_enc_on.bmp" : "enchantui/bg_enc_off.bmp";
+		entry.appendChild(icon);
+		entry.appendChild(nameEl);
+		entry.appendChild(count);
+		list.appendChild(entry);
+		GUIComponent.processDataAttrs(entry);
+		icon.dataset.name = label;
 		if (matId) {
-			icon.attr("data-itid", matId);
+			icon.dataset.itid = matId;
 			loadItemIcon(icon, matId, true);
 		}
 	});
 }
 function renderEnchantList(entries, selectedKey) {
-	const list = Enchant.ui.find(".enchant_list");
-	list.empty();
+	const root = _root$8();
+	if (!root) return;
+	const list = root.querySelector(".enchant_list");
+	if (!list) return;
+	list.innerHTML = "";
 	if (!entries || !entries.length) return;
-	entries.forEach(function(entry) {
-		const row = jquery_default("<div class=\"enchant_entry\"></div>");
-		const icon = jquery_default("<div class=\"entry_icon\"></div>");
-		const text = jquery_default("<div class=\"entry_text\"></div>");
-		const name = jquery_default("<div class=\"entry_name\"></div>");
+	entries.forEach((entry) => {
+		const row = document.createElement("div");
+		row.className = "enchant_entry";
+		const icon = document.createElement("div");
+		icon.className = "entry_icon";
+		const text = document.createElement("div");
+		text.className = "entry_text";
+		const name = document.createElement("div");
+		name.className = "entry_name";
 		const itid = entry.id || (entry.base ? DB.getItemIdfromBase(entry.base) : 0);
-		name.text(entry.label || "");
-		text.append(name);
+		name.textContent = entry.label || "";
+		text.appendChild(name);
 		if (entry.subLabel) {
-			const sub = jquery_default("<div class=\"entry_sub\"></div>");
-			sub.text(entry.subLabel);
-			text.append(sub);
+			const sub = document.createElement("div");
+			sub.className = "entry_sub";
+			sub.textContent = entry.subLabel;
+			text.appendChild(sub);
 		}
-		row.attr("data-key", entry.key);
-		row.attr("data-itid", itid || 0);
-		row.attr("data-name", entry.label || "");
-		row.attr("data-background", "enchantui/btn_enc_item.bmp");
-		row.attr("data-hover", "enchantui/btn_enc_item_over.bmp");
-		row.attr("data-down", "enchantui/btn_enc_item_press.bmp");
-		row.attr("data-active", "enchantui/btn_enc_item_press.bmp");
-		row.toggleClass("disabled", !!entry.disabled);
-		row.toggleClass("active", selectedKey != null && String(entry.key) === String(selectedKey));
-		row.append(icon).append(text);
-		list.append(row);
-		Enchant.parseHTML.call(row[0]);
+		row.dataset.key = entry.key;
+		row.dataset.itid = itid || 0;
+		row.dataset.name = entry.label || "";
+		row.dataset.background = "enchantui/btn_enc_item.bmp";
+		row.dataset.hover = "enchantui/btn_enc_item_over.bmp";
+		row.dataset.down = "enchantui/btn_enc_item_press.bmp";
+		row.dataset.active = "enchantui/btn_enc_item_press.bmp";
+		row.classList.toggle("disabled", !!entry.disabled);
+		row.classList.toggle("active", selectedKey != null && String(entry.key) === String(selectedKey));
+		row.appendChild(icon);
+		row.appendChild(text);
+		list.appendChild(row);
+		GUIComponent.processDataAttrs(row);
 		if (itid) loadItemIcon(icon, itid, true);
 	});
 }
 function renderItemList() {
-	const list = Enchant.ui.find(".item_list");
-	list.empty();
+	const root = _root$8();
+	if (!root) return;
+	const list = root.querySelector(".item_list");
+	if (!list) return;
+	list.innerHTML = "";
 	if (!EnchantState.group) {
-		list.append("<div class=\"item_list_empty\">Enchant data missing.</div>");
+		const empty = document.createElement("div");
+		empty.className = "item_list_empty";
+		empty.textContent = "Enchant data missing.";
+		list.appendChild(empty);
 		return;
 	}
 	const inventoryUI = InventoryController.getUI && InventoryController.getUI();
@@ -243073,7 +243632,7 @@ function renderItemList() {
 	let selectedIndex = EnchantState.item ? EnchantState.item.index : 0;
 	let selectedValid = false;
 	const candidates = [];
-	items.forEach(function(item) {
+	items.forEach((item) => {
 		if (!validateItem(item).ok) return;
 		candidates.push(item);
 		if (selectedIndex && item.index === selectedIndex) selectedValid = true;
@@ -243087,94 +243646,126 @@ function renderItemList() {
 		selectedIndex = 0;
 	}
 	if (!candidates.length) {
-		list.append("<div class=\"item_list_empty\">No enchantable items.</div>");
+		const empty = document.createElement("div");
+		empty.className = "item_list_empty";
+		empty.textContent = "No enchantable items.";
+		list.appendChild(empty);
 		return;
 	}
-	candidates.forEach(function(item) {
-		const entry = jquery_default("<button class=\"item_entry\"></button>");
-		const slot = jquery_default("<div class=\"item_slot\"></div>");
-		const info = jquery_default("<div class=\"item_info\"></div>");
-		const name = jquery_default("<div class=\"item_name\"></div>");
-		const grade = jquery_default("<div class=\"item_grade\"></div>");
+	candidates.forEach((item) => {
+		const entry = document.createElement("button");
+		entry.className = "item_entry";
+		const slot = document.createElement("div");
+		slot.className = "item_slot";
+		const info = document.createElement("div");
+		info.className = "item_info";
+		const name = document.createElement("div");
+		name.className = "item_name";
+		const grade = document.createElement("div");
+		grade.className = "item_grade";
 		const itemName = DB.getItemName(item, {
 			showItemRefine: true,
 			showItemGrade: false,
 			showItemOptions: false
 		});
-		name.text(itemName);
-		info.append(name).append(grade);
-		entry.attr("data-index", item.index);
-		entry.attr("data-name", itemName);
-		entry.attr("data-background", "enchantui/bg_enc_gear.bmp");
-		entry.attr("data-hover", "enchantui/bg_enc_gear_over.bmp");
-		entry.attr("data-down", "enchantui/bg_enc_gear_press.bmp");
-		entry.attr("data-active", "enchantui/bg_enc_gear_press.bmp");
-		entry.toggleClass("active", selectedIndex && item.index === selectedIndex);
-		entry.append(slot).append(info);
-		list.append(entry);
-		Enchant.parseHTML.call(entry[0]);
-		slot.attr("data-itid", item.ITID);
-		slot.attr("data-name", itemName);
+		name.textContent = itemName;
+		info.appendChild(name);
+		info.appendChild(grade);
+		entry.dataset.index = item.index;
+		entry.dataset.name = itemName;
+		entry.dataset.background = "enchantui/bg_enc_gear.bmp";
+		entry.dataset.hover = "enchantui/bg_enc_gear_over.bmp";
+		entry.dataset.down = "enchantui/bg_enc_gear_press.bmp";
+		entry.dataset.active = "enchantui/bg_enc_gear_press.bmp";
+		entry.classList.toggle("active", !!(selectedIndex && item.index === selectedIndex));
+		entry.appendChild(slot);
+		entry.appendChild(info);
+		list.appendChild(entry);
+		GUIComponent.processDataAttrs(entry);
+		slot.dataset.itid = item.ITID;
+		slot.dataset.name = itemName;
 		loadItemIcon(slot, item.ITID, item.IsIdentified);
 		loadGradeIcon(grade, getItemGrade(item));
 	});
 }
 function renderItemPreview() {
-	const preview = Enchant.ui.find(".preview_item");
-	preview.css("backgroundImage", "");
+	const root = _root$8();
+	if (!root) return;
+	const preview = root.querySelector(".preview_item");
+	if (!preview) return;
+	preview.style.backgroundImage = "";
 	if (!EnchantState.item) return;
 	loadItemCollection(preview, EnchantState.item.ITID, EnchantState.item.IsIdentified);
 }
 function renderSlots() {
-	const list = Enchant.ui.find(".slot_list");
-	let empty = list.find(".slot_empty");
-	if (!empty.length) {
-		empty = jquery_default("<div class=\"slot_empty\">Select an item</div>");
-		list.append(empty);
+	const root = _root$8();
+	if (!root) return;
+	const list = root.querySelector(".slot_list");
+	if (!list) return;
+	let empty = list.querySelector(".slot_empty");
+	if (!empty) {
+		empty = document.createElement("div");
+		empty.className = "slot_empty";
+		empty.textContent = "Select an item";
+		list.appendChild(empty);
 	}
 	const hasItem = !!(EnchantState.item && EnchantState.group);
-	empty.toggle(!hasItem);
+	empty.style.display = hasItem ? "none" : "flex";
 	const baseSlots = hasItem ? getBaseSlotCount(EnchantState.item) : 0;
-	list.find(".slot_entry").each(function() {
-		const entry = jquery_default(this);
-		const slotNum = parseInt(entry.attr("data-slot"), 10);
-		const icon = entry.find(".slot_icon");
+	list.querySelectorAll(".slot_entry").forEach((entry) => {
+		const slotNum = parseInt(entry.dataset.slot, 10);
+		const icon = entry.querySelector(".slot_icon");
 		const slotItem = hasItem ? getSlotValue(EnchantState.item, slotNum) : 0;
-		entry.toggleClass("locked", hasItem && slotNum < baseSlots);
-		entry.toggleClass("active", hasItem && slotNum === EnchantState.selectedSlot);
-		entry.toggleClass("empty", !slotItem);
-		entry.attr("data-itid", slotItem || 0);
-		icon.css("backgroundImage", "");
-		if (slotItem) loadItemIcon(icon, slotItem, true);
+		entry.classList.toggle("locked", hasItem && slotNum < baseSlots);
+		entry.classList.toggle("active", hasItem && slotNum === EnchantState.selectedSlot);
+		entry.classList.toggle("empty", !slotItem);
+		entry.dataset.itid = slotItem || 0;
+		if (icon) icon.style.backgroundImage = "";
+		if (slotItem && icon) loadItemIcon(icon, slotItem, true);
 	});
 }
 function updateTabs(availability) {
-	Enchant.ui.find(".action_tabs .tab").each(function() {
-		const action = this.dataset.action;
-		jquery_default(this).toggleClass("active", EnchantState.action === action);
-		jquery_default(this).toggleClass("disabled", availability && availability[action] === false);
+	const root = _root$8();
+	if (!root) return;
+	root.querySelectorAll(".action_tabs .tab").forEach((tab) => {
+		const action = tab.dataset.action;
+		tab.classList.toggle("active", EnchantState.action === action);
+		tab.classList.toggle("disabled", availability && availability[action] === false);
 	});
 	updateSubpageSkin();
 	updateMenuSkin();
 }
 function updateActionSections() {
-	Enchant.ui.find(".action_section").removeClass("active");
-	Enchant.ui.find("." + EnchantState.action + "_section").addClass("active");
+	const root = _root$8();
+	if (!root) return;
+	root.querySelectorAll(".action_section").forEach((section) => {
+		section.classList.remove("active");
+	});
+	const activeSection = root.querySelector("." + EnchantState.action + "_section");
+	if (activeSection) activeSection.classList.add("active");
 }
 function updateActionButton(enabled) {
-	const button = Enchant.ui.find(".action_btn");
+	const root = _root$8();
+	if (!root) return;
+	const button = root.querySelector(".action_btn");
+	if (!button) return;
 	const label = EnchantState.action === "reset" ? "Reset" : "Enchant";
-	button.text("");
-	button.attr("title", label);
-	button.toggleClass("disabled", !enabled);
+	button.textContent = "";
+	button.title = label;
+	button.classList.toggle("disabled", !enabled);
 	updateActionButtonSkin(button, enabled);
 }
 function renderCosts(rate, zeny, materials) {
+	const root = _root$8();
+	if (!root) return;
 	const zenyText = zeny != null ? formatZeny(zeny) : "";
-	Enchant.ui.find(".zeny_cost").text(zenyText);
+	const zenyCost = root.querySelector(".zeny_cost");
+	if (zenyCost) zenyCost.textContent = zenyText;
 	renderMaterials(materials);
 }
 function refreshActionContent() {
+	const root = _root$8();
+	if (!root) return;
 	const group = EnchantState.group;
 	const item = EnchantState.item;
 	let actionReady = false;
@@ -243186,7 +243777,8 @@ function refreshActionContent() {
 	};
 	let listEntries = [];
 	let selectedKey = null;
-	Enchant.ui.find(".upgrade_result").text("");
+	const upgradeResult = root.querySelector(".upgrade_result");
+	if (upgradeResult) upgradeResult.textContent = "";
 	if (group && item) {
 		const slotNum = getNextEnchantSlot(item, group);
 		const slotData = slotNum !== null ? group.slots[slotNum] : null;
@@ -243201,14 +243793,12 @@ function refreshActionContent() {
 			1,
 			2,
 			3
-		]).forEach(function(orderSlot) {
+		]).forEach((orderSlot) => {
 			if (orderSlot >= baseSlots && getSlotValue(item, orderSlot)) hasEnchant = true;
 		});
 		if (group.reset && group.reset.enabled && hasEnchant) availability.reset = true;
 		if (!availability[EnchantState.action]) {
-			const nextAction = Object.keys(availability).find(function(key) {
-				return availability[key];
-			});
+			const nextAction = Object.keys(availability).find((key) => availability[key]);
 			EnchantState.action = nextAction || EnchantState.action;
 		}
 		updateTabs(availability);
@@ -243226,29 +243816,31 @@ function refreshActionContent() {
 				};
 				renderCosts(totalRate, require.zeny, require.materials);
 				actionReady = availability.random && canAffordCost(require.zeny, require.materials);
-				if (slotData.random) listEntries = (slotData.random[grade] || slotData.random[0] || []).map(function(entry) {
-					const label = entry.id ? getItemDisplayName(entry.id, entry.base) : entry.base;
-					return {
-						key: entry.id || entry.base || label,
-						id: entry.id,
-						base: entry.base,
-						label,
-						disabled: true
-					};
-				});
+				if (slotData.random) listEntries = (slotData.random[grade] || slotData.random[0] || []).map((entry) => ({
+					key: entry.id || entry.base || (entry.id ? getItemDisplayName(entry.id, entry.base) : entry.base),
+					id: entry.id,
+					base: entry.base,
+					label: entry.id ? getItemDisplayName(entry.id, entry.base) : entry.base,
+					disabled: true
+				}));
 			} else renderCosts(null, 0, []);
 		}
 		if (EnchantState.action === "perfect") {
 			EnchantState.selectedSlot = slotNum;
-			const select = Enchant.ui.find(".perfect_select");
-			select.empty();
+			const select = root.querySelector(".perfect_select");
 			const perfectEntries = [];
+			if (select) select.innerHTML = "";
 			if (slotData && slotData.perfect) {
 				const perfectList = Object.keys(slotData.perfect);
-				perfectList.forEach(function(key) {
+				perfectList.forEach((key) => {
 					const entry = slotData.perfect[key];
 					const label = entry.id ? getItemDisplayName(entry.id, entry.base) : entry.base;
-					select.append("<option value=\"" + key + "\">" + label + "</option>");
+					if (select) {
+						const option = document.createElement("option");
+						option.value = key;
+						option.textContent = label;
+						select.appendChild(option);
+					}
 					perfectEntries.push({
 						key,
 						id: entry.id,
@@ -243257,14 +243849,14 @@ function refreshActionContent() {
 					});
 				});
 				if (perfectList.length) if (EnchantState.selectedPerfect && slotData.perfect[EnchantState.selectedPerfect]) {
-					select.val(EnchantState.selectedPerfect);
+					if (select) select.value = EnchantState.selectedPerfect;
 					const selected = slotData.perfect[EnchantState.selectedPerfect];
 					renderCosts(1e5, selected.zeny, selected.materials);
 					actionReady = availability.perfect && canAffordCost(selected.zeny, selected.materials);
 					selectedKey = EnchantState.selectedPerfect;
 				} else {
 					EnchantState.selectedPerfect = null;
-					select.prop("selectedIndex", -1);
+					if (select) select.selectedIndex = -1;
 					renderCosts(null, 0, []);
 				}
 				else renderCosts(null, 0, []);
@@ -243272,15 +243864,20 @@ function refreshActionContent() {
 			listEntries = perfectEntries;
 		}
 		if (EnchantState.action === "upgrade") {
-			const upgradeSelect = Enchant.ui.find(".upgrade_select");
-			upgradeSelect.empty();
+			const upgradeSelect = root.querySelector(".upgrade_select");
 			const upgradeEntries = [];
+			if (upgradeSelect) upgradeSelect.innerHTML = "";
 			if (upgradeCandidates.length) {
-				upgradeCandidates.forEach(function(candidate) {
+				upgradeCandidates.forEach((candidate) => {
 					const currentName = getItemDisplayName(candidate.currentId, candidate.baseName);
 					const resultId = candidate.entry.result ? candidate.entry.result.id || DB.getItemIdfromBase(candidate.entry.result.base) : 0;
 					const resultName = resultId ? getItemDisplayName(resultId, candidate.entry.result.base) : candidate.entry.result ? candidate.entry.result.base : "";
-					upgradeSelect.append("<option value=\"" + candidate.slotNum + "\">Slot " + (candidate.slotNum + 1) + ": " + currentName + " -> " + resultName + "</option>");
+					if (upgradeSelect) {
+						const option = document.createElement("option");
+						option.value = candidate.slotNum;
+						option.textContent = `Slot ${candidate.slotNum + 1}: ${currentName} -> ${resultName}`;
+						upgradeSelect.appendChild(option);
+					}
 					upgradeEntries.push({
 						key: String(candidate.slotNum),
 						id: resultId || 0,
@@ -243288,16 +243885,13 @@ function refreshActionContent() {
 						label: resultName || currentName
 					});
 				});
-				if (!EnchantState.selectedUpgradeSlot || !upgradeCandidates.find(function(candidate) {
-					return candidate.slotNum === EnchantState.selectedUpgradeSlot;
-				})) EnchantState.selectedUpgradeSlot = upgradeCandidates[0].slotNum;
-				upgradeSelect.val(EnchantState.selectedUpgradeSlot);
-				const selectedEntry = upgradeCandidates.find(function(candidate) {
-					return candidate.slotNum === EnchantState.selectedUpgradeSlot;
-				});
+				if (!EnchantState.selectedUpgradeSlot || !upgradeCandidates.find((candidate) => candidate.slotNum === EnchantState.selectedUpgradeSlot)) EnchantState.selectedUpgradeSlot = upgradeCandidates[0].slotNum;
+				if (upgradeSelect) upgradeSelect.value = EnchantState.selectedUpgradeSlot;
+				const selectedEntry = upgradeCandidates.find((candidate) => candidate.slotNum === EnchantState.selectedUpgradeSlot);
 				if (selectedEntry) {
 					EnchantState.selectedSlot = selectedEntry.slotNum;
-					Enchant.ui.find(".upgrade_result").text("Result: " + (selectedEntry.entry.result ? selectedEntry.entry.result.base : ""));
+					const ur = root.querySelector(".upgrade_result");
+					if (ur) ur.textContent = "Result: " + (selectedEntry.entry.result ? selectedEntry.entry.result.base : "");
 					renderCosts(1e5, selectedEntry.entry.zeny, selectedEntry.entry.materials);
 					actionReady = availability.upgrade && canAffordCost(selectedEntry.entry.zeny, selectedEntry.entry.materials);
 					selectedKey = String(EnchantState.selectedUpgradeSlot);
@@ -243371,11 +243965,10 @@ function getInventoryItemByIndex(index) {
 	return inventoryUI && inventoryUI.getItemByIndex ? inventoryUI.getItemByIndex(index) : null;
 }
 function resolveItemContext(target) {
-	const node = jquery_default(target);
-	const slotEntry = node.closest(".slot_entry");
-	if (slotEntry.length) {
+	const slotEntry = target.closest(".slot_entry");
+	if (slotEntry) {
 		if (!EnchantState.item) return null;
-		const slotNum = parseInt(slotEntry.attr("data-slot"), 10);
+		const slotNum = parseInt(slotEntry.dataset.slot, 10);
 		if (isNaN(slotNum)) return null;
 		const slotItemId = getSlotValue(EnchantState.item, slotNum);
 		if (!slotItemId) return null;
@@ -243389,12 +243982,12 @@ function resolveItemContext(target) {
 			anchor: slotEntry
 		};
 	}
-	const itemEntry = node.closest(".item_entry");
-	if (itemEntry.length) {
-		const index = parseInt(itemEntry.attr("data-index"), 10);
+	const itemEntry = target.closest(".item_entry");
+	if (itemEntry) {
+		const index = parseInt(itemEntry.dataset.index, 10);
 		let invItem = !isNaN(index) ? getInventoryItemByIndex(index) : null;
 		if (!invItem) {
-			const itemId = parseInt(node.attr("data-itid"), 10);
+			const itemId = parseInt(target.dataset.itid, 10);
 			if (!isNaN(itemId) && itemId) invItem = {
 				ITID: itemId,
 				IsIdentified: 1
@@ -243402,35 +243995,35 @@ function resolveItemContext(target) {
 		}
 		return {
 			item: invItem,
-			label: node.attr("data-name") || itemEntry.attr("data-name") || "",
+			label: target.dataset.name || itemEntry.dataset.name || "",
 			identified: invItem ? !!invItem.IsIdentified : true,
-			anchor: node
+			anchor: target
 		};
 	}
-	const materialIcon = node.closest(".material .icon");
-	if (materialIcon.length) {
-		const matId = parseInt(materialIcon.attr("data-itid"), 10);
+	const materialIcon = target.closest(".material .icon");
+	if (materialIcon) {
+		const matId = parseInt(materialIcon.dataset.itid, 10);
 		return {
 			item: !isNaN(matId) && matId ? {
 				ITID: matId,
 				IsIdentified: 1
 			} : null,
-			label: materialIcon.attr("data-name") || "",
+			label: materialIcon.dataset.name || "",
 			identified: true,
 			anchor: materialIcon
 		};
 	}
-	const enchantEntry = node.closest(".enchant_entry");
-	if (enchantEntry.length) {
-		const enchantId = parseInt(enchantEntry.attr("data-itid"), 10);
+	const enchantEntry = target.closest(".enchant_entry");
+	if (enchantEntry) {
+		const enchantId = parseInt(enchantEntry.dataset.itid, 10);
 		return {
 			item: !isNaN(enchantId) && enchantId ? {
 				ITID: enchantId,
 				IsIdentified: 1
 			} : null,
-			label: enchantEntry.attr("data-name") || "",
+			label: enchantEntry.dataset.name || "",
 			identified: true,
-			anchor: node
+			anchor: target
 		};
 	}
 	return null;
@@ -243441,7 +244034,7 @@ function onIconOver(event) {
 	let label = context.label;
 	if (context.item) label = DB.getItemName(context.item, { showItemOptions: false });
 	if (!label) return;
-	showHoverOverlay(label, context.identified, context.anchor || jquery_default(event.currentTarget));
+	showHoverOverlay(label, context.identified, context.anchor || event.currentTarget);
 }
 function onIconOut() {
 	hideHoverOverlay();
@@ -243451,26 +244044,26 @@ function onIconInfo(event) {
 	event.stopImmediatePropagation();
 	const context = resolveItemContext(event.currentTarget);
 	if (context && context.item) showItemInfo(context.item);
-	return false;
 }
 function onActionSelect(event) {
 	const action = event.currentTarget.dataset.action;
-	if (jquery_default(event.currentTarget).hasClass("disabled")) return;
+	if (event.currentTarget.classList.contains("disabled")) return;
 	EnchantState.action = action;
 	refreshUI();
 }
-function onPerfectChange() {
-	EnchantState.selectedPerfect = this.value;
+function onPerfectChange(event) {
+	EnchantState.selectedPerfect = event.currentTarget.value;
 	refreshUI();
 }
-function onUpgradeChange() {
-	EnchantState.selectedUpgradeSlot = parseInt(this.value, 10);
+function onUpgradeChange(event) {
+	EnchantState.selectedUpgradeSlot = parseInt(event.currentTarget.value, 10);
 	refreshUI();
 }
 function onEnchantListSelect(event) {
-	const entry = jquery_default(event.currentTarget);
-	if (entry.hasClass("disabled")) return;
-	const key = entry.attr("data-key");
+	const entry = event.target.closest(".enchant_entry");
+	if (!entry) return;
+	if (entry.classList.contains("disabled")) return;
+	const key = entry.dataset.key;
 	if (EnchantState.action === "perfect") {
 		EnchantState.selectedPerfect = key;
 		refreshUI();
@@ -243485,8 +244078,9 @@ function onEnchantListSelect(event) {
 	}
 }
 function onItemSelect$2(event) {
-	const entry = jquery_default(event.currentTarget);
-	const index = parseInt(entry.attr("data-index"), 10);
+	const entry = event.target.closest(".item_entry");
+	if (!entry) return;
+	const index = parseInt(entry.dataset.index, 10);
 	if (isNaN(index)) return;
 	const inventoryUI = InventoryController.getUI && InventoryController.getUI();
 	const item = inventoryUI && inventoryUI.getItemByIndex ? inventoryUI.getItemByIndex(index) : null;
@@ -243494,7 +244088,10 @@ function onItemSelect$2(event) {
 	Enchant.onRequestItemEnchant(item);
 }
 function onRequestAction() {
-	if (Enchant.ui.find(".action_btn").hasClass("disabled")) return;
+	const root = _root$8();
+	if (!root) return;
+	const actionBtn = root.querySelector(".action_btn");
+	if (actionBtn && actionBtn.classList.contains("disabled")) return;
 	if (!EnchantState.group || !EnchantState.item) {
 		setStatus("Select an item first.", true);
 		return;
@@ -243549,7 +244146,9 @@ function onRequestAction() {
 		item: EnchantState.item
 	};
 	EnchantState.pendingLock = true;
-	Enchant.ui.find(".close, .close_btn").prop("disabled", true);
+	root.querySelectorAll(".close, .close_btn").forEach((btn) => {
+		btn.disabled = true;
+	});
 	Network.sendPacket(pkt);
 	setStatus("Request sent...", false);
 }
@@ -243562,7 +244161,7 @@ function applyEnchantResult(item, action, slotNum, itid) {
 			1,
 			2,
 			3
-		]).forEach(function(orderSlot) {
+		]).forEach((orderSlot) => {
 			if (orderSlot >= baseSlots) setSlotValue(item, orderSlot, 0);
 		});
 		return;
@@ -243592,9 +244191,8 @@ function onRequestClose() {
 	}
 	Enchant.remove();
 }
-var Enchant, EnchantState, EnchantAssets, DEFAULT_INTRO_DURATION_MS, EnchantEffectState, EnchantEffectDurations, EnchantEffectGroups, ENCHANT_OVERLAY_COLOR, EnchantEffectFog, Enchant_default;
+var Enchant, EnchantState, EnchantAssets, DEFAULT_INTRO_DURATION_MS, EnchantEffectState, EnchantEffectDurations, EnchantEffectGroups, ENCHANT_OVERLAY_COLOR, EnchantEffectFog, _effectStyleNode, Enchant_default;
 var init_Enchant = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_Client();
 	init_EffectTable();
@@ -243608,14 +244206,16 @@ var init_Enchant = __esmMin((() => {
 	init_PacketVerManager();
 	init_SessionStorage();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_ItemInfo();
 	init_ChatBox();
 	init_Inventory();
 	init_KeyEventHandler();
 	init_Enchant$2();
 	init_Enchant$1();
-	Enchant = new UIComponent("Enchant", Enchant_default$2, Enchant_default$1);
+	Enchant = new GUIComponent("Enchant", Enchant_default$1);
+	Enchant.render = () => Enchant_default$2;
+	Enchant.captureKeyEvents = true;
 	EnchantState = {
 		groupId: 0,
 		group: null,
@@ -243702,15 +244302,18 @@ var init_Enchant = __esmMin((() => {
 			1
 		])
 	};
+	_effectStyleNode = null;
 	Enchant.onKeyDown = function onKeyDown(event) {
+		if (Enchant.isEditableFocused()) return;
 		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && Enchant.ui.is(":visible")) onRequestClose();
 	};
 	Enchant.init = function init() {
+		const root = _root$8();
 		this.ui.css({
 			top: 200,
 			left: 360
 		});
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(root.querySelector(".titlebar"));
 		preloadEnchantEffectDurations();
 		Client.loadFiles([
 			DB.INTERFACE_PATH + "enchantui/bg_subpage.bmp",
@@ -243745,7 +244348,8 @@ var init_Enchant = __esmMin((() => {
 			EnchantAssets.actionButton.down = down;
 			EnchantAssets.actionButton.disabled = disabled;
 			bindActionButtonSkin();
-			updateActionButtonSkin(Enchant.ui.find(".action_btn"), !Enchant.ui.find(".action_btn").hasClass("disabled"));
+			const actionBtn = _root$8() ? _root$8().querySelector(".action_btn") : null;
+			if (actionBtn) updateActionButtonSkin(actionBtn, !actionBtn.classList.contains("disabled"));
 		});
 		Client.loadFiles([
 			DB.INTERFACE_PATH + "enchantui/scroll_arrow_up.bmp",
@@ -243753,34 +244357,130 @@ var init_Enchant = __esmMin((() => {
 			DB.INTERFACE_PATH + "enchantui/scroll_bg.bmp",
 			DB.INTERFACE_PATH + "enchantui/scroll_btn.bmp"
 		], applyScrollSkin);
-		this.ui.find(".close, .close_btn").click(onRequestClose);
-		this.ui.find(".item_list").on("click", ".item_entry", onItemSelect$2);
-		this.ui.find(".item_list").on("mouseover", ".item_slot", onIconOver).on("mouseout", ".item_slot", onIconOut).on("contextmenu", ".item_slot", onIconInfo);
-		this.ui.find(".action_tabs").on("click", ".tab", onActionSelect);
-		this.ui.find(".perfect_select").change(onPerfectChange);
-		this.ui.find(".upgrade_select").change(onUpgradeChange);
-		this.ui.find(".material_list").on("mouseover", ".icon", onIconOver).on("mouseout", ".icon", onIconOut).on("contextmenu", ".icon", onIconInfo);
-		this.ui.find(".slot_list").on("mouseover", ".slot_icon", onIconOver).on("mouseout", ".slot_icon", onIconOut).on("contextmenu", ".slot_icon", onIconInfo);
-		this.ui.find(".enchant_list").on("click", ".enchant_entry", onEnchantListSelect).on("mouseover", ".entry_icon", onIconOver).on("mouseout", ".entry_icon", onIconOut).on("contextmenu", ".entry_icon", onIconInfo);
-		this.ui.find(".action_btn").click(onRequestAction);
+		root.querySelectorAll(".close, .close_btn").forEach((btn) => {
+			btn.addEventListener("click", onRequestClose);
+		});
+		const itemList = root.querySelector(".item_list");
+		if (itemList) {
+			itemList.addEventListener("click", onItemSelect$2);
+			itemList.addEventListener("mouseover", (e) => {
+				const slot = e.target.closest(".item_slot");
+				if (slot) onIconOver({ currentTarget: slot });
+			});
+			itemList.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".item_slot")) onIconOut();
+			});
+			itemList.addEventListener("contextmenu", (e) => {
+				const slot = e.target.closest(".item_slot");
+				if (slot) onIconInfo({
+					currentTarget: slot,
+					preventDefault: () => e.preventDefault(),
+					stopImmediatePropagation: () => e.stopImmediatePropagation()
+				});
+			});
+		}
+		const actionTabs = root.querySelector(".action_tabs");
+		if (actionTabs) actionTabs.addEventListener("click", (e) => {
+			const tab = e.target.closest(".tab");
+			if (tab) onActionSelect({ currentTarget: tab });
+		});
+		const perfectSelect = root.querySelector(".perfect_select");
+		if (perfectSelect) perfectSelect.addEventListener("change", onPerfectChange);
+		const upgradeSelect = root.querySelector(".upgrade_select");
+		if (upgradeSelect) upgradeSelect.addEventListener("change", onUpgradeChange);
+		const materialList = root.querySelector(".material_list");
+		if (materialList) {
+			materialList.addEventListener("mouseover", (e) => {
+				const icon = e.target.closest(".icon");
+				if (icon) onIconOver({ currentTarget: icon });
+			});
+			materialList.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".icon")) onIconOut();
+			});
+			materialList.addEventListener("contextmenu", (e) => {
+				const icon = e.target.closest(".icon");
+				if (icon) onIconInfo({
+					currentTarget: icon,
+					preventDefault: () => e.preventDefault(),
+					stopImmediatePropagation: () => e.stopImmediatePropagation()
+				});
+			});
+		}
+		const slotList = root.querySelector(".slot_list");
+		if (slotList) {
+			slotList.addEventListener("mouseover", (e) => {
+				const icon = e.target.closest(".slot_icon");
+				if (icon) onIconOver({ currentTarget: icon });
+			});
+			slotList.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".slot_icon")) onIconOut();
+			});
+			slotList.addEventListener("contextmenu", (e) => {
+				const icon = e.target.closest(".slot_icon");
+				if (icon) onIconInfo({
+					currentTarget: icon,
+					preventDefault: () => e.preventDefault(),
+					stopImmediatePropagation: () => e.stopImmediatePropagation()
+				});
+			});
+		}
+		const enchantList = root.querySelector(".enchant_list");
+		if (enchantList) {
+			enchantList.addEventListener("click", onEnchantListSelect);
+			enchantList.addEventListener("mouseover", (e) => {
+				const icon = e.target.closest(".entry_icon");
+				if (icon) onIconOver({ currentTarget: icon });
+			});
+			enchantList.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".entry_icon")) onIconOut();
+			});
+			enchantList.addEventListener("contextmenu", (e) => {
+				const icon = e.target.closest(".entry_icon");
+				if (icon) onIconInfo({
+					currentTarget: icon,
+					preventDefault: () => e.preventDefault(),
+					stopImmediatePropagation: () => e.stopImmediatePropagation()
+				});
+			});
+		}
+		const actionBtn = root.querySelector(".action_btn");
+		if (actionBtn) actionBtn.addEventListener("click", onRequestAction);
 	};
 	Enchant.onAppend = function onAppend() {
 		setStatus("", false);
 		refreshUI();
 	};
 	Enchant.onRemove = function onRemove() {
+		const root = _root$8();
 		clearState();
-		Enchant.ui.find(".close, .close_btn").prop("disabled", false);
-		this.ui.find(".slot_entry").removeClass("locked active").attr("title", "");
-		this.ui.find(".slot_icon").css("backgroundImage", "");
-		this.ui.find(".material_list").empty();
-		this.ui.find(".enchant_list").empty();
-		this.ui.find(".perfect_select").empty();
-		this.ui.find(".upgrade_select").empty();
-		this.ui.find(".upgrade_result").text("");
-		this.ui.find(".zeny_cost").text("");
-		this.ui.find(".item_list").empty();
-		this.ui.find(".preview_item").css("backgroundImage", "");
+		if (root) {
+			root.querySelectorAll(".close, .close_btn").forEach((btn) => {
+				btn.disabled = false;
+			});
+			root.querySelectorAll(".slot_entry").forEach((entry) => {
+				entry.classList.remove("locked", "active");
+				entry.title = "";
+			});
+			root.querySelectorAll(".slot_icon").forEach((icon) => {
+				icon.style.backgroundImage = "";
+			});
+			const materialList = root.querySelector(".material_list");
+			if (materialList) materialList.innerHTML = "";
+			const enchantList = root.querySelector(".enchant_list");
+			if (enchantList) enchantList.innerHTML = "";
+			const perfectSelect = root.querySelector(".perfect_select");
+			if (perfectSelect) perfectSelect.innerHTML = "";
+			const upgradeSelect = root.querySelector(".upgrade_select");
+			if (upgradeSelect) upgradeSelect.innerHTML = "";
+			const upgradeResult = root.querySelector(".upgrade_result");
+			if (upgradeResult) upgradeResult.textContent = "";
+			const zenyCost = root.querySelector(".zeny_cost");
+			if (zenyCost) zenyCost.textContent = "";
+			const itemList = root.querySelector(".item_list");
+			if (itemList) itemList.innerHTML = "";
+			const previewItem = root.querySelector(".preview_item");
+			if (previewItem) previewItem.style.backgroundImage = "";
+		}
 		hideHoverOverlay();
 		setStatus("", false);
 	};
@@ -243791,7 +244491,7 @@ var init_Enchant = __esmMin((() => {
 		if (!EnchantState.group) UIManager.showErrorBox("Enchant data missing for group " + groupId + ".");
 		Enchant.append();
 		Enchant.ui.show();
-		Enchant.ui.focus();
+		Enchant.focus();
 		refreshUI();
 	};
 	Enchant.onRequestItemEnchant = function onRequestItemEnchant(item) {
@@ -254151,101 +254851,122 @@ var init_MercenaryInformations = __esmMin((() => {
 //#region src/UI/Components/Captcha/CaptchaUpload.html?raw
 var CaptchaUpload_default$2;
 var init_CaptchaUpload$2 = __esmMin((() => {
-	CaptchaUpload_default$2 = "<div id=\"CaptchaUpload\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"custom_file_input\">\r\n			<input type=\"text\" id=\"captcha_file_text\" readonly placeholder=\"No file selected\" />\r\n			<button\r\n				id=\"captcha_browse_btn\"\r\n				class=\"btn_browse\"\r\n				data-background=\"basic_interface/txtbox_btn_a.bmp\"\r\n				data-hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n				data-down=\"basic_interface/txtbox_btn_c.bmp\"\r\n			></button>\r\n			<input type=\"file\" id=\"captcha_file_input\" accept=\"image/bmp\" style=\"display: none\" />\r\n		</div>\r\n		<div class=\"preview_box\"></div>\r\n		<div class=\"controls\">\r\n			<input type=\"text\" id=\"answer_input\" class=\"answer_input\" placeholder=\"Captcha Answer\" />\r\n			<button\r\n				class=\"btn ok\"\r\n				data-background=\"btn_ok.bmp\"\r\n				data-hover=\"btn_ok_a.bmp\"\r\n				data-down=\"btn_ok_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	CaptchaUpload_default$2 = "<div id=\"CaptchaUpload\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"custom_file_input\">\r\n			<input type=\"text\" class=\"captcha_file_text\" readonly placeholder=\"No file selected\" />\r\n			<ui-button\r\n				class=\"btn_browse\"\r\n				bg=\"basic_interface/txtbox_btn_a.bmp\"\r\n				hover=\"basic_interface/txtbox_btn_b.bmp\"\r\n				down=\"basic_interface/txtbox_btn_c.bmp\"\r\n			></ui-button>\r\n			<input type=\"file\" class=\"captcha_file_input\" accept=\"image/bmp\" style=\"display: none\" />\r\n		</div>\r\n		<div class=\"preview_box\"></div>\r\n		<div class=\"controls\">\r\n			<input type=\"text\" class=\"answer_input\" placeholder=\"Captcha Answer\" />\r\n			<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaUpload.css?raw
 var CaptchaUpload_default$1;
 var init_CaptchaUpload$1 = __esmMin((() => {
-	CaptchaUpload_default$1 = "#CaptchaUpload {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 200px;\r\n	background-color: #ffffff;\r\n	font-size: 12px;\r\n	border-radius: 3px;\r\n}\r\n\r\n#CaptchaUpload .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaUpload .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaUpload .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaUpload .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaUpload .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaUpload .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaUpload .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaUpload .container {\r\n	padding: 10px;\r\n	text-align: center;\r\n}\r\n\r\n#CaptchaUpload .btn {\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	margin-left: 5px;\r\n}\r\n\r\n/* Custom File Input Styles */\r\n#CaptchaUpload .custom_file_input {\r\n	margin-bottom: 10px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#CaptchaUpload #captcha_file_text {\r\n	width: 170px;\r\n	border: 1px solid #7f9db9;\r\n	background-color: #fff;\r\n	color: #000;\r\n	height: 14px;\r\n}\r\n\r\n#CaptchaUpload .btn_browse {\r\n	width: 18px;\r\n	height: 18px;\r\n	cursor: pointer;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CaptchaUpload .btn_browse:active {\r\n	border-color: #696969 #fff #fff #696969;\r\n}\r\n\r\n#CaptchaUpload .preview_box {\r\n	width: 220px;\r\n	height: 90px;\r\n	border: 1px solid #999;\r\n	margin: 0 auto 10px auto;\r\n	background-color: transparent;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaUpload .preview_box img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n\r\n#CaptchaUpload input[type='text'].answer_input {\r\n	width: 150px;\r\n	margin-right: 5px;\r\n	border: 1px solid #7f9db9;\r\n}\r\n\r\n#CaptchaUpload .controls {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n";
+	CaptchaUpload_default$1 = ":host {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 200px;\r\n}\r\n\r\n#CaptchaUpload {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #ffffff;\r\n	font-size: 12px;\r\n	border-radius: 3px;\r\n}\r\n\r\n#CaptchaUpload .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaUpload .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaUpload .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaUpload .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaUpload .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaUpload .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaUpload .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaUpload .container {\r\n	padding: 10px;\r\n	text-align: center;\r\n}\r\n\r\n#CaptchaUpload .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	margin-left: 5px;\r\n}\r\n\r\n/* Custom File Input Styles */\r\n#CaptchaUpload .custom_file_input {\r\n	margin-bottom: 10px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#CaptchaUpload .captcha_file_text {\r\n	width: 170px;\r\n	border: 1px solid #7f9db9;\r\n	background-color: #fff;\r\n	color: #000;\r\n	height: 14px;\r\n}\r\n\r\n#CaptchaUpload .btn_browse {\r\n	width: 18px;\r\n	height: 18px;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CaptchaUpload .btn_browse:active {\r\n	border-color: #696969 #fff #fff #696969;\r\n}\r\n\r\n#CaptchaUpload .preview_box {\r\n	width: 220px;\r\n	height: 90px;\r\n	border: 1px solid #999;\r\n	margin: 0 auto 10px auto;\r\n	background-color: transparent;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaUpload .preview_box img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n\r\n#CaptchaUpload input[type='text'].answer_input {\r\n	width: 150px;\r\n	margin-right: 5px;\r\n	border: 1px solid #7f9db9;\r\n}\r\n\r\n#CaptchaUpload .controls {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaUpload.js
 var CaptchaUpload, _preferences$25, CaptchaUpload_default;
 var init_CaptchaUpload = __esmMin((() => {
-	init_jquery();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_DBManager();
 	init_Preferences$1();
 	init_Renderer();
+	init_Elements();
 	init_CaptchaUpload$2();
 	init_CaptchaUpload$1();
-	CaptchaUpload = new UIComponent("CaptchaUpload", CaptchaUpload_default$2, CaptchaUpload_default$1);
+	CaptchaUpload = new GUIComponent("CaptchaUpload", CaptchaUpload_default$1);
 	_preferences$25 = Preferences.get("CaptchaUpload", {
 		x: 230,
 		y: 295
 	}, 2);
+	CaptchaUpload.render = () => CaptchaUpload_default$2;
+	CaptchaUpload.captureKeyEvents = true;
 	/**
 	* Initialize GUI
 	*/
-	CaptchaUpload.init = function Init() {
-		const selfCaptchaUpload = this;
-		this.ui.find(".close").click(this.remove.bind(this));
+	CaptchaUpload.init = function init() {
+		const root = this.getRoot();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => this.remove());
 		this.draggable(".titlebar");
-		this.ui.find("#captcha_browse_btn").click(function() {
-			selfCaptchaUpload.ui.find("#captcha_file_input").click();
+		const browseBtn = root.querySelector(".btn_browse");
+		const fileInput = root.querySelector(".captcha_file_input");
+		if (browseBtn && fileInput) browseBtn.addEventListener("click", () => {
+			fileInput.click();
 		});
-		this.ui.find("#captcha_file_input").change(function(evt) {
+		if (fileInput) fileInput.addEventListener("change", (evt) => {
 			const file = evt.target.files[0];
 			if (file) {
-				selfCaptchaUpload.ui.find("#captcha_file_text").val(file.name);
+				const fileText = root.querySelector(".captcha_file_text");
+				if (fileText) fileText.value = file.name;
 				const reader = new FileReader();
-				reader.onload = function(e) {
-					const img = jquery_default("<img/>").attr("src", e.target.result);
-					selfCaptchaUpload.ui.find(".preview_box").empty().append(img);
+				reader.onload = (e) => {
+					const previewBox = root.querySelector(".preview_box");
+					if (previewBox) {
+						previewBox.innerHTML = "";
+						const img = document.createElement("img");
+						img.src = e.target.result;
+						previewBox.appendChild(img);
+					}
 				};
 				reader.readAsDataURL(file);
-				Promise.resolve(selfCaptchaUpload.compressImage(file)).then(function(imageData) {
-					selfCaptchaUpload.imageData = imageData;
+				Promise.resolve(this.compressImage(file)).then((imageData) => {
+					this.imageData = imageData;
 				});
 			}
 		});
-		this.ui.find(".answer_input").change(function() {
-			const answer_input = selfCaptchaUpload.ui.find(".answer_input");
-			if (answer_input.val().length > 16) answer_input.val(answer_input.val().slice(0, 16));
-			selfCaptchaUpload.answer = answer_input.val();
+		const answerInput = root.querySelector(".answer_input");
+		if (answerInput) answerInput.addEventListener("change", () => {
+			if (answerInput.value.length > 16) answerInput.value = answerInput.value.slice(0, 16);
+			this.answer = answerInput.value;
 		});
-		this.ui.find(".ok").click(function() {
-			if (!selfCaptchaUpload.answer || selfCaptchaUpload.answer.length === 0) {
-				UIManager.showMessageBox(DB.getMessage(2872), "ok", function() {}, true);
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => {
+			if (!this.answer || this.answer.length === 0) {
+				UIManager.showMessageBox(DB.getMessage(2872), "ok", () => {}, true);
 				return;
 			}
-			if (!selfCaptchaUpload.imageData) {
-				UIManager.showMessageBox(DB.getMessage(2874), "ok", function() {}, true);
+			if (!this.imageData) {
+				UIManager.showMessageBox(DB.getMessage(2874), "ok", () => {}, true);
 				return;
 			}
-			UIManager.showPromptBox(DB.getMessage(2873).replace("%s", selfCaptchaUpload.answer), "ok", "cancel", function() {
-				if (selfCaptchaUpload.requestUploadCaptcha && selfCaptchaUpload.imageData) selfCaptchaUpload.requestUploadCaptcha(selfCaptchaUpload.imageData.length, selfCaptchaUpload.answer);
+			UIManager.showPromptBox(DB.getMessage(2873).replace("%s", this.answer), "ok", "cancel", () => {
+				if (this.requestUploadCaptcha && this.imageData) this.requestUploadCaptcha(this.imageData.length, this.answer);
 			});
 		});
+	};
+	CaptchaUpload.onKeyDown = function onKeyDown(event) {
+		if (CaptchaUpload.isEditableFocused()) {
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
 	};
 	/**
 	* Append to DOM
 	*/
-	CaptchaUpload.onAppend = function OnAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$25.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$25.x), Renderer.width - this.ui.width())
-		});
+	CaptchaUpload.onAppend = function onAppend() {
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$25.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$25.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Remove data from UI
 	*/
-	CaptchaUpload.onRemove = function OnRemove() {
-		_preferences$25.y = parseInt(this.ui.css("top"), 10);
-		_preferences$25.x = parseInt(this.ui.css("left"), 10);
+	CaptchaUpload.onRemove = function onRemove() {
+		_preferences$25.y = parseInt(this._host.style.top, 10);
+		_preferences$25.x = parseInt(this._host.style.left, 10);
 		_preferences$25.save();
-		this.ui.find(".preview_box").empty();
-		this.ui.find("input").val("");
+		const root = this.getRoot();
+		const previewBox = root.querySelector(".preview_box");
+		if (previewBox) previewBox.innerHTML = "";
+		root.querySelectorAll("input").forEach((input) => {
+			input.value = "";
+		});
 		this.answer = null;
 		this.imageData = null;
 	};
 	CaptchaUpload.uploadError = function uploadError() {
-		UIManager.showMessageBox(DB.getMessage(2881), "ok", function() {}, true);
+		UIManager.showMessageBox(DB.getMessage(2881), "ok", () => {}, true);
 	};
 	CaptchaUpload.uploadSuccess = function uploadSuccess() {
-		UIManager.showMessageBox(DB.getMessage(2880), "ok", function() {}, true);
+		UIManager.showMessageBox(DB.getMessage(2880), "ok", () => {}, true);
 	};
 	/**
 	* Callbacks
@@ -254259,30 +254980,30 @@ var init_CaptchaUpload = __esmMin((() => {
 //#region src/UI/Components/Captcha/CaptchaSelector.html?raw
 var CaptchaSelector_default$2;
 var init_CaptchaSelector$2 = __esmMin((() => {
-	CaptchaSelector_default$2 = "<div id=\"CaptchaSelector\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"options\">\r\n			<input id=\"target_type_character\" type=\"radio\" name=\"target_type\" value=\"character\" checked />\r\n			<label for=\"target_type_character\" data-text=\"2887\"></label>\r\n			<input id=\"target_type_range\" type=\"radio\" name=\"target_type\" value=\"range\" />\r\n			<label for=\"target_type_range\" data-text=\"2888\"></label>\r\n			<input id=\"range_val\" type=\"number\" class=\"range_val\" value=\"1\" min=\"1\" max=\"9\" />\r\n			<button\r\n				class=\"btn btn_active\"\r\n				data-background=\"btn_q_active.bmp\"\r\n				data-hover=\"btn_q_active_a.bmp\"\r\n				data-down=\"btn_q_active_b.bmp\"\r\n			></button>\r\n		</div>\r\n		<ul class=\"player_list\">\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n		</ul>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<button\r\n				class=\"btn ok\"\r\n				data-background=\"btn_ok.bmp\"\r\n				data-hover=\"btn_ok_a.bmp\"\r\n				data-down=\"btn_ok_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n	<div class=\"character_info\">\r\n		<button\r\n			class=\"base close-character\"\r\n			data-background=\"basic_interface/sys_close_off.bmp\"\r\n			data-hover=\"basic_interface/sys_close_on.bmp\"\r\n		></button>\r\n		<span class=\"character-name\"></span><br />\r\n		<span class=\"character-job\"></span>\r\n	</div>\r\n</div>\r\n";
+	CaptchaSelector_default$2 = "<div id=\"CaptchaSelector\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"options\">\r\n			<input id=\"target_type_character\" type=\"radio\" name=\"target_type\" value=\"character\" checked />\r\n			<label for=\"target_type_character\"><ui-text msg=\"2887\"></ui-text></label>\r\n			<input id=\"target_type_range\" type=\"radio\" name=\"target_type\" value=\"range\" />\r\n			<label for=\"target_type_range\"><ui-text msg=\"2888\"></ui-text></label>\r\n			<input type=\"number\" class=\"range_val\" value=\"1\" min=\"1\" max=\"9\" />\r\n			<ui-button\r\n				class=\"btn btn_active\"\r\n				bg=\"btn_q_active.bmp\"\r\n				hover=\"btn_q_active_a.bmp\"\r\n				down=\"btn_q_active_b.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<ul class=\"player_list\">\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n			<li class=\"player\"></li>\r\n		</ul>\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n	<div class=\"character_info\">\r\n		<ui-button\r\n			class=\"base close-character\"\r\n			bg=\"basic_interface/sys_close_off.bmp\"\r\n			hover=\"basic_interface/sys_close_on.bmp\"\r\n		></ui-button>\r\n		<span class=\"character-name\"></span><br />\r\n		<span class=\"character-job\"></span>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaSelector.css?raw
 var CaptchaSelector_default$1;
 var init_CaptchaSelector$1 = __esmMin((() => {
-	CaptchaSelector_default$1 = "#CaptchaSelector {\r\n	width: 210px;\r\n	height: 310px;\r\n	position: absolute;\r\n	z-index: 50;\r\n	background-color: #ffffff;\r\n	font-size: 12px;\r\n}\r\n\r\n#CaptchaSelector .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaSelector .titlebar {\r\n	width: 210px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaSelector .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaSelector .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaSelector .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaSelector .titlebar .right,\r\n#CaptchaSelector .character_info .close-character {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaSelector .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaSelector .container {\r\n	height: 293px;\r\n}\r\n\r\n#CaptchaSelector .options {\r\n	height: 22px;\r\n}\r\n\r\n#CaptchaSelector .player_list {\r\n	height: 247px;\r\n	overflow-y: auto;\r\n	list-style: none;\r\n	margin: 0px 10px;\r\n	padding: 0;\r\n}\r\n\r\n#CaptchaSelector .player_list li {\r\n	width: 190px;\r\n	height: 24px;\r\n	margin: 2px 0;\r\n	background-color: #e5e5e5;\r\n	display: flex;\r\n	align-items: center;\r\n	gap: 5px;\r\n}\r\n\r\n#CaptchaSelector .options {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#CaptchaSelector .footer {\r\n	display: flex;\r\n	justify-content: end;\r\n	align-items: center;\r\n	height: 24px;\r\n}\r\n\r\n#CaptchaSelector .range_val {\r\n	appearance: none;\r\n	width: 20px;\r\n	border: 1px solid;\r\n	margin-left: 3px;\r\n}\r\n\r\n#CaptchaSelector .range_val::-webkit-inner-spin-button,\r\n#CaptchaSelector .range_val::-webkit-outer-spin-button {\r\n	-webkit-appearance: none;\r\n	margin: 0;\r\n	border: 1px solid;\r\n	margin-left: 3px;\r\n}\r\n\r\n#CaptchaSelector .btn_active,\r\n#CaptchaSelector .footer .btn {\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#CaptchaSelector .btn_active {\r\n	margin-left: 15px;\r\n}\r\n\r\n#CaptchaSelector .footer .btn {\r\n	margin-right: 10px;\r\n}\r\n\r\n#CaptchaSelector .character_info {\r\n	position: absolute;\r\n	bottom: 0;\r\n	left: 0;\r\n	width: 200px;\r\n	height: 35px;\r\n	background-color: #ffffff;\r\n	border-radius: 3px;\r\n}\r\n\r\n#CaptchaSelector li a {\r\n	text-decoration: underline;\r\n	color: black;\r\n}\r\n";
+	CaptchaSelector_default$1 = ":host {\r\n	position: absolute;\r\n	width: 210px;\r\n	height: 310px;\r\n	z-index: 50;\r\n}\r\n\r\n#CaptchaSelector {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #ffffff;\r\n	font-size: 12px;\r\n}\r\n\r\n#CaptchaSelector .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaSelector .titlebar {\r\n	width: 210px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaSelector .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaSelector .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaSelector .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaSelector .titlebar .right,\r\n#CaptchaSelector .character_info .close-character {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaSelector .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaSelector .container {\r\n	height: 293px;\r\n}\r\n\r\n#CaptchaSelector .options {\r\n	height: 22px;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#CaptchaSelector .player_list {\r\n	height: 247px;\r\n	overflow-y: auto;\r\n	list-style: none;\r\n	margin: 0px 10px;\r\n	padding: 0;\r\n}\r\n\r\n#CaptchaSelector .player_list li {\r\n	width: 190px;\r\n	height: 24px;\r\n	margin: 2px 0;\r\n	background-color: #e5e5e5;\r\n	display: flex;\r\n	align-items: center;\r\n	gap: 5px;\r\n}\r\n\r\n#CaptchaSelector .footer {\r\n	display: flex;\r\n	justify-content: end;\r\n	align-items: center;\r\n	height: 24px;\r\n}\r\n\r\n#CaptchaSelector .range_val {\r\n	appearance: none;\r\n	width: 20px;\r\n	border: 1px solid;\r\n	margin-left: 3px;\r\n}\r\n\r\n#CaptchaSelector .range_val::-webkit-inner-spin-button,\r\n#CaptchaSelector .range_val::-webkit-outer-spin-button {\r\n	-webkit-appearance: none;\r\n	margin: 0;\r\n	border: 1px solid;\r\n	margin-left: 3px;\r\n}\r\n\r\n#CaptchaSelector .btn_active,\r\n#CaptchaSelector .footer .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n}\r\n\r\n#CaptchaSelector .btn_active {\r\n	margin-left: 15px;\r\n}\r\n\r\n#CaptchaSelector .footer .btn {\r\n	margin-right: 10px;\r\n}\r\n\r\n#CaptchaSelector .character_info {\r\n	position: absolute;\r\n	bottom: 0;\r\n	left: 0;\r\n	width: 200px;\r\n	height: 35px;\r\n	background-color: #ffffff;\r\n	border-radius: 3px;\r\n	display: none;\r\n}\r\n\r\n#CaptchaSelector li a {\r\n	text-decoration: underline;\r\n	color: black;\r\n}\r\n\r\n#CaptchaSelector .player_list li .remove {\r\n	width: 11px;\r\n	height: 11px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaSelector.js
 var CaptchaSelector, _preferences$24, _aidList, _aidInformation, _range, _active$2, CaptchaSelector_default;
 var init_CaptchaSelector = __esmMin((() => {
-	init_jquery();
 	init_UIManager();
-	init_UIComponent();
-	init_CaptchaSelector$2();
-	init_CaptchaSelector$1();
+	init_GUIComponent();
 	init_Preferences$1();
 	init_Renderer();
 	init_EntityManager();
 	init_SessionStorage();
 	init_DBManager();
 	init_MonsterTable();
-	CaptchaSelector = new UIComponent("CaptchaSelector", CaptchaSelector_default$2, CaptchaSelector_default$1);
+	init_Elements();
+	init_CaptchaSelector$2();
+	init_CaptchaSelector$1();
+	CaptchaSelector = new GUIComponent("CaptchaSelector", CaptchaSelector_default$1);
 	_preferences$24 = Preferences.get("CaptchaSelector", {
 		x: 230,
 		y: 295
@@ -254291,18 +255012,24 @@ var init_CaptchaSelector = __esmMin((() => {
 	_aidInformation = [];
 	_range = 1;
 	_active$2 = false;
+	CaptchaSelector.render = () => CaptchaSelector_default$2;
+	CaptchaSelector.captureKeyEvents = true;
 	/**
 	* Initialize GUI
 	*/
-	CaptchaSelector.init = function Init() {
+	CaptchaSelector.init = function init() {
 		this.draggable(".titlebar");
-		this.ui.find(".close").click(this.remove.bind(this));
-		const self = this;
-		this.ui.find(".btn_active").click(function() {
+		const root = this.getRoot();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => this.remove());
+		const activeBtn = root.querySelector(".btn_active");
+		if (activeBtn) activeBtn.addEventListener("click", () => {
 			_active$2 = !_active$2;
 			if (_active$2) {
-				const type = self.ui.find("input[name=\"target_type\"]:checked").val();
-				_range = parseInt(self.ui.find(".range_val").val(), 10) || 1;
+				const checked = root.querySelector("input[name=\"target_type\"]:checked");
+				const type = checked ? checked.value : "character";
+				const rangeInput = root.querySelector(".range_val");
+				_range = parseInt(rangeInput ? rangeInput.value : "1", 10) || 1;
 				_range = Math.min(Math.max(1, _range), 9);
 				if (type === "character") {
 					SessionStorage_default.captchaGetIdOnEntityClick = true;
@@ -254317,33 +255044,41 @@ var init_CaptchaSelector = __esmMin((() => {
 				SessionStorage_default.captchaGetIdOnFloorClick = false;
 			}
 		});
-		this.ui.find(".ok").click(function() {
-			if (_aidList.length > 0) UIManager.showPromptBox(DB.getMessage(2876).replace("%d", _aidList.length), "ok", "cancel", function() {
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => {
+			if (_aidList.length > 0) UIManager.showPromptBox(DB.getMessage(2876).replace("%d", _aidList.length), "ok", "cancel", () => {
 				CaptchaSelector.sendCaptchaToPlayers();
-			}, function() {});
+			}, () => {});
 		});
-		this.ui.find(".close-character").click(function() {
-			self.ui.find(".character_info").hide();
+		const closeCharBtn = root.querySelector(".close-character");
+		if (closeCharBtn) closeCharBtn.addEventListener("click", () => {
+			const charInfo = root.querySelector(".character_info");
+			if (charInfo) charInfo.style.display = "none";
 		});
-		this.ui.find(".character_info").hide();
+	};
+	CaptchaSelector.onKeyDown = function onKeyDown(event) {
+		if (CaptchaSelector.isEditableFocused()) {
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
 	};
 	/**
 	* Append to DOM
 	*/
-	CaptchaSelector.onAppend = function OnAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$24.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$24.x), Renderer.width - this.ui.width())
-		});
+	CaptchaSelector.onAppend = function onAppend() {
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$24.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$24.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Remove data from UI
 	*/
-	CaptchaSelector.onRemove = function OnRemove() {
-		_preferences$24.y = parseInt(this.ui.css("top"), 10);
-		_preferences$24.x = parseInt(this.ui.css("left"), 10);
+	CaptchaSelector.onRemove = function onRemove() {
+		_preferences$24.y = parseInt(this._host.style.top, 10);
+		_preferences$24.x = parseInt(this._host.style.left, 10);
 		_preferences$24.save();
-		this.ui.find(".character_info").hide();
+		const charInfo = this.getRoot().querySelector(".character_info");
+		if (charInfo) charInfo.style.display = "none";
 		this.cleanUIList();
 		_aidList = [];
 		_aidInformation = [];
@@ -254357,57 +255092,65 @@ var init_CaptchaSelector = __esmMin((() => {
 	* Set player list
 	* @param {Array} players - List of player AIDs
 	*/
-	CaptchaSelector.setPlayers = function SetPlayers(players) {
+	CaptchaSelector.setPlayers = function setPlayers(players) {
 		this.cleanUIList();
 		_aidInformation = [];
-		const li_list = this.ui.find(".player_list li");
-		players = players.filter(function(aid) {
-			return SessionStorage_default.Entity.GID !== aid;
-		});
-		for (let i = 0; i < players.length; i++) {
-			const li = li_list.eq(i);
+		const root = this.getRoot();
+		const liElements = root.querySelectorAll(".player_list li");
+		players = players.filter((aid) => SessionStorage_default.Entity.GID !== aid);
+		for (let i = 0; i < players.length && i < liElements.length; i++) {
+			const li = liElements[i];
 			const entity = EntityManager.get(players[i]);
 			const name = entity?.display?.name ?? "Unknown";
 			const aid = players[i];
-			li.addClass("player").data("aid", aid).html(`
-					<button class="base remove"
-                data-background="basic_interface/sys_close_off.bmp"
-                data-hover="basic_interface/sys_close_on.bmp"
-					data-aid="${aid}">
-            </button> 
-            <span><a data-aid="${aid}">${name}</a></span>`);
+			li.classList.add("player");
+			li.dataset.aid = aid;
+			li.innerHTML = "";
+			const removeBtn = document.createElement("ui-button");
+			removeBtn.classList.add("base", "remove");
+			removeBtn.setAttribute("bg", "basic_interface/sys_close_off.bmp");
+			removeBtn.setAttribute("hover", "basic_interface/sys_close_on.bmp");
+			removeBtn.dataset.aid = aid;
+			removeBtn.addEventListener("click", () => {
+				_aidList = _aidList.filter((item) => item !== aid);
+				CaptchaSelector.setPlayers(_aidList);
+			});
+			li.appendChild(removeBtn);
+			const span = document.createElement("span");
+			const link = document.createElement("a");
+			link.dataset.aid = aid;
+			link.textContent = name;
+			link.addEventListener("click", () => {
+				const charEntity = EntityManager.get(aid);
+				const charName = charEntity?.display?.name ?? "Unknown";
+				const charJob = MonsterTable_default[charEntity?._job ?? 0] ?? "Unknown";
+				const charInfo = root.querySelector(".character_info");
+				if (charInfo) {
+					const nameEl = charInfo.querySelector(".character-name");
+					if (nameEl) nameEl.textContent = charName;
+					const jobEl = charInfo.querySelector(".character-job");
+					if (jobEl) jobEl.textContent = charJob;
+					charInfo.style.top = `${li.offsetTop}px`;
+					charInfo.style.left = "0px";
+					charInfo.style.display = "block";
+				}
+			});
+			span.appendChild(link);
+			li.appendChild(document.createTextNode(" "));
+			li.appendChild(span);
 			_aidInformation.push({
 				aid,
 				name,
 				job: MonsterTable_default[entity?._job ?? 0] ?? "Unknown"
 			});
 		}
-		this.ui.find(".player_list li .remove").click(function() {
-			const aid = jquery_default(this).data("aid");
-			_aidList = _aidList.filter(function(item) {
-				return item !== aid;
-			});
-			CaptchaSelector.setPlayers(_aidList);
-		});
-		this.ui.find(".player_list li").find("a").click(function() {
-			const aid = jquery_default(this).data("aid");
-			const entity = EntityManager.get(aid);
-			const name = entity?.display?.name ?? "Unknown";
-			const job = MonsterTable_default[entity?._job ?? 0] ?? "Unknown";
-			CaptchaSelector.ui.find(".character_info").find(".character-name").text(name);
-			CaptchaSelector.ui.find(".character_info").find(".character-job").text(job);
-			CaptchaSelector.ui.find(".character_info").css({
-				top: jquery_default(this).position().top,
-				left: 0
-			});
-			CaptchaSelector.ui.find(".character_info").show();
-		});
-		this.ui.each(this.parseHTML).find("*").each(this.parseHTML);
 		_aidList = players;
 	};
 	CaptchaSelector.cleanUIList = function cleanList() {
-		this.ui.find(".player_list li").each(function() {
-			jquery_default(this).html("");
+		this.getRoot().querySelectorAll(".player_list li").forEach((li) => {
+			li.innerHTML = "";
+			li.classList.remove("player");
+			delete li.dataset.aid;
 		});
 	};
 	CaptchaSelector.addPlayer = function addPlayer(aid) {
@@ -254419,7 +255162,7 @@ var init_CaptchaSelector = __esmMin((() => {
 		if (CaptchaSelector.requestPlayersIdsInRange) CaptchaSelector.requestPlayersIdsInRange(xPos, yPos, _range);
 	};
 	CaptchaSelector.sendCaptchaToPlayers = function sendCaptchaToPlayers() {
-		_aidList.forEach(function(aid) {
+		_aidList.forEach((aid) => {
 			if (CaptchaSelector.sendCaptchaToPlayer) CaptchaSelector.sendCaptchaToPlayer(aid);
 		});
 		this.cleanUIList();
@@ -310580,7 +311323,8 @@ var init_DBManager = __esmMin((() => {
 			JobConst_default.PORING_SNOVICE,
 			JobConst_default.PORING_SNOVICE2,
 			JobConst_default.PORING_SNOVICE_B,
-			JobConst_default.PORING_SNOVICE2_B
+			JobConst_default.PORING_SNOVICE2_B,
+			JobConst_default.HYPER_NOVICE_RIDING
 		]);
 		static isSuperNovice(jobid) {
 			return this.S_JOBS_SN.has(jobid);
@@ -310613,7 +311357,16 @@ var init_DBManager = __esmMin((() => {
 			JobConst_default.SOUL_REAPER2_B,
 			JobConst_default.PORING_TAEKWON,
 			JobConst_default.PORING_STAR,
-			JobConst_default.FROG_LINKER
+			JobConst_default.FROG_LINKER,
+			JobConst_default.PORING_TAEKWON_B,
+			JobConst_default.PORING_STAR_B,
+			JobConst_default.FROG_LINKER_B,
+			JobConst_default.HAETAE_STAR_EMPEROR,
+			JobConst_default.HAETAE_SOUL_REAPER,
+			JobConst_default.HAETAE_STAR_EMPEROR_B,
+			JobConst_default.HAETAE_SOUL_REAPER_B,
+			JobConst_default.SKY_EMPEROR_RIDING,
+			JobConst_default.SOUL_ASCETIC_RIDING
 		]);
 		static isTaeKwon(jobid) {
 			return this.S_JOBS_TAEKWON.has(jobid);
@@ -310631,7 +311384,10 @@ var init_DBManager = __esmMin((() => {
 			JobConst_default.GUNSLINGER_B,
 			JobConst_default.REBELLION_B,
 			JobConst_default.PECO_GUNNER,
-			JobConst_default.PECO_REBELLION
+			JobConst_default.PECO_REBELLION,
+			JobConst_default.NIGHT_WATCH_RIDING,
+			JobConst_default.PECO_GUNNER_B,
+			JobConst_default.PECO_REBELLION_B
 		]);
 		static isGunslinger(jobid) {
 			return this.S_JOBS_GS.has(jobid);
@@ -313829,7 +314585,7 @@ function startAutoTarget() {
 /**
 * Stop event propagation
 */
-function stopPropagation$8(event) {
+function stopPropagation$7(event) {
 	if (event && typeof event.preventDefault === "function") event.preventDefault();
 	event.stopImmediatePropagation();
 	return false;
@@ -314101,11 +314857,11 @@ var init_MobileUI = __esmMin((() => {
 		const root = MobileUI.getRoot();
 		bindButton(root, "#toggleUIButton", (e) => {
 			toggleButtons();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#fullscreenButton", (e) => {
 			toggleFullScreen();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		const fKeyMap = [
 			["#f1Button", 112],
@@ -314156,48 +314912,48 @@ var init_MobileUI = __esmMin((() => {
 		].forEach(([selector, keyCode]) => {
 			bindButton(root, selector, (e) => {
 				logKeyPress(keyCode);
-				stopPropagation$8(e);
+				stopPropagation$7(e);
 			});
 		});
 		bindButton(root, "#f10Button", (e) => {
 			logKeyPress(121);
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#f12Button", (e) => {
 			logKeyPress(123);
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#insButton", (e) => {
 			logKeyPress(45);
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#toggleStatusButton", (e) => {
 			toggleStatus();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#toggleTargetingButton", (e) => {
 			toggleTouchTargeting();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#toggleAutoFollowButton", (e) => {
 			toggleAutoFollow();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#toggleAutoTargetButton", (e) => {
 			toggleAutoTargeting();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#attackButton", (e) => {
 			attackTargeted();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#pickupButton", (e) => {
 			pickUpItem();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		bindButton(root, "#switchshorcutButton", (e) => {
 			switchSkillButtons();
-			stopPropagation$8(e);
+			stopPropagation$7(e);
 		});
 		root.querySelectorAll(".buttons").forEach((btn) => {
 			btn.addEventListener("mousedown", (e) => e.target.classList.add("pressed"));
@@ -317512,16 +318268,22 @@ var init_VendingShop = __esmMin((() => {
 //#region src/UI/Components/VendingReport/VendingReport.html?raw
 var VendingReport_default$2;
 var init_VendingReport$2 = __esmMin((() => {
-	VendingReport_default$2 = "<div id=\"VendingReport\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text reportname\" data-text=\"2559\"></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"container\" data-background=\"basic_interface/itemwin_left.bmp\">\r\n			<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"btn close\"\r\n					data-background=\"btn_close.bmp\"\r\n					data-hover=\"btn_close_a.bmp\"\r\n					data-down=\"btn_close_b.bmp\"\r\n				></button>\r\n				<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	VendingReport_default$2 = "<div id=\"VendingReport\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-text class=\"text reportname\" msg=\"2559\"></ui-text>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"container\">\r\n			<ui-image src=\"basic_interface/itemwin_left.bmp\"></ui-image>\r\n			<div class=\"content\">\r\n				<ui-image src=\"basic_interface/itemwin_mid.bmp\"></ui-image>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"btn close\"\r\n					bg=\"btn_close.bmp\"\r\n					hover=\"btn_close_a.bmp\"\r\n					down=\"btn_close_b.bmp\"\r\n				></ui-button>\r\n				<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/VendingReport/VendingReport.css?raw
 var VendingReport_default$1;
 var init_VendingReport$1 = __esmMin((() => {
-	VendingReport_default$1 = "#VendingReport {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 400px;\r\n}\r\n\r\n#VendingReport .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#VendingReport .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#VendingReport .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#VendingReport .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#VendingReport .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#VendingReport .container {\r\n	padding-left: 20px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	background-repeat: repeat-y;\r\n	padding-right: 2px;\r\n	padding-top: 5px;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#VendingReport .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#VendingReport .hide {\r\n	height: 100%;\r\n	width: 16px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#VendingReport .content {\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 100px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	overflow-y: auto;\r\n}\r\n\r\n#VendingReport .content .item {\r\n	display: flex;\r\n	width: 100%;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n	gap: 5px;\r\n}\r\n\r\n#VendingReport .info {\r\n	width: 100%;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#VendingReport .info .count {\r\n	position: absolute;\r\n	top: 17px;\r\n	left: 17px;\r\n}\r\n\r\n#VendingReport .info .buyer {\r\n	width: 120px;\r\n}\r\n\r\n#VendingReport .info .zeny {\r\n	width: 35%;\r\n}\r\n\r\n#VendingReport .info .date {\r\n	width: 30%;\r\n}\r\n\r\n#VendingReport .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#VendingReport .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#VendingReport .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#VendingReport .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#VendingReport .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#VendingReport .footer .right {\r\n	float: right;\r\n	margin-right: 15px;\r\n	margin-top: 4px;\r\n}\r\n#VendingReport .close {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#VendingReport .extend {\r\n	position: absolute;\r\n	right: 1px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+	VendingReport_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 400px;\r\n}\r\n\r\n#VendingReport {\r\n	position: absolute;\r\n}\r\n\r\n#VendingReport .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#VendingReport .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#VendingReport .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#VendingReport .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#VendingReport .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#VendingReport .container {\r\n	padding-left: 20px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n	background-repeat: repeat-y;\r\n	padding-right: 2px;\r\n	padding-top: 5px;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#VendingReport .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#VendingReport .hide {\r\n	height: 100%;\r\n	width: 16px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#VendingReport .content {\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 100px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	overflow-y: auto;\r\n}\r\n\r\n#VendingReport .content .item {\r\n	display: flex;\r\n	width: 100%;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n	gap: 5px;\r\n}\r\n\r\n#VendingReport .info {\r\n	width: 100%;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#VendingReport .info .count {\r\n	position: absolute;\r\n	top: 17px;\r\n	left: 17px;\r\n}\r\n\r\n#VendingReport .info .buyer {\r\n	width: 120px;\r\n}\r\n\r\n#VendingReport .info .zeny {\r\n	width: 35%;\r\n}\r\n\r\n#VendingReport .info .date {\r\n	width: 30%;\r\n}\r\n\r\n#VendingReport .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#VendingReport .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#VendingReport .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#VendingReport .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#VendingReport .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#VendingReport .footer .right {\r\n	float: right;\r\n	margin-right: 15px;\r\n	margin-top: 4px;\r\n}\r\n#VendingReport .close {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#VendingReport .extend {\r\n	position: absolute;\r\n	right: 1px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/VendingReport/VendingReport.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$7() {
+	return VendingReport._shadow || VendingReport._host;
+}
 /**
 * Prettify zeny : 1000000 -> 1,000,000
 *
@@ -317535,7 +318297,7 @@ function prettyZeny$1(val, useStyle) {
 	let i;
 	let str = "";
 	for (i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-	if (useStyle) str = "<span style=\"" + [
+	if (useStyle) str = `<span style="${[
 		"color:#000000; text-shadow:1px 0px #00ffff;",
 		"color:#0000ff; text-shadow:1px 0px #ce00ce;",
 		"color:#0000ff; text-shadow:1px 0px #00ffff;",
@@ -317546,31 +318308,27 @@ function prettyZeny$1(val, useStyle) {
 		"color:#ff0000;",
 		"color:#000000; text-shadow:1px 0px #cece63;",
 		"color:#ff0000; text-shadow:1px 0px #ff007b;"
-	][count - 1] + "\">" + str + "</span>";
+	][count - 1]}">${str}</span>`;
 	return str;
 }
 /**
 * Handle mouse wheel event to scroll the content.
 *
 * @param {Event} event The mouse wheel event.
-*
-* @return {boolean} false to prevent default handling.
 */
 function onScrollWheel(event) {
 	event.preventDefault();
 	event.stopImmediatePropagation();
 	const ROW_HEIGHT = 24;
-	const oe = event.originalEvent;
 	let delta = 0;
-	if (oe.wheelDelta) delta = oe.wheelDelta > 0 ? 1 : -1;
-	else if (oe.deltaY) delta = oe.deltaY < 0 ? 1 : -1;
+	if (event.wheelDelta) delta = event.wheelDelta > 0 ? 1 : -1;
+	else if (event.deltaY) delta = event.deltaY < 0 ? 1 : -1;
 	let target = this.scrollTop - delta * ROW_HEIGHT;
 	const maxScroll = this.scrollHeight - this.clientHeight;
 	target = Math.max(0, Math.min(target, maxScroll));
 	target = Math.round(target / ROW_HEIGHT) * ROW_HEIGHT;
 	this.scrollTop = target;
 	this.style.backgroundPositionY = -target + "px";
-	return false;
 }
 /**
 * Sync the background position to the scroll position.
@@ -317587,38 +318345,41 @@ function onItemOver$6() {
 	const idx = parseInt(this.getAttribute("data-id"), 10);
 	const item = VendingReport.getItemByIndex(idx);
 	if (!item) return;
-	const pos = jquery_default(this).position();
-	const overlay = VendingReport.ui.find(".overlay");
-	overlay.show();
-	overlay.css({
-		top: pos.top,
-		left: pos.left + 35
-	});
-	overlay.text(DB.getItemName(item));
-	if (item.IsIdentified) overlay.removeClass("grey");
+	const root = _root$7();
+	const overlay = root.querySelector(".overlay");
+	const innerRoot = root.querySelector("#VendingReport");
+	if (!overlay || !innerRoot) return;
+	const itemRect = this.getBoundingClientRect();
+	const rootRect = innerRoot.getBoundingClientRect();
+	overlay.style.display = "block";
+	overlay.style.top = `${itemRect.top - rootRect.top}px`;
+	overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+	overlay.textContent = DB.getItemName(item);
+	if (item.IsIdentified) overlay.classList.remove("grey");
 }
 /**
 * Hide the item name
 */
 function onItemOut$7() {
-	VendingReport.ui.find(".overlay").hide();
+	const overlay = _root$7().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Get item info (open description window)
 */
 function onItemInfo$9(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const index = parseInt(this.getAttribute("data-id"), 10);
 	const item = VendingReport.getItemByIndex(index);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
 /**
 * Format a Unix timestamp (seconds) into MM/DD - HH:mm:sec
@@ -317633,17 +318394,17 @@ function formatUnixDate(unixTimestamp) {
 var VendingReport, VendingReportTable, _preferences$18, VendingReport_default;
 var init_VendingReport = __esmMin((() => {
 	init_DBManager();
-	init_jquery();
 	init_Client();
 	init_Preferences$1();
 	init_EntityManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_ItemInfo();
 	init_VendingShop();
+	init_Elements();
 	init_VendingReport$2();
 	init_VendingReport$1();
-	VendingReport = new UIComponent("VendingReport", VendingReport_default$2, VendingReport_default$1);
+	VendingReport = new GUIComponent("VendingReport", VendingReport_default$1);
 	VendingReportTable = {
 		list: [],
 		_nextIndex: 0
@@ -317654,6 +318415,8 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport._resizing = false;
 	VendingReport._startY = 0;
 	VendingReport._startHeight = 0;
+	VendingReport._boundResizeDrag = null;
+	VendingReport._boundResizeStop = null;
 	_preferences$18 = Preferences.get("VendingReport", {
 		x: 200,
 		y: 200,
@@ -317661,48 +318424,74 @@ var init_VendingReport = __esmMin((() => {
 		height: 180
 	}, 1);
 	/**
+	* Render HTML
+	*/
+	VendingReport.render = () => VendingReport_default$2;
+	/**
 	* Initialize UI
 	*/
 	VendingReport.init = function Init() {
-		this.ui.find(".btn.close").click(function() {
+		const root = _root$7();
+		const closeBtn = root.querySelector(".btn.close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
 			VendingReport.onClose();
 		});
-		const self = this;
-		this.ui.find(".extend").on("mousedown", function(e) {
+		const extendBtn = root.querySelector(".extend");
+		if (extendBtn) extendBtn.addEventListener("mousedown", (e) => {
 			e.preventDefault();
-			self._resizing = true;
-			self._startY = e.clientY;
-			self._startHeight = self.ui.find(".container .content").height();
-			jquery_default(document).on("mousemove.vendingResize", self.onResizeDrag.bind(self)).on("mouseup.vendingResize", self.onResizeStop.bind(self));
+			this._resizing = true;
+			this._startY = e.clientY;
+			const content = root.querySelector(".container .content");
+			this._startHeight = content ? content.getBoundingClientRect().height : 0;
+			this._boundResizeDrag = this.onResizeDrag.bind(this);
+			this._boundResizeStop = this.onResizeStop.bind(this);
+			document.addEventListener("mousemove", this._boundResizeDrag);
+			document.addEventListener("mouseup", this._boundResizeStop);
 		});
-		this.ui.find(".container .content").on("mousewheel DOMMouseScroll", onScrollWheel).on("wheel", onScrollWheel).on("scroll", onScrollSync).on("mouseover", ".item", onItemOver$6).on("mouseout", ".item", onItemOut$7).on("contextmenu", ".item", onItemInfo$9);
-		this.draggable(this.ui.find(".titlebar"));
+		const content = root.querySelector(".container .content");
+		if (content) {
+			content.addEventListener("wheel", onScrollWheel);
+			content.addEventListener("scroll", onScrollSync);
+			content.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$6.call(item, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOut$7.call(item, e);
+			});
+			content.addEventListener("contextmenu", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$9.call(item, e);
+			});
+		}
+		this.draggable(root.querySelector(".titlebar"));
 	};
 	/**
 	* Apply preferences once append to body
 	*/
 	VendingReport.onAppend = function OnAppend() {
-		this.ui.show();
+		this._host.style.display = "";
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
 	*/
 	VendingReport.onRemove = function OnRemove() {
 		VendingReport.reset();
-		jquery_default(".ItemInfo").remove();
-		_preferences$18.y = parseInt(this.ui.css("top"), 10);
-		_preferences$18.x = parseInt(this.ui.css("left"), 10);
+		ItemInfo_default.remove();
+		_preferences$18.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$18.x = parseInt(this._host.style.left, 10) || 0;
 		_preferences$18.save();
-		this.ui.hide();
+		this._host.style.display = "none";
 	};
 	VendingReport.reset = function reset() {
 		VendingReportTable.list.length = 0;
 		VendingReportTable._nextIndex = 0;
-		this.ui.find(".container .content").empty();
+		const content = _root$7().querySelector(".container .content");
+		if (content) content.querySelectorAll(".item").forEach((el) => el.remove());
 	};
 	/**
 	* Extend window size
-	*
 	*/
 	VendingReport.onResizeDrag = function(e) {
 		if (!this._resizing) return;
@@ -317711,8 +318500,9 @@ var init_VendingReport = __esmMin((() => {
 		const deltaY = e.clientY - this._startY;
 		let newHeight = this._startHeight + deltaY;
 		newHeight = Math.min(Math.max(newHeight, MIN_HEIGHT), MAX_HEIGHT);
-		this.ui.find(".container .content").height(newHeight);
-		this.ui.height(newHeight + 31 + 19);
+		const content = _root$7().querySelector(".container .content");
+		if (content) content.style.height = `${newHeight}px`;
+		this._host.style.height = `${newHeight + 31 + 19}px`;
 	};
 	/**
 	* Stop resizing window
@@ -317723,7 +318513,10 @@ var init_VendingReport = __esmMin((() => {
 	*/
 	VendingReport.onResizeStop = function() {
 		this._resizing = false;
-		jquery_default(document).off(".vendingResize");
+		if (this._boundResizeDrag) document.removeEventListener("mousemove", this._boundResizeDrag);
+		if (this._boundResizeStop) document.removeEventListener("mouseup", this._boundResizeStop);
+		this._boundResizeDrag = null;
+		this._boundResizeStop = null;
 	};
 	/**
 	* Add a sold item to the Vending Report Table.
@@ -317736,7 +318529,8 @@ var init_VendingReport = __esmMin((() => {
 		if (!shopItem) return;
 		const entity = EntityManager.getByCID(pkt.CID);
 		const buyer = entity ? entity.display.name : "Unknown";
-		const reportItem = jquery_default.extend({}, shopItem, {
+		const reportItem = {
+			...shopItem,
 			reportId: ++VendingReportTable._nextIndex,
 			shopindex: pkt.index,
 			count: pkt.count,
@@ -317744,7 +318538,7 @@ var init_VendingReport = __esmMin((() => {
 			zeny: pkt.zeny,
 			date: formatUnixDate(pkt.date),
 			date_raw: pkt.date
-		});
+		};
 		this.addItem(reportItem);
 	};
 	/**
@@ -317763,10 +318557,12 @@ var init_VendingReport = __esmMin((() => {
 	*/
 	VendingReport.addItemSub = function addItemSub(item) {
 		const it = DB.getItemInfo(item.ITID);
-		const content = this.ui.find(".container .content");
-		content.append("<div class=\"item\" data-ITID=\"" + item.ITID + "\" data-index=\"" + item.shopindex + "\" data-id=\"" + item.reportId + "\"><div class=\"icon\"></div><div class=\"info\"><div class=\"count\">" + item.count + "</div><div class=\"buyer\">" + item.buyer + "</div><div class=\"zeny\">" + prettyZeny$1(item.zeny, false).toLocaleString() + " Zeny</div><div class=\"date\">" + item.date + "</div></div></div>");
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-			content.find(".item[data-id=\"" + item.reportId + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const content = _root$7().querySelector(".container .content");
+		if (!content) return false;
+		content.insertAdjacentHTML("beforeend", `<div class="item" data-ITID="${item.ITID}" data-index="${item.shopindex}" data-id="${item.reportId}"><div class="icon"></div><div class="info"><div class="count">${item.count}</div><div class="buyer">${item.buyer}</div><div class="zeny">${prettyZeny$1(item.zeny, false)} Zeny</div><div class="date">${item.date}</div></div></div>`);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = content.querySelector(`.item[data-id="${item.reportId}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 		return true;
 	};
@@ -317777,16 +318573,15 @@ var init_VendingReport = __esmMin((() => {
 	* @returns {Item}
 	*/
 	VendingReport.getItemByIndex = function getItemByIndex(index) {
-		let i, count;
 		const list = VendingReportTable.list;
-		for (i = 0, count = list.length; i < count; ++i) if (list[i].reportId === index) return list[i];
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].reportId === index) return list[i];
 		return null;
 	};
 	/**
 	* Close
 	*/
 	VendingReport.onClose = function onClose() {
-		this.onRemove();
+		this.remove();
 	};
 	VendingReport_default = UIManager.addComponent(VendingReport);
 }));
@@ -318902,21 +319697,35 @@ var init_StatusIcons = __esmMin((() => {
 //#region src/UI/Components/CashShop/CashShop.html?raw
 var CashShop_default$2;
 var init_CashShop$3 = __esmMin((() => {
-	CashShop_default$2 = "<div id=\"CashShop\" data-background=\"cashshop/img_shop_bg.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\">Sell List</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"panel-content\">\r\n			<div class=\"panel-banner\">\r\n				<div class=\"banner-slides\"></div>\r\n				<ul class=\"banner-dots\"></ul>\r\n			</div>\r\n			<div id=\"panel-menu\" class=\"panel-menu\">\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"0\"\r\n					data-title=\"New\"\r\n					data-background=\"cashshop/img_shop_tap0_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap0_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap0_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"1\"\r\n					data-title=\"Popular\"\r\n					data-background=\"cashshop/img_shop_tap1_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap1_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap1_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"2\"\r\n					data-title=\"Limited Sale\"\r\n					data-background=\"cashshop/img_shop_tap2_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap2_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap2_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"3\"\r\n					data-title=\"Rental Equipment\"\r\n					data-background=\"cashshop/img_shop_tap3_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap3_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap3_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"4\"\r\n					data-title=\"Permanent Equipment\"\r\n					data-background=\"cashshop/img_shop_tap4_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap4_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap4_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"5\"\r\n					data-title=\"Scrolls\"\r\n					data-background=\"cashshop/img_shop_tap5_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap5_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap5_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"6\"\r\n					data-title=\"Consumables\"\r\n					data-background=\"cashshop/img_shop_tap6_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap6_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap6_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"7\"\r\n					data-title=\"Other\"\r\n					data-background=\"cashshop/img_shop_tap7_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap7_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap7_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"8\"\r\n					data-title=\"Account Limited\"\r\n					data-background=\"cashshop/img_shop_tap8_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap8_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap8_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div id=\"panel-items\" class=\"panel-items\"></div>\r\n			<div class=\"panel-pagination\">\r\n				<button\r\n					class=\"go-first pagi-handler\"\r\n					data-index=\"1\"\r\n					data-background=\"cashshop/bt_arrowL2_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"go-prev pagi-handler\"\r\n					data-index=\"2\"\r\n					data-background=\"cashshop/bt_arrowL_on.bmp\"\r\n				></button>\r\n				<span class=\"pagi-changepage\">1</span><span>/</span><span class=\"pagi-countpage\">1</span>\r\n				<button\r\n					class=\"go-next pagi-handler\"\r\n					data-index=\"3\"\r\n					data-background=\"cashshop/bt_arrowR_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"go-last pagi-handler\"\r\n					data-index=\"4\"\r\n					data-background=\"cashshop/bt_arrowR2_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"panel-footer\">\r\n				<input type=\"text\" id=\"cashshop-search\" class=\"cashshop-search\" placeholder=\"Item Search\" />\r\n				<button\r\n					id=\"cashshop-search-btn\"\r\n					class=\"cashshop-search-btn\"\r\n					data-background=\"cashshop/btn_searchbar_normal.bmp\"\r\n					data-hover=\"cashshop/btn_searchbar_over.bmp\"\r\n					data-down=\"cashshop/btn_searchbar_press.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n		<div class=\"panel-cart\">\r\n			<div class=\"panel-cart-header\">\r\n				<div class=\"panel-cart-header-title\">Buy List</div>\r\n				<div class=\"panel-cart-charging-view\">\r\n					<div id=\"cashpoint\" class=\"view-cash-point\"><span>0</span></div>\r\n					<div class=\"panel-cart-cash-points\">\r\n						<button\r\n							class=\"panel-cart-charge-btn\"\r\n							data-background=\"cashshop/btn_charge_normal.bmp\"\r\n							data-down=\"cashshop/btn_charge_press.bmp\"\r\n						>\r\n							Charging\r\n						</button>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"panel-cart-body\" data-background=\"cashshop/img_shop_cart_bg.bmp\">\r\n				<div id=\"cart-list\" class=\"cart-list\">\r\n					<ul class=\"items\"></ul>\r\n				</div>\r\n			</div>\r\n			<div class=\"panel-cart-footer\">\r\n				<table>\r\n					<tr>\r\n						<td class=\"txt\">Free Points</td>\r\n						<td class=\"value free-point\">0 C</td>\r\n					</tr>\r\n					<tr>\r\n						<td class=\"txt\">Use Free Points</td>\r\n						<td class=\"value\">\r\n							<input\r\n								type=\"number\"\r\n								id=\"use-free-points\"\r\n								class=\"use-free-points\"\r\n								placeholder=\"0\"\r\n								value=\"0\"\r\n							/>C\r\n						</td>\r\n					</tr>\r\n					<tr>\r\n						<td class=\"txt\">Cash Point</td>\r\n						<td class=\"value cashpoint_footer\">0 C</td>\r\n					</tr>\r\n				</table>\r\n				<div class=\"cart-footer-action\">\r\n					<div class=\"total-price\">\r\n						<span>0 C</span>\r\n					</div>\r\n					<button\r\n						id=\"purchase-btn\"\r\n						data-background=\"cashshop/btn_buy_normal.bmp\"\r\n						data-down=\"cashshop/btn_buy_press.bmp\"\r\n					>\r\n						Purchase\r\n					</button>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n</div>\r\n";
+	CashShop_default$2 = "<div id=\"CashShop\" data-background=\"cashshop/img_shop_bg.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text\">Sell List</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<div class=\"panel-content\">\r\n			<div class=\"panel-banner\">\r\n				<div class=\"banner-slides\"></div>\r\n				<ul class=\"banner-dots\"></ul>\r\n			</div>\r\n			<div id=\"panel-menu\" class=\"panel-menu\">\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"0\"\r\n					data-title=\"New\"\r\n					data-background=\"cashshop/img_shop_tap0_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap0_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap0_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"1\"\r\n					data-title=\"Popular\"\r\n					data-background=\"cashshop/img_shop_tap1_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap1_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap1_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"2\"\r\n					data-title=\"Limited Sale\"\r\n					data-background=\"cashshop/img_shop_tap2_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap2_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap2_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"3\"\r\n					data-title=\"Rental Equipment\"\r\n					data-background=\"cashshop/img_shop_tap3_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap3_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap3_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"4\"\r\n					data-title=\"Permanent Equipment\"\r\n					data-background=\"cashshop/img_shop_tap4_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap4_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap4_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"5\"\r\n					data-title=\"Scrolls\"\r\n					data-background=\"cashshop/img_shop_tap5_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap5_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap5_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"6\"\r\n					data-title=\"Consumables\"\r\n					data-background=\"cashshop/img_shop_tap6_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap6_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap6_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"7\"\r\n					data-title=\"Other\"\r\n					data-background=\"cashshop/img_shop_tap7_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap7_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap7_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"tab\"\r\n					data-index=\"8\"\r\n					data-title=\"Account Limited\"\r\n					data-background=\"cashshop/img_shop_tap8_off.bmp\"\r\n					data-down=\"cashshop/img_shop_tap8_on.bmp\"\r\n					data-active=\"cashshop/img_shop_tap8_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div id=\"panel-items\" class=\"panel-items\"></div>\r\n			<div class=\"panel-pagination\">\r\n				<button\r\n					class=\"go-first pagi-handler\"\r\n					data-index=\"1\"\r\n					data-background=\"cashshop/bt_arrowL2_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"go-prev pagi-handler\"\r\n					data-index=\"2\"\r\n					data-background=\"cashshop/bt_arrowL_on.bmp\"\r\n				></button>\r\n				<span class=\"pagi-changepage\">1</span><span>/</span><span class=\"pagi-countpage\">1</span>\r\n				<button\r\n					class=\"go-next pagi-handler\"\r\n					data-index=\"3\"\r\n					data-background=\"cashshop/bt_arrowR_on.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"go-last pagi-handler\"\r\n					data-index=\"4\"\r\n					data-background=\"cashshop/bt_arrowR2_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"panel-footer\">\r\n				<input type=\"text\" id=\"cashshop-search\" class=\"cashshop-search\" placeholder=\"Item Search\" />\r\n				<button\r\n					id=\"cashshop-search-btn\"\r\n					class=\"cashshop-search-btn\"\r\n					data-background=\"cashshop/btn_searchbar_normal.bmp\"\r\n					data-hover=\"cashshop/btn_searchbar_over.bmp\"\r\n					data-down=\"cashshop/btn_searchbar_press.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n		<div class=\"panel-cart\">\r\n			<div class=\"panel-cart-header\">\r\n				<div class=\"panel-cart-header-title\">Buy List</div>\r\n				<div class=\"panel-cart-charging-view\">\r\n					<div id=\"cashpoint\" class=\"view-cash-point\"><span>0</span></div>\r\n					<div class=\"panel-cart-cash-points\">\r\n						<button\r\n							class=\"panel-cart-charge-btn\"\r\n							data-background=\"cashshop/btn_charge_normal.bmp\"\r\n							data-down=\"cashshop/btn_charge_press.bmp\"\r\n						>\r\n							Charging\r\n						</button>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"panel-cart-body\" data-background=\"cashshop/img_shop_cart_bg.bmp\">\r\n				<div id=\"cart-list\" class=\"cart-list\">\r\n					<ul class=\"items\"></ul>\r\n				</div>\r\n			</div>\r\n			<div class=\"panel-cart-footer\">\r\n				<table>\r\n					<tr>\r\n						<td class=\"txt\">Free Points</td>\r\n						<td class=\"value free-point\">0 C</td>\r\n					</tr>\r\n					<tr>\r\n						<td class=\"txt\">Use Free Points</td>\r\n						<td class=\"value\">\r\n							<input\r\n								type=\"number\"\r\n								id=\"use-free-points\"\r\n								class=\"use-free-points\"\r\n								placeholder=\"0\"\r\n								value=\"0\"\r\n							/>C\r\n						</td>\r\n					</tr>\r\n					<tr>\r\n						<td class=\"txt\">Cash Point</td>\r\n						<td class=\"value cashpoint_footer\">0 C</td>\r\n					</tr>\r\n				</table>\r\n				<div class=\"cart-footer-action\">\r\n					<div class=\"total-price\">\r\n						<span>0 C</span>\r\n					</div>\r\n					<button\r\n						id=\"purchase-btn\"\r\n						data-background=\"cashshop/btn_buy_normal.bmp\"\r\n						data-down=\"cashshop/btn_buy_press.bmp\"\r\n					>\r\n						Purchase\r\n					</button>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/CashShop/CashShop.css?raw
 var CashShop_default$1;
 var init_CashShop$2 = __esmMin((() => {
-	CashShop_default$1 = "#CashShop {\r\n	position: absolute;\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 723px;\r\n	height: 540px;\r\n	background: transparent;\r\n	border-radius: 3px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CashShop .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CashShop .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CashShop .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CashShop .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CashShop .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CashShop .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CashShop .panel {\r\n	display: flex;\r\n	flex-direction: row;\r\n	width: 100%;\r\n	height: 523px;\r\n	gap: 2px;\r\n}\r\n\r\n#CashShop .panel-content {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 535px;\r\n	height: 100%;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner {\r\n	width: 100%;\r\n	height: 55px;\r\n	position: relative;\r\n	overflow: hidden;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-slides {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: relative;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-slides .banner-slide {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	background-size: cover;\r\n	background-position: center;\r\n	opacity: 0;\r\n	transition: opacity 0.5s ease-in-out;\r\n	cursor: pointer;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-slides .banner-slide.active {\r\n	opacity: 1;\r\n	z-index: 1;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-dots {\r\n	position: absolute;\r\n	bottom: 5px;\r\n	right: 20px;\r\n	display: flex;\r\n	gap: 5px;\r\n	z-index: 2;\r\n	list-style: none;\r\n	padding: 0;\r\n	margin: 0;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-dots .banner-dot {\r\n	width: 8px;\r\n	height: 8px;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner button {\r\n	width: 100%;\r\n	height: 100%;\r\n	border: none;\r\n	background-color: transparent;\r\n}\r\n\r\n#CashShop .panel-content .panel-menu {\r\n	width: 100%;\r\n	height: 31.5px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: end;\r\n	gap: 2px;\r\n	flex-direction: row;\r\n}\r\n\r\n#CashShop .panel-content .panel-menu button {\r\n	width: 56px;\r\n	height: 31px;\r\n	border: none;\r\n	background-color: transparent;\r\n}\r\n\r\n#CashShop .panel-content .panel-items {\r\n	display: flex;\r\n	flex-direction: row;\r\n	flex-wrap: wrap;\r\n	align-content: flex-start;\r\n	width: 100%;\r\n	height: 380px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 172px;\r\n	height: 126px;\r\n	margin-left: 4px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .top-con,\r\n#CashShop .panel-content .panel-items .lower-con {\r\n	width: 100%;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .top-con {\r\n	text-align: center;\r\n	padding-top: 5px;\r\n	font-weight: bold;\r\n	padding-bottom: 5px;\r\n	color: #3a4aa4;\r\n	font-size: 10px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item-left-img {\r\n	width: 75px;\r\n	height: 98px;\r\n	background-size: cover;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item-right-desc {\r\n	float: right;\r\n	margin-right: 8px;\r\n	margin-top: 17px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item-right-desc .item-desc-price {\r\n	color: #ffffff;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .item-left-img {\r\n	margin-left: 4px;\r\n	float: left;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .lower-con .purchase-btn-container {\r\n	padding-top: 20px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .lower-con .purchase-btn-container .add-to-cart {\r\n	width: 81px;\r\n	height: 24px;\r\n	border: none;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .lower-con .purchase-btn-container .purchase-btn {\r\n	width: 81px;\r\n	height: 24px;\r\n	border: none;\r\n}\r\n\r\n#CashShop #panel-items .item-desc-price {\r\n	width: 81px;\r\n	height: 17px;\r\n	margin-top: 7px;\r\n	text-align: right;\r\n}\r\n\r\n#CashShop .item-desc-price span {\r\n	line-height: 18px;\r\n	margin-right: 5px;\r\n	text-align: right;\r\n	font-size: 10px;\r\n}\r\n\r\n#CashShop .item-desc-price .icon-gold-coin {\r\n	margin-top: 2px;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CashShop .panel-content .panel-pagination {\r\n	width: 100%;\r\n	height: 26px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#CashShop .panel-content .panel-pagination button {\r\n	width: 18px;\r\n	height: 14px;\r\n	background-position: center center;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	margin-top: 5px;\r\n}\r\n\r\n#CashShop .panel-content .panel-pagination span {\r\n	width: 15px;\r\n	height: 14px;\r\n	text-align: center;\r\n	margin-top: 7px;\r\n}\r\n\r\n#CashShop .panel-content .panel-footer {\r\n	width: 100%;\r\n	height: 30px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	flex-direction: row;\r\n}\r\n\r\n#CashShop .panel-content .panel-footer .cashshop-search {\r\n	border: none;\r\n	border-radius: 5px 0px 0px 5px;\r\n	width: 296px;\r\n	line-height: 14px;\r\n	margin-left: 2px;\r\n}\r\n\r\n#CashShop .panel-content .panel-footer .cashshop-search-btn {\r\n	border: 0px;\r\n	width: 54px;\r\n	height: 18px;\r\n	background-size: cover;\r\n	background-color: transparent;\r\n}\r\n\r\n#CashShop .panel-cart {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 185px;\r\n	height: 100%;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-header {\r\n	width: 100%;\r\n	height: 56px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-header-title {\r\n	padding-left: 65px;\r\n	color: white;\r\n	text-shadow: 2px 2px black;\r\n	height: 24px;\r\n	padding-top: 5px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	gap: 30px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view .view-cash-point {\r\n	width: 70px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	text-align: end;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view .panel-cart-cash-points {\r\n	width: 76px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	text-align: end;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view .panel-cart-charge-btn {\r\n	width: 64px;\r\n	height: 20px;\r\n	border: none;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-body {\r\n	width: 100%;\r\n	height: 360px;\r\n	background-size: cover;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer {\r\n	width: 100%;\r\n	height: 107px;\r\n}\r\n\r\n#CashShop .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#CashShop .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#CashShop .view-cash-point-2 {\r\n	background: #ffffff;\r\n	border: 1px solid #4d4d4d;\r\n	border-radius: 0px 4px 4px 0px;\r\n\r\n	padding: 4px;\r\n}\r\n\r\n#CashShop ul.items {\r\n	list-style: none;\r\n	list-style-type: none;\r\n	padding: 0px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#CashShop ul.items .item {\r\n	width: 172px;\r\n	height: 54px;\r\n	margin-left: 6px;\r\n	margin-bottom: 4px;\r\n	border-radius: 4px;\r\n	position: relative;\r\n}\r\n\r\n#CashShop ul.items .inner-item-dt {\r\n	width: 100%;\r\n	height: 100%;\r\n	float: left;\r\n}\r\n\r\n#CashShop .inner-item-dt .item-dt-img {\r\n	float: left;\r\n	width: 40px;\r\n	height: 50px;\r\n	background-size: contain;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CashShop .container-cart .container-cart-body {\r\n	height: 326px;\r\n}\r\n\r\n#CashShop .inner-item-dt .item-dt-desc {\r\n	float: left;\r\n	width: 115px;\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	font-size: 8px;\r\n}\r\n\r\n#CashShop .container-cart-footer {\r\n	width: 169px;\r\n	margin-left: 10px;\r\n	background: #cfdfef;\r\n	border-radius: 4px;\r\n	height: 108px;\r\n}\r\n\r\n#CashShop .container-cart-footer .item-desc-price {\r\n	width: 100%;\r\n	color: #fff;\r\n	height: 17px;\r\n	background: #4c7ba6;\r\n	margin-top: 4px;\r\n	border-radius: 4px 4px 0px 0px;\r\n	box-shadow: inset 1px 1px 3px #1c1c1c;\r\n	-webkit-box-shadow: inset 1px 1px 3px #1c1c1c;\r\n	-moz-box-shadow: inset 1px 1px 3px #1c1c1c;\r\n	font-weight: bold;\r\n	line-height: 20px;\r\n}\r\n\r\n#CashShop #cart-list .item-desc-price {\r\n	width: 50px;\r\n	height: 17px;\r\n	margin-top: 4px;\r\n	float: left;\r\n	text-align: center;\r\n}\r\n\r\n#CashShop #cart-list .item-counter {\r\n	width: 50px;\r\n	height: 17px;\r\n	float: left;\r\n	position: relative;\r\n	margin-top: 4px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt,\r\n#CashShop #cart-list .item-counter .item-cnt-up,\r\n#CashShop #cart-list .item-counter .item-cnt-down {\r\n	position: absolute;\r\n	width: 7px;\r\n	height: 7px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt-down {\r\n	bottom: 1px;\r\n	right: 1px;\r\n	width: 10px;\r\n	background-color: transparent;\r\n	border: 0px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt-up {\r\n	top: 0px;\r\n	right: 1px;\r\n	width: 10px;\r\n	background-color: transparent;\r\n	border: 0px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt {\r\n	top: 3px;\r\n	left: 12px;\r\n	color: #6e6d6d;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table {\r\n	font-size: 9px;\r\n	padding: 0px 14px;\r\n	width: 100%;\r\n	border-spacing: 1px;\r\n}\r\n\r\n#CashShop #cart-list {\r\n	height: 350px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	scrollbar-width: thin;\r\n}\r\n\r\n#CashShop #cart-list::-webkit-scrollbar {\r\n	width: 4px;\r\n}\r\n\r\n#CashShop #cart-list::-webkit-scrollbar-thumb {\r\n	background-color: rgba(0, 0, 0, 0.2);\r\n	border-radius: 4px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .use-free-points {\r\n	border: none;\r\n	background: transparent;\r\n	-moz-appearance: textfield;\r\n	appearance: textfield;\r\n	text-align: right;\r\n	font-size: 9px;\r\n	max-width: 45px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .use-free-points::-webkit-outer-spin-button,\r\n#CashShop .panel-cart .panel-cart-footer .use-free-points::-webkit-inner-spin-button {\r\n	-webkit-appearance: none;\r\n	margin: 0;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table tr {\r\n	height: 15px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table tr td.txt {\r\n	width: 60%;\r\n	text-align: left;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table tr td.value {\r\n	width: 40%;\r\n	text-align: right;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .cart-footer-action {\r\n	padding: 0px 10px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .cart-footer-action button {\r\n	width: 154px;\r\n	height: 23px;\r\n	margin-left: 5px;\r\n	margin-top: 4px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .cart-footer-action .total-price {\r\n	width: 100%;\r\n	color: #fff;\r\n	height: 18px;\r\n	margin-top: 4px;\r\n	font-weight: bold;\r\n	line-height: 25px;\r\n	text-align: center;\r\n}\r\n\r\n#CashShop #cart-list .items .item .delete-item {\r\n	position: absolute;\r\n	width: 7px;\r\n	height: 7px;\r\n	top: 3px;\r\n	right: 4px;\r\n	background-size: cover;\r\n}\r\n\r\n.item-desc-top {\r\n	height: 20px;\r\n}\r\n";
+	CashShop_default$1 = ":host {\r\n	position: absolute;\r\n	width: 723px;\r\n	height: 540px;\r\n}\r\n\r\n#CashShop {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 723px;\r\n	height: 540px;\r\n	background: transparent;\r\n	border-radius: 3px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CashShop .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CashShop .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CashShop .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CashShop .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CashShop .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CashShop .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CashShop .panel {\r\n	display: flex;\r\n	flex-direction: row;\r\n	width: 100%;\r\n	height: 523px;\r\n	gap: 2px;\r\n}\r\n\r\n#CashShop .panel-content {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 535px;\r\n	height: 100%;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner {\r\n	width: 100%;\r\n	height: 55px;\r\n	position: relative;\r\n	overflow: hidden;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-slides {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: relative;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-slides .banner-slide {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	background-size: cover;\r\n	background-position: center;\r\n	opacity: 0;\r\n	transition: opacity 0.5s ease-in-out;\r\n	cursor: pointer;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-slides .banner-slide.active {\r\n	opacity: 1;\r\n	z-index: 1;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-dots {\r\n	position: absolute;\r\n	bottom: 5px;\r\n	right: 20px;\r\n	display: flex;\r\n	gap: 5px;\r\n	z-index: 2;\r\n	list-style: none;\r\n	padding: 0;\r\n	margin: 0;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner .banner-dots .banner-dot {\r\n	width: 8px;\r\n	height: 8px;\r\n}\r\n\r\n#CashShop .panel-content .panel-banner button {\r\n	width: 100%;\r\n	height: 100%;\r\n	border: none;\r\n	background-color: transparent;\r\n}\r\n\r\n#CashShop .panel-content .panel-menu {\r\n	width: 100%;\r\n	height: 31.5px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: end;\r\n	gap: 2px;\r\n	flex-direction: row;\r\n}\r\n\r\n#CashShop .panel-content .panel-menu button {\r\n	width: 56px;\r\n	height: 31px;\r\n	border: none;\r\n	background-color: transparent;\r\n}\r\n\r\n#CashShop .panel-content .panel-items {\r\n	display: flex;\r\n	flex-direction: row;\r\n	flex-wrap: wrap;\r\n	align-content: flex-start;\r\n	width: 100%;\r\n	height: 380px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 172px;\r\n	height: 126px;\r\n	margin-left: 4px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .top-con,\r\n#CashShop .panel-content .panel-items .lower-con {\r\n	width: 100%;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .top-con {\r\n	text-align: center;\r\n	padding-top: 5px;\r\n	font-weight: bold;\r\n	padding-bottom: 5px;\r\n	color: #3a4aa4;\r\n	font-size: 10px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item-left-img {\r\n	width: 75px;\r\n	height: 98px;\r\n	background-size: cover;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item-right-desc {\r\n	float: right;\r\n	margin-right: 8px;\r\n	margin-top: 17px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item-right-desc .item-desc-price {\r\n	color: #ffffff;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .item-left-img {\r\n	margin-left: 4px;\r\n	float: left;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .lower-con .purchase-btn-container {\r\n	padding-top: 20px;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .lower-con .purchase-btn-container .add-to-cart {\r\n	width: 81px;\r\n	height: 24px;\r\n	border: none;\r\n}\r\n\r\n#CashShop .panel-content .panel-items .item .lower-con .purchase-btn-container .purchase-btn {\r\n	width: 81px;\r\n	height: 24px;\r\n	border: none;\r\n}\r\n\r\n#CashShop #panel-items .item-desc-price {\r\n	width: 81px;\r\n	height: 17px;\r\n	margin-top: 7px;\r\n	text-align: right;\r\n}\r\n\r\n#CashShop .item-desc-price span {\r\n	line-height: 18px;\r\n	margin-right: 5px;\r\n	text-align: right;\r\n	font-size: 10px;\r\n}\r\n\r\n#CashShop .item-desc-price .icon-gold-coin {\r\n	margin-top: 2px;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CashShop .panel-content .panel-pagination {\r\n	width: 100%;\r\n	height: 26px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#CashShop .panel-content .panel-pagination button {\r\n	width: 18px;\r\n	height: 14px;\r\n	background-position: center center;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	margin-top: 5px;\r\n}\r\n\r\n#CashShop .panel-content .panel-pagination span {\r\n	width: 15px;\r\n	height: 14px;\r\n	text-align: center;\r\n	margin-top: 7px;\r\n}\r\n\r\n#CashShop .panel-content .panel-footer {\r\n	width: 100%;\r\n	height: 30px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	flex-direction: row;\r\n}\r\n\r\n#CashShop .panel-content .panel-footer .cashshop-search {\r\n	border: none;\r\n	border-radius: 5px 0px 0px 5px;\r\n	width: 296px;\r\n	line-height: 14px;\r\n	margin-left: 2px;\r\n}\r\n\r\n#CashShop .panel-content .panel-footer .cashshop-search-btn {\r\n	border: 0px;\r\n	width: 54px;\r\n	height: 18px;\r\n	background-size: cover;\r\n	background-color: transparent;\r\n}\r\n\r\n#CashShop .panel-cart {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 185px;\r\n	height: 100%;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-header {\r\n	width: 100%;\r\n	height: 56px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-header-title {\r\n	padding-left: 65px;\r\n	color: white;\r\n	text-shadow: 2px 2px black;\r\n	height: 24px;\r\n	padding-top: 5px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	gap: 30px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view .view-cash-point {\r\n	width: 70px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	text-align: end;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view .panel-cart-cash-points {\r\n	width: 76px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	text-align: end;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-charging-view .panel-cart-charge-btn {\r\n	width: 64px;\r\n	height: 20px;\r\n	border: none;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-body {\r\n	width: 100%;\r\n	height: 360px;\r\n	background-size: cover;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer {\r\n	width: 100%;\r\n	height: 107px;\r\n}\r\n\r\n#CashShop .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#CashShop .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#CashShop .view-cash-point-2 {\r\n	background: #ffffff;\r\n	border: 1px solid #4d4d4d;\r\n	border-radius: 0px 4px 4px 0px;\r\n\r\n	padding: 4px;\r\n}\r\n\r\n#CashShop ul.items {\r\n	list-style: none;\r\n	list-style-type: none;\r\n	padding: 0px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#CashShop ul.items .item {\r\n	width: 172px;\r\n	height: 54px;\r\n	margin-left: 6px;\r\n	margin-bottom: 4px;\r\n	border-radius: 4px;\r\n	position: relative;\r\n}\r\n\r\n#CashShop ul.items .inner-item-dt {\r\n	width: 100%;\r\n	height: 100%;\r\n	float: left;\r\n}\r\n\r\n#CashShop .inner-item-dt .item-dt-img {\r\n	float: left;\r\n	width: 40px;\r\n	height: 50px;\r\n	background-size: contain;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CashShop .container-cart .container-cart-body {\r\n	height: 326px;\r\n}\r\n\r\n#CashShop .inner-item-dt .item-dt-desc {\r\n	float: left;\r\n	width: 115px;\r\n	margin-top: 5px;\r\n	margin-left: 10px;\r\n	font-size: 8px;\r\n}\r\n\r\n#CashShop .container-cart-footer {\r\n	width: 169px;\r\n	margin-left: 10px;\r\n	background: #cfdfef;\r\n	border-radius: 4px;\r\n	height: 108px;\r\n}\r\n\r\n#CashShop .container-cart-footer .item-desc-price {\r\n	width: 100%;\r\n	color: #fff;\r\n	height: 17px;\r\n	background: #4c7ba6;\r\n	margin-top: 4px;\r\n	border-radius: 4px 4px 0px 0px;\r\n	box-shadow: inset 1px 1px 3px #1c1c1c;\r\n	-webkit-box-shadow: inset 1px 1px 3px #1c1c1c;\r\n	-moz-box-shadow: inset 1px 1px 3px #1c1c1c;\r\n	font-weight: bold;\r\n	line-height: 20px;\r\n}\r\n\r\n#CashShop #cart-list .item-desc-price {\r\n	width: 50px;\r\n	height: 17px;\r\n	margin-top: 4px;\r\n	float: left;\r\n	text-align: center;\r\n}\r\n\r\n#CashShop #cart-list .item-counter {\r\n	width: 50px;\r\n	height: 17px;\r\n	float: left;\r\n	position: relative;\r\n	margin-top: 4px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt,\r\n#CashShop #cart-list .item-counter .item-cnt-up,\r\n#CashShop #cart-list .item-counter .item-cnt-down {\r\n	position: absolute;\r\n	width: 7px;\r\n	height: 7px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt-down {\r\n	bottom: 1px;\r\n	right: 1px;\r\n	width: 10px;\r\n	background-color: transparent;\r\n	border: 0px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt-up {\r\n	top: 0px;\r\n	right: 1px;\r\n	width: 10px;\r\n	background-color: transparent;\r\n	border: 0px;\r\n}\r\n\r\n#CashShop #cart-list .item-counter .item-cnt {\r\n	top: 3px;\r\n	left: 12px;\r\n	color: #6e6d6d;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table {\r\n	font-size: 9px;\r\n	padding: 0px 14px;\r\n	width: 100%;\r\n	border-spacing: 1px;\r\n}\r\n\r\n#CashShop #cart-list {\r\n	height: 350px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	scrollbar-width: thin;\r\n}\r\n\r\n#CashShop #cart-list::-webkit-scrollbar {\r\n	width: 4px;\r\n}\r\n\r\n#CashShop #cart-list::-webkit-scrollbar-thumb {\r\n	background-color: rgba(0, 0, 0, 0.2);\r\n	border-radius: 4px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .use-free-points {\r\n	border: none;\r\n	background: transparent;\r\n	-moz-appearance: textfield;\r\n	appearance: textfield;\r\n	text-align: right;\r\n	font-size: 9px;\r\n	max-width: 45px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .use-free-points::-webkit-outer-spin-button,\r\n#CashShop .panel-cart .panel-cart-footer .use-free-points::-webkit-inner-spin-button {\r\n	-webkit-appearance: none;\r\n	margin: 0;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table tr {\r\n	height: 15px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table tr td.txt {\r\n	width: 60%;\r\n	text-align: left;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer > table tr td.value {\r\n	width: 40%;\r\n	text-align: right;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .cart-footer-action {\r\n	padding: 0px 10px;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .cart-footer-action button {\r\n	width: 154px;\r\n	height: 23px;\r\n	margin-left: 5px;\r\n	margin-top: 4px;\r\n	border: none;\r\n	background: transparent;\r\n}\r\n\r\n#CashShop .panel-cart .panel-cart-footer .cart-footer-action .total-price {\r\n	width: 100%;\r\n	color: #fff;\r\n	height: 18px;\r\n	margin-top: 4px;\r\n	font-weight: bold;\r\n	line-height: 25px;\r\n	text-align: center;\r\n}\r\n\r\n#CashShop #cart-list .items .item .delete-item {\r\n	position: absolute;\r\n	width: 7px;\r\n	height: 7px;\r\n	top: 3px;\r\n	right: 4px;\r\n	background-size: cover;\r\n}\r\n\r\n#CashShop .item-desc-top {\r\n	height: 20px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/CashShop/CashShop.js
-function onClickPagination(e) {
-	const index = parseInt(e.currentTarget.dataset.index);
+/**
+* Helper: query inside shadow root
+*/
+function _root$6() {
+	return CashShop._shadow || CashShop._host;
+}
+/**
+* Helper: process data-* attributes on newly inserted content
+*/
+function _processContent(container) {
+	const selector = "[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]";
+	if (container.matches && container.matches(selector)) GUIComponent.processDataAttrs(container);
+	container.querySelectorAll(selector).forEach((node) => GUIComponent.processDataAttrs(node));
+}
+function onClickPagination(target) {
+	const root = _root$6();
+	const index = parseInt(target.dataset.index);
 	const items = CashShop.isSearch ? CashShop.csListItemSearchResult : CashShop.cashShopListItem[CashShop.activeCashMenu]?.items || [];
 	if (items.length === 0) return;
-	const content = CashShop.ui.find(".panel-pagination");
 	CashShop.isFirstPage = false;
 	CashShop.isLastPage = false;
 	switch (index) {
@@ -318948,23 +319757,30 @@ function onClickPagination(e) {
 	CashShop.paginationOffsetLimit();
 	const arrowsL = CashShop.isFirstPage ? "off" : "on";
 	const arrowsR = CashShop.isLastPage ? "off" : "on";
+	const goNext = root.querySelector(".panel-pagination .go-next");
+	const goLast = root.querySelector(".panel-pagination .go-last");
+	const goPrev = root.querySelector(".panel-pagination .go-prev");
+	const goFirst = root.querySelector(".panel-pagination .go-first");
 	Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowR_" + arrowsR + ".bmp", function(data) {
-		content.find(".go-next").css("backgroundImage", "url(" + data + ")");
+		if (goNext) goNext.style.backgroundImage = `url(${data})`;
 	});
 	Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowR2_" + arrowsR + ".bmp", function(data) {
-		content.find(".go-last").css("backgroundImage", "url(" + data + ")");
+		if (goLast) goLast.style.backgroundImage = `url(${data})`;
 	});
 	Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowL_" + arrowsL + ".bmp", function(data) {
-		content.find(".go-prev").css("backgroundImage", "url(" + data + ")");
+		if (goPrev) goPrev.style.backgroundImage = `url(${data})`;
 	});
 	Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowL2_" + arrowsL + ".bmp", function(data) {
-		content.find(".go-first").css("backgroundImage", "url(" + data + ")");
+		if (goFirst) goFirst.style.backgroundImage = `url(${data})`;
 	});
-	CashShop.ui.find(".panel-pagination span.pagi-changepage").html(CashShop.currentPage);
+	const changePage = root.querySelector(".panel-pagination span.pagi-changepage");
+	if (changePage) changePage.textContent = CashShop.currentPage;
 	CashShop.renderCashShopItems(CashShop.paginate(items, CashShop.pageOffset, CashShop.pageEnd));
 }
 function onClickSearch() {
-	const val = CashShop.ui.find(".cashshop-search").val().toLowerCase();
+	const root = _root$6();
+	const searchInput = root.querySelector(".cashshop-search");
+	const val = searchInput ? searchInput.value.toLowerCase() : "";
 	const newList = [];
 	CashShop.isSearch = true;
 	CashShop.activeCashMenu = 9;
@@ -318978,7 +319794,7 @@ function onClickSearch() {
 			}
 		}
 	}
-	if (CashShop.ui.find("#panel-menu .search-result").length === 0) CashShop.ui.find("#panel-menu .tab").removeClass("active");
+	if (!root.querySelector("#panel-menu .search-result")) root.querySelectorAll("#panel-menu .tab").forEach((el) => el.classList.remove("active"));
 	if (newList.length === 0) {
 		UIManager.showMessageBox("No items found in auction search", "ok");
 		return;
@@ -318988,10 +319804,13 @@ function onClickSearch() {
 	CashShop.paginationOffsetLimit();
 	CashShop.renderCashShopItems(CashShop.paginate(newList, CashShop.pageOffset, CashShop.pageEnd));
 }
-function onClickActionCounterButtonCart(e) {
-	const counter = e.currentTarget.dataset.index;
-	const itemId = jquery_default(e.currentTarget).closest(".item").data("index");
+function onClickActionCounterButtonCart(target) {
+	const counter = target.dataset.index;
+	const itemEl = target.closest(".item");
+	if (!itemEl) return;
+	const itemId = parseInt(itemEl.getAttribute("data-index"), 10);
 	const itemCart = CashShop.cartItem.find((i) => i.itemId === itemId);
+	if (!itemCart) return;
 	if (itemCart.amount >= 99 && counter === "up") {
 		UIManager.showMessageBox("Max Quantity 99!", "ok");
 		ChatBox_default.addText("Max Quantity 99!", ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
@@ -319004,34 +319823,42 @@ function onClickActionCounterButtonCart(e) {
 	}
 	if (counter === "up") itemCart.amount += 1;
 	else itemCart.amount -= 1;
-	jquery_default(e.currentTarget).closest(".item").find(".item-counter .item-cnt").html(itemCart.amount);
+	const cntEl = itemEl.querySelector(".item-counter .item-cnt");
+	if (cntEl) cntEl.textContent = itemCart.amount;
 	updateCartTotal();
 }
-function onClickDeleteItemInCart(e) {
-	const item = jquery_default(e.currentTarget).closest(".item");
-	const itemId = item.data("index");
+function onClickDeleteItemInCart(target) {
+	const itemEl = target.closest(".item");
+	if (!itemEl) return;
+	const itemId = parseInt(itemEl.getAttribute("data-index"), 10);
 	CashShop.cartItem = CashShop.cartItem.filter((i) => i.itemId != itemId);
-	item.remove();
+	itemEl.remove();
 	updateCartTotal();
 }
 function updateCartTotal() {
+	const root = _root$6();
 	if (CashShop.cartItem.length === 0) CashShop.cartItemTotalPrice = 0;
 	else CashShop.cartItemTotalPrice = CashShop.cartItem.reduce((total, item) => total + item.price * item.amount, 0);
-	CashShop.ui.find(".cart-footer-action .total-price span").html(CashShop.cartItemTotalPrice + " C");
+	const totalPriceEl = root.querySelector(".cart-footer-action .total-price span");
+	if (totalPriceEl) totalPriceEl.textContent = CashShop.cartItemTotalPrice + " C";
 }
 function onResetCartListCashShop() {
+	const root = _root$6();
 	CashShop.cartItem = [];
 	CashShop.cartItemTotalPrice = 0;
-	CashShop.ui.find(".cart-footer-action .total-price span").html("0 C");
-	CashShop.ui.find(".panel-cart #cart-list .items").empty();
+	const totalPriceEl = root.querySelector(".cart-footer-action .total-price span");
+	if (totalPriceEl) totalPriceEl.textContent = "0 C";
+	const cartItems = root.querySelector(".panel-cart #cart-list .items");
+	if (cartItems) cartItems.innerHTML = "";
 }
 function onDropToCart(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
+	} catch (_e) {
 		return false;
 	}
 	if (data.type === "item" && data.from === "CashShop") {
@@ -319045,9 +319872,9 @@ function onDropToCart(event) {
 	return false;
 }
 function addItemToCart(itemId, amount = 1) {
-	let html = "";
+	const root = _root$6();
 	const it = DB.getItemInfo(itemId);
-	const content = CashShop.ui.find(".panel-cart");
+	const cartContainer = root.querySelector(".panel-cart");
 	const itemCart = CashShop.cartItem.find((i) => i.itemId === itemId);
 	let item = [];
 	let tab = 0;
@@ -319059,7 +319886,8 @@ function addItemToCart(itemId, amount = 1) {
 		tab = item.tab;
 	}
 	if (!item) return;
-	if (content.find("#cart-list .items .no-items").length > 0) content.find("#cart-list .items .no-items").remove();
+	const noItems = cartContainer ? cartContainer.querySelector("#cart-list .items .no-items") : null;
+	if (noItems) noItems.remove();
 	if (CashShop.cartItem.length > 7 && typeof itemCart === "undefined") {
 		UIManager.showMessageBox("8 Items can only be stored in cart!", "ok");
 		return;
@@ -319073,50 +319901,59 @@ function addItemToCart(itemId, amount = 1) {
 		item.amount = amount;
 		item.tab = tab;
 		CashShop.cartItem.push(item);
-		html = `<li class="item" data-index="${itemId}" data-background="cashshop/img_shop_itembg2.bmp">
-				<div class="inner-item-dt">
-					<div class="delete-item" data-background="cashshop/btn_close.bmp"></div>
-					<div class="item-dt-img"></div>
-					<div class="item-dt-desc">
-						<div class="item-desc-top">${it.identifiedDisplayName}</div>
-						<div class="item-counter">
-							<div class="item-cnt">${item.amount}</div>
-							<button class="counter-btn item-cnt-up" data-index="up"></button>
-							<button class="counter-btn item-cnt-down" data-index="down"></button>
-						</div>
-						<div class="item-desc-price">
-							<span>${item.price}</span> C
-						</div>
+		const html = `<li class="item" data-index="${itemId}" data-background="cashshop/img_shop_itembg2.bmp">
+			<div class="inner-item-dt">
+				<div class="delete-item" data-background="cashshop/btn_close.bmp"></div>
+				<div class="item-dt-img"></div>
+				<div class="item-dt-desc">
+					<div class="item-desc-top">${it.identifiedDisplayName}</div>
+					<div class="item-counter">
+						<div class="item-cnt">${item.amount}</div>
+						<button class="counter-btn item-cnt-up" data-index="up"></button>
+						<button class="counter-btn item-cnt-down" data-index="down"></button>
+					</div>
+					<div class="item-desc-price">
+						<span>${item.price}</span> C
 					</div>
 				</div>
-			</li>`;
-		content.find(".items").append(html);
+			</div>
+		</li>`;
+		const itemsList = cartContainer ? cartContainer.querySelector(".items") : null;
+		if (itemsList) {
+			itemsList.insertAdjacentHTML("beforeend", html);
+			_processContent(itemsList);
+		}
 		Client.loadFile(DB.INTERFACE_PATH + "collection/" + it.identifiedResourceName + ".bmp", function(data) {
-			content.find(".item[data-index=\"" + itemId + "\"] .item-dt-img").css("backgroundImage", "url(" + data + ")");
+			const imgEl = cartContainer ? cartContainer.querySelector(`.item[data-index="${itemId}"] .item-dt-img`) : null;
+			if (imgEl) imgEl.style.backgroundImage = `url(${data})`;
 		});
 	} else {
 		itemCart.amount += amount;
-		content.find(".items .item[data-index=\"" + itemId + "\"] .item-cnt").html(itemCart.amount);
+		const cntEl = cartContainer ? cartContainer.querySelector(`.items .item[data-index="${itemId}"] .item-cnt`) : null;
+		if (cntEl) cntEl.textContent = itemCart.amount;
 	}
-	content.each(CashShop.parseHTML).find("*").each(CashShop.parseHTML);
 	updateCartTotal();
 }
 /**
 * Add cash item in cart list
 */
 function onClickActionAddCartItem(e) {
-	addItemToCart(parseInt(e.currentTarget.dataset.itemid));
+	const btn = e.target.closest(".purchase-btn-container button");
+	if (!btn) return;
+	addItemToCart(parseInt(btn.dataset.itemid));
 }
 /**
 * purchase item list in cart
 */
 function onClickActionBuyItem() {
+	const root = _root$6();
 	const itemlist = CashShop.cartItem;
 	CashShop.cartItemLen = itemlist.length;
-	UIManager.showPromptBox("Are you sure you want to buy this items?", "ok", "cancel", function() {
+	UIManager.showPromptBox("Are you sure you want to buy this items?", "ok", "cancel", () => {
 		if (CashShop.cartItem.length > 0) {
 			const pkt = new PACKET.CZ.SE_PC_BUY_CASHITEM_LIST();
-			const useFreePoints = CashShop.ui.find("#use-free-points").val() || 0;
+			const freePointsInput = root.querySelector("#use-free-points");
+			const useFreePoints = (freePointsInput ? freePointsInput.value : 0) || 0;
 			if (useFreePoints >= 0 && useFreePoints <= CashShop.kafraPoints) {
 				pkt.kafraPoints = useFreePoints;
 				pkt.item_list = CashShop.cartItem;
@@ -319128,17 +319965,18 @@ function onClickActionBuyItem() {
 /**
 * Menu navigation
 */
-function onClickMenu(e) {
-	const contentMenu = CashShop.ui.find("#panel-menu");
-	const contentListItem = CashShop.ui.find(".panel-items");
-	const selectedMenu = e.currentTarget.dataset.index.toUpperCase();
-	CashShop.ui.find("#cashshop-search").val("");
+function onClickMenu(target) {
+	const root = _root$6();
+	const selectedMenu = target.dataset.index.toUpperCase();
+	const searchInput = root.querySelector("#cashshop-search");
+	if (searchInput) searchInput.value = "";
 	if (selectedMenu !== CashShop.activeCashMenu) {
 		CashShop.isSearch = false;
 		CashShop.activeCashMenu = selectedMenu;
-		contentListItem.empty();
-		contentMenu.find(".tab").removeClass("active");
-		e.currentTarget.classList.add("active");
+		const panelItems = root.querySelector(".panel-items");
+		if (panelItems) panelItems.innerHTML = "";
+		root.querySelectorAll("#panel-menu .tab").forEach((el) => el.classList.remove("active"));
+		target.classList.add("active");
 		const tab_items = CashShop.cashShopListItem[CashShop.activeCashMenu]?.items?.length >= 0 ? CashShop.cashShopListItem[CashShop.activeCashMenu].items : [];
 		CashShop.initPagination(tab_items);
 		CashShop.renderCashShopItems(CashShop.paginate(tab_items, CashShop.pageOffset, CashShop.pageEnd));
@@ -319148,24 +319986,31 @@ function onClickMenu(e) {
 * Hide the item name
 */
 function onItemOut$6() {
-	CashShop.ui.find(".overlay").hide();
+	const overlay = _root$6().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 function onMouseMoveTab(event) {
-	const overlay = CashShop.ui.find(".overlay");
-	const offset = CashShop.ui.offset();
-	const x = event.pageX - offset.left;
-	const y = event.pageY - offset.top - 30;
-	overlay.css({
+	const overlay = _root$6().querySelector(".overlay");
+	if (!overlay) return;
+	const hostRect = CashShop._host.getBoundingClientRect();
+	const x = event.clientX - hostRect.left;
+	const y = event.clientY - hostRect.top - 30;
+	Object.assign(overlay.style, {
 		top: y + "px",
 		left: x + "px"
 	});
 }
-function onMouseOverTab() {
-	const title = this.getAttribute("data-title");
-	CashShop.ui.find(".overlay").text(title).show();
+function onMouseOverTab(target) {
+	const title = target.getAttribute("data-title");
+	const overlay = _root$6().querySelector(".overlay");
+	if (overlay) {
+		overlay.textContent = title;
+		overlay.style.display = "block";
+	}
 }
 function onMouseOutTab() {
-	CashShop.ui.find(".overlay").hide();
+	const overlay = _root$6().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
@@ -319175,11 +320020,14 @@ function onItemDragStart$4(event) {
 	const item = CashShop.getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".item-left-img").style.backgroundImage.match(/\(([^\)]+)/)[1];
-	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	const imgEl = this.querySelector(".item-left-img");
+	const url = imgEl ? imgEl.style.backgroundImage.match(/\(([^)]+)/)?.[1] : null;
+	if (url) {
+		img.decoding = "async";
+		img.src = url.replace(/^"/, "").replace(/"$/, "");
+		event.dataTransfer.setDragImage(img, 12, 12);
+	}
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "CashShop",
 		data: item
@@ -319188,13 +320036,13 @@ function onItemDragStart$4(event) {
 }
 /**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$4() {
 	delete window._OBJ_DRAG_;
 }
 function onItemInfo$8(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = CashShop.getItemByIndex(index);
 	if (!item) return false;
@@ -319213,15 +320061,15 @@ function onItemInfo$8(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$7(event) {
+function stopPropagation$6(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	return false;
 }
 var CashShop, _preferences$15, CashShop_default;
 var init_CashShop$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
-	init_jquery();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_KeyEventHandler();
@@ -319232,10 +320080,11 @@ var init_CashShop$1 = __esmMin((() => {
 	init_SessionStorage();
 	init_ItemInfo();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_CashShop$3();
 	init_CashShop$2();
-	CashShop = new UIComponent("CashShop", CashShop_default$2, CashShop_default$1);
+	CashShop = new GUIComponent("CashShop", CashShop_default$1);
 	/**
 	* Store cash shop items
 	*/
@@ -319300,42 +320149,117 @@ var init_CashShop$1 = __esmMin((() => {
 	CashShop.bannerInterval = null;
 	CashShop.currentBannerIndex = 0;
 	CashShop.bannerRotationTime = 5e3;
+	/**
+	* Has input fields, protect key events
+	*/
+	CashShop.captureKeyEvents = true;
+	/**
+	* Render HTML
+	*/
+	CashShop.render = () => CashShop_default$2;
 	CashShop.init = function init() {
-		this.ui.find(".titlebar .base").mousedown(stopPropagation$7);
-		this.ui.find(".titlebar .close").click(function() {
+		const root = _root$6();
+		root.querySelectorAll(".titlebar .base").forEach((btn) => {
+			btn.addEventListener("mousedown", stopPropagation$6);
+		});
+		const closeBtn = root.querySelector(".titlebar .close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
 			const pkt = new PACKET.CZ.CASH_SHOP_CLOSE();
 			Network.sendPacket(pkt);
 			CashShop.remove();
 		});
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.on("click", ".purchase-btn-container button", onClickActionAddCartItem);
-		this.ui.on("click", "#purchase-btn", onClickActionBuyItem);
-		this.ui.on("click", "#panel-menu .tab", onClickMenu);
-		this.ui.on("mouseover", "#panel-menu .tab", onMouseOverTab);
-		this.ui.on("mousemove", "#panel-menu .tab", onMouseMoveTab);
-		this.ui.on("mouseout", "#panel-menu .tab", onMouseOutTab);
-		this.ui.on("click", ".panel-pagination .pagi-handler", onClickPagination);
-		this.ui.on("click", ".cashshop-search-btn", onClickSearch);
-		this.ui.on("click", "#cart-list .items .item .counter-btn", onClickActionCounterButtonCart);
-		this.ui.on("click", "#cart-list .items .item .delete-item", onClickDeleteItemInCart);
-		if (this.ui.find("#cart-list items").length > 0) CashShop.onResetCartListCashShop();
-		this.ui.on("dragover", stopPropagation$7).find(".panel-cart-body").on("drop", onDropToCart).on("dragover", stopPropagation$7).end().on("click", ".banner-dot", function(e) {
-			const index = parseInt(this.getAttribute("data-index"), 10);
-			CashShop.goToBanner(index);
-		}).on("click", ".banner-slide", function() {
-			const url = this.getAttribute("data-url");
-			if (url && url !== "undefined" && url !== "null") window.open(url, "_blank");
-		}).on("click", ".panel-cart-charge-btn", function() {
-			window.open(DB.getMessage(3301), "_blank");
+		this.draggable(".titlebar");
+		const container = root.querySelector(".ui-component-root") || root;
+		container.addEventListener("click", (e) => {
+			if (e.target.closest(".purchase-btn-container button")) {
+				onClickActionAddCartItem(e);
+				return;
+			}
+			if (e.target.closest("#purchase-btn")) {
+				onClickActionBuyItem();
+				return;
+			}
+			const tab = e.target.closest("#panel-menu .tab");
+			if (tab) {
+				onClickMenu(tab);
+				return;
+			}
+			const pagiHandler = e.target.closest(".panel-pagination .pagi-handler");
+			if (pagiHandler) {
+				onClickPagination(pagiHandler);
+				return;
+			}
+			if (e.target.closest(".cashshop-search-btn")) {
+				onClickSearch();
+				return;
+			}
+			const counterBtn = e.target.closest("#cart-list .items .item .counter-btn");
+			if (counterBtn) {
+				onClickActionCounterButtonCart(counterBtn);
+				return;
+			}
+			const deleteBtn = e.target.closest("#cart-list .items .item .delete-item");
+			if (deleteBtn) {
+				onClickDeleteItemInCart(deleteBtn);
+				return;
+			}
+			const bannerDot = e.target.closest(".banner-dot");
+			if (bannerDot) {
+				const index = parseInt(bannerDot.getAttribute("data-index"), 10);
+				CashShop.goToBanner(index);
+				return;
+			}
+			const bannerSlide = e.target.closest(".banner-slide");
+			if (bannerSlide) {
+				const url = bannerSlide.getAttribute("data-url");
+				if (url && url !== "undefined" && url !== "null") window.open(url, "_blank");
+				return;
+			}
+			if (e.target.closest(".panel-cart-charge-btn")) {
+				window.open(DB.getMessage(3301), "_blank");
+				return;
+			}
 		});
-		this.ui.find(".panel-content .panel-items").on("dragstart", ".item", onItemDragStart$4).on("dragend", ".item", onItemDragEnd$4).on("contextmenu", ".item", onItemInfo$8);
+		container.addEventListener("mouseover", (e) => {
+			const tab = e.target.closest("#panel-menu .tab");
+			if (tab) onMouseOverTab(tab);
+		});
+		container.addEventListener("mousemove", (e) => {
+			if (e.target.closest("#panel-menu .tab")) onMouseMoveTab(e);
+		});
+		container.addEventListener("mouseout", (e) => {
+			if (e.target.closest("#panel-menu .tab")) onMouseOutTab();
+		});
+		const cartBody = root.querySelector(".panel-cart-body");
+		if (cartBody) {
+			cartBody.addEventListener("dragover", stopPropagation$6);
+			cartBody.addEventListener("drop", onDropToCart);
+		}
+		const panelItems = root.querySelector(".panel-content .panel-items");
+		if (panelItems) {
+			panelItems.addEventListener("dragstart", function(e) {
+				const item = e.target.closest(".item");
+				if (item) onItemDragStart$4.call(item, e);
+			});
+			panelItems.addEventListener("dragend", function(e) {
+				const item = e.target.closest(".item");
+				if (item) onItemDragEnd$4.call(item, e);
+			});
+			panelItems.addEventListener("contextmenu", function(e) {
+				const item = e.target.closest(".item");
+				if (item) onItemInfo$8.call(item, e);
+			});
+		}
+		container.addEventListener("dragover", stopPropagation$6);
+		const cartListItems = root.querySelector("#cart-list .items");
+		if (cartListItems && cartListItems.children.length > 0) onResetCartListCashShop();
 		CashShop.loadCashShopBanner();
 	};
 	CashShop.onAppend = function OnAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$15.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$15.x), Renderer.width - this.ui.width())
-		});
+		const hostHeight = this._host.offsetHeight || 540;
+		const hostWidth = this._host.offsetWidth || 723;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$15.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$15.x), Renderer.width - hostWidth)}px`;
 		this.magnet.TOP = _preferences$15.magnet_top;
 		this.magnet.BOTTOM = _preferences$15.magnet_bottom;
 		this.magnet.LEFT = _preferences$15.magnet_left;
@@ -319346,8 +320270,8 @@ var init_CashShop$1 = __esmMin((() => {
 	* Remove Cash shop
 	*/
 	CashShop.onRemove = function onRemove() {
-		_preferences$15.x = parseInt(this.ui.css("left"), 10);
-		_preferences$15.y = parseInt(this.ui.css("top"), 10);
+		_preferences$15.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$15.y = parseInt(this._host.style.top, 10) || 0;
 		_preferences$15.magnet_top = this.magnet.TOP;
 		_preferences$15.magnet_bottom = this.magnet.BOTTOM;
 		_preferences$15.magnet_left = this.magnet.LEFT;
@@ -319356,14 +320280,18 @@ var init_CashShop$1 = __esmMin((() => {
 		CashShop.stopBannerRotation();
 		CashShop.csListItemSearchResult = [];
 		CashShop.cashShopBannerTable = [];
-		CashShop.ui.find(".panel-items").empty();
+		const panelItems = _root$6().querySelector(".panel-items");
+		if (panelItems) panelItems.innerHTML = "";
 		CashShop.cartItem = [];
 		CashShop.cartItemTotalPrice = 0;
 		CashShop.cartItemLen = 0;
 		CashShop.checkCartItemLen = 0;
-		CashShop.ui.find(".cart-list .items").empty();
-		CashShop.ui.find(".cart-footer-action .total-price span").html("0 C");
-		CashShop.ui.find("#use-free-points").val("0");
+		const cartListItems = _root$6().querySelector(".cart-list .items");
+		if (cartListItems) cartListItems.innerHTML = "";
+		const totalPrice = _root$6().querySelector(".cart-footer-action .total-price span");
+		if (totalPrice) totalPrice.textContent = "0 C";
+		const freePoints = _root$6().querySelector("#use-free-points");
+		if (freePoints) freePoints.value = "0";
 	};
 	CashShop.clean = function clean() {
 		CashShop.cashShopListItem = [];
@@ -319377,41 +320305,54 @@ var init_CashShop$1 = __esmMin((() => {
 	};
 	CashShop.loadCashShopBanner = function loadCashShopBanner() {
 		this.cashShopBannerTable = DB.getCashShopBannerTable();
+		const root = _root$6();
 		if (CashShop.cashShopBannerTable?.length > 0) {
 			const banners = CashShop.cashShopBannerTable;
-			const slidesContainer = this.ui.find(".banner-slides");
-			const dotsContainer = this.ui.find(".banner-dots");
-			slidesContainer.empty();
-			dotsContainer.empty();
+			const slidesContainer = root.querySelector(".banner-slides");
+			const dotsContainer = root.querySelector(".banner-dots");
+			if (slidesContainer) slidesContainer.innerHTML = "";
+			if (dotsContainer) dotsContainer.innerHTML = "";
 			banners.forEach((banner, index) => {
-				const slide = jquery_default("<div class=\"banner-slide\" data-index=\"" + index + "\" data-url=\"" + (banner.url || "") + "\"><button class=\"btn-banner\"></button></div>");
+				const slide = document.createElement("div");
+				slide.className = "banner-slide" + (index === 0 ? " active" : "");
+				slide.setAttribute("data-index", index);
+				slide.setAttribute("data-url", banner.url || "");
+				slide.innerHTML = "<button class=\"btn-banner\"></button>";
 				Client.loadFile(DB.INTERFACE_PATH + "cashshop/" + banner.bmp, function(data) {
-					slide.css("backgroundImage", "url(" + data + ")");
+					slide.style.backgroundImage = `url(${data})`;
 				});
-				if (index === 0) slide.addClass("active");
-				slidesContainer.append(slide);
-				const dot = jquery_default("<li class=\"banner-dot\" data-background=\"cashshop/btn_ad_off.bmp\" data-active=\"cashshop/btn_ad_on.bmp\" data-index=\"" + index + "\"><button class=\"btn-banner\"></button></li>");
-				if (index === 0) dot.addClass("active");
-				dotsContainer.append(dot);
+				if (slidesContainer) slidesContainer.appendChild(slide);
+				const dot = document.createElement("li");
+				dot.className = "banner-dot" + (index === 0 ? " active" : "");
+				dot.setAttribute("data-background", "cashshop/btn_ad_off.bmp");
+				dot.setAttribute("data-active", "cashshop/btn_ad_on.bmp");
+				dot.setAttribute("data-index", index);
+				dot.innerHTML = "<button class=\"btn-banner\"></button>";
+				if (dotsContainer) dotsContainer.appendChild(dot);
 			});
-			this.ui.find(".banner-dots").each(this.parseHTML).find("*").each(this.parseHTML);
+			if (dotsContainer) _processContent(dotsContainer);
 			CashShop.currentBannerIndex = 0;
 		}
 	};
 	CashShop.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) {
+		if (this.isEditableFocused()) return;
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host && this._host.parentNode) {
 			const pkt = new PACKET.CZ.CASH_SHOP_CLOSE();
 			Network.sendPacket(pkt);
 			CashShop.remove();
 		}
 	};
 	CashShop.readPoints = function readPoints(cashPoint, kafraPoints, tab) {
+		const root = _root$6();
 		this.cashPoint = cashPoint;
 		this.kafraPoints = kafraPoints;
 		this.activeCashMenu = tab || 0;
-		this.ui.find("#cashpoint > span").html(this.cashPoint);
-		this.ui.find(".cashpoint_footer").html(this.cashPoint + " C");
-		this.ui.find(".free-point").html(this.kafraPoints + " C");
+		const cashpointSpan = root.querySelector("#cashpoint > span");
+		if (cashpointSpan) cashpointSpan.textContent = this.cashPoint;
+		const cashpointFooter = root.querySelector(".cashpoint_footer");
+		if (cashpointFooter) cashpointFooter.textContent = this.cashPoint + " C";
+		const freePoint = root.querySelector(".free-point");
+		if (freePoint) freePoint.textContent = this.kafraPoints + " C";
 	};
 	/**
 	* Search in a list for an item by its index
@@ -319444,8 +320385,11 @@ var init_CashShop$1 = __esmMin((() => {
 						CashShop.checkCartItemLen = 0;
 						UIManager.showMessageBox("Successfully done buying items from cash shop!", "ok");
 						ChatBox_default.addText("Successfully done buying items from cash shop!", ChatBox_default.TYPE.INFO, ChatBox_default.FILTER.PUBLIC_LOG);
-						CashShop.ui.find("#cashpoint span").html(res.cashPoints);
-						CashShop.ui.find(".cashpoint_footer").html(res.cashPoints);
+						const root = _root$6();
+						const cashpointSpan = root.querySelector("#cashpoint span");
+						if (cashpointSpan) cashpointSpan.textContent = res.cashPoints;
+						const cashpointFooter = root.querySelector(".cashpoint_footer");
+						if (cashpointFooter) cashpointFooter.textContent = res.cashPoints;
 						onResetCartListCashShop();
 					}
 					break;
@@ -319475,10 +320419,12 @@ var init_CashShop$1 = __esmMin((() => {
 	* Load Cash Shop Components
 	*/
 	CashShop.loadComponentCashShop = function loadComponentCashShop() {
+		const root = _root$6();
 		if (CashShop.cashShopBannerTable?.length > 0) CashShop.startBannerRotation();
 		CashShop.isSearch = false;
-		CashShop.ui.find("#panel-menu .tab").removeClass("active");
-		CashShop.ui.find("#panel-menu .tab[data-index=\"" + CashShop.activeCashMenu + "\"]").addClass("active");
+		root.querySelectorAll("#panel-menu .tab").forEach((el) => el.classList.remove("active"));
+		const activeTab = root.querySelector(`#panel-menu .tab[data-index="${CashShop.activeCashMenu}"]`);
+		if (activeTab) activeTab.classList.add("active");
 		const tab_items = CashShop.cashShopListItem[CashShop.activeCashMenu]?.items?.length >= 0 ? CashShop.cashShopListItem[CashShop.activeCashMenu].items : [];
 		CashShop.initPagination(tab_items);
 		CashShop.renderCashShopItems(CashShop.paginate(tab_items, CashShop.pageOffset, CashShop.pageEnd));
@@ -319502,63 +320448,71 @@ var init_CashShop$1 = __esmMin((() => {
 	};
 	CashShop.goToBanner = function(index) {
 		if (index === this.currentBannerIndex) return;
-		const slides = this.ui.find(".banner-slide");
-		const dots = this.ui.find(".banner-dot");
-		slides.removeClass("active");
-		dots.removeClass("active");
-		slides.eq(index).addClass("active");
-		dots.eq(index).addClass("active");
+		const root = _root$6();
+		const slides = root.querySelectorAll(".banner-slide");
+		const dots = root.querySelectorAll(".banner-dot");
+		slides.forEach((s) => s.classList.remove("active"));
+		dots.forEach((d) => d.classList.remove("active"));
+		if (slides[index]) slides[index].classList.add("active");
+		if (dots[index]) dots[index].classList.add("active");
 		this.currentBannerIndex = index;
 		this.startBannerRotation();
 	};
 	CashShop.renderCashShopItems = function renderCashShopItems(items) {
-		this.ui.find("#panel-items").empty();
-		const content = this.ui.find("#panel-items");
+		const content = _root$6().querySelector("#panel-items");
+		if (!content) return;
+		content.innerHTML = "";
 		for (let i = 0; i < items.length; i++) {
 			const item = structuredClone(items[i]);
 			const it = DB.getItemInfo(item.itemId);
-			content.append(`<div class="item" draggable="true" title="${it.identifiedDisplayName}" data-index="${item.itemId}" data-background="cashshop/img_shop_itembg.bmp">
-					<div class="top-con">
-						<span class="item-name">${it.identifiedDisplayName}</span>
-					</div>
-					<div class="lower-con">
-						<div class="item-left-img" data-background="${"collection/" + it.identifiedResourceName + ".bmp"}"></div>
-						<div class="item-right-desc">
-							<div class="item-desc-price">
-								<span>${item.price}</span>
-							</div>
-							<div class="purchase-btn-container">
-								<button id="add-to-cart" class="add-to-cart" data-itemId="${item.itemId}" tab-index="${i}" data-background="cashshop/btn_add_normal.bmp" data-down="cashshop/btn_add_press.bmp">Purchase</button>
-							</div>
+			content.insertAdjacentHTML("beforeend", `<div class="item" draggable="true" title="${it.identifiedDisplayName}" data-index="${item.itemId}" data-background="cashshop/img_shop_itembg.bmp">
+				<div class="top-con">
+					<span class="item-name">${it.identifiedDisplayName}</span>
+				</div>
+				<div class="lower-con">
+					<div class="item-left-img" data-background="${"collection/" + it.identifiedResourceName + ".bmp"}"></div>
+					<div class="item-right-desc">
+						<div class="item-desc-price">
+							<span>${item.price}</span>
+						</div>
+						<div class="purchase-btn-container">
+							<button class="add-to-cart" data-itemid="${item.itemId}" tab-index="${i}" data-background="cashshop/btn_add_normal.bmp" data-down="cashshop/btn_add_press.bmp">Purchase</button>
 						</div>
 					</div>
-				</div>`);
+				</div>
+			</div>`);
 		}
-		content.each(this.parseHTML).find("*").each(this.parseHTML);
+		_processContent(content);
 	};
 	CashShop.initPagination = function initPagination(items) {
+		const root = _root$6();
 		CashShop.currentPage = 1;
 		CashShop.pageOffset = 0;
 		CashShop.pageEnd = CashShop.pageLimit;
 		CashShop.isFirstPage = true;
 		CashShop.isLastPage = items.length >= CashShop.pageLimit ? false : true;
-		const content = CashShop.ui.find(".panel-pagination");
 		const arrowsL = CashShop.isFirstPage ? "off" : "on";
 		const arrowsR = CashShop.isLastPage ? "off" : "on";
 		CashShop.totalPage = Math.ceil(items.length / CashShop.pageLimit);
-		CashShop.ui.find(".panel-pagination span.pagi-countpage").html(CashShop.totalPage);
-		CashShop.ui.find(".panel-pagination span.pagi-changepage").html(CashShop.totalPage > 0 ? 1 : 0);
+		const countPage = root.querySelector(".panel-pagination span.pagi-countpage");
+		if (countPage) countPage.textContent = CashShop.totalPage;
+		const changePage = root.querySelector(".panel-pagination span.pagi-changepage");
+		if (changePage) changePage.textContent = CashShop.totalPage > 0 ? 1 : 0;
+		const goNext = root.querySelector(".panel-pagination .go-next");
+		const goLast = root.querySelector(".panel-pagination .go-last");
+		const goPrev = root.querySelector(".panel-pagination .go-prev");
+		const goFirst = root.querySelector(".panel-pagination .go-first");
 		Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowR_" + arrowsR + ".bmp", function(data) {
-			content.find(".go-next").css("backgroundImage", "url(" + data + ")");
+			if (goNext) goNext.style.backgroundImage = `url(${data})`;
 		});
 		Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowR2_" + arrowsR + ".bmp", function(data) {
-			content.find(".go-last").css("backgroundImage", "url(" + data + ")");
+			if (goLast) goLast.style.backgroundImage = `url(${data})`;
 		});
 		Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowL_" + arrowsL + ".bmp", function(data) {
-			content.find(".go-prev").css("backgroundImage", "url(" + data + ")");
+			if (goPrev) goPrev.style.backgroundImage = `url(${data})`;
 		});
 		Client.loadFile(DB.INTERFACE_PATH + "cashshop/bt_arrowL2_" + arrowsL + ".bmp", function(data) {
-			content.find(".go-first").css("backgroundImage", "url(" + data + ")");
+			if (goFirst) goFirst.style.backgroundImage = `url(${data})`;
 		});
 	};
 	CashShop.paginate = function paginate(items, start, end) {
@@ -319576,16 +320530,22 @@ var init_CashShop$1 = __esmMin((() => {
 //#region src/UI/Components/ItemReform/ItemReform.html?raw
 var ItemReform_default$2;
 var init_ItemReform$2 = __esmMin((() => {
-	ItemReform_default$2 = "<div id=\"ItemReform\">\r\n	<div class=\"container\" data-background=\"itemreform/bg_reform.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"base\"\r\n					data-background=\"basic_interface/sys_base_off.bmp\"\r\n					data-hover=\"basic_interface/sys_base_on.bmp\"\r\n				></button>\r\n				<span class=\"item_text\"></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"overlay\"></div>\r\n		<div class=\"panel\">\r\n			<div class=\"left_panel\">\r\n				<div class=\"result_info_container\">\r\n					<div class=\"result_item\"></div>\r\n					<div class=\"base_item\"></div>\r\n					<div class=\"result_item_text\"></div>\r\n					<div class=\"information_details\" data-text=\"3854\"></div>\r\n					<div class=\"material_list\"></div>\r\n				</div>\r\n			</div>\r\n			<div class=\"right_panel\">\r\n				<div class=\"available_material_list\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<div class=\"some_notifs\">\r\n				<span class=\"info_msg\"></span>\r\n			</div>\r\n			<div\r\n				class=\"cancel\"\r\n				data-background=\"lapine/btn_cancel_out.bmp\"\r\n				data-hover=\"lapine/btn_cancel_over.bmp\"\r\n				data-down=\"lapine/btn_cancel_press.bmp\"\r\n			></div>\r\n			<div\r\n				class=\"reform_enabled\"\r\n				data-text=\"3847\"\r\n				data-background=\"tipbox/btn_close_normal.bmp\"\r\n				data-hover=\"tipbox/btn_close_over.bmp\"\r\n				data-down=\"tipbox/btn_close_press.bmp\"\r\n			></div>\r\n			<div\r\n				class=\"reform_disabled\"\r\n				data-text=\"3847\"\r\n				data-background=\"equip_preview/btn_mounting_disable.bmp\"\r\n			></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	ItemReform_default$2 = "<div id=\"ItemReform\">\r\n	<div class=\"container\">\r\n		<ui-image src=\"itemreform/bg_reform.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<span class=\"item_text\"></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"overlay\"></div>\r\n		<div class=\"panel\">\r\n			<div class=\"left_panel\">\r\n				<div class=\"result_info_container\">\r\n					<div class=\"result_item\"></div>\r\n					<div class=\"base_item\"></div>\r\n					<div class=\"result_item_text\"></div>\r\n					<div class=\"information_details\"><ui-text msg=\"3854\"></ui-text></div>\r\n					<div class=\"material_list\"></div>\r\n				</div>\r\n			</div>\r\n			<div class=\"right_panel\">\r\n				<div class=\"available_material_list\"></div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<div class=\"some_notifs\">\r\n				<span class=\"info_msg\"></span>\r\n			</div>\r\n			<ui-button\r\n				class=\"cancel\"\r\n				bg=\"lapine/btn_cancel_out.bmp\"\r\n				hover=\"lapine/btn_cancel_over.bmp\"\r\n				down=\"lapine/btn_cancel_press.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"reform_enabled\"\r\n				bg=\"tipbox/btn_close_normal.bmp\"\r\n				hover=\"tipbox/btn_close_over.bmp\"\r\n				down=\"tipbox/btn_close_press.bmp\"\r\n				><ui-text msg=\"3847\"></ui-text\r\n			></ui-button>\r\n			<ui-button class=\"reform_disabled\" bg=\"equip_preview/btn_mounting_disable.bmp\"\r\n				><ui-text msg=\"3847\"></ui-text\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ItemReform/ItemReform.css?raw
 var ItemReform_default$1;
 var init_ItemReform$1 = __esmMin((() => {
-	ItemReform_default$1 = "#ItemReform {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 440px;\r\n	height: 261px;\r\n}\r\n#ItemReform .container {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 100%;\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border-radius: 10px;\r\n}\r\n#ItemReform .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n}\r\n#ItemReform .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ItemReform .titlebar .item_text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ItemReform .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#ItemReform .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ItemReform .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ItemReform .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#ItemReform .panel {\r\n	width: 100%;\r\n	position: absolute;\r\n	height: 215px;\r\n	display: flex;\r\n}\r\n\r\n#ItemReform .left_panel {\r\n	left: 0px;\r\n	height: 215px;\r\n	width: 100%;\r\n}\r\n\r\n#ItemReform .right_panel {\r\n	width: 100%;\r\n}\r\n\r\n#ItemReform .available_material_list {\r\n	flex-direction: column;\r\n	overflow: auto;\r\n	display: inline-flex;\r\n	height: 215px;\r\n	width: 218px;\r\n	gap: 5px;\r\n}\r\n\r\n#ItemReform .available_material_list .item {\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#ItemReform .item_container {\r\n	display: flex;\r\n	gap: 10px;\r\n	height: 26px;\r\n	padding-left: 13px;\r\n	padding-top: 4px;\r\n}\r\n\r\n#ItemReform .icon {\r\n	height: 24px;\r\n	width: 24px;\r\n	background: no-repeat;\r\n}\r\n\r\n#ItemReform .name {\r\n	align-content: center;\r\n	text-wrap: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#ItemReform .result_info_container {\r\n	height: 123px;\r\n}\r\n\r\n#ItemReform .result_item {\r\n	position: absolute;\r\n	height: 32px;\r\n	width: 32px;\r\n	left: 50px;\r\n	top: 29px;\r\n	display: flex;\r\n	padding-left: 4px;\r\n	padding-top: 4px;\r\n}\r\n\r\n#ItemReform .base_item {\r\n	position: absolute;\r\n	height: 32px;\r\n	width: 32px;\r\n	left: 140px;\r\n	top: 29px;\r\n	display: flex;\r\n	padding-left: 4px;\r\n	padding-top: 4px;\r\n}\r\n\r\n#ItemReform .result_item_text {\r\n	height: 20px;\r\n	width: 225px;\r\n	position: absolute;\r\n	top: 88px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	text-wrap: nowrap;\r\n	font-size: 1.2em;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#ItemReform .information_details {\r\n	height: 15px;\r\n	position: absolute;\r\n	width: 125px;\r\n	top: 105px;\r\n	left: 48px;\r\n	text-align: center;\r\n	text-decoration: underline;\r\n}\r\n\r\n#ItemReform .material_list {\r\n	height: 85px;\r\n	width: 220px;\r\n	position: absolute;\r\n	top: 120px;\r\n	display: inline-flex;\r\n	gap: 5px;\r\n	flex-wrap: wrap;\r\n}\r\n\r\n#ItemReform .material_list .item {\r\n	width: 100%;\r\n	flex: 1 1 calc(33.333% - 10px);\r\n	box-sizing: border-box;\r\n	max-width: calc(33.333% - 10px);\r\n	padding-left: 30px;\r\n	padding-top: 3px;\r\n	padding-bottom: 3px;\r\n	text-align: center;\r\n}\r\n\r\n#ItemReform .material_list .item:nth-child(3n + 1) {\r\n	margin-left: 0; /* Ensure first item in each row aligns correctly */\r\n}\r\n\r\n#ItemReform .count {\r\n	text-align: center;\r\n	align-content: center;\r\n	text-wrap: nowrap;\r\n	position: relative;\r\n	left: -5px;\r\n}\r\n\r\n#ItemReform .red {\r\n	color: red;\r\n}\r\n\r\n#ItemReform .footer {\r\n	position: absolute;\r\n	height: 28px;\r\n	width: 100%;\r\n	bottom: 0px;\r\n}\r\n\r\n#ItemReform .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 270px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#ItemReform .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#ItemReform .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 100%;\r\n	left: 15px;\r\n	font-size: 1em;\r\n	align-content: center;\r\n	color: red;\r\n}\r\n\r\n#ItemReform .cancel,\r\n#ItemReform .reform_enabled,\r\n#ItemReform .reform_disabled {\r\n	height: 20px;\r\n	width: 56px;\r\n}\r\n\r\n#ItemReform .cancel {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 68px;\r\n}\r\n\r\n#ItemReform .reform_enabled,\r\n#ItemReform .reform_disabled {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 5px;\r\n	background-size: 56px 20px;\r\n	background-repeat: no-repeat;\r\n	text-align: center;\r\n	align-content: center;\r\n}\r\n\r\n#ItemReform .reform_disabled {\r\n	text-shadow: -1px -1px white;\r\n	color: gray;\r\n}\r\n";
+	ItemReform_default$1 = ":host {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 440px;\r\n	height: 261px;\r\n}\r\n#ItemReform .container {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 100%;\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border-radius: 10px;\r\n}\r\n#ItemReform .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n}\r\n#ItemReform .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#ItemReform .titlebar .item_text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#ItemReform .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#ItemReform .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ItemReform .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#ItemReform .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#ItemReform .panel {\r\n	width: 100%;\r\n	position: absolute;\r\n	height: 215px;\r\n	display: flex;\r\n}\r\n\r\n#ItemReform .left_panel {\r\n	left: 0px;\r\n	height: 215px;\r\n	width: 100%;\r\n}\r\n\r\n#ItemReform .right_panel {\r\n	width: 100%;\r\n}\r\n\r\n#ItemReform .available_material_list {\r\n	flex-direction: column;\r\n	overflow: auto;\r\n	display: inline-flex;\r\n	height: 215px;\r\n	width: 218px;\r\n	gap: 5px;\r\n}\r\n\r\n#ItemReform .available_material_list .item {\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#ItemReform .item_container {\r\n	display: flex;\r\n	gap: 10px;\r\n	height: 26px;\r\n	padding-left: 13px;\r\n	padding-top: 4px;\r\n}\r\n\r\n#ItemReform .icon {\r\n	height: 24px;\r\n	width: 24px;\r\n	background: no-repeat;\r\n}\r\n\r\n#ItemReform .name {\r\n	align-content: center;\r\n	text-wrap: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#ItemReform .result_info_container {\r\n	height: 123px;\r\n}\r\n\r\n#ItemReform .result_item {\r\n	position: absolute;\r\n	height: 32px;\r\n	width: 32px;\r\n	left: 50px;\r\n	top: 29px;\r\n	display: flex;\r\n	padding-left: 4px;\r\n	padding-top: 4px;\r\n}\r\n\r\n#ItemReform .base_item {\r\n	position: absolute;\r\n	height: 32px;\r\n	width: 32px;\r\n	left: 140px;\r\n	top: 29px;\r\n	display: flex;\r\n	padding-left: 4px;\r\n	padding-top: 4px;\r\n}\r\n\r\n#ItemReform .result_item_text {\r\n	height: 20px;\r\n	width: 225px;\r\n	position: absolute;\r\n	top: 88px;\r\n	left: 0px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	text-wrap: nowrap;\r\n	font-size: 1.2em;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#ItemReform .information_details {\r\n	height: 15px;\r\n	position: absolute;\r\n	width: 125px;\r\n	top: 105px;\r\n	left: 48px;\r\n	text-align: center;\r\n	text-decoration: underline;\r\n}\r\n\r\n#ItemReform .material_list {\r\n	height: 85px;\r\n	width: 220px;\r\n	position: absolute;\r\n	top: 120px;\r\n	display: inline-flex;\r\n	gap: 5px;\r\n	flex-wrap: wrap;\r\n}\r\n\r\n#ItemReform .material_list .item {\r\n	width: 100%;\r\n	flex: 1 1 calc(33.333% - 10px);\r\n	box-sizing: border-box;\r\n	max-width: calc(33.333% - 10px);\r\n	padding-left: 30px;\r\n	padding-top: 3px;\r\n	padding-bottom: 3px;\r\n	text-align: center;\r\n}\r\n\r\n#ItemReform .material_list .item:nth-child(3n + 1) {\r\n	margin-left: 0;\r\n}\r\n\r\n#ItemReform .count {\r\n	text-align: center;\r\n	align-content: center;\r\n	text-wrap: nowrap;\r\n	position: relative;\r\n	left: -5px;\r\n}\r\n\r\n#ItemReform .red {\r\n	color: red;\r\n}\r\n\r\n#ItemReform .footer {\r\n	position: absolute;\r\n	height: 28px;\r\n	width: 100%;\r\n	bottom: 0px;\r\n}\r\n\r\n#ItemReform .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 270px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#ItemReform .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#ItemReform .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 100%;\r\n	left: 15px;\r\n	font-size: 1em;\r\n	align-content: center;\r\n	color: red;\r\n}\r\n\r\n#ItemReform .cancel,\r\n#ItemReform .reform_enabled,\r\n#ItemReform .reform_disabled {\r\n	height: 20px;\r\n	width: 56px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n}\r\n\r\n#ItemReform .cancel {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 68px;\r\n}\r\n\r\n#ItemReform .reform_enabled,\r\n#ItemReform .reform_disabled {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 5px;\r\n	background-size: 56px 20px;\r\n	background-repeat: no-repeat;\r\n	text-align: center;\r\n	line-height: 20px;\r\n}\r\n\r\n#ItemReform .reform_disabled {\r\n	text-shadow: -1px -1px white;\r\n	color: gray;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/ItemReform/ItemReform.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$5() {
+	return ItemReform._shadow || ItemReform._host;
+}
 function resetReformUIState() {
 	ReformUIState.itemId = 0;
 	ReformUIState.index = 0;
@@ -319605,7 +320565,7 @@ function GetInventoryItemsById$2(id) {
 	return items;
 }
 /**
-* Opens the Laphine UI and initializes its state based on the provided packet data.
+* Opens the Reform UI and initializes its state based on the provided packet data.
 * @param {object} pkt - The packet containing item information.
 */
 function onOpenReformUI(pkt) {
@@ -319620,7 +320580,8 @@ function onOpenReformUI(pkt) {
 			ReformInfo = DB.getAllReformInfos(reformids);
 			checkReformCriteria();
 			ItemReform.append();
-			ItemReform.ui.find(".item_text").text(DB.getItemName(item));
+			const itemText = _root$5().querySelector(".item_text");
+			if (itemText) itemText.textContent = DB.getItemName(item);
 		} else console.warn("Item with ID", pkt.itemId, "not found in Reform List.");
 	}
 }
@@ -319628,7 +320589,9 @@ function onOpenReformUI(pkt) {
 * Checks inventory items against reform criteria.
 */
 function checkReformCriteria() {
-	ItemReform.ui.find(".available_material_list").empty();
+	const availableMatList = _root$5().querySelector(".available_material_list");
+	if (!availableMatList) return;
+	availableMatList.innerHTML = "";
 	let availableMats = 0;
 	for (const reform of ReformInfo) {
 		const baseItemId = reform.BaseItemId;
@@ -319648,69 +320611,83 @@ function checkReformCriteria() {
 * Handles the addition of an item in the UI from the available materials list.
 */
 function onAddMaterialItem$2(item) {
-	const availableMatList = ItemReform.ui.find(".available_material_list");
+	const availableMatList = _root$5().querySelector(".available_material_list");
+	if (!availableMatList) return;
 	const it = DB.getItemInfo(item.ITID);
-	const newItem = jquery_default("<div class=\"item\" data-index=\"" + item.index + "\"><div class=\"item_container\" \"data-index=\"" + item.index + "\"><div class=\"icon\"></div><div class=\"name\">" + DB.getItemName(item, {
+	const newItem = document.createElement("div");
+	newItem.className = "item";
+	newItem.setAttribute("data-index", item.index);
+	newItem.innerHTML = `<div class="item_container" data-index="${item.index}"><div class="icon"></div><div class="name">${DB.getItemName(item, {
 		showItemGrade: false,
 		showItemOptions: false
-	}) + "</div></div></div>");
-	availableMatList.append(newItem);
+	})}</div></div>`;
+	availableMatList.appendChild(newItem);
 	Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+		const icon = availableMatList.querySelector(`.item[data-index="${item.index}"] .icon`);
+		if (icon) icon.style.backgroundImage = `url(${data})`;
 	});
 	Client.loadFile(DB.INTERFACE_PATH + "itemreform/btn_reform_item.bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"]").css("backgroundImage", "url(" + data + ")");
+		const el = availableMatList.querySelector(`.item[data-index="${item.index}"]`);
+		if (el) el.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
 * Handles the selection of a material in the UI.
 */
-function onMaterialSelect() {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onMaterialSelect(element) {
+	const idx = parseInt(element.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
+	if (!item) return;
 	ReformUIState.index = item.index;
 	SelectedReformInfo = ReformInfo.find((info) => info.BaseItemId === item.ITID);
-	if (!SelectedReformInfo) return false;
+	if (!SelectedReformInfo) return;
 	UpdatePossibleReformUI(item, SelectedReformInfo);
-	const availableMatList = ItemReform.ui.find(".available_material_list");
-	availableMatList.find(".item").removeClass("selected").each(function() {
-		const resetIdx = parseInt(this.getAttribute("data-index"), 10);
+	const availableMatList = _root$5().querySelector(".available_material_list");
+	if (!availableMatList) return;
+	availableMatList.querySelectorAll(".item").forEach((el) => {
+		el.classList.remove("selected");
+		const resetIdx = parseInt(el.getAttribute("data-index"), 10);
 		const resetItem = InventoryController.getUI().getItemByIndex(resetIdx);
 		if (resetItem) Client.loadFile(DB.INTERFACE_PATH + "itemreform/btn_reform_item.bmp", function(data) {
-			availableMatList.find(".item[data-index=\"" + resetItem.index + "\"]").css("backgroundImage", "url(" + data + ")");
+			const target = availableMatList.querySelector(`.item[data-index="${resetItem.index}"]`);
+			if (target) target.style.backgroundImage = `url(${data})`;
 		});
 	});
-	jquery_default(this).addClass("selected");
+	element.classList.add("selected");
 	Client.loadFile(DB.INTERFACE_PATH + "itemreform/btn_reform_item_press.bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"]").css("backgroundImage", "url(" + data + ")");
+		const target = availableMatList.querySelector(`.item[data-index="${item.index}"]`);
+		if (target) target.style.backgroundImage = `url(${data})`;
 	});
 	showMessage$2(DB.getMessage(3855));
 }
 /**
 * Handles the hover event on a container element.
 */
-function onHoverContainer() {
-	if (jquery_default(this).hasClass("selected")) return false;
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onHoverContainer(element) {
+	if (element.classList.contains("selected")) return;
+	const idx = parseInt(element.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
-	const availableMatList = ItemReform.ui.find(".available_material_list");
+	if (!item) return;
+	const availableMatList = _root$5().querySelector(".available_material_list");
+	if (!availableMatList) return;
 	Client.loadFile(DB.INTERFACE_PATH + "itemreform/btn_reform_item_over.bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"]").css("backgroundImage", "url(" + data + ")");
+		const target = availableMatList.querySelector(`.item[data-index="${item.index}"]`);
+		if (target) target.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
 * Handles the hover out event on a container element.
 */
-function onHoverOutContainer() {
-	if (jquery_default(this).hasClass("selected")) return false;
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onHoverOutContainer(element) {
+	if (element.classList.contains("selected")) return;
+	const idx = parseInt(element.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
-	const availableMatList = ItemReform.ui.find(".available_material_list");
+	if (!item) return;
+	const availableMatList = _root$5().querySelector(".available_material_list");
+	if (!availableMatList) return;
 	Client.loadFile(DB.INTERFACE_PATH + "itemreform/btn_reform_item.bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"]").css("backgroundImage", "url(" + data + ")");
+		const target = availableMatList.querySelector(`.item[data-index="${item.index}"]`);
+		if (target) target.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
@@ -319720,7 +320697,9 @@ function onHoverOutContainer() {
 * @param {Object} info - The reform info object.
 */
 function UpdatePossibleReformUI(item, info) {
-	ItemReform.ui.find(".information_details").show();
+	const root = _root$5();
+	const details = root.querySelector(".information_details");
+	if (details) details.style.display = "";
 	const resultItem = { ...item };
 	resultItem.ITID = info.ResultItemId;
 	resultItem.RefiningLevel = item.RefiningLevel + info.ChangeRefineValue;
@@ -319733,22 +320712,28 @@ function UpdatePossibleReformUI(item, info) {
 	};
 	ReformUIState.resultItem = resultItem;
 	const result_it = DB.getItemInfo(resultItem.ITID);
-	const resultItemDiv = ItemReform.ui.find(".result_item");
-	const result_item_view = jquery_default("<div class=\"item resultitem\" data-index=\"" + resultItem.ITID + "\"><div class=\"icon\"></div></div>");
-	resultItemDiv.empty().append(result_item_view);
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + result_it.identifiedResourceName + ".bmp", function(data) {
-		resultItemDiv.find(".item[data-index=\"" + resultItem.ITID + "\"] .icon").css("backgroundImage", "url(" + data + ")");
-	});
+	const resultItemDiv = root.querySelector(".result_item");
+	if (resultItemDiv) {
+		resultItemDiv.innerHTML = `<div class="item resultitem" data-index="${resultItem.ITID}"><div class="icon"></div></div>`;
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + result_it.identifiedResourceName + ".bmp", function(data) {
+			const icon = resultItemDiv.querySelector(`.item[data-index="${resultItem.ITID}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
+		});
+	}
 	const it = DB.getItemInfo(item.ITID);
-	const baseItemDiv = ItemReform.ui.find(".base_item");
-	const base_item_view = jquery_default("<div class=\"item \"data-index=\"" + item.index + "\"><div class=\"icon\"></div></div>");
-	baseItemDiv.empty().append(base_item_view);
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
-		baseItemDiv.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
-	});
-	ItemReform.ui.find(".result_item_text").empty().text(DB.getItemName(resultItem, { showItemOptions: false }));
-	const materialDiv = ItemReform.ui.find(".material_list");
-	materialDiv.empty();
+	const baseItemDiv = root.querySelector(".base_item");
+	if (baseItemDiv) {
+		baseItemDiv.innerHTML = `<div class="item" data-index="${item.index}"><div class="icon"></div></div>`;
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(data) {
+			const icon = baseItemDiv.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
+		});
+	}
+	const resultItemText = root.querySelector(".result_item_text");
+	if (resultItemText) resultItemText.textContent = DB.getItemName(resultItem, { showItemOptions: false });
+	const materialDiv = root.querySelector(".material_list");
+	if (!materialDiv) return;
+	materialDiv.innerHTML = "";
 	const limitedMaterials = info.Materials.slice().sort((a, b) => a.MaterialItemID - b.MaterialItemID).slice(0, 6);
 	let withenoughMat = 0;
 	limitedMaterials.forEach((material) => {
@@ -319759,21 +320744,24 @@ function UpdatePossibleReformUI(item, info) {
 		else inventory_mat_count = mat_item.type === ItemType_default.WEAPON || mat_item.type === ItemType_default.ARMOR ? 1 : mat_item.count;
 		if (inventory_mat_count >= material.Amount) withenoughMat++;
 		const itemClass = inventory_mat_count >= material.Amount ? "" : "red";
-		const newMat = jquery_default("<div class=\"item dummy\" data-index=\"" + material.MaterialItemID + "\"><div class=\"icon\"></div><div class=\"count " + itemClass + "\">" + inventory_mat_count + " / " + material.Amount + "</div></div>");
-		materialDiv.append(newMat);
+		const newMat = document.createElement("div");
+		newMat.className = "item dummy";
+		newMat.setAttribute("data-index", material.MaterialItemID);
+		newMat.innerHTML = `<div class="icon"></div><div class="count ${itemClass}">${inventory_mat_count} / ${material.Amount}</div>`;
+		materialDiv.appendChild(newMat);
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + mat_it.identifiedResourceName + ".bmp", function(data) {
-			materialDiv.find(".item[data-index=\"" + material.MaterialItemID + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+			const icon = materialDiv.querySelector(`.item[data-index="${material.MaterialItemID}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
 		});
 	});
 	if (withenoughMat >= limitedMaterials.length) {
-		ItemReform.ui.find(".reform_disabled").hide();
-		ItemReform.ui.find(".reform_enabled").show();
+		const reformDisabled = root.querySelector(".reform_disabled");
+		const reformEnabled = root.querySelector(".reform_enabled");
+		if (reformDisabled) reformDisabled.style.display = "none";
+		if (reformEnabled) reformEnabled.style.display = "inline-block";
 	}
 }
-/**
-* Handles the hover event for displaying item details in the NpcBox.
-*/
-function onHoverDetails(event) {
+function onHoverDetails() {
 	if (SelectedReformInfo) {
 		const infoText = SelectedReformInfo.InformationString.join("\n");
 		NpcBox_default.append();
@@ -319786,12 +320774,9 @@ function onHoverDetails(event) {
 				left: e.pageX
 			});
 		}
-		jquery_default("body").append(NpcBox_default.ui);
-		jquery_default(document).on("mousemove", updateNpcBoxPosition);
-		jquery_default(event.currentTarget).on("mouseout", function() {
-			jquery_default(document).off("mousemove", updateNpcBoxPosition);
-			onHoverOutDetails();
-		});
+		document.body.appendChild(NpcBox_default._host || NpcBox_default.ui[0]);
+		_npcBoxMoveHandler = updateNpcBoxPosition;
+		document.addEventListener("mousemove", _npcBoxMoveHandler);
 	}
 }
 /**
@@ -319799,6 +320784,10 @@ function onHoverDetails(event) {
 */
 function onHoverOutDetails() {
 	if (SelectedReformInfo) {
+		if (_npcBoxMoveHandler) {
+			document.removeEventListener("mousemove", _npcBoxMoveHandler);
+			_npcBoxMoveHandler = null;
+		}
 		if (NpcBox_default.ui.is(":visible")) NpcBox_default.remove();
 	}
 }
@@ -319816,7 +320805,7 @@ function onItemReformResult(pkt) {
 			function handleEffectAndPreview() {
 				EffectManager.spam(EF_Init_Par);
 				if (ReformUIState.timeout) clearTimeout(ReformUIState.timeout);
-				ReformUIState.timeout = setTimeout(function() {
+				ReformUIState.timeout = setTimeout(() => {
 					showItemPreview(item);
 				}, 3e3);
 			}
@@ -319828,7 +320817,7 @@ function onItemReformResult(pkt) {
 	}
 }
 /**
-* Handles the close request of the Laphine UI and sends the appropriate packet.
+* Handles the close request of the Reform UI and sends the appropriate packet.
 */
 function onRequestReformClose() {
 	ItemReform.remove();
@@ -319839,8 +320828,11 @@ function onRequestReformClose() {
 * Handles showing of message for notifications.
 */
 function showMessage$2(message) {
-	ItemReform.ui.find(".info_msg").empty().text(message);
-	ItemReform.ui.find(".some_notifs").show();
+	const root = _root$5();
+	const infoMsg = root.querySelector(".info_msg");
+	const someNotifs = root.querySelector(".some_notifs");
+	if (infoMsg) infoMsg.textContent = message;
+	if (someNotifs) someNotifs.style.display = "";
 }
 /**
 * Handles the item reform request by preparing and sending the packet.
@@ -319854,56 +320846,62 @@ function onRequestItemReform() {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$5(event) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onItemOver$5(event, element) {
+	const idx = parseInt(element.getAttribute("data-index"), 10);
 	let item;
-	if (this.classList.contains("dummy")) item = {
+	if (element.classList.contains("dummy")) item = {
 		ITID: idx,
 		IsIdentified: 1
 	};
-	else if (this.classList.contains("resultitem")) item = ReformUIState.resultItem;
+	else if (element.classList.contains("resultitem")) item = ReformUIState.resultItem;
 	else item = InventoryController.getUI().getItemByIndex(idx);
-	const overlay = ItemReform.ui.find(".overlay");
-	overlay.show();
-	overlay.text(DB.getItemName(item, { showItemOptions: false }));
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
-	const uiOffset = ItemReform.ui.offset();
+	const overlay = _root$5().querySelector(".overlay");
+	if (!overlay) return;
+	overlay.style.display = "block";
+	overlay.textContent = DB.getItemName(item, { showItemOptions: false });
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
+	const hostRect = ItemReform._host.getBoundingClientRect();
 	function updateOverlayPosition(e) {
-		overlay.css({
-			top: e.pageY - uiOffset.top + 10 + "px",
-			left: e.pageX - uiOffset.left + 10 + "px"
+		Object.assign(overlay.style, {
+			top: `${e.pageY - hostRect.top + 10}px`,
+			left: `${e.pageX - hostRect.left + 10}px`
 		});
 	}
 	updateOverlayPosition(event);
-	jquery_default(document).on("mousemove", updateOverlayPosition);
-	jquery_default(event.currentTarget).on("mouseout", function() {
-		jquery_default(document).off("mousemove", updateOverlayPosition);
+	function moveHandler(e) {
+		updateOverlayPosition(e);
+	}
+	function outHandler(e) {
+		if (element.contains(e.relatedTarget)) return;
+		document.removeEventListener("mousemove", moveHandler);
+		element.removeEventListener("mouseout", outHandler);
 		onItemOut$5();
-	});
+	}
+	document.addEventListener("mousemove", moveHandler);
+	element.addEventListener("mouseout", outHandler);
 }
 /**
 * Hide the item name
 */
 function onItemOut$5() {
-	ItemReform.ui.find(".overlay").hide();
+	const overlay = _root$5().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$7(event) {
-	event.stopImmediatePropagation();
-	const idx = parseInt(this.getAttribute("data-index"), 10);
+function onItemInfo$7(element) {
+	const idx = parseInt(element.getAttribute("data-index"), 10);
 	let item;
-	if (this.classList.contains("dummy")) item = {
+	if (element.classList.contains("dummy")) item = {
 		ITID: idx,
 		IsIdentified: 1
 	};
-	else if (this.classList.contains("resultitem")) item = ReformUIState.resultItem;
+	else if (element.classList.contains("resultitem")) item = ReformUIState.resultItem;
 	else item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
+	if (!item) return;
 	showItemPreview(item);
-	return false;
 }
 /**
 * Displays a preview of an item and its comparison item, if available.
@@ -319915,7 +320913,7 @@ function showItemPreview(item) {
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
 		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
@@ -319927,11 +320925,9 @@ function showItemPreview(item) {
 		ItemCompare_default.uid = compareItem.ITID;
 		ItemCompare_default.setItem(compareItem);
 	}
-	return false;
 }
-var ItemReform, ReformInfo, SelectedReformInfo, ReformUIState, ItemReform_default;
+var ItemReform, ReformInfo, SelectedReformInfo, ReformUIState, _npcBoxMoveHandler, ItemReform_default;
 var init_ItemReform = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_EffectConst();
 	init_ItemType();
@@ -319939,7 +320935,8 @@ var init_ItemReform = __esmMin((() => {
 	init_NetworkManager();
 	init_EffectManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Equipment();
 	init_Inventory();
 	init_ItemCompare();
@@ -319950,7 +320947,15 @@ var init_ItemReform = __esmMin((() => {
 	init_ItemReform$2();
 	init_ItemReform$1();
 	init_PacketStructure();
-	ItemReform = new UIComponent("ItemReform", ItemReform_default$2, ItemReform_default$1);
+	ItemReform = new GUIComponent("ItemReform", ItemReform_default$1);
+	/**
+	* Render HTML
+	*/
+	ItemReform.render = () => ItemReform_default$2;
+	/**
+	* Use capture phase for keydown so Escape is handled before EscapeWindow
+	*/
+	ItemReform.captureKeyEvents = true;
 	ReformInfo = {};
 	SelectedReformInfo = {};
 	ReformUIState = {
@@ -319960,55 +320965,119 @@ var init_ItemReform = __esmMin((() => {
 		timeout: 0
 	};
 	/**
-	* Once append to the DOM
+	* Key handler
 	*/
 	ItemReform.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) ItemReform.remove();
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+			ItemReform.remove();
+			event.preventDefault();
+			event.stopImmediatePropagation();
+		}
 	};
 	/**
 	* Once append
 	*/
 	ItemReform.onAppend = function onAppend() {
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		ItemReform.ui.find(".information_details").hide();
-		ItemReform.ui.find(".reform_enabled").hide();
-		ItemReform.ui.find(".reform_disabled").show();
+		const root = _root$5();
+		const details = root.querySelector(".information_details");
+		const reformEnabled = root.querySelector(".reform_enabled");
+		const reformDisabled = root.querySelector(".reform_disabled");
+		if (details) details.style.display = "none";
+		if (reformEnabled) reformEnabled.style.display = "none";
+		if (reformDisabled) reformDisabled.style.display = "inline-block";
 	};
 	/**
 	* Once removed from html
 	*/
 	ItemReform.onRemove = function onRemove() {
+		const root = _root$5();
 		ReformInfo = {};
 		SelectedReformInfo = {};
-		ItemReform.ui.find(".available_material_list").empty();
-		ItemReform.ui.find(".material_list").empty();
-		ItemReform.ui.find(".result_item_text").empty();
-		ItemReform.ui.find(".base_item").empty();
-		ItemReform.ui.find(".result_item").empty();
-		ItemReform.ui.find(".info_msg").empty();
-		ItemReform.ui.find(".information_details").hide();
-		ItemReform.ui.find(".reform_enabled").hide();
-		ItemReform.ui.find(".reform_disabled").show();
-		ItemReform.ui.find(".some_notifs").hide();
+		const availableMatList = root.querySelector(".available_material_list");
+		const materialList = root.querySelector(".material_list");
+		const resultItemText = root.querySelector(".result_item_text");
+		const baseItem = root.querySelector(".base_item");
+		const resultItem = root.querySelector(".result_item");
+		const infoMsg = root.querySelector(".info_msg");
+		const details = root.querySelector(".information_details");
+		const reformEnabled = root.querySelector(".reform_enabled");
+		const reformDisabled = root.querySelector(".reform_disabled");
+		const someNotifs = root.querySelector(".some_notifs");
+		if (availableMatList) availableMatList.innerHTML = "";
+		if (materialList) materialList.innerHTML = "";
+		if (resultItemText) resultItemText.innerHTML = "";
+		if (baseItem) baseItem.innerHTML = "";
+		if (resultItem) resultItem.innerHTML = "";
+		if (infoMsg) infoMsg.innerHTML = "";
+		if (details) details.style.display = "none";
+		if (reformEnabled) reformEnabled.style.display = "none";
+		if (reformDisabled) reformDisabled.style.display = "inline-block";
+		if (someNotifs) someNotifs.style.display = "none";
+		if (_npcBoxMoveHandler) {
+			document.removeEventListener("mousemove", _npcBoxMoveHandler);
+			_npcBoxMoveHandler = null;
+		}
+		if (NpcBox_default.ui && NpcBox_default.ui.is(":visible")) NpcBox_default.remove();
 		resetReformUIState();
 	};
 	/**
 	* Initialize UI
 	*/
 	ItemReform.init = function init() {
-		this.ui.css({
-			top: 200,
-			left: 480
+		const root = _root$5();
+		Object.assign(this._host.style, {
+			top: "200px",
+			left: "480px"
 		});
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".close, .cancel").click(onRequestReformClose);
-		this.ui.find(".available_material_list").on("click", ".item", onMaterialSelect).on("mouseover", ".item", onHoverContainer).on("mouseout", ".item", onHoverOutContainer);
-		this.ui.find(".information_details").on("mouseover", onHoverDetails).on("mouseout", onHoverOutDetails);
-		this.ui.find(".reform_enabled").click(onRequestItemReform);
-		this.ui.find(".panel").on("contextmenu", ".item", onItemInfo$7);
-		this.ui.find(".panel .left_panel").on("mouseover", ".item", onItemOver$5).on("mouseout", ".item", onItemOut$5);
+		this.draggable(".titlebar");
+		const closeBtn = root.querySelector(".close");
+		const cancelBtn = root.querySelector(".cancel");
+		if (closeBtn) closeBtn.addEventListener("click", onRequestReformClose);
+		if (cancelBtn) cancelBtn.addEventListener("click", onRequestReformClose);
+		const availableMatList = root.querySelector(".available_material_list");
+		if (availableMatList) {
+			availableMatList.addEventListener("click", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onMaterialSelect(item);
+			});
+			availableMatList.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onHoverContainer(item);
+			});
+			availableMatList.addEventListener("mouseout", (e) => {
+				const item = e.target.closest(".item");
+				if (item && (!e.relatedTarget || !item.contains(e.relatedTarget))) onHoverOutContainer(item);
+			});
+		}
+		const infoDetails = root.querySelector(".information_details");
+		if (infoDetails) {
+			infoDetails.addEventListener("mouseover", onHoverDetails);
+			infoDetails.addEventListener("mouseout", onHoverOutDetails);
+		}
+		const reformEnabled = root.querySelector(".reform_enabled");
+		if (reformEnabled) reformEnabled.addEventListener("click", onRequestItemReform);
+		const panel = root.querySelector(".panel");
+		if (panel) panel.addEventListener("contextmenu", (e) => {
+			const item = e.target.closest(".item");
+			if (item) {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+				onItemInfo$7(item);
+			}
+		});
+		const leftPanel = root.querySelector(".panel .left_panel");
+		if (leftPanel) {
+			leftPanel.addEventListener("mouseover", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onItemOver$5(e, item);
+			});
+			leftPanel.addEventListener("mouseout", (e) => {
+				const item = e.target.closest(".item");
+				if (item && (!e.relatedTarget || !item.contains(e.relatedTarget))) onItemOut$5();
+			});
+		}
 	};
+	_npcBoxMoveHandler = null;
 	/**
 	* Packet Hooks to functions
 	*/
@@ -320020,16 +321089,22 @@ var init_ItemReform = __esmMin((() => {
 //#region src/UI/Components/LaphineSys/LaphineSys.html?raw
 var LaphineSys_default$2;
 var init_LaphineSys$2 = __esmMin((() => {
-	LaphineSys_default$2 = "<div id=\"LaphineSys\">\r\n	<div class=\"container\" data-background=\"lapine/bg_lapine.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"base\"\r\n					data-background=\"basic_interface/sys_base_off.bmp\"\r\n					data-hover=\"basic_interface/sys_base_on.bmp\"\r\n				></button>\r\n				<span class=\"item_text\"></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"overlay\"></div>\r\n		<div class=\"panel\">\r\n			<div class=\"scroll_hider\"></div>\r\n			<div class=\"left_panel\">\r\n				<div class=\"mat_info_container\">\r\n					<div class=\"info_title\" data-text=\"2896\"></div>\r\n					<div class=\"mat_info_list\"></div>\r\n					<div class=\"mat_count_submitted\"></div>\r\n					<div class=\"mat_count_needed\"></div>\r\n				</div>\r\n				<div class=\"submitted_mat_list\"></div>\r\n			</div>\r\n			<div class=\"submit_button_disabled\" data-background=\"lapine/btn_moveitem_dis.bmp\"></div>\r\n			<div\r\n				class=\"submit_button_enabled\"\r\n				data-background=\"lapine/btn_moveitem_out.bmp\"\r\n				data-hover=\"lapine/btn_moveitem_over.bmp\"\r\n				data-press=\"lapine/btn_moveitem_press.bmp\"\r\n			></div>\r\n			<div class=\"available_mat_list\"></div>\r\n			<div class=\"footer\">\r\n				<div class=\"some_notifs\">\r\n					<div class=\"notif\" data-background=\"lapine/icon_notify.bmp\"></div>\r\n					<span class=\"info_msg\"></span>\r\n				</div>\r\n				<div\r\n					class=\"cancel\"\r\n					data-background=\"lapine/btn_cancel_out.bmp\"\r\n					data-hover=\"lapine/btn_cancel_over.bmp\"\r\n					data-down=\"lapine/btn_cancel_press.bmp\"\r\n				></div>\r\n				<div\r\n					class=\"make_enabled\"\r\n					data-background=\"lapine/btn_make_out.bmp\"\r\n					data-hover=\"lapine/btn_make_over.bmp\"\r\n					data-down=\"lapine/btn_make_press.bmp\"\r\n				></div>\r\n				<div class=\"make_disabled\" data-background=\"lapine/btn_make_dis.bmp\"></div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	LaphineSys_default$2 = "<div id=\"LaphineSys\">\r\n	<div class=\"container\">\r\n		<ui-image src=\"lapine/bg_lapine.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<span class=\"item_text\"></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"overlay\"></div>\r\n		<div class=\"panel\">\r\n			<div class=\"scroll_hider\"></div>\r\n			<div class=\"left_panel\">\r\n				<div class=\"mat_info_container\">\r\n					<div class=\"info_title\"><ui-text msg=\"2896\"></ui-text></div>\r\n					<div class=\"mat_info_list\"></div>\r\n					<div class=\"mat_count_submitted\"></div>\r\n					<div class=\"mat_count_needed\"></div>\r\n				</div>\r\n				<div class=\"submitted_mat_list\"></div>\r\n			</div>\r\n			<div class=\"submit_button_disabled\">\r\n				<ui-image src=\"lapine/btn_moveitem_dis.bmp\"></ui-image>\r\n			</div>\r\n			<ui-button\r\n				class=\"submit_button_enabled\"\r\n				bg=\"lapine/btn_moveitem_out.bmp\"\r\n				hover=\"lapine/btn_moveitem_over.bmp\"\r\n				down=\"lapine/btn_moveitem_press.bmp\"\r\n			></ui-button>\r\n			<div class=\"available_mat_list\"></div>\r\n			<div class=\"footer\">\r\n				<div class=\"some_notifs\">\r\n					<div class=\"notif\">\r\n						<ui-image src=\"lapine/icon_notify.bmp\"></ui-image>\r\n					</div>\r\n					<span class=\"info_msg\"></span>\r\n				</div>\r\n				<ui-button\r\n					class=\"cancel\"\r\n					bg=\"lapine/btn_cancel_out.bmp\"\r\n					hover=\"lapine/btn_cancel_over.bmp\"\r\n					down=\"lapine/btn_cancel_press.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"make_enabled\"\r\n					bg=\"lapine/btn_make_out.bmp\"\r\n					hover=\"lapine/btn_make_over.bmp\"\r\n					down=\"lapine/btn_make_press.bmp\"\r\n				></ui-button>\r\n				<div class=\"make_disabled\">\r\n					<ui-image src=\"lapine/btn_make_dis.bmp\"></ui-image>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/LaphineSys/LaphineSys.css?raw
 var LaphineSys_default$1;
 var init_LaphineSys$1 = __esmMin((() => {
-	LaphineSys_default$1 = "#LaphineSys {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 400px;\r\n	height: 250px;\r\n}\r\n#LaphineSys .container {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 100%;\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border-radius: 10px;\r\n}\r\n#LaphineSys .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n}\r\n#LaphineSys .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#LaphineSys .titlebar .item_text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#LaphineSys .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#LaphineSys .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#LaphineSys .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#LaphineSys .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#LaphineSys .panel {\r\n	width: 100%;\r\n	position: absolute;\r\n	height: 233px;\r\n}\r\n\r\n#LaphineSys .left_panel {\r\n	position: absolute;\r\n	left: 0px;\r\n	height: 205px;\r\n	width: 225px;\r\n}\r\n\r\n#LaphineSys .mat_info_container {\r\n	position: absolute;\r\n	height: 55px;\r\n	width: 245px;\r\n	top: 22px;\r\n	text-overflow: clip;\r\n}\r\n\r\n#LaphineSys .info_title {\r\n	height: 15px;\r\n	width: 228px;\r\n	position: relative;\r\n	top: 9px;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	color: #527bce;\r\n}\r\n\r\n#LaphineSys .mat_info_list {\r\n	position: relative;\r\n	height: 15px;\r\n	top: 8px;\r\n	color: #424a84;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	width: 230px;\r\n}\r\n\r\n#LaphineSys .mat_count_submitted,\r\n#LaphineSys .mat_count_needed {\r\n	height: 15px;\r\n	width: 10px;\r\n	position: absolute;\r\n	color: white;\r\n	font-size: 0.9em;\r\n	text-align: center;\r\n	align-content: center;\r\n}\r\n\r\n#LaphineSys .mat_count_submitted {\r\n	top: 35px;\r\n	left: 99px;\r\n}\r\n\r\n#LaphineSys .mat_count_needed {\r\n	top: 35px;\r\n	left: 117px;\r\n}\r\n\r\n#LaphineSys .available_mat_list {\r\n	position: absolute;\r\n	height: 205px;\r\n	width: 146px;\r\n	left: 245px;\r\n	overflow: auto;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item {\r\n	display: block;\r\n	width: 132px;\r\n	height: 26px;\r\n	margin: 4px 0px 0px 2px;\r\n	position: relative;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item.unselectable .icon {\r\n	filter: sepia(1) hue-rotate(300deg) saturate(2);\r\n}\r\n\r\n#LaphineSys .available_mat_list .item.unselectable .name {\r\n	color: gray;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item .amount {\r\n	position: absolute;\r\n\r\n	top: 15px;\r\n	left: 12px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#LaphineSys .available_mat_list .name {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 30px;\r\n	width: 104px;\r\n	align-content: center;\r\n	height: 30px;\r\n	background-size: 0px;\r\n}\r\n\r\n#LaphineSys .available_mat_list .name.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#LaphineSys .submit_button_enabled,\r\n#LaphineSys .submit_button_disabled {\r\n	position: absolute;\r\n	height: 24px;\r\n	width: 24px;\r\n	top: 93px;\r\n	left: 213px;\r\n	background: no-repeat;\r\n}\r\n\r\n#LaphineSys .scroll_hider {\r\n	position: absolute;\r\n	height: 204px;\r\n	width: 8px;\r\n	background-color: #f7f7ff;\r\n	right: 8px;\r\n	top: 1px;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list {\r\n	left: 36px;\r\n	position: absolute;\r\n	width: 160px;\r\n	height: auto;\r\n	top: 145px;\r\n	display: flex;\r\n	flex-wrap: wrap;\r\n	align-content: flex-start;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px;\r\n	position: relative;\r\n	flex: 0 0 auto; /* Ensure items do not shrink or grow */\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item .amount {\r\n	position: absolute;\r\n\r\n	top: 15px;\r\n	left: 12px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 2;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item .shadow {\r\n	position: absolute;\r\n	height: 18px;\r\n	width: 32px;\r\n	top: 9px;\r\n	left: -2px;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#LaphineSys .footer {\r\n	position: absolute;\r\n	height: 28px;\r\n	width: 100%;\r\n	bottom: 0px;\r\n}\r\n\r\n#LaphineSys .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 270px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineSys .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineSys .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 100%;\r\n	left: 15px;\r\n	font-size: 1em;\r\n	align-content: center;\r\n	color: blue;\r\n}\r\n\r\n#LaphineSys .cancel,\r\n#LaphineSys .make_enabled,\r\n#LaphineSys .make_disabled {\r\n	height: 20px;\r\n	width: 56px;\r\n}\r\n\r\n#LaphineSys .cancel {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 68px;\r\n}\r\n\r\n#LaphineSys .make_enabled,\r\n#LaphineSys .make_disabled {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n";
+	LaphineSys_default$1 = ":host {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 400px;\r\n	height: 250px;\r\n}\r\n#LaphineSys .container {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 100%;\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border-radius: 10px;\r\n}\r\n#LaphineSys .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n}\r\n#LaphineSys .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#LaphineSys .titlebar .item_text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#LaphineSys .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#LaphineSys .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#LaphineSys .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#LaphineSys .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#LaphineSys .panel {\r\n	width: 100%;\r\n	position: absolute;\r\n	height: 233px;\r\n}\r\n\r\n#LaphineSys .left_panel {\r\n	position: absolute;\r\n	left: 0px;\r\n	height: 205px;\r\n	width: 225px;\r\n}\r\n\r\n#LaphineSys .mat_info_container {\r\n	position: absolute;\r\n	height: 55px;\r\n	width: 245px;\r\n	top: 22px;\r\n	text-overflow: clip;\r\n}\r\n\r\n#LaphineSys .info_title {\r\n	height: 15px;\r\n	width: 228px;\r\n	position: relative;\r\n	top: 9px;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	color: #527bce;\r\n}\r\n\r\n#LaphineSys .mat_info_list {\r\n	position: relative;\r\n	height: 15px;\r\n	top: 8px;\r\n	color: #424a84;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	width: 230px;\r\n}\r\n\r\n#LaphineSys .mat_count_submitted,\r\n#LaphineSys .mat_count_needed {\r\n	height: 15px;\r\n	width: 10px;\r\n	position: absolute;\r\n	color: white;\r\n	font-size: 0.9em;\r\n	text-align: center;\r\n	align-content: center;\r\n}\r\n\r\n#LaphineSys .mat_count_submitted {\r\n	top: 35px;\r\n	left: 99px;\r\n}\r\n\r\n#LaphineSys .mat_count_needed {\r\n	top: 35px;\r\n	left: 117px;\r\n}\r\n\r\n#LaphineSys .available_mat_list {\r\n	position: absolute;\r\n	height: 205px;\r\n	width: 146px;\r\n	left: 245px;\r\n	overflow: auto;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item {\r\n	display: block;\r\n	width: 132px;\r\n	height: 26px;\r\n	margin: 4px 0px 0px 2px;\r\n	position: relative;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item.unselectable .icon {\r\n	filter: sepia(1) hue-rotate(300deg) saturate(2);\r\n}\r\n\r\n#LaphineSys .available_mat_list .item.unselectable .name {\r\n	color: gray;\r\n}\r\n\r\n#LaphineSys .available_mat_list .item .amount {\r\n	position: absolute;\r\n\r\n	top: 15px;\r\n	left: 12px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#LaphineSys .available_mat_list .name {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 30px;\r\n	width: 104px;\r\n	align-content: center;\r\n	height: 30px;\r\n	background-size: 0px;\r\n}\r\n\r\n#LaphineSys .available_mat_list .name.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#LaphineSys .submit_button_enabled,\r\n#LaphineSys .submit_button_disabled {\r\n	position: absolute;\r\n	height: 24px;\r\n	width: 24px;\r\n	top: 93px;\r\n	left: 213px;\r\n	background: no-repeat;\r\n}\r\n\r\n#LaphineSys .scroll_hider {\r\n	position: absolute;\r\n	height: 204px;\r\n	width: 8px;\r\n	background-color: #f7f7ff;\r\n	right: 8px;\r\n	top: 1px;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list {\r\n	left: 36px;\r\n	position: absolute;\r\n	width: 160px;\r\n	height: auto;\r\n	top: 145px;\r\n	display: flex;\r\n	flex-wrap: wrap;\r\n	align-content: flex-start;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px;\r\n	position: relative;\r\n	flex: 0 0 auto; /* Ensure items do not shrink or grow */\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item .amount {\r\n	position: absolute;\r\n\r\n	top: 15px;\r\n	left: 12px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 2;\r\n}\r\n\r\n#LaphineSys .submitted_mat_list .item .shadow {\r\n	position: absolute;\r\n	height: 18px;\r\n	width: 32px;\r\n	top: 9px;\r\n	left: -2px;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#LaphineSys .footer {\r\n	position: absolute;\r\n	height: 28px;\r\n	width: 100%;\r\n	bottom: 0px;\r\n}\r\n\r\n#LaphineSys .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 270px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineSys .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineSys .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 100%;\r\n	left: 15px;\r\n	font-size: 1em;\r\n	align-content: center;\r\n	color: blue;\r\n}\r\n\r\n#LaphineSys .cancel,\r\n#LaphineSys .make_enabled,\r\n#LaphineSys .make_disabled {\r\n	height: 20px;\r\n	width: 56px;\r\n}\r\n\r\n#LaphineSys .cancel {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 68px;\r\n}\r\n\r\n#LaphineSys .make_enabled,\r\n#LaphineSys .make_disabled {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/LaphineSys/LaphineSys.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$4() {
+	return LaphineSys._shadow || LaphineSys._host;
+}
 /**
 * Opens the Laphine UI and initializes its state based on the provided packet data.
 * @param {object} pkt - The packet containing item information.
@@ -320056,9 +321131,10 @@ function onOpenLaphineUI(pkt) {
 function onUpdateLaphineUI() {
 	const item = InventoryController.getUI().getItemById(LaphineUIState.itemId);
 	if (!item) return false;
-	LaphineSys.ui.find(".item_text").text(DB.getItemName(item));
-	LaphineSys.ui.find(".mat_info_list").text(LaphineUIState.needSourceString);
-	LaphineSys.ui.find(".mat_count_needed").text(LaphineUIState.needCount);
+	const root = _root$4();
+	root.querySelector(".item_text").textContent = DB.getItemName(item);
+	root.querySelector(".mat_info_list").textContent = LaphineUIState.needSourceString;
+	root.querySelector(".mat_count_needed").textContent = LaphineUIState.needCount;
 }
 /**
 * Get item objects by id
@@ -320076,7 +321152,8 @@ function GetInventoryItemsById$1(id) {
 * Populates the list of available materials.
 */
 function populateAvailableMatList() {
-	LaphineSys.ui.find(".available_mat_list").empty();
+	const availableMatList = _root$4().querySelector(".available_mat_list");
+	availableMatList.innerHTML = "";
 	LaphineUIState.sourceItems.forEach((sourceItem) => {
 		GetInventoryItemsById$1(sourceItem.id).forEach((inventoryItem) => {
 			onAddMaterialItem$1(inventoryItem, inventoryItem.type === ItemType_default.WEAPON || inventoryItem.type === ItemType_default.ARMOR ? 1 : inventoryItem.count, sourceItem.count, sourceItem.name);
@@ -320087,19 +321164,22 @@ function populateAvailableMatList() {
 * Handles the addition of an item in the UI from the available materials list.
 */
 function onAddMaterialItem$1(item, inventory_count, source_needcount, source_iconname) {
-	const availableMatList = LaphineSys.ui.find(".available_mat_list");
+	const availableMatList = _root$4().querySelector(".available_mat_list");
 	let isSelectable;
 	if (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) isSelectable = item.RefiningLevel >= LaphineUIState.needRefineMin && item.RefiningLevel <= LaphineUIState.needRefineMax;
 	else isSelectable = inventory_count >= source_needcount;
-	const draggableAttr = !isSelectable ? "" : "draggable=\"true\"";
-	const newItem = jquery_default("<div class=\"item " + (isSelectable ? "" : "unselectable") + "\" data-index=\"" + item.index + "\" " + draggableAttr + "><div class=\"icon\"></div><div class=\"amount\">" + inventory_count + "</div><div class=\"name\">" + DB.getItemName(item) + "</div></div>");
-	newItem.dblclick(onSubmitItem$1);
-	availableMatList.append(newItem);
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + source_iconname + ".bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+	const draggableAttr = !isSelectable ? "" : " draggable=\"true\"";
+	const newItemHTML = `<div class="item${isSelectable ? "" : " unselectable"}" data-index="${item.index}"${draggableAttr}><div class="icon"></div><div class="amount">${inventory_count}</div><div class="name">${DB.getItemName(item)}</div></div>`;
+	availableMatList.insertAdjacentHTML("beforeend", newItemHTML);
+	const newItemEl = availableMatList.querySelector(`.item[data-index="${item.index}"]`);
+	if (newItemEl) newItemEl.addEventListener("dblclick", onSubmitItem$1);
+	Client.loadFile(DB.INTERFACE_PATH + "item/" + source_iconname + ".bmp", (data) => {
+		const icon = availableMatList.querySelector(`.item[data-index="${item.index}"] .icon`);
+		if (icon) icon.style.backgroundImage = `url(${data})`;
 	});
-	Client.loadFile(DB.INTERFACE_PATH + "lapine/list_selected_item.bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"] .name").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "lapine/list_selected_item.bmp", (data) => {
+		const name = availableMatList.querySelector(`.item[data-index="${item.index}"] .name`);
+		if (name) name.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
@@ -320126,29 +321206,40 @@ function onRequestLaphineClose() {
 /**
 * Handles the selection of an item from the available materials list.
 */
-function onItemSelect$1() {
-	if (jquery_default(this).hasClass("unselectable")) return false;
+function onItemSelect$1(e) {
+	if (this.classList.contains("unselectable")) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+		return;
+	}
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
-	LaphineSys.ui.find(".name").removeClass("selected");
-	LaphineSys.ui.find(".item[data-index=\"" + item.index + "\"] .name").addClass("selected");
+	if (!item) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+		return;
+	}
+	const root = _root$4();
+	root.querySelectorAll(".name").forEach((el) => el.classList.remove("selected"));
+	const nameEl = root.querySelector(`.item[data-index="${item.index}"] .name`);
+	if (nameEl) nameEl.classList.add("selected");
 }
 /**
 * Submits a selected item and updates the UI accordingly.
 */
 function onSubmitItem$1() {
-	if (parseInt(LaphineSys.ui.find(".mat_count_submitted").text(), 10) >= parseInt(LaphineSys.ui.find(".mat_count_needed").text(), 10)) return false;
-	const selectedItem = LaphineSys.ui.find(".item .name.selected");
+	const root = _root$4();
+	if (parseInt(root.querySelector(".mat_count_submitted").textContent, 10) >= parseInt(root.querySelector(".mat_count_needed").textContent, 10)) return;
+	const selectedItem = root.querySelector(".item .name.selected");
 	let idx;
-	if (selectedItem.length > 0) idx = parseInt(selectedItem.closest(".item").data("index"), 10);
+	if (selectedItem) idx = parseInt(selectedItem.closest(".item").getAttribute("data-index"), 10);
 	else idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
+	if (!item) return;
 	if (LaphineSys.submittedItems.some((submittedItem) => submittedItem.index === item.index)) return;
 	const sourceItem = LaphineUIState.sourceItems.find((si) => si.id === item.ITID);
 	if (!sourceItem) return;
-	if (jquery_default(this).hasClass("unselectable")) {
+	if (this.classList && this.classList.contains("unselectable")) {
 		let message;
 		if (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) if (item.RefiningLevel > LaphineUIState.needRefineMax) {
 			message = DB.getMessage(3644);
@@ -320161,35 +321252,39 @@ function onSubmitItem$1() {
 			message = DB.getMessage(2898).replace("%d", sourceItem.count);
 			showMessage$1(message);
 		}
-		return false;
+		return;
 	}
 	onUpdateSubmitList$1(item);
 }
 function onUpdateSubmitList$1(item) {
 	const it = DB.getItemInfo(item.ITID);
-	const submittedMatList = LaphineSys.ui.find(".submitted_mat_list");
+	const root = _root$4();
+	const submittedMatList = root.querySelector(".submitted_mat_list");
 	const sourceItem = LaphineUIState.sourceItems.find((si) => si.id === item.ITID);
 	const itemCount = item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR ? 1 : sourceItem.count;
-	const newItem = jquery_default("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"shadow\"></div><div class=\"icon\"></div><div class=\"amount\">" + sourceItem.count + "</div></div>");
-	newItem.dblclick(onItemRemove$1);
-	submittedMatList.append(newItem);
-	Client.loadFile(DB.INTERFACE_PATH + "lapine/shadow_item_off.bmp", function(data) {
-		submittedMatList.find(".item[data-index=\"" + item.index + "\"] .shadow").css("backgroundImage", "url(" + data + ")");
+	const newItemHTML = `<div class="item" data-index="${item.index}" draggable="true"><div class="shadow"></div><div class="icon"></div><div class="amount">${sourceItem.count}</div></div>`;
+	submittedMatList.insertAdjacentHTML("beforeend", newItemHTML);
+	const newItemEl = submittedMatList.querySelector(`.item[data-index="${item.index}"]`);
+	if (newItemEl) newItemEl.addEventListener("dblclick", onItemRemove$1);
+	Client.loadFile(DB.INTERFACE_PATH + "lapine/shadow_item_off.bmp", (data) => {
+		const shadow = submittedMatList.querySelector(`.item[data-index="${item.index}"] .shadow`);
+		if (shadow) shadow.style.backgroundImage = `url(${data})`;
 	});
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-		submittedMatList.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+		const icon = submittedMatList.querySelector(`.item[data-index="${item.index}"] .icon`);
+		if (icon) icon.style.backgroundImage = `url(${data})`;
 	});
 	LaphineSys.submittedItems.push({
 		index: item.index,
 		count: itemCount
 	});
-	const submittedCount = parseInt(LaphineSys.ui.find(".mat_count_submitted").text(), 10) + 1;
-	LaphineSys.ui.find(".mat_count_submitted").text(submittedCount);
-	if (submittedCount >= parseInt(LaphineSys.ui.find(".mat_count_needed").text(), 10)) {
-		LaphineSys.ui.find(".submit_button_enabled").hide();
-		LaphineSys.ui.find(".submit_button_disabled").show();
-		LaphineSys.ui.find(".make_disabled").hide();
-		LaphineSys.ui.find(".make_enabled").show();
+	const submittedCount = parseInt(root.querySelector(".mat_count_submitted").textContent, 10) + 1;
+	root.querySelector(".mat_count_submitted").textContent = submittedCount;
+	if (submittedCount >= parseInt(root.querySelector(".mat_count_needed").textContent, 10)) {
+		root.querySelector(".submit_button_enabled").style.display = "none";
+		root.querySelector(".submit_button_disabled").style.display = "block";
+		root.querySelector(".make_disabled").style.display = "none";
+		root.querySelector(".make_enabled").style.display = "inline-block";
 	}
 	adjustSubmittedMatList();
 	updateAvailableMatList$1(item.ITID, item.index, sourceItem.count, false);
@@ -320198,10 +321293,10 @@ function onUpdateSubmitList$1(item) {
 * Adjusts the layout of the submitted materials list.
 */
 function adjustSubmittedMatList() {
-	const submittedMatList = LaphineSys.ui.find(".submitted_mat_list");
-	const numItems = submittedMatList.find(".item").length;
+	const submittedMatList = _root$4().querySelector(".submitted_mat_list");
+	const numItems = submittedMatList.querySelectorAll(".item").length;
 	const numRows = Math.ceil(numItems / 5);
-	submittedMatList.css("top", 145 - (numRows - 1) * 28);
+	submittedMatList.style.top = `${145 - (numRows - 1) * 28}px`;
 }
 /**
 * Handles the removal of a submitted item and updates the UI accordingly.
@@ -320212,16 +321307,17 @@ function onItemRemove$1() {
 	if (item) onRemoveItemSubmitList$1(item, this);
 }
 function onRemoveItemSubmitList$1(item, element = null) {
+	const root = _root$4();
 	const itemIndex = LaphineSys.submittedItems.findIndex((submittedItem) => submittedItem.index === item.index);
 	if (itemIndex !== -1) {
 		LaphineSys.submittedItems.splice(itemIndex, 1);
-		if (!element) element = LaphineSys.ui.find(`.item[data-index="${item.index}"]`);
-		jquery_default(element).remove();
-		const submittedCount = parseInt(LaphineSys.ui.find(".mat_count_submitted").text(), 10) - 1;
-		LaphineSys.ui.find(".mat_count_submitted").text(submittedCount);
-		if (submittedCount < parseInt(LaphineSys.ui.find(".mat_count_needed").text(), 10)) {
-			LaphineSys.ui.find(".submit_button_enabled").show();
-			LaphineSys.ui.find(".submit_button_disabled").hide();
+		if (!element) element = root.querySelector(`.submitted_mat_list .item[data-index="${item.index}"]`);
+		if (element) element.remove();
+		const submittedCount = parseInt(root.querySelector(".mat_count_submitted").textContent, 10) - 1;
+		root.querySelector(".mat_count_submitted").textContent = submittedCount;
+		if (submittedCount < parseInt(root.querySelector(".mat_count_needed").textContent, 10)) {
+			root.querySelector(".submit_button_enabled").style.display = "block";
+			root.querySelector(".submit_button_disabled").style.display = "none";
 		}
 		adjustSubmittedMatList();
 		updateAvailableMatList$1(item.ITID, item.index, item.count, true);
@@ -320231,27 +321327,29 @@ function onRemoveItemSubmitList$1(item, element = null) {
 * Handles the changes in UI when submitting and removing item from submitted list.
 */
 function updateAvailableMatList$1(itemId, itemIndex, countChange, increase) {
-	const availableMatList = LaphineSys.ui.find(".available_mat_list");
+	const availableMatList = _root$4().querySelector(".available_mat_list");
 	let itemExists = false;
-	availableMatList.find(".item").each(function() {
-		const idx = parseInt(jquery_default(this).attr("data-index"), 10);
+	availableMatList.querySelectorAll(".item").forEach((el) => {
+		const idx = parseInt(el.getAttribute("data-index"), 10);
 		const item = InventoryController.getUI().getItemByIndex(idx);
 		if (item.ITID === itemId && idx === itemIndex) {
 			itemExists = true;
-			const selectedItem = jquery_default(this);
 			let tempCount = item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR ? 1 : item.count;
 			if (increase) {
-				selectedItem.removeClass("unselectable");
-				selectedItem.find(".amount").text(tempCount);
-				selectedItem.attr("draggable", "true");
+				el.classList.remove("unselectable");
+				const amountEl = el.querySelector(".amount");
+				if (amountEl) amountEl.textContent = tempCount;
+				el.setAttribute("draggable", "true");
 			} else {
 				tempCount -= countChange;
-				if (tempCount <= 0) selectedItem.remove();
+				if (tempCount <= 0) el.remove();
 				else {
-					selectedItem.addClass("unselectable");
-					selectedItem.find(".name").removeClass("selected");
-					selectedItem.find(".amount").text(tempCount);
-					selectedItem.attr("draggable", "false");
+					el.classList.add("unselectable");
+					const nameEl = el.querySelector(".name");
+					if (nameEl) nameEl.classList.remove("selected");
+					const amountEl = el.querySelector(".amount");
+					if (amountEl) amountEl.textContent = tempCount;
+					el.setAttribute("draggable", "false");
 				}
 			}
 		}
@@ -320271,8 +321369,14 @@ function updateAvailableMatList$1(itemId, itemIndex, countChange, increase) {
 * Handles showing of message for notifications.
 */
 function showMessage$1(message) {
-	LaphineSys.ui.find(".info_msg").empty().text(message);
-	LaphineSys.ui.find(".some_notifs").show();
+	const root = _root$4();
+	const infoMsg = root.querySelector(".info_msg");
+	if (infoMsg) {
+		infoMsg.textContent = "";
+		infoMsg.textContent = message;
+	}
+	const notifs = root.querySelector(".some_notifs");
+	if (notifs) notifs.style.display = "block";
 }
 /**
 * Handles the synthesis request by preparing and sending the packet.
@@ -320301,34 +321405,36 @@ function onItemOver$4() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const pos = jquery_default(this);
-	const overlay = LaphineSys.ui.find(".overlay");
-	const parentContainer = jquery_default(this).closest(".available_mat_list, .submitted_mat_list");
-	const itemPos = pos.position();
-	const containerPos = parentContainer.position();
-	const top = itemPos.top - overlay.outerHeight() + 25;
-	const left = itemPos.left;
-	overlay.show();
-	overlay.css({
-		top: top + containerPos.top,
-		left: left + containerPos.left
-	});
-	overlay.text(DB.getItemName(item));
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	const root = _root$4();
+	const overlay = root.querySelector(".overlay");
+	const parentContainer = this.closest(".available_mat_list") || this.closest(".submitted_mat_list");
+	if (!parentContainer) return;
+	const itemRect = this.getBoundingClientRect();
+	const containerRect = parentContainer.getBoundingClientRect();
+	const panelRect = root.querySelector(".panel").getBoundingClientRect();
+	const overlayHeight = overlay.offsetHeight || 23;
+	const top = itemRect.top - containerRect.top + (containerRect.top - panelRect.top) - overlayHeight + 25;
+	const left = itemRect.left - panelRect.left;
+	overlay.style.display = "block";
+	overlay.style.top = `${top}px`;
+	overlay.style.left = `${left}px`;
+	overlay.textContent = DB.getItemName(item);
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
 }
 /**
 * Hide the item name
 */
 function onItemOut$4() {
-	LaphineSys.ui.find(".overlay").hide();
+	const root = _root$4();
+	root.querySelector(".overlay").style.display = "none";
 }
 /**
 * Stop event propagation
 */
-function stopPropagation$6(event) {
+function stopPropagation$5(event) {
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Start dragging an item
@@ -320338,11 +321444,15 @@ function onItemDragStart$3(event) {
 	const item = InventoryController.getUI().getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".icon").style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, "");
+	const iconEl = this.querySelector(".icon");
+	if (!iconEl) return;
+	const match = iconEl.style.backgroundImage.match(/\((.*?)\)/);
+	if (!match) return;
+	const url = match[1].replace(/('|")/g, "");
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url.replace(/^"/, "").replace(/"$/, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "LaphineSys",
 		data: item
@@ -320351,79 +321461,62 @@ function onItemDragStart$3(event) {
 }
 /**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$3() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Drop an item from available_mat_list into submitted_mat_list
-*
-* @param {event}
 */
 function onSubmitItemDrop$1(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item") return false;
-	if (parseInt(LaphineSys.ui.find(".mat_count_submitted").text(), 10) >= parseInt(LaphineSys.ui.find(".mat_count_needed").text(), 10)) return false;
+	if (data.type !== "item") return;
+	const root = _root$4();
+	if (parseInt(root.querySelector(".mat_count_submitted").textContent, 10) >= parseInt(root.querySelector(".mat_count_needed").textContent, 10)) return;
 	if (LaphineSys.submittedItems.some((submittedItem) => submittedItem.index === item.index)) return;
-	const sourceItem = LaphineUIState.sourceItems.find((si) => si.id === item.ITID);
-	if (!sourceItem) return;
-	if (jquery_default(this).hasClass("unselectable")) {
-		let message;
-		if (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) if (item.RefiningLevel > LaphineUIState.needRefineMax) {
-			message = DB.getMessage(3644);
-			showMessage$1(message);
-		} else {
-			message = DB.getMessage(2899);
-			showMessage$1(message);
-		}
-		else {
-			message = DB.getMessage(2898).replace("%d", sourceItem.count);
-			showMessage$1(message);
-		}
-		return false;
-	}
+	if (!LaphineUIState.sourceItems.find((si) => si.id === item.ITID)) return;
 	if (item) onUpdateSubmitList$1(item);
 }
 /**
 * Drop an item from submitted_mat_list into available_mat_list
-*
-* @param {event}
 */
 function onRemoveSubmitDrop$1(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item") return false;
-	if (!item) return false;
-	const element = LaphineSys.ui.find(`.item[data-index="${item.index}"]`);
-	onRemoveItemSubmitList$1(item, element.get(0));
+	if (data.type !== "item") return;
+	if (!item) return;
+	const element = _root$4().querySelector(`.submitted_mat_list .item[data-index="${item.index}"]`);
+	onRemoveItemSubmitList$1(item, element);
 }
 /**
 * Get item info (open description window)
 */
 function onItemInfo$6(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemCompare_default.ui) ItemCompare_default.remove();
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
 		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
@@ -320435,16 +321528,15 @@ function onItemInfo$6(event) {
 		ItemCompare_default.uid = compareItem.ITID;
 		ItemCompare_default.setItem(compareItem);
 	}
-	return false;
 }
 var LaphineSys, LaphineUIState, LaphineSys_default;
 var init_LaphineSys = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_ItemType();
 	init_NetworkManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Equipment();
 	init_Inventory();
 	init_ItemCompare();
@@ -320454,7 +321546,7 @@ var init_LaphineSys = __esmMin((() => {
 	init_LaphineSys$2();
 	init_LaphineSys$1();
 	init_PacketStructure();
-	LaphineSys = new UIComponent("LaphineSys", LaphineSys_default$2, LaphineSys_default$1);
+	LaphineSys = new GUIComponent("LaphineSys", LaphineSys_default$1);
 	LaphineUIState = {
 		itemId: null,
 		needCount: null,
@@ -320465,51 +321557,100 @@ var init_LaphineSys = __esmMin((() => {
 	};
 	LaphineSys.submittedItems = [];
 	/**
+	* Render HTML
+	*/
+	LaphineSys.render = () => LaphineSys_default$2;
+	/**
 	* Once append to the DOM
 	*/
 	LaphineSys.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) LaphineSys.remove();
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") LaphineSys.remove();
 	};
 	/**
 	* Once append
 	*/
 	LaphineSys.onAppend = function onAppend() {
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		LaphineSys.ui.find(".some_notifs").hide();
-		LaphineSys.ui.find(".make_enabled").hide();
-		LaphineSys.ui.find(".make_disabled").show();
+		const root = _root$4();
+		root.querySelector(".some_notifs").style.display = "none";
+		root.querySelector(".make_enabled").style.display = "none";
+		root.querySelector(".make_disabled").style.display = "block";
 	};
 	/**
 	* Once removed from html
 	*/
 	LaphineSys.onRemove = function onRemove() {
+		const root = _root$4();
 		LaphineSys.submittedItems.length = 0;
-		LaphineSys.ui.find(".submit_button_enabled").show();
-		LaphineSys.ui.find(".submit_button_disabled").hide();
-		LaphineSys.ui.find(".submitted_mat_list").empty();
-		LaphineSys.ui.find(".mat_count_submitted").text("0");
-		LaphineSys.ui.find(".some_notifs").hide();
+		root.querySelector(".submit_button_enabled").style.display = "block";
+		root.querySelector(".submit_button_disabled").style.display = "none";
+		root.querySelector(".submitted_mat_list").innerHTML = "";
+		root.querySelector(".mat_count_submitted").textContent = "0";
+		root.querySelector(".some_notifs").style.display = "none";
 	};
 	/**
 	* Initialize UI
 	*/
 	LaphineSys.init = function init() {
-		this.ui.find(".mat_count_submitted").text("0");
-		this.ui.find(".submit_button_disabled").hide();
-		this.ui.find(".some_notifs").hide();
-		this.ui.css({
-			top: 200,
-			left: 480
+		const root = _root$4();
+		root.querySelector(".mat_count_submitted").textContent = "0";
+		root.querySelector(".submit_button_disabled").style.display = "none";
+		root.querySelector(".some_notifs").style.display = "none";
+		this._host.style.top = "200px";
+		this._host.style.left = "480px";
+		this.draggable(".titlebar");
+		root.querySelector(".close").addEventListener("click", onRequestLaphineClose);
+		root.querySelector(".cancel").addEventListener("click", onRequestLaphineClose);
+		const availableMatList = root.querySelector(".available_mat_list");
+		const leftPanel = root.querySelector(".left_panel");
+		availableMatList.addEventListener("dragover", stopPropagation$5);
+		leftPanel.addEventListener("dragover", stopPropagation$5);
+		availableMatList.addEventListener("dragstart", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragStart$3.call(item, e);
 		});
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".close, .cancel").click(onRequestLaphineClose);
-		this.ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$6).on("dragstart", ".item", onItemDragStart$3).on("dragend", ".item", onItemDragEnd$3);
-		this.ui.find(".submit_button_enabled").click(onSubmitItem$1);
-		this.ui.find(".available_mat_list").on("click", ".item", onItemSelect$1).on("drop", onRemoveSubmitDrop$1);
-		this.ui.find(".left_panel").on("drop", onSubmitItemDrop$1);
-		this.ui.find(".make_enabled").click(onRequestSynthesis);
-		this.ui.find(".available_mat_list, .submitted_mat_list").on("mouseover", ".item", onItemOver$4).on("mouseout", ".item", onItemOut$4).on("contextmenu", ".item", onItemInfo$6);
+		availableMatList.addEventListener("dragend", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragEnd$3.call(item, e);
+		});
+		leftPanel.addEventListener("dragstart", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragStart$3.call(item, e);
+		});
+		leftPanel.addEventListener("dragend", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragEnd$3.call(item, e);
+		});
+		root.querySelector(".submit_button_enabled").addEventListener("click", onSubmitItem$1);
+		availableMatList.addEventListener("click", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemSelect$1.call(item, e);
+		});
+		availableMatList.addEventListener("drop", onRemoveSubmitDrop$1);
+		leftPanel.addEventListener("drop", onSubmitItemDrop$1);
+		root.querySelector(".make_enabled").addEventListener("click", onRequestSynthesis);
+		availableMatList.addEventListener("mouseover", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemOver$4.call(item, e);
+		});
+		availableMatList.addEventListener("mouseout", (e) => {
+			if (e.target.closest(".item")) onItemOut$4();
+		});
+		availableMatList.addEventListener("contextmenu", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemInfo$6.call(item, e);
+		});
+		const submittedMatList = root.querySelector(".submitted_mat_list");
+		submittedMatList.addEventListener("mouseover", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemOver$4.call(item, e);
+		});
+		submittedMatList.addEventListener("mouseout", (e) => {
+			if (e.target.closest(".item")) onItemOut$4();
+		});
+		submittedMatList.addEventListener("contextmenu", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemInfo$6.call(item, e);
+		});
 		Client.loadFiles([
 			DB.INTERFACE_PATH + "lapine/scrollbar_bg_btm.bmp",
 			DB.INTERFACE_PATH + "lapine/scrollbar_bg_mid.bmp",
@@ -320524,17 +321665,20 @@ var init_LaphineSys = __esmMin((() => {
 			DB.INTERFACE_PATH + "lapine/scrollbar_thumb_press_mid.bmp",
 			DB.INTERFACE_PATH + "lapine/scrollbar_thumb_press_top.bmp"
 		], function(bgBottom, bgMid, bgTop, thumbOutBottom, thumbOutMid, thumbOutTop, thumbOverBottom, thumbOverMid, thumbOverTop, thumbPressBottom, thumbPressMid, thumbPressTop) {
-			jquery_default("style:first").append([
+			const style = document.createElement("style");
+			style.textContent = [
 				"#LaphineSys .available_mat_list::-webkit-scrollbar { width: 8px; height: 0px; }",
 				"#LaphineSys .available_mat_list::-webkit-scrollbar-corner { display: none; }",
-				"#LaphineSys .available_mat_list::-webkit-scrollbar-button:vertical:increment { background: url(" + bgBottom + ") center center no-repeat, url(" + bgMid + ") top no-repeat; height: 15px; width: 7px; background-color: transparent; }",
-				"#LaphineSys .available_mat_list::-webkit-scrollbar-button:vertical:decrement { background: url(" + bgTop + ") center center no-repeat, url(" + bgMid + ") bottom no-repeat; height: 15px; width: 7px; background-color: transparent; }",
-				"#LaphineSys .available_mat_list::-webkit-scrollbar-track-piece:vertical { background: url(" + bgTop + ") top no-repeat, url(" + bgMid + ") center repeat-y, url(" + bgBottom + ") bottom no-repeat; }",
-				"#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical { background: url(" + thumbOutTop + ") top no-repeat, url(" + thumbOutMid + ") center repeat-y, url(" + thumbOutBottom + ") bottom no-repeat !important; border-radius: 100px; }",
-				"#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical:hover { background: url(" + thumbOverTop + ") top no-repeat, url(" + thumbOverMid + ") center repeat-y, url(" + thumbOverBottom + ") bottom no-repeat !important; border-radius: 100px; }",
-				"#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical:active { background: url(" + thumbPressTop + ") top no-repeat, url(" + thumbPressMid + ") center repeat-y, url(" + thumbPressBottom + ") bottom no-repeat !important; border-radius: 100px; }",
+				`#LaphineSys .available_mat_list::-webkit-scrollbar-button:vertical:increment { background: url(${bgBottom}) center center no-repeat, url(${bgMid}) top no-repeat; height: 15px; width: 7px; background-color: transparent; }`,
+				`#LaphineSys .available_mat_list::-webkit-scrollbar-button:vertical:decrement { background: url(${bgTop}) center center no-repeat, url(${bgMid}) bottom no-repeat; height: 15px; width: 7px; background-color: transparent; }`,
+				`#LaphineSys .available_mat_list::-webkit-scrollbar-track-piece:vertical { background: url(${bgTop}) top no-repeat, url(${bgMid}) center repeat-y, url(${bgBottom}) bottom no-repeat; }`,
+				`#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical { background: url(${thumbOutTop}) top no-repeat, url(${thumbOutMid}) center repeat-y, url(${thumbOutBottom}) bottom no-repeat !important; border-radius: 100px; }`,
+				`#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical:hover { background: url(${thumbOverTop}) top no-repeat, url(${thumbOverMid}) center repeat-y, url(${thumbOverBottom}) bottom no-repeat !important; border-radius: 100px; }`,
+				`#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical:active { background: url(${thumbPressTop}) top no-repeat, url(${thumbPressMid}) center repeat-y, url(${thumbPressBottom}) bottom no-repeat !important; border-radius: 100px; }`,
 				"#LaphineSys .available_mat_list::-webkit-scrollbar-thumb:vertical{ -webkit-border-image: none; }"
-			].join("\n"));
+			].join("\n");
+			const shadow = LaphineSys._shadow;
+			if (shadow) shadow.appendChild(style);
 		});
 	};
 	/**
@@ -320548,21 +321692,27 @@ var init_LaphineSys = __esmMin((() => {
 //#region src/UI/Components/LaphineUpg/LaphineUpg.html?raw
 var LaphineUpg_default$2;
 var init_LaphineUpg$2 = __esmMin((() => {
-	LaphineUpg_default$2 = "<div id=\"LaphineUpg\">\r\n	<div class=\"container\" data-background=\"lapine/bg_lapineupgrade.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"base\"\r\n					data-background=\"basic_interface/sys_base_off.bmp\"\r\n					data-hover=\"basic_interface/sys_base_on.bmp\"\r\n				></button>\r\n				<span class=\"item_text\"></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"overlay\"></div>\r\n		<div class=\"panel\">\r\n			<div class=\"scroll_hider\"></div>\r\n			<div class=\"left_panel\">\r\n				<div class=\"mat_info_container\">\r\n					<div class=\"info_title\" data-text=\"2896\"></div>\r\n					<div class=\"mat_info_list\"></div>\r\n				</div>\r\n				<div class=\"submitted_mat_list\"></div>\r\n			</div>\r\n			<div class=\"submit_button_disabled\" data-background=\"lapine/btn_moveitem_dis.bmp\"></div>\r\n			<div\r\n				class=\"submit_button_enabled\"\r\n				data-background=\"lapine/btn_moveitem_out.bmp\"\r\n				data-hover=\"lapine/btn_moveitem_over.bmp\"\r\n				data-press=\"lapine/btn_moveitem_press.bmp\"\r\n			></div>\r\n			<div class=\"available_mat_list\"></div>\r\n			<div class=\"footer\">\r\n				<div class=\"some_notifs\">\r\n					<div class=\"notif\" data-background=\"lapine/icon_notify.bmp\"></div>\r\n					<span class=\"info_msg\"></span>\r\n				</div>\r\n				<div\r\n					class=\"cancel\"\r\n					data-background=\"lapine/btn_cancel_out.bmp\"\r\n					data-hover=\"lapine/btn_cancel_over.bmp\"\r\n					data-down=\"lapine/btn_cancel_press.bmp\"\r\n				></div>\r\n				<div\r\n					class=\"make_enabled\"\r\n					data-background=\"lapine/btn_make_out.bmp\"\r\n					data-hover=\"lapine/btn_make_over.bmp\"\r\n					data-down=\"lapine/btn_make_press.bmp\"\r\n				></div>\r\n				<div class=\"make_disabled\" data-background=\"lapine/btn_make_dis.bmp\"></div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	LaphineUpg_default$2 = "<div id=\"LaphineUpg\">\r\n	<div class=\"container\">\r\n		<ui-image src=\"lapine/bg_lapineupgrade.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<span class=\"item_text\"></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"overlay\"></div>\r\n		<div class=\"panel\">\r\n			<div class=\"scroll_hider\"></div>\r\n			<div class=\"left_panel\">\r\n				<div class=\"mat_info_container\">\r\n					<div class=\"info_title\"><ui-text msg=\"2896\"></ui-text></div>\r\n					<div class=\"mat_info_list\"></div>\r\n				</div>\r\n				<div class=\"submitted_mat_list\"></div>\r\n			</div>\r\n			<div class=\"submit_button_disabled\">\r\n				<ui-image src=\"lapine/btn_moveitem_dis.bmp\"></ui-image>\r\n			</div>\r\n			<ui-button\r\n				class=\"submit_button_enabled\"\r\n				bg=\"lapine/btn_moveitem_out.bmp\"\r\n				hover=\"lapine/btn_moveitem_over.bmp\"\r\n				down=\"lapine/btn_moveitem_press.bmp\"\r\n			></ui-button>\r\n			<div class=\"available_mat_list\"></div>\r\n			<div class=\"footer\">\r\n				<div class=\"some_notifs\">\r\n					<div class=\"notif\">\r\n						<ui-image src=\"lapine/icon_notify.bmp\"></ui-image>\r\n					</div>\r\n					<span class=\"info_msg\"></span>\r\n				</div>\r\n				<ui-button\r\n					class=\"cancel\"\r\n					bg=\"lapine/btn_cancel_out.bmp\"\r\n					hover=\"lapine/btn_cancel_over.bmp\"\r\n					down=\"lapine/btn_cancel_press.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"make_enabled\"\r\n					bg=\"lapine/btn_make_out.bmp\"\r\n					hover=\"lapine/btn_make_over.bmp\"\r\n					down=\"lapine/btn_make_press.bmp\"\r\n				></ui-button>\r\n				<div class=\"make_disabled\">\r\n					<ui-image src=\"lapine/btn_make_dis.bmp\"></ui-image>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/LaphineUpg/LaphineUpg.css?raw
 var LaphineUpg_default$1;
 var init_LaphineUpg$1 = __esmMin((() => {
-	LaphineUpg_default$1 = "#LaphineUpg {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 400px;\r\n	height: 250px;\r\n}\r\n#LaphineUpg .container {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 100%;\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border-radius: 10px;\r\n}\r\n#LaphineUpg .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n}\r\n#LaphineUpg .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#LaphineUpg .titlebar .item_text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#LaphineUpg .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#LaphineUpg .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#LaphineUpg .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#LaphineUpg .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#LaphineUpg .panel {\r\n	width: 100%;\r\n	position: absolute;\r\n	height: 233px;\r\n}\r\n\r\n#LaphineUpg .left_panel {\r\n	position: absolute;\r\n	left: 0px;\r\n	height: 205px;\r\n	width: 225px;\r\n}\r\n\r\n#LaphineUpg .mat_info_container {\r\n	position: absolute;\r\n	height: 55px;\r\n	width: 245px;\r\n	top: 22px;\r\n	text-overflow: clip;\r\n}\r\n\r\n#LaphineUpg .info_title {\r\n	height: 15px;\r\n	width: 228px;\r\n	position: relative;\r\n	top: 9px;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	color: #527bce;\r\n}\r\n\r\n#LaphineUpg .mat_info_list {\r\n	position: relative;\r\n	height: 15px;\r\n	top: 8px;\r\n	color: #424a84;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	width: 230px;\r\n}\r\n\r\n#LaphineUpg .available_mat_list {\r\n	position: absolute;\r\n	height: 205px;\r\n	width: 146px;\r\n	left: 245px;\r\n	overflow: auto;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item {\r\n	display: block;\r\n	width: 132px;\r\n	height: 26px;\r\n	margin: 4px 0px 0px 2px;\r\n	position: relative;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item.unselectable .icon {\r\n	filter: sepia(1) hue-rotate(300deg) saturate(2);\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item.unselectable .name {\r\n	color: gray;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .name {\r\n	font-size: 12px;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 30px;\r\n	width: 104px;\r\n	align-content: center;\r\n	height: 30px;\r\n	background-size: 0px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .name.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#LaphineUpg .submit_button_enabled,\r\n#LaphineUpg .submit_button_disabled {\r\n	position: absolute;\r\n	height: 24px;\r\n	width: 24px;\r\n	top: 93px;\r\n	left: 213px;\r\n	background: no-repeat;\r\n}\r\n\r\n#LaphineUpg .scroll_hider {\r\n	position: absolute;\r\n	height: 204px;\r\n	width: 8px;\r\n	background-color: #f7f7ff;\r\n	right: 8px;\r\n	top: 1px;\r\n}\r\n\r\n#LaphineUpg .submitted_mat_list {\r\n	left: 97px;\r\n	position: absolute;\r\n	width: 50px;\r\n	height: auto;\r\n	top: 142px;\r\n	display: flex;\r\n	flex-wrap: wrap;\r\n	align-content: flex-start;\r\n}\r\n\r\n#LaphineUpg .submitted_mat_list .item {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px;\r\n	position: relative;\r\n	flex: 0 0 auto; /* Ensure items do not shrink or grow */\r\n}\r\n\r\n#LaphineUpg .submitted_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#LaphineUpg .footer {\r\n	position: absolute;\r\n	height: 28px;\r\n	width: 100%;\r\n	bottom: 0px;\r\n}\r\n\r\n#LaphineUpg .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 270px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineUpg .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineUpg .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 100%;\r\n	left: 15px;\r\n	font-size: 1em;\r\n	align-content: center;\r\n	color: blue;\r\n}\r\n\r\n#LaphineUpg .cancel,\r\n#LaphineUpg .make_enabled,\r\n#LaphineUpg .make_disabled {\r\n	height: 20px;\r\n	width: 56px;\r\n}\r\n\r\n#LaphineUpg .cancel {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 68px;\r\n}\r\n\r\n#LaphineUpg .make_enabled,\r\n#LaphineUpg .make_disabled {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n";
+	LaphineUpg_default$1 = ":host {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 400px;\r\n	height: 250px;\r\n}\r\n#LaphineUpg .container {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	height: 100%;\r\n	width: 100%;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border-radius: 10px;\r\n}\r\n#LaphineUpg .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n}\r\n#LaphineUpg .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#LaphineUpg .titlebar .item_text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#LaphineUpg .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#LaphineUpg .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#LaphineUpg .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#LaphineUpg .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#LaphineUpg .panel {\r\n	width: 100%;\r\n	position: absolute;\r\n	height: 233px;\r\n}\r\n\r\n#LaphineUpg .left_panel {\r\n	position: absolute;\r\n	left: 0px;\r\n	height: 205px;\r\n	width: 225px;\r\n}\r\n\r\n#LaphineUpg .mat_info_container {\r\n	position: absolute;\r\n	height: 55px;\r\n	width: 245px;\r\n	top: 22px;\r\n	text-overflow: clip;\r\n}\r\n\r\n#LaphineUpg .info_title {\r\n	height: 15px;\r\n	width: 228px;\r\n	position: relative;\r\n	top: 9px;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	color: #527bce;\r\n}\r\n\r\n#LaphineUpg .mat_info_list {\r\n	position: relative;\r\n	height: 15px;\r\n	top: 8px;\r\n	color: #424a84;\r\n	text-align: center;\r\n	font-size: 0.9em;\r\n	width: 230px;\r\n}\r\n\r\n#LaphineUpg .available_mat_list {\r\n	position: absolute;\r\n	height: 205px;\r\n	width: 146px;\r\n	left: 245px;\r\n	overflow: auto;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item {\r\n	display: block;\r\n	width: 132px;\r\n	height: 26px;\r\n	margin: 4px 0px 0px 2px;\r\n	position: relative;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item.unselectable .icon {\r\n	filter: sepia(1) hue-rotate(300deg) saturate(2);\r\n}\r\n\r\n#LaphineUpg .available_mat_list .item.unselectable .name {\r\n	color: gray;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .name {\r\n	font-size: 12px;\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 30px;\r\n	width: 104px;\r\n	align-content: center;\r\n	height: 30px;\r\n	background-size: 0px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n\r\n#LaphineUpg .available_mat_list .name.selected {\r\n	background-size: cover;\r\n}\r\n\r\n#LaphineUpg .submit_button_enabled,\r\n#LaphineUpg .submit_button_disabled {\r\n	position: absolute;\r\n	height: 24px;\r\n	width: 24px;\r\n	top: 93px;\r\n	left: 213px;\r\n	background: no-repeat;\r\n}\r\n\r\n#LaphineUpg .scroll_hider {\r\n	position: absolute;\r\n	height: 204px;\r\n	width: 8px;\r\n	background-color: #f7f7ff;\r\n	right: 8px;\r\n	top: 1px;\r\n}\r\n\r\n#LaphineUpg .submitted_mat_list {\r\n	left: 97px;\r\n	position: absolute;\r\n	width: 50px;\r\n	height: auto;\r\n	top: 142px;\r\n	display: flex;\r\n	flex-wrap: wrap;\r\n	align-content: flex-start;\r\n}\r\n\r\n#LaphineUpg .submitted_mat_list .item {\r\n	display: flex;\r\n	flex-direction: column;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px;\r\n	position: relative;\r\n	flex: 0 0 auto; /* Ensure items do not shrink or grow */\r\n}\r\n\r\n#LaphineUpg .submitted_mat_list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#LaphineUpg .footer {\r\n	position: absolute;\r\n	height: 28px;\r\n	width: 100%;\r\n	bottom: 0px;\r\n}\r\n\r\n#LaphineUpg .some_notifs {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 270px;\r\n	left: 5px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineUpg .notif {\r\n	position: absolute;\r\n	height: 13px;\r\n	width: 14px;\r\n	top: 4px;\r\n}\r\n\r\n#LaphineUpg .info_msg {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 100%;\r\n	left: 15px;\r\n	font-size: 1em;\r\n	align-content: center;\r\n	color: blue;\r\n}\r\n\r\n#LaphineUpg .cancel,\r\n#LaphineUpg .make_enabled,\r\n#LaphineUpg .make_disabled {\r\n	height: 20px;\r\n	width: 56px;\r\n}\r\n\r\n#LaphineUpg .cancel {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 68px;\r\n}\r\n\r\n#LaphineUpg .make_enabled,\r\n#LaphineUpg .make_disabled {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	right: 5px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/LaphineUpg/LaphineUpg.js
 /**
+* Helper: query inside shadow root
+*/
+function _root$3() {
+	return LaphineUpg._shadow || LaphineUpg._host;
+}
+/**
 * Clears the variables in the LaphineUpgUIState object.
 */
 function clearLaphineUpgUIState() {
-	Object.keys(LaphineUpgUIState).forEach(function(key) {
+	Object.keys(LaphineUpgUIState).forEach((key) => {
 		if (Array.isArray(LaphineUpgUIState[key])) LaphineUpgUIState[key] = [];
 		else LaphineUpgUIState[key] = null;
 	});
@@ -320595,9 +321745,9 @@ function onOpenLaphineUpgUI(pkt) {
 function onUpdateLaphineUpgUI() {
 	const item = InventoryController.getUI().getItemById(LaphineUpgUIState.itemId);
 	if (!item) return false;
-	const ui = LaphineUpg.ui;
-	ui.find(".item_text").text(DB.getItemName(item));
-	ui.find(".mat_info_list").text(LaphineUpgUIState.needSourceString);
+	const root = _root$3();
+	root.querySelector(".item_text").textContent = DB.getItemName(item);
+	root.querySelector(".mat_info_list").textContent = LaphineUpgUIState.needSourceString;
 }
 /**
 * Get item objects by id
@@ -320615,7 +321765,8 @@ function GetInventoryItemsById(id) {
 * Populates the list of available materials.
 */
 function populateAvailableUpgMatList() {
-	LaphineUpg.ui.find(".available_mat_list").empty();
+	const availableMatList = _root$3().querySelector(".available_mat_list");
+	availableMatList.innerHTML = "";
 	LaphineUpgUIState.targetItems.forEach((targetItem) => {
 		GetInventoryItemsById(targetItem.id).forEach((inventoryItem) => {
 			let isValid = true;
@@ -320640,18 +321791,21 @@ function populateAvailableUpgMatList() {
 * Handles the addition of an item in the UI from the available materials list.
 */
 function onAddMaterialItem(item, target_iconname) {
-	const availableMatList = LaphineUpg.ui.find(".available_mat_list");
-	const newItem = jquery_default("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div><div class=\"name\">" + DB.getItemName(item, {
+	const availableMatList = _root$3().querySelector(".available_mat_list");
+	const newItemHTML = `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="name">${DB.getItemName(item, {
 		showItemGrade: false,
 		showItemSlots: false
-	}) + "</div></div>");
-	newItem.dblclick(onSubmitItem);
-	availableMatList.append(newItem);
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + target_iconname + ".bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+	})}</div></div>`;
+	availableMatList.insertAdjacentHTML("beforeend", newItemHTML);
+	const newItemEl = availableMatList.querySelector(`.item[data-index="${item.index}"]`);
+	if (newItemEl) newItemEl.addEventListener("dblclick", onSubmitItem);
+	Client.loadFile(DB.INTERFACE_PATH + "item/" + target_iconname + ".bmp", (data) => {
+		const icon = availableMatList.querySelector(`.item[data-index="${item.index}"] .icon`);
+		if (icon) icon.style.backgroundImage = `url(${data})`;
 	});
-	Client.loadFile(DB.INTERFACE_PATH + "lapine/list_selected_item.bmp", function(data) {
-		availableMatList.find(".item[data-index=\"" + item.index + "\"] .name").css("backgroundImage", "url(" + data + ")");
+	Client.loadFile(DB.INTERFACE_PATH + "lapine/list_selected_item.bmp", (data) => {
+		const name = availableMatList.querySelector(`.item[data-index="${item.index}"] .name`);
+		if (name) name.style.backgroundImage = `url(${data})`;
 	});
 }
 /**
@@ -320676,27 +321830,32 @@ function onRequestLaphineUpgClose() {
 /**
 * Handles the selection of an item from the available materials list.
 */
-function onItemSelect() {
+function onItemSelect(e) {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
-	const ui = LaphineUpg.ui;
-	ui.find(".name").removeClass("selected");
-	ui.find(".item[data-index=\"" + item.index + "\"] .name").addClass("selected");
+	if (!item) {
+		e.preventDefault();
+		e.stopImmediatePropagation();
+		return;
+	}
+	const root = _root$3();
+	root.querySelectorAll(".name").forEach((el) => el.classList.remove("selected"));
+	const nameEl = root.querySelector(`.item[data-index="${item.index}"] .name`);
+	if (nameEl) nameEl.classList.add("selected");
 }
 /**
 * Submits a selected item and updates the UI accordingly.
 */
 function onSubmitItem() {
-	const selectedItem = LaphineUpg.ui.find(".item .name.selected");
+	const root = _root$3();
+	const selectedItem = root.querySelector(".item .name.selected");
 	let idx;
-	const ui = LaphineUpg.ui;
-	if (selectedItem.length > 0) idx = parseInt(selectedItem.closest(".item").data("index"), 10);
+	if (selectedItem) idx = parseInt(selectedItem.closest(".item").getAttribute("data-index"), 10);
 	else idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
-	if (LaphineUpg.submittedIndex !== 0) return false;
-	if (ui.find(".submitted_mat_list .item").length > 0) return false;
+	if (!item) return;
+	if (LaphineUpg.submittedIndex !== 0) return;
+	if (root.querySelector(".submitted_mat_list .item")) return;
 	if (!LaphineUpgUIState.targetItems.find((si) => si.id === item.ITID)) return;
 	onUpdateSubmitList(item);
 }
@@ -320705,19 +321864,21 @@ function onSubmitItem() {
 */
 function onUpdateSubmitList(item) {
 	const it = DB.getItemInfo(item.ITID);
-	const submittedMatList = LaphineUpg.ui.find(".submitted_mat_list");
-	const newItem = jquery_default("<div class=\"item\" data-index=\"" + item.index + "\" draggable=\"true\"><div class=\"icon\"></div></div>");
-	newItem.dblclick(onItemRemove);
-	submittedMatList.append(newItem);
-	Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", function(data) {
-		submittedMatList.find(".item[data-index=\"" + item.index + "\"] .icon").css("backgroundImage", "url(" + data + ")");
+	const root = _root$3();
+	const submittedMatList = root.querySelector(".submitted_mat_list");
+	const newItemHTML = `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div></div>`;
+	submittedMatList.insertAdjacentHTML("beforeend", newItemHTML);
+	const newItemEl = submittedMatList.querySelector(`.item[data-index="${item.index}"]`);
+	if (newItemEl) newItemEl.addEventListener("dblclick", onItemRemove);
+	Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
+		const icon = submittedMatList.querySelector(`.item[data-index="${item.index}"] .icon`);
+		if (icon) icon.style.backgroundImage = `url(${data})`;
 	});
 	LaphineUpg.submittedIndex = item.index;
-	const ui = LaphineUpg.ui;
-	ui.find(".submit_button_enabled").show();
-	ui.find(".submit_button_disabled").hide();
-	ui.find(".make_disabled").hide();
-	ui.find(".make_enabled").show();
+	root.querySelector(".submit_button_enabled").style.display = "block";
+	root.querySelector(".submit_button_disabled").style.display = "none";
+	root.querySelector(".make_disabled").style.display = "none";
+	root.querySelector(".make_enabled").style.display = "inline-block";
 	onCheckSubmittedItem(item);
 	updateAvailableMatList(item.ITID, item.index, true);
 }
@@ -320739,19 +321900,17 @@ function onItemRemove() {
 }
 /**
 * Removes an item from the submitted items list and updates the UI accordingly.
-* @param {Object} item - The item to be removed.
-* @param {HTMLElement|null} [element=null] - The DOM element corresponding to the item. If not provided, it will be found.
 */
 function onRemoveItemSubmitList(item, element = null) {
+	const root = _root$3();
 	if (LaphineUpg.submittedIndex !== -1) {
 		LaphineUpg.submittedIndex = 0;
-		if (!element) element = LaphineUpg.ui.find(`.item[data-index="${item.index}"]`);
-		jquery_default(element).remove();
-		const ui = LaphineUpg.ui;
-		ui.find(".submit_button_enabled").show();
-		ui.find(".submit_button_disabled").hide();
-		ui.find(".make_disabled").show();
-		ui.find(".make_enabled").hide();
+		if (!element) element = root.querySelector(`.submitted_mat_list .item[data-index="${item.index}"]`);
+		if (element) element.remove();
+		root.querySelector(".submit_button_enabled").style.display = "block";
+		root.querySelector(".submit_button_disabled").style.display = "none";
+		root.querySelector(".make_disabled").style.display = "block";
+		root.querySelector(".make_enabled").style.display = "none";
 		updateAvailableMatList(item.ITID, item.index, false);
 	}
 }
@@ -320759,13 +321918,13 @@ function onRemoveItemSubmitList(item, element = null) {
 * Handles the changes in UI when submitting and removing item from submitted list.
 */
 function updateAvailableMatList(itemId, itemIndex, remove) {
-	const availableMatList = LaphineUpg.ui.find(".available_mat_list");
+	const availableMatList = _root$3().querySelector(".available_mat_list");
 	let itemExists = false;
-	availableMatList.find(".item").each(function() {
-		const idx = parseInt(jquery_default(this).attr("data-index"), 10);
+	availableMatList.querySelectorAll(".item").forEach((el) => {
+		const idx = parseInt(el.getAttribute("data-index"), 10);
 		if (InventoryController.getUI().getItemByIndex(idx).ITID === itemId && idx === itemIndex) {
 			itemExists = true;
-			if (remove) jquery_default(this).remove();
+			if (remove) el.remove();
 		}
 	});
 	if (!remove && !itemExists) {
@@ -320785,22 +321944,27 @@ function updateAvailableMatList(itemId, itemIndex, remove) {
 * Handles showing of message for notifications.
 */
 function showMessage(message) {
-	const ui = LaphineUpg.ui;
-	ui.find(".info_msg").empty().text(message);
-	ui.find(".some_notifs").show();
+	const root = _root$3();
+	const infoMsg = root.querySelector(".info_msg");
+	if (infoMsg) {
+		infoMsg.textContent = "";
+		infoMsg.textContent = message;
+	}
+	const notifs = root.querySelector(".some_notifs");
+	if (notifs) notifs.style.display = "block";
 }
 /**
-* Handles the synthesis request by preparing and sending the packet.
+* Handles the upgrade request by preparing and sending the packet.
 */
 function onRequestLaphineUpg() {
-	if (!InventoryController.getUI().getItemByIndex(LaphineUpg.submittedIndex)) return false;
+	if (!InventoryController.getUI().getItemByIndex(LaphineUpg.submittedIndex)) return;
 	const pkt = new PACKET.CZ.REQ_RANDOM_UPGRADE_ITEM();
 	pkt.itemId = LaphineUpgUIState.itemId;
 	pkt.item_index = LaphineUpg.submittedIndex;
 	Network.sendPacket(pkt);
-	const ui = LaphineUpg.ui;
-	ui.find(".make_enabled").hide();
-	ui.find(".make_disabled").show();
+	const root = _root$3();
+	root.querySelector(".make_enabled").style.display = "none";
+	root.querySelector(".make_disabled").style.display = "block";
 }
 /**
 * Show item name when mouse is over
@@ -320809,37 +321973,39 @@ function onItemOver$3() {
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
 	if (!item) return;
-	const pos = jquery_default(this);
-	const overlay = LaphineUpg.ui.find(".overlay");
-	const parentContainer = jquery_default(this).closest(".available_mat_list, .submitted_mat_list");
-	const itemPos = pos.position();
-	const containerPos = parentContainer.position();
-	const top = itemPos.top - overlay.outerHeight() + 25;
-	const left = itemPos.left;
-	overlay.show();
-	overlay.css({
-		top: top + containerPos.top,
-		left: left + containerPos.left
-	});
-	overlay.text(DB.getItemName(item, {
+	const root = _root$3();
+	const overlay = root.querySelector(".overlay");
+	const parentContainer = this.closest(".available_mat_list") || this.closest(".submitted_mat_list");
+	if (!parentContainer) return;
+	const itemRect = this.getBoundingClientRect();
+	const containerRect = parentContainer.getBoundingClientRect();
+	const panelRect = root.querySelector(".panel").getBoundingClientRect();
+	const overlayHeight = overlay.offsetHeight || 23;
+	const top = itemRect.top - containerRect.top + (containerRect.top - panelRect.top) - overlayHeight + 25;
+	const left = itemRect.left - panelRect.left;
+	overlay.style.display = "block";
+	overlay.style.top = `${top}px`;
+	overlay.style.left = `${left}px`;
+	overlay.textContent = DB.getItemName(item, {
 		showItemGrade: false,
 		showItemSlots: false
-	}));
-	if (item.IsIdentified) overlay.removeClass("grey");
-	else overlay.addClass("grey");
+	});
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
 }
 /**
 * Hide the item name
 */
 function onItemOut$3() {
-	LaphineUpg.ui.find(".overlay").hide();
+	const root = _root$3();
+	root.querySelector(".overlay").style.display = "none";
 }
 /**
 * Stop event propagation
 */
-function stopPropagation$5(event) {
+function stopPropagation$4(event) {
 	event.stopImmediatePropagation();
-	return false;
+	event.preventDefault();
 }
 /**
 * Start dragging an item
@@ -320849,11 +322015,15 @@ function onItemDragStart$2(event) {
 	const item = InventoryController.getUI().getItemByIndex(index);
 	if (!item) return;
 	const img = new Image();
-	const url = this.querySelector(".icon").style.backgroundImage.match(/\((.*?)\)/)[1].replace(/('|")/g, "");
+	const iconEl = this.querySelector(".icon");
+	if (!iconEl) return;
+	const match = iconEl.style.backgroundImage.match(/\((.*?)\)/);
+	if (!match) return;
+	const url = match[1].replace(/('|")/g, "");
 	img.decoding = "async";
-	img.src = url.replace(/^\"/, "").replace(/\"$/, "");
-	event.originalEvent.dataTransfer.setDragImage(img, 12, 12);
-	event.originalEvent.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+	img.src = url.replace(/^"/, "").replace(/"$/, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "LaphineUpg",
 		data: item
@@ -320862,65 +322032,63 @@ function onItemDragStart$2(event) {
 }
 /**
 * Stop dragging an item
-*
 */
 function onItemDragEnd$2() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Drop an item from available_mat_list into submitted_mat_list
-*
-* @param {event}
 */
 function onSubmitItemDrop(event) {
 	let item, data;
-	const ui = LaphineUpg.ui;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item") return false;
-	if (!item) return false;
-	if (LaphineUpg.submittedIndex !== 0) return false;
-	if (ui.find(".submitted_mat_list .item").length > 0) return false;
+	if (data.type !== "item") return;
+	if (!item) return;
+	const root = _root$3();
+	if (LaphineUpg.submittedIndex !== 0) return;
+	if (root.querySelector(".submitted_mat_list .item")) return;
 	if (!LaphineUpgUIState.targetItems.find((si) => si.id === item.ITID)) return;
 	onUpdateSubmitList(item);
 }
 /**
 * Drop an item from submitted_mat_list into available_mat_list
-*
-* @param {event}
 */
 function onRemoveSubmitDrop(event) {
 	let item, data;
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	try {
-		data = JSON.parse(event.originalEvent.dataTransfer.getData("Text"));
+		data = JSON.parse(event.dataTransfer.getData("Text"));
 		item = data.data;
-	} catch (e) {
-		return false;
+	} catch (_e) {
+		return;
 	}
-	if (data.type !== "item") return false;
-	if (!item) return false;
-	const element = LaphineUpg.ui.find(`.item[data-index="${item.index}"]`);
-	onRemoveItemSubmitList(item, element.get(0));
+	if (data.type !== "item") return;
+	if (!item) return;
+	const element = _root$3().querySelector(`.submitted_mat_list .item[data-index="${item.index}"]`);
+	onRemoveItemSubmitList(item, element);
 }
 /**
 * Get item info (open description window)
 */
 function onItemInfo$5(event) {
 	event.stopImmediatePropagation();
+	event.preventDefault();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = InventoryController.getUI().getItemByIndex(idx);
-	if (!item) return false;
+	if (!item) return;
 	if (ItemCompare_default.ui) ItemCompare_default.remove();
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
 		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
@@ -320932,16 +322100,15 @@ function onItemInfo$5(event) {
 		ItemCompare_default.uid = compareItem.ITID;
 		ItemCompare_default.setItem(compareItem);
 	}
-	return false;
 }
 var LaphineUpg, LaphineUpgUIState, LaphineUpg_default;
 var init_LaphineUpg = __esmMin((() => {
-	init_jquery();
 	init_DBManager();
 	init_ItemType();
 	init_NetworkManager();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
+	init_Elements();
 	init_Equipment();
 	init_Inventory();
 	init_ItemCompare();
@@ -320951,7 +322118,7 @@ var init_LaphineUpg = __esmMin((() => {
 	init_LaphineUpg$2();
 	init_LaphineUpg$1();
 	init_PacketStructure();
-	LaphineUpg = new UIComponent("LaphineUpg", LaphineUpg_default$2, LaphineUpg_default$1);
+	LaphineUpg = new GUIComponent("LaphineUpg", LaphineUpg_default$1);
 	LaphineUpgUIState = {
 		itemId: null,
 		needRefineMin: null,
@@ -320963,51 +322130,99 @@ var init_LaphineUpg = __esmMin((() => {
 	};
 	LaphineUpg.submittedIndex = 0;
 	/**
+	* Render HTML
+	*/
+	LaphineUpg.render = () => LaphineUpg_default$2;
+	/**
 	* Once append to the DOM
 	*/
 	LaphineUpg.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) LaphineUpg.remove();
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") LaphineUpg.remove();
 	};
 	/**
 	* Once append
 	*/
 	LaphineUpg.onAppend = function onAppend() {
-		const events = jquery_default._data(window, "events").keydown;
-		events.unshift(events.pop());
-		LaphineUpg.ui.find(".some_notifs").hide();
-		LaphineUpg.ui.find(".make_enabled").hide();
-		LaphineUpg.ui.find(".make_disabled").show();
+		const root = _root$3();
+		root.querySelector(".some_notifs").style.display = "none";
+		root.querySelector(".make_enabled").style.display = "none";
+		root.querySelector(".make_disabled").style.display = "block";
 	};
 	/**
 	* Once removed from html
 	*/
 	LaphineUpg.onRemove = function onRemove() {
+		const root = _root$3();
 		LaphineUpg.submittedIndex = 0;
-		LaphineUpg.ui.find(".submit_button_enabled").show();
-		LaphineUpg.ui.find(".submit_button_disabled").hide();
-		LaphineUpg.ui.find(".submitted_mat_list").empty();
-		LaphineUpg.ui.find(".some_notifs").hide();
+		root.querySelector(".submit_button_enabled").style.display = "block";
+		root.querySelector(".submit_button_disabled").style.display = "none";
+		root.querySelector(".submitted_mat_list").innerHTML = "";
+		root.querySelector(".some_notifs").style.display = "none";
 		clearLaphineUpgUIState();
 	};
 	/**
 	* Initialize UI
 	*/
 	LaphineUpg.init = function init() {
-		const ui = this.ui;
-		ui.find(".submit_button_disabled").hide();
-		ui.find(".some_notifs").hide();
-		ui.css({
-			top: 200,
-			left: 480
+		const root = _root$3();
+		root.querySelector(".submit_button_disabled").style.display = "none";
+		root.querySelector(".some_notifs").style.display = "none";
+		this._host.style.top = "200px";
+		this._host.style.left = "480px";
+		this.draggable(".titlebar");
+		root.querySelector(".close").addEventListener("click", onRequestLaphineUpgClose);
+		root.querySelector(".cancel").addEventListener("click", onRequestLaphineUpgClose);
+		const availableMatList = root.querySelector(".available_mat_list");
+		const leftPanel = root.querySelector(".left_panel");
+		availableMatList.addEventListener("dragover", stopPropagation$4);
+		leftPanel.addEventListener("dragover", stopPropagation$4);
+		availableMatList.addEventListener("dragstart", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragStart$2.call(item, e);
 		});
-		this.draggable(ui.find(".titlebar"));
-		ui.find(".close, .cancel").click(onRequestLaphineUpgClose);
-		ui.find(".available_mat_list, .left_panel").on("dragover", stopPropagation$5).on("dragstart", ".item", onItemDragStart$2).on("dragend", ".item", onItemDragEnd$2);
-		ui.find(".submit_button_enabled").click(onSubmitItem);
-		ui.find(".available_mat_list").on("click", ".item", onItemSelect).on("drop", onRemoveSubmitDrop);
-		ui.find(".left_panel").on("drop", onSubmitItemDrop);
-		ui.find(".make_enabled").click(onRequestLaphineUpg);
-		ui.find(".available_mat_list, .submitted_mat_list").on("mouseover", ".item", onItemOver$3).on("mouseout", ".item", onItemOut$3).on("contextmenu", ".item", onItemInfo$5);
+		availableMatList.addEventListener("dragend", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragEnd$2.call(item, e);
+		});
+		leftPanel.addEventListener("dragstart", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragStart$2.call(item, e);
+		});
+		leftPanel.addEventListener("dragend", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemDragEnd$2.call(item, e);
+		});
+		root.querySelector(".submit_button_enabled").addEventListener("click", onSubmitItem);
+		availableMatList.addEventListener("click", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemSelect.call(item, e);
+		});
+		availableMatList.addEventListener("drop", onRemoveSubmitDrop);
+		leftPanel.addEventListener("drop", onSubmitItemDrop);
+		root.querySelector(".make_enabled").addEventListener("click", onRequestLaphineUpg);
+		availableMatList.addEventListener("mouseover", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemOver$3.call(item, e);
+		});
+		availableMatList.addEventListener("mouseout", (e) => {
+			if (e.target.closest(".item")) onItemOut$3();
+		});
+		availableMatList.addEventListener("contextmenu", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemInfo$5.call(item, e);
+		});
+		const submittedMatList = root.querySelector(".submitted_mat_list");
+		submittedMatList.addEventListener("mouseover", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemOver$3.call(item, e);
+		});
+		submittedMatList.addEventListener("mouseout", (e) => {
+			if (e.target.closest(".item")) onItemOut$3();
+		});
+		submittedMatList.addEventListener("contextmenu", (e) => {
+			const item = e.target.closest(".item");
+			if (item) onItemInfo$5.call(item, e);
+		});
 		Client.loadFiles([
 			DB.INTERFACE_PATH + "lapine/scrollbar_bg_btm.bmp",
 			DB.INTERFACE_PATH + "lapine/scrollbar_bg_mid.bmp",
@@ -321022,17 +322237,20 @@ var init_LaphineUpg = __esmMin((() => {
 			DB.INTERFACE_PATH + "lapine/scrollbar_thumb_press_mid.bmp",
 			DB.INTERFACE_PATH + "lapine/scrollbar_thumb_press_top.bmp"
 		], function(bgBottom, bgMid, bgTop, thumbOutBottom, thumbOutMid, thumbOutTop, thumbOverBottom, thumbOverMid, thumbOverTop, thumbPressBottom, thumbPressMid, thumbPressTop) {
-			jquery_default("style:first").append([
+			const style = document.createElement("style");
+			style.textContent = [
 				"#LaphineUpg .available_mat_list::-webkit-scrollbar { width: 8px; height: 0px; }",
 				"#LaphineUpg .available_mat_list::-webkit-scrollbar-corner { display: none; }",
-				"#LaphineUpg .available_mat_list::-webkit-scrollbar-button:vertical:increment { background: url(" + bgBottom + ") center center no-repeat, url(" + bgMid + ") top no-repeat; height: 15px; width: 7px; background-color: transparent; }",
-				"#LaphineUpg .available_mat_list::-webkit-scrollbar-button:vertical:decrement { background: url(" + bgTop + ") center center no-repeat, url(" + bgMid + ") bottom no-repeat; height: 15px; width: 7px; background-color: transparent; }",
-				"#LaphineUpg .available_mat_list::-webkit-scrollbar-track-piece:vertical { background: url(" + bgTop + ") top no-repeat, url(" + bgMid + ") center repeat-y, url(" + bgBottom + ") bottom no-repeat; }",
-				"#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical { background: url(" + thumbOutTop + ") top no-repeat, url(" + thumbOutMid + ") center repeat-y, url(" + thumbOutBottom + ") bottom no-repeat !important; border-radius: 100px; }",
-				"#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical:hover { background: url(" + thumbOverTop + ") top no-repeat, url(" + thumbOverMid + ") center repeat-y, url(" + thumbOverBottom + ") bottom no-repeat !important; border-radius: 100px; }",
-				"#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical:active { background: url(" + thumbPressTop + ") top no-repeat, url(" + thumbPressMid + ") center repeat-y, url(" + thumbPressBottom + ") bottom no-repeat !important; border-radius: 100px; }",
+				`#LaphineUpg .available_mat_list::-webkit-scrollbar-button:vertical:increment { background: url(${bgBottom}) center center no-repeat, url(${bgMid}) top no-repeat; height: 15px; width: 7px; background-color: transparent; }`,
+				`#LaphineUpg .available_mat_list::-webkit-scrollbar-button:vertical:decrement { background: url(${bgTop}) center center no-repeat, url(${bgMid}) bottom no-repeat; height: 15px; width: 7px; background-color: transparent; }`,
+				`#LaphineUpg .available_mat_list::-webkit-scrollbar-track-piece:vertical { background: url(${bgTop}) top no-repeat, url(${bgMid}) center repeat-y, url(${bgBottom}) bottom no-repeat; }`,
+				`#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical { background: url(${thumbOutTop}) top no-repeat, url(${thumbOutMid}) center repeat-y, url(${thumbOutBottom}) bottom no-repeat !important; border-radius: 100px; }`,
+				`#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical:hover { background: url(${thumbOverTop}) top no-repeat, url(${thumbOverMid}) center repeat-y, url(${thumbOverBottom}) bottom no-repeat !important; border-radius: 100px; }`,
+				`#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical:active { background: url(${thumbPressTop}) top no-repeat, url(${thumbPressMid}) center repeat-y, url(${thumbPressBottom}) bottom no-repeat !important; border-radius: 100px; }`,
 				"#LaphineUpg .available_mat_list::-webkit-scrollbar-thumb:vertical{ -webkit-border-image: none; }"
-			].join("\n"));
+			].join("\n");
+			const shadow = LaphineUpg._shadow;
+			if (shadow) shadow.appendChild(style);
 		});
 	};
 	/**
@@ -321052,35 +322270,45 @@ var init_RodexIcon$2 = __esmMin((() => {
 //#region src/UI/Components/Rodex/RodexIcon.css?raw
 var RodexIcon_default$1;
 var init_RodexIcon$1 = __esmMin((() => {
-	RodexIcon_default$1 = "#RodexIcon {\r\n	width: 43px;\r\n	height: 43px;\r\n	position: absolute;\r\n	right: 200px;\r\n	top: 20px;\r\n}\r\n.rodex-icon {\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+	RodexIcon_default$1 = ":host {\r\n	width: 43px;\r\n	height: 43px;\r\n	position: absolute;\r\n	right: 200px;\r\n	top: 20px;\r\n}\r\n#RodexIcon {\r\n	width: 43px;\r\n	height: 43px;\r\n}\r\n.rodex-icon {\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Rodex/RodexIcon.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$2() {
+	return RodexIcon._shadow || RodexIcon._host;
+}
 function onClickRodexIcon() {
 	Rodex_default.openRodexBox();
 	Rodex_default.append();
-	Rodex_default.ui.show();
-	Rodex_default.ui.focus();
+	Rodex_default._host.style.display = "";
+	Rodex_default.focus();
 }
 var RodexIcon, RodexIcon_default;
 var init_RodexIcon = __esmMin((() => {
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_RodexIcon$2();
 	init_RodexIcon$1();
 	init_Rodex$1();
-	RodexIcon = new UIComponent("RodexIcon", RodexIcon_default$2, RodexIcon_default$1);
+	RodexIcon = new GUIComponent("RodexIcon", RodexIcon_default$1);
+	/**
+	* Render HTML
+	*/
+	RodexIcon.render = () => RodexIcon_default$2;
 	/**
 	* Apply preferences once append to body
 	*/
 	RodexIcon.onAppend = function OnAppend() {
-		const icon = this.ui.find(".rodex-icon");
-		icon.on("click", onClickRodexIcon);
-		icon.focus();
+		_root$2().querySelector(".rodex-icon").addEventListener("click", onClickRodexIcon);
 	};
 	RodexIcon.toggle = function toggle() {
-		this.ui.toggle();
-		if (this.ui.is(":visible")) this.focus();
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			this.focus();
+		} else this._host.style.display = "none";
 	};
 	RodexIcon_default = UIManager.addComponent(RodexIcon);
 }));
@@ -321094,7 +322322,7 @@ var init_Roulette$3 = __esmMin((() => {
 //#region src/UI/Components/Roulette/Roulette.css?raw
 var Roulette_default$1;
 var init_Roulette$2 = __esmMin((() => {
-	Roulette_default$1 = "#Roulette {\r\n	position: absolute;\r\n	width: 600px;\r\n	height: 500px;\r\n	z-index: 50;\r\n}\r\n\r\n#Roulette .body {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #2a2a2a;\r\n	border: 2px solid #5a5a5a;\r\n	border-radius: 10px;\r\n}\r\n\r\n#Roulette .titlebar {\r\n	position: relative;\r\n	height: 30px;\r\n	background: linear-gradient(to bottom, #4a4a4a 0%, #2a2a2a 100%);\r\n	border-bottom: 1px solid #5a5a5a;\r\n	cursor: move;\r\n	padding: 5px 10px;\r\n}\r\n\r\n#Roulette .titlebar .left {\r\n	float: left;\r\n}\r\n\r\n#Roulette .titlebar .title {\r\n	color: #fff;\r\n	font-size: 14px;\r\n	font-weight: bold;\r\n	line-height: 20px;\r\n}\r\n\r\n#Roulette .titlebar .right {\r\n	float: right;\r\n}\r\n\r\n#Roulette .titlebar .close {\r\n	width: 20px;\r\n	height: 20px;\r\n	border: 0;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n\r\n#Roulette .roulette-container {\r\n	position: relative;\r\n	width: 100%;\r\n	height: calc(100% - 30px);\r\n	padding: 20px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#Roulette .roulette-wheel {\r\n	position: relative;\r\n	width: 350px;\r\n	height: 350px;\r\n	margin: 0 auto 20px;\r\n}\r\n\r\n#Roulette .wheel-center {\r\n	position: absolute;\r\n	top: 50%;\r\n	left: 50%;\r\n	transform: translate(-50%, -50%);\r\n	width: 300px;\r\n	height: 300px;\r\n	border-radius: 50%;\r\n	background: radial-gradient(circle, #4a4a4a 0%, #2a2a2a 100%);\r\n	border: 3px solid #8a8a8a;\r\n	box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n#Roulette .wheel-slots {\r\n	position: absolute;\r\n	top: 50%;\r\n	left: 50%;\r\n	transform: translate(-50%, -50%);\r\n	width: 280px;\r\n	height: 280px;\r\n	border-radius: 50%;\r\n	transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);\r\n}\r\n\r\n#Roulette .wheel-slot {\r\n	position: absolute;\r\n	top: 50%;\r\n	left: 50%;\r\n	width: 50px;\r\n	height: 50px;\r\n	margin-left: -25px;\r\n	margin-top: -25px;\r\n	transform-origin: center;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	background-color: rgba(255, 255, 255, 0.1);\r\n	border: 1px solid #5a5a5a;\r\n	border-radius: 5px;\r\n	transition: background-color 0.3s;\r\n}\r\n\r\n#Roulette .wheel-slot:hover {\r\n	background-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n#Roulette .wheel-slot .item-icon {\r\n	width: 40px;\r\n	height: 40px;\r\n	background-size: contain;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Roulette .wheel-pointer {\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 0;\r\n	height: 0;\r\n	border-left: 15px solid transparent;\r\n	border-right: 15px solid transparent;\r\n	border-top: 30px solid #ff0000;\r\n	z-index: 10;\r\n	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));\r\n}\r\n\r\n#Roulette .roulette-info {\r\n	width: 100%;\r\n	text-align: center;\r\n}\r\n\r\n#Roulette .points-display {\r\n	margin-bottom: 15px;\r\n	font-size: 16px;\r\n	color: #fff;\r\n}\r\n\r\n#Roulette .points-display .label {\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n\r\n#Roulette .points-display .points-value {\r\n	color: #ffd700;\r\n	font-size: 18px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Roulette .buttons-container {\r\n	display: flex;\r\n	justify-content: center;\r\n	gap: 10px;\r\n	margin-bottom: 15px;\r\n}\r\n\r\n#Roulette .buttons-container button {\r\n	min-width: 80px;\r\n	height: 30px;\r\n	border: 1px solid #5a5a5a;\r\n	background-color: #3a3a3a;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	color: #fff;\r\n	border-radius: 5px;\r\n	transition: background-color 0.3s;\r\n}\r\n\r\n#Roulette .buttons-container button:hover {\r\n	background-color: #4a4a4a;\r\n}\r\n\r\n#Roulette .buttons-container button:active {\r\n	background-color: #2a2a2a;\r\n}\r\n\r\n#Roulette .buttons-container button:disabled {\r\n	opacity: 0.5;\r\n}\r\n\r\n#Roulette .result-display {\r\n	min-height: 60px;\r\n	padding: 10px;\r\n	background-color: rgba(0, 0, 0, 0.3);\r\n	border: 1px solid #5a5a5a;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Roulette .result-display .result-label {\r\n	display: block;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	margin-bottom: 5px;\r\n}\r\n\r\n#Roulette .result-display .result-item {\r\n	display: inline-block;\r\n	width: 40px;\r\n	height: 40px;\r\n	background-size: contain;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Roulette .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Animation classes */\r\n#Roulette .wheel-slots.spinning {\r\n	animation: spin 3s cubic-bezier(0.25, 0.1, 0.25, 1);\r\n}\r\n\r\n@keyframes spin {\r\n	0% {\r\n		transform: translate(-50%, -50%) rotate(0deg);\r\n	}\r\n	100% {\r\n		transform: translate(-50%, -50%) rotate(1800deg);\r\n	}\r\n}\r\n\r\n/* Roulette icon button in MiniMap - positioned below cashshop */\r\n#MiniMapV2 .rouletteIcon,\r\n#MiniMapV0 .rouletteIcon,\r\n#MiniMap .rouletteIcon {\r\n	position: absolute !important;\r\n	height: 43px !important;\r\n	width: 43px !important;\r\n	border: none !important;\r\n	top: 57px !important;\r\n	left: -45px !important;\r\n	background-size: contain !important;\r\n	background-repeat: no-repeat !important;\r\n	background-position: center !important;\r\n	display: block !important;\r\n	min-width: 43px !important;\r\n	min-height: 43px !important;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#MiniMapV2 .rouletteIcon:hover,\r\n#MiniMapV0 .rouletteIcon:hover,\r\n#MiniMap .rouletteIcon:hover {\r\n	filter: brightness(1.1);\r\n}\r\n\r\n#MiniMapV2 .rouletteIcon:active,\r\n#MiniMapV0 .rouletteIcon:active,\r\n#MiniMap .rouletteIcon:active {\r\n	transform: scale(0.95);\r\n}\r\n";
+	Roulette_default$1 = ":host {\r\n	width: 600px;\r\n	height: 500px;\r\n}\r\n\r\n#Roulette {\r\n	position: absolute;\r\n	width: 100%;\r\n	height: 100%;\r\n	z-index: 50;\r\n}\r\n\r\n#Roulette .body {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #2a2a2a;\r\n	border: 2px solid #5a5a5a;\r\n	border-radius: 10px;\r\n}\r\n\r\n#Roulette .titlebar {\r\n	position: relative;\r\n	height: 30px;\r\n	background: linear-gradient(to bottom, #4a4a4a 0%, #2a2a2a 100%);\r\n	border-bottom: 1px solid #5a5a5a;\r\n	cursor: move;\r\n	padding: 5px 10px;\r\n}\r\n\r\n#Roulette .titlebar .left {\r\n	float: left;\r\n}\r\n\r\n#Roulette .titlebar .title {\r\n	color: #fff;\r\n	font-size: 14px;\r\n	font-weight: bold;\r\n	line-height: 20px;\r\n}\r\n\r\n#Roulette .titlebar .right {\r\n	float: right;\r\n}\r\n\r\n#Roulette .titlebar .close {\r\n	width: 20px;\r\n	height: 20px;\r\n	border: 0;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n\r\n#Roulette .roulette-container {\r\n	position: relative;\r\n	width: 100%;\r\n	height: calc(100% - 30px);\r\n	padding: 20px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#Roulette .roulette-wheel {\r\n	position: relative;\r\n	width: 350px;\r\n	height: 350px;\r\n	margin: 0 auto 20px;\r\n}\r\n\r\n#Roulette .wheel-center {\r\n	position: absolute;\r\n	top: 50%;\r\n	left: 50%;\r\n	transform: translate(-50%, -50%);\r\n	width: 300px;\r\n	height: 300px;\r\n	border-radius: 50%;\r\n	background: radial-gradient(circle, #4a4a4a 0%, #2a2a2a 100%);\r\n	border: 3px solid #8a8a8a;\r\n	box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);\r\n}\r\n\r\n#Roulette .wheel-slots {\r\n	position: absolute;\r\n	top: 50%;\r\n	left: 50%;\r\n	transform: translate(-50%, -50%);\r\n	width: 280px;\r\n	height: 280px;\r\n	border-radius: 50%;\r\n	transition: transform 3s cubic-bezier(0.25, 0.1, 0.25, 1);\r\n}\r\n\r\n#Roulette .wheel-slot {\r\n	position: absolute;\r\n	top: 50%;\r\n	left: 50%;\r\n	width: 50px;\r\n	height: 50px;\r\n	margin-left: -25px;\r\n	margin-top: -25px;\r\n	transform-origin: center;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	background-color: rgba(255, 255, 255, 0.1);\r\n	border: 1px solid #5a5a5a;\r\n	border-radius: 5px;\r\n	transition: background-color 0.3s;\r\n}\r\n\r\n#Roulette .wheel-slot:hover {\r\n	background-color: rgba(255, 255, 255, 0.2);\r\n}\r\n\r\n#Roulette .wheel-slot .item-icon {\r\n	width: 40px;\r\n	height: 40px;\r\n	background-size: contain;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Roulette .wheel-pointer {\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 0;\r\n	height: 0;\r\n	border-left: 15px solid transparent;\r\n	border-right: 15px solid transparent;\r\n	border-top: 30px solid #ff0000;\r\n	z-index: 10;\r\n	filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));\r\n}\r\n\r\n#Roulette .roulette-info {\r\n	width: 100%;\r\n	text-align: center;\r\n}\r\n\r\n#Roulette .points-display {\r\n	margin-bottom: 15px;\r\n	font-size: 16px;\r\n	color: #fff;\r\n}\r\n\r\n#Roulette .points-display .label {\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n\r\n#Roulette .points-display .points-value {\r\n	color: #ffd700;\r\n	font-size: 18px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Roulette .buttons-container {\r\n	display: flex;\r\n	justify-content: center;\r\n	gap: 10px;\r\n	margin-bottom: 15px;\r\n}\r\n\r\n#Roulette .buttons-container button {\r\n	min-width: 80px;\r\n	height: 30px;\r\n	border: 1px solid #5a5a5a;\r\n	background-color: #3a3a3a;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	color: #fff;\r\n	border-radius: 5px;\r\n	transition: background-color 0.3s;\r\n}\r\n\r\n#Roulette .buttons-container button:hover {\r\n	background-color: #4a4a4a;\r\n}\r\n\r\n#Roulette .buttons-container button:active {\r\n	background-color: #2a2a2a;\r\n}\r\n\r\n#Roulette .buttons-container button:disabled {\r\n	opacity: 0.5;\r\n}\r\n\r\n#Roulette .result-display {\r\n	min-height: 60px;\r\n	padding: 10px;\r\n	background-color: rgba(0, 0, 0, 0.3);\r\n	border: 1px solid #5a5a5a;\r\n	border-radius: 5px;\r\n}\r\n\r\n#Roulette .result-display .result-label {\r\n	display: block;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	margin-bottom: 5px;\r\n}\r\n\r\n#Roulette .result-display .result-item {\r\n	display: inline-block;\r\n	width: 40px;\r\n	height: 40px;\r\n	background-size: contain;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#Roulette .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Animation classes */\r\n#Roulette .wheel-slots.spinning {\r\n	animation: spin 3s cubic-bezier(0.25, 0.1, 0.25, 1);\r\n}\r\n\r\n@keyframes spin {\r\n	0% {\r\n		transform: translate(-50%, -50%) rotate(0deg);\r\n	}\r\n	100% {\r\n		transform: translate(-50%, -50%) rotate(1800deg);\r\n	}\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Roulette/Roulette.js
@@ -321102,21 +322330,19 @@ var init_Roulette$2 = __esmMin((() => {
 * Click on roulette icon
 */
 function onClickIcon() {
-	if (Roulette.ui.is(":visible")) {
+	if (Roulette._host.style.display !== "none") {
 		Roulette.onClose();
 		return;
 	}
 	const pkt = new PACKET.CZ.REQ_OPEN_ROULETTE();
 	Network.sendPacket(pkt);
 	if (_responseTimeout) clearTimeout(_responseTimeout);
-	_responseTimeout = setTimeout(function() {
+	_responseTimeout = setTimeout(() => {
 		_responseTimeout = null;
 	}, 2e3);
 }
 /**
 * Create the roulette icon as a standalone light-DOM button.
-* NOTE: temporary light-DOM solution — should become its own
-* GUIComponent (like CashShopIcon) when Roulette is migrated.
 */
 function addRouletteIcon() {
 	if (_iconBtn) return;
@@ -321140,7 +322366,7 @@ function addRouletteIcon() {
 	_iconBtn.addEventListener("click", onClickIcon);
 	document.body.appendChild(_iconBtn);
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/roullette/RoulletteIcon.bmp", function(data) {
-		if (_iconBtn) _iconBtn.style.backgroundImage = "url(" + data + ")";
+		if (_iconBtn) _iconBtn.style.backgroundImage = `url(${data})`;
 	});
 }
 var Roulette, _preferences$14, _rouletteInfo, _isSpinning, _responseTimeout, _iconBtn, Roulette_default;
@@ -321150,15 +322376,17 @@ var init_Roulette$1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
 	init_UIManager();
-	init_UIComponent();
-	init_MiniMap();
+	init_GUIComponent();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_PacketVerManager();
-	init_jquery();
 	init_Roulette$3();
 	init_Roulette$2();
-	Roulette = new UIComponent("Roulette", Roulette_default$2, Roulette_default$1);
+	Roulette = new GUIComponent("Roulette", Roulette_default$1);
+	/**
+	* Render HTML
+	*/
+	Roulette.render = () => Roulette_default$2;
 	_preferences$14 = Preferences.get("Roulette", {
 		x: 200,
 		y: 200,
@@ -321178,30 +322406,29 @@ var init_Roulette$1 = __esmMin((() => {
 	* Initialize UI
 	*/
 	Roulette.init = function init() {
-		this.ui.find(".close").click(function() {
+		const root = this.getRoot();
+		root.querySelector(".close").addEventListener("click", () => {
 			Roulette.onClose();
 		});
-		this.ui.find(".btn-close").click(function() {
+		root.querySelector(".btn-close").addEventListener("click", () => {
 			Roulette.onClose();
 		});
-		this.ui.find(".btn-spin").click(function() {
+		root.querySelector(".btn-spin").addEventListener("click", () => {
 			if (!_isSpinning) Roulette.onSpin();
 		});
-		this.ui.find(".btn-info").click(function() {
+		root.querySelector(".btn-info").addEventListener("click", () => {
 			Roulette.onInfo();
 		});
-		this.draggable(this.ui.find(".titlebar"));
+		this.draggable(".titlebar");
 	};
 	_responseTimeout = null;
 	/**
 	* Once append to the DOM
 	*/
 	Roulette.onAppend = function onAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$14.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$14.x), Renderer.width - this.ui.width())
-		});
-		if (!_preferences$14.show) this.ui.hide();
+		this._host.style.top = Math.min(Math.max(0, _preferences$14.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$14.x), Renderer.width - this._host.offsetWidth) + "px";
+		if (!_preferences$14.show) this._host.style.display = "none";
 		if (ROConfig.enableRoulette === false) return;
 		if (PacketVerManager_default.value < 20141008) return;
 		addRouletteIcon();
@@ -321215,9 +322442,9 @@ var init_Roulette$1 = __esmMin((() => {
 			_iconBtn.remove();
 			_iconBtn = null;
 		}
-		_preferences$14.show = this.ui.is(":visible");
-		_preferences$14.x = parseInt(this.ui.css("left"), 10);
-		_preferences$14.y = parseInt(this.ui.css("top"), 10);
+		_preferences$14.show = this._host.style.display !== "none";
+		_preferences$14.x = parseInt(this._host.style.left, 10);
+		_preferences$14.y = parseInt(this._host.style.top, 10);
 		_preferences$14.save();
 	};
 	/**
@@ -321232,15 +322459,15 @@ var init_Roulette$1 = __esmMin((() => {
 			_rouletteInfo.bronzePoint = pkt.bronzePoint || 0;
 			_rouletteInfo.additionItemID = pkt.additionItemID || 0;
 		}
-		Roulette.ui.show();
-		Roulette.updateUI();
-		Roulette.focus();
+		this._host.style.display = "";
+		this.updateUI();
+		this.focus();
 	};
 	/**
 	* Close Roulette Window
 	*/
 	Roulette.onClose = function onClose() {
-		Roulette.ui.hide();
+		Roulette._host.style.display = "none";
 		const pkt = new PACKET.CZ.REQ_CLOSE_ROULETTE();
 		Network.sendPacket(pkt);
 	};
@@ -321270,15 +322497,18 @@ var init_Roulette$1 = __esmMin((() => {
 	* Update UI with current roulette data
 	*/
 	Roulette.updateUI = function updateUI() {
+		const root = this.getRoot();
 		this.generateWheelSlots();
-		this.ui.find(".btn-spin").prop("disabled", _isSpinning);
+		const btnSpin = root.querySelector(".btn-spin");
+		if (btnSpin) btnSpin.disabled = _isSpinning;
 	};
 	/**
 	* Generate wheel slots from items
 	*/
 	Roulette.generateWheelSlots = function generateWheelSlots() {
-		const wheelSlots = this.ui.find(".wheel-slots");
-		wheelSlots.empty();
+		const wheelSlots = this.getRoot().querySelector(".wheel-slots");
+		if (!wheelSlots) return;
+		wheelSlots.innerHTML = "";
 		const items = _rouletteInfo.items || [];
 		const numSlots = items.length || 10;
 		for (let i = 0; i < numSlots; i++) {
@@ -321287,18 +322517,20 @@ var init_Roulette$1 = __esmMin((() => {
 			const radian = (angle - 90) * (Math.PI / 180);
 			const x = distance * Math.cos(radian);
 			const y = distance * Math.sin(radian);
-			const slot = jquery_default("<div class=\"wheel-slot\"></div>");
-			slot.attr("data-index", i);
-			slot.css({ transform: "translate(" + x + "px, " + y + "px) rotate(" + angle + "deg)" });
+			const slot = document.createElement("div");
+			slot.className = "wheel-slot";
+			slot.setAttribute("data-index", i);
+			Object.assign(slot.style, { transform: `translate(${x}px, ${y}px) rotate(${angle}deg)` });
 			if (items[i]) {
 				const itemId = items[i].itemId || items[i].item_id || items[i].ItemID;
-				if (itemId) Client.loadFile(DB.INTERFACE_PATH + "item/" + itemId + ".bmp", function(_slot, data) {
-					const icon = jquery_default("<div class=\"item-icon\"></div>");
-					icon.css("backgroundImage", "url(" + data + ")");
-					_slot.append(icon);
-				}.bind(this, slot));
+				if (itemId) Client.loadFile(DB.INTERFACE_PATH + `item/${itemId}.bmp`, function(data) {
+					const icon = document.createElement("div");
+					icon.className = "item-icon";
+					icon.style.backgroundImage = `url(${data})`;
+					slot.appendChild(icon);
+				});
 			}
-			wheelSlots.append(slot);
+			wheelSlots.appendChild(slot);
 		}
 	};
 	/**
@@ -321307,13 +322539,21 @@ var init_Roulette$1 = __esmMin((() => {
 	Roulette.startSpin = function startSpin(resultIndex) {
 		if (_isSpinning) return;
 		_isSpinning = true;
-		this.ui.find(".btn-spin").prop("disabled", true);
-		const wheelSlots = this.ui.find(".wheel-slots");
-		const targetRotation = 360 * 5 + resultIndex * (360 / (_rouletteInfo.items.length || 10));
-		wheelSlots.css({ transform: "translate(-50%, -50%) rotate(" + targetRotation + "deg)" });
-		setTimeout(function() {
+		const root = this.getRoot();
+		const btnSpin = root.querySelector(".btn-spin");
+		if (btnSpin) btnSpin.disabled = true;
+		const wheelSlots = root.querySelector(".wheel-slots");
+		if (!wheelSlots) {
 			_isSpinning = false;
-			Roulette.ui.find(".btn-spin").prop("disabled", false);
+			if (btnSpin) btnSpin.disabled = false;
+			return;
+		}
+		const targetRotation = 360 * 5 + resultIndex * (360 / (_rouletteInfo.items.length || 10));
+		wheelSlots.style.transform = `translate(-50%, -50%) rotate(${targetRotation}deg)`;
+		setTimeout(() => {
+			_isSpinning = false;
+			const btn = Roulette.getRoot().querySelector(".btn-spin");
+			if (btn) btn.disabled = false;
 			Roulette.showResult(resultIndex);
 		}, 3e3);
 	};
@@ -321321,13 +322561,14 @@ var init_Roulette$1 = __esmMin((() => {
 	* Show result after spin
 	*/
 	Roulette.showResult = function showResult(resultIndex) {
-		const resultDisplay = this.ui.find(".result-item");
-		resultDisplay.empty();
+		const resultDisplay = this.getRoot().querySelector(".result-item");
+		if (!resultDisplay) return;
+		resultDisplay.innerHTML = "";
 		if (_rouletteInfo.items[resultIndex]) {
 			const item = _rouletteInfo.items[resultIndex];
 			const itemId = item.itemId || item.item_id || item.ItemID;
-			if (itemId) Client.loadFile(DB.INTERFACE_PATH + "item/" + itemId + ".bmp", function(data) {
-				resultDisplay.css("backgroundImage", "url(" + data + ")");
+			if (itemId) Client.loadFile(DB.INTERFACE_PATH + `item/${itemId}.bmp`, function(data) {
+				resultDisplay.style.backgroundImage = `url(${data})`;
 			});
 		}
 	};
@@ -321345,7 +322586,7 @@ var init_Roulette$1 = __esmMin((() => {
 	/**
 	* Handle item received from server
 	*/
-	Roulette.onItemReceived = function onItemReceived(pkt) {
+	Roulette.onItemReceived = function onItemReceived(_pkt) {
 		Roulette.updateUI();
 	};
 	/**
@@ -321575,101 +322816,125 @@ var init_MapName = __esmMin((() => {
 //#region src/UI/Components/Captcha/CaptchaAnswer.html?raw
 var CaptchaAnswer_default$2;
 var init_CaptchaAnswer$2 = __esmMin((() => {
-	CaptchaAnswer_default$2 = "<div id=\"CaptchaAnswer\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"right\"></div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"information\">\r\n			<div class=\"message\">\r\n				<span data-text=\"2883\">Hello, illegal software is being monitored.</span><br />\r\n				<span data-text=\"2884\">Please enter the text below within the specified time.</span><br />\r\n				<span data-text=\"2885\">If you enter the text wrong three times, you will get banned</span><br />\r\n				<span class=\"error_text\"></span>\r\n			</div>\r\n			<div class=\"timer_bar_bg\">\r\n				<div class=\"timer_bar_fill\"></div>\r\n			</div>\r\n\r\n			<div class=\"status\">\r\n				<span class=\"retry_count\">Remaining chance: 3</span>\r\n				<span class=\"timer_text\">00:59</span>\r\n			</div>\r\n		</div>\r\n		<div class=\"preview_box\"></div>\r\n		<div class=\"controls\">\r\n			<input type=\"text\" id=\"answer_input\" class=\"answer_input\" placeholder=\"Captcha Answer\" />\r\n			<button\r\n				class=\"btn ok\"\r\n				data-background=\"btn_ok.bmp\"\r\n				data-hover=\"btn_ok_a.bmp\"\r\n				data-down=\"btn_ok_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	CaptchaAnswer_default$2 = "<div id=\"CaptchaAnswer\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"right\"></div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"information\">\r\n			<div class=\"message\">\r\n				<ui-text msg=\"2883\">Hello, illegal software is being monitored.</ui-text><br />\r\n				<ui-text msg=\"2884\">Please enter the text below within the specified time.</ui-text><br />\r\n				<ui-text msg=\"2885\">If you enter the text wrong three times, you will get banned</ui-text><br />\r\n				<span class=\"error_text\"></span>\r\n			</div>\r\n			<div class=\"timer_bar_bg\">\r\n				<div class=\"timer_bar_fill\"></div>\r\n			</div>\r\n\r\n			<div class=\"status\">\r\n				<span class=\"retry_count\">Remaining chance: 3</span>\r\n				<span class=\"timer_text\">00:59</span>\r\n			</div>\r\n		</div>\r\n		<div class=\"preview_box\"></div>\r\n		<div class=\"controls\">\r\n			<input type=\"text\" class=\"answer_input\" placeholder=\"Captcha Answer\" />\r\n			<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaAnswer.css?raw
 var CaptchaAnswer_default$1;
 var init_CaptchaAnswer$1 = __esmMin((() => {
-	CaptchaAnswer_default$1 = "#CaptchaAnswer {\r\n	width: 340px;\r\n	height: 290px;\r\n	position: absolute;\r\n	background-color: rgba(255, 255, 255, 0.85);\r\n}\r\n\r\n#CaptchaAnswer .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaAnswer .titlebar {\r\n	width: 340px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaAnswer .container {\r\n	padding: 10px;\r\n	text-align: center;\r\n}\r\n\r\n#CaptchaAnswer .btn {\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	margin-left: 5px;\r\n}\r\n\r\n#CaptchaAnswer .preview_box {\r\n	width: 220px;\r\n	height: 90px;\r\n	border: 1px solid #999;\r\n	margin: 0 auto 10px auto;\r\n	background-color: transparent;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaAnswer .preview_box img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n\r\n#CaptchaAnswer input[type='text'].answer_input {\r\n	width: 150px;\r\n	margin-right: 5px;\r\n	border: 1px solid #7f9db9;\r\n}\r\n\r\n#CaptchaAnswer .controls {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#CaptchaAnswer .image_container {\r\n	width: 260px;\r\n	height: 100px;\r\n	margin: 10px auto;\r\n	background-color: #000;\r\n	border: 1px solid #333;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	position: relative;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaAnswer .status {\r\n	display: flex;\r\n	justify-content: center;\r\n	gap: 80px;\r\n}\r\n\r\n#CaptchaAnswer .image_container img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n\r\n#CaptchaAnswer .timer_bar_bg {\r\n	width: 260px;\r\n	height: 30px;\r\n	background-color: #ccc;\r\n	margin: 5px auto;\r\n	border: 1px solid #999;\r\n}\r\n\r\n#CaptchaAnswer .timer_bar_fill {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #f00;\r\n}\r\n\r\n#CaptchaAnswer .answer_field {\r\n	width: 180px;\r\n	margin-right: 5px;\r\n}\r\n\r\n#CaptchaAnswer .message {\r\n	margin-bottom: 10px;\r\n}\r\n\r\n#CaptchaAnswer .message,\r\n#CaptchaAnswer .retry_count,\r\n#CaptchaAnswer .timer_text {\r\n	font-size: 12px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaAnswer .retry_count {\r\n	color: rgb(130, 0, 0);\r\n}\r\n\r\n#CaptchaAnswer .timer_text {\r\n	color: rgb(0, 0, 130);\r\n}\r\n\r\n#CaptchaAnswer .error_text {\r\n	display: inline-block;\r\n	min-width: 15px;\r\n	min-height: 15px;\r\n	font-weight: normal;\r\n	color: red;\r\n}\r\n";
+	CaptchaAnswer_default$1 = ":host {\r\n	position: absolute;\r\n	width: 340px;\r\n	height: 290px;\r\n}\r\n\r\n#CaptchaAnswer {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: rgba(255, 255, 255, 0.85);\r\n}\r\n\r\n#CaptchaAnswer .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaAnswer .titlebar {\r\n	width: 340px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaAnswer .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaAnswer .container {\r\n	padding: 10px;\r\n	text-align: center;\r\n}\r\n\r\n#CaptchaAnswer .btn {\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	margin-left: 5px;\r\n}\r\n\r\n#CaptchaAnswer .preview_box {\r\n	width: 220px;\r\n	height: 90px;\r\n	border: 1px solid #999;\r\n	margin: 0 auto 10px auto;\r\n	background-color: transparent;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaAnswer .preview_box img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n\r\n#CaptchaAnswer input[type='text'].answer_input {\r\n	width: 150px;\r\n	margin-right: 5px;\r\n	border: 1px solid #7f9db9;\r\n}\r\n\r\n#CaptchaAnswer .controls {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#CaptchaAnswer .image_container {\r\n	width: 260px;\r\n	height: 100px;\r\n	margin: 10px auto;\r\n	background-color: #000;\r\n	border: 1px solid #333;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	position: relative;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaAnswer .status {\r\n	display: flex;\r\n	justify-content: center;\r\n	gap: 80px;\r\n}\r\n\r\n#CaptchaAnswer .image_container img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n\r\n#CaptchaAnswer .timer_bar_bg {\r\n	width: 260px;\r\n	height: 30px;\r\n	background-color: #ccc;\r\n	margin: 5px auto;\r\n	border: 1px solid #999;\r\n}\r\n\r\n#CaptchaAnswer .timer_bar_fill {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #f00;\r\n}\r\n\r\n#CaptchaAnswer .answer_field {\r\n	width: 180px;\r\n	margin-right: 5px;\r\n}\r\n\r\n#CaptchaAnswer .message {\r\n	margin-bottom: 10px;\r\n}\r\n\r\n#CaptchaAnswer .message,\r\n#CaptchaAnswer .retry_count,\r\n#CaptchaAnswer .timer_text {\r\n	font-size: 12px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaAnswer .retry_count {\r\n	color: rgb(130, 0, 0);\r\n}\r\n\r\n#CaptchaAnswer .timer_text {\r\n	color: rgb(0, 0, 130);\r\n}\r\n\r\n#CaptchaAnswer .error_text {\r\n	display: inline-block;\r\n	min-width: 15px;\r\n	min-height: 15px;\r\n	font-weight: normal;\r\n	color: red;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaAnswer.js
 var CaptchaAnswer, _preferences$13, timer, CaptchaAnswer_default;
 var init_CaptchaAnswer = __esmMin((() => {
-	init_jquery();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Preferences$1();
 	init_Renderer();
+	init_DBManager();
+	init_Elements();
 	init_CaptchaAnswer$2();
 	init_CaptchaAnswer$1();
-	init_DBManager();
-	CaptchaAnswer = new UIComponent("CaptchaAnswer", CaptchaAnswer_default$2, CaptchaAnswer_default$1);
+	CaptchaAnswer = new GUIComponent("CaptchaAnswer", CaptchaAnswer_default$1);
 	_preferences$13 = Preferences.get("CaptchaAnswer", {
 		x: 230,
 		y: 295
 	}, 2);
 	timer = null;
+	CaptchaAnswer.render = () => CaptchaAnswer_default$2;
+	CaptchaAnswer.captureKeyEvents = true;
 	/**
 	* Initialize GUI
 	*/
-	CaptchaAnswer.init = function Init() {
+	CaptchaAnswer.init = function init() {
 		this.draggable(".titlebar");
-		const self = this;
-		this.ui.find(".ok").click(function() {
-			const answer = self.ui.find(".answer_input").val();
-			if (answer && answer.length > 0 && self.onSend) self.onSend(answer);
+		const root = this.getRoot();
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => {
+			const answerInput = root.querySelector(".answer_input");
+			const answer = answerInput ? answerInput.value : "";
+			if (answer && answer.length > 0 && this.onSend) this.onSend(answer);
 		});
+	};
+	CaptchaAnswer.onKeyDown = function onKeyDown(event) {
+		if (CaptchaAnswer.isEditableFocused()) {
+			event.stopImmediatePropagation();
+			return true;
+		}
+		return true;
 	};
 	/**
 	* Append to DOM
 	*/
-	CaptchaAnswer.onAppend = function OnAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$13.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$13.x), Renderer.width - this.ui.width())
-		});
+	CaptchaAnswer.onAppend = function onAppend() {
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$13.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$13.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Set Image
 	*/
-	CaptchaAnswer.setImage = function SetImage(imageData) {
+	CaptchaAnswer.setImage = function setImage(imageData) {
 		const blob = new Blob([imageData], { type: "image/bmp" });
 		const url = URL.createObjectURL(blob);
-		const img = jquery_default("<img/>").attr("src", url);
-		this.ui.find(".preview_box").empty().append(img);
+		const previewBox = this.getRoot().querySelector(".preview_box");
+		if (previewBox) {
+			previewBox.innerHTML = "";
+			const img = document.createElement("img");
+			img.src = url;
+			previewBox.appendChild(img);
+		}
 	};
 	/**
 	* Set Metadata
 	*/
-	CaptchaAnswer.setData = function SetData(retryCount, timeout) {
-		this.ui.find(".retry_count").text(DB.getMessage(2886).replace("%d", retryCount));
+	CaptchaAnswer.setData = function setData(retryCount, timeout) {
+		const root = this.getRoot();
+		const retryEl = root.querySelector(".retry_count");
+		if (retryEl) retryEl.textContent = DB.getMessage(2886).replace("%d", retryCount);
 		if (timer) {
 			clearInterval(timer);
 			timer = null;
 		}
-		timer = setInterval(function() {
+		timer = setInterval(() => {
 			timeout--;
 			const minutes = Math.floor(timeout / 60);
 			const seconds = timeout % 60;
-			this.ui.find(".timer_text").text(minutes.toString().padStart(2, "0") + ":" + seconds.toString().padStart(2, "0"));
-			this.ui.find(".timer_bar_fill").css("width", timeout / 60 * 100 + "%");
+			const timerText = root.querySelector(".timer_text");
+			if (timerText) timerText.textContent = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+			const timerBarFill = root.querySelector(".timer_bar_fill");
+			if (timerBarFill) timerBarFill.style.width = `${timeout / 60 * 100}%`;
 			if (timeout <= 0) {
 				clearInterval(timer);
 				timer = null;
 			}
-		}.bind(this), 1e3);
+		}, 1e3);
 	};
-	CaptchaAnswer.setError = function SetError(retryCount) {
-		this.ui.find(".error_text").text(DB.getMessage(2875).replace("%d", retryCount));
+	CaptchaAnswer.setError = function setError(retryCount) {
+		const errorText = this.getRoot().querySelector(".error_text");
+		if (errorText) errorText.textContent = DB.getMessage(2875).replace("%d", retryCount);
 	};
-	CaptchaAnswer.showSuccessMessage = function ShowSuccessMessage() {
-		UIManager.showMessageBox(DB.getMessage(2871), "ok", function() {
+	CaptchaAnswer.showSuccessMessage = function showSuccessMessage() {
+		UIManager.showMessageBox(DB.getMessage(2871), "ok", () => {
 			CaptchaAnswer.remove();
 		}, true);
 	};
 	/**
 	* Remove data from UI
 	*/
-	CaptchaAnswer.onRemove = function OnRemove() {
-		_preferences$13.y = parseInt(this.ui.css("top"), 10);
-		_preferences$13.x = parseInt(this.ui.css("left"), 10);
+	CaptchaAnswer.onRemove = function onRemove() {
+		_preferences$13.y = parseInt(this._host.style.top, 10);
+		_preferences$13.x = parseInt(this._host.style.left, 10);
 		_preferences$13.save();
-		this.ui.find(".image_container").empty();
-		this.ui.find(".retry_count").text("Remaining chance: 0");
-		this.ui.find(".timer_text").text("0");
-		this.ui.find(".error_text").text("");
+		const root = this.getRoot();
+		const imageContainer = root.querySelector(".image_container");
+		if (imageContainer) imageContainer.innerHTML = "";
+		const retryCount = root.querySelector(".retry_count");
+		if (retryCount) retryCount.textContent = "Remaining chance: 0";
+		const timerText = root.querySelector(".timer_text");
+		if (timerText) timerText.textContent = "0";
+		const errorText = root.querySelector(".error_text");
+		if (errorText) errorText.textContent = "";
 		if (timer) {
 			clearInterval(timer);
 			timer = null;
@@ -321685,63 +322950,69 @@ var init_CaptchaAnswer = __esmMin((() => {
 //#region src/UI/Components/Captcha/CaptchaPreview.html?raw
 var CaptchaPreview_default$2;
 var init_CaptchaPreview$2 = __esmMin((() => {
-	CaptchaPreview_default$2 = "<div id=\"CaptchaPreview\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"preview_box\"></div>\r\n	</div>\r\n</div>\r\n";
+	CaptchaPreview_default$2 = "<div id=\"CaptchaPreview\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\">\r\n		<div class=\"preview_box\"></div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaPreview.css?raw
 var CaptchaPreview_default$1;
 var init_CaptchaPreview$1 = __esmMin((() => {
-	CaptchaPreview_default$1 = "#CaptchaPreview {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 107px;\r\n	background-color: #ffffff;\r\n	border-radius: 3px;\r\n}\r\n\r\n#CaptchaPreview .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaPreview .titlebar {\r\n	width: 220px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaPreview .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaPreview .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaPreview .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaPreview .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaPreview .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaPreview .preview_box {\r\n	width: 220px;\r\n	height: 90px;\r\n	background-color: transparent;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaPreview .preview_box img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n";
+	CaptchaPreview_default$1 = ":host {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 107px;\r\n}\r\n\r\n#CaptchaPreview {\r\n	width: 100%;\r\n	height: 100%;\r\n	background-color: #ffffff;\r\n	border-radius: 3px;\r\n}\r\n\r\n#CaptchaPreview .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaPreview .titlebar {\r\n	width: 220px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#CaptchaPreview .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#CaptchaPreview .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CaptchaPreview .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#CaptchaPreview .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#CaptchaPreview .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#CaptchaPreview .preview_box {\r\n	width: 220px;\r\n	height: 90px;\r\n	background-color: transparent;\r\n	overflow: hidden;\r\n}\r\n\r\n#CaptchaPreview .preview_box img {\r\n	max-width: 100%;\r\n	max-height: 100%;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaPreview.js
 var CaptchaPreview, _preferences$12, CaptchaPreview_default;
 var init_CaptchaPreview = __esmMin((() => {
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_Preferences$1();
 	init_Renderer();
+	init_Elements();
 	init_CaptchaPreview$2();
 	init_CaptchaPreview$1();
-	init_jquery();
-	CaptchaPreview = new UIComponent("CaptchaPreview", CaptchaPreview_default$2, CaptchaPreview_default$1);
+	CaptchaPreview = new GUIComponent("CaptchaPreview", CaptchaPreview_default$1);
 	_preferences$12 = Preferences.get("CaptchaPreview", {
 		x: 230,
 		y: 295
 	}, 2);
+	CaptchaPreview.render = () => CaptchaPreview_default$2;
 	/**
 	* Initialize GUI
 	*/
-	CaptchaPreview.init = function Init() {
-		this.ui.find(".close").click(this.remove.bind(this));
+	CaptchaPreview.init = function init() {
+		const closeBtn = this.getRoot().querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => this.remove());
 		this.draggable(".titlebar");
 	};
 	/**
 	* Append to DOM
 	*/
-	CaptchaPreview.onAppend = function OnAppend() {
-		this.ui.css({
-			top: Math.min(Math.max(0, _preferences$12.y), Renderer.height - this.ui.height()),
-			left: Math.min(Math.max(0, _preferences$12.x), Renderer.width - this.ui.width())
-		});
+	CaptchaPreview.onAppend = function onAppend() {
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$12.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$12.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Remove data from UI
 	*/
-	CaptchaPreview.onRemove = function OnRemove() {
-		_preferences$12.y = parseInt(this.ui.css("top"), 10);
-		_preferences$12.x = parseInt(this.ui.css("left"), 10);
+	CaptchaPreview.onRemove = function onRemove() {
+		_preferences$12.y = parseInt(this._host.style.top, 10);
+		_preferences$12.x = parseInt(this._host.style.left, 10);
 		_preferences$12.save();
-		this.ui.find(".preview_box").empty();
+		const previewBox = this.getRoot().querySelector(".preview_box");
+		if (previewBox) previewBox.innerHTML = "";
 	};
 	/**
 	* Set Image
 	*/
-	CaptchaPreview.setImage = function SetImage(imageData) {
+	CaptchaPreview.setImage = function setImage(imageData) {
 		const blob = new Blob([imageData], { type: "image/bmp" });
 		const url = URL.createObjectURL(blob);
-		const img = jquery_default("<img/>").attr("src", url);
-		this.ui.find(".preview_box").empty().append(img);
+		const previewBox = this.getRoot().querySelector(".preview_box");
+		if (previewBox) {
+			previewBox.innerHTML = "";
+			const img = document.createElement("img");
+			img.src = url;
+			previewBox.appendChild(img);
+		}
 	};
 	CaptchaPreview_default = UIManager.addComponent(CaptchaPreview);
 }));
@@ -327127,7 +328398,7 @@ function onDrop$3(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$4(event) {
+function stopPropagation$3(event) {
 	event.preventDefault();
 	event.stopImmediatePropagation();
 }
@@ -327193,7 +328464,7 @@ var init_MakeItemSelection = __esmMin((() => {
 		});
 		const materials = root.querySelector(".materials");
 		materials.addEventListener("drop", onDrop$3);
-		materials.addEventListener("dragover", stopPropagation$4);
+		materials.addEventListener("dragover", stopPropagation$3);
 		root.querySelectorAll(".materials .item").forEach((el) => el.remove());
 		materials.style.display = "none";
 	};
@@ -327560,7 +328831,7 @@ function onDrop$2(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$3(event) {
+function stopPropagation$2(event) {
 	event.preventDefault();
 	event.stopImmediatePropagation();
 }
@@ -327636,7 +328907,7 @@ var init_ConvertItems = __esmMin((() => {
 		resizeHeight$1(_preferences$10.height);
 		const mainEl = root.querySelector("#ConvertItems");
 		mainEl.addEventListener("drop", onDrop$2);
-		mainEl.addEventListener("dragover", stopPropagation$3);
+		mainEl.addEventListener("dragover", stopPropagation$2);
 		const content = root.querySelector(".container .content");
 		content.addEventListener("wheel", onScroll$2);
 		content.addEventListener("mouseover", (e) => {
@@ -327935,7 +329206,7 @@ function onDrop$1(event) {
 /**
 * Stop event propagation
 */
-function stopPropagation$2(event) {
+function stopPropagation$1(event) {
 	event.preventDefault();
 	event.stopImmediatePropagation();
 }
@@ -328011,7 +329282,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 		resizeHeight(_preferences$9.height);
 		const mainEl = root.querySelector("#ItemListWindowSelection");
 		mainEl.addEventListener("drop", onDrop$1);
-		mainEl.addEventListener("dragover", stopPropagation$2);
+		mainEl.addEventListener("dragover", stopPropagation$1);
 		const content = root.querySelector(".container .content");
 		content.addEventListener("wheel", onScroll$1);
 		content.addEventListener("mouseover", (e) => {
@@ -328743,11 +330014,11 @@ var init_ReadMail$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root() {
+function _root$1() {
 	return ReadMail._shadow || ReadMail._host;
 }
 function addItemSub(itemMail) {
-	const root = _root();
+	const root = _root$1();
 	removeValueItemZeny();
 	const zenyItemContainer = root.querySelector(".zeny_item_container");
 	if (itemMail.ITID != 0 && itemMail.count > 0) {
@@ -328814,7 +330085,7 @@ function addItemSub(itemMail) {
 * Hide the item name
 */
 function onItemOut(event) {
-	const root = _root();
+	const root = _root$1();
 	event.stopImmediatePropagation();
 	const overlay = root.querySelector(".container_item .overlay");
 	if (overlay) overlay.style.display = "none";
@@ -328823,7 +330094,7 @@ function onItemOut(event) {
 * Show item name when mouse is over
 */
 function onItemOver(event) {
-	const root = _root();
+	const root = _root$1();
 	event.stopImmediatePropagation();
 	const item = _preferences$8.item_add_email;
 	if (!item) return;
@@ -328851,14 +330122,14 @@ function onItemInfo$2(event) {
 	ItemInfo_default.setItem(item);
 }
 function replyMail(event) {
-	const root = _root();
+	const root = _root$1();
 	event.stopImmediatePropagation();
 	const senderEl = root.querySelector(".text_sender");
 	const textSender = senderEl ? senderEl.textContent : "";
 	Mail_default.replyNewMail(textSender);
 }
 function deleteMail(event) {
-	const root = _root();
+	const root = _root$1();
 	event.stopImmediatePropagation();
 	if (validItemMoneyExists()) {
 		const btnContainer = root.querySelector(".btn_return_reply_remove");
@@ -328874,7 +330145,7 @@ function validItemMoneyExists() {
 	return validItem && validMoney;
 }
 function returnMail(event) {
-	const root = _root();
+	const root = _root$1();
 	event.stopImmediatePropagation();
 	const btnContainer = root.querySelector(".btn_return_reply_remove");
 	const mailID = btnContainer ? btnContainer.dataset.mailID : null;
@@ -328898,7 +330169,7 @@ function prettifyZeny$1(value) {
 	return out;
 }
 function removeValueItemZeny() {
-	const root = _root();
+	const root = _root$1();
 	const item = root.querySelector(".item");
 	if (item) item.remove();
 	const zenyInput = root.querySelector(".input_zeny_amt");
@@ -328945,7 +330216,7 @@ var init_ReadMail = __esmMin((() => {
 	* Initialize Component
 	*/
 	ReadMail.onAppend = function onAppend() {
-		const root = _root();
+		const root = _root$1();
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) closeBtn.addEventListener("click", (event) => {
 			event.stopImmediatePropagation();
@@ -328984,7 +330255,7 @@ var init_ReadMail = __esmMin((() => {
 	ReadMail.openEmail = function openEmail(inforMail) {
 		ReadMail.remove();
 		ReadMail.append();
-		const freshRoot = _root();
+		const freshRoot = _root$1();
 		const textSender = inforMail.FromName;
 		const textTitle = inforMail.Header;
 		const textMessage = inforMail.msg === "(no message)" ? "" : inforMail.msg;
@@ -329000,7 +330271,7 @@ var init_ReadMail = __esmMin((() => {
 		else this.resetItemZeny();
 	};
 	ReadMail.resetItemZeny = function resetItemZeny() {
-		const root = _root();
+		const root = _root$1();
 		_preferences$8.item_add_email = {};
 		_preferences$8.save();
 		removeValueItemZeny();
@@ -330980,13 +332251,13 @@ var init_SlotMachine = __esmMin((() => {
 //#region src/UI/Components/PetEvolution/PetEvolution.html?raw
 var PetEvolution_default$2;
 var init_PetEvolution$2 = __esmMin((() => {
-	PetEvolution_default$2 = "<div id=\"PetEvolution\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\" data-text=\"2567\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"pet_illust_holder\">\r\n			<div class=\"base_pet_illust\"></div>\r\n			<div class=\"next\" data-background=\"img_next.bmp\"></div>\r\n			<div class=\"target_pet_illust\"></div>\r\n		</div>\r\n		<div class=\"pet_eggID_holder\">\r\n			<div class=\"base_petEggId\"></div>\r\n			<div></div>\r\n			<div class=\"target_petEggId\"></div>\r\n		</div>\r\n		<div class=\"evo_requirements\"></div>\r\n		<div class=\"footer\">\r\n			<button\r\n				class=\"evolve\"\r\n				data-background=\"btn_big_ok.bmp\"\r\n				data-hover=\"btn_big_ok_a.bmp\"\r\n				data-down=\"btn_big_ok_b.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"big_cancel\"\r\n				data-background=\"btn_big_cancel.bmp\"\r\n				data-hover=\"btn_big_cancel_a.bmp\"\r\n				data-down=\"btn_big_cancel_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+	PetEvolution_default$2 = "<div id=\"PetEvolution\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<span class=\"text\" data-text=\"2567\">Pet Evolution</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"pet_illust_holder\">\r\n			<div class=\"base_pet_illust\"></div>\r\n			<div class=\"next\">▶</div>\r\n			<div class=\"target_pet_illust\"></div>\r\n		</div>\r\n		<div class=\"pet_eggID_holder\">\r\n			<div class=\"base_petEggId\"></div>\r\n			<div class=\"target_petEggId\"></div>\r\n		</div>\r\n		<div class=\"evo_requirements\"></div>\r\n		<div class=\"footer\">\r\n			<button\r\n				class=\"evolve\"\r\n				data-background=\"btn_ok.bmp\"\r\n				data-hover=\"btn_ok_a.bmp\"\r\n				data-down=\"btn_ok_b.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"big_cancel\"\r\n				data-background=\"btn_cancel.bmp\"\r\n				data-hover=\"btn_cancel_a.bmp\"\r\n				data-down=\"btn_cancel_b.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PetEvolution/PetEvolution.css?raw
 var PetEvolution_default$1;
 var init_PetEvolution$1 = __esmMin((() => {
-	PetEvolution_default$1 = "#PetEvolution {\r\n	position: absolute;\r\n	top: 100px;\r\n	left: 100px;\r\n	width: 280px;\r\n	height: 380px;\r\n	font-size: 12px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#PetEvolution .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PetEvolution .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PetEvolution .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 50px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#PetEvolution .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PetEvolution .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PetEvolution .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PetEvolution .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	gap: 10px;\r\n}\r\n\r\n#PetEvolution .pet_illust_holder {\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	top: 5px;\r\n	gap: 15px;\r\n	height: 136px;\r\n	width: 280px;\r\n}\r\n\r\n#PetEvolution .base_pet_illust,\r\n#PetEvolution .target_pet_illust {\r\n	height: 134px;\r\n	width: 90px;\r\n	background-repeat: no-repeat;\r\n	border: 1px solid black;\r\n	box-shadow: grey 3px 2px 1px 0px;\r\n}\r\n\r\n#PetEvolution .next {\r\n	height: 43px;\r\n	width: 43px;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#PetEvolution .pet_eggID_holder {\r\n	display: flex;\r\n	text-decoration: underline;\r\n	justify-content: center;\r\n	align-items: flex-start;\r\n	width: 280px;\r\n	margin-top: 5px;\r\n	position: relative;\r\n	top: 5px;\r\n	margin-bottom: 15px;\r\n	color: blue;\r\n	gap: 15px;\r\n}\r\n\r\n#PetEvolution .base_petEggId,\r\n#PetEvolution .target_petEggId {\r\n	width: 100px;\r\n	text-align: center;\r\n	text-decoration: underline;\r\n	color: blue;\r\n	cursor: pointer;\r\n}\r\n\r\n#PetEvolution .pet_eggID_holder > div:nth-child(2) {\r\n	width: 43px;\r\n}\r\n\r\n#PetEvolution .evo_requirements {\r\n	width: 260px;\r\n	height: 135px;\r\n}\r\n\r\n#PetEvolution .evo_item_name {\r\n	color: blue;\r\n	text-decoration: underline;\r\n}\r\n\r\n#PetEvolution .footer {\r\n	display: flex;\r\n	gap: 5px;\r\n	margin-left: 40px;\r\n}\r\n\r\n#PetEvolution .evolve,\r\n#PetEvolution .big_cancel {\r\n	height: 20px;\r\n	width: 100px;\r\n	border: none;\r\n}\r\n";
+	PetEvolution_default$1 = ":host {\r\n	width: 280px;\r\n	height: 380px;\r\n	top: 200px;\r\n	left: 200px;\r\n}\r\n\r\n#PetEvolution {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 380px;\r\n	background-color: white;\r\n	border-radius: 5px;\r\n}\r\n\r\n#PetEvolution .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PetEvolution .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PetEvolution .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 80px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#PetEvolution .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PetEvolution .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PetEvolution .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PetEvolution .content {\r\n	background-repeat: no-repeat;\r\n	position: relative;\r\n	width: 100%;\r\n	height: calc(100% - 17px);\r\n}\r\n\r\n#PetEvolution .pet_illust_holder {\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n	width: 100%;\r\n	height: 100px;\r\n	margin-top: 10px;\r\n}\r\n\r\n#PetEvolution .base_pet_illust,\r\n#PetEvolution .target_pet_illust {\r\n	width: 100px;\r\n	height: 100px;\r\n	background-size: contain;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#PetEvolution .next {\r\n	font-size: 18px;\r\n	margin: 0 10px;\r\n	color: #333;\r\n}\r\n\r\n#PetEvolution .pet_eggID_holder {\r\n	display: flex;\r\n	justify-content: space-around;\r\n	width: 100%;\r\n	padding: 5px 0;\r\n	text-align: center;\r\n}\r\n\r\n#PetEvolution .base_petEggId,\r\n#PetEvolution .target_petEggId {\r\n	cursor: pointer;\r\n	color: blue;\r\n	text-decoration: underline;\r\n	font-size: 11px;\r\n}\r\n\r\n#PetEvolution .pet_eggID_holder > div:nth-child(2) {\r\n	margin-left: 20px;\r\n}\r\n\r\n#PetEvolution .evo_requirements {\r\n	padding: 5px 15px;\r\n	font-size: 11px;\r\n	overflow-y: auto;\r\n	max-height: 140px;\r\n}\r\n\r\n#PetEvolution .evo_item_name {\r\n	color: blue;\r\n	text-decoration: underline;\r\n}\r\n\r\n#PetEvolution .footer {\r\n	position: absolute;\r\n	bottom: 10px;\r\n	width: 100%;\r\n	display: flex;\r\n	justify-content: center;\r\n	gap: 10px;\r\n}\r\n\r\n#PetEvolution .evolve,\r\n#PetEvolution .big_cancel {\r\n	width: 42px;\r\n	height: 20px;\r\n	border: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PetEvolution/PetEvolution.js
@@ -331006,35 +332277,27 @@ function onRequestEvolve() {
 * Closing window
 */
 function onClose$1() {
-	PetEvolution.ui.hide();
+	if (PetEvolution._host) PetEvolution._host.style.display = "none";
 	currentMaterials = [];
 	targetEvoPetEggId = 0;
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$1(event) {
-	event.stopImmediatePropagation();
-	return false;
 }
 /**
 * Get item info (open description window)
 */
 function onItemInfo$1(event) {
 	event.stopImmediatePropagation();
-	const ITID = parseInt(this.getAttribute("data-index"), 10);
+	const ITID = parseInt(event.currentTarget.getAttribute("data-index"), 10);
 	const item = DB.getItemInfo(ITID);
+	if (!item) return;
 	item.ITID = ITID;
 	item.IsIdentified = 1;
-	if (!item) return false;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
-		return false;
+		return;
 	}
 	ItemInfo_default.append();
 	ItemInfo_default.uid = item.ITID;
 	ItemInfo_default.setItem(item);
-	return false;
 }
 /**
 * Handle the result of a pet evolution request
@@ -331059,7 +332322,7 @@ function onPetEvolveResult(pkt) {
 			ChatBox_default.addText(DB.getMessage(2576), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
 			break;
 		case 6:
-			if (PetEvolution.ui) PetEvolution.ui.hide();
+			if (PetEvolution._host) PetEvolution._host.style.display = "none";
 			break;
 		default: break;
 	}
@@ -331069,16 +332332,18 @@ var init_PetEvolution = __esmMin((() => {
 	init_DBManager();
 	init_Client();
 	init_Preferences$1();
+	init_Renderer();
 	init_NetworkManager();
 	init_PacketStructure();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_ChatBox();
 	init_Inventory();
 	init_ItemInfo();
 	init_PetEvolution$2();
 	init_PetEvolution$1();
-	PetEvolution = new UIComponent("PetEvolution", PetEvolution_default$2, PetEvolution_default$1);
+	PetEvolution = new GUIComponent("PetEvolution", PetEvolution_default$1);
+	PetEvolution.render = () => PetEvolution_default$2;
 	currentMaterials = [];
 	targetEvoPetEggId = 0;
 	_preferences$7 = Preferences.get("PetEvolution", {
@@ -331090,20 +332355,38 @@ var init_PetEvolution = __esmMin((() => {
 	* Initialize component
 	*/
 	PetEvolution.init = function init() {
-		this.draggable(this.ui.find(".titlebar"));
-		this.ui.find(".base").mousedown(stopPropagation$1);
-		this.ui.find(".close").click(onClose$1);
-		this.ui.find(".big_cancel").click(onClose$1);
-		this.ui.find(".evolve").click(onRequestEvolve);
+		this.draggable(".titlebar");
+		const root = PetEvolution.getRoot();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				onClose$1();
+			});
+		}
+		const cancelBtn = root.querySelector(".big_cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", () => {
+			onClose$1();
+		});
+		const evolveBtn = root.querySelector(".evolve");
+		if (evolveBtn) evolveBtn.addEventListener("click", () => {
+			onRequestEvolve();
+		});
 	};
-	PetEvolution.onAppend = function onAppend() {};
+	PetEvolution.onAppend = function onAppend() {
+		const rect = this._host.getBoundingClientRect();
+		const hostHeight = rect.height || 380;
+		const hostWidth = rect.width || 280;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$7.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$7.x), Renderer.width - hostWidth)}px`;
+	};
 	/**
 	* Once remove from body, save user preferences
 	*/
 	PetEvolution.onRemove = function onRemove() {
-		_preferences$7.show = this.ui.is(":visible");
-		_preferences$7.y = parseInt(this.ui.css("top"), 10);
-		_preferences$7.x = parseInt(this.ui.css("left"), 10);
+		_preferences$7.show = this._host.style.display !== "none";
+		_preferences$7.y = parseInt(this._host.style.top, 10);
+		_preferences$7.x = parseInt(this._host.style.left, 10);
 		_preferences$7.save();
 		currentMaterials = [];
 		targetEvoPetEggId = 0;
@@ -331114,6 +332397,7 @@ var init_PetEvolution = __esmMin((() => {
 	* @param {object} pet evolution info
 	*/
 	PetEvolution.SetInfo = function SetInfo(baseJobID) {
+		const root = PetEvolution.getRoot();
 		const baseData = DB.getPetByJobID(baseJobID);
 		if (!baseData) {
 			console.warn("Pet Base Data data not found");
@@ -331125,29 +332409,40 @@ var init_PetEvolution = __esmMin((() => {
 			return;
 		}
 		Client.loadFile("data/texture/userinterface/illust/" + baseData.PetIllust, function(url) {
-			PetEvolution.ui.find(".base_pet_illust").css("backgroundImage", "url(" + url + ")");
+			const el = root.querySelector(".base_pet_illust");
+			if (el) el.style.backgroundImage = `url(${url})`;
 		});
 		Client.loadFile("data/texture/userinterface/illust/" + evoData.PetIllust, function(url) {
-			PetEvolution.ui.find(".target_pet_illust").css("backgroundImage", "url(" + url + ")");
+			const el = root.querySelector(".target_pet_illust");
+			if (el) el.style.backgroundImage = `url(${url})`;
 		});
 		targetEvoPetEggId = evoData.PetEggID;
-		PetEvolution.ui.find(".base_petEggId").text(baseData.PetString).attr("data-index", baseData.PetEggID);
-		PetEvolution.ui.find(".target_petEggId").text(evoData.PetString).attr("data-index", evoData.PetEggID);
-		PetEvolution.ui.find(".base_petEggId").click(onItemInfo$1);
-		PetEvolution.ui.find(".target_petEggId").click(onItemInfo$1);
-		const reqBox = PetEvolution.ui.find(".evo_requirements");
-		reqBox.empty();
+		const basePetEggEl = root.querySelector(".base_petEggId");
+		if (basePetEggEl) {
+			basePetEggEl.textContent = baseData.PetString;
+			basePetEggEl.setAttribute("data-index", baseData.PetEggID);
+			basePetEggEl.addEventListener("click", onItemInfo$1);
+		}
+		const targetPetEggEl = root.querySelector(".target_petEggId");
+		if (targetPetEggEl) {
+			targetPetEggEl.textContent = evoData.PetString;
+			targetPetEggEl.setAttribute("data-index", evoData.PetEggID);
+			targetPetEggEl.addEventListener("click", onItemInfo$1);
+		}
+		const reqBox = root.querySelector(".evo_requirements");
+		if (!reqBox) return;
+		reqBox.innerHTML = "";
 		const targetEggID = Number(Object.keys(baseData.Evolution)[0]);
 		const materials = baseData.Evolution[targetEggID];
 		currentMaterials = materials;
 		const title = document.createElement("div");
 		title.className = "evo_requirements_title";
 		title.textContent = DB.getMessage(2569);
-		reqBox.append(title);
+		reqBox.appendChild(title);
 		const spacer = document.createElement("div");
 		spacer.className = "evo_requirement_spacer";
 		spacer.style.height = "20px";
-		reqBox.append(spacer);
+		reqBox.appendChild(spacer);
 		materials.forEach((mat) => {
 			const item = DB.getItemInfo(mat.MaterialID);
 			const itemName = item ? item.identifiedDisplayName || item.Name : `Item ${mat.MaterialID}`;
@@ -331164,16 +332459,16 @@ var init_PetEvolution = __esmMin((() => {
 			amountSpan.textContent = ` - ${mat.Amount} ea`;
 			row.appendChild(nameSpan);
 			row.appendChild(amountSpan);
-			reqBox.append(row);
+			reqBox.appendChild(row);
 		});
 		const spacer2 = document.createElement("div");
 		spacer2.className = "evo_requirement_spacer2";
 		spacer2.style.height = "35px";
-		reqBox.append(spacer2);
+		reqBox.appendChild(spacer2);
 		const title2 = document.createElement("div");
 		title2.className = "evo_requirements_title2";
 		title2.textContent = DB.getMessage(2570);
-		reqBox.append(title2);
+		reqBox.appendChild(title2);
 	};
 	/**
 	* Check if player has enough materials for evolution
@@ -333421,7 +334716,7 @@ function onUIOpen(pkt) {
 				CheckAttendance_default.cleanUI();
 				CheckAttendance_default.append();
 				CheckAttendance_default.ui.show();
-				CheckAttendance_default.ui.focus();
+				CheckAttendance_default.focus();
 			}
 			break;
 		case 8:
@@ -333652,16 +334947,22 @@ var init_ReadRodex$2 = __esmMin((() => {
 //#region src/UI/Components/Rodex/ReadRodex.css?raw
 var ReadRodex_default$1;
 var init_ReadRodex$1 = __esmMin((() => {
-	ReadRodex_default$1 = "#ReadRodex {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#ReadRodex .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n\r\n#ReadRodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#ReadRodex .body .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n#ReadRodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ReadRodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#ReadRodex .body .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#ReadRodex .body .sender .name {\r\n	margin-left: 10px;\r\n	font-weight: bold;\r\n	color: darkblue;\r\n}\r\n\r\n#ReadRodex .body .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#ReadRodex .body .title .title-text {\r\n	margin-left: 10px;\r\n}\r\n\r\n#ReadRodex .body .content {\r\n	float: left;\r\n	width: 100%;\r\n	height: 230px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .content .content-text {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 10px;\r\n	width: 280px;\r\n	height: 220px;\r\n}\r\n\r\n#ReadRodex .body .items {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .items .item-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	display: table;\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 22px;\r\n}\r\n#ReadRodex .body .items .item-list .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n	margin: 4px 5px 4px 5px;\r\n}\r\n#ReadRodex .body .items .item-list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#ReadRodex .body .items .item-list .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#ReadRodex .body .items .get-content {\r\n	position: absolute;\r\n	width: 26px;\r\n	height: 20px;\r\n	top: 10px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n\r\n#ReadRodex .body .zeny {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .zeny .image {\r\n	position: absolute;\r\n	width: 28px;\r\n	height: 25px;\r\n	top: 1px;\r\n	left: 15px;\r\n}\r\n#ReadRodex .body .zeny .value {\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 50px;\r\n}\r\n#ReadRodex .body .zeny .get-zeny {\r\n	position: absolute;\r\n	width: 26px;\r\n	height: 20px;\r\n	top: 3px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n\r\n#ReadRodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .footer .delete {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	left: 10px;\r\n}\r\n#ReadRodex .body .footer .reply {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	right: 10px;\r\n}\r\n";
+	ReadRodex_default$1 = ":host {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#ReadRodex {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#ReadRodex .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n\r\n#ReadRodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#ReadRodex .body .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n#ReadRodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#ReadRodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#ReadRodex .body .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#ReadRodex .body .sender .name {\r\n	margin-left: 10px;\r\n	font-weight: bold;\r\n	color: darkblue;\r\n}\r\n\r\n#ReadRodex .body .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#ReadRodex .body .title .title-text {\r\n	margin-left: 10px;\r\n}\r\n\r\n#ReadRodex .body .content {\r\n	float: left;\r\n	width: 100%;\r\n	height: 230px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .content .content-text {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 10px;\r\n	width: 280px;\r\n	height: 220px;\r\n}\r\n\r\n#ReadRodex .body .items {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .items .item-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	display: table;\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 22px;\r\n}\r\n#ReadRodex .body .items .item-list .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n	margin: 4px 5px 4px 5px;\r\n}\r\n#ReadRodex .body .items .item-list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#ReadRodex .body .items .item-list .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#ReadRodex .body .items .get-content {\r\n	position: absolute;\r\n	width: 26px;\r\n	height: 20px;\r\n	top: 10px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n\r\n#ReadRodex .body .zeny {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .zeny .image {\r\n	position: absolute;\r\n	width: 28px;\r\n	height: 25px;\r\n	top: 1px;\r\n	left: 15px;\r\n}\r\n#ReadRodex .body .zeny .value {\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 50px;\r\n}\r\n#ReadRodex .body .zeny .get-zeny {\r\n	position: absolute;\r\n	width: 26px;\r\n	height: 20px;\r\n	top: 3px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n\r\n#ReadRodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#ReadRodex .body .footer .delete {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	left: 10px;\r\n}\r\n#ReadRodex .body .footer .reply {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	right: 10px;\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/Rodex/ReadRodex.js
+/**
+* Helper: query inside shadow root
+*/
+function _root() {
+	return ReadRodex._shadow || ReadRodex._host;
+}
 function onClickClose(e) {
 	e.stopImmediatePropagation();
 	ReadRodex.MailID = 0;
 	ReadRodex.openType = 0;
 	ReadRodex.SenderName = "";
-	ReadRodex.ui.hide();
+	ReadRodex._host.style.display = "none";
 }
 function onClickGetItems(e) {
 	e.stopImmediatePropagation();
@@ -333673,7 +334974,7 @@ function onClickGetZeny(e) {
 }
 function onClickDelete(e) {
 	e.stopImmediatePropagation();
-	UIManager.showPromptBox(DB.getMessage(356), "ok", "cancel", function() {
+	UIManager.showPromptBox(DB.getMessage(356), "ok", "cancel", () => {
 		Rodex_default.requestDeleteRodex(ReadRodex.openType, ReadRodex.MailID);
 	});
 }
@@ -333706,72 +335007,87 @@ var init_ReadRodex = __esmMin((() => {
 	init_Renderer();
 	init_Client();
 	init_UIManager();
-	init_UIComponent();
+	init_GUIComponent();
 	init_ReadRodex$2();
 	init_ReadRodex$1();
 	init_Rodex$1();
-	ReadRodex = new UIComponent("ReadRodex", ReadRodex_default$2, ReadRodex_default$1);
+	ReadRodex = new GUIComponent("ReadRodex", ReadRodex_default$1);
 	ReadRodex.MailID = 0;
 	ReadRodex.openType = 0;
 	_preferences$5 = Preferences.get("ReadRodex", { show: false }, 1);
 	/**
+	* Render HTML
+	*/
+	ReadRodex.render = () => ReadRodex_default$2;
+	/**
 	* Initialize Component
 	*/
 	ReadRodex.onAppend = function onAppend() {
-		ReadRodex.ui.find(".right .close").on("click", onClickClose);
-		ReadRodex.ui.css({
-			top: Math.min(Math.max(0, parseInt(Rodex_default.ui.css("top"), 10)), Renderer.height - ReadRodex.ui.height()),
-			left: Math.min(Math.max(0, parseInt(Rodex_default.ui.css("left"), 10)) + 310, Renderer.width - ReadRodex.ui.width())
-		});
-		ReadRodex.draggable(ReadRodex.ui.find(".titlebar"));
+		const root = _root();
+		root.querySelector(".right .close").addEventListener("click", onClickClose);
+		const rodexTop = Rodex_default._host ? parseInt(Rodex_default._host.style.top, 10) || 0 : 0;
+		const rodexLeft = Rodex_default._host ? parseInt(Rodex_default._host.style.left, 10) || 0 : 0;
+		this._host.style.top = `${Math.min(Math.max(0, rodexTop), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, rodexLeft) + 310, Renderer.width - this._host.offsetWidth)}px`;
+		this.draggable(root.querySelector(".titlebar"));
 	};
 	/**
 	* Remove Mail from window (and so clean up items)
 	*/
 	ReadRodex.onRemove = function OnRemove() {
-		_preferences$5.show = this.ui.is(":visible");
+		_preferences$5.show = this._host.style.display !== "none";
 		_preferences$5.save();
 	};
 	ReadRodex.initData = function initData(data, mail) {
+		const root = _root();
 		ReadRodex.MailID = mail.MailID;
 		ReadRodex.openType = mail.openType;
 		ReadRodex.SenderName = mail.SenderName;
-		ReadRodex.ui.find(".name").html(mail.SenderName);
-		ReadRodex.ui.find(".title-text").html(mail.title);
-		ReadRodex.ui.find(".content-text").html(data.Textcontent);
-		ReadRodex.ui.find(".value").html(prettifyZeny(data.zeny));
-		this.ui.find(".get-content").on("click", onClickGetItems);
-		this.ui.find(".get-zeny").on("click", onClickGetZeny);
-		this.ui.find(".delete").on("click", onClickDelete);
-		this.ui.find(".reply").on("click", onClickReply);
-		const content = ReadRodex.ui.find(".item-list");
-		content.html("");
+		const nameEl = root.querySelector(".name");
+		if (nameEl) nameEl.textContent = mail.SenderName;
+		const titleEl = root.querySelector(".title-text");
+		if (titleEl) titleEl.textContent = mail.title;
+		const contentEl = root.querySelector(".content-text");
+		if (contentEl) contentEl.textContent = data.Textcontent;
+		const valueEl = root.querySelector(".value");
+		if (valueEl) valueEl.textContent = prettifyZeny(data.zeny);
+		root.querySelector(".get-content").addEventListener("click", onClickGetItems);
+		root.querySelector(".get-zeny").addEventListener("click", onClickGetZeny);
+		root.querySelector(".delete").addEventListener("click", onClickDelete);
+		root.querySelector(".reply").addEventListener("click", onClickReply);
+		const content = root.querySelector(".item-list");
+		content.innerHTML = "";
 		for (let i = 0; i < data.ItemList.length; i++) {
 			const item = data.ItemList[i];
 			const it = DB.getItemInfo(item.ITID);
-			content.append("<div class=\"item\" data-index=\"" + i + "\"><div class=\"icon\"></div><div class=\"amount\"><span class=\"count\">" + (item.count || 1) + "</span></div></div>");
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", function(url) {
-				content.find(".item[data-index=\"" + i + "\"] .icon").css("backgroundImage", "url(" + url + ")");
+			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${i}"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+			Client.loadFile(`${DB.INTERFACE_PATH}item/${it.identifiedResourceName}.bmp`, (url) => {
+				const icon = root.querySelector(`.item[data-index="${i}"] .icon`);
+				if (icon) icon.style.backgroundImage = `url(${url})`;
 			});
 		}
-		if (data.ItemList.length > 0) this.ui.find(".get-content").show();
-		else this.ui.find(".get-content").hide();
-		if (data.zeny > 0) this.ui.find(".get-zeny").show();
-		else this.ui.find(".get-zeny").hide();
-		ReadRodex.ui.show();
-		ReadRodex.ui.focus();
+		const getContentBtn = root.querySelector(".get-content");
+		if (data.ItemList.length > 0) getContentBtn.style.display = "";
+		else getContentBtn.style.display = "none";
+		const getZenyBtn = root.querySelector(".get-zeny");
+		if (data.zeny > 0) getZenyBtn.style.display = "";
+		else getZenyBtn.style.display = "none";
+		this._host.style.display = "";
+		this.focus();
 	};
 	ReadRodex.clearItemList = function clearItemList() {
-		ReadRodex.ui.find(".item-list").html("");
+		const itemList = _root().querySelector(".item-list");
+		if (itemList) itemList.innerHTML = "";
 	};
 	ReadRodex.clearZeny = function clearZeny() {
-		ReadRodex.ui.find(".value").html("");
+		const valueEl = _root().querySelector(".value");
+		if (valueEl) valueEl.textContent = "";
 	};
 	ReadRodex.close = function close() {
 		ReadRodex.MailID = 0;
 		ReadRodex.openType = 0;
 		ReadRodex.SenderName = "";
-		ReadRodex.ui.hide();
+		if (ReadRodex._host) ReadRodex._host.style.display = "none";
 	};
 	ReadRodex_default = UIManager.addComponent(ReadRodex);
 }));
