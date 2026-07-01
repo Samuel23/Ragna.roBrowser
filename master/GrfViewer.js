@@ -267678,12 +267678,12 @@ function UpdateBody(job) {
 	const isTransformation = hasTransformation.call(this);
 	for (baseJob in MountTable) if (MountTable[baseJob] === job) {
 		this.costume = job;
-		job = baseJob;
+		job = +baseJob;
 		break;
 	}
 	for (baseJob in AllMountTable) if (AllMountTable[baseJob] === job) {
 		this.costume = job;
-		job = baseJob;
+		job = +baseJob;
 		break;
 	}
 	if (!isTransformation) this._job = job;
