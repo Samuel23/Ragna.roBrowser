@@ -77891,7 +77891,7 @@ var init_preload_helper = __esmMin((() => {
 //#region src/UI/Common.css?raw
 var Common_default$1;
 var init_Common$1 = __esmMin((() => {
-	Common_default$1 = "/* Avoid input focus border */\r\n:focus {\r\n	outline: none;\r\n}\r\n::-moz-focus-inner {\r\n	border: 0;\r\n}\r\n\r\n* {\r\n	-moz-user-select: none;\r\n}\r\n\r\nhtml,\r\nbody {\r\n	touch-action: manipulation;\r\n	margin: 0;\r\n}\r\n\r\n/* Prevent mobile browser auto-zoom on input focus and double-tap */\r\n:host {\r\n	touch-action: manipulation;\r\n}\r\n\r\ninput,\r\ntextarea,\r\nselect {\r\n	touch-action: manipulation;\r\n}\r\n\r\ncanvas {\r\n	touch-action: none;\r\n}\r\n\r\nbody {\r\n	background-color: #000;\r\n	color: #484848;\r\n	font-size: 11px;\r\n	font-weight: 400;\r\n	font-family: Gulim, Dotum, 'Malgun Gothic', sans-serif, Arial;\r\n	overflow: hidden;\r\n	-webkit-user-select: none;\r\n	user-select: none;\r\n	min-width: 100vw;\r\n	min-height: 100vh;\r\n	letter-spacing: 0;\r\n	line-height: 1.2;\r\n}\r\n\r\n.title {\r\n	font-size: 12px;\r\n}\r\n\r\nbutton,\r\nui-button {\r\n	padding: 0;\r\n}\r\n\r\nui-button {\r\n	display: inline-block;\r\n}\r\n\r\n.ui-btn {\r\n	-webkit-appearance: none;\r\n	appearance: none;\r\n	display: inline-flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	height: 20px;\r\n	min-width: 52px;\r\n	padding: 0 10px;\r\n\r\n	font-size: 12px;\r\n	line-height: 1;\r\n	color: #3f3f3f;\r\n	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);\r\n\r\n	border-radius: 4px;\r\n	border: 1px solid;\r\n\r\n	/* 3D border: top right bottom left */\r\n	border-color: #cfcfcf #a9a9a9 #5f5f5f #bdbdbd;\r\n\r\n	/* glossy + subtle depth */\r\n	background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 35%, #dcdcdc 55%, #f9f9f9 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		/* top highlight */ inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		/* bottom inner edge */ 0 1px 0 rgba(0, 0, 0, 0.12); /* outer bottom shadow */\r\n\r\n	cursor: pointer;\r\n}\r\n\r\n/* Hover: hơi xanh nhẹ giống button Reset */\r\n.ui-btn:hover {\r\n	border-color: #c9d1dd #8ea2c4 #4d5f86 #b1bfd5;\r\n	background: linear-gradient(to bottom, #f7fbff 0%, #dfe8f6 35%, #c0d0ee 55%, #f0f6ff 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		0 1px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n/* Active: giống \"ấn xuống\" */\r\n.ui-btn:active {\r\n	border-color: #9fb0c9 #6f86a6 #3b4b67 #7f96b6;\r\n\r\n	background: linear-gradient(to bottom, #cdd8eb 0%, #b7c8e5 45%, #dfe9fb 100%);\r\n\r\n	box-shadow:\r\n		inset 0 2px 3px rgba(0, 0, 0, 0.18),\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.35);\r\n\r\n	transform: translateY(1px); /* cảm giác bị nhấn */\r\n}\r\n\r\n/* Disabled */\r\n.ui-btn:disabled,\r\n.ui-btn.is-disabled {\r\n	cursor: default;\r\n	color: #8f8f8f;\r\n	text-shadow: none;\r\n\r\n	border-color: #d3d3d3 #bdbdbd #9b9b9b #c9c9c9;\r\n\r\n	background: linear-gradient(to bottom, #f6f6f6 0%, #e7e7e7 55%, #fafafa 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.9),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.08),\r\n		0 1px 0 rgba(0, 0, 0, 0.08);\r\n\r\n	transform: none;\r\n}\r\n\r\n/* Hide native cursor inside Shadow DOM when custom cursor is active */\r\n:host-context(.custom-cursor) * {\r\n	cursor: none !important;\r\n}\r\n";
+	Common_default$1 = "/* Avoid input focus border */\r\n:focus {\r\n	outline: none;\r\n}\r\n::-moz-focus-inner {\r\n	border: 0;\r\n}\r\n\r\n* {\r\n	-moz-user-select: none;\r\n}\r\n\r\nhtml,\r\nbody {\r\n	touch-action: manipulation;\r\n	margin: 0;\r\n}\r\n\r\n/* Prevent mobile browser auto-zoom on input focus and double-tap */\r\n:host {\r\n	touch-action: manipulation;\r\n}\r\n\r\ninput,\r\ntextarea,\r\nselect {\r\n	touch-action: manipulation;\r\n}\r\n\r\ncanvas {\r\n	touch-action: none;\r\n}\r\n\r\nbody {\r\n	background-color: black;\r\n	font-size: 12px;\r\n	font-family: 'SCDream', Arial, Helvetica, sans-serif;\r\n	overflow: hidden;\r\n	-webkit-user-select: none;\r\n	user-select: none;\r\n	min-width: 100vw;\r\n	min-height: 100vh;\r\n	letter-spacing: 0;\r\n	line-height: 1.2;\r\n}\r\n\r\n.title {\r\n	font-size: 12px;\r\n}\r\n\r\nbutton,\r\nui-button {\r\n	padding: 0;\r\n}\r\n\r\nui-button {\r\n	display: inline-block;\r\n}\r\n\r\n.ui-btn {\r\n	-webkit-appearance: none;\r\n	appearance: none;\r\n	display: inline-flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	height: 20px;\r\n	min-width: 52px;\r\n	padding: 0 10px;\r\n\r\n	font-size: 12px;\r\n	line-height: 1;\r\n	color: #3f3f3f;\r\n	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.85);\r\n\r\n	border-radius: 4px;\r\n	border: 1px solid;\r\n\r\n	/* 3D border: top right bottom left */\r\n	border-color: #cfcfcf #a9a9a9 #5f5f5f #bdbdbd;\r\n\r\n	/* glossy + subtle depth */\r\n	background: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 35%, #dcdcdc 55%, #f9f9f9 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		/* top highlight */ inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		/* bottom inner edge */ 0 1px 0 rgba(0, 0, 0, 0.12); /* outer bottom shadow */\r\n\r\n	cursor: pointer;\r\n}\r\n\r\n/* Hover: hơi xanh nhẹ giống button Reset */\r\n.ui-btn:hover {\r\n	border-color: #c9d1dd #8ea2c4 #4d5f86 #b1bfd5;\r\n	background: linear-gradient(to bottom, #f7fbff 0%, #dfe8f6 35%, #c0d0ee 55%, #f0f6ff 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.95),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.12),\r\n		0 1px 0 rgba(0, 0, 0, 0.12);\r\n}\r\n\r\n/* Active: giống \"ấn xuống\" */\r\n.ui-btn:active {\r\n	border-color: #9fb0c9 #6f86a6 #3b4b67 #7f96b6;\r\n\r\n	background: linear-gradient(to bottom, #cdd8eb 0%, #b7c8e5 45%, #dfe9fb 100%);\r\n\r\n	box-shadow:\r\n		inset 0 2px 3px rgba(0, 0, 0, 0.18),\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.35);\r\n\r\n	transform: translateY(1px); /* cảm giác bị nhấn */\r\n}\r\n\r\n/* Disabled */\r\n.ui-btn:disabled,\r\n.ui-btn.is-disabled {\r\n	cursor: default;\r\n	color: #8f8f8f;\r\n	text-shadow: none;\r\n\r\n	border-color: #d3d3d3 #bdbdbd #9b9b9b #c9c9c9;\r\n\r\n	background: linear-gradient(to bottom, #f6f6f6 0%, #e7e7e7 55%, #fafafa 100%);\r\n\r\n	box-shadow:\r\n		inset 0 1px 0 rgba(255, 255, 255, 0.9),\r\n		inset 0 -1px 0 rgba(0, 0, 0, 0.08),\r\n		0 1px 0 rgba(0, 0, 0, 0.08);\r\n\r\n	transform: none;\r\n}\r\n\r\n/* Hide native cursor inside Shadow DOM when custom cursor is active */\r\n:host-context(.custom-cursor) * {\r\n	cursor: none !important;\r\n}\r\n";
 }));
 //#endregion
 //#region src/Controls/MouseEventHandler.js
@@ -218078,7 +218078,7 @@ function _root$17() {
 	return PartyFriendsV0._shadow || PartyFriendsV0._host;
 }
 /**
-* Helper: escape HTML (replace jQuery.escape)
+* Helper: escape HTML
 */
 function _escapeHTML$7(text) {
 	const div = document.createElement("div");
@@ -222975,7 +222975,6 @@ var init_SkillDescription$1 = __esmMin((() => {
 /**
 * Sanitize and format RO text with ^rrggbb color codes, ^nItemID^NNN
 * item name substitution, and newline conversion.
-* Replicates the logic from Utils/jquery.js overridden .text() method.
 *
 * @param {string} value - raw skill description text
 * @returns {string} safe HTML string
@@ -223485,7 +223484,7 @@ function _root$13(comp) {
 	return comp.getRoot();
 }
 /**
-* Helper: escape HTML (replace jQuery.escape)
+* Helper: escape HTML
 */
 function _escapeHTML$5(text) {
 	const div = document.createElement("div");
@@ -238615,38 +238614,17 @@ function onSwitchTab$2() {
 	requestFilter$2();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$38.tab !== InventoryV3.TAB.FAV) {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "none";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "none";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "none";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "none";
-		const sort = root.querySelector(".sort");
-		if (sort) sort.style.display = "none";
-	} else {
-		if (_preferences$38.npcsalelock) {
-			const dealOn = root.querySelector(".deallock_on");
-			if (dealOn) dealOn.style.display = "";
-			const lockOverlay = root.querySelector(".lockoverlay");
-			if (lockOverlay) lockOverlay.style.display = "";
-			const dealOff = root.querySelector(".deallock_off");
-			if (dealOff) dealOff.style.display = "none";
-		} else {
-			const dealOn = root.querySelector(".deallock_on");
-			if (dealOn) dealOn.style.display = "none";
-			const lockOverlay = root.querySelector(".lockoverlay");
-			if (lockOverlay) lockOverlay.style.display = "none";
-			const lockMsg = root.querySelector(".lockoverlaymsg");
-			if (lockMsg) lockMsg.style.display = "none";
-			const dealOff = root.querySelector(".deallock_off");
-			if (dealOff) dealOff.style.display = "";
-		}
-		const sort = root.querySelector(".sort");
-		if (sort) sort.style.display = "";
-	}
+	const dealOn = root.querySelector(".deallock_on");
+	const dealOff = root.querySelector(".deallock_off");
+	const lockOverlay = root.querySelector(".lockoverlay");
+	const lockMsg = root.querySelector(".lockoverlaymsg");
+	const sort = root.querySelector(".sort");
+	const onFavTab = _preferences$38.tab === InventoryV3.TAB.FAV;
+	if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$38.npcsalelock));
+	if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$38.npcsalelock));
+	if (lockOverlay) lockOverlay.classList.toggle("hidden", !(onFavTab && _preferences$38.npcsalelock));
+	if (lockMsg) lockMsg.classList.add("hidden");
+	if (sort) sort.classList.toggle("hidden", !onFavTab);
 }
 function onToggleReduction$1() {
 	const panel = InventoryV3.getRoot().querySelector(".panel");
@@ -238938,28 +238916,24 @@ function onNPCLock() {
 	_preferences$38.npcsalelock = !_preferences$38.npcsalelock;
 	InventoryV3.npcsalelock = _preferences$38.npcsalelock;
 	const root = InventoryV3.getRoot();
+	const dealOn = root.querySelector(".deallock_on");
+	const dealOff = root.querySelector(".deallock_off");
+	if (dealOn) dealOn.classList.toggle("hidden", !_preferences$38.npcsalelock);
+	if (dealOff) dealOff.classList.toggle("hidden", _preferences$38.npcsalelock);
 	if (_preferences$38.npcsalelock) {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "";
+		if (lockOverlay) lockOverlay.classList.remove("hidden");
 		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "none";
+		if (lockMsg) lockMsg.classList.remove("hidden");
 		lockOverlayTimeout = setTimeout(() => {
 			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.style.display = "none";
+			if (msg) msg.classList.add("hidden");
 		}, 3e3);
 	} else {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "none";
 		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "none";
+		if (lockOverlay) lockOverlay.classList.add("hidden");
 		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "none";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "";
+		if (lockMsg) lockMsg.classList.add("hidden");
 	}
 }
 var InventoryV3, _realSize$2, _preferences$38, lockOverlayTimeout, InventoryV3_default;
@@ -239034,7 +239008,10 @@ var init_InventoryV3 = __esmMin((() => {
 		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$1);
 		root.querySelectorAll(".tabs button").forEach((btn) => {
 			btn.addEventListener("mousedown", onSwitchTab$2);
-			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
+			btn.addEventListener("dragover", (e) => {
+				e.preventDefault();
+				e.stopImmediatePropagation();
+			});
 			btn.addEventListener("drop", onTabDrop);
 		});
 		const extendBtn = root.querySelector(".footer .extend");
@@ -239096,16 +239073,13 @@ var init_InventoryV3 = __esmMin((() => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$38.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$38.tab !== InventoryV3.TAB.FAV) {
-			if (lockSale) lockSale.style.display = "none";
-			const sortEl = root.querySelector(".sort");
-			if (sortEl) sortEl.style.display = "none";
-		} else {
-			if (lockSale) lockSale.style.display = "";
-			const sortEl = root.querySelector(".sort");
-			if (sortEl) sortEl.style.display = "";
-		}
+		const dealOn = root.querySelector(".deallock_on");
+		const dealOff = root.querySelector(".deallock_off");
+		const onFavTab = _preferences$38.tab === InventoryV3.TAB.FAV;
+		if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$38.npcsalelock));
+		if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$38.npcsalelock));
+		const sortEl = root.querySelector(".sort");
+		if (sortEl) sortEl.classList.toggle("hidden", !onFavTab);
 		const itemExpansion = root.querySelector(".item_expansion");
 		if (itemExpansion) itemExpansion.addEventListener("click", onInventoryExpand);
 		const itemDropLock = root.querySelector(".item_drop_lock");
@@ -239116,7 +239090,7 @@ var init_InventoryV3 = __esmMin((() => {
 		const overlayClose = root.querySelector(".lockoverlayclose");
 		if (overlayClose) overlayClose.addEventListener("click", () => {
 			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.style.display = "none";
+			if (msg) msg.classList.add("hidden");
 			clearTimeout(lockOverlayTimeout);
 		});
 		const sortBtn = root.querySelector(".sort");
@@ -295791,20 +295765,47 @@ function loadFontFromClient(fontPath) {
 		Client.loadFile(fontPath + "SCDream6.otf", function(fontData6) {
 			const fontUrl6 = "data:font/opentype;base64," + arrayBufferToBase64(fontData6);
 			const style = document.createElement("style");
-			style.textContent = `  						
+			style.textContent = `
 							@font-face {  
 								font-family: 'SCDream';  
-								src: url('${fontUrl4}') format('opentype');  
-								font-weight: 400; /* Normal */  
+								src: url('${fontUrl6}') format('opentype');  
+								font-weight: 100; /* Thin */  
 								font-style: normal;  
 							}  
 							
 							@font-face {  
 								font-family: 'SCDream';  
 								src: url('${fontUrl6}') format('opentype');  
+								font-weight: 200; /* Extra Light */  
+								font-style: normal;  
+							}  
+							
+							@font-face {  
+								font-family: 'SCDream';  
+								src: url('${fontUrl6}') format('opentype');  
+								font-weight: 300; /* Light */  
+								font-style: normal;  
+							}  											
+							@font-face {  
+								font-family: 'SCDream';  
+								src: url('${fontUrl6}') format('opentype');  
+								font-weight: 400; /* Normal */  
+								font-style: normal;  
+							}  
+							
+							@font-face {  
+								font-family: 'SCDream';  
+								src: url('${fontUrl4}') format('opentype');  
 								font-weight: 700; /* Bold */  
 								font-style: normal;  
 							}
+								
+							@font-face {  
+								font-family: 'SCDream';  
+								src: url('${fontUrl4}') format('opentype');  
+								font-weight: 900; /* Black/Bolder */  
+								font-style: normal;  
+							}  								
 						`;
 			document.head.appendChild(style);
 		}, function(error) {
@@ -298518,7 +298519,7 @@ var init_DBManager = __esmMin((() => {
 					if (index === count && DB.onReady) DB.onReady();
 				};
 			}
-			if (Configs.get("useSystemFolderFont", false)) loadFontFromClient("System/Font/");
+			loadFontFromClient("System/Font/");
 			loadTable("data/mp3nametable.txt", "#", 2, function(_index, key, val) {
 				(MapTable[key] || (MapTable[key] = {})).mp3 = val;
 			}, onLoad());
@@ -341184,7 +341185,7 @@ var init_PreLoader = __esmMin((() => {
 /**
 * Helper: query inside shadow DOM
 */
-function $(sel) {
+function querySelector(sel) {
 	return Intro._shadow.querySelector(sel);
 }
 /**
@@ -341263,7 +341264,7 @@ function processDropEvent(event) {
 function addFiles(files) {
 	if (!files.length) return;
 	Intro.files.push.apply(Intro.files, files);
-	const msgEl = $(".msg");
+	const msgEl = querySelector(".msg");
 	if (msgEl) msgEl.textContent = Intro.files.length + " files selected";
 }
 var Intro, _resizeHandler, Intro_default;
