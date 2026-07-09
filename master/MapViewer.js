@@ -223326,7 +223326,7 @@ var init_WinStats$2 = __esmMin((() => {
 * @param {string}  name      - component name
 * @param {string}  htmlText  - raw HTML
 * @param {string}  cssText   - raw CSS
-* @param {boolean} hasTraits - whether this version has trait stats (V3)
+* @param {boolean} hasTraits - whether this version has trait stats
 */
 function createWinStats({ name, htmlText, cssText, hasTraits }) {
 	const Component = new GUIComponent(name, cssText);
