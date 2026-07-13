@@ -11314,7 +11314,7 @@ var init_MemoryManager = __esmMin((() => {
 //#endregion
 //#region src/Network/Packets/packets2003_len_main.js
 var packets2003_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2003_len_main_default });
-function init$36(packetver) {
+function init$37(packetver) {
 	length_list$22[100] = 55;
 	length_list$22[101] = 17;
 	length_list$22[102] = 3;
@@ -11722,12 +11722,12 @@ function init$36(packetver) {
 var length_list$22, packets2003_len_main_default;
 var init_packets2003_len_main = __esmMin((() => {
 	length_list$22 = new Array();
-	packets2003_len_main_default = { init: init$36 };
+	packets2003_len_main_default = { init: init$37 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2004_len_main.js
 var packets2004_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2004_len_main_default });
-function init$35(packetver) {
+function init$36(packetver) {
 	length_list$21[100] = 55;
 	length_list$21[101] = 17;
 	length_list$21[102] = 3;
@@ -12335,12 +12335,12 @@ function init$35(packetver) {
 var length_list$21, packets2004_len_main_default;
 var init_packets2004_len_main = __esmMin((() => {
 	length_list$21 = new Array();
-	packets2004_len_main_default = { init: init$35 };
+	packets2004_len_main_default = { init: init$36 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2005_len_main.js
 var packets2005_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2005_len_main_default });
-function init$34(packetver) {
+function init$35(packetver) {
 	length_list$20[100] = 55;
 	length_list$20[101] = 17;
 	length_list$20[102] = 3;
@@ -12965,12 +12965,12 @@ function init$34(packetver) {
 var length_list$20, packets2005_len_main_default;
 var init_packets2005_len_main = __esmMin((() => {
 	length_list$20 = new Array();
-	packets2005_len_main_default = { init: init$34 };
+	packets2005_len_main_default = { init: init$35 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2006_len_main.js
 var packets2006_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2006_len_main_default });
-function init$33(packetver) {
+function init$34(packetver) {
 	length_list$19[100] = 55;
 	length_list$19[101] = 17;
 	length_list$19[102] = 3;
@@ -13564,12 +13564,12 @@ function init$33(packetver) {
 var length_list$19, packets2006_len_main_default;
 var init_packets2006_len_main = __esmMin((() => {
 	length_list$19 = new Array();
-	packets2006_len_main_default = { init: init$33 };
+	packets2006_len_main_default = { init: init$34 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2007_len_main.js
 var packets2007_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2007_len_main_default });
-function init$32(packetver) {
+function init$33(packetver) {
 	length_list$18[100] = 55;
 	length_list$18[101] = 17;
 	length_list$18[102] = 3;
@@ -14256,12 +14256,12 @@ function init$32(packetver) {
 var length_list$18, packets2007_len_main_default;
 var init_packets2007_len_main = __esmMin((() => {
 	length_list$18 = new Array();
-	packets2007_len_main_default = { init: init$32 };
+	packets2007_len_main_default = { init: init$33 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2008_len_main.js
 var packets2008_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2008_len_main_default });
-function init$31(packetver) {
+function init$32(packetver) {
 	length_list$17[100] = 55;
 	length_list$17[101] = 17;
 	length_list$17[102] = 3;
@@ -32445,12 +32445,12 @@ function init$31(packetver) {
 var length_list$17, packets2008_len_main_default;
 var init_packets2008_len_main = __esmMin((() => {
 	length_list$17 = new Array();
-	packets2008_len_main_default = { init: init$31 };
+	packets2008_len_main_default = { init: init$32 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2009_len_main.js
 var packets2009_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2009_len_main_default });
-function init$30(packetver) {
+function init$31(packetver) {
 	length_list$16[100] = 55;
 	length_list$16[101] = 17;
 	length_list$16[102] = 3;
@@ -38687,12 +38687,12 @@ function init$30(packetver) {
 var length_list$16, packets2009_len_main_default;
 var init_packets2009_len_main = __esmMin((() => {
 	length_list$16 = new Array();
-	packets2009_len_main_default = { init: init$30 };
+	packets2009_len_main_default = { init: init$31 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2010_len_main.js
 var packets2010_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2010_len_main_default });
-function init$29(packetver) {
+function init$30(packetver) {
 	length_list$15[100] = 55;
 	length_list$15[101] = 17;
 	length_list$15[102] = 3;
@@ -40166,12 +40166,12 @@ function init$29(packetver) {
 var length_list$15, packets2010_len_main_default;
 var init_packets2010_len_main = __esmMin((() => {
 	length_list$15 = new Array();
-	packets2010_len_main_default = { init: init$29 };
+	packets2010_len_main_default = { init: init$30 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2011_len_main.js
 var packets2011_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2011_len_main_default });
-function init$28(packetver) {
+function init$29(packetver) {
 	length_list$14[100] = 55;
 	length_list$14[101] = 17;
 	length_list$14[102] = 3;
@@ -43101,12 +43101,12 @@ function init$28(packetver) {
 var length_list$14, packets2011_len_main_default;
 var init_packets2011_len_main = __esmMin((() => {
 	length_list$14 = new Array();
-	packets2011_len_main_default = { init: init$28 };
+	packets2011_len_main_default = { init: init$29 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2012_len_main.js
 var packets2012_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2012_len_main_default });
-function init$27(packetver) {
+function init$28(packetver) {
 	length_list$13[100] = 55;
 	length_list$13[101] = 17;
 	length_list$13[102] = 3;
@@ -46521,12 +46521,12 @@ function init$27(packetver) {
 var length_list$13, packets2012_len_main_default;
 var init_packets2012_len_main = __esmMin((() => {
 	length_list$13 = new Array();
-	packets2012_len_main_default = { init: init$27 };
+	packets2012_len_main_default = { init: init$28 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2013_len_main.js
 var packets2013_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2013_len_main_default });
-function init$26(packetver) {
+function init$27(packetver) {
 	length_list$12[100] = 55;
 	length_list$12[101] = 17;
 	length_list$12[102] = 3;
@@ -50015,12 +50015,12 @@ function init$26(packetver) {
 var length_list$12, packets2013_len_main_default;
 var init_packets2013_len_main = __esmMin((() => {
 	length_list$12 = new Array();
-	packets2013_len_main_default = { init: init$26 };
+	packets2013_len_main_default = { init: init$27 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2014_len_main.js
 var packets2014_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2014_len_main_default });
-function init$25(packetver) {
+function init$26(packetver) {
 	length_list$11[100] = 55;
 	length_list$11[101] = 17;
 	length_list$11[102] = 3;
@@ -53600,12 +53600,12 @@ function init$25(packetver) {
 var length_list$11, packets2014_len_main_default;
 var init_packets2014_len_main = __esmMin((() => {
 	length_list$11 = new Array();
-	packets2014_len_main_default = { init: init$25 };
+	packets2014_len_main_default = { init: init$26 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2015_len_main.js
 var packets2015_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2015_len_main_default });
-function init$24(packetver) {
+function init$25(packetver) {
 	length_list$10[100] = 55;
 	length_list$10[101] = 17;
 	length_list$10[102] = 3;
@@ -57037,12 +57037,12 @@ function init$24(packetver) {
 var length_list$10, packets2015_len_main_default;
 var init_packets2015_len_main = __esmMin((() => {
 	length_list$10 = new Array();
-	packets2015_len_main_default = { init: init$24 };
+	packets2015_len_main_default = { init: init$25 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2016_len_main.js
 var packets2016_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2016_len_main_default });
-function init$23(packetver) {
+function init$24(packetver) {
 	length_list$9[100] = 55;
 	length_list$9[101] = 17;
 	length_list$9[102] = 3;
@@ -60640,12 +60640,12 @@ function init$23(packetver) {
 var length_list$9, packets2016_len_main_default;
 var init_packets2016_len_main = __esmMin((() => {
 	length_list$9 = new Array();
-	packets2016_len_main_default = { init: init$23 };
+	packets2016_len_main_default = { init: init$24 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2017_len_main.js
 var packets2017_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2017_len_main_default });
-function init$22(packetver) {
+function init$23(packetver) {
 	length_list$8[100] = 55;
 	length_list$8[101] = 17;
 	length_list$8[102] = 3;
@@ -64223,12 +64223,12 @@ function init$22(packetver) {
 var length_list$8, packets2017_len_main_default;
 var init_packets2017_len_main = __esmMin((() => {
 	length_list$8 = new Array();
-	packets2017_len_main_default = { init: init$22 };
+	packets2017_len_main_default = { init: init$23 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2018_len_main.js
 var packets2018_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2018_len_main_default });
-function init$21(packetver) {
+function init$22(packetver) {
 	length_list$7[100] = 55;
 	length_list$7[101] = 17;
 	length_list$7[102] = 3;
@@ -66132,12 +66132,12 @@ function init$21(packetver) {
 var length_list$7, packets2018_len_main_default;
 var init_packets2018_len_main = __esmMin((() => {
 	length_list$7 = new Array();
-	packets2018_len_main_default = { init: init$21 };
+	packets2018_len_main_default = { init: init$22 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2019_len_main.js
 var packets2019_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2019_len_main_default });
-function init$20(packetver) {
+function init$21(packetver) {
 	length_list$6[100] = 55;
 	length_list$6[101] = 17;
 	length_list$6[102] = 3;
@@ -67715,12 +67715,12 @@ function init$20(packetver) {
 var length_list$6, packets2019_len_main_default;
 var init_packets2019_len_main = __esmMin((() => {
 	length_list$6 = new Array();
-	packets2019_len_main_default = { init: init$20 };
+	packets2019_len_main_default = { init: init$21 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2020_len_main.js
 var packets2020_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2020_len_main_default });
-function init$19(packetver) {
+function init$20(packetver) {
 	length_list$5[100] = 55;
 	length_list$5[101] = 17;
 	length_list$5[102] = 3;
@@ -69305,12 +69305,12 @@ function init$19(packetver) {
 var length_list$5, packets2020_len_main_default;
 var init_packets2020_len_main = __esmMin((() => {
 	length_list$5 = new Array();
-	packets2020_len_main_default = { init: init$19 };
+	packets2020_len_main_default = { init: init$20 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2021_len_main.js
 var packets2021_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2021_len_main_default });
-function init$18(packetver) {
+function init$19(packetver) {
 	length_list$4[100] = 55;
 	length_list$4[101] = 17;
 	length_list$4[102] = 3;
@@ -70916,12 +70916,12 @@ function init$18(packetver) {
 var length_list$4, packets2021_len_main_default;
 var init_packets2021_len_main = __esmMin((() => {
 	length_list$4 = new Array();
-	packets2021_len_main_default = { init: init$18 };
+	packets2021_len_main_default = { init: init$19 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2022_len_main.js
 var packets2022_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2022_len_main_default });
-function init$17(packetver) {
+function init$18(packetver) {
 	length_list$3[100] = 55;
 	length_list$3[101] = 17;
 	length_list$3[102] = 3;
@@ -72533,12 +72533,12 @@ function init$17(packetver) {
 var length_list$3, packets2022_len_main_default;
 var init_packets2022_len_main = __esmMin((() => {
 	length_list$3 = new Array();
-	packets2022_len_main_default = { init: init$17 };
+	packets2022_len_main_default = { init: init$18 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2023_len_main.js
 var packets2023_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2023_len_main_default });
-function init$16(packetver) {
+function init$17(packetver) {
 	length_list$2[100] = 55;
 	length_list$2[101] = 17;
 	length_list$2[102] = 3;
@@ -74204,12 +74204,12 @@ function init$16(packetver) {
 var length_list$2, packets2023_len_main_default;
 var init_packets2023_len_main = __esmMin((() => {
 	length_list$2 = new Array();
-	packets2023_len_main_default = { init: init$16 };
+	packets2023_len_main_default = { init: init$17 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2024_len_main.js
 var packets2024_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2024_len_main_default });
-function init$15(packetver) {
+function init$16(packetver) {
 	length_list$1[100] = 55;
 	length_list$1[101] = 17;
 	length_list$1[102] = 3;
@@ -75915,12 +75915,12 @@ function init$15(packetver) {
 var length_list$1, packets2024_len_main_default;
 var init_packets2024_len_main = __esmMin((() => {
 	length_list$1 = new Array();
-	packets2024_len_main_default = { init: init$15 };
+	packets2024_len_main_default = { init: init$16 };
 }));
 //#endregion
 //#region src/Network/Packets/packets2025_len_main.js
 var packets2025_len_main_exports = /* @__PURE__ */ __exportAll({ default: () => packets2025_len_main_default });
-function init$14(packetver) {
+function init$15(packetver) {
 	length_list[100] = 55;
 	length_list[101] = 17;
 	length_list[102] = 3;
@@ -77666,7 +77666,7 @@ function init$14(packetver) {
 var length_list, packets2025_len_main_default;
 var init_packets2025_len_main = __esmMin((() => {
 	length_list = new Array();
-	packets2025_len_main_default = { init: init$14 };
+	packets2025_len_main_default = { init: init$15 };
 }));
 //#endregion
 //#region src/Network/PacketLength.js
@@ -77675,7 +77675,7 @@ var init_packets2025_len_main = __esmMin((() => {
 *
 * @param {number} packetver - packet version (clientdate)
 */
-function init$13(packetver) {
+function init$14(packetver) {
 	packetver = parseInt(packetver);
 	const years = [
 		2025,
@@ -77776,7 +77776,7 @@ var init_PacketLength = __esmMin((() => {
 	};
 	packets_len = new Array();
 	PacketLength_default = {
-		init: init$13,
+		init: init$14,
 		getPacketLength
 	};
 }));
@@ -78869,7 +78869,7 @@ var init_Controls = __esmMin((() => {
 }));
 //#endregion
 //#region src/Vendors/gl-matrix.js
-var exports$3, GLMAT_EPSILON, GLMAT_ARRAY_TYPE, GLMAT_RANDOM, glMatrix, vec2$4, vec3$8, vec4$8, mat2$1, mat2d, mat3$6, mat4$23, quat$2;
+var exports$3, GLMAT_EPSILON, GLMAT_ARRAY_TYPE, GLMAT_RANDOM, glMatrix, vec2$4, vec3$8, vec4$8, mat2$1, mat2d, mat3$7, mat4$24, quat$2;
 var init_gl_matrix$1 = __esmMin((() => {
 	exports$3 = {};
 	if (!GLMAT_EPSILON) GLMAT_EPSILON = 1e-6;
@@ -80531,13 +80531,13 @@ var init_gl_matrix$1 = __esmMin((() => {
 		return "mat2d(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ")";
 	};
 	if (typeof exports$3 !== "undefined") exports$3.mat2d = mat2d;
-	mat3$6 = {};
+	mat3$7 = {};
 	/**
 	* Creates a new identity mat3
 	*
 	* @returns {mat3} a new 3x3 matrix
 	*/
-	mat3$6.create = function() {
+	mat3$7.create = function() {
 		var out = new GLMAT_ARRAY_TYPE(9);
 		out[0] = 1;
 		out[1] = 0;
@@ -80557,7 +80557,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a   the source 4x4 matrix
 	* @returns {mat3} out
 	*/
-	mat3$6.fromMat4 = function(out, a) {
+	mat3$7.fromMat4 = function(out, a) {
 		out[0] = a[0];
 		out[1] = a[1];
 		out[2] = a[2];
@@ -80575,7 +80575,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} a matrix to clone
 	* @returns {mat3} a new 3x3 matrix
 	*/
-	mat3$6.clone = function(a) {
+	mat3$7.clone = function(a) {
 		var out = new GLMAT_ARRAY_TYPE(9);
 		out[0] = a[0];
 		out[1] = a[1];
@@ -80595,7 +80595,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} a the source matrix
 	* @returns {mat3} out
 	*/
-	mat3$6.copy = function(out, a) {
+	mat3$7.copy = function(out, a) {
 		out[0] = a[0];
 		out[1] = a[1];
 		out[2] = a[2];
@@ -80613,7 +80613,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} out the receiving matrix
 	* @returns {mat3} out
 	*/
-	mat3$6.identity = function(out) {
+	mat3$7.identity = function(out) {
 		out[0] = 1;
 		out[1] = 0;
 		out[2] = 0;
@@ -80632,7 +80632,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} a the source matrix
 	* @returns {mat3} out
 	*/
-	mat3$6.transpose = function(out, a) {
+	mat3$7.transpose = function(out, a) {
 		if (out === a) {
 			var a01 = a[1], a02 = a[2], a12 = a[5];
 			out[1] = a[3];
@@ -80661,7 +80661,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} a the source matrix
 	* @returns {mat3} out
 	*/
-	mat3$6.invert = function(out, a) {
+	mat3$7.invert = function(out, a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a10 = a[3], a11 = a[4], a12 = a[5], a20 = a[6], a21 = a[7], a22 = a[8], b01 = a22 * a11 - a12 * a21, b11 = -a22 * a10 + a12 * a20, b21 = a21 * a10 - a11 * a20, det = a00 * b01 + a01 * b11 + a02 * b21;
 		if (!det) return null;
 		det = 1 / det;
@@ -80683,7 +80683,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} a the source matrix
 	* @returns {mat3} out
 	*/
-	mat3$6.adjoint = function(out, a) {
+	mat3$7.adjoint = function(out, a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a10 = a[3], a11 = a[4], a12 = a[5], a20 = a[6], a21 = a[7], a22 = a[8];
 		out[0] = a11 * a22 - a12 * a21;
 		out[1] = a02 * a21 - a01 * a22;
@@ -80702,7 +80702,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} a the source matrix
 	* @returns {Number} determinant of a
 	*/
-	mat3$6.determinant = function(a) {
+	mat3$7.determinant = function(a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a10 = a[3], a11 = a[4], a12 = a[5], a20 = a[6], a21 = a[7], a22 = a[8];
 		return a00 * (a22 * a11 - a12 * a21) + a01 * (-a22 * a10 + a12 * a20) + a02 * (a21 * a10 - a11 * a20);
 	};
@@ -80714,7 +80714,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} b the second operand
 	* @returns {mat3} out
 	*/
-	mat3$6.multiply = function(out, a, b) {
+	mat3$7.multiply = function(out, a, b) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a10 = a[3], a11 = a[4], a12 = a[5], a20 = a[6], a21 = a[7], a22 = a[8], b00 = b[0], b01 = b[1], b02 = b[2], b10 = b[3], b11 = b[4], b12 = b[5], b20 = b[6], b21 = b[7], b22 = b[8];
 		out[0] = b00 * a00 + b01 * a10 + b02 * a20;
 		out[1] = b00 * a01 + b01 * a11 + b02 * a21;
@@ -80731,7 +80731,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* Alias for {@link mat3.multiply}
 	* @function
 	*/
-	mat3$6.mul = mat3$6.multiply;
+	mat3$7.mul = mat3$7.multiply;
 	/**
 	* Translate a mat3 by the given vector
 	*
@@ -80740,7 +80740,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec2} v vector to translate by
 	* @returns {mat3} out
 	*/
-	mat3$6.translate = function(out, a, v) {
+	mat3$7.translate = function(out, a, v) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a10 = a[3], a11 = a[4], a12 = a[5], a20 = a[6], a21 = a[7], a22 = a[8], x = v[0], y = v[1];
 		out[0] = a00;
 		out[1] = a01;
@@ -80761,7 +80761,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {Number} rad the angle to rotate the matrix by
 	* @returns {mat3} out
 	*/
-	mat3$6.rotate = function(out, a, rad) {
+	mat3$7.rotate = function(out, a, rad) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a10 = a[3], a11 = a[4], a12 = a[5], a20 = a[6], a21 = a[7], a22 = a[8], s = Math.sin(rad), c = Math.cos(rad);
 		out[0] = c * a00 + s * a10;
 		out[1] = c * a01 + s * a11;
@@ -80782,7 +80782,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec2} v the vec2 to scale the matrix by
 	* @returns {mat3} out
 	**/
-	mat3$6.scale = function(out, a, v) {
+	mat3$7.scale = function(out, a, v) {
 		var x = v[0], y = v[1];
 		out[0] = x * a[0];
 		out[1] = x * a[1];
@@ -80802,7 +80802,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat2d} a the matrix to copy
 	* @returns {mat3} out
 	**/
-	mat3$6.fromMat2d = function(out, a) {
+	mat3$7.fromMat2d = function(out, a) {
 		out[0] = a[0];
 		out[1] = a[1];
 		out[2] = 0;
@@ -80822,7 +80822,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	*
 	* @returns {mat3} out
 	*/
-	mat3$6.fromQuat = function(out, q) {
+	mat3$7.fromQuat = function(out, q) {
 		var x = q[0], y = q[1], z = q[2], w = q[3], x2 = x + x, y2 = y + y, z2 = z + z, xx = x * x2, xy = x * y2, xz = x * z2, yy = y * y2, yz = y * z2, zz = z * z2, wx = w * x2, wy = w * y2, wz = w * z2;
 		out[0] = 1 - (yy + zz);
 		out[3] = xy + wz;
@@ -80843,7 +80843,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	*
 	* @returns {mat3} out
 	*/
-	mat3$6.normalFromMat4 = function(out, a) {
+	mat3$7.normalFromMat4 = function(out, a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32, det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 		if (!det) return null;
 		det = 1 / det;
@@ -80864,17 +80864,17 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat3} mat matrix to represent as a string
 	* @returns {String} string representation of the matrix
 	*/
-	mat3$6.str = function(a) {
+	mat3$7.str = function(a) {
 		return "mat3(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ")";
 	};
-	if (typeof exports$3 !== "undefined") exports$3.mat3 = mat3$6;
-	mat4$23 = {};
+	if (typeof exports$3 !== "undefined") exports$3.mat3 = mat3$7;
+	mat4$24 = {};
 	/**
 	* Creates a new identity mat4
 	*
 	* @returns {mat4} a new 4x4 matrix
 	*/
-	mat4$23.create = function() {
+	mat4$24.create = function() {
 		var out = new GLMAT_ARRAY_TYPE(16);
 		out[0] = 1;
 		out[1] = 0;
@@ -80900,7 +80900,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a matrix to clone
 	* @returns {mat4} a new 4x4 matrix
 	*/
-	mat4$23.clone = function(a) {
+	mat4$24.clone = function(a) {
 		var out = new GLMAT_ARRAY_TYPE(16);
 		out[0] = a[0];
 		out[1] = a[1];
@@ -80927,7 +80927,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a the source matrix
 	* @returns {mat4} out
 	*/
-	mat4$23.copy = function(out, a) {
+	mat4$24.copy = function(out, a) {
 		out[0] = a[0];
 		out[1] = a[1];
 		out[2] = a[2];
@@ -80952,7 +80952,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} out the receiving matrix
 	* @returns {mat4} out
 	*/
-	mat4$23.identity = function(out) {
+	mat4$24.identity = function(out) {
 		out[0] = 1;
 		out[1] = 0;
 		out[2] = 0;
@@ -80978,7 +80978,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a the source matrix
 	* @returns {mat4} out
 	*/
-	mat4$23.transpose = function(out, a) {
+	mat4$24.transpose = function(out, a) {
 		if (out === a) {
 			var a01 = a[1], a02 = a[2], a03 = a[3], a12 = a[6], a13 = a[7], a23 = a[11];
 			out[1] = a[4];
@@ -81020,7 +81020,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a the source matrix
 	* @returns {mat4} out
 	*/
-	mat4$23.invert = function(out, a) {
+	mat4$24.invert = function(out, a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31, b11 = a22 * a33 - a23 * a32, det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 		if (!det) return null;
 		det = 1 / det;
@@ -81049,7 +81049,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a the source matrix
 	* @returns {mat4} out
 	*/
-	mat4$23.adjoint = function(out, a) {
+	mat4$24.adjoint = function(out, a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
 		out[0] = a11 * (a22 * a33 - a23 * a32) - a21 * (a12 * a33 - a13 * a32) + a31 * (a12 * a23 - a13 * a22);
 		out[1] = -(a01 * (a22 * a33 - a23 * a32) - a21 * (a02 * a33 - a03 * a32) + a31 * (a02 * a23 - a03 * a22));
@@ -81075,7 +81075,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} a the source matrix
 	* @returns {Number} determinant of a
 	*/
-	mat4$23.determinant = function(a) {
+	mat4$24.determinant = function(a) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15], b00 = a00 * a11 - a01 * a10, b01 = a00 * a12 - a02 * a10, b02 = a00 * a13 - a03 * a10, b03 = a01 * a12 - a02 * a11, b04 = a01 * a13 - a03 * a11, b05 = a02 * a13 - a03 * a12, b06 = a20 * a31 - a21 * a30, b07 = a20 * a32 - a22 * a30, b08 = a20 * a33 - a23 * a30, b09 = a21 * a32 - a22 * a31, b10 = a21 * a33 - a23 * a31;
 		return b00 * (a22 * a33 - a23 * a32) - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 	};
@@ -81087,7 +81087,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} b the second operand
 	* @returns {mat4} out
 	*/
-	mat4$23.multiply = function(out, a, b) {
+	mat4$24.multiply = function(out, a, b) {
 		var a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11], a30 = a[12], a31 = a[13], a32 = a[14], a33 = a[15];
 		var b0 = b[0], b1 = b[1], b2 = b[2], b3 = b[3];
 		out[0] = b0 * a00 + b1 * a10 + b2 * a20 + b3 * a30;
@@ -81124,7 +81124,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* Alias for {@link mat4.multiply}
 	* @function
 	*/
-	mat4$23.mul = mat4$23.multiply;
+	mat4$24.mul = mat4$24.multiply;
 	/**
 	* Translate a mat4 by the given vector
 	*
@@ -81133,7 +81133,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec3} v vector to translate by
 	* @returns {mat4} out
 	*/
-	mat4$23.translate = function(out, a, v) {
+	mat4$24.translate = function(out, a, v) {
 		var x = v[0], y = v[1], z = v[2], a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23;
 		if (a === out) {
 			out[12] = a[0] * x + a[4] * y + a[8] * z + a[12];
@@ -81180,7 +81180,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec3} v the vec3 to scale the matrix by
 	* @returns {mat4} out
 	**/
-	mat4$23.scale = function(out, a, v) {
+	mat4$24.scale = function(out, a, v) {
 		var x = v[0], y = v[1], z = v[2];
 		out[0] = a[0] * x;
 		out[1] = a[1] * x;
@@ -81209,7 +81209,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec3} axis the axis to rotate around
 	* @returns {mat4} out
 	*/
-	mat4$23.rotate = function(out, a, rad, axis) {
+	mat4$24.rotate = function(out, a, rad, axis) {
 		var x = axis[0], y = axis[1], z = axis[2], len = Math.sqrt(x * x + y * y + z * z), s, c, t, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, b00, b01, b02, b10, b11, b12, b20, b21, b22;
 		if (Math.abs(len) < GLMAT_EPSILON) return null;
 		len = 1 / len;
@@ -81268,7 +81268,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {Number} rad the angle to rotate the matrix by
 	* @returns {mat4} out
 	*/
-	mat4$23.rotateX = function(out, a, rad) {
+	mat4$24.rotateX = function(out, a, rad) {
 		var s = Math.sin(rad), c = Math.cos(rad), a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
 		if (a !== out) {
 			out[0] = a[0];
@@ -81298,7 +81298,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {Number} rad the angle to rotate the matrix by
 	* @returns {mat4} out
 	*/
-	mat4$23.rotateY = function(out, a, rad) {
+	mat4$24.rotateY = function(out, a, rad) {
 		var s = Math.sin(rad), c = Math.cos(rad), a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a20 = a[8], a21 = a[9], a22 = a[10], a23 = a[11];
 		if (a !== out) {
 			out[4] = a[4];
@@ -81328,7 +81328,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {Number} rad the angle to rotate the matrix by
 	* @returns {mat4} out
 	*/
-	mat4$23.rotateZ = function(out, a, rad) {
+	mat4$24.rotateZ = function(out, a, rad) {
 		var s = Math.sin(rad), c = Math.cos(rad), a00 = a[0], a01 = a[1], a02 = a[2], a03 = a[3], a10 = a[4], a11 = a[5], a12 = a[6], a13 = a[7];
 		if (a !== out) {
 			out[8] = a[8];
@@ -81365,7 +81365,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec3} v Translation vector
 	* @returns {mat4} out
 	*/
-	mat4$23.fromRotationTranslation = function(out, q, v) {
+	mat4$24.fromRotationTranslation = function(out, q, v) {
 		var x = q[0], y = q[1], z = q[2], w = q[3], x2 = x + x, y2 = y + y, z2 = z + z, xx = x * x2, xy = x * y2, xz = x * z2, yy = y * y2, yz = y * z2, zz = z * z2, wx = w * x2, wy = w * y2, wz = w * z2;
 		out[0] = 1 - (yy + zz);
 		out[1] = xy + wz;
@@ -81393,7 +81393,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	*
 	* @returns {mat4} out
 	*/
-	mat4$23.fromQuat = function(out, q) {
+	mat4$24.fromQuat = function(out, q) {
 		var x = q[0], y = q[1], z = q[2], w = q[3], x2 = x + x, y2 = y + y, z2 = z + z, xx = x * x2, xy = x * y2, xz = x * z2, yy = y * y2, yz = y * z2, zz = z * z2, wx = w * x2, wy = w * y2, wz = w * z2;
 		out[0] = 1 - (yy + zz);
 		out[1] = xy + wz;
@@ -81425,7 +81425,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {Number} far Far bound of the frustum
 	* @returns {mat4} out
 	*/
-	mat4$23.frustum = function(out, left, right, bottom, top, near, far) {
+	mat4$24.frustum = function(out, left, right, bottom, top, near, far) {
 		var rl = 1 / (right - left), tb = 1 / (top - bottom), nf = 1 / (near - far);
 		out[0] = near * 2 * rl;
 		out[1] = 0;
@@ -81455,7 +81455,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {number} far Far bound of the frustum
 	* @returns {mat4} out
 	*/
-	mat4$23.perspective = function(out, fovy, aspect, near, far) {
+	mat4$24.perspective = function(out, fovy, aspect, near, far) {
 		var f = 1 / Math.tan(fovy / 2), nf = 1 / (near - far);
 		out[0] = f / aspect;
 		out[1] = 0;
@@ -81487,7 +81487,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {number} far Far bound of the frustum
 	* @returns {mat4} out
 	*/
-	mat4$23.ortho = function(out, left, right, bottom, top, near, far) {
+	mat4$24.ortho = function(out, left, right, bottom, top, near, far) {
 		var lr = 1 / (left - right), bt = 1 / (bottom - top), nf = 1 / (near - far);
 		out[0] = -2 * lr;
 		out[1] = 0;
@@ -81516,9 +81516,9 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {vec3} up vec3 pointing up
 	* @returns {mat4} out
 	*/
-	mat4$23.lookAt = function(out, eye, center, up) {
+	mat4$24.lookAt = function(out, eye, center, up) {
 		var x0, x1, x2, y0, y1, y2, z0, z1, z2, len, eyex = eye[0], eyey = eye[1], eyez = eye[2], upx = up[0], upy = up[1], upz = up[2], centerx = center[0], centery = center[1], centerz = center[2];
-		if (Math.abs(eyex - centerx) < GLMAT_EPSILON && Math.abs(eyey - centery) < GLMAT_EPSILON && Math.abs(eyez - centerz) < GLMAT_EPSILON) return mat4$23.identity(out);
+		if (Math.abs(eyex - centerx) < GLMAT_EPSILON && Math.abs(eyey - centery) < GLMAT_EPSILON && Math.abs(eyez - centerz) < GLMAT_EPSILON) return mat4$24.identity(out);
 		z0 = eyex - centerx;
 		z1 = eyey - centery;
 		z2 = eyez - centerz;
@@ -81578,10 +81578,10 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @param {mat4} mat matrix to represent as a string
 	* @returns {String} string representation of the matrix
 	*/
-	mat4$23.str = function(a) {
+	mat4$24.str = function(a) {
 		return "mat4(" + a[0] + ", " + a[1] + ", " + a[2] + ", " + a[3] + ", " + a[4] + ", " + a[5] + ", " + a[6] + ", " + a[7] + ", " + a[8] + ", " + a[9] + ", " + a[10] + ", " + a[11] + ", " + a[12] + ", " + a[13] + ", " + a[14] + ", " + a[15] + ")";
 	};
-	if (typeof exports$3 !== "undefined") exports$3.mat4 = mat4$23;
+	if (typeof exports$3 !== "undefined") exports$3.mat4 = mat4$24;
 	quat$2 = {};
 	/**
 	* Creates a new identity quat
@@ -81646,7 +81646,7 @@ var init_gl_matrix$1 = __esmMin((() => {
 	* @returns {quat} out
 	*/
 	quat$2.setAxes = (function() {
-		var matr = mat3$6.create();
+		var matr = mat3$7.create();
 		return function(out, view, right, up) {
 			matr[0] = right[0];
 			matr[3] = right[1];
@@ -83569,7 +83569,7 @@ var init_PostProcess = __esmMin((() => {
 }));
 //#endregion
 //#region src/Renderer/Effects/Shaders/VerticalFlip.js
-var _program$26, _buffer$21, _active$3, VerticalFlip;
+var _program$27, _buffer$21, _active$3, VerticalFlip;
 var init_VerticalFlip = __esmMin((() => {
 	init_VerticalFlip$2();
 	init_VerticalFlip$1();
@@ -83578,9 +83578,9 @@ var init_VerticalFlip = __esmMin((() => {
 	_active$3 = false;
 	VerticalFlip = class {
 		static init(gl) {
-			if (_program$26) return;
+			if (_program$27) return;
 			try {
-				_program$26 = WebGL_default.createShaderProgram(gl, VerticalFlip_default$1, VerticalFlip_default);
+				_program$27 = WebGL_default.createShaderProgram(gl, VerticalFlip_default$1, VerticalFlip_default);
 			} catch (e) {
 				console.error("Error when compiling shader VerticalFlip.", e);
 				return;
@@ -83613,19 +83613,19 @@ var init_VerticalFlip = __esmMin((() => {
 		* @param {WebGLFramebuffer} outputFbo - Target
 		*/
 		static render(gl, inputTexture, outputFbo) {
-			if (!_buffer$21 || !_program$26 || !_active$3) return;
+			if (!_buffer$21 || !_program$27 || !_active$3) return;
 			PostProcess.beforeRenderPass(gl, outputFbo);
-			gl.useProgram(_program$26);
+			gl.useProgram(_program$27);
 			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer$21);
-			let posLoc = _program$26.attribute.aPosition;
+			let posLoc = _program$27.attribute.aPosition;
 			gl.enableVertexAttribArray(posLoc);
 			gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 16, 0);
-			posLoc = _program$26.attribute.aTextureCoord;
+			posLoc = _program$27.attribute.aTextureCoord;
 			gl.enableVertexAttribArray(posLoc);
 			gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 16, 8);
 			gl.activeTexture(gl.TEXTURE0);
 			gl.bindTexture(gl.TEXTURE_2D, inputTexture);
-			gl.uniform1i(_program$26.uniform.uTexture, 0);
+			gl.uniform1i(_program$27.uniform.uTexture, 0);
 			gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 			PostProcess.afterRenderPass(gl);
 		}
@@ -83633,13 +83633,13 @@ var init_VerticalFlip = __esmMin((() => {
 		* @returns {WebGLProgram} Shader program
 		*/
 		static program() {
-			return _program$26;
+			return _program$27;
 		}
 		/** Resets effect state */
 		static clean(gl) {
 			_active$3 = false;
 			if (_buffer$21) gl.deleteBuffer(_buffer$21);
-			_program$26 = _buffer$21 = null;
+			_program$27 = _buffer$21 = null;
 		}
 		/** @returns {boolean} Whether the effect is active */
 		static isActive() {
@@ -83653,19 +83653,19 @@ var init_VerticalFlip = __esmMin((() => {
 }));
 //#endregion
 //#region src/Renderer/Map/Altitude.js
-var _cells, _types, mat4$22, vec3$7, vec4$7, _from, _to, _unit, _matrix$7, buffer1x1, buffer5x5, buffer7x7, buffer13x13, tmp, Altitude, TYPE_TABLE;
+var _cells, _types$1, mat4$23, vec3$7, vec4$7, _from, _to, _unit, _matrix$7, buffer1x1, buffer5x5, buffer7x7, buffer13x13, tmp, Altitude, TYPE_TABLE;
 var init_Altitude = __esmMin((() => {
 	init_gl_matrix$1();
 	init_PathFinding();
 	init_MouseEventHandler();
 	init_VerticalFlip();
 	_cells = null;
-	_types = null;
-	({mat4: mat4$22, vec3: vec3$7, vec4: vec4$7} = exports$3);
+	_types$1 = null;
+	({mat4: mat4$23, vec3: vec3$7, vec4: vec4$7} = exports$3);
 	_from = vec3$7.create();
 	_to = vec4$7.create();
 	_unit = vec3$7.create();
-	_matrix$7 = mat4$22.create();
+	_matrix$7 = mat4$23.create();
 	buffer1x1 = /* @__PURE__ */ new Float32Array(30);
 	buffer5x5 = /* @__PURE__ */ new Float32Array(750);
 	buffer7x7 = /* @__PURE__ */ new Float32Array(1470);
@@ -83684,7 +83684,7 @@ var init_Altitude = __esmMin((() => {
 			const types = new Uint8Array(count);
 			for (i = 0; i < count; ++i) types[i] = data.cells[i * 5 + 4];
 			_cells = data.cells;
-			_types = types;
+			_types$1 = types;
 			Altitude.width = data.width;
 			Altitude.height = data.height;
 			PathFinding_default.setGat({
@@ -83718,7 +83718,7 @@ var init_Altitude = __esmMin((() => {
 		* @return {number} cell type
 		*/
 		static getCellType(x, y) {
-			return _types[x + y * Altitude.width];
+			return _types$1[x + y * Altitude.width];
 		}
 		/**
 		* Return cell height
@@ -83738,7 +83738,7 @@ var init_Altitude = __esmMin((() => {
 			return -(x1 + (_cells[index + 2] + (_cells[index + 3] - _cells[index + 2]) * x - x1) * y);
 		}
 		static setCellType(x, y, type) {
-			_types[x + y * Altitude.width] = TYPE_TABLE[type];
+			_types$1[x + y * Altitude.width] = TYPE_TABLE[type];
 			PathFinding_default.updateGat(x, y, TYPE_TABLE[type]);
 		}
 		/**
@@ -83752,7 +83752,7 @@ var init_Altitude = __esmMin((() => {
 		static intersect(modelView, projection, out) {
 			let i;
 			const count = Altitude.MAX_INTERSECT_COUNT;
-			mat4$22.invert(_matrix$7, modelView);
+			mat4$23.invert(_matrix$7, modelView);
 			_from[0] = _matrix$7[12];
 			_from[1] = _matrix$7[13];
 			_from[2] = _matrix$7[14];
@@ -83761,8 +83761,8 @@ var init_Altitude = __esmMin((() => {
 			if (VerticalFlip.isActive()) _to[1] = -_to[1];
 			_to[2] = 1;
 			_to[3] = 1;
-			mat4$22.multiply(_matrix$7, projection, modelView);
-			mat4$22.invert(_matrix$7, _matrix$7);
+			mat4$23.multiply(_matrix$7, projection, modelView);
+			mat4$23.invert(_matrix$7, _matrix$7);
 			vec4$7.transformMat4(_to, _to, _matrix$7);
 			_to[0] /= _to[3];
 			_to[1] /= _to[3];
@@ -205797,7 +205797,7 @@ var init_HtmlHelper = __esmMin((() => {
 /**
 * Render background (or a black background if no image is loaded yet)
 */
-function render$24() {
+function render$25() {
 	_ctx$17.clearRect(0, 0, _canvas.width, _canvas.height);
 	if (_progress > -1) Background.setPercent(_progress);
 }
@@ -205865,7 +205865,7 @@ var init_Background = __esmMin((() => {
 			let i;
 			_progress = 0;
 			_canvas.style.zIndex = "1";
-			render$24();
+			render$25();
 			if (loading) {
 				_loading = loading;
 				return;
@@ -205888,7 +205888,7 @@ var init_Background = __esmMin((() => {
 				height: height + "px"
 			});
 			_ctx$17.clearRect(0, 0, width, height);
-			render$24();
+			render$25();
 		}
 		/**
 		* Set an image as background
@@ -205901,7 +205901,7 @@ var init_Background = __esmMin((() => {
 			_progress = -1;
 			_container.innerHTML = "";
 			_container.style.backgroundImage = "none";
-			render$24();
+			render$25();
 			if (Array.isArray(filename)) {
 				let loadedCount = 0;
 				const total = filename.length;
@@ -206626,7 +206626,7 @@ var init_GridSelector$1 = __esmMin((() => {
 *
 * @param {object} gl context
 */
-function init$12(gl) {
+function init$13(gl) {
 	Client.loadFile("data/texture/grid.tga", function(buffer) {
 		Texture.load(buffer, function(success) {
 			if (!success) return;
@@ -206649,7 +206649,7 @@ function init$12(gl) {
 		});
 	});
 	_buffer$20 = gl.createBuffer();
-	_program$25 = WebGL_default.createShaderProgram(gl, GridSelector_default$2, GridSelector_default$1);
+	_program$26 = WebGL_default.createShaderProgram(gl, GridSelector_default$2, GridSelector_default$1);
 	gl.bindBuffer(gl.ARRAY_BUFFER, _buffer$20);
 	gl.bufferData(gl.ARRAY_BUFFER, _buffer_data.byteLength, gl.DYNAMIC_DRAW);
 }
@@ -206663,12 +206663,12 @@ function init$12(gl) {
 * @param {number} x
 * @param {number} y
 */
-function render$23(gl, modelView, projection, fog, x, y) {
+function render$24(gl, modelView, projection, fog, x, y) {
 	if (!_texture$5) return;
-	const uniform = _program$25.uniform;
-	const attribute = _program$25.attribute;
+	const uniform = _program$26.uniform;
+	const attribute = _program$26.attribute;
 	let z;
-	gl.useProgram(_program$25);
+	gl.useProgram(_program$26);
 	gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
 	gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 	gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
@@ -206705,7 +206705,7 @@ function render$23(gl, modelView, projection, fog, x, y) {
 *
 * @param {object} gl context
 */
-function free$7(gl) {
+function free$8(gl) {
 	if (_buffer$20) {
 		gl.deleteBuffer(_buffer$20);
 		_buffer$20 = null;
@@ -206714,12 +206714,12 @@ function free$7(gl) {
 		gl.deleteTexture(_texture$5);
 		_texture$5 = null;
 	}
-	if (_program$25) {
-		gl.deleteProgram(_program$25);
-		_program$25 = null;
+	if (_program$26) {
+		gl.deleteProgram(_program$26);
+		_program$26 = null;
 	}
 }
-var _program$25, _buffer$20, _texture$5, _xy, _buffer_data, GridSelector_default;
+var _program$26, _buffer$20, _texture$5, _xy, _buffer_data, GridSelector_default;
 var init_GridSelector = __esmMin((() => {
 	init_Altitude();
 	init_Client();
@@ -206728,7 +206728,7 @@ var init_GridSelector = __esmMin((() => {
 	init_Configs();
 	init_GridSelector$2();
 	init_GridSelector$1();
-	_program$25 = null;
+	_program$26 = null;
 	_buffer$20 = null;
 	_texture$5 = null;
 	_xy = null;
@@ -206755,9 +206755,9 @@ var init_GridSelector = __esmMin((() => {
 		1
 	]);
 	GridSelector_default = {
-		init: init$12,
-		free: free$7,
-		render: render$23
+		init: init$13,
+		free: free$8,
+		render: render$24
 	};
 }));
 //#endregion
@@ -206840,10 +206840,10 @@ var init_Ground$1 = __esmMin((() => {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$22(gl, modelView, projection, normalMat, fog, light) {
-	const uniform = _program$24.uniform;
-	const attribute = _program$24.attribute;
-	gl.useProgram(_program$24);
+function render$23(gl, modelView, projection, normalMat, fog, light) {
+	const uniform = _program$25.uniform;
+	const attribute = _program$25.attribute;
+	gl.useProgram(_program$25);
 	gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
 	gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 	gl.uniform3fv(uniform.uLightDirection, light.direction);
@@ -207007,13 +207007,13 @@ function onTextureAtlasComplete(gl, atlas) {
 * @param {object} gl context
 * @param {object} data - ground
 */
-function init$11(gl, data) {
+function init$12(gl, data) {
 	_vertCount$1 = data.meshVertCount;
 	_width = data.width;
 	data.height;
 	_shadowMap = data.shadowMap;
 	if (!_buffer$19) _buffer$19 = gl.createBuffer();
-	if (!_program$24) _program$24 = WebGL_default.createShaderProgram(gl, Ground_default$2, Ground_default$1);
+	if (!_program$25) _program$25 = WebGL_default.createShaderProgram(gl, Ground_default$2, Ground_default$1);
 	gl.bindBuffer(gl.ARRAY_BUFFER, _buffer$19);
 	gl.bufferData(gl.ARRAY_BUFFER, data.mesh, gl.STATIC_DRAW);
 	initLightmap(gl, data.lightmap, data.lightmapSize);
@@ -207025,7 +207025,7 @@ function init$11(gl, data) {
 *
 * @param {object} gl context
 */
-function free$6(gl) {
+function free$7(gl) {
 	if (_lightmap) {
 		gl.deleteTexture(_lightmap);
 		_lightmap = null;
@@ -207064,7 +207064,7 @@ function getShadowFactor(x, y) {
 	for (y = -3; y < 3; ++y) for (x = -3; x < 3; ++x) factor += _shadowMap[_x + x + (_y + y) * _width * 8];
 	return factor / 36 / 255;
 }
-var procCanvas$2, procCtx$2, _program$24, _buffer$19, _lightmap, _tileColor, _textureAtlas, _shadowMap, _vertCount$1, _width, Ground_default;
+var procCanvas$2, procCtx$2, _program$25, _buffer$19, _lightmap, _tileColor, _textureAtlas, _shadowMap, _vertCount$1, _width, Ground_default;
 var init_Ground = __esmMin((() => {
 	init_WebGL();
 	init_Texture();
@@ -207074,7 +207074,7 @@ var init_Ground = __esmMin((() => {
 	init_Ground$1();
 	procCanvas$2 = document.createElement("canvas");
 	procCtx$2 = procCanvas$2.getContext("2d", { willReadFrequently: true });
-	_program$24 = null;
+	_program$25 = null;
 	_buffer$19 = null;
 	_lightmap = null;
 	_tileColor = null;
@@ -207083,9 +207083,9 @@ var init_Ground = __esmMin((() => {
 	_vertCount$1 = 0;
 	_width = 0;
 	Ground_default = {
-		init: init$11,
-		free: free$6,
-		render: render$22,
+		init: init$12,
+		free: free$7,
+		render: render$23,
 		getShadowFactor
 	};
 }));
@@ -207108,8 +207108,8 @@ var init_SpriteRenderer$1 = __esmMin((() => {
 */
 function RenderCanvas3D(isBlendModeOne) {
 	if (!this.image.texture || !this.color[3]) return;
-	const uniform = _program$23.uniform;
-	const gl = _gl$1;
+	const uniform = _program$24.uniform;
+	const gl = _gl$2;
 	const use_pal = this.image.palette !== null;
 	if (isBlendModeOne) gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
 	else if (isBlendModeOne === false) gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -207131,8 +207131,8 @@ function RenderCanvas3D(isBlendModeOne) {
 	gl.uniform1f(uniform.uSpriteRendererZindex, this.zIndex++);
 	if (this.angle !== _angle) {
 		_angle = this.angle;
-		mat4$21.identity(_matrix$6);
-		if (_angle) mat4$21.rotateZ(_matrix$6, _matrix$6, -_angle / 180 * Math.PI);
+		mat4$22.identity(_matrix$6);
+		if (_angle) mat4$22.rotateZ(_matrix$6, _matrix$6, -_angle / 180 * Math.PI);
 		gl.uniformMatrix4fv(uniform.uSpriteRendererAngle, false, _matrix$6);
 	}
 	_offset[0] = this.offset[0] / 175 * this.xSize;
@@ -207149,14 +207149,14 @@ function RenderCanvas3D(isBlendModeOne) {
 	}
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
-var mat4$21, RenderCanvas2D, _program$23, _buffer$18, _ctx$16, _gl$1, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
+var mat4$22, RenderCanvas2D, _program$24, _buffer$18, _ctx$16, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
 var init_SpriteRenderer = __esmMin((() => {
 	init_WebGL();
 	init_gl_matrix();
 	init_Camera();
 	init_SpriteRenderer$2();
 	init_SpriteRenderer$1();
-	mat4$21 = gl_matrix_default.mat4;
+	mat4$22 = gl_matrix_default.mat4;
 	RenderCanvas2D = (function RenderCanvas2DClosure() {
 		let imageData;
 		const canvas = document.createElement("canvas");
@@ -207255,10 +207255,10 @@ var init_SpriteRenderer = __esmMin((() => {
 			_ctx$16.restore();
 		};
 	})();
-	_program$23 = null;
+	_program$24 = null;
 	_buffer$18 = null;
 	_ctx$16 = null;
-	_gl$1 = null;
+	_gl$2 = null;
 	_groupId = 0;
 	_lastGroupId = 0;
 	_shadow = null;
@@ -207366,7 +207366,7 @@ var init_SpriteRenderer = __esmMin((() => {
 					1
 				]), gl.STATIC_DRAW);
 			}
-			if (!_program$23) _program$23 = WebGL_default.createShaderProgram(gl, SpriteRenderer_default$1, SpriteRenderer_default);
+			if (!_program$24) _program$24 = WebGL_default.createShaderProgram(gl, SpriteRenderer_default$1, SpriteRenderer_default);
 		}
 		/**
 		* Initialize 3D Context
@@ -207377,12 +207377,12 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {object} fog structure
 		*/
 		static bind3DContext(gl, modelView, projection, fog) {
-			const attribute = _program$23.attribute;
-			const uniform = _program$23.uniform;
-			gl.useProgram(_program$23);
+			const attribute = _program$24.attribute;
+			const uniform = _program$24.uniform;
+			gl.useProgram(_program$24);
 			gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 			gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
-			gl.uniformMatrix4fv(uniform.uViewModelMat, false, mat4$21.invert(_matrix$6, modelView));
+			gl.uniformMatrix4fv(uniform.uViewModelMat, false, mat4$22.invert(_matrix$6, modelView));
 			gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
 			gl.uniform1f(uniform.uFogNear, fog.near);
 			gl.uniform1f(uniform.uFogFar, fog.far);
@@ -207400,7 +207400,7 @@ var init_SpriteRenderer = __esmMin((() => {
 			this.render = RenderCanvas3D;
 			this.xSize = 5;
 			this.ySize = 5;
-			_gl$1 = gl;
+			_gl$2 = gl;
 			_depthMask = true;
 			_groupId++;
 		}
@@ -207410,7 +207410,7 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {object} gl context
 		*/
 		static unbind(gl) {
-			const attribute = _program$23.attribute;
+			const attribute = _program$24.attribute;
 			gl.disableVertexAttribArray(attribute.aPosition);
 			gl.disableVertexAttribArray(attribute.aTextureCoord);
 		}
@@ -207444,7 +207444,7 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {function} execute function with this parameters before restore gl state.
 		*/
 		static runWithDepth(depthTest, depthMask, depthCorrection, fn) {
-			if (!_gl$1) {
+			if (!_gl$2) {
 				fn();
 				return;
 			}
@@ -207453,23 +207453,23 @@ var init_SpriteRenderer = __esmMin((() => {
 			const prevDepthCorrection = this.disableDepthCorrection;
 			if (_depthTest !== depthTest) {
 				_depthTest = depthTest;
-				if (depthTest) _gl$1.enable(_gl$1.DEPTH_TEST);
-				else _gl$1.disable(_gl$1.DEPTH_TEST);
+				if (depthTest) _gl$2.enable(_gl$2.DEPTH_TEST);
+				else _gl$2.disable(_gl$2.DEPTH_TEST);
 			}
 			if (_depthMask !== depthMask) {
 				_depthMask = depthMask;
-				_gl$1.depthMask(depthMask);
+				_gl$2.depthMask(depthMask);
 			}
 			if (this.disableDepthCorrection !== depthCorrection) this.disableDepthCorrection = depthCorrection;
 			fn();
 			if (_depthTest !== prevDepthTest) {
 				_depthTest = prevDepthTest;
-				if (prevDepthTest) _gl$1.enable(_gl$1.DEPTH_TEST);
-				else _gl$1.disable(_gl$1.DEPTH_TEST);
+				if (prevDepthTest) _gl$2.enable(_gl$2.DEPTH_TEST);
+				else _gl$2.disable(_gl$2.DEPTH_TEST);
 			}
 			if (_depthMask !== prevDepthMask) {
 				_depthMask = prevDepthMask;
-				_gl$1.depthMask(prevDepthMask);
+				_gl$2.depthMask(prevDepthMask);
 			}
 			if (this.disableDepthCorrection !== prevDepthCorrection) this.disableDepthCorrection = prevDepthCorrection;
 		}
@@ -207495,7 +207495,7 @@ var init_Water$1 = __esmMin((() => {
 * @param {object} gl context
 * @param {object} water data
 */
-function init$10(gl, water) {
+function init$11(gl, water) {
 	_vertCount = water.vertCount;
 	_waveHeight = water.waveHeight;
 	_waveSpeed = water.waveSpeed;
@@ -207504,7 +207504,7 @@ function init$10(gl, water) {
 	_wavePitch = water.wavePitch;
 	_waterOpacity = water.type !== 4 && water.type !== 6 ? .8 : 1;
 	if (!_vertCount) return;
-	if (!_program$22) _program$22 = WebGL_default.createShaderProgram(gl, Water_default$2, Water_default$1);
+	if (!_program$23) _program$23 = WebGL_default.createShaderProgram(gl, Water_default$2, Water_default$1);
 	_buffer$17 = gl.createBuffer();
 	gl.bindBuffer(gl.ARRAY_BUFFER, _buffer$17);
 	gl.bufferData(gl.ARRAY_BUFFER, water.mesh, gl.STATIC_DRAW);
@@ -207523,12 +207523,12 @@ function init$10(gl, water) {
 * @param {object} light structure
 * @param {number} tick (game tick)
 */
-function render$21(gl, modelView, projection, fog, light, tick) {
+function render$22(gl, modelView, projection, fog, light, tick) {
 	if (!_vertCount) return;
-	const uniform = _program$22.uniform;
-	const attribute = _program$22.attribute;
+	const uniform = _program$23.uniform;
+	const attribute = _program$23.attribute;
 	const frame = tick / (1e3 / 60);
-	gl.useProgram(_program$22);
+	gl.useProgram(_program$23);
 	gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
 	gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 	gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
@@ -207559,28 +207559,28 @@ function render$21(gl, modelView, projection, fog, light, tick) {
 *
 * @param {object} gl context
 */
-function free$5(gl) {
+function free$6(gl) {
 	let i;
 	if (_buffer$17) {
 		gl.deleteBuffer(_buffer$17);
 		_buffer$17 = null;
 	}
-	if (_program$22) {
-		gl.deleteProgram(_program$22);
-		_program$22 = null;
+	if (_program$23) {
+		gl.deleteProgram(_program$23);
+		_program$23 = null;
 	}
 	for (i = 0; i < 32; ++i) if (_textures$1[i]) {
 		gl.deleteTexture(_textures$1[i]);
 		_textures$1[i] = null;
 	}
 }
-var _program$22, _buffer$17, _vertCount, _textures$1, _waveSpeed, _waveHeight, _wavePitch, _animSpeed, _waterOpacity, Water_default;
+var _program$23, _buffer$17, _vertCount, _textures$1, _waveSpeed, _waveHeight, _wavePitch, _animSpeed, _waterOpacity, Water_default;
 var init_Water = __esmMin((() => {
 	init_WebGL();
 	init_SpriteRenderer();
 	init_Water$2();
 	init_Water$1();
-	_program$22 = null;
+	_program$23 = null;
 	_buffer$17 = null;
 	_vertCount = 0;
 	_textures$1 = new Array(32);
@@ -207590,9 +207590,9 @@ var init_Water = __esmMin((() => {
 	_animSpeed = 0;
 	_waterOpacity = .9;
 	Water_default = {
-		init: init$10,
-		free: free$5,
-		render: render$21
+		init: init$11,
+		free: free$6,
+		render: render$22
 	};
 }));
 //#endregion
@@ -207637,13 +207637,13 @@ function buildBatches() {
 * @param {object} gl context
 * @param {object} data ( models )
 */
-function init$9(gl, data) {
+function init$10(gl, data) {
 	const count = data.infos.length;
 	_objects.length = count;
 	_batchesReady = false;
 	_pendingTextures = count;
 	if (!_buffer$16) _buffer$16 = gl.createBuffer();
-	if (!_program$21) _program$21 = WebGL_default.createShaderProgram(gl, Models_default$2, Models_default$1);
+	if (!_program$22) _program$22 = WebGL_default.createShaderProgram(gl, Models_default$2, Models_default$1);
 	gl.bindBuffer(gl.ARRAY_BUFFER, _buffer$16);
 	gl.bufferData(gl.ARRAY_BUFFER, data.buffer, gl.STATIC_DRAW);
 	function onTextureLoaded(texture, index) {
@@ -207670,11 +207670,11 @@ function init$9(gl, data) {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$20(gl, modelView, projection, normalMat, fog, light) {
-	const uniform = _program$21.uniform;
-	const attribute = _program$21.attribute;
+function render$21(gl, modelView, projection, normalMat, fog, light) {
+	const uniform = _program$22.uniform;
+	const attribute = _program$22.attribute;
 	let i, count;
-	gl.useProgram(_program$21);
+	gl.useProgram(_program$22);
 	gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
 	gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 	gl.uniform3fv(uniform.uLightDirection, light.direction);
@@ -207723,38 +207723,38 @@ function render$20(gl, modelView, projection, normalMat, fog, light) {
 *
 * @param {object} gl context
 */
-function free$4(gl) {
+function free$5(gl) {
 	let i, count;
 	if (_buffer$16) {
 		gl.deleteBuffer(_buffer$16);
 		_buffer$16 = null;
 	}
-	if (_program$21) {
-		gl.deleteProgram(_program$21);
-		_program$21 = null;
+	if (_program$22) {
+		gl.deleteProgram(_program$22);
+		_program$22 = null;
 	}
 	for (i = 0, count = _objects.length; i < count; ++i) gl.deleteTexture(_objects[i].texture);
 	_objects.length = 0;
 	_batches.length = 0;
 	_batchesReady = false;
 }
-var _program$21, _buffer$16, _objects, _batches, _batchesReady, _pendingTextures, Models_default;
+var _program$22, _buffer$16, _objects, _batches, _batchesReady, _pendingTextures, Models_default;
 var init_Models = __esmMin((() => {
 	init_Models$2();
 	init_Models$1();
 	init_WebGL();
 	init_Map();
 	init_SpriteRenderer();
-	_program$21 = null;
+	_program$22 = null;
 	_buffer$16 = null;
 	_objects = [];
 	_batches = [];
 	_batchesReady = false;
 	_pendingTextures = 0;
 	Models_default = {
-		init: init$9,
-		render: render$20,
-		free: free$4
+		init: init$10,
+		render: render$21,
+		free: free$5
 	};
 }));
 //#endregion
@@ -207774,34 +207774,34 @@ var init_AnimatedModels$1 = __esmMin((() => {
 /**
 * Initialize shader program
 */
-function init$8(gl) {
-	_program$20 = WebGL_default.createShaderProgram(gl, AnimatedModels_default$2, AnimatedModels_default$1);
-	_program$20.uniform = {
-		uModelViewMat: gl.getUniformLocation(_program$20, "uModelViewMat"),
-		uProjectionMat: gl.getUniformLocation(_program$20, "uProjectionMat"),
-		uNormalMat: gl.getUniformLocation(_program$20, "uNormalMat"),
-		uLightDirection: gl.getUniformLocation(_program$20, "uLightDirection"),
-		uLightOpacity: gl.getUniformLocation(_program$20, "uLightOpacity"),
-		uLightAmbient: gl.getUniformLocation(_program$20, "uLightAmbient"),
-		uLightDiffuse: gl.getUniformLocation(_program$20, "uLightDiffuse"),
-		uLightEnv: gl.getUniformLocation(_program$20, "uLightEnv"),
-		uFogUse: gl.getUniformLocation(_program$20, "uFogUse"),
-		uFogNear: gl.getUniformLocation(_program$20, "uFogNear"),
-		uFogFar: gl.getUniformLocation(_program$20, "uFogFar"),
-		uFogColor: gl.getUniformLocation(_program$20, "uFogColor"),
-		uDiffuse: gl.getUniformLocation(_program$20, "uDiffuse")
+function init$9(gl) {
+	_program$21 = WebGL_default.createShaderProgram(gl, AnimatedModels_default$2, AnimatedModels_default$1);
+	_program$21.uniform = {
+		uModelViewMat: gl.getUniformLocation(_program$21, "uModelViewMat"),
+		uProjectionMat: gl.getUniformLocation(_program$21, "uProjectionMat"),
+		uNormalMat: gl.getUniformLocation(_program$21, "uNormalMat"),
+		uLightDirection: gl.getUniformLocation(_program$21, "uLightDirection"),
+		uLightOpacity: gl.getUniformLocation(_program$21, "uLightOpacity"),
+		uLightAmbient: gl.getUniformLocation(_program$21, "uLightAmbient"),
+		uLightDiffuse: gl.getUniformLocation(_program$21, "uLightDiffuse"),
+		uLightEnv: gl.getUniformLocation(_program$21, "uLightEnv"),
+		uFogUse: gl.getUniformLocation(_program$21, "uFogUse"),
+		uFogNear: gl.getUniformLocation(_program$21, "uFogNear"),
+		uFogFar: gl.getUniformLocation(_program$21, "uFogFar"),
+		uFogColor: gl.getUniformLocation(_program$21, "uFogColor"),
+		uDiffuse: gl.getUniformLocation(_program$21, "uDiffuse")
 	};
-	_program$20.attribute = {
-		aPosition: gl.getAttribLocation(_program$20, "aPosition"),
-		aNormal: gl.getAttribLocation(_program$20, "aNormal"),
-		aTextureCoord: gl.getAttribLocation(_program$20, "aTextureCoord"),
-		aAlpha: gl.getAttribLocation(_program$20, "aAlpha")
+	_program$21.attribute = {
+		aPosition: gl.getAttribLocation(_program$21, "aPosition"),
+		aNormal: gl.getAttribLocation(_program$21, "aNormal"),
+		aTextureCoord: gl.getAttribLocation(_program$21, "aTextureCoord"),
+		aAlpha: gl.getAttribLocation(_program$21, "aAlpha")
 	};
 }
 /**
 * Free resources
 */
-function free$3(gl) {
+function free$4(gl) {
 	for (let i = 0; i < _animatedModels.length; i++) {
 		const model = _animatedModels[i];
 		if (model.vao) gl.deleteVertexArray(model.vao);
@@ -207818,11 +207818,11 @@ function isNodeStatic(node) {
 */
 function add$2(gl, modelData) {
 	if (!modelData || !modelData.nodes || modelData.nodes.length === 0) return;
-	if (!_program$20) init$8(gl);
+	if (!_program$21) init$9(gl);
 	const instances = [];
 	for (let i = 0; i < modelData.instances.length; i++) {
 		const instArray = modelData.instances[i];
-		const matrix = mat4$20.create();
+		const matrix = mat4$21.create();
 		for (let j = 0; j < 16; j++) matrix[j] = instArray[j];
 		instances.push(matrix);
 	}
@@ -207852,20 +207852,20 @@ function add$2(gl, modelData) {
 			_isStatic: !hasAnyAnimation,
 			_index: n,
 			_cache: {
-				local: mat4$20.create(),
-				final: mat4$20.create(),
+				local: mat4$21.create(),
+				final: mat4$21.create(),
 				instances: new Array(instances.length)
 			}
 		};
 		if (node._isStatic) {
-			const local = mat4$20.create();
-			mat4$20.identity(local);
-			mat4$20.translate(local, local, node.pos);
-			mat4$20.rotate(local, local, node.rotangle, node.rotaxis);
-			mat4$20.scale(local, local, node.scale);
+			const local = mat4$21.create();
+			mat4$21.identity(local);
+			mat4$21.translate(local, local, node.pos);
+			mat4$21.rotate(local, local, node.rotangle, node.rotaxis);
+			mat4$21.scale(local, local, node.scale);
 			node._staticLocalMatrix = local;
 		}
-		for (let k = 0; k < instances.length; k++) node._cache.instances[k] = mat4$20.create();
+		for (let k = 0; k < instances.length; k++) node._cache.instances[k] = mat4$21.create();
 		if (node.rotKeyframes) for (let rk = 0; rk < node.rotKeyframes.length; rk++) {
 			const kf = node.rotKeyframes[rk];
 			totalAnimationLength = Math.max(totalAnimationLength, kf.frame || 0);
@@ -207968,7 +207968,7 @@ function add$2(gl, modelData) {
 	};
 	for (let n = 0; n < nodes.length; n++) {
 		animModel._nodeMap[nodes[n].name] = nodes[n];
-		animModel._globalMatrices[n] = mat4$20.create();
+		animModel._globalMatrices[n] = mat4$21.create();
 	}
 	gl.bindBuffer(gl.ARRAY_BUFFER, animModel.buffer);
 	gl.bufferData(gl.ARRAY_BUFFER, animModel._gpuBuffer.byteLength, gl.DYNAMIC_DRAW);
@@ -207976,7 +207976,7 @@ function add$2(gl, modelData) {
 	animModel.vao = gl.createVertexArray();
 	gl.bindVertexArray(animModel.vao);
 	gl.bindBuffer(gl.ARRAY_BUFFER, animModel.buffer);
-	const attribute = _program$20.attribute;
+	const attribute = _program$21.attribute;
 	const stride = 36;
 	gl.enableVertexAttribArray(attribute.aPosition);
 	gl.vertexAttribPointer(attribute.aPosition, 3, gl.FLOAT, false, stride, 0);
@@ -208054,9 +208054,9 @@ function getScaleAtFrame$2(keyframes, frame, out) {
 * Writes directly to the monolithic buffer
 */
 function transformAndWrite(node, finalMatrix, textureId, offset, buffer, alpha) {
-	const normalMat = node._cache.normalMat || mat4$20.create();
+	const normalMat = node._cache.normalMat || mat4$21.create();
 	node._cache.normalMat = normalMat;
-	mat4$20.extractRotation(normalMat, finalMatrix);
+	mat4$21.extractRotation(normalMat, finalMatrix);
 	const m = finalMatrix;
 	const n = normalMat;
 	const m0 = m[0], m1 = m[1], m2 = m[2], m4 = m[4], m5 = m[5], m6 = m[6], m8 = m[8], m9 = m[9], m10 = m[10], m12 = m[12], m13 = m[13], m14 = m[14];
@@ -208124,35 +208124,35 @@ function updateModelBuffer(gl, model, frame, force) {
 		const globalMatrix = globalMatrices[n];
 		if (node.parentname && nodeMap[node.parentname] && node.parentname !== node.name) {
 			const parentIdx = nodeMap[node.parentname]._index;
-			mat4$20.copy(globalMatrix, globalMatrices[parentIdx]);
-		} else mat4$20.identity(globalMatrix);
-		if (node._isStatic) mat4$20.multiply(globalMatrix, globalMatrix, node._staticLocalMatrix);
+			mat4$21.copy(globalMatrix, globalMatrices[parentIdx]);
+		} else mat4$21.identity(globalMatrix);
+		if (node._isStatic) mat4$21.multiply(globalMatrix, globalMatrix, node._staticLocalMatrix);
 		else {
 			const animPos = getPositionAtFrame$2(node.posKeyframes, frame, _tempVec3);
-			mat4$20.translate(globalMatrix, globalMatrix, animPos || node.pos);
+			mat4$21.translate(globalMatrix, globalMatrix, animPos || node.pos);
 			const animRot = getRotationAtFrame$2(node.rotKeyframes, frame, _tempQuat);
 			if (animRot) {
-				mat4$20.fromQuat(_tempMat4, animRot);
-				mat4$20.multiply(globalMatrix, globalMatrix, _tempMat4);
-			} else mat4$20.rotate(globalMatrix, globalMatrix, node.rotangle, node.rotaxis);
+				mat4$21.fromQuat(_tempMat4, animRot);
+				mat4$21.multiply(globalMatrix, globalMatrix, _tempMat4);
+			} else mat4$21.rotate(globalMatrix, globalMatrix, node.rotangle, node.rotaxis);
 			const animScale = getScaleAtFrame$2(node.scaleKeyFrames, frame, _tempVec3Scale);
-			mat4$20.scale(globalMatrix, globalMatrix, animScale || node.scale);
+			mat4$21.scale(globalMatrix, globalMatrix, animScale || node.scale);
 		}
 		const finalNodeMatrix = node._cache.final;
-		mat4$20.identity(finalNodeMatrix);
-		mat4$20.translate(finalNodeMatrix, finalNodeMatrix, [
+		mat4$21.identity(finalNodeMatrix);
+		mat4$21.translate(finalNodeMatrix, finalNodeMatrix, [
 			-box.center[0],
 			-box.max[1],
 			-box.center[2]
 		]);
-		mat4$20.multiply(finalNodeMatrix, finalNodeMatrix, globalMatrix);
-		if (!node.is_only) mat4$20.translate(finalNodeMatrix, finalNodeMatrix, node.offset);
-		mat4$20.multiply(finalNodeMatrix, finalNodeMatrix, mat3$5.toMat4(node.mat3));
+		mat4$21.multiply(finalNodeMatrix, finalNodeMatrix, globalMatrix);
+		if (!node.is_only) mat4$21.translate(finalNodeMatrix, finalNodeMatrix, node.offset);
+		mat4$21.multiply(finalNodeMatrix, finalNodeMatrix, mat3$6.toMat4(node.mat3));
 		node.finalMatrix = finalNodeMatrix;
 	}
 	for (let n = 0; n < model.nodes.length; n++) {
 		const node = model.nodes[n];
-		for (let i = 0; i < model.instances.length; i++) mat4$20.multiply(node._cache.instances[i], model.instances[i], node.finalMatrix);
+		for (let i = 0; i < model.instances.length; i++) mat4$21.multiply(node._cache.instances[i], model.instances[i], node.finalMatrix);
 	}
 	const buffer = model._gpuBuffer;
 	const writePlans = model.writePlans;
@@ -208172,11 +208172,11 @@ function updateModelBuffer(gl, model, frame, force) {
 /**
 * Render animated models
 */
-function render$19(gl, modelView, projection, normalMat, fog, light, tick) {
+function render$20(gl, modelView, projection, normalMat, fog, light, tick) {
 	if (_animatedModels.length === 0) return;
-	if (!_program$20) init$8(gl);
-	const uniform = _program$20.uniform;
-	gl.useProgram(_program$20);
+	if (!_program$21) init$9(gl);
+	const uniform = _program$21.uniform;
+	gl.useProgram(_program$21);
 	gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
 	gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
 	gl.uniformMatrix3fv(uniform.uNormalMat, false, normalMat);
@@ -208215,7 +208215,7 @@ function render$19(gl, modelView, projection, normalMat, fog, light, tick) {
 function hasAnimatedModels() {
 	return _animatedModels.length > 0;
 }
-var mat3$5, mat4$20, vec3$6, quat$1, _tempVec3, _tempVec3Scale, _tempQuat, _tempMat4, _program$20, _animatedModels, AnimatedModels_default;
+var mat3$6, mat4$21, vec3$6, quat$1, _tempVec3, _tempVec3Scale, _tempQuat, _tempMat4, _program$21, _animatedModels, AnimatedModels_default;
 var init_AnimatedModels = __esmMin((() => {
 	init_Client();
 	init_gl_matrix();
@@ -208224,22 +208224,4524 @@ var init_AnimatedModels = __esmMin((() => {
 	init_AnimatedModels$2();
 	init_AnimatedModels$1();
 	init_SpriteRenderer();
-	mat3$5 = gl_matrix_default.mat3;
-	mat4$20 = gl_matrix_default.mat4;
+	mat3$6 = gl_matrix_default.mat3;
+	mat4$21 = gl_matrix_default.mat4;
 	vec3$6 = gl_matrix_default.vec3;
 	quat$1 = gl_matrix_default.quat;
 	_tempVec3 = vec3$6.create();
 	_tempVec3Scale = vec3$6.create();
 	_tempQuat = quat$1.create();
-	_tempMat4 = mat4$20.create();
-	_program$20 = null;
+	_tempMat4 = mat4$21.create();
+	_program$21 = null;
 	_animatedModels = [];
 	AnimatedModels_default = {
+		init: init$9,
+		free: free$4,
+		add: add$2,
+		render: render$20,
+		hasAnimatedModels
+	};
+}));
+//#endregion
+//#region src/Renderer/Effects/FlatColorTile.vs?raw
+var FlatColorTile_default$2;
+var init_FlatColorTile$2 = __esmMin((() => {
+	FlatColorTile_default$2 = "#version 300 es\r\nprecision highp float;\r\n\r\nout vec4 vColor;\r\n\r\nin vec2 aPosition;\r\n\r\nuniform vec4 uColor;\r\n\r\nuniform mat4 uModelViewMat;\r\nuniform mat4 uProjectionMat;\r\n\r\nuniform vec3 uPosition;\r\nuniform float uSize;\r\n\r\nvoid main(void) {\r\n    vec4 position  = vec4(uPosition.x + 0.5, -uPosition.z, uPosition.y + 0.5, 1.0);\r\n    position      += vec4(aPosition.x * uSize, 0.0, aPosition.y * uSize, 0.0);\r\n\r\n    gl_Position    = uProjectionMat * uModelViewMat * position;\r\n    gl_Position.z -= 0.01;\r\n    vColor = uColor;\r\n}";
+}));
+//#endregion
+//#region src/Renderer/Effects/FlatColorTile.fs?raw
+var FlatColorTile_default$1;
+var init_FlatColorTile$1 = __esmMin((() => {
+	FlatColorTile_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec4 vColor;\r\nout vec4 fragColor;\r\n\r\nvoid main(void) {\r\n    fragColor = vColor;\r\n}";
+}));
+//#endregion
+//#region src/Renderer/Effects/FlatColorTile.js
+function FlatColorTile_default(name, spec) {
+	let _program, _buffer;
+	if (_cache[name]) return _cache[name];
+	if (spec.a === void 0) spec.a = .5;
+	[
+		spec.r,
+		spec.g,
+		spec.b,
+		spec.a
+	].forEach(function(value) {
+		if (value === void 0) throw new Error("FlatColorTile: need to pass r, g, b, a");
+		if (value > 1 || value < 0) throw new Error("FlatColorTile: r, g, b, a need to be 0.0-1.0");
+	});
+	class FlatColorTile {
+		constructor(pos, startTick) {
+			this.position = pos;
+		}
+		init(gl) {
+			this.ready = true;
+		}
+		free(gl) {
+			this.ready = false;
+		}
+		render(gl, tick) {
+			if (_program === void 0) return;
+			gl.uniform3fv(_program.uniform.uPosition, this.position);
+			gl.uniform1f(_program.uniform.uSize, .5);
+			gl.uniform4fv(_program.uniform.uColor, [
+				spec.r,
+				spec.g,
+				spec.b,
+				spec.a
+			]);
+			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
+			gl.drawArrays(gl.TRIANGLES, 0, 6);
+		}
+		static init(gl) {
+			_program = WebGL_default.createShaderProgram(gl, FlatColorTile_default$2, FlatColorTile_default$1);
+			_buffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
+			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
+				-1,
+				-1,
+				0,
+				0,
+				1,
+				-1,
+				1,
+				0,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				1,
+				-1,
+				1,
+				0,
+				1,
+				-1,
+				-1,
+				0,
+				0
+			]), gl.STATIC_DRAW);
+			FlatColorTile.ready = true;
+		}
+		static free(gl) {
+			if (_program) {
+				gl.deleteProgram(_program);
+				_program = null;
+			}
+			if (_buffer) gl.deleteBuffer(_buffer);
+			this.ready = false;
+		}
+		static beforeRender(gl, modelView, projection, fog, tick) {
+			const uniform = _program.uniform;
+			const attribute = _program.attribute;
+			gl.useProgram(_program);
+			gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
+			gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
+			gl.enableVertexAttribArray(attribute.aPosition);
+			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
+			gl.vertexAttribPointer(attribute.aPosition, 2, gl.FLOAT, false, 16, 0);
+		}
+		static afterRender(gl) {
+			gl.disableVertexAttribArray(_program.attribute.aPosition);
+		}
+	}
+	FlatColorTile._uid = name;
+	FlatColorTile.renderBeforeEntities = true;
+	_cache[name] = FlatColorTile;
+	return FlatColorTile;
+}
+var _cache;
+var init_FlatColorTile = __esmMin((() => {
+	init_WebGL();
+	init_FlatColorTile$2();
+	init_FlatColorTile$1();
+	_cache = {};
+}));
+//#endregion
+//#region node_modules/granny-ro-js/dist/granny-ro.wasm.esm.js
+function l(e) {
+	let t = e >>> 0;
+	return ((t & 255) << 24 | (t & 65280) << 8 | (t & 16711680) >>> 8 | (t & 4278190080) >>> 24) >>> 0;
+}
+function u(e, t) {
+	let n = e.length;
+	if (n !== t.length) return !1;
+	for (let r = 0; r < n; r++) if (e[r] !== t[r]) return !1;
+	return !0;
+}
+function d(e, t) {
+	let n = [
+		e.getUint32(0, !0),
+		e.getUint32(4, !0),
+		e.getUint32(8, !0),
+		e.getUint32(12, !0)
+	];
+	if (!t) return n;
+	for (let e = 0; e < 4; e++) n[e] = l(n[e]);
+	return n;
+}
+function f(a) {
+	let o = p(a);
+	if (o.byteLength < 32) return {
+		ok: !1,
+		byteReversed: !1,
+		pointerSize: 0
+	};
+	let s = d(o, !1);
+	if (u(s, e) || u(s, t)) return {
+		ok: !0,
+		byteReversed: !1,
+		pointerSize: 32
+	};
+	if (u(s, r)) return {
+		ok: !0,
+		byteReversed: !1,
+		pointerSize: 64
+	};
+	let c = s.map(l);
+	return u(c, e) || u(c, n) ? {
+		ok: !0,
+		byteReversed: !0,
+		pointerSize: 32
+	} : u(c, i$1) ? {
+		ok: !0,
+		byteReversed: !0,
+		pointerSize: 64
+	} : {
+		ok: !1,
+		byteReversed: !1,
+		pointerSize: 0
+	};
+}
+function p(e) {
+	if (e instanceof DataView) return e;
+	if (ArrayBuffer.isView(e)) return new DataView(e.buffer, e.byteOffset, e.byteLength);
+	if (e instanceof ArrayBuffer) return new DataView(e);
+	throw TypeError(`parseGR2File expects ArrayBuffer, DataView or typed array`);
+}
+function m(e) {
+	if (e instanceof Uint8Array) return e;
+	if (ArrayBuffer.isView(e)) return new Uint8Array(e.buffer, e.byteOffset, e.byteLength);
+	if (e instanceof ArrayBuffer) return new Uint8Array(e);
+	throw TypeError(`parseGR2File expects ArrayBuffer, DataView or typed array`);
+}
+function h(e, t) {
+	let n = !t, r = e.byteLength;
+	return (t) => {
+		if (t < 0 || t + 4 > r) throw RangeError(`gr2 read out of range at 0x${t.toString(16)} (cap 0x${r.toString(16)})`);
+		return e.getUint32(t, n);
+	};
+}
+function g(e) {
+	let t = p(e), n = m(e), r = f(t);
+	if (!r.ok) throw Error(`not a Granny2 file`);
+	let i = h(t, r.byteReversed), a = i(32), o = i(36), l = i(40), u = i(44), d = i(48), g = [i(52), i(56)], _ = [i(60), i(64)], v = i(68), y = [
+		,
+		,
+		,
+		,
+	];
+	for (let e = 0; e < 4; e++) y[e] = i(72 + e * 4);
+	let b = 0, x = [];
+	a >= 7 && (b = i(88), x = [
+		i(92),
+		i(96),
+		i(100)
+	]);
+	let S = Array(d), C = 32 + u;
+	for (let e = 0; e < d; e++) {
+		let t = C + e * 44;
+		S[e] = {
+			index: e,
+			compression: i(t),
+			data_offset: i(t + 4),
+			data_size: i(t + 8),
+			expanded_size: i(t + 12),
+			internal_alignment: i(t + 16),
+			first_16bit: i(t + 20),
+			first_8bit: i(t + 24),
+			pointer_fixup_offset: i(t + 28),
+			pointer_fixup_count: i(t + 32),
+			mixed_marshalling_offset: i(t + 36),
+			mixed_marshalling_count: i(t + 40),
+			get compression_name() {
+				return s[this.compression] ?? `unknown_${this.compression}`;
+			},
+			get semantic_name() {
+				return c[this.index] ?? `section_${this.index}`;
+			}
+		};
+	}
+	return {
+		header: {
+			version: a,
+			total_size: o,
+			crc: l,
+			section_array_offset: u,
+			section_count: d,
+			root_type: g,
+			root_object: _,
+			type_tag: v,
+			extra_tags: y,
+			string_db_crc: b,
+			reserved: x,
+			pointer_size: r.pointerSize,
+			byte_reversed: r.byteReversed
+		},
+		sections: S,
+		data: n,
+		sectionBytes(e) {
+			let t = e.data_offset, r = t + e.data_size;
+			if (t < 0 || r > n.byteLength) throw RangeError(`section ${e.index} points outside file`);
+			return n.subarray(t, r);
+		}
+	};
+}
+function x(e) {
+	let t = e.expanded_size, n = S(e.first_16bit, t), r = S(e.first_8bit, t);
+	return r < n && (r = n), [
+		0,
+		n,
+		r,
+		t
+	];
+}
+function S(e, t) {
+	return e <= 0 ? 0 : e >= t ? t : e;
+}
+function C(e, t) {
+	if (t.length < 36) throw RangeError(`oodle0 section ${e.index} too short for header`);
+	let n = new DataView(t.buffer, t.byteOffset, t.byteLength), r = Array(9);
+	for (let e = 0; e < 9; e++) r[e] = n.getUint32(e * 4, !0);
+	let i = [
+		new b(r[0], r[1], r[2]),
+		new b(r[3], r[4], r[5]),
+		new b(r[6], r[7], r[8])
+	], a = x(e), o = [
+		,
+		,
+		,
+	];
+	for (let e = 0; e < 3; e++) {
+		let t = a[e], n = a[e + 1];
+		o[e] = {
+			index: e,
+			output_start: t,
+			output_end: n,
+			output_size: Math.max(0, n - t),
+			is_empty: n <= t,
+			header: i[e]
+		};
+	}
+	return {
+		section_index: e.index,
+		expanded_size: e.expanded_size,
+		blocks: o,
+		bitstream_offset: 36
+	};
+}
+function w(e, t) {
+	let n = e.length;
+	if (t + 4 <= n) return (e[t] | e[t + 1] << 8 | e[t + 2] << 16 | e[t + 3] << 24) >>> 0;
+	let r = 0;
+	return t < n && (r |= e[t]), t + 1 < n && (r |= e[t + 1] << 8), t + 2 < n && (r |= e[t + 2] << 16), t + 3 < n && (r |= e[t + 3] << 24), r >>> 0;
+}
+function T(e, t) {
+	let n = 0;
+	for (let r = 0; r < t; r++) n = n << 1 | e >>> r & 1;
+	return n >>> 0;
+}
+function ee(e) {
+	return e + 5 & -4;
+}
+function O(e) {
+	if (e < 6) return [
+		0,
+		15,
+		0
+	];
+	let t = 4294967295, n = 0;
+	for (let r = 0; r < 16; r++) {
+		let i = 1 << r, a = e - i * (Math.min(Math.floor((e + i - 1) / i), 16) - 1);
+		if (a < i && (a = i), a < t && (n = r, t = a), i > e) break;
+	}
+	let r = 1 << n;
+	return [
+		r,
+		n,
+		15 * r
+	];
+}
+function j$1(e, t, n) {
+	let r = e.decompress(t);
+	if (r instanceof k) {
+		let i = t.getValue(n);
+		return e.setEscaped(r, i), i;
+	}
+	return r | 0;
+}
+function M(e, t) {
+	if (e.expanded_size === 0) return /* @__PURE__ */ new Uint8Array();
+	if (t.length < 36) throw new y(`oodle0 data too short for 3 block headers`);
+	let n = e.expanded_size;
+	if (n > 268435456 || n > t.length * 1024) throw new y(`oodle0 expanded_size ${n} exceeds cap (268435456 B / 1024× of ${t.length} B)`);
+	let r = C(e, t), i = new D(t, 36), a = new Uint8Array(e.expanded_size), o = 0;
+	for (let e = 0; e < 3; e++) {
+		let t = r.blocks[e];
+		t.is_empty || (o = ne(new te(t.header), i, a, o, t.output_end));
+	}
+	if (o !== e.expanded_size) throw new y(`oodle0 decompressed ${o}, expected ${e.expanded_size}`);
+	return a;
+}
+function ne(e, t, n, r, i) {
+	for (; r < i;) {
+		let i = e.last_length, a = j$1(e.lengths[i], t, 65);
+		if (e.last_length = a, a) {
+			let i = a >= 61 ? _[a - 61] : a + 1, o = j$1(e.offset_low, t, e.max_offset_low), s = (Math.min(e.max_offsets, e.bytes_decompressed) >>> 2) + 1, c = j$1(e.offset_high, t, s), l = o + 1 + (c << 2);
+			if (l <= 0 || l > r) throw new y(`oodle0 invalid copy distance ${l}`);
+			let u = r - l;
+			for (let e = 0; e < i; e++) n[r + e] = n[u + e];
+			r += i, e.bytes_decompressed += i;
+		} else {
+			let i = j$1(e.bytes, t, e.max_bytes);
+			if (i < 0 || i > 255) throw new y(`oodle0 invalid literal ${i}`);
+			n[r++] = i, e.bytes_decompressed += 1;
+		}
+	}
+	return r;
+}
+function P(e, t, n) {
+	let r = e.sectionsOriginal[t];
+	if (!r || n < 0 || n + 68 > r.length) return N;
+	let i = new DataView(r.buffer, r.byteOffset, r.byteLength), a = i.getUint32(n, !0), o = Array(16);
+	for (let e = 0; e < 16; e++) o[e] = i.getFloat32(n + 4 + e * 4, !0);
+	return {
+		flags: a,
+		position: [
+			o[0],
+			o[1],
+			o[2]
+		],
+		orientation: [
+			o[3],
+			o[4],
+			o[5],
+			o[6]
+		],
+		scaleShear: [
+			o[7],
+			o[8],
+			o[9],
+			o[10],
+			o[11],
+			o[12],
+			o[13],
+			o[14],
+			o[15]
+		]
+	};
+}
+function re(e, t) {
+	if (e.expanded_size === 0) return /* @__PURE__ */ new Uint8Array();
+	if (e.compression === 0) {
+		if (t.length < e.expanded_size) throw RangeError(`section ${e.index} short: ${t.length} < ${e.expanded_size}`);
+		return t.subarray(0, e.expanded_size);
+	}
+	if (e.compression === 1) return M(e, t);
+	throw Error(`unsupported compression ${e.compression}`);
+}
+function ce(e, t) {
+	return oe + e * se + t >>> 0;
+}
+function I(e, t) {
+	if (e < 268435456) return null;
+	let n = e - oe >>> 0, r = n / se | 0, i = n - r * se;
+	return r < 0 || r >= t ? null : [r, i];
+}
+function le(e) {
+	return e.header.pointer_size >>> 3;
+}
+function ue(e) {
+	let t = !e;
+	return (e, n) => {
+		if (n < 0 || n + 4 > e.length) throw RangeError(`gr2 type-tree read out of range at 0x${n.toString(16)} (cap 0x${e.length.toString(16)})`);
+		return new DataView(e.buffer, e.byteOffset, e.byteLength).getUint32(n, t);
+	};
+}
+function L(e, t, n, r) {
+	let i = new DataView(e.buffer, e.byteOffset, e.byteLength), a = !r;
+	if (n === 4) return i.getUint32(t, a);
+	let o = i.getUint32(t, a) >>> 0;
+	return (i.getUint32(t + 4, a) >>> 0) * 4294967296 + o;
+}
+function de(e, t, n, r, i) {
+	let a = new DataView(e.buffer, e.byteOffset, e.byteLength), o = !i;
+	if (r === 4) {
+		a.setUint32(t, n >>> 0, o);
+		return;
+	}
+	let s = n >>> 0, c = Math.floor(n / 4294967296) >>> 0;
+	a.setUint32(t, s, o), a.setUint32(t + 4, c, o);
+}
+function fe(e) {
+	let t = e.sections, n = t.length, r = Array(n), i = Array(n);
+	for (let a = 0; a < n; a++) {
+		let n = t[a], o = re(n, e.sectionBytes(n));
+		r[a] = o, i[a] = new Uint8Array(o);
+	}
+	let a = le(e);
+	if (a !== 4 && a !== 8) throw Error(`unsupported pointer size ${e.header.pointer_size}`);
+	let o = pe(e), s = me(e);
+	if (e.header.byte_reversed && s.length > 0) throw Error(`cross-endian asset (byte_reversed + mixed-marshalling table) is not supported — iRO corpus is all little-endian`);
+	for (let t = 0; t < o.length; t++) {
+		let r = o[t];
+		if (r.source_section >= n) continue;
+		let s = i[r.source_section];
+		if (r.source_offset + a > s.length) continue;
+		let c = ce(r.target[0], r.target[1]);
+		de(s, r.source_offset, c, a, e.header.byte_reversed);
+	}
+	return {
+		file: e,
+		sectionsOriginal: r,
+		sectionsFixed: i,
+		pointerFixups: o,
+		mixedFixups: s,
+		pointerSize: a
+	};
+}
+function pe(e) {
+	let t = ue(e.header.byte_reversed), n = e.data, r = e.sections, i = [];
+	for (let e = 0; e < r.length; e++) {
+		let a = r[e], o = a.pointer_fixup_count, s = a.pointer_fixup_offset;
+		if (!(o === 0 || s === 0)) {
+			if (s + o * 12 > n.length) throw RangeError(`section ${e} pointer fixup table at 0x${s.toString(16)} (${o} entries) escapes file (size 0x${n.length.toString(16)})`);
+			for (let r = 0; r < o; r++) {
+				let a = s + r * 12;
+				i.push({
+					source_section: e,
+					source_offset: t(n, a),
+					target: [t(n, a + 4), t(n, a + 8)]
+				});
+			}
+		}
+	}
+	return i;
+}
+function me(e) {
+	let t = ue(e.header.byte_reversed), n = e.data, r = e.sections, i = [];
+	for (let e = 0; e < r.length; e++) {
+		let a = r[e], o = a.mixed_marshalling_count, s = a.mixed_marshalling_offset;
+		if (!(o === 0 || s === 0)) {
+			if (s + o * 16 > n.length) throw RangeError(`section ${e} mixed-marshalling table at 0x${s.toString(16)} (${o} entries) escapes file (size 0x${n.length.toString(16)})`);
+			for (let r = 0; r < o; r++) {
+				let a = s + r * 16;
+				i.push({
+					source_section: e,
+					count: t(n, a),
+					offset: t(n, a + 4),
+					type_ref: [t(n, a + 8), t(n, a + 12)]
+				});
+			}
+		}
+	}
+	return i;
+}
+function he(e) {
+	let t = e.length;
+	if (t === 0) return !1;
+	for (let n = 0; n < t; n++) {
+		let t = e[n];
+		if (!(t === 9 || t === 10 || t === 13) && (t < 32 || t === 127)) return !1;
+	}
+	return !0;
+}
+function _e(e, t, n = 1024) {
+	let r = t[0], i = t[1];
+	if (r >= e.sectionsOriginal.length) return ``;
+	let a = e.sectionsOriginal[r];
+	if (i < 0 || i >= a.length) return ``;
+	if (i + 4 <= a.length) {
+		let t = ue(e.file.header.byte_reversed)(a, i), r = i + 4 + t;
+		if (t > 0 && t <= n && r <= a.length) {
+			let e = a.subarray(i + 4, r);
+			if (he(e)) return ge.decode(e).replace(/\0+$/, ``);
+		}
+	}
+	let o = Math.min(a.length, i + n), s = o;
+	for (let e = i; e < o; e++) if (a[e] === 0) {
+		s = e;
+		break;
+	}
+	let c = a.subarray(i, s);
+	return he(c) ? ge.decode(c) : ``;
+}
+function ve(e, t) {
+	let n = I(t, e.sectionsOriginal.length);
+	return n === null ? `` : _e(e, n);
+}
+function R(e, t, n = {}) {
+	let r = n.maxMembers ?? 512, i = t[0], a = t[1];
+	if (i >= e.sectionsFixed.length) return [];
+	let o = e.sectionsFixed[i], s = ue(e.file.header.byte_reversed), c = e.sectionsFixed.length, l = [], u = a;
+	for (let t = 0; t < r && !(u + 32 > o.length); t++) {
+		let t = s(o, u);
+		if (t === 0) break;
+		let n = s(o, u + 4), r = s(o, u + 8), i = s(o, u + 12), a = s(o, u + 16), d = s(o, u + 20), f = s(o, u + 24), p = ve(e, n) || `member_${l.length}`, m = I(r, c);
+		l.push({
+			memberType: t,
+			memberTypeName: ie[t] ?? `type_${t}`,
+			name: p,
+			referenceType: m,
+			arrayWidth: i || 1,
+			extra: [
+				a,
+				d,
+				f
+			],
+			offset: u
+		}), u += 32;
+	}
+	return l;
+}
+function ye(e, t) {
+	let n = e.arrayWidth || 1, r = e.memberType, i = ae[r];
+	return i === void 0 ? r === 2 || r === 22 || r === 8 ? t : r === 3 || r === 4 ? 4 + t : r === 5 ? t * 2 : r === 7 ? t + 4 + t : r === 9 ? 68 : r === 1 ? 0 : t : i * n;
+}
+function be(e, t, n, r, i = {}) {
+	let a = 0;
+	for (let o = 0; o < t.length; o++) {
+		let s = t[o];
+		if (s.memberType === 1 && s.referenceType) {
+			let t = s.referenceType[0] * se + s.referenceType[1];
+			if (r.has(t)) continue;
+			if (i[t] !== void 0) {
+				a += i[t];
+				continue;
+			}
+			let o = new Set(r);
+			o.add(t);
+			let c = be(e, R(e, s.referenceType), n, o, i);
+			i[t] = c, a += c;
+		} else a += ye(s, n);
+	}
+	return a;
+}
+function z(e, t, n, r = {}, i = 0, a = null) {
+	let o = r.maxArrayRefs ?? 256, s = e.pointerSize, c = e.file.header.byte_reversed, l = n[0], u = n[1];
+	if (l >= e.sectionsFixed.length) return {};
+	let d = e.sectionsFixed[l], f = e.sectionsOriginal[l], p = e.sectionsFixed.length, m = ue(c), h = new DataView(f.buffer, f.byteOffset, f.byteLength), g = !c, _ = {}, v = u;
+	for (let n = 0; n < t.length; n++) {
+		let u = t[n], y = ye(u, s);
+		if (v + y > d.length) break;
+		let b = {
+			type: u.memberTypeName,
+			offset: v
+		};
+		u.referenceType && (b.reference_type = {
+			section: u.referenceType[0],
+			offset: u.referenceType[1]
+		});
+		let x = u.memberType;
+		if (x === 2 || x === 22) b.target = Se(I(L(d, v, s, c), p));
+		else if (x === 8) {
+			let t = L(d, v, s, c);
+			b.value = ve(e, t), b.target = Se(I(t, p));
+		} else if (x === 3 || x === 4) {
+			let t = m(f, v), n = I(L(d, v + 4, s, c), p);
+			b.count = t, b.target = Se(n), b.truncated = t > o, x === 4 && (b.element_refs = xe(e, n, t, o));
+		} else if (x === 7) {
+			let e = L(d, v, s, c), t = m(f, v + s), n = L(d, v + s + 4, s, c);
+			b.variant_type = Se(I(e, p)), b.count = t, b.target = Se(I(n, p)), b.truncated = t > o;
+		} else if (x === 5) {
+			let e = L(d, v, s, c), t = L(d, v + s, s, c);
+			b.variant_type = Se(I(e, p)), b.target = Se(I(t, p));
+		} else if (x === 19) b.value = h.getInt32(v, g);
+		else if (x === 20) b.value = h.getUint32(v, g);
+		else if (x === 15) b.value = h.getInt16(v, g);
+		else if (x === 16) b.value = h.getUint16(v, g);
+		else if (x === 11) b.value = h.getInt8(v);
+		else if (x === 12) b.value = h.getUint8(v);
+		else if (x === 10) b.value = h.getFloat32(v, g);
+		else if (x === 9) b.value = P(e, l, v);
+		else if (x === 1 && u.referenceType) {
+			let t = u.referenceType[0] * se + u.referenceType[1];
+			if (i >= 64) throw new F(`inline nesting exceeds MAX_INLINE_DEPTH (64) at section ${l} offset 0x${v.toString(16)}`);
+			if (a !== null && a.has(t)) throw new F(`self-referential inline type [${u.referenceType[0]}, ${u.referenceType[1]}] at section ${l} offset 0x${v.toString(16)}`);
+			let n = a === null ? /* @__PURE__ */ new Set() : new Set(a);
+			n.add(t);
+			let o = R(e, u.referenceType);
+			b.inline = z(e, o, [l, v], r, i + 1, n);
+			let c = be(e, o, s, /* @__PURE__ */ new Set());
+			v += c, _[u.name] = b;
+			continue;
+		}
+		_[u.name] = b, v += y;
+	}
+	return _;
+}
+function xe(e, t, n, r) {
+	if (t === null || n <= 0) return [];
+	let i = e.pointerSize, a = e.file.header.byte_reversed, o = e.sectionsFixed[t[0]];
+	if (!o) return [];
+	let s = e.sectionsFixed.length, c = n < r ? n : r, l = Array(c), u = 0;
+	for (let e = 0; e < c; e++) {
+		let n = t[1] + e * i;
+		if (n + i > o.length) break;
+		let r = I(L(o, n, i, a), s);
+		r !== null && (l[u++] = {
+			section: r[0],
+			offset: r[1]
+		});
+	}
+	return l.length = u, l;
+}
+function B(e, t, n, r, i = {}) {
+	if (t === null || r === null || n <= 0) return [];
+	let a = i.maxCount ?? 64, o = i.maxArrayRefs ?? a, s = R(e, [r.section, r.offset]), c = be(e, s, e.pointerSize, /* @__PURE__ */ new Set());
+	if (c <= 0) return [];
+	let l = n < a ? n : a, u = Array(l), d = { maxArrayRefs: o };
+	for (let n = 0; n < l; n++) {
+		let r = t.offset + n * c;
+		u[n] = {
+			ref: {
+				section: t.section,
+				offset: r
+			},
+			fields: z(e, s, [t.section, r], d)
+		};
+	}
+	return u;
+}
+function Se(e) {
+	return e === null ? null : {
+		section: e[0],
+		offset: e[1]
+	};
+}
+function Ce(e, t = {}) {
+	let n = t.maxSkeletons ?? 16, r = t.maxBones ?? 4096, i = e.file, a = i.header.root_type, o = i.header.root_object, s = z(e, R(e, a), o, { maxArrayRefs: n }).Skeletons;
+	if (!s) return [];
+	let c = s.reference_type ?? null, l = s.element_refs ?? [];
+	if (c === null || l.length === 0) return [];
+	let u = [], d = R(e, [c.section, c.offset]), f = l.length < n ? l.length : n;
+	for (let t = 0; t < f; t++) {
+		let n = l[t];
+		if (!n) continue;
+		let i = z(e, d, [n.section, n.offset], { maxArrayRefs: r }), a = i.Bones, o = a?.target ?? null, s = a?.reference_type ?? null, c = B(e, o, a?.count ?? 0, s, { maxCount: r }), f = Array(c.length);
+		for (let t = 0; t < c.length; t++) f[t] = we(e, t, c[t]);
+		let p = i.Name?.value, m = i.LODType?.value;
+		u.push({
+			name: typeof p == `string` && p ? p : `Skeleton_${u.length}`,
+			bones: f,
+			lodType: typeof m == `number` ? m : 0
+		});
+	}
+	return u;
+}
+function we(e, t, n) {
+	let { ref: r, fields: i } = n, a = i.Name?.value, o = i.ParentIndex?.value, s = i.Transform?.offset ?? 0, c = i.InverseWorldTransform?.offset ?? 0, l = N, u = [];
+	return r && (l = P(e, r.section, s), u = Te(e, r.section, c, 16)), {
+		index: t,
+		name: typeof a == `string` && a ? a : `Bone_${t}`,
+		parentIndex: typeof o == `number` ? o : -1,
+		transform: l,
+		inverseWorldTransform: u
+	};
+}
+function Te(e, t, n, r) {
+	let i = e.sectionsOriginal[t];
+	if (!i || n < 0 || n + r * 4 > i.length) return [];
+	let a = new DataView(i.buffer, i.byteOffset, i.byteLength), o = Array(r);
+	for (let e = 0; e < r; e++) o[e] = a.getFloat32(n + e * 4, !0);
+	return o;
+}
+function Ee(e, t = {}) {
+	let n = t.maxMeshes ?? 32, r = t.maxMaterials ?? 4096, i = t.maxBones ?? 4096, a = De(e, n);
+	if (a.length === 0) return [];
+	let o = We(e, r), s = [], c = a.length;
+	for (let t = 0; t < c; t++) {
+		let n = a[t], r = n.primaryVertexData, c = n.primaryTopology;
+		if (!r) continue;
+		let l = r.Vertices;
+		if (!l) continue;
+		let u = l.target ?? null, d = l.variant_type ?? null, f = l.count ?? 0;
+		if (!u || !d || f <= 0) continue;
+		let p = ke(R(e, [d.section, d.offset])), m = Ae(p), h = Ye(e, u.section, u.offset, f * m);
+		if (h === null) continue;
+		let g = c ? He(c) : null, _ = g ? g.field : null, v = g ? g.name : null, y = Pe(e, _?.target ?? null, _?.count ?? 0, Ve(v, _, 16)), b = Re(e, n.fields, i), x = ze(e, n.fields, o, i), S = c ? Be(e, c) : [], C = Ne(h, f, m, p, `Position`, 3, !1), w = Ne(h, f, m, p, `Normal`, 3, !1), T = Ne(h, f, m, p, `TextureCoordinates`, 2, !0), E = Fe(h, f, m, p, b.length);
+		s.push({
+			name: n.name,
+			vertexCount: f,
+			indexCount: y.length,
+			vertexStride: m,
+			components: p,
+			positions: C,
+			normals: w,
+			uvs: T,
+			indices: y,
+			boneBindings: b,
+			vertexWeights: E,
+			materials: x,
+			triangleGroups: S
+		});
+	}
+	return s;
+}
+function De(e, t) {
+	let n = e.file, r = R(e, n.header.root_type), i = null;
+	for (let e = 0; e < r.length; e++) if (r[e].name === `Meshes`) {
+		i = r[e];
+		break;
+	}
+	if (!i || !i.referenceType) return [];
+	let a = z(e, r, n.header.root_object, { maxArrayRefs: t }).Meshes?.element_refs ?? [];
+	if (a.length === 0) return [];
+	let o = i.referenceType, s = R(e, o), c = {};
+	for (let e = 0; e < s.length; e++) c[s[e].name] = s[e];
+	let l = a.length < t ? a.length : t, u = Array(l), d = 0;
+	for (let t = 0; t < l; t++) {
+		let n = a[t];
+		if (!n) continue;
+		let r = z(e, s, [n.section, n.offset]), i = r.Name?.value, o = {
+			index: t,
+			name: typeof i == `string` && i ? i : `Mesh_${t}`,
+			ref: n,
+			fields: r,
+			primaryVertexData: null,
+			primaryTopology: null
+		};
+		Oe(e, o, r, c, `PrimaryVertexData`, `primaryVertexData`), Oe(e, o, r, c, `PrimaryTopology`, `primaryTopology`), u[d++] = o;
+	}
+	return u.length = d, u;
+}
+function Oe(e, t, n, r, i, a) {
+	let o = n[i]?.target, s = r[i];
+	!o || !s || !s.referenceType || (t[a] = z(e, R(e, s.referenceType), [o.section, o.offset]));
+}
+function ke(e) {
+	let t = Array(e.length), n = 0;
+	for (let r = 0; r < e.length; r++) {
+		let i = e[r], a = je(i);
+		t[r] = {
+			name: i.name,
+			offset: n,
+			width: i.arrayWidth || 1,
+			memberType: i.memberType
+		}, n += a;
+	}
+	return t;
+}
+function Ae(e) {
+	if (e.length === 0) return 0;
+	let t = 0;
+	for (let n = 0; n < e.length; n++) {
+		let r = e[n].offset + Me(e[n]);
+		r > t && (t = r);
+	}
+	return t;
+}
+function je(e) {
+	let t = e.arrayWidth || 1, n = e.memberType;
+	return n === 10 || n === 19 || n === 20 ? 4 * t : n === 15 || n === 16 || n === 17 || n === 18 ? 2 * t : n === 11 || n === 12 || n === 13 || n === 14 ? t : 4 * t;
+}
+function Me(e) {
+	let t = e.width, n = e.memberType;
+	return n === 10 || n === 19 || n === 20 ? 4 * t : n === 15 || n === 16 || n === 17 || n === 18 ? 2 * t : n === 11 || n === 12 || n === 13 || n === 14 ? t : 4 * t;
+}
+function Ne(e, t, n, r, i, a, o) {
+	let s = null;
+	for (let e = 0; e < r.length; e++) {
+		let t = r[e];
+		if (t.memberType === 10 && !(t.width < a) && (o ? t.name.startsWith(i) : t.name === i)) {
+			s = t;
+			break;
+		}
+	}
+	if (s === null) return [];
+	let c = new DataView(e.buffer, e.byteOffset, e.byteLength), l = e.length, u = s.offset, d = a * 4, f = [];
+	for (let e = 0; e < t; e++) {
+		let t = e * n + u;
+		if (t + d > l) break;
+		if (a === 3) f.push([
+			c.getFloat32(t, !0),
+			c.getFloat32(t + 4, !0),
+			c.getFloat32(t + 8, !0)
+		]);
+		else if (a === 2) f.push([c.getFloat32(t, !0), c.getFloat32(t + 4, !0)]);
+		else {
+			let e = Array(a);
+			for (let n = 0; n < a; n++) e[n] = c.getFloat32(t + n * 4, !0);
+			f.push(e);
+		}
+	}
+	return f;
+}
+function Pe(e, t, n, r) {
+	if (!t || n <= 0) return [];
+	if (r === 19 || r === 20) {
+		let r = Ye(e, t.section, t.offset, n * 4);
+		if (r === null) return [];
+		let i = new DataView(r.buffer, r.byteOffset, r.byteLength), a = Array(n);
+		for (let e = 0; e < n; e++) a[e] = i.getUint32(e * 4, !0);
+		return a;
+	}
+	let i = Ye(e, t.section, t.offset, n * 2);
+	if (i === null) return [];
+	let a = new DataView(i.buffer, i.byteOffset, i.byteLength), o = Array(n);
+	for (let e = 0; e < n; e++) o[e] = a.getUint16(e * 2, !0);
+	return o;
+}
+function Fe(e, t, n, r, i) {
+	let a = null, o = null;
+	for (let e = 0; e < r.length; e++) r[e].name === `BoneWeights` ? a = r[e] : r[e].name === `BoneIndices` && (o = r[e]);
+	if (a === null || o === null || i <= 0) return [];
+	let s = a.width < o.width ? a.width : o.width, c = new DataView(e.buffer, e.byteOffset, e.byteLength), l = e.length, u = Array(t), d = a.offset, f = o.offset;
+	for (let e = 0; e < t; e++) {
+		let t = e * n, r = [];
+		for (let e = 0; e < s; e++) {
+			let n = Ie(c, l, t + d, e, a), s = Le(c, l, t + f, e, o);
+			n <= 0 || s < 0 || s >= i || r.push({
+				boneIndex: s,
+				weight: n
+			});
+		}
+		u[e] = r;
+	}
+	return u;
+}
+function Ie(e, t, n, r, i) {
+	let a = i.memberType;
+	if (a === 10) {
+		let i = n + r * 4;
+		if (i + 4 > t) return 0;
+		let a = e.getFloat32(i, !0);
+		return a <= 0 ? 0 : a > 1 ? 1 : a;
+	}
+	if (a === 16 || a === 18) {
+		let i = n + r * 2;
+		if (i + 2 > t) return 0;
+		let o = e.getUint16(i, !0);
+		return a === 18 ? o / 65535 : o;
+	}
+	if (a === 12 || a === 14) {
+		let i = n + r;
+		if (i >= t) return 0;
+		let o = e.getUint8(i);
+		return a === 14 ? o / 255 : o;
+	}
+	return 0;
+}
+function Le(e, t, n, r, i) {
+	let a = i.memberType;
+	if (a === 19 || a === 20) {
+		let i = n + r * 4;
+		return i + 4 > t ? -1 : a === 19 ? e.getInt32(i, !0) : e.getUint32(i, !0);
+	}
+	if (a === 15 || a === 16) {
+		let i = n + r * 2;
+		return i + 2 > t ? -1 : a === 15 ? e.getInt16(i, !0) : e.getUint16(i, !0);
+	}
+	if (a === 11 || a === 12) {
+		let i = n + r;
+		return i >= t ? -1 : a === 11 ? e.getInt8(i) : e.getUint8(i);
+	}
+	return -1;
+}
+function Re(e, t, n) {
+	let r = t.BoneBindings;
+	if (!r) return [];
+	let i = B(e, r.target ?? null, r.count ?? 0, r.reference_type ?? null, { maxCount: n }), a = Array(i.length);
+	for (let e = 0; e < i.length; e++) {
+		let t = i[e].fields.BoneName?.value;
+		a[e] = {
+			index: e,
+			name: typeof t == `string` && t ? t : `Bone_${e}`
+		};
+	}
+	return a;
+}
+function ze(e, t, n, r) {
+	let i = t.MaterialBindings;
+	if (!i) return [];
+	let a = B(e, i.target ?? null, i.count ?? 0, i.reference_type ?? null, { maxCount: r }), o = Array(a.length);
+	for (let e = 0; e < a.length; e++) {
+		let t = a[e].fields.Material?.target;
+		o[e] = (t ? n[`${t.section}:${t.offset}`] : null) ?? {
+			index: e,
+			name: `Material_${e}`,
+			textureFile: ``,
+			textureSize: null
+		};
+	}
+	return o;
+}
+function Be(e, t) {
+	let n = t.Groups;
+	if (!n) return [];
+	let r = B(e, n.target ?? null, n.count ?? 0, n.reference_type ?? null, { maxCount: 4096 }), i = Array(r.length);
+	for (let e = 0; e < r.length; e++) {
+		let t = r[e].fields;
+		i[e] = {
+			materialIndex: typeof t.MaterialIndex?.value == `number` ? t.MaterialIndex.value : 0,
+			triFirst: typeof t.TriFirst?.value == `number` ? t.TriFirst.value : 0,
+			triCount: typeof t.TriCount?.value == `number` ? t.TriCount.value : 0
+		};
+	}
+	return i;
+}
+function Ve(e, t, n) {
+	return t && e === `Indices` ? 20 : n;
+}
+function He(e) {
+	let t = e.Indices16 ?? null, n = e.Indices ?? null;
+	return t && (t.count ?? 0) > 0 ? {
+		name: `Indices16`,
+		field: t
+	} : n && (n.count ?? 0) > 0 ? {
+		name: `Indices`,
+		field: n
+	} : t ? {
+		name: `Indices16`,
+		field: t
+	} : n ? {
+		name: `Indices`,
+		field: n
+	} : null;
+}
+function Ue(e, t) {
+	let n = e.file, r = z(e, R(e, n.header.root_type), n.header.root_object, { maxArrayRefs: t }).Materials;
+	if (!r) return {
+		materials: [],
+		cache: {}
+	};
+	let i = r.reference_type ?? null, a = r.element_refs ?? [], o = {}, s = a.length < t ? a.length : t, c = Array(s), l = 0;
+	for (let t = 0; t < s; t++) {
+		let n = a[t];
+		n && (c[l++] = Ke(e, n, i, t, o, {}));
+	}
+	return c.length = l, {
+		materials: c,
+		cache: o
+	};
+}
+function We(e, t) {
+	return Ue(e, t).cache;
+}
+function Ke(e, t, n, r, i, a) {
+	let o = `${t.section}:${t.offset}`;
+	if (i[o]) return i[o];
+	if (n === null || a[o]) return {
+		index: r,
+		name: `Material_${r}`,
+		textureFile: ``,
+		textureSize: null
+	};
+	let s = z(e, R(e, [n.section, n.offset]), [t.section, t.offset], { maxArrayRefs: 16 }), c = qe(e, s.Texture);
+	c === null && (c = Je(e, s.Maps, n, i, {
+		...a,
+		[o]: !0
+	}));
+	let l = s.Name?.value, u = {
+		index: r,
+		name: typeof l == `string` && l ? l : `Material_${r}`,
+		textureFile: c ? c[0] : ``,
+		textureSize: c ? c[1] : null
+	};
+	return i[o] = u, u;
+}
+function qe(e, t) {
+	if (!t) return null;
+	let n = t.target ?? null, r = t.reference_type ?? null;
+	if (!n || !r) return null;
+	let i = z(e, R(e, [r.section, r.offset]), [n.section, n.offset], { maxArrayRefs: 8 }), a = i.Width?.value, o = i.Height?.value, s = typeof a == `number` && typeof o == `number` ? [a, o] : null, c = i.FromFileName?.value;
+	return [typeof c == `string` ? c : ``, s];
+}
+function Je(e, t, n, r, i) {
+	if (!t) return null;
+	let a = t.target ?? null, o = t.reference_type ?? null, s = B(e, a, t.count ?? 0, o, { maxCount: 16 });
+	for (let t = 0; t < s.length; t++) {
+		let a = s[t].fields.Map?.target;
+		if (!a) continue;
+		let o = Ke(e, a, n, -1, r, i);
+		if (o.textureFile) return [o.textureFile, o.textureSize];
+	}
+	return null;
+}
+function Ye(e, t, n, r) {
+	let i = e.sectionsOriginal[t];
+	return !i || n < 0 || n + r > i.length ? null : i.subarray(n, n + r);
+}
+function Xe(e) {
+	let t = {}, n = e?.element_refs ?? [];
+	for (let e = 0; e < n.length; e++) {
+		let r = n[e];
+		r && (t[`${r.section}:${r.offset}`] = e);
+	}
+	return t;
+}
+function Ze(e, t = {}) {
+	let n = t.maxModels ?? 64, r = t.maxBindings ?? 256, i = e.file, a = z(e, R(e, i.header.root_type), i.header.root_object), o = a.Models;
+	if (!o) return [];
+	let s = o.reference_type ?? null, c = o.element_refs ?? [];
+	if (s === null || c.length === 0) return [];
+	let l = Xe(a.Skeletons), u = Xe(a.Meshes), d = R(e, [s.section, s.offset]), f = c.length < n ? c.length : n, p = Array(f), m = 0;
+	for (let t = 0; t < f; t++) {
+		let n = c[t];
+		if (!n) continue;
+		let i = z(e, d, [n.section, n.offset]), a = i.Name?.value, o = typeof a == `string` && a ? a : `Model_${m}`, s = i.Skeleton?.target ?? null, f = s ? l[`${s.section}:${s.offset}`] ?? -1 : -1, h = i.InitialPlacement?.value ?? P(e, n.section, i.InitialPlacement?.offset ?? 0) ?? N, g = Qe(e, i, u, r);
+		p[m++] = {
+			name: o,
+			skeletonIdx: f,
+			initialPlacement: h,
+			meshBindings: g
+		};
+	}
+	return p.length = m, p;
+}
+function Qe(e, t, n, r) {
+	let i = t.MeshBindings;
+	if (!i) return [];
+	let a = i.reference_type ?? null, o = i.target ?? null, s = i.count ?? 0;
+	if (a === null || o === null || s <= 0) return [];
+	let c = B(e, o, s, a, { maxCount: r }), l = Array(c.length), u = 0;
+	for (let e = 0; e < c.length; e++) {
+		let t = c[e].fields.Mesh?.target ?? null, r = t ? n[`${t.section}:${t.offset}`] ?? -1 : -1;
+		l[u++] = { meshIdx: r };
+	}
+	return l.length = u, l;
+}
+function $e(e, t, n, r, i, a) {
+	let o = i * a, s = new Uint8Array(o * 4), c = 0;
+	for (let i = 0; i < o; i++) {
+		let a = t[i] + 0, o = e[i] + 0, l = n[i] + 0, u = r[i];
+		o -= (a + l) / 4 | 0, a += o, l += o, a < 0 ? a = 0 : a > 255 && (a = 255), o < 0 ? o = 0 : o > 255 && (o = 255), l < 0 ? l = 0 : l > 255 && (l = 255), u < 0 ? u = 0 : u > 255 && (u = 255), s[c] = a, s[c + 1] = o, s[c + 2] = l, s[c + 3] = u, c += 4;
+	}
+	return s;
+}
+function nt(e, t, n) {
+	if (tt++, n !== t) throw Error(`[IGC_ARITH_VERIFY] ${e} divergence at call #${tt}: f64=${t} bigint=${n}`);
+}
+function at(e, t) {
+	let n = e[t] | 0, r = e[t + 1] | 0, i = e[t + 2] | 0, a = e[t + 3] | 0, o = (n | r << 8 | i << 16 | a << 24) >>> 0, s = o >>> 31 & 1, c = o & 2147483647, l = V[c >>> 4 & 15];
+	return l |= V[c & 15] << 4, l = l << 4 >>> 0 | V[c >>> 8 & 15], l = l << 4 >>> 0 | V[c >>> 12 & 15], l = l << 4 >>> 0 | V[c >>> 16 & 15], l = l << 4 >>> 0 | V[c >>> 20 & 15], l = l << 4 >>> 0 | V[c >>> 24 & 15], l = l << 3 >>> 0 | rt[c >>> 28 & 7], {
+		buf: e,
+		ptr: t + 4 | 0,
+		accum: s,
+		bitsLeft: 1,
+		high: 2147483647,
+		low: 0,
+		target: l >>> 0
+	};
+}
+function ot(e, t) {
+	let n = e.bitsLeft | 0, r = e.accum >>> 0, i;
+	if (n < t) {
+		let a = e.buf, o = e.ptr | 0, s = (a[o] | a[o + 1] << 8 | a[o + 2] << 16 | a[o + 3] << 24) >>> 0, c = n === 0 ? s : (s << n | r) >>> 0;
+		e.accum = s >>> t - n >>> 0, e.bitsLeft = n + 32 - t, e.ptr = o + 4 | 0, i = c & (1 << t) - 1;
+	} else i = r & (1 << t) - 1, e.accum = r >>> t >>> 0, e.bitsLeft = n - t;
+	return t === 8 ? it[i] : t === 4 ? V[i] : i;
+}
+function st(e) {
+	let t = e.high >>> 0, n = e.low >>> 0, r = e.target >>> 0, i = (n ^ t) >>> 0;
+	if (!(i & 1073741824)) {
+		if (!(i & 2139095040)) do {
+			t = (t << 8 | 255) >>> 0 & 2147483647, n = n << 8 >>> 0 & 2147483647;
+			let a = ot(e, 8);
+			r = (r << 8 | a) >>> 0 & 2147483647, i = (n ^ t) >>> 0;
+		} while (!(i & 2139095040));
+		if (!(i & 2013265920)) {
+			t = (t << 4 | 15) >>> 0 & 2147483647, n = n << 4 >>> 0 & 2147483647;
+			let a = ot(e, 4);
+			r = (r << 4 | a) >>> 0 & 2147483647, i = (n ^ t) >>> 0;
+		}
+		if (!(i & 1073741824)) do {
+			t = (t << 1 | 1) >>> 0 & 2147483647, n = n << 1 >>> 0 & 2147483647;
+			let a = ot(e, 1);
+			r = (r << 1 | a) >>> 0 & 2147483647, i = (n ^ t) >>> 0;
+		} while (!(i & 1073741824));
+	}
+	if (n & 536870912) for (; !(t & 536870912);) {
+		n = (n & 536870911) << 1 >>> 0 & 2147483647, t = (t << 1 | 1073741825) >>> 0 & 2147483647, r = (r ^ 536870912) >>> 0;
+		let i = ot(e, 1);
+		if (r = (r << 1 | i) >>> 0 & 2147483647, !(n & 536870912)) break;
+	}
+	e.high = t, e.low = n, e.target = r;
+}
+function ct(e, t) {
+	let n = e.high - e.low + 1 >>> 0, r = e.target - e.low + 1 >>> 0, i = (r * t - 1) / n | 0;
+	return et && nt(`Get`, i, Number((BigInt(r) * BigInt(t) - 1n) / BigInt(n)) | 0), i >= t ? t - 1 : i;
+}
+function lt(e, t, n, r) {
+	let i = e.high - e.low + 1 >>> 0, a = Math.floor(i * (t + n) / r), o = Math.floor(i * t / r);
+	if (et) {
+		let e = BigInt(r);
+		nt(`Remove.num1`, a, Number(BigInt(i) * BigInt(t + n) / e)), nt(`Remove.num2`, o, Number(BigInt(i) * BigInt(t) / e));
+	}
+	let s = e.low >>> 0;
+	e.high = s + a - 1 >>> 0, e.low = s + o >>> 0, st(e);
+}
+function ut(e, t) {
+	let n = e.high - e.low + 1 >>> 0, r = e.target - e.low + 1 >>> 0, i = (r * t - 1) / n | 0;
+	return et && nt(`GetValue`, i, Number((BigInt(r) * BigInt(t) - 1n) / BigInt(n)) | 0), i >= t && (i = t - 1), lt(e, i, 1, t), i;
+}
+function dt(e, t) {
+	if (t < 6) {
+		e.bucketSize = 0, e.shiftDepth = 15, e.bandBoundary = 0;
+		return;
+	}
+	let n = 0, r = 4294967295;
+	for (let e = 0; e < 16; e++) {
+		let i = 1 << e, a = ((i + t - 1) / i | 0) >>> 0;
+		a > 16 && (a = 16);
+		let o = t - (a - 1) * i >>> 0;
+		if (o < i && (o = i >>> 0), o < r && (n = e, r = o), i > t) break;
+	}
+	e.bucketSize = 1 << n & 65535, e.shiftDepth = n & 255, e.bandBoundary = 15 * e.bucketSize & 65535;
+}
+function ft(e, t, n) {
+	let r = n & 65535;
+	if (n >>> 16 & 65535, t >= e.bandBoundary) {
+		e.cumCounts[15] = e.cumCounts[15] + r & 65535, e.singleCounts[t] = e.singleCounts[t] + r & 65535;
+		return;
+	}
+	let i = t >>> e.shiftDepth;
+	if (i & 1 && (e.cumCounts[i] = e.cumCounts[i] + r & 65535, i++), i >>>= 1, i <= 7) {
+		let t = n >>> 0;
+		for (let n = i; n <= 7; n++) {
+			let r = n * 2 | 0, i = (e.cumCounts[r + 1] * 65536 + e.cumCounts[r] >>> 0) + t >>> 0;
+			e.cumCounts[r] = i & 65535, e.cumCounts[r + 1] = i >>> 16 & 65535;
+		}
+	}
+	e.singleCounts[t] = e.singleCounts[t] + r & 65535;
+}
+function pt(e, t) {
+	let n = e.cumCounts, r = 0, i = 0;
+	t >= n[7] && (i = n[7], r = 8), t >= n[r + 3] && (i = n[r + 3], r += 4), t >= n[r + 1] && (i = n[r + 1], r += 2), t >= n[r] && (i = n[r], r += 1);
+	for (let e = r; e < 16; e++) n[e] = n[e] + 1 & 65535;
+	let a = r * e.bucketSize | 0, o = i, s = e.singleCounts, c = Math.min(s.length, e.uniqueCount + 1 | 0);
+	for (; a < c;) {
+		let e = o + s[a] & 65535;
+		if (t < e) return [a, o];
+		o = e, a++;
+	}
+	return [Math.min(Math.max(a - 1, 0), Math.max(e.uniqueCount, 0)), o];
+}
+function mt(e, t) {
+	if (e.singlesLength !== e.uniqueCount && e.singleCounts[0] === 0) {
+		e.singleCounts[0] = 2;
+		let n = 0 >= e.bandBoundary ? 15 : 0;
+		t[n] = t[n] + 2 >>> 0;
+	}
+	let n = 0;
+	for (let r = 0; r < 16; r++) n = n + t[r] & 65535, e.cumCounts[r] = n;
+}
+function ht(e) {
+	dt(e, e.singlesLength + 1 | 0);
+	let t = /* @__PURE__ */ new Uint32Array(16);
+	e.singleCounts[0] = e.singleCounts[0] >>> 1 & 65535;
+	let n = 0 >= e.bandBoundary ? 15 : 0;
+	t[n] = e.singleCounts[0] >>> 0;
+	let r = 0, i = 0, a = 1;
+	for (; a <= e.singlesLength;) {
+		for (; e.singleCounts[a] <= 1;) {
+			if (a >= e.singlesLength) {
+				e.singleCounts[a] = 0, e.singlesLength = e.singlesLength - 1 | 0;
+				break;
+			}
+			e.singleCounts[a] = e.singleCounts[e.singlesLength], e.singleCounts[e.singlesLength] = 0, e.values[a] = e.values[e.singlesLength], e.singlesLength = e.singlesLength - 1 | 0;
+		}
+		if (a > e.singlesLength) break;
+		e.singleCounts[a] = e.singleCounts[a] >>> 1 & 65535;
+		let n = e.singleCounts[a];
+		n > r && (r = n, i = a);
+		let o = a >= e.bandBoundary ? 15 : a >>> e.shiftDepth;
+		t[o] = t[o] + n >>> 0, a++;
+	}
+	if (r > 0) {
+		let n;
+		if (n = e.singlesLength >= e.bandBoundary ? e.bandBoundary : e.singlesLength >>> e.shiftDepth << e.shiftDepth, n === 0 && (n = 1), i !== n) {
+			let r = e.singleCounts[n] >>> 0, a = e.singleCounts[i] >>> 0, o = a - r | 0, s = n >= e.bandBoundary ? 15 : n >>> e.shiftDepth, c = i >= e.bandBoundary ? 15 : i >>> e.shiftDepth;
+			t[s] = t[s] + o >>> 0, t[c] = t[c] - o >>> 0, e.singleCounts[n] = a, e.singleCounts[i] = r;
+			let l = e.values[n];
+			e.values[n] = e.values[i], e.values[i] = l;
+		}
+	}
+	mt(e, t);
+}
+function _t(e, t) {
+	if (t > 8192) throw Error(`igc arith alphabet ${t} exceeds cap ${gt}`);
+	let n = t + 5 & -4 | 0, r = {
+		cumCounts: /* @__PURE__ */ new Uint16Array(16),
+		singleCounts: new Uint16Array(n),
+		values: new Uint16Array(n),
+		singlesLength: 0,
+		bandBoundary: 0,
+		shiftDepth: 0,
+		bucketSize: 0,
+		uniqueCount: t
+	};
+	return dt(r, t + 1 | 0), ft(r, 0, 196611), r;
+}
+function vt(e) {
+	return {
+		__escape: !0,
+		slot: e
+	};
+}
+function yt(e) {
+	return typeof e == `object`;
+}
+function bt(e, t, n) {
+	n.values[e.slot] = t;
+}
+function xt(e, t) {
+	if (e.cumCounts[15] >= 16384 && ht(e), globalThis.__igcTrace) {
+		let n = globalThis.__igcTraceIdx | 0, r = globalThis.__igcTrace[n];
+		if (r) {
+			let n = [], i = t.high >>> 0, a = t.low >>> 0, o = t.target >>> 0, s = parseInt(r.abH, 16), c = parseInt(r.abL, 16), l = parseInt(r.abT, 16);
+			i !== s && n.push(`abH 0x${i.toString(16)} vs 0x${s.toString(16)}`), a !== c && n.push(`abL 0x${a.toString(16)} vs 0x${c.toString(16)}`), o !== l && n.push(`abT 0x${o.toString(16)} vs 0x${l.toString(16)}`);
+			for (let t = 0; t < 16; t++) e.cumCounts[t] !== r.cum[t] && n.push(`cum[${t}] ${e.cumCounts[t]} vs ${r.cum[t]}`);
+			if (e.singlesLength !== r.sL && n.push(`sL ${e.singlesLength} vs ${r.sL}`), e.bandBoundary !== r.bB && n.push(`bB ${e.bandBoundary} vs ${r.bB}`), e.shiftDepth !== r.sD && n.push(`sD ${e.shiftDepth} vs ${r.sD}`), e.uniqueCount !== r.uC && n.push(`uC ${e.uniqueCount} vs ${r.uC}`), n.length > 0 && (globalThis.__igcDivergences || (globalThis.__igcDivergences = []), globalThis.__igcDivergences.push({
+				call: r.call,
+				errs: n
+			}), globalThis.__igcDivergences.length === 1 || globalThis.__igcStrictThrow)) {
+				let e = Error(`__igcTrace: call ${r.call} divergence:\n  ${n.join(`
+  `)}`);
+				if (e.callIdx = r.call, globalThis.__igcStrictThrow) throw e;
+				process.stderr.write(`!! First divergence at call ${r.call}:\n  ${n.join(`
+  `)}\n`);
+			}
+		}
+		globalThis.__igcTraceIdx = n + 1;
+	}
+	let n = e.cumCounts[15], [r, i] = pt(e, ct(t, n)), a = e.singleCounts[r];
+	if (lt(t, i, a, n), e.singleCounts[r] = e.singleCounts[r] + 1 & 65535, r !== 0) return e.values[r];
+	if (e.singlesLength = e.singlesLength + 1 & 65535, ft(e, e.singlesLength, 131074), e.singlesLength === e.uniqueCount) {
+		let t = e.singleCounts[0] | 0, n = -t & 65535;
+		ft(e, 0, ((-t - 1 & 65535) << 16 | n) >>> 0);
+	}
+	return vt(e.singlesLength);
+}
+function St(e, t) {
+	return {
+		buf: e,
+		cur: t | 0,
+		bits: 0,
+		bitlen: 0
+	};
+}
+function Ct(e, t) {
+	return (e[t] | e[t + 1] << 8 | e[t + 2] << 16 | e[t + 3] << 24) >>> 0;
+}
+function H(e) {
+	let t = e.bitlen, n;
+	if (t === 0) {
+		let r = Ct(e.buf, e.cur);
+		return e.cur = e.cur + 4 | 0, n = r >>> 1, t = 31, e.bits = n, e.bitlen = t, r & 1;
+	}
+	return n = e.bits, e.bits = n >>> 1, e.bitlen = t - 1, n & 1;
+}
+function U(e, t) {
+	let n = t === 32 ? 4294967295 : (1 << t) - 1 >>> 0;
+	if (e.bitlen < t) {
+		let r = Ct(e.buf, e.cur);
+		e.cur = e.cur + 4 | 0;
+		let i = (e.bits | r << e.bitlen) >>> 0 & n;
+		return e.bits = r >>> t - e.bitlen >>> 0, e.bitlen = e.bitlen + 32 - t, i >>> 0;
+	}
+	let r = e.bits & n;
+	return e.bits = e.bits >>> t >>> 0, e.bitlen -= t, r >>> 0;
+}
+function wt(e) {
+	return e & 32768 ? e | -65536 : e | 0;
+}
+function Dt(e) {
+	let t = e >>> 0;
+	if (t === 0) return 0;
+	if (t >= 16384) return 15;
+	let n = 0;
+	for (; t > 0;) n++, t >>>= 1;
+	return n;
+}
+function Ot(e, t, n, r, i, a) {
+	let o = n - r, s = t;
+	for (let t = 0; t < i; t++) {
+		for (let t = 0; t < r; t++) e[s++] = a;
+		s += o;
+	}
+}
+function kt(e, t, n) {
+	let r = Z(e, n + 1);
+	for (let i = 0; i < n; i++) an(e, n) >= r ? (t[i] = 1, on(e, r, n - r, n)) : (t[i] = 0, on(e, 0, r, n));
+}
+function At(e, t, n, r, i, a, o) {
+	if (H(t)) {
+		let e = U(t, 16);
+		Ot(n, r, i, a, o, wt(e));
+		return;
+	}
+	let s = U(t, 16), c = s + 1, l = rn(s, c), u = i - a, d = U(t, 16);
+	n[r++] = wt(d), d = wt(d);
+	for (let i = 0; i < a - 1; i++) {
+		let i = J(l, e);
+		if (Y(i)) {
+			let t = Z(e, c);
+			X(i, t, l), i = t;
+		}
+		if (i) {
+			let e = -H(t) | 0;
+			i = (i ^ e) - e;
+		}
+		d = i + d | 0, n[r++] = d;
+	}
+	for (let s = 0; s < o - 1; s++) {
+		r += u;
+		let o = r - i, s = J(l, e);
+		if (Y(s)) {
+			let t = Z(e, c);
+			X(s, t, l), s = t;
+		}
+		if (s) {
+			let e = -H(t) | 0;
+			s = (s ^ e) - e;
+		}
+		d = s + n[o] | 0, n[r++] = d, ++o;
+		for (let i = 0; i < a - 1; i++) {
+			if (s = J(l, e), Y(s)) {
+				let t = Z(e, c);
+				X(s, t, l), s = t;
+			}
+			if (s) {
+				let e = -H(t) | 0;
+				s = (s ^ e) - e;
+			}
+			d = s + ((d + n[o]) / 2 | 0) | 0, n[r++] = d, ++o;
+		}
+	}
+}
+function jt(e, t, n) {
+	let r = Array(n);
+	for (let i = 0; i < n; i++) r[i] = rn(e, t);
+	return {
+		contexts: r,
+		lits: rn(63, 64),
+		zeros: rn(255, 256)
+	};
+}
+function W(e) {
+	return e < 0 ? -e : e;
+}
+function G(e, t, n, r, i, a, o) {
+	let s = U(t, 16);
+	if (H(t)) {
+		let e = wt(U(t, 16));
+		Ot(n, r, i, a, o, e * s | 0);
+		return;
+	}
+	let c = U(t, 16), l = c + 1, u = c * s;
+	u = Dt(u) + 1;
+	let { contexts: d, lits: f, zeros: p } = jt(c, l, u), m = i - a, h = o, g = Z(e, l);
+	if (g) {
+		let e = -H(t) | 0;
+		g = (g ^ e) - e, g = g * s | 0;
+	}
+	n[r] = g;
+	let _ = g, v = g, y = r;
+	if (++r, a === 1) return Mt(e, t, n, r, i, a, o, d, f, p, l, u, s, m, h, g, _, v, y);
+	let b = a - 1, x = 0, S = 0, C = 0;
+	outer: for (;;) {
+		let c = J(f, e);
+		if (Y(c)) {
+			let e = U(t, 6);
+			X(c, e, f), x = e;
+		} else x = c;
+		x >= 60 && (x = Tt[x - 60]);
+		let u = J(p, e);
+		if (Y(u)) {
+			let e = U(t, 8);
+			X(u, e, p), S = e;
+		} else S = u;
+		if (S >= 252 ? S = Et[S - 252] + 3 - 1 : S && (S += 2), x === 0 && S === 0) {
+			if (++C > 64) throw Error(`decodeHigh1: stuck at h=${h} w=${b} after ${C} consecutive arith reads with litLen=0/zeroLen=0 — bitstream likely off-corpus (granny2.dll hangs on the same input). Encoding=${a}x${o}.`);
+		} else C = 0;
+		for (; x > 0;) if (b <= 1) {
+			if (b) {
+				let i = (W(Math.imul(v, 2)) + W(_) + W(g) >>> 0) / 4 >>> 0;
+				i = Dt(i);
+				let a = J(d[i], e);
+				if (Y(a)) {
+					let t = Z(e, l);
+					X(a, t, d[i]), a = t;
+				}
+				if (a) {
+					let e = -H(t) | 0;
+					a = (a ^ e) - e, a = a * s | 0;
+				}
+				n[r++] = a, --x;
+			}
+			if (--h === 0) return;
+			b = a, r += m, y = r - i, g = n[y++], _ = g, v = g;
+		} else {
+			let i = n[y], a = (W(v) + W(_) + W(g) + W(i) >>> 0) / 4 >>> 0;
+			a = Dt(a);
+			let o = J(d[a], e);
+			if (Y(o)) {
+				let t = Z(e, l);
+				X(o, t, d[a]), o = t;
+			}
+			if (o) {
+				let e = -H(t) | 0;
+				o = (o ^ e) - e, o = o * s | 0;
+			}
+			n[r] = o, _ = g, g = i, v = o, ++r, ++y, --b, --x;
+		}
+		for (; S > 0;) if (S >= b) {
+			for (S -= b, y += b; b-- > 0;) n[r++] = 0;
+			if (--h === 0) return;
+			b = a, r += m, y = r - i, g = n[y++], _ = g, v = g;
+		} else {
+			b -= S, y += S;
+			do
+				n[r++] = 0;
+			while (--S > 0);
+			v = 0, g = n[y - 1], _ = n[y - 2];
+		}
+	}
+}
+function Mt(e, t, n, r, i, a, o, s, c, l, u, d, f, p, m, h, g, _, v) {
+	let y = m, b = h, x = g, S = _, C = v;
+	if (--y === 0) return;
+	let w = a;
+	r += p, C = r - i, b = n[C++], x = b, S = b;
+	let T = 0, E = 0, D = 0;
+	for (;;) {
+		let d = J(c, e);
+		if (Y(d)) {
+			let e = U(t, 6);
+			X(d, e, c), T = e;
+		} else T = d;
+		T >= 60 && (T = Tt[T - 60]);
+		let m = J(l, e);
+		if (Y(m)) {
+			let e = U(t, 8);
+			X(m, e, l), E = e;
+		} else E = m;
+		if (E >= 252 ? E = Et[E - 252] + 3 - 1 : E && (E += 2), T === 0 && E === 0) {
+			if (++D > 64) throw Error(`decodeHigh1AfterFirst: stuck at h=${y} w=${w} after ${D} consecutive arith reads with litLen=0/zeroLen=0 — bitstream likely off-corpus. Encoding=${a}x${o}.`);
+		} else D = 0;
+		for (; T > 0;) if (w <= 1) {
+			if (w) {
+				let i = (W(S * 2) + W(x) + W(b) | 0) / 4 | 0;
+				i = Dt(i);
+				let a = J(s[i], e);
+				if (Y(a)) {
+					let t = Z(e, u);
+					X(a, t, s[i]), a = t;
+				}
+				if (a) {
+					let e = -H(t) | 0;
+					a = (a ^ e) - e, a = a * f | 0;
+				}
+				n[r++] = a, --T;
+			}
+			if (--y === 0) return;
+			w = a, r += p, C = r - i, b = n[C++], x = b, S = b;
+		} else {
+			let i = n[C], a = (W(S) + W(x) + W(b) + W(i) >>> 0) / 4 >>> 0;
+			a = Dt(a);
+			let o = J(s[a], e);
+			if (Y(o)) {
+				let t = Z(e, u);
+				X(o, t, s[a]), o = t;
+			}
+			if (o) {
+				let e = -H(t) | 0;
+				o = (o ^ e) - e, o = o * f | 0;
+			}
+			n[r] = o, x = b, b = i, S = o, ++r, ++C, --w, --T;
+		}
+		for (; E > 0;) if (E >= w) {
+			for (E -= w, C += w; w-- > 0;) n[r++] = 0;
+			if (--y === 0) return;
+			w = a, r += p, C = r - i, b = n[C++], x = b, S = b;
+		} else {
+			w -= E, C += E;
+			do
+				n[r++] = 0;
+			while (--E > 0);
+			S = 0, b = n[C - 1], x = n[C - 2];
+		}
+	}
+}
+function Nt(e, t, n, r, i, a, o) {
+	let s = Ct(e, t), c = t + 8 + s, l = nn(e, t + 8), u = St(e, c);
+	return At(l, u, n, r, i * 16, i >> 4, a >> 4), G(l, u, n, r + (i >> 4), i * 16, i >> 4, a >> 4), G(l, u, n, r + i * 8, i * 16, i >> 4, a >> 4), G(l, u, n, r + (i >> 4) + i * 8, i * 16, i >> 4, a >> 4), G(l, u, n, r + (i >> 3), i * 8, i >> 3, a >> 3), G(l, u, n, r + i * 4, i * 8, i >> 3, a >> 3), G(l, u, n, r + (i >> 3) + i * 4, i * 8, i >> 3, a >> 3), G(l, u, n, r + (i >> 2), i * 4, i >> 2, a >> 2), G(l, u, n, r + i * 2, i * 4, i >> 2, a >> 2), G(l, u, n, r + (i >> 2) + i * 2, i * 4, i >> 2, a >> 2), G(l, u, n, r + (i >> 1), i * 2, i >> 1, a >> 1), G(l, u, n, r + i, i * 2, i >> 1, a >> 1), G(l, u, n, r + (i >> 1) + i, i * 2, i >> 1, a >> 1), o && kt(l, o, a), s + Ct(e, t + 4) + 8;
+}
+function K(e) {
+	return (e + (32767 ^ e >> 31)) / 65536 | 0;
+}
+function Bt(e, t, n, r, i, a, o, s, c) {
+	let l = i >> 1, u = s * t, d = s * r, f = s * r + l, p = s, m = Pt, h = Ft;
+	for (let i = 0; i < c; i++) {
+		let i = 1, a = u, s = d, c = f, g = d + l;
+		m[1] = n[s + 0], m[0] = m[2] = n[s + 1], m[3] = n[s + 2], m[4] = n[s + 3], m[5] = n[s + 4], m[6] = n[s + 5], s += 6, h[2] = n[c + 0], h[3] = n[c + 1], h[4] = n[c + 2], h[5] = n[c + 3], h[6] = n[c + 4], h[7] = n[c + 5], h[0] = h[3], h[1] = h[2], c += 6;
+		let _ = o === null || o[p], v = l < 8 ? 0 : (l - 8) / 4 | 0;
+		if (_) {
+			for (; v-- > 0;) {
+				let t, r, i, o, l, u, d, f;
+				t = m[1] * 51674 - ((m[0] + m[2]) * 2667 | 0) - ((h[0] + h[3]) * 1563 | 0) + ((h[1] + h[2]) * 24733 | 0), r = ((m[1] + m[2]) * 27400 | 0) - ((m[0] + m[3]) * 4230 | 0) - (h[2] * 55882 | 0) - ((h[0] + h[4]) * 2479 | 0) + ((h[1] + h[3]) * 7250 | 0), i = m[2] * 51674 - ((m[1] + m[3]) * 2667 | 0) - ((h[1] + h[4]) * 1563 | 0) + ((h[2] + h[3]) * 24733 | 0), o = ((m[2] + m[3]) * 27400 | 0) - ((m[1] + m[4]) * 4230 | 0) - (h[3] * 55882 | 0) - ((h[1] + h[5]) * 2479 | 0) + ((h[2] + h[4]) * 7250 | 0), l = m[3] * 51674 - ((m[2] + m[4]) * 2667 | 0) - ((h[2] + h[5]) * 1563 | 0) + ((h[3] + h[4]) * 24733 | 0), u = ((m[3] + m[4]) * 27400 | 0) - ((m[2] + m[5]) * 4230 | 0) - (h[4] * 55882 | 0) - ((h[2] + h[6]) * 2479 | 0) + ((h[3] + h[5]) * 7250 | 0), d = m[4] * 51674 - ((m[3] + m[5]) * 2667 | 0) - ((h[3] + h[6]) * 1563 | 0) + ((h[4] + h[5]) * 24733 | 0), f = ((m[4] + m[5]) * 27400 | 0) - ((m[3] + m[6]) * 4230 | 0) - (h[5] * 55882 | 0) - ((h[3] + h[7]) * 2479 | 0) + ((h[4] + h[6]) * 7250 | 0), t = K(t), r = K(r), i = K(i), o = K(o), l = K(l), u = K(u), d = K(d), f = K(f), e[a + 0] = t, e[a + 1] = r, e[a + 2] = i, e[a + 3] = o, e[a + 4] = l, e[a + 5] = u, e[a + 6] = d, e[a + 7] = f, a += 8, m[0] = m[4], m[1] = m[5], m[2] = m[6], m[3] = n[s + 0], m[4] = n[s + 1], m[5] = n[s + 2], m[6] = n[s + 3], h[0] = h[4], h[1] = h[5], h[2] = h[6], h[3] = h[7], h[4] = n[c + 0], h[5] = n[c + 1], h[6] = n[c + 2], h[7] = n[c + 3], s += 4, c += 4;
+			}
+			let t = l < 8 ? l : (l & 3) + 8;
+			for (; t-- > 0;) {
+				s === g && (s -= i, c -= i + i, i = -i);
+				let t = m[1] * 51674 - ((m[0] + m[2]) * 2667 | 0) - ((h[0] + h[3]) * 1563 | 0) + ((h[1] + h[2]) * 24733 | 0), r = ((m[1] + m[2]) * 27400 | 0) - ((m[0] + m[3]) * 4230 | 0) - (h[2] * 55882 | 0) - ((h[0] + h[4]) * 2479 | 0) + ((h[1] + h[3]) * 7250 | 0);
+				t = K(t), r = K(r), e[a + 0] = t, e[a + 1] = r, a += 2, m[0] = m[1], m[1] = m[2], m[2] = m[3], m[3] = m[4], m[4] = m[5], m[5] = m[6], m[6] = n[s], h[0] = h[1], h[1] = h[2], h[2] = h[3], h[3] = h[4], h[4] = h[5], h[5] = h[6], h[6] = h[7], h[7] = n[c], s += i, c += i;
+			}
+		} else {
+			for (; v-- > 0;) {
+				let t, r, i, o, c, l, u, d;
+				t = m[1] * 51674 - ((m[0] + m[2]) * 2667 | 0), r = ((m[1] + m[2]) * 27400 | 0) - ((m[0] + m[3]) * 4230 | 0), i = m[2] * 51674 - ((m[1] + m[3]) * 2667 | 0), o = ((m[2] + m[3]) * 27400 | 0) - ((m[1] + m[4]) * 4230 | 0), c = m[3] * 51674 - ((m[2] + m[4]) * 2667 | 0), l = ((m[3] + m[4]) * 27400 | 0) - ((m[2] + m[5]) * 4230 | 0), u = m[4] * 51674 - ((m[3] + m[5]) * 2667 | 0), d = ((m[4] + m[5]) * 27400 | 0) - ((m[3] + m[6]) * 4230 | 0), t = K(t), r = K(r), i = K(i), o = K(o), c = K(c), l = K(l), u = K(u), d = K(d), e[a + 0] = t, e[a + 1] = r, e[a + 2] = i, e[a + 3] = o, e[a + 4] = c, e[a + 5] = l, e[a + 6] = u, e[a + 7] = d, a += 8, m[0] = m[4], m[1] = m[5], m[2] = m[6], m[3] = n[s + 0], m[4] = n[s + 1], m[5] = n[s + 2], m[6] = n[s + 3], s += 4;
+			}
+			let t = l < 8 ? l : (l & 3) + 8;
+			for (; t-- > 0;) {
+				s === g && (--s, i = -1);
+				let t = m[1] * 51674 - ((m[0] + m[2]) * 2667 | 0), r = ((m[1] + m[2]) * 27400 | 0) - ((m[0] + m[3]) * 4230 | 0);
+				t = K(t), r = K(r), e[a + 0] = t, e[a + 1] = r, a += 2, m[0] = m[1], m[1] = m[2], m[2] = m[3], m[3] = m[4], m[4] = m[5], m[5] = m[6], m[6] = n[s], s += i;
+			}
+		}
+		u += t, d += r, f += r, ++p;
+	}
+}
+function Vt(e, t, n, r, i, a, o, s) {
+	let c = s >> 1, l = o * t, u = 0, d = r, f = r * a, p = r * 2;
+	o && (u += ((o / 2 | 0) - 1) * p, d += ((o / 2 | 0) - 2) * p);
+	let m = 0, h = i / 4 | 0;
+	for (let r = 0; r < h; r++) {
+		let r = p, i = l + m, a = u + m, s = d + m, h = f + m, g = It, _ = Lt;
+		if (o) {
+			for (let e = 0; e < 4; e++) g[0 + e] = n[a + e];
+			a += r;
+			for (let e = 0; e < 4; e++) g[4 + e] = n[a + e];
+			a += r;
+			for (let e = 0; e < 4; e++) g[8 + e] = n[a + e];
+			a += r;
+			for (let e = 0; e < 4; e++) g[12 + e] = n[a + e];
+			a += r;
+			for (let e = 0; e < 4; e++) _[0 + e] = n[s + e];
+			s += r;
+			for (let e = 0; e < 4; e++) _[4 + e] = n[s + e];
+			s += r;
+			for (let e = 0; e < 4; e++) _[8 + e] = n[s + e];
+			s += r;
+			for (let e = 0; e < 4; e++) _[12 + e] = n[s + e];
+			s += r;
+			for (let e = 0; e < 4; e++) _[16 + e] = n[s + e];
+			s += r;
+		} else {
+			for (let e = 0; e < 4; e++) g[4 + e] = n[a + e];
+			a += r;
+			for (let e = 0; e < 4; e++) {
+				let t = n[a + e];
+				g[0 + e] = t, g[8 + e] = t;
+			}
+			a += r;
+			for (let e = 0; e < 4; e++) g[12 + e] = n[a + e];
+			a += r;
+			for (let e = 0; e < 4; e++) {
+				let t = n[s + e];
+				_[4 + e] = t, _[8 + e] = t;
+			}
+			s += r;
+			for (let e = 0; e < 4; e++) {
+				let t = n[s + e];
+				_[0 + e] = t, _[12 + e] = t;
+			}
+			s += r;
+			for (let e = 0; e < 4; e++) _[16 + e] = n[s + e];
+			s += r;
+		}
+		let v = 0, y = 0;
+		for (let o = 0; o < c; o++) {
+			a === h && (a -= r, s -= r + r, r = -r);
+			let o = v, c = y, l, u, d, f, p, m, b, x;
+			for (let e = 0; e < 4; e++) {
+				let t = g[(o + 0) * 4 + e], n = g[(o + 1) * 4 + e], r = g[(o + 2) * 4 + e], i = g[(o + 3) * 4 + e], a = _[(c + 0) * 4 + e], s = _[(c + 1) * 4 + e], h = _[(c + 2) * 4 + e], v = _[(c + 3) * 4 + e], y = _[(c + 4) * 4 + e], S = n * 51674 - ((t + r) * 2667 | 0) - ((a + v) * 1563 | 0) + ((s + h) * 24733 | 0), C = ((n + r) * 27400 | 0) - ((t + i) * 4230 | 0) - (h * 55882 | 0) - ((a + y) * 2479 | 0) + ((s + v) * 7250 | 0), w = K(S), T = K(C);
+				e === 0 ? (l = w, p = T) : e === 1 ? (u = w, m = T) : e === 2 ? (d = w, b = T) : (f = w, x = T);
+			}
+			if (e[i + 0] = l, e[i + 1] = u, e[i + 2] = d, e[i + 3] = f, e[i + t + 0] = p, e[i + t + 1] = m, e[i + t + 2] = b, e[i + t + 3] = x, i += t + t, ++v, ++y, v + 3 === 20) {
+				for (let e = 0; e < 4; e++) g[0 + e] = g[(v + 1) * 4 + e];
+				for (let e = 0; e < 4; e++) g[4 + e] = g[(v + 2) * 4 + e];
+				for (let e = 0; e < 4; e++) g[8 + e] = g[(v + 3) * 4 + e];
+				for (let e = 0; e < 4; e++) _[0 + e] = _[(y + 1) * 4 + e];
+				for (let e = 0; e < 4; e++) _[4 + e] = _[(y + 2) * 4 + e];
+				for (let e = 0; e < 4; e++) _[8 + e] = _[(y + 3) * 4 + e];
+				for (let e = 0; e < 4; e++) _[12 + e] = _[(y + 4) * 4 + e];
+				v = 0, y = 0;
+			}
+			for (let e = 0; e < 4; e++) g[(v + 3) * 4 + e] = n[a + e];
+			for (let e = 0; e < 4; e++) _[(y + 4) * 4 + e] = n[s + e];
+			a += r, s += r;
+		}
+		m += 4;
+	}
+	let g = i & 3;
+	for (let r = 0; r < g; r++) {
+		let r = p, i = l + m, a = u + m, s = d + m, h = f + m, g = Rt, _ = zt;
+		o ? (g[0] = n[a], a += r, g[1] = n[a], a += r, g[2] = n[a], a += r, g[3] = n[a], a += r, _[0] = n[s], s += r, _[1] = n[s], s += r, _[2] = n[s], s += r, _[3] = n[s], s += r, _[4] = n[s], s += r) : (g[1] = n[a], a += r, g[0] = g[2] = n[a], a += r, g[3] = n[a], a += r, _[1] = _[2] = n[s], s += r, _[0] = _[3] = n[s], s += r, _[4] = n[s], s += r);
+		for (let o = 0; o < c; o++) {
+			a === h && (a -= r, s -= r + r, r = -r);
+			let o = g[1] * 51674 - ((g[0] + g[2]) * 2667 | 0) - ((_[0] + _[3]) * 1563 | 0) + ((_[1] + _[2]) * 24733 | 0), c = ((g[1] + g[2]) * 27400 | 0) - ((g[0] + g[3]) * 4230 | 0) - (_[2] * 55882 | 0) - ((_[0] + _[4]) * 2479 | 0) + ((_[1] + _[3]) * 7250 | 0);
+			e[i] = K(o), e[i + t] = K(c), i += t + t, g[0] = g[1], g[1] = g[2], g[2] = g[3], g[3] = n[a], _[0] = _[1], _[1] = _[2], _[2] = _[3], _[3] = _[4], _[4] = n[s], a += r, s += r;
+		}
+		m += 1;
+	}
+}
+function Ht(e, t, n, r, i, a, o, s, c) {
+	let l = i >> 1, u = s * t, d = s * r, f = s * r + l, p = s;
+	for (let i = 0; i < c; i++) {
+		let i = u, a = d, s = f;
+		if (o === null || o[p]) for (let t = 0; t < l; t++) {
+			let t = n[a], r = n[s], o = t * 2 + r | 0, c = t * 2 - r | 0;
+			o = (o + (1 ^ o >> 31)) / 2 | 0, c = (c + (1 ^ c >> 31)) / 2 | 0, e[i + 0] = o, e[i + 1] = c, i += 2, a += 1, s += 1;
+		}
+		else for (let t = 0; t < l; t++) {
+			let t = n[a];
+			e[i + 0] = t, e[i + 1] = t, i += 2, a += 1;
+		}
+		u += t, d += r, f += r, ++p;
+	}
+}
+function Ut(e, t, n, r, i, a, o, s) {
+	let c = s >> 1, l = o * t, u = 0, d = r, f = r * 2;
+	o && (u += (o / 2 | 0) * f, d += (o / 2 | 0) * f);
+	for (let r = 0; r < i; r++) {
+		let i = l + r, a = u + r, o = d + r;
+		for (let r = 0; r < c; r++) {
+			let r = n[a], s = n[o], c = r * 2 + s | 0, l = r * 2 - s | 0;
+			c = (c + (1 ^ c >> 31)) / 2 | 0, l = (l + (1 ^ l >> 31)) / 2 | 0, e[i] = c, e[i + t] = l, i += t + t, a += f, o += f;
+		}
+	}
+}
+function Wt(e, t, n, r, i, a) {
+	let o = n >= 16 ? Bt : Ht, s = r >= 16 ? Vt : Ut, c = r <= 16 ? r : 12, l = r - c, u = 0, d = r;
+	o(a, t, e, t, n, r, i, 0, c);
+	do {
+		let f = d <= 12 ? d : 8;
+		s(e, t, a, t, n, r, u, f), u += f, d -= f, l && (f = l <= 12 ? l : 8, o(a, t, e, t, n, r, i, c, f), c += f, l -= f);
+	} while (d);
+}
+function Gt(e, t, n, r, i, a, o) {
+	let s = r ? 4 : 3, c = [
+		,
+		,
+		,
+		,
+	];
+	for (let e = 0; e < 4; e++) c[e] = new Int16Array(t * n);
+	let l = new Uint8Array(n), u = new Int16Array(t * n), d = 4;
+	for (let r = 0; r < s; r++) {
+		let o = i(e, d, c[r], 0, t, n, r === 0 ? l : null);
+		d += o, a(c[r], t * 8, t >> 3, n >> 3, null, u), a(c[r], t * 4, t >> 2, n >> 2, null, u), a(c[r], t * 2, t >> 1, n >> 1, null, u), a(c[r], t, t, n, r === 0 ? l : null, u);
+	}
+	if (!r) for (let e = 0; e < t * n; e++) c[3][e] = 255;
+	return o(c[0], c[1], c[2], c[3], t, n);
+}
+function Kt(e, t, n, r) {
+	return Gt(e, t, n, r, Nt, Wt, $e);
+}
+function qt(e) {
+	let t = e.exports, n = t.memory, r = t.scratchBase() >>> 0, i = r, a = null, o, s;
+	function c() {
+		n.buffer !== a && (a = n.buffer, o = new Uint8Array(n.buffer), s = new DataView(n.buffer));
+	}
+	function l(e) {
+		let t = n.buffer.byteLength;
+		t < e && n.grow(Math.ceil((e - t) / 65536)), c();
+	}
+	let u = (e) => e + 3 & -4;
+	return c(), {
+		bitOpen(e, n) {
+			let a = e.length;
+			i = r;
+			let s = i;
+			l(s + a + 32), o.set(e, s), o.fill(0, s + a, s + a + 32), i = u(s + a + 32);
+			let c = i;
+			return l(c + 28), i = c + 28, t.arithBitOpen(c, s, n | 0), c;
+		},
+		open(e) {
+			let n = 44 + (e + 5 & -4) * 4, r = i;
+			l(r + n), i = r + n;
+			let a = t.arithOpen(r, e | 0);
+			if (a !== n) throw Error(`arith-driver: arithOpen size mismatch ${a} !== ${n} (uniqueValues=${e})`);
+			return r;
+		},
+		decompress(e, n) {
+			return t.arithDecompress(e, n) | 0;
+		},
+		setDecompressed(e, n, r) {
+			t.arithSetDecompressed(e, n | 0, r | 0);
+		},
+		bitsGetValue(e, n) {
+			return t.arithBitsGetValue(e, n | 0) | 0;
+		},
+		bitsGet(e, n) {
+			return t.arithBitsGet(e, n | 0) | 0;
+		},
+		bitsRemove(e, n, r, i) {
+			t.arithBitsRemove(e, n | 0, r | 0, i | 0);
+		},
+		readCoder(e) {
+			return c(), {
+				ptr: s.getUint32(e + 4, !0),
+				accum: s.getUint32(e + 8, !0),
+				bitsLeft: s.getInt32(e + 12, !0),
+				high: s.getUint32(e + 16, !0),
+				low: s.getUint32(e + 20, !0),
+				target: s.getUint32(e + 24, !0)
+			};
+		},
+		readModel(e) {
+			c();
+			let t = Array(16);
+			for (let n = 0; n < 16; n++) t[n] = s.getUint16(e + n * 2, !0);
+			return {
+				cumCounts: t,
+				singlesLength: s.getUint16(e + 32, !0),
+				bandBoundary: s.getUint16(e + 34, !0),
+				shiftDepth: s.getUint16(e + 36, !0),
+				bucketSize: s.getUint16(e + 38, !0),
+				uniqueCount: s.getUint16(e + 40, !0)
+			};
+		}
+	};
+}
+function Jt(e) {
+	let t = e.exports, n = t.memory, r = t.scratchBase() >>> 0, i = null, a, o;
+	function s() {
+		n.buffer !== i && (i = n.buffer, a = new Uint8Array(n.buffer), o = new Int16Array(n.buffer));
+	}
+	function c(e) {
+		let t = n.buffer.byteLength;
+		t < e && n.grow(Math.ceil((e - t) / 65536)), s();
+	}
+	let l = (e) => e + 3 & -4;
+	return s(), { planeDecode(e, n, i, u, d) {
+		let f = i * u, p = e.length - n, m = r, h = l(m + p + 32), g = h + f * 2, _ = l(g + u);
+		c(_ + 64), a.set(e.subarray(n), m), a.fill(0, m + p, m + p + 32), o.fill(0, h >> 1, (h >> 1) + f);
+		let v = t.planeDecode(m, 0, h, i, u, d ? g : 0, _);
+		if (v < 0) throw Error(`planeDecode (wasm): decodeHigh1 anti-hang at plane offset ${n} (${i}x${u}) — bitstream likely off-corpus (granny2.dll hangs on the same input).`);
+		return s(), {
+			plane: o.slice(h >> 1, (h >> 1) + f),
+			mask: d ? a.slice(g, g + u) : null,
+			consumed: v
+		};
+	} };
+}
+function Yt(e) {
+	let t = e.exports, n = t.memory, r = t.scratchBase() >>> 0, i = null, a, o;
+	function s() {
+		n.buffer !== i && (i = n.buffer, a = new Uint8Array(n.buffer), o = new Int16Array(n.buffer));
+	}
+	function c(e) {
+		let t = n.buffer.byteLength;
+		t < e && n.grow(Math.ceil((e - t) / 65536)), s();
+	}
+	let l = (e) => e + 3 & -4;
+	return s(), { iDWT2D(e, n, i, s, u) {
+		let d = e.length, f = r, p = l(f + d * 2 + 16), m = l(p + d * 2 + 16);
+		c(m + (u ? u.length : 0));
+		let h = f >> 1, g = p >> 1;
+		return o.set(e, h), o.fill(0, h + d, h + d + 8), o.fill(0, g + d, g + d + 8), u && a.set(u, m), t.iDWT2D(f, n, i, s, u ? m : 0, p), o.slice(h, h + d);
+	} };
+}
+function Xt(e) {
+	let t = e.exports, n = t.memory, r = t.scratchBase() >>> 0, i = null, a;
+	function o() {
+		n.buffer !== i && (i = n.buffer, a = new Uint8Array(n.buffer));
+	}
+	function s(e) {
+		let t = n.buffer.byteLength;
+		t < e && n.grow(Math.ceil((e - t) / 65536)), o();
+	}
+	let c = (e) => e + 3 & -4;
+	return o(), { decode(e, n, i, l) {
+		let u = n * i, d = e.length, f = r, p = c(f + d + 32), m = c(p + u * 4);
+		s(m + (u * 4 + 8) * 2 + (u + 8) * 2 + i + 64), a.set(e, f), a.fill(0, f + d, f + d + 32);
+		let h = t.decodeIGCTexture(f, n, i, +!!l, p, m);
+		if (h < 0) throw Error(h === -2 ? `igc arith alphabet exceeds cap ${gt}` : `decodeIGCTexture: planeDecode anti-hang (off-corpus bitstream)`);
+		return o(), a.slice(p, p + u * 4);
+	} };
+}
+function en(e) {
+	let t = atob(e), n = t.length, r = new Uint8Array(n);
+	for (let e = 0; e < n; e++) r[e] = t.charCodeAt(e);
+	return r;
+}
+async function tn() {
+	if (Qt) return;
+	let { instance: e } = await WebAssembly.instantiate(en(Zt), {});
+	Qt = e.exports, Qt.scratchBase() >>> 0, q = qt(e), Jt(e), Yt(e), $t = Xt(e);
+}
+function nn(e, t) {
+	return q ? q.bitOpen(e, t) : at(e, t);
+}
+function rn(e, t) {
+	if (q) {
+		if (t > 8192) throw Error(`igc arith alphabet ${t} exceeds cap ${gt}`);
+		return q.open(t);
+	}
+	return _t(e, t);
+}
+function J(e, t) {
+	return q ? q.decompress(e, t) : xt(e, t);
+}
+function Y(e) {
+	return q ? e < 0 : yt(e);
+}
+function X(e, t, n) {
+	q ? q.setDecompressed(n, -e - 1, t) : bt(e, t, n);
+}
+function Z(e, t) {
+	return q ? q.bitsGetValue(e, t) : ut(e, t);
+}
+function an(e, t) {
+	return q ? q.bitsGet(e, t) : ct(e, t);
+}
+function on(e, t, n, r) {
+	q ? q.bitsRemove(e, t, n, r) : lt(e, t, n, r);
+}
+function sn(e, t, n, r) {
+	return $t ? $t.decode(e, t, n, r) : Kt(e, t, n, r);
+}
+function un(e) {
+	let { Width: t, Height: n, Alpha: r, ImageData: i } = e;
+	if (t * n <= 256) {
+		let e = t * n * 4;
+		if (i.byteLength < e) throw Error(`decodeIGCTexture: small-image fallback expects ${e} RGBA bytes, got ${i.byteLength} (W=${t}, H=${n})`);
+		return new Uint8Array(i.buffer, i.byteOffset, e).slice();
+	}
+	if (t < 16 || n < 16 || t & 15 || n & 15) throw Error(`decodeIGCTexture: shouldBink fallback not supported (W=${t}, H=${n}). iRO corpus walker should filter these out.`);
+	let a = t * n;
+	if (a > cn || a > i.byteLength * ln) throw Error(`decodeIGCTexture: ${t}×${n} (${a} px) exceeds cap (${cn} px / ${ln}× of ${i.byteLength} B)`);
+	return sn(i, t, n, r);
+}
+function fn(e, t = {}) {
+	let n = gn(e, t), r = Array(n.length), i = 0;
+	for (let e = 0; e < n.length; e++) {
+		let t = n[e], a = pn(t);
+		a !== null && (r[i++] = {
+			texIdx: t.texIdx,
+			imgIdx: t.imgIdx,
+			mipIdx: t.mipIdx,
+			name: t.fromFileName || `tex${t.texIdx}`,
+			fromFileName: t.fromFileName,
+			width: t.width,
+			height: t.height,
+			encoding: t.encoding,
+			subFormat: t.subFormat,
+			alpha: t.alpha,
+			pixels: a
+		});
+	}
+	return r.length = i, r;
+}
+function pn(e) {
+	let { encoding: t, width: n, height: r, pixelBytes: i } = e;
+	if (t === 1) return mn(i, n, r);
+	if (t === 3) return un({
+		Width: n,
+		Height: r,
+		Alpha: e.alpha,
+		ImageData: i
+	});
+	throw Error(t === 2 ? `extractTextures: S3TC textures (encoding=2) not yet supported in granny-ro-js — file an issue if an iRO asset hits this. Texture: ${hn(e)}` : `extractTextures: unknown encoding=${t} for ${hn(e)}`);
+}
+function mn(e, t, n) {
+	let r = t * n * 4;
+	if (!e || e.length !== r) throw Error(`extractTextures: Raw texture byte count ${e?.length} != W*H*4 (${r})`);
+	let i = new Uint8Array(r);
+	for (let t = 0; t < r; t += 4) i[t] = e[t + 2], i[t + 1] = e[t + 1], i[t + 2] = e[t], i[t + 3] = e[t + 3];
+	return i;
+}
+function hn(e) {
+	return `tex${e.texIdx}-img${e.imgIdx}-mip${e.mipIdx}`;
+}
+function gn(e, t = {}) {
+	let n = t.maxTextures ?? 256, r = t.maxImages ?? 8, i = t.maxMips ?? 32, a = e.file, o = z(e, R(e, a.header.root_type), a.header.root_object, { maxArrayRefs: n }).Textures;
+	if (!o || !o.reference_type) return [];
+	let s = o.reference_type, c = o.element_refs ?? [];
+	if (c.length === 0) return [];
+	let l = R(e, [s.section, s.offset]), u = [], d = c.length < n ? c.length : n;
+	for (let t = 0; t < d; t++) {
+		let n = c[t];
+		if (!n) continue;
+		let a = z(e, l, [n.section, n.offset], { maxArrayRefs: 64 }), o = a.Width?.value ?? 0, s = a.Height?.value ?? 0, d = a.Encoding?.value ?? 0, f = a.SubFormat?.value ?? 0, p = a.FromFileName?.value ?? ``, m = _n(e, l, a, n), h = a.Images, g = h?.reference_type ?? null, _ = g ? B(e, h.target ?? null, h.count ?? 0, g, { maxCount: r }) : [];
+		for (let n = 0; n < _.length; n++) {
+			let r = _[n].fields.MIPLevels, a = r?.reference_type ?? null, c = a ? B(e, r.target ?? null, r.count ?? 0, a, { maxCount: i }) : [];
+			for (let r = 0; r < c.length; r++) {
+				let i = c[r].fields, a = i.Pixels ?? i.PixelBytes, l = a?.count ?? 0, h = a?.target ?? null, g = null;
+				if (h && l > 0) {
+					let t = e.sectionsOriginal[h.section];
+					t && h.offset >= 0 && h.offset + l <= t.length && (g = t.subarray(h.offset, h.offset + l));
+				}
+				u.push({
+					texIdx: t,
+					imgIdx: n,
+					mipIdx: r,
+					width: o,
+					height: s,
+					encoding: d,
+					subFormat: f,
+					alpha: m,
+					fromFileName: p,
+					pixelBytes: g,
+					pixelCount: l
+				});
+			}
+		}
+	}
+	return u;
+}
+function _n(e, t, n, r) {
+	try {
+		let i = n.Layout;
+		if (!i || i.type !== `inline`) return 1;
+		let a = null;
+		for (let e = 0; e < t.length; e++) if (t[e].name === `Layout`) {
+			a = t[e];
+			break;
+		}
+		if (!a || !a.referenceType) return 1;
+		let o = a.referenceType.section;
+		if (!e.sectionsOriginal[o]) return 1;
+		let s = R(e, [o, a.referenceType.offset]), c = i.offset ?? 0;
+		return z(e, s, [r.section, r.offset + c]).BytesPerPixel?.value === 3 ? 0 : 1;
+	} catch {
+		return 1;
+	}
+}
+function xn(e, t, n) {
+	let r = new DataView(e.buffer, e.byteOffset, e.byteLength);
+	if (n === 4) return r.getUint32(t, !0);
+	let i = r.getUint32(t, !0) >>> 0;
+	return (r.getUint32(t + 4, !0) >>> 0) * 4294967296 + i;
+}
+function Sn(e, t) {
+	let n = e.arrayWidth || 1, r = e.memberType, i = yn[r];
+	return i === void 0 ? r === 2 || r === 22 || r === 8 ? t : r === 3 || r === 4 ? 4 + t : r === 5 ? t * 2 : r === 7 ? t + 4 + t : r === 9 ? 68 : r === 1 ? 0 : t : i * n;
+}
+function Cn(e, t) {
+	let n = e.pointerSize, r = Object.create(null), i = 0;
+	for (let a = 0; a < t.length; a++) {
+		let o = t[a];
+		if (r[o.name] = i, o.memberType === 1 && o.referenceType) {
+			let t = R(e, o.referenceType);
+			i += be(e, t, n, /* @__PURE__ */ new Set());
+		} else i += Sn(o, n);
+	}
+	return r;
+}
+function wn(e) {
+	let t = /* @__PURE__ */ new DataView(/* @__PURE__ */ new ArrayBuffer(4));
+	return t.setUint32(0, (e & 65535) << 16, !0), t.getFloat32(0, !0);
+}
+function Tn(e) {
+	if (e.length >= 2 && e[0] === `D`) {
+		let t = e.charCodeAt(1) - 48;
+		if (t >= 0 && t <= 9) return t;
+	}
+	return 0;
+}
+function En(e, t) {
+	let n = /* @__PURE__ */ new Float32Array(4), r = /* @__PURE__ */ new Float32Array(4), i = e >>> 0;
+	for (let e = 0; e < 4; e++) {
+		let a = i & 15;
+		i >>>= 4;
+		let o = bn[a];
+		n[e] = o[0] / t, r[e] = o[1];
+	}
+	return {
+		scales: n,
+		offsets: r
+	};
+}
+function Dn(e, t, n) {
+	let r = e.pointerSize;
+	return n + 4 + r > t.length ? null : I(xn(t, n + 4, r), e.sectionsFixed.length);
+}
+function On(e, t, n, r, i, a, o, s) {
+	if (s <= 0 || n <= 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let c = o.KnotsControls;
+	if (c === void 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let l = Dn(e, i, a + c);
+	return l === null ? {
+		knots: Q,
+		controls: Q
+	} : t === `D3K16uC16u` || t === `D3I1K16uC16u` ? kn(e, t, n, r, a, o, s, l) : t === `D4nK8uC7u` ? An(e, r, a, o, s, l) : t === `D4nK16uC15u` ? jn(e, r, a, o, s, l) : {
+		knots: Q,
+		controls: Q
+	};
+}
+function kn(e, t, n, r, i, a, o, s) {
+	let c = o / (t === `D3I1K16uC16u` ? 2 : n + 1) | 0;
+	if (c <= 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let l = i + (a.OneOverKnotScaleTrunc ?? 2), u = i + (a.ControlScales ?? 4), d = i + (a.ControlOffsets ?? 16);
+	if (d + n * 4 > r.length) return {
+		knots: Q,
+		controls: Q
+	};
+	let f = new DataView(r.buffer, r.byteOffset, r.byteLength), p = wn(f.getUint16(l, !0));
+	if (p === 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let m = new Float32Array(n), h = new Float32Array(n);
+	for (let e = 0; e < n; e++) m[e] = f.getFloat32(u + e * 4, !0), h[e] = f.getFloat32(d + e * 4, !0);
+	let g = e.sectionsFixed[s[0]], _ = o * 2;
+	if (s[1] + _ > g.length) return {
+		knots: Q,
+		controls: Q
+	};
+	let v = new DataView(g.buffer, g.byteOffset + s[1], _), y = 1 / p, b = new Float32Array(c);
+	for (let e = 0; e < c; e++) b[e] = y * v.getUint16(e * 2, !0);
+	let x = new Float32Array(c * n);
+	if (t === `D3I1K16uC16u`) for (let e = 0; e < c; e++) {
+		let t = v.getUint16((c + e) * 2, !0), r = e * n;
+		for (let e = 0; e < n; e++) x[r + e] = h[e] + m[e] * t;
+	}
+	else for (let e = 0; e < c; e++) {
+		let t = e * n, r = (c + e * n) * 2;
+		for (let e = 0; e < n; e++) {
+			let n = v.getUint16(r + e * 2, !0);
+			x[t + e] = h[e] + m[e] * n;
+		}
+	}
+	return {
+		knots: b,
+		controls: x
+	};
+}
+function An(e, t, n, r, i, a) {
+	let o = i / 4 | 0;
+	if (o <= 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let s = n + (r.ScaleOffsetTableEntries ?? 2), c = n + (r.OneOverKnotScale ?? 4);
+	if (c + 4 > t.length) return {
+		knots: Q,
+		controls: Q
+	};
+	let l = new DataView(t.buffer, t.byteOffset, t.byteLength), u = l.getFloat32(c, !0);
+	if (u === 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let d = e.sectionsFixed[a[0]];
+	if (a[1] + i > d.length) return {
+		knots: Q,
+		controls: Q
+	};
+	let f = 1 / u, p = new Float32Array(o);
+	for (let e = 0; e < o; e++) p[e] = f * d[a[1] + e];
+	let { scales: m, offsets: h } = En(l.getUint16(s, !0), 127), g = new Float32Array(o * 4), _ = a[1] + o;
+	for (let e = 0; e < o; e++) {
+		let t = d[_ + e * 3 + 0], n = d[_ + e * 3 + 1], r = d[_ + e * 3 + 2], i = (t & 128) != 0, a = (n >> 6 & 2 | r >> 7) & 3, o = [
+			0,
+			0,
+			0,
+			0
+		], s = a, c = 0, l = [
+			t,
+			n,
+			r
+		];
+		for (let e = 0; e < 3; e++) {
+			s = s + 1 & 3;
+			let t = h[s] + m[s] * (l[e] & 127);
+			o[s] = t, c += t * t;
+		}
+		let u = Math.sqrt(Math.max(0, 1 - c));
+		o[a] = i ? -u : u;
+		let f = e * 4;
+		g[f] = o[0], g[f + 1] = o[1], g[f + 2] = o[2], g[f + 3] = o[3];
+	}
+	return {
+		knots: p,
+		controls: g
+	};
+}
+function jn(e, t, n, r, i, a) {
+	let o = i / 4 | 0;
+	if (o <= 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let s = n + (r.ScaleOffsetTableEntries ?? 2), c = n + (r.OneOverKnotScale ?? 4);
+	if (c + 4 > t.length) return {
+		knots: Q,
+		controls: Q
+	};
+	let l = new DataView(t.buffer, t.byteOffset, t.byteLength), u = l.getFloat32(c, !0);
+	if (u === 0) return {
+		knots: Q,
+		controls: Q
+	};
+	let d = e.sectionsFixed[a[0]], f = i * 2;
+	if (a[1] + f > d.length) return {
+		knots: Q,
+		controls: Q
+	};
+	let p = new DataView(d.buffer, d.byteOffset + a[1], f), m = 1 / u, h = new Float32Array(o);
+	for (let e = 0; e < o; e++) h[e] = m * p.getUint16(e * 2, !0);
+	let { scales: g, offsets: _ } = En(l.getUint16(s, !0), 32767), v = new Float32Array(o * 4), y = o;
+	for (let e = 0; e < o; e++) {
+		let t = p.getUint16((y + e * 3 + 0) * 2, !0), n = p.getUint16((y + e * 3 + 1) * 2, !0), r = p.getUint16((y + e * 3 + 2) * 2, !0), i = (t & 32768) != 0, a = (n >> 14 & 2 | r >> 15) & 3, o = [
+			0,
+			0,
+			0,
+			0
+		], s = a, c = 0, l = [
+			t,
+			n,
+			r
+		];
+		for (let e = 0; e < 3; e++) {
+			s = s + 1 & 3;
+			let t = _[s] + g[s] * (l[e] & 32767);
+			o[s] = t, c += t * t;
+		}
+		let u = Math.sqrt(Math.max(0, 1 - c));
+		o[a] = i ? -u : u;
+		let d = e * 4;
+		v[d] = o[0], v[d + 1] = o[1], v[d + 2] = o[2], v[d + 3] = o[3];
+	}
+	return {
+		knots: h,
+		controls: v
+	};
+}
+function Mn(e, t, n, r) {
+	if (t <= 0) return Q;
+	if (e.endsWith(`Constant32f`)) {
+		let e = r + 4;
+		if (e + t * 4 > n.length) return Q;
+		let i = new DataView(n.buffer, n.byteOffset, n.byteLength), a = new Float32Array(t);
+		for (let n = 0; n < t; n++) a[n] = i.getFloat32(e + n * 4, !0);
+		return a;
+	}
+	return e === `DaIdentity` ? t === 9 ? new Float32Array([
+		1,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		1
+	]) : t === 4 ? new Float32Array([
+		0,
+		0,
+		0,
+		1
+	]) : new Float32Array(t) : Q;
+}
+function Nn(e, t, n) {
+	let r = e.pointerSize, i = e.sectionsOriginal[t], a = e.sectionsFixed[t];
+	if (!i || n + 4 + (4 + r) * 2 > i.length) return null;
+	let o = new DataView(i.buffer, i.byteOffset, i.byteLength), s = o.getInt32(n, !0);
+	if (s < 0 || s > 3) return null;
+	let c = o.getUint32(n + 4, !0), l = o.getUint32(n + 4 + r + 4, !0);
+	if (c === 0 && l === 0 || c <= 0 || l <= 0 || l % c !== 0) return null;
+	let u = l / c | 0;
+	if (u <= 0 || u > 16) return null;
+	let d = I(xn(a, n + 4 + 4, r), e.sectionsFixed.length), f = I(xn(a, n + 4 + r + 4 + 4, r), e.sectionsFixed.length);
+	if (d === null || f === null) return null;
+	let p = e.sectionsFixed[d[0]], m = e.sectionsFixed[f[0]];
+	if (d[1] + c * 4 > p.length || f[1] + l * 4 > m.length) return null;
+	let h = new DataView(p.buffer, p.byteOffset + d[1], c * 4), g = new DataView(m.buffer, m.byteOffset + f[1], l * 4), _ = new Float32Array(c);
+	for (let e = 0; e < c; e++) _[e] = h.getFloat32(e * 4, !0);
+	let v = new Float32Array(l);
+	for (let e = 0; e < l; e++) v[e] = g.getFloat32(e * 4, !0);
+	let y = c === 1 ? v.slice(0, u) : Q;
+	return {
+		codec: `LegacyCurve32f`,
+		format: -1,
+		degree: s,
+		dimension: u,
+		knotControlCount: c + l,
+		sampleValue: y,
+		knots: _,
+		controls: v
+	};
+}
+function Pn(e, t, n) {
+	let r = e.pointerSize, i = e.sectionsFixed[t];
+	if (!i || n + r * 2 > i.length) return null;
+	let a = Nn(e, t, n);
+	if (a) return a;
+	let o = I(xn(i, n, r), e.sectionsFixed.length), s = I(xn(i, n + r, r), e.sectionsFixed.length);
+	if (o === null || s === null) return null;
+	let c = R(e, o);
+	if (c.length === 0) return null;
+	let l = c[0].name.replace(/^CurveDataHeader_/, ``), u = Cn(e, c), d = e.sectionsOriginal[s[0]];
+	if (s[1] + 2 > d.length) return null;
+	let f = new DataView(d.buffer, d.byteOffset, d.byteLength), p = f.getUint8(s[1]), m = f.getUint8(s[1] + 1), h = Tn(l);
+	if (l === `DaIdentity`) {
+		let e = s[1] + (u.Dimension ?? 2);
+		e + 2 <= d.length && (h = f.getInt16(e, !0));
+	}
+	let g = 0, _ = u.KnotsControls;
+	_ !== void 0 && s[1] + _ + 4 <= d.length && (g = f.getUint32(s[1] + _, !0));
+	let { knots: v, controls: y } = On(e, l, h, d, e.sectionsFixed[s[0]], s[1], u, g);
+	return {
+		codec: l,
+		format: p,
+		degree: m,
+		dimension: h,
+		knotControlCount: g,
+		sampleValue: Mn(l, h, d, s[1]),
+		knots: v,
+		controls: y
+	};
+}
+function Fn(e, t, n) {
+	let { ref: r, fields: i } = n, a = i.Name?.value, o = i.OrientationCurve ?? null, s = i.PositionCurve ?? null, c = i.ScaleShearCurve ?? null, l = r.offset + 4, u = i.Flags;
+	u && typeof u.offset == `number` && (l = u.offset);
+	let d = 0, f = e.sectionsOriginal[r.section];
+	return f && l + 4 <= f.length && (d = new DataView(f.buffer, f.byteOffset, f.byteLength).getInt32(l, !0)), {
+		index: t,
+		name: typeof a == `string` && a ? a : `TransformTrack_${t}`,
+		flags: d,
+		orientationCurve: o ? Pn(e, r.section, o.offset) : null,
+		positionCurve: s ? Pn(e, r.section, s.offset) : null,
+		scaleShearCurve: c ? Pn(e, r.section, c.offset) : null
+	};
+}
+function In(e, t, n) {
+	let r = t?.target ?? null, i = t?.reference_type ?? null, a = t?.count ?? 0;
+	if (r === null || i === null || a <= 0) return [];
+	let o = B(e, r, a, i, {
+		maxCount: n,
+		maxArrayRefs: 64
+	}), s = Array(o.length);
+	for (let t = 0; t < o.length; t++) s[t] = Fn(e, t, o[t]);
+	return s;
+}
+function Ln(e, t, n) {
+	let r = t?.target ?? null, i = t?.reference_type ?? null, a = t?.count ?? 0;
+	if (r === null || i === null || a <= 0) return [];
+	let o = B(e, r, a, i, {
+		maxCount: n,
+		maxArrayRefs: 64
+	}), s = Array(o.length);
+	for (let e = 0; e < o.length; e++) {
+		let t = o[e].fields.Name?.value;
+		s[e] = typeof t == `string` && t ? t : `Track_${e}`;
+	}
+	return s;
+}
+function Rn(e, t, n, r, i) {
+	let a = z(e, r, [n.section, n.offset], { maxArrayRefs: i }), o = In(e, a.TransformTracks, i), s = a.Name?.value;
+	return {
+		index: t,
+		name: typeof s == `string` && s ? s : `TrackGroup_${t}`,
+		vectorTrackCount: a.VectorTracks?.count ?? 0,
+		transformTrackCount: a.TransformTracks?.count ?? 0,
+		textTrackCount: a.TextTracks?.count ?? 0,
+		accumulationFlags: a.AccumulationFlags?.value ?? 0,
+		loopTranslation: a.LoopTranslation?.value ?? 0,
+		vectorTrackNames: Ln(e, a.VectorTracks, i),
+		transformTracks: o
+	};
+}
+function zn(e, t, n) {
+	let r = t?.target ?? null, i = t?.reference_type ?? null, a = t?.count ?? 0;
+	if (r === null || a <= 0) return [];
+	let o = t?.element_refs ?? [], s = Array(o.length);
+	if (i === null) {
+		for (let e = 0; e < o.length; e++) s[e] = `TrackGroup_${e}`;
+		return s;
+	}
+	let c = R(e, [i.section, i.offset]), l = Math.min(o.length, n);
+	for (let t = 0; t < l; t++) {
+		let n = o[t], r = z(e, c, [n.section, n.offset], { maxArrayRefs: 0 }).Name?.value;
+		s[t] = typeof r == `string` && r ? r : `TrackGroup_${t}`;
+	}
+	return s.length = l, s;
+}
+function Bn(e, t, n, r, i) {
+	let a = z(e, r, [n.section, n.offset], { maxArrayRefs: 64 }), o = a.Name?.value, s = zn(e, a.TrackGroups, 64), c = [];
+	for (let e = 0; e < s.length; e++) {
+		let t = i[s[e]];
+		t && c.push(t);
+	}
+	return {
+		index: t,
+		name: typeof o == `string` && o ? o : `Animation_${t}`,
+		duration: a.Duration?.value ?? 0,
+		timeStep: a.TimeStep?.value ?? 0,
+		oversampling: a.Oversampling?.value ?? 0,
+		defaultLoopCount: a.DefaultLoopCount?.value ?? 0,
+		flags: a.Flags?.value ?? 0,
+		trackGroupNames: s,
+		trackGroups: c
+	};
+}
+function Vn(e, t = {}) {
+	let n = t.maxTrackGroups ?? 64, r = t.maxTracksPerGroup ?? 512, i = t.maxAnimations ?? 64, a = e.file, o = z(e, R(e, a.header.root_type), a.header.root_object, { maxArrayRefs: Math.max(n, i) }), s = o.TrackGroups, c = [];
+	if (s) {
+		let t = s.reference_type ?? null, i = s.element_refs ?? [];
+		if (t !== null && i.length > 0) {
+			let a = R(e, [t.section, t.offset]), o = Math.min(i.length, n);
+			for (let t = 0; t < o; t++) c.push(Rn(e, t, i[t], a, r));
+		}
+	}
+	let l = o.Animations, u = [];
+	if (l) {
+		let t = l.reference_type ?? null, n = l.element_refs ?? [];
+		if (t !== null && n.length > 0) {
+			let r = R(e, [t.section, t.offset]), a = Object.create(null);
+			for (let e = 0; e < c.length; e++) a[c[e].name] = c[e];
+			let o = Math.min(n.length, i);
+			for (let t = 0; t < o; t++) u.push(Bn(e, t, n[t], r, a));
+		}
+	}
+	return u;
+}
+function Hn(e, t) {
+	let n = e.length;
+	for (let r = 0; r < n; r++) if (e[r] > t) return r;
+	return n > 0 ? n - 1 : 0;
+}
+function Un(e, t) {
+	return Math.abs(t) < 1e-12 ? 0 : e / t;
+}
+function Wn(e, t, n) {
+	let r = Un(n - e, t - e);
+	return [1 - r, r];
+}
+function Gn(e, t, n, r, i) {
+	let a = Un(i - t, n - t), o = Un(i - e, n - e), s = Un(i - t, r - t), c = o + a - a * o, l = a * s, u = c - l;
+	return [
+		1 - c,
+		u,
+		l
+	];
+}
+function Kn(e) {
+	let t = e[0], n = e[1], r = e[2], i = e[3], a = (3 - (t * t + n * n + r * r + i * i)) * .5;
+	return [
+		t * a,
+		n * a,
+		r * a,
+		i * a
+	];
+}
+function qn(e, t, n) {
+	let r = e.length / t, i = (n < r ? n : r - 1) * t, a = Array(t);
+	for (let n = 0; n < t; n++) a[n] = e[i + n];
+	return a;
+}
+function Jn(e, t) {
+	if (!e) return null;
+	let n = e.knots, r = e.controls, i = e.dimension;
+	if (n.length === 0 || r.length === 0) {
+		if (e.sampleValue.length > 0) {
+			let t = Array(e.sampleValue.length);
+			for (let n = 0; n < t.length; n++) t[n] = e.sampleValue[n];
+			return t;
+		}
+		return null;
+	}
+	let a = e.degree > 0 ? e.degree | 0 : 0;
+	if (a === 0 || n.length === 1) return qn(r, i, Hn(n, t));
+	let o = Hn(n, t), s = o < n.length ? o : n.length - 1, c = 2 * a, l = s - a, u = Array(c), d = Array(c);
+	for (let e = 0; e < c; e++) {
+		let t = l + e;
+		t < 0 && (t = 0), t > n.length - 1 && (t = n.length - 1), u[e] = n[t], d[e] = qn(r, i, t);
+	}
+	let f = a, p;
+	if (a === 1) {
+		let [e, n] = Wn(u[f - 1], u[f], t);
+		p = Array(i);
+		for (let t = 0; t < i; t++) p[t] = e * d[f - 1][t] + n * d[f][t];
+	} else if (a === 2) {
+		let [e, n, r] = Gn(u[f - 2], u[f - 1], u[f], u[f + 1], t);
+		p = Array(i);
+		for (let t = 0; t < i; t++) p[t] = e * d[f - 2][t] + n * d[f - 1][t] + r * d[f][t];
+	} else p = d[f];
+	return i === 4 ? Kn(p) : p;
+}
+function Yn(e, t, n) {
+	return e ? e.length === t ? e : t === 9 && e.length === 3 ? [
+		e[0],
+		0,
+		0,
+		0,
+		e[1],
+		0,
+		0,
+		0,
+		e[2]
+	] : n : n;
+}
+function Xn(e, t) {
+	let n = Jn(e?.positionCurve, t), r = Jn(e?.orientationCurve, t), i = Jn(e?.scaleShearCurve, t);
+	return {
+		position: Yn(n, 3, [...vn.position]),
+		orientation: Yn(r, 4, [...vn.orientation]),
+		scaleShear: Yn(i, 9, [...vn.scaleShear])
+	};
+}
+function Zn(e, t) {
+	let n = Object.create(null);
+	if (!e) return n;
+	let r = e.trackGroups ?? [];
+	for (let e = 0; e < r.length; e++) {
+		let i = r[e].transformTracks ?? [];
+		for (let e = 0; e < i.length; e++) n[i[e].name] = Xn(i[e], t);
+	}
+	return n;
+}
+function tr(e, t, n) {
+	let r = n ?? /* @__PURE__ */ new Float32Array(16), i = e[0], a = e[1], o = e[2], s = e[3], c = e[4], l = e[5], u = e[6], d = e[7], f = e[8], p = e[9], m = e[10], h = e[11], g = e[12], _ = e[13], v = e[14], y = e[15];
+	for (let e = 0; e < 4; e++) {
+		let n = t[e * 4 + 0], b = t[e * 4 + 1], x = t[e * 4 + 2], S = t[e * 4 + 3];
+		r[e * 4 + 0] = i * n + c * b + f * x + g * S, r[e * 4 + 1] = a * n + l * b + p * x + _ * S, r[e * 4 + 2] = o * n + u * b + m * x + v * S, r[e * 4 + 3] = s * n + d * b + h * x + y * S;
+	}
+	return r;
+}
+function nr(e, t) {
+	let n = e.bones, r = n.length, i = Array(r);
+	for (let e = 0; e < r; e++) {
+		let r = n[e], a = t[e], o = r.parentIndex;
+		o < 0 || o >= e ? i[e] = or(a) : i[e] = tr(i[o], a, Array(16));
+	}
+	let a = Array(r);
+	for (let e = 0; e < r; e++) a[e] = new Float32Array(i[e]);
+	return a;
+}
+function rr(e, t) {
+	let n = e.bones, r = n.length, i = Array(r);
+	for (let e = 0; e < r; e++) {
+		let r = sr(n[e]), a = tr(t[e], r, Array(16));
+		i[e] = new Float32Array(a);
+	}
+	return i;
+}
+function ir(e, t, n) {
+	let r = e.bones, i = r.length, a = t ? Zn(t, n) : null, o = Array(i), s = Array(i);
+	for (let e = 0; e < i; e++) {
+		let t = r[e], n = (a ? a[t.name] : null) ?? t.transform;
+		o[e] = n, s[e] = ar(n);
+	}
+	let c = nr(e, s);
+	return {
+		localTransforms: o,
+		worldMatrices: c,
+		skinningMatrices: rr(e, c)
+	};
+}
+function ar(e) {
+	let t = e ?? $n, n = t.position ?? $n.position, r = t.orientation ?? $n.orientation, i = t.scaleShear ?? $n.scaleShear, a = n[0], o = n[1], s = n[2], c = r[0], l = r[1], u = r[2], d = r[3], f = c * c, p = l * l, m = u * u, h = c * l, g = c * u, _ = l * u, v = d * c, y = d * l, b = d * u, x = 1 - 2 * (p + m), S = 2 * (h - b), C = 2 * (g + y), w = 2 * (h + b), T = 1 - 2 * (f + m), E = 2 * (_ - v), D = 2 * (g - y), ee = 2 * (_ + v), O = 1 - 2 * (f + p), k = i[0], A = i[1], te = i[2], j = i[3], M = i[4], ne = i[5], N = i[6], P = i[7], F = i[8], re = x * k + S * j + C * N, ie = x * A + S * M + C * P, ae = x * te + S * ne + C * F, oe = w * k + T * j + E * N, se = w * A + T * M + E * P, ce = w * te + T * ne + E * F;
+	return [
+		re,
+		oe,
+		D * k + ee * j + O * N,
+		0,
+		ie,
+		se,
+		D * A + ee * M + O * P,
+		0,
+		ae,
+		ce,
+		D * te + ee * ne + O * F,
+		0,
+		a,
+		o,
+		s,
+		1
+	];
+}
+function or(e) {
+	let t = Array(16);
+	for (let n = 0; n < 16; n++) t[n] = e[n];
+	return t;
+}
+function sr(e) {
+	let t = e.inverseWorldTransform;
+	if (!t || t.length !== 16) return [...Qn];
+	let n = Array(16);
+	for (let e = 0; e < 16; e++) n[e] = t[e];
+	return n;
+}
+function lr() {
+	return cr ??= tn();
+}
+function mr(e, t = {}) {
+	let n = g(e), r = fe(n), i = R(r, n.header.root_type);
+	return {
+		file: n,
+		typeTree: i,
+		root: z(r, i, n.header.root_object),
+		skeletons: Ce(r, t),
+		meshes: Ee(r, t),
+		animations: Vn(r, t)
+	};
+}
+function gr(e, t = {}) {
+	let n = g(e), r = fe(n), i = R(r, n.header.root_type);
+	return {
+		file: n,
+		typeTree: i,
+		root: z(r, i, n.header.root_object),
+		skeletons: Ce(r, t),
+		meshes: Ee(r, t),
+		textures: fn(r, t),
+		animations: Vn(r, t),
+		models: Ze(r, t)
+	};
+}
+function _r(e, t, n) {
+	let r = e.skeletons?.[0];
+	if (!r) throw Error(`poseAt: parsed.skeletons[0] is missing`);
+	return ir(r, (e.animations ?? [])[t] ?? null, n);
+}
+var e, t, n, r, i$1, s, c, _, v, y, b, E, D, k, A, te, N, F, ie, ae, oe, se, ge, et, tt, V, rt, it, gt, Tt, Et, Pt, Ft, It, Lt, Rt, zt, Zt, Qt, q, $t, cn, ln, Q, vn, yn, $, bn, Qn, $n, cr;
+var init_granny_ro_wasm_esm = __esmMin((() => {
+	e = [
+		3400558520,
+		263286264,
+		2123133572,
+		503322974
+	];
+	t = [
+		3228360233,
+		726901946,
+		2780296485,
+		4007814902
+	];
+	n = [
+		3046445326,
+		1270195562,
+		1344809195,
+		78870565
+	];
+	r = [
+		1581882341,
+		337601391,
+		2850755358,
+		3303915152
+	];
+	i$1 = [
+		3822359857,
+		1649400864,
+		986724044,
+		2315223729
+	];
+	s = {
+		0: `none`,
+		1: `oodle0`,
+		2: `oodle1`,
+		3: `bitknit`,
+		4: `bitknit2`
+	};
+	c = {
+		0: `main`,
+		1: `rigid_vertex`,
+		2: `rigid_index`,
+		3: `deformable_vertex`,
+		4: `deformable_index`,
+		5: `texture`,
+		6: `discardable`,
+		7: `unloaded`
+	};
+	_ = [
+		128,
+		192,
+		256,
+		512
+	];
+	v = 2147483647;
+	y = class extends Error {
+		constructor(e) {
+			super(e), this.name = `DecompressionError`;
+		}
+	};
+	b = class {
+		constructor(e, t, n) {
+			this.max_offset_and_byte = e >>> 0, this.uniq_offset_and_byte = t >>> 0, this.uniq_lens = n >>> 0;
+		}
+		get max_byte_value() {
+			return this.max_offset_and_byte & 511;
+		}
+		get max_offset() {
+			return this.max_offset_and_byte >>> 9;
+		}
+		get unique_byte_values() {
+			return this.uniq_offset_and_byte & 511;
+		}
+		get unique_offsets() {
+			return this.uniq_offset_and_byte >>> 9;
+		}
+		length_unique(e) {
+			let t = Math.min(e / (64 / 4) | 0, 3);
+			return this.uniq_lens >>> (3 - t) * 8 & 255;
+		}
+	};
+	E = class {
+		constructor(e, t) {
+			this.data = e, this.cur = t, this.bits = 0, this.bitlen = 0;
+		}
+		get(e) {
+			if (e === 0) return 0;
+			let t = (1 << e >>> 0) - 1;
+			if (this.bitlen >= e) {
+				let n = this.bits & t;
+				return this.bits >>>= e, this.bitlen -= e, n;
+			}
+			let n = w(this.data, this.cur);
+			this.cur += 4;
+			let r = e - this.bitlen, i = n & (1 << r >>> 0) - 1, a = (this.bits | i << this.bitlen) >>> 0;
+			return this.bits = n >>> r, this.bitlen = this.bitlen + 32 - e, a;
+		}
+		get1() {
+			if (this.bitlen) {
+				let e = this.bits & 1;
+				return this.bits >>>= 1, --this.bitlen, e;
+			}
+			let e = w(this.data, this.cur);
+			return this.cur += 4, this.bits = e >>> 1, this.bitlen = 31, e & 1;
+		}
+	};
+	D = class {
+		constructor(e, t) {
+			this.vbits = new E(e, t), this.high = v, this.low = 0, this.code = T(this.vbits.get(31), 31);
+		}
+		getCount(e) {
+			if (e <= 0) return 0;
+			let t = this.high - this.low + 1;
+			return Math.floor(((this.code - this.low + 1) * e - 1) / t);
+		}
+		getValue(e) {
+			let t = this.getCount(e);
+			return t >= e && (t = e - 1), this.remove(t, 1, e), t;
+		}
+		remove(e, t, n) {
+			if (n <= 0) return;
+			let r = this.high, i = this.low, a = this.code, o = r - i + 1;
+			if (r = i + Math.floor(o * (e + t) / n) - 1 >>> 0, i = i + Math.floor(o * e / n) >>> 0, !((r ^ i) & 1073741824)) {
+				for (; !((r ^ i) & 2139095040);) {
+					i = i << 8 >>> 0, r = (r << 8 | 255) >>> 0;
+					let e = this.vbits.get(8);
+					a = (a << 8 | T(e & 15, 4) << 4 | T(e >>> 4, 4)) >>> 0;
+				}
+				for ((r ^ i) & 2013265920 || (i = i << 4 >>> 0, r = (r << 4 | 15) >>> 0, a = (a << 4 | T(this.vbits.get(4), 4)) >>> 0); !((r ^ i) & 1073741824);) i = i << 1 >>> 0, r = (r << 1 | 1) >>> 0, a = (a << 1 | this.vbits.get1()) >>> 0;
+			}
+			for (; i & 536870912 && !(r & 536870912);) a = (a ^ 536870912) >>> 0, i = (i & 536870911) << 1 >>> 0, r = (r << 1 | 1073741825) >>> 0, a = (a << 1 | this.vbits.get1()) >>> 0;
+			this.high = r & v, this.low = i & v, this.code = a & v;
+		}
+	};
+	k = class {
+		constructor(e) {
+			this.index = e;
+		}
+	};
+	A = class {
+		constructor(e) {
+			if (e > 2097152) throw new y(`oodle0 arith alphabet ${e} exceeds cap 2097152`);
+			this.unique_values = e;
+			let t = ee(e);
+			this.totals = Array(16).fill(0), this.counts = Array(t).fill(0), this.values = Array(t).fill(0), this.number = 0;
+			let [n, r, i] = O(e + 1);
+			this.bin_size = n, this.bin_shift = r, this.last_bin_start = i, this._quickIncrement(0, 3);
+		}
+		decompress(e) {
+			this.totals[15] >= 16384 && this._rescale();
+			let t = this.totals[15], n = e.getCount(t), [r, i] = this._findPos(n), a = this.counts[r];
+			if (this._incrementTotals(r, 1), e.remove(i, a, this.totals[15] - 1), this.counts[r] = this.counts[r] + 1 & 65535, r === 0) {
+				if (this.number += 1, this.number >= this.counts.length) throw new y(`oodle0 escape exceeded model capacity`);
+				return this._quickIncrement(this.number, 2), this.number === this.unique_values && this._decrementCounts(0, this.counts[0]), new k(this.number);
+			}
+			return this.values[r];
+		}
+		setEscaped(e, t) {
+			this.values[e.index] = t & 65535;
+		}
+		_findPos(e) {
+			let t = this.totals, n = 0, r = 16;
+			for (; n < r;) {
+				let i = n + r >>> 1;
+				e < t[i] ? r = i : n = i + 1;
+			}
+			let i = n, a = this.counts, o = this.bin_shift, s, c;
+			i < 15 ? (s = i << o, c = s + (1 << o), c > a.length && (c = a.length)) : (s = this.last_bin_start, c = a.length);
+			let l = i > 0 ? t[i - 1] : 0;
+			for (; s < c;) {
+				let t = a[s];
+				if (e < l + t) return [s, l];
+				l += t, s++;
+			}
+			throw new y(`oodle0 model count ${e} outside total ${l}`);
+		}
+		_quickIncrement(e, t) {
+			this._incrementTotals(e, t), this.counts[e] = this.counts[e] + t & 65535;
+		}
+		_incrementTotals(e, t) {
+			let n = this.totals;
+			if (e >= this.last_bin_start) {
+				n[15] = n[15] + t & 65535;
+				return;
+			}
+			for (let r = e >>> this.bin_shift; r < 16; r++) n[r] = n[r] + t & 65535;
+		}
+		_decrementCounts(e, t) {
+			let n = this.totals;
+			if (this.counts[e] = this.counts[e] - t & 65535, e >= this.last_bin_start) {
+				n[15] = n[15] - t & 65535;
+				return;
+			}
+			for (let r = e >>> this.bin_shift; r < 16; r++) n[r] = n[r] - t & 65535;
+		}
+		_rescale() {
+			let [e, t, n] = O(this.number + 1);
+			this.bin_size = e, this.bin_shift = t, this.last_bin_start = n;
+			let r = Array(16).fill(0);
+			this.counts[0] = this.counts[0] >>> 1, r[0 < this.last_bin_start ? 0 : 15] += this.counts[0];
+			let i = 0, a = 0, o = 1, s = !1;
+			for (; o <= this.number && !s;) {
+				for (; this.counts[o] <= 1;) if (o < this.number) this.counts[o] = this.counts[this.number], this.values[o] = this.values[this.number], this.counts[this.number] = 0, --this.number;
+				else {
+					this.counts[o] = 0, --this.number, s = !0;
+					break;
+				}
+				if (s) break;
+				this.counts[o] = this.counts[o] >>> 1, this.counts[o] > i && (i = this.counts[o], a = o);
+				let e = o < this.last_bin_start ? o >>> this.bin_shift : 15;
+				r[e] += this.counts[o], o += 1;
+			}
+			if (i) {
+				let e;
+				if (e = this.number < this.last_bin_start ? this.number >>> this.bin_shift << this.bin_shift : this.last_bin_start, e === 0 && (e = 1), a !== e) {
+					let t = this.counts[e];
+					this.counts[e] = this.counts[a];
+					let n = e < this.last_bin_start ? e >>> this.bin_shift : 15, i = a < this.last_bin_start ? a >>> this.bin_shift : 15;
+					r[n] += -t + this.counts[e], r[i] += t - this.counts[e], this.counts[a] = t;
+					let o = this.values[e];
+					this.values[e] = this.values[a], this.values[a] = o;
+				}
+			}
+			this.number !== this.unique_values && this.counts[0] === 0 && (this.counts[0] = this.counts[0] + 2 & 65535, r[0 < this.last_bin_start ? 0 : 15] += 2);
+			let c = 0;
+			for (let e = 0; e < 16; e++) c += r[e], this.totals[e] = c & 65535;
+		}
+	};
+	te = class {
+		constructor(e) {
+			this.max_bytes = e.max_byte_value, this.max_offsets = e.max_offset, this.max_offset_low = Math.min(this.max_offsets, 4), this.bytes = new A(e.unique_byte_values);
+			let t = Array(65);
+			for (let n = 0; n <= 64; n++) t[n] = new A(e.length_unique(n));
+			this.lengths = t, this.offset_low = new A(this.max_offset_low), this.offset_high = new A(e.unique_offsets), this.bytes_decompressed = 0, this.last_length = 0;
+		}
+	};
+	N = Object.freeze({
+		flags: 0,
+		position: [
+			0,
+			0,
+			0
+		],
+		orientation: [
+			0,
+			0,
+			0,
+			1
+		],
+		scaleShear: [
+			1,
+			0,
+			0,
+			0,
+			1,
+			0,
+			0,
+			0,
+			1
+		]
+	});
+	F = class extends Error {
+		constructor(e) {
+			super(e), this.name = `GrannyParseError`;
+		}
+	};
+	ie = {
+		0: `end`,
+		1: `inline`,
+		2: `reference`,
+		3: `reference_to_array`,
+		4: `array_of_references`,
+		5: `variant_reference`,
+		6: `unsupported`,
+		7: `reference_to_variant_array`,
+		8: `string`,
+		9: `transform`,
+		10: `real32`,
+		11: `int8`,
+		12: `uint8`,
+		13: `binormal_int8`,
+		14: `normal_uint8`,
+		15: `int16`,
+		16: `uint16`,
+		17: `binormal_int16`,
+		18: `normal_uint16`,
+		19: `int32`,
+		20: `uint32`,
+		21: `real16`,
+		22: `empty_reference`
+	};
+	ae = {
+		10: 4,
+		11: 1,
+		12: 1,
+		13: 1,
+		14: 1,
+		15: 2,
+		16: 2,
+		17: 2,
+		18: 2,
+		19: 4,
+		20: 4,
+		21: 2
+	};
+	oe = 268435456;
+	se = 1048576;
+	ge = new TextDecoder(`utf-8`, { fatal: !1 });
+	et = typeof process < `u` && {}.IGC_ARITH_VERIFY === `1`;
+	tt = 0;
+	V = new Uint8Array([
+		0,
+		8,
+		4,
+		12,
+		2,
+		10,
+		6,
+		14,
+		1,
+		9,
+		5,
+		13,
+		3,
+		11,
+		7,
+		15
+	]);
+	rt = new Uint8Array([
+		0,
+		4,
+		2,
+		6,
+		1,
+		5,
+		3,
+		7
+	]);
+	it = (() => {
+		let e = /* @__PURE__ */ new Uint8Array(256);
+		for (let t = 0; t < 256; t++) e[t] = V[t & 15] << 4 | V[t >>> 4 & 15];
+		return e;
+	})();
+	gt = 8192;
+	Tt = [
+		128,
+		256,
+		512,
+		1024
+	];
+	Et = [
+		512,
+		1024,
+		2048,
+		3072
+	];
+	Pt = /* @__PURE__ */ new Int32Array(8);
+	Ft = /* @__PURE__ */ new Int32Array(8);
+	It = /* @__PURE__ */ new Int32Array(80);
+	Lt = /* @__PURE__ */ new Int32Array(84);
+	Rt = /* @__PURE__ */ new Int32Array(4);
+	zt = /* @__PURE__ */ new Int32Array(5);
+	Zt = `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`;
+	Qt = null;
+	q = null;
+	$t = null;
+	cn = 4096 * 4096;
+	ln = 4096;
+	Q = /* @__PURE__ */ new Float32Array();
+	vn = Object.freeze({
+		position: [
+			0,
+			0,
+			0
+		],
+		orientation: [
+			0,
+			0,
+			0,
+			1
+		],
+		scaleShear: [
+			1,
+			0,
+			0,
+			0,
+			1,
+			0,
+			0,
+			0,
+			1
+		]
+	});
+	yn = {
+		10: 4,
+		11: 1,
+		12: 1,
+		13: 1,
+		14: 1,
+		15: 2,
+		16: 2,
+		17: 2,
+		18: 2,
+		19: 4,
+		20: 4,
+		21: 2
+	};
+	$ = .707106781;
+	bn = [
+		[$ * 2, -.707106781],
+		[$ * 1, -.707106781 * .5],
+		[$ * .5, -.707106781 * .75],
+		[$ * .5, -.707106781 * .25],
+		[$ * .5, $ * .25],
+		[$ * .25, -.707106781 * .25],
+		[$ * .25, -.707106781 * .125],
+		[$ * .25, $ * 0],
+		[-.707106781 * 2, $],
+		[-.707106781 * 1, $ * .5],
+		[-.707106781 * .5, $ * .75],
+		[-.707106781 * .5, $ * .25],
+		[-.707106781 * .5, -.707106781 * .25],
+		[-.707106781 * .25, $ * .25],
+		[-.707106781 * .25, $ * .125],
+		[-.707106781 * .25, -0]
+	];
+	new TextDecoder(`utf-8`, { fatal: !1 });
+	Qn = Object.freeze([
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1
+	]);
+	$n = Object.freeze({
+		flags: 0,
+		position: [
+			0,
+			0,
+			0
+		],
+		orientation: [
+			0,
+			0,
+			0,
+			1
+		],
+		scaleShear: [
+			1,
+			0,
+			0,
+			0,
+			1,
+			0,
+			0,
+			0,
+			1
+		]
+	});
+	cr = null;
+}));
+//#endregion
+//#region src/Renderer/GR2/gr2Math.js
+function mul(a, b) {
+	const o = new Array(16);
+	for (let r = 0; r < 4; r++) for (let c = 0; c < 4; c++) {
+		let s = 0;
+		for (let k = 0; k < 4; k++) s += a[r * 4 + k] * b[k * 4 + c];
+		o[r * 4 + c] = s;
+	}
+	return o;
+}
+var IDENTITY_ROW, trans;
+var init_gr2Math = __esmMin((() => {
+	IDENTITY_ROW = [
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1
+	];
+	trans = (x, y, z) => [
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		0,
+		0,
+		0,
+		1,
+		0,
+		x,
+		y,
+		z,
+		1
+	];
+}));
+//#endregion
+//#region src/Loaders/GR2Loader.js
+function _quatToRow(x, y, z, w) {
+	const xx = x * x;
+	const yy = y * y;
+	const zz = z * z;
+	const xy = x * y;
+	const xz = x * z;
+	const yz = y * z;
+	const wx = w * x;
+	const wy = w * y;
+	const wz = w * z;
+	return [
+		1 - 2 * (yy + zz),
+		2 * (xy + wz),
+		2 * (xz - wy),
+		0,
+		2 * (xy - wz),
+		1 - 2 * (xx + zz),
+		2 * (yz + wx),
+		0,
+		2 * (xz + wy),
+		2 * (yz - wx),
+		1 - 2 * (xx + yy),
+		0,
+		0,
+		0,
+		0,
+		1
+	];
+}
+var HAS_POSITION, HAS_ORIENTATION, HAS_SCALESHEAR, _isEmblemMesh, GR2Loader;
+var init_GR2Loader = __esmMin((() => {
+	init_granny_ro_wasm_esm();
+	init_gr2Math();
+	HAS_POSITION = 1;
+	HAS_ORIENTATION = 2;
+	HAS_SCALESHEAR = 4;
+	_isEmblemMesh = (name) => /Plane/i.test(name);
+	GR2Loader = class GR2Loader {
+		constructor(buffer) {
+			if (buffer) this.load(buffer);
+		}
+		/**
+		* Parse the .gr2 bytes into { parsed, meshes, boneCount, animIndex, duration, ipRow }.
+		* A single parseAll decompresses the buffer once and runs every extractor on that one
+		* graph: parsed carries the textured meshes/skeletons, the animations, and models[] —
+		* models[0].initialPlacement is the InitialPlacement transform that grounds the actor.
+		*/
+		load(buffer) {
+			const parsed = gr(new Uint8Array(buffer));
+			this.parsed = parsed;
+			const packed = GR2Loader.packModel(parsed);
+			this.meshes = packed.meshes;
+			this.boneCount = packed.boneCount;
+			this.animIndex = 0;
+			const anim = parsed.animations[0];
+			this.duration = anim ? anim.duration : 1;
+			const model = parsed.models[0];
+			this.ipRow = model ? GR2Loader.ipRowFromTransform(model.initialPlacement) : void 0;
+		}
+		/**
+		* packModel(parsed) -> { meshes:[{ name, vcount, indices, bind, bidx, bw, uv, nrm, texFile, emblem }], boneCount }.
+		* Per-vertex attribute arrays: bind pos(3), GLOBAL bone indices(4), normalized top-4 weights(4),
+		* uv(2), bind normals(3). Matless proxy submeshes are dropped (the client binds no shader for them).
+		*/
+		static packModel(parsed) {
+			const skel = parsed.skeletons[0];
+			if (!skel) throw new Error("GR2Loader: model has no skeleton");
+			const bones = skel.bones;
+			const byName = {};
+			for (let i = 0; i < bones.length; i++) byName[bones[i].name] = i;
+			const boneCount = bones.length;
+			return {
+				meshes: parsed.meshes.filter((m) => m.materials && m.materials[0] && m.materials[0].textureFile).map((m) => {
+					const l2g = m.boneBindings.map((b) => byName[b.name] != null ? byName[b.name] : 0);
+					const N = m.vertexCount;
+					const bind = new Float32Array(N * 3);
+					const bidx = new Float32Array(N * 4);
+					const bw = new Float32Array(N * 4);
+					const uv = new Float32Array(N * 2);
+					const nrm = new Float32Array(N * 3);
+					for (let i = 0; i < N; i++) {
+						const p = m.positions[i];
+						bind[i * 3] = p[0];
+						bind[i * 3 + 1] = p[1];
+						bind[i * 3 + 2] = p[2];
+						const nn = m.normals && m.normals[i] || [
+							0,
+							0,
+							1
+						];
+						nrm[i * 3] = nn[0];
+						nrm[i * 3 + 1] = nn[1];
+						nrm[i * 3 + 2] = nn[2];
+						const t = m.uvs[i] || [0, 0];
+						uv[i * 2] = t[0];
+						uv[i * 2 + 1] = t[1];
+						const vw = m.vertexWeights[i] || [];
+						let s = 0;
+						for (let j = 0; j < 4; j++) {
+							const e = vw[j];
+							if (e) {
+								bidx[i * 4 + j] = l2g[e.boneIndex] | 0;
+								bw[i * 4 + j] = e.weight;
+								s += e.weight;
+							}
+						}
+						if (s < 1e-6) {
+							bidx[i * 4] = l2g.length ? l2g[0] | 0 : 0;
+							bw[i * 4] = 1;
+							s = 1;
+						}
+						for (let j = 0; j < 4; j++) bw[i * 4 + j] /= s;
+					}
+					const mat0 = m.materials && m.materials[0];
+					const texFile = mat0 && mat0.textureFile || "";
+					return {
+						name: m.name,
+						vcount: N,
+						indices: new Uint16Array(m.indices),
+						bind,
+						bidx,
+						bw,
+						uv,
+						nrm,
+						texFile,
+						emblem: _isEmblemMesh(m.name)
+					};
+				}),
+				boneCount
+			};
+		}
+		/**
+		* ipRowFromTransform(t) -> row-vector mat4 for a granny Transform { flags, position,
+		* orientation, scaleShear }, applying ONLY the flag-marked components (S.R.T order).
+		* Identity when the transform is absent or flags is 0.
+		*
+		* POSITION is applied INVERTED (`-p`). The granny InitialPlacement records where the
+		* model sat in its authoring scene; rendering at the actor's cell origin must UNDO that
+		* placement, not re-apply it. A model authored off-origin (e.g. Kguardian90_7, whose mesh
+		* lives entirely forward of origin with an IP `[0.045,-7.253,0]`) otherwise draws ~1.45
+		* cells too far forward — verified against mars-26/data.grf: `-p` re-centers its world-Z
+		* onto its identity-IP siblings. Orientation/scale stay as-authored (translation-free IPs
+		* like the treasurebox Rx+90 are unaffected).
+		*/
+		static ipRowFromTransform(t) {
+			if (!t || !t.flags) return IDENTITY_ROW.slice();
+			let M = IDENTITY_ROW.slice();
+			if (t.flags & HAS_SCALESHEAR) {
+				const s = t.scaleShear;
+				M = mul(M, [
+					s[0],
+					s[1],
+					s[2],
+					0,
+					s[3],
+					s[4],
+					s[5],
+					0,
+					s[6],
+					s[7],
+					s[8],
+					0,
+					0,
+					0,
+					0,
+					1
+				]);
+			}
+			if (t.flags & HAS_ORIENTATION) {
+				const q = t.orientation;
+				M = mul(M, _quatToRow(q[0], q[1], q[2], q[3]));
+			}
+			if (t.flags & HAS_POSITION) {
+				const p = t.position;
+				M = mul(M, trans(-p[0], -p[1], -p[2]));
+			}
+			return M;
+		}
+		/**
+		* Initialize the granny-ro-js WASM (texture pixel decode only). The geometry / skeleton /
+		* animation decode is WASM-independent; call this before decoding textures.
+		*/
+		static ready() {
+			return lr();
+		}
+	};
+}));
+//#endregion
+//#region src/Renderer/GR2/gr2Pack.js
+/**
+* packRobrowserInterleave(mesh) -> Float32Array(vcount * 16): roBrowser's model
+* vertex layout with the grafted GPU-skin attributes. Positions come from the
+* BIND pose (the vertex shader re-poses them from uBones).
+*
+*   aPosition@0(3) . aNormal@3(3) . aTextureCoord@6(2) . aBoneIndex@8(4) . aBoneWeight@12(4)
+*   = 16 floats/vert, stride 64 bytes.
+*/
+function packRobrowserInterleave(mesh) {
+	const n = mesh.vcount;
+	const buf = new Float32Array(n * 16);
+	for (let i = 0; i < n; i++) {
+		const o = i * 16;
+		buf[o] = mesh.bind[i * 3];
+		buf[o + 1] = mesh.bind[i * 3 + 1];
+		buf[o + 2] = mesh.bind[i * 3 + 2];
+		buf[o + 3] = mesh.nrm[i * 3];
+		buf[o + 4] = mesh.nrm[i * 3 + 1];
+		buf[o + 5] = mesh.nrm[i * 3 + 2];
+		buf[o + 6] = mesh.uv[i * 2];
+		buf[o + 7] = mesh.uv[i * 2 + 1];
+		buf[o + 8] = mesh.bidx[i * 4];
+		buf[o + 9] = mesh.bidx[i * 4 + 1];
+		buf[o + 10] = mesh.bidx[i * 4 + 2];
+		buf[o + 11] = mesh.bidx[i * 4 + 3];
+		buf[o + 12] = mesh.bw[i * 4];
+		buf[o + 13] = mesh.bw[i * 4 + 1];
+		buf[o + 14] = mesh.bw[i * 4 + 2];
+		buf[o + 15] = mesh.bw[i * 4 + 3];
+	}
+	return buf;
+}
+/**
+* flattenPose(pose, boneCount) -> Float32Array(boneCount * 16): the granny skinning
+* matrices laid out contiguously for the uBones uniform array (column-major per bone).
+*/
+function flattenPose(pose, boneCount) {
+	const s = new Float32Array(boneCount * 16);
+	for (let i = 0; i < boneCount; i++) s.set(pose.skinningMatrices[i], i * 16);
+	return s;
+}
+/**
+* quantizePoseTime(t, hz) -> integer bucket index at hz (default 40 Hz). Near-equal
+* clip times inside one 1/40 s bucket collapse to the same bucket, so the pose cache
+* computes one poseAt per (type, anim, bucket).
+*/
+function quantizePoseTime(t, hz) {
+	return Math.round(t * (hz || 40));
+}
+/**
+* poseCacheKey(path, animIndex, quant) -> cache key for a posed skeleton. Distinct
+* gr2 path, anim index, or time bucket never collide.
+*/
+function poseCacheKey(path, animIndex, quant) {
+	return path + "|" + animIndex + "|" + quant;
+}
+/**
+* gr2ActionFor(entity) -> the GR2 action name for a mob entity's CURRENT action, read
+* SEMANTICALLY via the entity's own ACTION enum (correct for MOB and NPC). Idle / state-0 /
+* any unmapped action -> 'stand' (animated idx-0 standby; a missing bank falls to poseAt(-1)).
+*/
+function gr2ActionFor(entity) {
+	const A = entity.ACTION;
+	const a = entity.action;
+	if (a === A.DIE) return "dead";
+	if (a === A.HURT) return "damage";
+	if (a === A.ATTACK || a === A.ATTACK1 || a === A.ATTACK2 || a === A.ATTACK3) return "attack";
+	if (a === A.WALK) return "move";
+	return "stand";
+}
+/**
+* frustumCullClip(x, y, w, margin) -> true when a clip-space point is off-screen (cull):
+* behind the camera (w <= 0) or beyond the padded [-1,1] NDC box on x/y.
+*/
+function frustumCullClip(x, y, w, margin) {
+	if (w <= 0) return true;
+	const m = (1 + margin) * w;
+	return x < -m || x > m || y < -m || y > m;
+}
+var init_gr2Pack = __esmMin((() => {}));
+//#endregion
+//#region src/Renderer/GR2/gr2World.js
+/**
+* worldCore(dir, pos) -> the reflection-free world core Rx(rxSign*pi/2) . Ry(yaw) . S . T
+* at the /5 referential (geometry x0.2, +0.5 cell-centre offset). Position is fed unchanged.
+*/
+function worldCore(dir, pos, opts) {
+	const o = opts || {};
+	const rxSign = o.rxSign != null ? o.rxSign : 1;
+	const yaw = (dir + (o.yawOffsetDeg != null ? o.yawOffsetDeg : YAW_BASE_DEG)) / 180 * Math.PI;
+	let m = mul(_rotX(rxSign * Math.PI / 2), _rotY(yaw));
+	m = mul(m, _scale$1(RB_UNIT_SCALE));
+	m = mul(m, trans(pos[0] + RB_PLACEMENT_OFS, pos[1] + (o.heightOffset || 0), pos[2] + RB_PLACEMENT_OFS));
+	return m;
+}
+/**
+* computeGroundOffset(meshes, ipRow, opts) -> the heightOffset that puts the model's base flush on
+* the terrain. roBrowser's render inverts world Y on screen (proven on the live map: a model placed
+* at world Y ABOVE the ground draws BELOW it / occluded), so the base — the part that must touch the
+* ground line — is the world-Y MAX vertex. We ground that: no vertex ends up above the ground's
+* world Y, so nothing renders under the terrain. Yaw-independent (uses the world matrix's Y-row).
+*
+* The model's granny InitialPlacement (ipRow) MUST be threaded here so grounding runs in the SAME
+* frame the draw uses (`v . ipRow . worldCore`). A non-identity IP (e.g. the treasurebox's 90 deg X
+* rotation, or the guardians' Y translation) reorients/shifts the mesh; grounding with a null IP
+* would compute the base in the wrong frame and the model floats / sinks / lies flat on the ground.
+*/
+function computeGroundOffset(meshes, ipRow, opts) {
+	const m = buildWorld(0, [
+		0,
+		0,
+		0
+	], ipRow, opts);
+	const a = m[1];
+	const b = m[5];
+	const c = m[9];
+	let max = -Infinity;
+	for (let k = 0; k < meshes.length; k++) {
+		const bind = meshes[k].bind;
+		const vc = meshes[k].vcount;
+		for (let i = 0; i < vc; i++) {
+			const y = a * bind[i * 3] + b * bind[i * 3 + 1] + c * bind[i * 3 + 2];
+			if (y > max) max = y;
+		}
+	}
+	return max === -Infinity ? 0 : -max;
+}
+/**
+* buildWorld(dir, pos, ipRow) -> Float32Array(16) GR2 world matrix.
+* Chain (row-vector, IP innermost): v . ipRow . worldCore(dir, pos) — a clean,
+* reflection-free Rx . Ry . S . T (det +1). The granny-RH -> render-LH reflection is
+* provided by roBrowser's Y-inverting camera, not by this matrix (see HANDEDNESS above).
+* Hand the result straight to gl-matrix `mat4.multiply(out, view, world)` (see MATRIX
+* CONVENTION above) — it is already the column-major world matrix.
+*
+* @param {number} dir - actor facing fed into Ry((dir+180))
+* @param {number[]} pos - world position [x, y, z] (caller referential, left unscaled)
+* @param {number[]} [ipRow] - the model's granny InitialPlacement row-vector mat4 (identity for flags)
+*/
+function buildWorld(dir, pos, ipRow, opts) {
+	return new Float32Array(mul(ipRow || IDENTITY_ROW, worldCore(dir, pos, opts || {})));
+}
+var RB_UNIT_SCALE, RB_PLACEMENT_OFS, _rotX, _rotY, _scale$1, YAW_BASE_DEG;
+var init_gr2World = __esmMin((() => {
+	init_gr2Math();
+	RB_UNIT_SCALE = .2;
+	RB_PLACEMENT_OFS = .5;
+	_rotX = (a) => {
+		const s = Math.sin(a);
+		const c = Math.cos(a);
+		return [
+			1,
+			0,
+			0,
+			0,
+			0,
+			c,
+			s,
+			0,
+			0,
+			-s,
+			c,
+			0,
+			0,
+			0,
+			0,
+			1
+		];
+	};
+	_rotY = (a) => {
+		const s = Math.sin(a);
+		const c = Math.cos(a);
+		return [
+			c,
+			0,
+			-s,
+			0,
+			0,
+			1,
+			0,
+			0,
+			s,
+			0,
+			c,
+			0,
+			0,
+			0,
+			0,
+			1
+		];
+	};
+	_scale$1 = (s) => [
+		s,
+		0,
+		0,
+		0,
+		0,
+		s,
+		0,
+		0,
+		0,
+		0,
+		s,
+		0,
+		0,
+		0,
+		0,
+		1
+	];
+	YAW_BASE_DEG = 360;
+}));
+//#endregion
+//#region src/Renderer/GR2/actorAction.js
+/**
+* createActor() -> a fresh actor in the standby state.
+*/
+function createActor() {
+	return {
+		name: "stand",
+		startT: 0,
+		loop: false
+	};
+}
+/**
+* setAction(actor, name, tNow) — the hard cut: reset the action clock (fcn.00b2c180.c:63
+* +0x514=0) and clear the loop latch. A caller that wants the clip to loop (a mob re-driven
+* each movement tick) re-arms actor.loop after.
+*/
+function setAction$1(actor, name, tNow) {
+	if (!ACTION[name]) return;
+	actor.name = name;
+	actor.startT = tNow;
+	actor.loop = false;
+}
+/**
+* actorPose(actor, model, tNow, standbyIdx, frozenT) -> { animIndex, t }, evaluated EVERY
+* frame (standby included) so the clip clock is action-relative. standbyIdx = the model's
+* standby clip (registry animIndex; -1 = the NPC bind pose). frozenT (seconds) freezes the
+* standby scrub for manual A/B; pass null to run. Mutates actor on revert.
+*/
+function actorPose(actor, model, tNow, standbyIdx, frozenT) {
+	const anims = model.parsed && model.parsed.animations || [];
+	const elapsed = (tNow - actor.startT) / 1e3;
+	if (actor.name === "stand") {
+		if (standbyIdx < 0) return {
+			animIndex: -1,
+			t: 0
+		};
+		const standbyDur = anims[standbyIdx] ? anims[standbyIdx].duration || 1 : 1;
+		return {
+			animIndex: standbyIdx,
+			t: (frozenT != null ? frozenT : elapsed) % standbyDur
+		};
+	}
+	const a = ACTION[actor.name];
+	const present = anims[a.idx] != null;
+	if (actor.name === "attack") {
+		if (!present) return {
+			animIndex: -1,
+			t: 0
+		};
+		if (elapsed >= (anims[a.idx].duration || 1)) {
+			setAction$1(actor, "stand", tNow);
+			return actorPose(actor, model, tNow, standbyIdx, frozenT);
+		}
+		return {
+			animIndex: a.idx,
+			t: elapsed
+		};
+	}
+	if (actor.name === "dead") {
+		if (!present) return {
+			animIndex: -1,
+			t: 0
+		};
+		const dur = anims[a.idx].duration || 1;
+		return {
+			animIndex: a.idx,
+			t: Math.min(elapsed, dur)
+		};
+	}
+	if (!present) {
+		setAction$1(actor, "stand", tNow);
+		return {
+			animIndex: -1,
+			t: 0
+		};
+	}
+	const durDM = anims[a.idx].duration || 1;
+	if (actor.loop) return {
+		animIndex: a.idx,
+		t: elapsed % durDM
+	};
+	if (elapsed >= durDM) {
+		setAction$1(actor, "stand", tNow);
+		return actorPose(actor, model, tNow, standbyIdx, frozenT);
+	}
+	return {
+		animIndex: a.idx,
+		t: elapsed
+	};
+}
+var ACTION;
+var init_actorAction = __esmMin((() => {
+	ACTION = {
+		stand: {
+			type: 0,
+			idx: 0,
+			name: "ST_STAND"
+		},
+		move: {
+			type: 8,
+			idx: 1,
+			name: "ST_MOVE"
+		},
+		attack: {
+			type: 80,
+			idx: 2,
+			name: "ST_ATTACK"
+		},
+		dead: {
+			type: 64,
+			idx: 3,
+			name: "ST_DEAD"
+		},
+		damage: {
+			type: 48,
+			idx: 4,
+			name: "ST_DAMAGE"
+		}
+	};
+}));
+//#endregion
+//#region src/Renderer/GR2/gr2Banks.js
+/**
+* bankPathsFor(path) -> [{ name, path }] : the declared external bank files for a
+* model, given its main .gr2 path. Empty when the model ships no external banks.
+* @param {string} path e.g. 'data/model/3dmob/sguardian90_9.gr2'
+*/
+function bankPathsFor(path) {
+	const match = path.match(/_(\d+)\.gr2$/i);
+	const setId = match ? match[1] : null;
+	return (setId != null && GR2_BANKS[setId] || []).map((name) => ({
+		name,
+		path: "data/model/3dmob_bone/" + setId + "_" + name + ".gr2"
+	}));
+}
+var GR2_BANKS;
+var init_gr2Banks = __esmMin((() => {
+	GR2_BANKS = {
+		2: ["dead", "damage"],
+		7: [
+			"attack",
+			"damage",
+			"dead",
+			"move"
+		],
+		8: [
+			"attack",
+			"damage",
+			"dead",
+			"move"
+		],
+		9: [
+			"attack",
+			"damage",
+			"dead",
+			"move"
+		]
+	};
+}));
+//#endregion
+//#region src/Renderer/GR2/GR2Model.vs?raw
+var GR2Model_default$1;
+var init_GR2Model$1 = __esmMin((() => {
+	GR2Model_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec3 aPosition;\r\nin vec3 aNormal;\r\nin vec2 aTextureCoord;\r\nin vec4 aBoneIndex;\r\nin vec4 aBoneWeight;\r\n\r\nout vec2 vTextureCoord;\r\nout float vLightWeighting;\r\n\r\nuniform mat4 uModelViewMat;   // Camera view * instance world\r\nuniform mat4 uProjectionMat;\r\nuniform mat3 uNormalMat;      // normal-matrix of (view * world) -> VIEW space\r\n\r\nuniform mat4 uBones[48];      // GPU skin. MUST equal gr2Pack.js BONE_CAP (48) — GLSL can't import\r\n                              // it, so this literal is the hand-synced mirror; change both together.\r\n\r\nuniform vec3 uLightDirection; // scene light direction, VIEW space\r\nuniform float uLightOpacity;\r\n\r\nvoid main(void) {\r\n	mat4 skin = aBoneWeight.x * uBones[int(aBoneIndex.x)]\r\n	          + aBoneWeight.y * uBones[int(aBoneIndex.y)]\r\n	          + aBoneWeight.z * uBones[int(aBoneIndex.z)]\r\n	          + aBoneWeight.w * uBones[int(aBoneIndex.w)];\r\n\r\n	vec4 skinned = skin * vec4(aPosition, 1.0);\r\n	gl_Position = uProjectionMat * uModelViewMat * skinned;\r\n\r\n	vTextureCoord = aTextureCoord;\r\n\r\n	// Skin the normal, then carry it to view space (uNormalMat = normal-matrix of view*world);\r\n	// uLightDirection is handed in already in view space, so N.L shares a frame and stays\r\n	// world-fixed as the orbit camera moves.\r\n	vec3 normal = normalize(uNormalMat * (mat3(skin) * aNormal));\r\n	float lightWeight = max(dot(normal, uLightDirection), 0.0);\r\n	vLightWeighting = (1.0 - uLightOpacity) + lightWeight * uLightOpacity;\r\n}\r\n";
+}));
+//#endregion
+//#region src/Renderer/GR2/GR2Model.fs?raw
+var GR2Model_default;
+var init_GR2Model = __esmMin((() => {
+	GR2Model_default = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 vTextureCoord;\r\nin float vLightWeighting;\r\nout vec4 fragColor;\r\n\r\nuniform sampler2D uDiffuse;\r\nuniform float uAlphaRef;      // client HARD alpha-test (207/255), not roBrowser's a == 0.0\r\nuniform float uAlpha;         // per-instance entity alpha (removal fade); 1.0 = opaque\r\n\r\nuniform bool uFogUse;\r\nuniform float uFogNear;\r\nuniform float uFogFar;\r\nuniform vec3 uFogColor;\r\n\r\nuniform vec3 uLightAmbient;\r\nuniform vec3 uLightDiffuse;\r\nuniform vec3 uLightEnv;\r\n\r\nvoid main(void) {\r\n	vec4 textureSample = texture(uDiffuse, vTextureCoord.st);\r\n\r\n	// Client hard alpha-test (fcn.005384e0.c:32-34, ALPHAREF 0xCF): discard alpha < 207/255,\r\n	// keep the rest OPAQUE. Clips the linear alpha ramp to a tight 1-texel edge.\r\n	if (textureSample.a < uAlphaRef) {\r\n		discard;\r\n	}\r\n\r\n	// Phase-0 grayscale directional light: uLightDiffuse / uLightAmbient are fed grayscale\r\n	// (R=G=B) so the shade is the RE directional gradient MODULATE'd with the texel.\r\n	vec3 color = (vLightWeighting * uLightDiffuse + uLightAmbient);\r\n	textureSample.rgb *= clamp(color, 0.0, 1.0);\r\n	textureSample.rgb *= clamp(uLightEnv, 0.0, 1.0);\r\n	// Kept fragments are opaque except during a removal fade, where uAlpha ramps the FINAL alpha\r\n	// down (the discard above already cut the texture edge). uAlpha = 1.0 -> unchanged.\r\n	textureSample.a = uAlpha;\r\n\r\n	fragColor = textureSample;\r\n\r\n	if (uFogUse) {\r\n		float depth = gl_FragCoord.z / gl_FragCoord.w;\r\n		float fogFactor = smoothstep(uFogNear, uFogFar, depth);\r\n		fragColor = mix(fragColor, vec4(uFogColor, fragColor.w), fogFactor);\r\n	}\r\n}\r\n";
+}));
+//#endregion
+//#region src/Renderer/GR2/GR2ModelRenderer.js
+function gr2Basename(path) {
+	const cut = Math.max(path.lastIndexOf("/"), path.lastIndexOf("\\"));
+	const dot = path.lastIndexOf(".");
+	return path.slice(cut + 1, dot > cut ? dot : path.length).toLowerCase();
+}
+function grayBroadcast(src, out) {
+	out[0] = out[1] = out[2] = .299 * src[0] + .587 * src[1] + .114 * src[2];
+	return out;
+}
+/**
+* Initialize the shader program.
+*/
+function init$8(gl) {
+	_program$20 = WebGL_default.createShaderProgram(gl, GR2Model_default$1, GR2Model_default);
+	_program$20.uniform = {
+		uModelViewMat: gl.getUniformLocation(_program$20, "uModelViewMat"),
+		uProjectionMat: gl.getUniformLocation(_program$20, "uProjectionMat"),
+		uNormalMat: gl.getUniformLocation(_program$20, "uNormalMat"),
+		uBones: gl.getUniformLocation(_program$20, "uBones[0]"),
+		uLightDirection: gl.getUniformLocation(_program$20, "uLightDirection"),
+		uLightOpacity: gl.getUniformLocation(_program$20, "uLightOpacity"),
+		uLightAmbient: gl.getUniformLocation(_program$20, "uLightAmbient"),
+		uLightDiffuse: gl.getUniformLocation(_program$20, "uLightDiffuse"),
+		uLightEnv: gl.getUniformLocation(_program$20, "uLightEnv"),
+		uAlphaRef: gl.getUniformLocation(_program$20, "uAlphaRef"),
+		uAlpha: gl.getUniformLocation(_program$20, "uAlpha"),
+		uFogUse: gl.getUniformLocation(_program$20, "uFogUse"),
+		uFogNear: gl.getUniformLocation(_program$20, "uFogNear"),
+		uFogFar: gl.getUniformLocation(_program$20, "uFogFar"),
+		uFogColor: gl.getUniformLocation(_program$20, "uFogColor"),
+		uDiffuse: gl.getUniformLocation(_program$20, "uDiffuse")
+	};
+	_program$20.attribute = {
+		aPosition: gl.getAttribLocation(_program$20, "aPosition"),
+		aNormal: gl.getAttribLocation(_program$20, "aNormal"),
+		aTextureCoord: gl.getAttribLocation(_program$20, "aTextureCoord"),
+		aBoneIndex: gl.getAttribLocation(_program$20, "aBoneIndex"),
+		aBoneWeight: gl.getAttribLocation(_program$20, "aBoneWeight")
+	};
+}
+/**
+* Free all type GL resources and drop every instance (MapRenderer calls this on map unload).
+*/
+function free$3(gl) {
+	for (const path in _types) {
+		const type = _types[path];
+		const submeshes = type.submeshes;
+		if (submeshes) for (let s = 0; s < submeshes.length; s++) {
+			const sm = submeshes[s];
+			gl.deleteVertexArray(sm.vao);
+			gl.deleteBuffer(sm.vbo);
+			gl.deleteBuffer(sm.ibo);
+		}
+		if (type.textures) for (const file in type.textures.byFile) gl.deleteTexture(type.textures.byFile[file]);
+	}
+	for (let i = 0; i < _instances.length; i++) if (_instances[i].emblemTex) gl.deleteTexture(_instances[i].emblemTex);
+	_types = {};
+	_instances = [];
+	_poseCache = {};
+}
+/**
+* keyGr2Magenta(px) — ASM-faithful gr2 texture transparency. The client keys MAGENTA
+* 0xFF00FF by zeroing the whole pixel to black + alpha 0 (mars26 fcn.0054e950 / ver12
+* fcn.00417550). Discarded before the RGB contributes (opaque + hard alpha-test at 207).
+* A 32-bit source with its own alpha is honoured verbatim.
+*/
+function keyGr2Magenta(px) {
+	for (let i = 3; i < px.length; i += 4) if (px[i] < 255) return px;
+	const out = new Uint8Array(px);
+	for (let i = 0; i < out.length; i += 4) if (out[i] >= 248 && out[i + 1] < 8 && out[i + 2] >= 248) out[i] = out[i + 1] = out[i + 2] = out[i + 3] = 0;
+	return out;
+}
+/**
+* makeTypeTextures(gl, parsed) -> { byFile:{ textureFile -> GLTexture } }. One texture per
+* embedded granny texture, keyed by its file name (the string a packed mesh carries in
+* texFile). LINEAR + CLAMP = the client's active sampler 0 (byte-cited).
+*/
+function makeTypeTextures(gl, parsed) {
+	const byFile = {};
+	const list = parsed.textures || [];
+	for (let i = 0; i < list.length; i++) {
+		const t = list[i];
+		const tex = gl.createTexture();
+		gl.bindTexture(gl.TEXTURE_2D, tex);
+		if (t && t.pixels) gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, t.width, t.height, 0, gl.RGBA, gl.UNSIGNED_BYTE, keyGr2Magenta(t.pixels));
+		else gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, TEX_MISSING_PX);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+		byFile[t.name] = tex;
+	}
+	const grey = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, grey);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, TEX_GREY_PX);
+	byFile.__grey = grey;
+	gl.bindTexture(gl.TEXTURE_2D, null);
+	return { byFile };
+}
+function quantize4bit(px) {
+	for (let i = 0; i < px.length; i++) px[i] = (px[i] >> 4) * A4_NIBBLE_EXPAND;
+}
+/**
+* buildEmblemTexture(gl, img, prevTex) — the live per-guild emblem, POT-padded the way the client
+* does it. The client requests the emblem 24x24 then rounds it up to the next power-of-two
+* (32x32, fcn.00529000) with the pixels in the TOP-LEFT corner and the rest transparent, so
+* UV 0..1 sample the whole 32x32 and the emblem reads at 75% top-left of the Plane01 quad
+* (~centered, upper third of the banner). The placement IS the POT padding — no geometry recentre.
+* The transparent [24..31] border is discarded by the shader's hard alpha-test (ALPHA_REF). The
+* source already passed Texture.load (magenta keyed) in Guild.js, so only the A4R4G4B4 quantize is
+* applied here. Reuses prevTex on a guild/version change so a re-bind never leaks. LINEAR + CLAMP
+* = the client's sampler (byte-cited).
+*/
+function buildEmblemTexture(gl, img, prevTex) {
+	const POT = 32, SRC = 24;
+	const cv = _emblemCanvas || (_emblemCanvas = document.createElement("canvas"));
+	cv.width = POT;
+	cv.height = POT;
+	const ctx = cv.getContext("2d", { willReadFrequently: true });
+	ctx.imageSmoothingEnabled = false;
+	ctx.drawImage(img, 0, 0, SRC, SRC);
+	const im = ctx.getImageData(0, 0, POT, POT);
+	quantize4bit(im.data);
+	const tex = prevTex || gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, tex);
+	gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, im);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.bindTexture(gl.TEXTURE_2D, null);
+	return tex;
+}
+/**
+* acquire(path) — refcount a type; on first acquire fetch the .gr2 (worker Thread ->
+* cyro source) and decode it on the CPU (GL upload is deferred to the first render that
+* has a gl context). Returns the type entry immediately (empty until decode completes).
+*/
+function acquire(path) {
+	let type = _types[path];
+	if (type) {
+		type.refcount++;
+		return type;
+	}
+	const declaredBanks = bankPathsFor(path);
+	type = {
+		path,
+		refcount: 1,
+		cpuReady: false,
+		glReady: false,
+		parsed: null,
+		meshes: null,
+		ipRow: void 0,
+		boneCount: 0,
+		duration: 1,
+		submeshes: null,
+		textures: null,
+		declaredBanks,
+		bankQueue: declaredBanks.map((b) => b.name),
+		bankState: {},
+		bankLoading: false
+	};
+	_types[path] = type;
+	if (!_readyPromise) _readyPromise = GR2Loader.ready();
+	Client.getFile(path, function(buffer) {
+		_readyPromise.then(function() {
+			if (_types[path] !== type) return;
+			try {
+				const loader = new GR2Loader(buffer);
+				type.parsed = loader.parsed;
+				type.meshes = loader.meshes;
+				type.ipRow = loader.ipRow;
+				type.groundOffset = computeGroundOffset(type.meshes, type.ipRow);
+				type.aabb = computeLocalAABB(type.meshes);
+				type.boneCount = loader.boneCount;
+				type.duration = loader.duration;
+				type.cpuReady = true;
+			} catch (e) {
+				_missing[path] = true;
+				console.error("[GR2ModelRenderer] decode failed", path, e);
+			}
+		});
+	}, function() {
+		_missing[path] = true;
+		console.warn("[GR2ModelRenderer] failed to fetch", path);
+	});
+	return type;
+}
+/**
+* buildTypeGL(gl, type) — upload the type's VBO/IBO/VAO per submesh + textures, once the
+* CPU decode is done. One VAO per submesh, 16-float interleave (see GR2_VERTEX_LAYOUT).
+*/
+function buildTypeGL(gl, type) {
+	type.textures = makeTypeTextures(gl, type.parsed);
+	const attr = _program$20.attribute;
+	type.submeshes = type.meshes.map(function(mesh) {
+		const vao = gl.createVertexArray();
+		gl.bindVertexArray(vao);
+		const vbo = gl.createBuffer();
+		gl.bindBuffer(gl.ARRAY_BUFFER, vbo);
+		gl.bufferData(gl.ARRAY_BUFFER, packRobrowserInterleave(mesh), gl.STATIC_DRAW);
+		for (let a = 0; a < GR2_VERTEX_LAYOUT.length; a++) {
+			const layout = GR2_VERTEX_LAYOUT[a];
+			const loc = attr[layout.attr];
+			gl.enableVertexAttribArray(loc);
+			gl.vertexAttribPointer(loc, layout.size, gl.FLOAT, false, GR2_VERTEX_STRIDE, layout.offset);
+		}
+		const ibo = gl.createBuffer();
+		gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, ibo);
+		gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, mesh.indices, gl.STATIC_DRAW);
+		gl.bindVertexArray(null);
+		return {
+			vao,
+			vbo,
+			ibo,
+			count: mesh.indices.length,
+			tex: type.textures.byFile[mesh.texFile] || type.textures.byFile.__grey,
+			emblem: mesh.emblem
+		};
+	});
+	type.hasEmblem = type.submeshes.some(function(sm) {
+		return sm.emblem;
+	});
+	type.glReady = true;
+}
+function mat3MulVec3(m, v, out) {
+	out[0] = m[0] * v[0] + m[4] * v[1] + m[8] * v[2];
+	out[1] = m[1] * v[0] + m[5] * v[1] + m[9] * v[2];
+	out[2] = m[2] * v[0] + m[6] * v[1] + m[10] * v[2];
+}
+/**
+* computeLocalAABB(meshes) -> the model's local bind-pose axis-aligned bounds { min, max }, or
+* null if empty. Used to project a screen-space pick box (see computeScreenRect) — the GR2 path
+* suppresses the 2D sprite body, which is what normally fills entity.boundingRect.
+*/
+function computeLocalAABB(meshes) {
+	let minX = Infinity, minY = Infinity, minZ = Infinity;
+	let maxX = -Infinity, maxY = -Infinity, maxZ = -Infinity;
+	for (let k = 0; k < meshes.length; k++) {
+		const bind = meshes[k].bind;
+		const vc = meshes[k].vcount;
+		for (let i = 0; i < vc; i++) {
+			const x = bind[i * 3];
+			const y = bind[i * 3 + 1];
+			const z = bind[i * 3 + 2];
+			if (x < minX) minX = x;
+			if (x > maxX) maxX = x;
+			if (y < minY) minY = y;
+			if (y > maxY) maxY = y;
+			if (z < minZ) minZ = z;
+			if (z > maxZ) maxZ = z;
+		}
+	}
+	if (minX === Infinity) return null;
+	return {
+		min: [
+			minX,
+			minY,
+			minZ
+		],
+		max: [
+			maxX,
+			maxY,
+			maxZ
+		]
+	};
+}
+/**
+* computeBaseSphereRect(mvp, projection, out) -> the client's GR2 pick box: the screen rect of a
+* base bounding-sphere (fcn.006852e0), written into `out` (same {x1,y1,x2,y2} shape and
+* window-pixel/y-down convention computeScreenRect produces, so EntityRender consumes it
+* unchanged). Returns false when the base is behind the camera.
+*
+* Centre = the model origin (0,0,0) projected through the FULL model→clip matrix = the mvp
+* translation column (mvp[12], mvp[13], w = mvp[15]). This is the model's base exactly as drawn —
+* it carries the cell-centre +0.5, the groundOffset and the ipRow — matching fcn.006852e0.c:50-57,
+* which transforms the stored centre (sub+0x394 = (0,0,0)) by the model's own matrices. Do NOT use
+* the raw cell anchor (worldAnchorToClip): it misses the +0.5/ground and lands half a cell off.
+*
+* Half-extent = √(r²·0.5) world-u (BASE_SPHERE_HALF_EXTENT), projected `·focal·(1/w)` symmetrically
+* around the centre (fcn.006852e0.c:70-71,75-81), where roBrowser's `focal` is `halfW·projection[0]`
+* / `halfH·projection[5]` (the viewport scales). The radius is a world/view extent, independent of
+* the model's own geometry scale — same as the client, which adds the raw radius in view space.
+*/
+function computeBaseSphereRect(mvp, projection, out) {
+	const cw = mvp[15];
+	if (cw <= CLIP_W_EPS) return false;
+	const inv = 1 / cw;
+	const halfW = window.innerWidth * .5;
+	const halfH = window.innerHeight * .5;
+	const cx = halfW * (1 + mvp[12] * inv);
+	const cy = halfH * (1 - mvp[13] * inv);
+	const ex = halfW * projection[0] * BASE_SPHERE_HALF_EXTENT * inv;
+	const ey = halfH * projection[5] * BASE_SPHERE_HALF_EXTENT * inv;
+	out.x1 = cx - ex;
+	out.x2 = cx + ex;
+	out.y1 = cy - ey;
+	out.y2 = cy + ey;
+	return true;
+}
+function normalize3(v) {
+	const len = Math.hypot(v[0], v[1], v[2]) || 1;
+	v[0] /= len;
+	v[1] /= len;
+	v[2] /= len;
+}
+/**
+* Render every live GR2 instance. Signature mirrors AnimatedModels.render (the seam it
+* sits next to): (gl, modelView, projection, normalMat, fog, light, tick). modelView is
+* Camera.modelView (the view matrix); the per-instance world is composed on top.
+*/
+function render$19(gl, modelView, projection, normalMat, fog, light, tick) {
+	_gl$1 = gl;
+	if (_instances.length === 0 || !light) return;
+	if (!_program$20) init$8(gl);
+	for (const path in _types) {
+		const type = _types[path];
+		if (type.cpuReady && !type.glReady) buildTypeGL(gl, type);
+	}
+	const uniform = _program$20.uniform;
+	gl.useProgram(_program$20);
+	gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
+	gl.uniform1f(uniform.uLightOpacity, light.opacity != null ? light.opacity : 1);
+	gl.uniform3fv(uniform.uLightEnv, light.env || _phaseEnv);
+	gl.uniform1f(uniform.uAlphaRef, ALPHA_REF);
+	gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
+	gl.uniform1f(uniform.uFogNear, fog.near);
+	gl.uniform1f(uniform.uFogFar, fog.far);
+	gl.uniform3fv(uniform.uFogColor, fog.color);
+	gl.activeTexture(gl.TEXTURE0);
+	gl.uniform1i(uniform.uDiffuse, 0);
+	const blendWasEnabled = gl.isEnabled(gl.BLEND);
+	gl.disable(gl.BLEND);
+	mat3MulVec3(modelView, light.direction, _lightView);
+	normalize3(_lightView);
+	gl.uniform3fv(uniform.uLightDirection, _lightView);
+	const seen = {};
+	SpriteRenderer.runWithDepth(true, true, true, function() {
+		for (let i = 0; i < _instances.length; i++) {
+			const inst = _instances[i];
+			const type = _types[inst.path];
+			if (!type || !type.glReady) continue;
+			if (inst.entity) {
+				syncFromEntity(inst, type, tick);
+				if (type.hasEmblem) {
+					const emblemImg = inst.entity.emblem && inst.entity.emblem.emblem;
+					if (emblemImg !== inst._emblemImg) {
+						inst._emblemImg = emblemImg;
+						if (emblemImg) inst.emblemTex = buildEmblemTexture(gl, emblemImg, inst.emblemTex);
+						else if (inst.emblemTex) {
+							gl.deleteTexture(inst.emblemTex);
+							inst.emblemTex = null;
+						}
+					}
+				}
+			}
+			worldAnchorToClip(inst.pos, modelView, projection, _clip);
+			if (frustumCullClip(_clip[0], _clip[1], _clip[3], CULL_MARGIN)) {
+				inst.screenRect = null;
+				continue;
+			}
+			if (!inst.worldBuilt) {
+				const p = inst.pos;
+				inst.world = buildWorld(inst.dir * DIR_STEP_DEG, [
+					p[0],
+					-p[2],
+					p[1]
+				], type.ipRow, { heightOffset: type.groundOffset });
+				inst.worldBuilt = true;
+			}
+			const pose = actorPose(inst.actor, type, tick, inst.standbyIdx, null);
+			const animIndex = pose.animIndex;
+			const t = pose.t;
+			inst.animIndex = animIndex;
+			inst.t = t;
+			const key = poseCacheKey(inst.path, animIndex, quantizePoseTime(t));
+			let bones = seen[key] || _poseCache[key];
+			if (!bones) {
+				const idx = animIndex < 0 ? -1 : animIndex;
+				const sampleT = animIndex < 0 ? 0 : t;
+				bones = flattenPose(_r(type.parsed, idx, sampleT), type.boneCount);
+			}
+			seen[key] = bones;
+			mat4$20.multiply(_mv, modelView, inst.world);
+			mat4$20.toInverseMat3(_mv, _nmat);
+			mat3$5.transpose(_nmat, _nmat);
+			gl.uniformMatrix4fv(uniform.uModelViewMat, false, _mv);
+			gl.uniformMatrix3fv(uniform.uNormalMat, false, _nmat);
+			gl.uniformMatrix4fv(uniform.uBones, false, bones);
+			const profile = GR2_ROSTER[gr2Basename(inst.path)];
+			if (profile === "flag") {
+				gl.uniform3fv(uniform.uLightDiffuse, _gr2FlagDiffuse);
+				gl.uniform3fv(uniform.uLightAmbient, grayBroadcast(light.ambient || _phaseAmbient, _gr2FlagAmbient));
+			} else if (profile === "emp") {
+				gl.uniform3fv(uniform.uLightDiffuse, _gr2EmpDiffuse);
+				gl.uniform3fv(uniform.uLightAmbient, _gr2EmpAmbient);
+			} else {
+				gl.uniform3fv(uniform.uLightDiffuse, light.diffuse || _phaseDiffuse);
+				gl.uniform3fv(uniform.uLightAmbient, light.ambient || _phaseAmbient);
+			}
+			if (inst.entity && type.aabb) {
+				const box = inst.screenRect || (inst.screenRect = {
+					x1: 0,
+					y1: 0,
+					x2: 0,
+					y2: 0
+				});
+				mat4$20.multiply(_mvp, projection, _mv);
+				if (!computeBaseSphereRect(_mvp, projection, box)) inst.screenRect = null;
+			}
+			let alpha = 1;
+			const e = inst.entity;
+			if (e) {
+				alpha = e.effectColor[3];
+				if (e.remove_tick && e.remove_delay) {
+					if (e.action === e.ACTION.DIE ? FADE.death : FADE.vanish) alpha *= 1 - (Date.now() - e.remove_tick) / e.remove_delay;
+				}
+				alpha = alpha < 0 ? 0 : alpha > 1 ? 1 : alpha;
+			}
+			gl.uniform1f(uniform.uAlpha, alpha);
+			const fading = alpha < 1;
+			if (fading) {
+				gl.enable(gl.BLEND);
+				gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+			}
+			const submeshes = type.submeshes;
+			for (let s = 0; s < submeshes.length; s++) {
+				const sm = submeshes[s];
+				if (sm.emblem) {
+					if (!inst.emblemTex) continue;
+					gl.bindTexture(gl.TEXTURE_2D, inst.emblemTex);
+				} else gl.bindTexture(gl.TEXTURE_2D, sm.tex);
+				gl.bindVertexArray(sm.vao);
+				gl.drawElements(gl.TRIANGLES, sm.count, gl.UNSIGNED_SHORT, 0);
+			}
+			if (fading) gl.disable(gl.BLEND);
+		}
+	});
+	gl.bindVertexArray(null);
+	if (blendWasEnabled) gl.enable(gl.BLEND);
+	gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+	_poseCache = seen;
+	if (_debugCell && _instances.length) {
+		if (!_dbgCellInited) {
+			_dbgCellTile.init(gl);
+			_dbgCellInited = true;
+		}
+		const dbgBlendWasEnabled = gl.isEnabled(gl.BLEND);
+		gl.enable(gl.BLEND);
+		gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+		_dbgCellTile.beforeRender(gl, modelView, projection, fog, tick);
+		for (let i = 0; i < _instances.length; i++) {
+			const inst = _instances[i];
+			const type = _types[inst.path];
+			if (!type || !type.glReady) continue;
+			_dbgTileInst.position = inst.pos;
+			_dbgTileInst.render(gl, tick);
+		}
+		_dbgCellTile.afterRender(gl);
+		if (!dbgBlendWasEnabled) gl.disable(gl.BLEND);
+	}
+}
+function worldAnchorToClip(pos, modelView, projection, out) {
+	const x = pos[0];
+	const y = -pos[2];
+	const z = pos[1];
+	const vx = modelView[0] * x + modelView[4] * y + modelView[8] * z + modelView[12];
+	const vy = modelView[1] * x + modelView[5] * y + modelView[9] * z + modelView[13];
+	const vz = modelView[2] * x + modelView[6] * y + modelView[10] * z + modelView[14];
+	const vw = modelView[3] * x + modelView[7] * y + modelView[11] * z + modelView[15];
+	out[0] = projection[0] * vx + projection[4] * vy + projection[8] * vz + projection[12] * vw;
+	out[1] = projection[1] * vx + projection[5] * vy + projection[9] * vz + projection[13] * vw;
+	out[2] = projection[2] * vx + projection[6] * vy + projection[10] * vz + projection[14] * vw;
+	out[3] = projection[3] * vx + projection[7] * vy + projection[11] * vz + projection[15] * vw;
+}
+/**
+* pumpBanks(type, priorityName): per-type sequential loader for the external animation
+* banks. The current action's bank (priorityName) jumps to the front of the queue; one bank
+* is fetched at a time and grafted into the shared type.parsed.animations at its action slot
+* (loaded once for every instance of that type). A 404 drops the name (stays bind pose).
+*/
+function pumpBanks(type, priorityName) {
+	const queue = type.bankQueue;
+	if (priorityName) {
+		const at = queue.indexOf(priorityName);
+		if (at > 0) {
+			queue.splice(at, 1);
+			queue.unshift(priorityName);
+		}
+	}
+	if (type.bankLoading || queue.length === 0) return;
+	const name = queue.shift();
+	const entry = type.declaredBanks.find((b) => b.name === name);
+	if (!entry) return;
+	type.bankLoading = true;
+	type.bankState[name] = "loading";
+	Client.getFile(entry.path, function(buffer) {
+		type.bankLoading = false;
+		if (_types[type.path] === type && type.parsed) {
+			const bank = mr(new Uint8Array(buffer));
+			type.parsed.animations[ACTION[name].idx] = bank.animations[0];
+			type.bankState[name] = "loaded";
+		}
+		pumpBanks(type);
+	}, function() {
+		type.bankLoading = false;
+		delete type.bankState[name];
+		pumpBanks(type);
+	});
+}
+function syncFromEntity(inst, type, tick) {
+	const e = inst.entity;
+	const p = e.position;
+	const dir = e.direction;
+	if (inst.pos[0] !== p[0] || inst.pos[1] !== p[1] || inst.pos[2] !== p[2] || inst.dir !== dir) {
+		inst.pos[0] = p[0];
+		inst.pos[1] = p[1];
+		inst.pos[2] = p[2];
+		inst.dir = dir;
+		inst.worldBuilt = false;
+	}
+	if (inst.standbyIdx < 0) return;
+	const name = gr2ActionFor(e);
+	pumpBanks(type, name);
+	const animTick = e.animation.tick;
+	if (name !== inst._lastAction || animTick !== inst._lastTick) {
+		setAction$1(inst.actor, name, tick);
+		inst.actor.loop = name === "move";
+		inst._lastAction = name;
+		inst._lastTick = animTick;
+	}
+}
+/**
+* attach(entity): create a GR2 instance bound to a mob/NPC entity. standbyIdx is classified
+* by objecttype — NPC -> -1 (static poseAt(-1); SetAction never fires) vs MOB -> 0 (animated
+* idx-0 standby). The renderer pulls pos/dir/action from the entity each frame (syncFromEntity).
+*/
+function attach$1(entity) {
+	acquire(entity.gr2);
+	const p = entity.position;
+	const isNpc = entity.objecttype === entity.constructor.TYPE_NPC;
+	const inst = {
+		entity,
+		path: entity.gr2,
+		world: null,
+		worldBuilt: false,
+		actor: createActor(),
+		dir: entity.direction,
+		pos: [
+			p[0],
+			p[1],
+			p[2]
+		],
+		standbyIdx: isNpc ? -1 : 0,
+		animIndex: 0,
+		t: 0,
+		_lastAction: "stand",
+		_lastTick: 0,
+		screenRect: null,
+		emblemTex: null,
+		_emblemImg: null
+	};
+	_instances.push(inst);
+	return inst;
+}
+/**
+* detach(inst): drop an entity's GR2 instance (called from EntityManager on removal). The type
+* GL resources stay cached until map unload (free); the type set is bounded, so no leak.
+*/
+function detach(inst) {
+	const idx = _instances.indexOf(inst);
+	if (idx !== -1) _instances.splice(idx, 1);
+	const type = _types[inst.path];
+	if (type && type.refcount > 0) type.refcount--;
+	if (inst.emblemTex && _gl$1) {
+		_gl$1.deleteTexture(inst.emblemTex);
+		inst.emblemTex = null;
+	}
+	inst.entity = null;
+}
+/**
+* spawn(path, opts) — dev harness: place a GR2 instance. opts = { pos, dir, action,
+* standbyIdx }; pos/dir default to the player's position/facing. Returns the instance.
+*/
+function spawn(path, opts) {
+	const o = opts || {};
+	const ent = SessionStorage_default.Entity;
+	const pos = o.pos || (ent ? [
+		ent.position[0],
+		ent.position[1],
+		ent.position[2]
+	] : [
+		0,
+		0,
+		0
+	]);
+	const dir = o.dir != null ? o.dir : ent ? ent.direction : 0;
+	pos[2] = Altitude.getCellHeight(pos[0], pos[1]);
+	acquire(path);
+	const actor = createActor();
+	if (o.action && o.action !== "stand") {
+		setAction$1(actor, o.action, 0);
+		if (o.action === "move") actor.loop = true;
+	}
+	const inst = {
+		path,
+		world: null,
+		worldBuilt: false,
+		actor,
+		dir,
+		pos,
+		standbyIdx: o.standbyIdx != null ? o.standbyIdx : 0,
+		animIndex: 0,
+		t: 0
+	};
+	_instances.push(inst);
+	return inst;
+}
+/**
+* spawnMany(path, n, opts) — dev stress path: spawn n instances of one type in a sunflower
+* (phyllotaxis) spiral radiating out around the player, to prove same-type mobs collapse to one
+* geometry upload + one poseAt per phase. opts.spacing scales the disk radius.
+*/
+function spawnMany(path, n, opts) {
+	const o = opts || {};
+	const ent = SessionStorage_default.Entity;
+	const base = o.pos || (ent ? [
+		ent.position[0],
+		ent.position[1],
+		ent.position[2]
+	] : [
+		0,
+		0,
+		0
+	]);
+	const spacing = o.spacing || 1.2;
+	const golden = Math.PI * (3 - Math.sqrt(5));
+	const out = [];
+	for (let i = 0; i < n; i++) {
+		const r = spacing * Math.sqrt(i + .5);
+		const a = i * golden;
+		const inst = spawn(path, {
+			pos: [
+				base[0] + r * Math.cos(a),
+				base[1] + r * Math.sin(a),
+				base[2]
+			],
+			dir: o.dir,
+			action: o.action,
+			standbyIdx: o.standbyIdx
+		});
+		if (o.decorrelate) inst.actor.startT = -i * (1e3 / 40);
+		out.push(inst);
+	}
+	return out;
+}
+/**
+* clear() — dev: drop every instance (GL type resources stay cached for re-spawn; the map
+* unload frees them via free(gl)).
+*/
+function clear() {
+	const insts = _instances.slice();
+	for (let i = 0; i < insts.length; i++) detach(insts[i]);
+	_poseCache = {};
+}
+var mat3$5, mat4$20, ALPHA_REF, _phaseDiffuse, _phaseAmbient, _phaseEnv, _gr2FlagDiffuse, _gr2EmpDiffuse, _gr2EmpAmbient, _gr2FlagAmbient, GR2_ROSTER, _program$20, _gl$1, _types, _missing, _instances, _poseCache, _dbgCellTile, _dbgTileInst, _dbgCellInited, _debugCell, BASE_SPHERE_RADIUS, BASE_SPHERE_HALF_EXTENT, _readyPromise, _mv, _mvp, _nmat, _lightView, _clip, CULL_MARGIN, CLIP_W_EPS, DIR_STEP_DEG, FADE, TEX_MISSING_PX, TEX_GREY_PX, A4_NIBBLE_EXPAND, _emblemCanvas, GR2_VERTEX_STRIDE, GR2_VERTEX_LAYOUT, GR2ModelRenderer_default;
+var init_GR2ModelRenderer = __esmMin((() => {
+	init_Client();
+	init_gl_matrix();
+	init_WebGL();
+	init_SpriteRenderer();
+	init_SessionStorage();
+	init_Altitude();
+	init_FlatColorTile();
+	init_GR2Loader();
+	init_granny_ro_wasm_esm();
+	init_gr2Pack();
+	init_gr2World();
+	init_actorAction();
+	init_gr2Banks();
+	init_GR2Model$1();
+	init_GR2Model();
+	mat3$5 = gl_matrix_default.mat3;
+	mat4$20 = gl_matrix_default.mat4;
+	ALPHA_REF = 207 / 255;
+	_phaseDiffuse = new Float32Array([
+		128 / 255,
+		128 / 255,
+		128 / 255
+	]);
+	_phaseAmbient = new Float32Array([
+		127 / 255,
+		127 / 255,
+		127 / 255
+	]);
+	_phaseEnv = new Float32Array([
+		1,
+		1,
+		1
+	]);
+	_gr2FlagDiffuse = new Float32Array([
+		100 / 255,
+		100 / 255,
+		100 / 255
+	]);
+	_gr2EmpDiffuse = new Float32Array([
+		128 / 255,
+		128 / 255,
+		128 / 255
+	]);
+	_gr2EmpAmbient = new Float32Array([
+		127 / 255,
+		127 / 255,
+		127 / 255
+	]);
+	_gr2FlagAmbient = /* @__PURE__ */ new Float32Array(3);
+	GR2_ROSTER = {
+		guildflag90_1: "flag",
+		empelium90_0: "emp",
+		kguardian90_7: "emp",
+		aguardian90_8: "emp",
+		sguardian90_9: "emp",
+		treasurebox_2: "emp"
+	};
+	_program$20 = null;
+	_gl$1 = null;
+	_types = {};
+	_missing = {};
+	_instances = [];
+	_poseCache = {};
+	_dbgCellTile = FlatColorTile_default("gr2_debug_cell", {
+		r: 0,
+		g: 1,
+		b: 1,
+		a: .45
+	});
+	_dbgTileInst = new _dbgCellTile([
+		0,
+		0,
+		0
+	]);
+	_dbgCellInited = false;
+	_debugCell = false;
+	BASE_SPHERE_RADIUS = 2;
+	BASE_SPHERE_HALF_EXTENT = Math.sqrt(BASE_SPHERE_RADIUS * BASE_SPHERE_RADIUS * .5);
+	_readyPromise = null;
+	_mv = mat4$20.create();
+	_mvp = mat4$20.create();
+	_nmat = mat3$5.create();
+	_lightView = /* @__PURE__ */ new Float32Array(3);
+	_clip = /* @__PURE__ */ new Float32Array(4);
+	CULL_MARGIN = .2;
+	CLIP_W_EPS = 1e-6;
+	DIR_STEP_DEG = 45;
+	FADE = {
+		death: false,
+		vanish: false
+	};
+	TEX_MISSING_PX = new Uint8Array([
+		200,
+		200,
+		200,
+		255
+	]);
+	TEX_GREY_PX = new Uint8Array([
+		180,
+		180,
+		185,
+		255
+	]);
+	A4_NIBBLE_EXPAND = 17;
+	_emblemCanvas = null;
+	GR2_VERTEX_STRIDE = 64;
+	GR2_VERTEX_LAYOUT = [
+		{
+			attr: "aPosition",
+			size: 3,
+			offset: 0
+		},
+		{
+			attr: "aNormal",
+			size: 3,
+			offset: 12
+		},
+		{
+			attr: "aTextureCoord",
+			size: 2,
+			offset: 24
+		},
+		{
+			attr: "aBoneIndex",
+			size: 4,
+			offset: 32
+		},
+		{
+			attr: "aBoneWeight",
+			size: 4,
+			offset: 48
+		}
+	];
+	GR2ModelRenderer_default = {
 		init: init$8,
 		free: free$3,
-		add: add$2,
 		render: render$19,
-		hasAnimatedModels
+		attach: attach$1,
+		detach,
+		isMissing: function(path) {
+			return _missing[path] === true;
+		},
+		isSupported: function(path) {
+			return GR2_ROSTER[gr2Basename(path)] !== void 0;
+		},
+		spawn,
+		spawnMany,
+		clear,
+		FADE,
+		get debugCell() {
+			return _debugCell;
+		},
+		set debugCell(v) {
+			_debugCell = !!v;
+		}
 	};
 }));
 //#endregion
@@ -259495,6 +263997,7 @@ var init_MapRenderer = __esmMin((() => {
 	init_Water();
 	init_Models();
 	init_AnimatedModels();
+	init_GR2ModelRenderer();
 	init_Sounds();
 	init_Effects();
 	init_SpriteRenderer();
@@ -259621,6 +264124,7 @@ var init_MapRenderer = __esmMin((() => {
 			Water_default.free(gl);
 			Models_default.free(gl);
 			AnimatedModels_default.free(gl);
+			GR2ModelRenderer_default.free(gl);
 			Damage.free(gl);
 			EffectManager.free(gl);
 			SignboardManager.free();
@@ -259678,6 +264182,7 @@ var init_MapRenderer = __esmMin((() => {
 			Sky_default.render(gl, modelView, projection, fog, tick);
 			Models_default.render(gl, modelView, projection, normalMat, fog, light);
 			AnimatedModels_default.render(gl, modelView, projection, normalMat, fog, light, tick);
+			GR2ModelRenderer_default.render(gl, modelView, projection, normalMat, fog, light, tick);
 			ScreenEffectManager.render(gl, modelView, projection, fog, tick, true);
 			EffectManager.render(gl, modelView, projection, fog, tick, true);
 			EntityManager.render(gl, modelView, projection, fog, false);
@@ -262388,122 +266893,6 @@ var init_Tiles = __esmMin((() => {
 			gl.drawArrays(gl.TRIANGLES, 0, 6);
 		}
 	};
-}));
-//#endregion
-//#region src/Renderer/Effects/FlatColorTile.vs?raw
-var FlatColorTile_default$2;
-var init_FlatColorTile$2 = __esmMin((() => {
-	FlatColorTile_default$2 = "#version 300 es\r\nprecision highp float;\r\n\r\nout vec4 vColor;\r\n\r\nin vec2 aPosition;\r\n\r\nuniform vec4 uColor;\r\n\r\nuniform mat4 uModelViewMat;\r\nuniform mat4 uProjectionMat;\r\n\r\nuniform vec3 uPosition;\r\nuniform float uSize;\r\n\r\nvoid main(void) {\r\n    vec4 position  = vec4(uPosition.x + 0.5, -uPosition.z, uPosition.y + 0.5, 1.0);\r\n    position      += vec4(aPosition.x * uSize, 0.0, aPosition.y * uSize, 0.0);\r\n\r\n    gl_Position    = uProjectionMat * uModelViewMat * position;\r\n    gl_Position.z -= 0.01;\r\n    vColor = uColor;\r\n}";
-}));
-//#endregion
-//#region src/Renderer/Effects/FlatColorTile.fs?raw
-var FlatColorTile_default$1;
-var init_FlatColorTile$1 = __esmMin((() => {
-	FlatColorTile_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec4 vColor;\r\nout vec4 fragColor;\r\n\r\nvoid main(void) {\r\n    fragColor = vColor;\r\n}";
-}));
-//#endregion
-//#region src/Renderer/Effects/FlatColorTile.js
-function FlatColorTile_default(name, spec) {
-	let _program, _buffer;
-	if (_cache[name]) return _cache[name];
-	if (spec.a === void 0) spec.a = .5;
-	[
-		spec.r,
-		spec.g,
-		spec.b,
-		spec.a
-	].forEach(function(value) {
-		if (value === void 0) throw new Error("FlatColorTile: need to pass r, g, b, a");
-		if (value > 1 || value < 0) throw new Error("FlatColorTile: r, g, b, a need to be 0.0-1.0");
-	});
-	class FlatColorTile {
-		constructor(pos, startTick) {
-			this.position = pos;
-		}
-		init(gl) {
-			this.ready = true;
-		}
-		free(gl) {
-			this.ready = false;
-		}
-		render(gl, tick) {
-			if (_program === void 0) return;
-			gl.uniform3fv(_program.uniform.uPosition, this.position);
-			gl.uniform1f(_program.uniform.uSize, .5);
-			gl.uniform4fv(_program.uniform.uColor, [
-				spec.r,
-				spec.g,
-				spec.b,
-				spec.a
-			]);
-			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
-			gl.drawArrays(gl.TRIANGLES, 0, 6);
-		}
-		static init(gl) {
-			_program = WebGL_default.createShaderProgram(gl, FlatColorTile_default$2, FlatColorTile_default$1);
-			_buffer = gl.createBuffer();
-			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
-			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-				-1,
-				-1,
-				0,
-				0,
-				1,
-				-1,
-				1,
-				0,
-				1,
-				1,
-				1,
-				1,
-				1,
-				1,
-				1,
-				1,
-				-1,
-				1,
-				0,
-				1,
-				-1,
-				-1,
-				0,
-				0
-			]), gl.STATIC_DRAW);
-			FlatColorTile.ready = true;
-		}
-		static free(gl) {
-			if (_program) {
-				gl.deleteProgram(_program);
-				_program = null;
-			}
-			if (_buffer) gl.deleteBuffer(_buffer);
-			this.ready = false;
-		}
-		static beforeRender(gl, modelView, projection, fog, tick) {
-			const uniform = _program.uniform;
-			const attribute = _program.attribute;
-			gl.useProgram(_program);
-			gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
-			gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
-			gl.enableVertexAttribArray(attribute.aPosition);
-			gl.bindBuffer(gl.ARRAY_BUFFER, _buffer);
-			gl.vertexAttribPointer(attribute.aPosition, 2, gl.FLOAT, false, 16, 0);
-		}
-		static afterRender(gl) {
-			gl.disableVertexAttribArray(_program.attribute.aPosition);
-		}
-	}
-	FlatColorTile._uid = name;
-	FlatColorTile.renderBeforeEntities = true;
-	_cache[name] = FlatColorTile;
-	return FlatColorTile;
-}
-var _cache;
-var init_FlatColorTile = __esmMin((() => {
-	init_WebGL();
-	init_FlatColorTile$2();
-	init_FlatColorTile$1();
-	_cache = {};
 }));
 //#endregion
 //#region src/Renderer/Effects/Songs.js
@@ -303890,7 +308279,7 @@ function refreshHeadState() {
 * @param {number} job id
 */
 function UpdateBody(job) {
-	let baseJob, path;
+	let baseJob;
 	const transformationSeq = this._transformationSeq || 0;
 	if (job < 0) return;
 	const isTransformation = hasTransformation.call(this);
@@ -303909,7 +308298,7 @@ function UpdateBody(job) {
 	if (this.costume) job = this.costume;
 	this.xSize = this.ySize = DB.isBaby(job) ? 4 : 5;
 	this.files.shadow.size = job in ShadowTable_default ? ShadowTable_default[job] : 1;
-	path = this.isAdmin && !shouldSuppressHead.call(this) ? DB.getAdminPath(this._sex) : DB.getBodyPath(job, this._sex);
+	let path = this.isAdmin && !shouldSuppressHead.call(this) ? DB.getAdminPath(this._sex) : DB.getBodyPath(job, this._sex);
 	const Entity = this.constructor;
 	if (this.objecttype === Entity.TYPE_UNKNOWN) {
 		let objecttype;
@@ -303955,13 +308344,24 @@ function UpdateBody(job) {
 		this.files.body.act = null;
 		return;
 	}
-	if (path === null || path.match(/\.gr2$/i)) if (path.match(/aguardian90_8\.gr2$/i)) path = DB.getBodyPath(1276, this._sex);
-	else if (path.match(/empelium90_0\.gr2$/i)) path = DB.getBodyPath(2080, this._sex);
-	else if (path.match(/guildflag90_1\.gr2$/i)) path = DB.getBodyPath(1911, this._sex);
-	else if (path.match(/kguardian90_7\.gr2$/i)) path = DB.getBodyPath(2691, this._sex);
-	else if (path.match(/sguardian90_9\.gr2$/i)) path = DB.getBodyPath(1163, this._sex);
-	else if (path.match(/treasurebox_2\.gr2$/i)) path = DB.getBodyPath(1191, this._sex);
-	else path = DB.getBodyPath(1002, this._sex);
+	if (path === null) {
+		this.gr2 = null;
+		this.files.body.spr = null;
+		this.files.body.act = null;
+		return;
+	}
+	if (path.match(/\.gr2$/i)) {
+		const gr2Path = GR2_MODEL_ROOT + path.replace(/^.*\//, "");
+		if (GR2ModelRenderer_default.isSupported(gr2Path) && !GR2ModelRenderer_default.isMissing(gr2Path)) {
+			if (this.objecttype === Entity.TYPE_PC && (this._weapon || this._shield)) console.warn("[GR2] Player-class GR2 body (" + path + "): weapon/shield/bodypalette refresh is skipped -- see UpdateBody.");
+			this.gr2 = gr2Path;
+			this.files.body.spr = null;
+			this.files.body.act = null;
+			return;
+		}
+		this.gr2 = null;
+		path = DB.getBodyPath(GR2_FALLBACK_JOB, this._sex);
+	} else this.gr2 = null;
 	Client.loadFile(path + ".act");
 	Client.loadFile(path + ".spr", function() {
 		const isStaleCallback = this._transformationSeq && this._transformationSeq > transformationSeq;
@@ -304359,7 +308759,7 @@ function Init$5() {
 	createTransformationProperty("active_monster_transform");
 	createTransformationProperty("job_transform");
 }
-var HeadParts;
+var GR2_MODEL_ROOT, GR2_FALLBACK_JOB, HeadParts;
 var init_EntityView = __esmMin((() => {
 	init_Client();
 	init_DBManager();
@@ -304369,6 +308769,9 @@ var init_EntityView = __esmMin((() => {
 	init_EntityAction();
 	init_PacketVerManager();
 	init_JobConst();
+	init_GR2ModelRenderer();
+	GR2_MODEL_ROOT = "data/model/3dmob/";
+	GR2_FALLBACK_JOB = 1002;
 	HeadParts = [
 		"head",
 		"accessory",
@@ -304852,6 +309255,18 @@ var init_EntityWalk = __esmMin((() => {
 * @param {mat4} projection
 */
 function render$14(modelView, projection) {
+	if (this.gr2Model && this.gr2Model.path !== this.gr2) {
+		GR2ModelRenderer_default.detach(this.gr2Model);
+		this.gr2Model = null;
+	}
+	if (this.gr2 && !this.gr2Model) this.gr2Model = GR2ModelRenderer_default.attach(this);
+	if (this.gr2 && GR2ModelRenderer_default.isMissing(this.gr2)) {
+		if (this.gr2Model) {
+			GR2ModelRenderer_default.detach(this.gr2Model);
+			this.gr2Model = null;
+		}
+		this.job = this._job;
+	}
 	this.animations.process();
 	this.walkProcess();
 	this.entitiesWalkProcess();
@@ -305143,6 +309558,7 @@ var init_EntityRender = __esmMin((() => {
 	init_SessionStorage();
 	init_DBManager();
 	init_Graphics();
+	init_GR2ModelRenderer();
 	WALK_DIST_TO_MOTION = 4.6 * .37 * 4 * 25;
 	renderGUI = (function renderGUIClosure() {
 		const mat4 = gl_matrix_default.mat4;
@@ -305202,6 +309618,23 @@ var init_EntityRender = __esmMin((() => {
 			size[1] = window.innerHeight * .5;
 			const rect = entity.boundingRect;
 			const minSize = entity.objecttype === entity.constructor.TYPE_ITEM ? 30 : 60;
+			const gr2Model = entity.gr2Model;
+			if (gr2Model && gr2Model.screenRect) {
+				const sr = gr2Model.screenRect;
+				rect.x1 = sr.x1;
+				rect.y1 = sr.y1;
+				rect.x2 = sr.x2;
+				rect.y2 = sr.y2;
+				if (rect.x2 - rect.x1 < minSize) {
+					rect.x1 = (rect.x1 + rect.x2) * .5 - minSize * .5;
+					rect.x2 = rect.x1 + minSize;
+				}
+				if (rect.y2 - rect.y1 < minSize) {
+					rect.y1 = (rect.y1 + rect.y2) * .5 - minSize * .5;
+					rect.y2 = rect.y1 + minSize;
+				}
+				return;
+			}
 			if (rect.x1 === Infinity || rect.x2 === -Infinity || rect.y1 === -Infinity || rect.y2 === Infinity) {
 				rect.x1 = -25;
 				rect.x2 = 25;
@@ -305240,6 +309673,7 @@ var init_EntityRender = __esmMin((() => {
 			_position[0] = 0;
 			_position[1] = 0;
 			if (animation.save && animation.delay < Date.now()) this.setAction(animation.save);
+			if (this.gr2) return;
 			const action = this.action < 0 ? this.ACTION.IDLE : this.action;
 			const direction = (Camera.direction + this.direction + 8) % 8;
 			const behind = direction > 1 && direction < 6;
@@ -306666,6 +311100,8 @@ var init_Entity$1 = __esmMin((() => {
 			};
 			this.matrix = mat4$2.create();
 			this.position = vec3$1.create();
+			this.gr2 = null;
+			this.gr2Model = null;
 			Init$11.call(this);
 			Init$10.call(this);
 			Init$9.call(this);
@@ -307015,6 +311451,17 @@ var init_Entity$1 = __esmMin((() => {
 //#region src/Renderer/EntityManager.js
 var EntityManager_exports = /* @__PURE__ */ __exportAll({ default: () => EntityManager });
 /**
+* Release an entity's GR2 model instance (if any) at the true-removal sites, so a
+* removed mob leaves no ghost in the renderer's instance list. Idempotent.
+* @param {Entity} entity
+*/
+function releaseGr2(entity) {
+	if (entity.gr2Model) {
+		GR2ModelRenderer_default.detach(entity.gr2Model);
+		entity.gr2Model = null;
+	}
+}
+/**
 * Find an Entity and return it directly via Map lookup (O(1))
 *
 * @param {number} gid
@@ -307101,7 +311548,10 @@ function addEntity(entity) {
 * Clean up entities from list
 */
 function free() {
-	_list$4.forEach((entity) => entity.clean());
+	_list$4.forEach((entity) => {
+		releaseGr2(entity);
+		entity.clean();
+	});
 	_list$4.length = 0;
 	_gidMap.clear();
 	_pickList.length = 0;
@@ -307124,6 +311574,7 @@ function removeGID(gid) {
 function removeEntity(gid) {
 	const entity = _gidMap.get(gid);
 	if (entity) {
+		releaseGr2(entity);
 		entity.clean();
 		_gidMap.delete(gid);
 		const index = _list$4.indexOf(entity);
@@ -307237,6 +311688,7 @@ function render$13(gl, modelView, projection, fog, renderEffects) {
 				setFocusEntity(null);
 			}
 			_gidMap.delete(_list$4[i].GID);
+			releaseGr2(_list$4[i]);
 			_list$4[i].clean();
 			_list$4.splice(i, 1);
 			i--;
@@ -307391,6 +311843,7 @@ var init_EntityManager = __esmMin((() => {
 	init_PathFinding();
 	init_Graphics();
 	init_Altitude();
+	init_GR2ModelRenderer();
 	_list$4 = [];
 	_gidMap = /* @__PURE__ */ new Map();
 	_renderSortDirty = true;
