@@ -259163,15 +259163,21 @@ var init_EffectManager = __esmMin((() => {
 						if (!!list[j].renderBeforeEntities !== renderBeforeEntities) continue;
 						const effect = list[j];
 						const pos = effect._Params && effect._Params.Inst ? effect._Params.Inst.position : null;
-						if (pos) if ((pos[0] - center[0]) * (pos[0] - center[0]) + (pos[1] - center[1]) * (pos[1] - center[1]) > cullDistanceSq) {
-							let shouldRemove = false;
-							if (effect._Params.Inst.duration > 0 && effect._Params.Inst.endTick > 0 && tick > effect._Params.Inst.endTick) shouldRemove = true;
-							if (shouldRemove) effect.needCleanUp = true;
-							else {
-								size += repeatEffect(effect);
-								continue;
+						let culled = false;
+						if (pos) {
+							if ((pos[0] - center[0]) * (pos[0] - center[0]) + (pos[1] - center[1]) * (pos[1] - center[1]) > cullDistanceSq) {
+								let shouldRemove = false;
+								if (effect._Params.Inst.duration > 0 && effect._Params.Inst.endTick > 0 && tick > effect._Params.Inst.endTick) shouldRemove = true;
+								if (shouldRemove) {
+									effect.needCleanUp = true;
+									culled = true;
+								} else {
+									size += repeatEffect(effect);
+									continue;
+								}
 							}
-						} else {
+						}
+						if (!culled) {
 							if (!effect.ready && effect.needInit) {
 								effect.init(gl);
 								effect.needInit = false;
@@ -346382,7 +346388,6 @@ function loadModel(filename) {
 	stop();
 	Client.getFile(filename, (buf) => {
 		_model = new RSM(buf);
-		const data = _model.compile();
 		let i, count, j, size, offset, length;
 		const objects = [];
 		const infos = [];
@@ -346391,6 +346396,7 @@ function loadModel(filename) {
 		let object;
 		_GlobalParameters.filename = filename.replace("data/model/", "");
 		_model.createInstance(_GlobalParameters, 0, 0);
+		const data = _model.compile();
 		count = data.meshes.length;
 		let total = 0;
 		for (i = 0; i < count; ++i) {
