@@ -346253,7 +346253,7 @@ MapViewer.init = function Init() {
 	let ready = false;
 	let maptoload = "";
 	const q = new Queue();
-	if (Configs.get("API")) q.add(function() {
+	if (Configs.get("api")) q.add(function() {
 		function onAPIMessage(event) {
 			if (typeof event.data !== "object") return;
 			if (event.source !== window.parent && event.source !== window.opener) return;
@@ -346307,7 +346307,7 @@ MapViewer.init = function Init() {
 		MapRenderer.onLoad = MapViewer.onLoad;
 		MapControl.init();
 		MapControl.onRequestWalk = MapViewer.onMouseDown;
-		if (Configs.get("API")) {
+		if (Configs.get("api")) {
 			ready = true;
 			maptoload = maptoload || location.hash.substr(1).replace("data/", "");
 			MapRenderer.setMap(maptoload);
@@ -346337,7 +346337,7 @@ MapViewer.init = function Init() {
 */
 MapViewer.onLoad = function() {
 	BGM.stop();
-	if (!Configs.get("API")) document.body.appendChild(MapViewer.dropDown);
+	if (!Configs.get("api")) document.body.appendChild(MapViewer.dropDown);
 	MapViewer.spot.position[0] = Altitude.width >> 1;
 	MapViewer.spot.position[1] = Altitude.height >> 1;
 	MapViewer.spot.position[2] = Altitude.getCellHeight(MapViewer.spot.position[0], MapViewer.spot.position[1]);

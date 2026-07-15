@@ -346432,7 +346432,7 @@ function init() {
 				break;
 		}
 	}
-	if (Configs.get("API")) {
+	if (Configs.get("api")) {
 		window.addEventListener("message", onAPIMessage, false);
 		return;
 	}

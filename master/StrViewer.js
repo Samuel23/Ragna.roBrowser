@@ -346280,11 +346280,11 @@ Viewer.init = function init() {
 	EffectManager.init(Renderer.getContext());
 	Client.init([]);
 	const root = Viewer.getRoot();
-	if (!Configs.get("API")) initDropDown(root.querySelector("select"));
+	if (!Configs.get("api")) initDropDown(root.querySelector("select"));
 	else {
 		const hash = decodeURIComponent(location.hash);
 		location.hash = hash;
-		loadEffect(hash.substr(1));
+		if (hash.length > 1) loadEffect(hash.substr(1));
 	}
 };
 /**
@@ -346405,7 +346405,7 @@ function init() {
 				break;
 		}
 	}
-	if (Configs.get("API")) {
+	if (Configs.get("api")) {
 		window.addEventListener("message", onAPIMessage, false);
 		return;
 	}

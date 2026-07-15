@@ -347196,6 +347196,7 @@ function onTextClick(iconEl) {
 * User click on a Granny model, render it using GrannyModelViewer
 */
 var onGrannyClick = (() => {
+	let ready = false;
 	let App = null;
 	const element = document.createElement("div");
 	function initApp() {
@@ -347213,13 +347214,63 @@ var onGrannyClick = (() => {
 		});
 		return true;
 	}
-	function _synchronise() {
-		App._APP.postMessage({ type: "init" }, location.origin);
-		setTimeout(_synchronise, 100);
+	function onMessage(event) {
+		if (typeof event.data !== "object") return;
+		switch (event.data.type) {
+			case "SYNC":
+				ready = true;
+				App.onload();
+				break;
+			case "SET_HOST":
+			case "CLEAN_GRF": return;
+			default: Thread.send(event.data.type, event.data.data, function() {
+				App._APP.postMessage({
+					arguments: Array.prototype.slice.call(arguments, 0),
+					uid: event.data.uid
+				}, location.origin);
+			});
+		}
 	}
-	return (_iconEl) => {
+	function synchronise() {
+		if (!ready) {
+			App._APP.postMessage({ type: "init" }, location.origin);
+			setTimeout(synchronise, 100);
+		}
+	}
+	return (iconEl) => {
 		if (!initApp()) return;
-		alert("This module is under development.");
+		const root = Viewer.getRoot();
+		const path = iconEl.getAttribute("data-path").replace(/\\/g, "/");
+		const box = root.querySelector("#preview .box");
+		const preview = root.querySelector("#preview");
+		box.style.top = `${(window.innerHeight - 400) * .5}px`;
+		element.style.display = "block";
+		preview.style.display = "block";
+		preview.addEventListener("click", () => {
+			preview.style.display = "none";
+			element.style.display = "none";
+			App._APP.postMessage({ type: "stop" }, location.origin);
+			window.removeEventListener("message", onMessage, false);
+		}, { once: true });
+		window.addEventListener("message", onMessage, false);
+		if (!ready) {
+			box.appendChild(element);
+			App.start();
+			App.onReady = () => {
+				App._APP.frameElement.style.border = "1px solid grey";
+				App._APP.frameElement.style.backgroundColor = "#45484d";
+				synchronise();
+			};
+			App.onload = () => {
+				App._APP.postMessage({
+					type: "load",
+					data: path
+				}, location.origin);
+			};
+		} else App._APP.postMessage({
+			type: "load",
+			data: path
+		}, location.origin);
 	};
 })();
 //#endregion
