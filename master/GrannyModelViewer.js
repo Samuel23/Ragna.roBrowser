@@ -205798,7 +205798,7 @@ var init_HtmlHelper = __esmMin((() => {
 * Render background (or a black background if no image is loaded yet)
 */
 function render$26() {
-	_ctx$17.clearRect(0, 0, _canvas.width, _canvas.height);
+	_ctx$12.clearRect(0, 0, _canvas.width, _canvas.height);
 	if (_progress > -1) Background.setPercent(_progress);
 }
 /**
@@ -205818,7 +205818,7 @@ function transition(callback) {
 		});
 	});
 }
-var _overlay, _container, _canvas, _ctx$17, _progress, _overlayAnim, _loading, Background;
+var _overlay, _container, _canvas, _ctx$12, _progress, _overlayAnim, _loading, Background;
 var init_Background = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -205851,7 +205851,7 @@ var init_Background = __esmMin((() => {
 		left: "0",
 		zIndex: "2"
 	});
-	_ctx$17 = _canvas.getContext("2d");
+	_ctx$12 = _canvas.getContext("2d");
 	_progress = -1;
 	_overlayAnim = null;
 	_loading = [];
@@ -205887,7 +205887,7 @@ var init_Background = __esmMin((() => {
 				width: width + "px",
 				height: height + "px"
 			});
-			_ctx$17.clearRect(0, 0, width, height);
+			_ctx$12.clearRect(0, 0, width, height);
 			render$26();
 		}
 		/**
@@ -206023,14 +206023,14 @@ var init_Background = __esmMin((() => {
 			const height = 15;
 			const x = Math.floor((_canvas.width - width) * .5);
 			const y = Math.floor(_canvas.height * .75);
-			_ctx$17.fillStyle = "rgb(0,255,255)";
-			_ctx$17.fillRect(x, y, width, height);
-			_ctx$17.fillStyle = "rgb(140,140,140)";
-			_ctx$17.fillRect(x + 1, y + 1, width - 2, height - 2);
-			_ctx$17.fillStyle = "rgb(66,99,165)";
-			_ctx$17.fillRect(x + 2, y + 2, Math.floor(percent * (width - 4) * .01), height - 4);
-			_ctx$17.fillStyle = "rgb(255,255,0)";
-			_ctx$17.fillText(percent + "%", Math.floor((_canvas.width - _ctx$17.measureText(percent + "%").width) * .5), y + 11);
+			_ctx$12.fillStyle = "rgb(0,255,255)";
+			_ctx$12.fillRect(x, y, width, height);
+			_ctx$12.fillStyle = "rgb(140,140,140)";
+			_ctx$12.fillRect(x + 1, y + 1, width - 2, height - 2);
+			_ctx$12.fillStyle = "rgb(66,99,165)";
+			_ctx$12.fillRect(x + 2, y + 2, Math.floor(percent * (width - 4) * .01), height - 4);
+			_ctx$12.fillStyle = "rgb(255,255,0)";
+			_ctx$12.fillText(percent + "%", Math.floor((_canvas.width - _ctx$12.measureText(percent + "%").width) * .5), y + 11);
 		}
 	};
 }));
@@ -207149,7 +207149,7 @@ function RenderCanvas3D(isBlendModeOne) {
 	}
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
-var mat4$22, RenderCanvas2D, _program$25, _buffer$18, _ctx$16, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
+var mat4$22, RenderCanvas2D, _program$25, _buffer$18, _ctx$11, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
 var init_SpriteRenderer = __esmMin((() => {
 	init_WebGL();
 	init_gl_matrix();
@@ -207247,17 +207247,17 @@ var init_SpriteRenderer = __esmMin((() => {
 				}
 			}
 			ctx.putImageData(imageData, 0, 0, 0, 0, width, height);
-			_ctx$16.save();
-			_ctx$16.translate(_x | 0, _y | 0);
-			_ctx$16.rotate(this.angle / 180 * Math.PI);
-			_ctx$16.scale(scale_x, scale_y);
-			_ctx$16.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
-			_ctx$16.restore();
+			_ctx$11.save();
+			_ctx$11.translate(_x | 0, _y | 0);
+			_ctx$11.rotate(this.angle / 180 * Math.PI);
+			_ctx$11.scale(scale_x, scale_y);
+			_ctx$11.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
+			_ctx$11.restore();
 		};
 	})();
 	_program$25 = null;
 	_buffer$18 = null;
-	_ctx$16 = null;
+	_ctx$11 = null;
 	_gl$2 = null;
 	_groupId = 0;
 	_lastGroupId = 0;
@@ -207422,7 +207422,7 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {number} y position
 		*/
 		static bind2DContext(ctx, x, y) {
-			_ctx$16 = ctx;
+			_ctx$11 = ctx;
 			_pos$8[0] = x;
 			_pos$8[1] = y;
 			this.render = RenderCanvas2D;
@@ -212761,13 +212761,13 @@ var init_GR2ModelRenderer = __esmMin((() => {
 * Add 3D sound to the list
 */
 function add$1(sound) {
-	_list$16.push(sound);
+	_list$13.push(sound);
 }
 /**
 * Remove data from memory
 */
 function free$3() {
-	_list$16.length = 0;
+	_list$13.length = 0;
 }
 /**
 * Rendering sounds
@@ -212775,7 +212775,7 @@ function free$3() {
 * @param {vec2} position
 */
 function render$19(position, tick) {
-	_list$16.forEach((sound) => {
+	_list$13.forEach((sound) => {
 		const dist = Math.floor(vec2$3.dist(sound.pos, position));
 		if (sound.tick < tick && dist <= sound.range) {
 			SoundManager.playPosition(sound.file, sound.pos);
@@ -212783,12 +212783,12 @@ function render$19(position, tick) {
 		}
 	});
 }
-var vec2$3, _list$16, Sounds_default;
+var vec2$3, _list$13, Sounds_default;
 var init_Sounds = __esmMin((() => {
 	init_gl_matrix();
 	init_SoundManager();
 	vec2$3 = gl_matrix_default.vec2;
-	_list$16 = [];
+	_list$13 = [];
 	Sounds_default = {
 		add: add$1,
 		free: free$3,
@@ -218311,10 +218311,10 @@ function resize$7(height) {
 	if (list) list.style.height = height * 32 - 31 + "px";
 	const inner = root.querySelector("#ChatBoxSettings");
 	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$72.height = height;
-	_preferences$72.save();
+	_preferences$62.height = height;
+	_preferences$62.save();
 }
-var ChatBoxSettings, _preferences$72, ChatBoxSettings_default;
+var ChatBoxSettings, _preferences$62, ChatBoxSettings_default;
 var init_ChatBoxSettings = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -218336,7 +218336,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.isOpen = false;
 	ChatBoxSettings.tabOption = [];
 	ChatBoxSettings.activeTab = 0;
-	_preferences$72 = Preferences.get("ChatBoxSettings", {
+	_preferences$62 = Preferences.get("ChatBoxSettings", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -218364,10 +218364,10 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Once in HTML
 	*/
 	ChatBoxSettings.onAppend = function onAppend() {
-		resize$7(_preferences$72.height);
+		resize$7(_preferences$62.height);
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$72.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$72.x), Renderer.width - rect.width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$62.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$62.x), Renderer.width - rect.width) + "px";
 		this._host.style.display = "none";
 	};
 	/**
@@ -218401,9 +218401,9 @@ var init_ChatBoxSettings = __esmMin((() => {
 		});
 	};
 	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$72.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$72.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$72.save();
+		_preferences$62.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$62.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$62.save();
 	};
 	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
 	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
@@ -218585,8 +218585,8 @@ function onChangeTargetMessage(type) {
 }
 function setChatFontScale(scale) {
 	return function setChatFontScaleClosure() {
-		_preferences$71.fontScale = clampChatFontScale(scale);
-		_preferences$71.save();
+		_preferences$61.fontScale = clampChatFontScale(scale);
+		_preferences$61.save();
 		ChatBox.applyFontScale();
 	};
 }
@@ -218650,7 +218650,7 @@ function makeResizableDiv() {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$71, ChatBox, ChatBox_default;
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$61, ChatBox, ChatBox_default;
 var init_ChatBox = __esmMin((() => {
 	init_DBManager();
 	init_Renderer();
@@ -218680,7 +218680,7 @@ var init_ChatBox = __esmMin((() => {
 	_heightIndex = 2;
 	_messageBuffer = [];
 	_rafScheduled = false;
-	_preferences$71 = Preferences.get("ChatBox", {
+	_preferences$61 = Preferences.get("ChatBox", {
 		x: 0,
 		y: Infinity,
 		height: 2,
@@ -218764,15 +218764,15 @@ var init_ChatBox = __esmMin((() => {
 	ChatBox.init = function init() {
 		const root = _root$20();
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$71.height - 1;
+		_heightIndex = _preferences$61.height - 1;
 		ChatBox.updateHeight();
 		ChatBox.applyFontScale();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$71.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$71.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		this.magnet.TOP = _preferences$71.magnet_top;
-		this.magnet.BOTTOM = _preferences$71.magnet_bottom;
-		this.magnet.LEFT = _preferences$71.magnet_left;
-		this.magnet.RIGHT = _preferences$71.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$61.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$61.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		this.magnet.TOP = _preferences$61.magnet_top;
+		this.magnet.BOTTOM = _preferences$61.magnet_bottom;
+		this.magnet.LEFT = _preferences$61.magnet_left;
+		this.magnet.RIGHT = _preferences$61.magnet_right;
 		this.draggable(".input");
 		this.draggable(".battlemode");
 		root.querySelectorAll(".input, .chat-function, .battlemode, .event_add_cursor").forEach((el) => {
@@ -219058,13 +219058,13 @@ var init_ChatBox = __esmMin((() => {
 			ChatBox.toggleChatBattleOption();
 		});
 		ChatBoxSettings_default.append();
-		if (_preferences$71.tabs.length > 0 && _preferences$71.tabs.length == _preferences$71.tabOption.length) {
-			for (let i = 0; i < _preferences$71.tabs.length; i++) if (_preferences$71.tabs[i]) {
-				const tabName = _preferences$71.tabs[i].name;
-				const tabSettings = _preferences$71.tabOption[i];
+		if (_preferences$61.tabs.length > 0 && _preferences$61.tabs.length == _preferences$61.tabOption.length) {
+			for (let i = 0; i < _preferences$61.tabs.length; i++) if (_preferences$61.tabs[i]) {
+				const tabName = _preferences$61.tabs[i].name;
+				const tabSettings = _preferences$61.tabOption[i];
 				ChatBox.addNewTab(tabName, tabSettings);
 			}
-			if (_preferences$71.activeTab !== void 0 && ChatBox.tabs[_preferences$71.activeTab]) ChatBox.switchTab(_preferences$71.activeTab);
+			if (_preferences$61.activeTab !== void 0 && ChatBox.tabs[_preferences$61.activeTab]) ChatBox.switchTab(_preferences$61.activeTab);
 		} else {
 			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
 				ChatBox.FILTER.PUBLIC_LOG,
@@ -219223,17 +219223,17 @@ var init_ChatBox = __esmMin((() => {
 	* Stop custom scroll
 	*/
 	ChatBox.onRemove = function OnRemove() {
-		_preferences$71.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
-		_preferences$71.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$71.height = _heightIndex;
-		_preferences$71.magnet_top = this.magnet.TOP;
-		_preferences$71.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$71.magnet_left = this.magnet.LEFT;
-		_preferences$71.magnet_right = this.magnet.RIGHT;
-		_preferences$71.tabs = this.tabs;
-		_preferences$71.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$71.activeTab = this.activeTab;
-		_preferences$71.save();
+		_preferences$61.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
+		_preferences$61.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$61.height = _heightIndex;
+		_preferences$61.magnet_top = this.magnet.TOP;
+		_preferences$61.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$61.magnet_left = this.magnet.LEFT;
+		_preferences$61.magnet_right = this.magnet.RIGHT;
+		_preferences$61.tabs = this.tabs;
+		_preferences$61.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$61.activeTab = this.activeTab;
+		_preferences$61.save();
 		this.lastTabID = -1;
 		this.activeTab = 0;
 	};
@@ -219538,14 +219538,14 @@ var init_ChatBox = __esmMin((() => {
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
 		const root = _root$20();
-		const scale = clampChatFontScale(_preferences$71.fontScale || 1);
+		const scale = clampChatFontScale(_preferences$61.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
 		const baseInputLineHeight = 18;
 		const fontSize = Math.max(10, Math.round(baseFont * scale));
 		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
 		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$71.fontScale = scale;
+		_preferences$61.fontScale = scale;
 		root.querySelectorAll(".content").forEach((el) => {
 			el.style.fontSize = `${fontSize}px`;
 			el.style.lineHeight = `${lineHeight}px`;
@@ -219646,7 +219646,7 @@ function onClose$14(e) {
 	} catch (_error) {}
 	_BOOK_INFORMATION["book_open"] = false;
 	_BOOK_INFORMATION.save();
-	if (_preferences$70.show) MakeReadBook.onRemove();
+	if (_preferences$60.show) MakeReadBook.onRemove();
 }
 function page() {
 	const root = MakeReadBook.getRoot();
@@ -219666,7 +219666,7 @@ function adjustButtons$1() {
 	const prevBtn = root.querySelector(".previous_btn");
 	if (prevBtn) prevBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] == 0;
 }
-var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$70, MakeReadBook_default;
+var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$60, MakeReadBook_default;
 var init_MakeReadBook = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -219698,7 +219698,7 @@ var init_MakeReadBook = __esmMin((() => {
 	* Store MakeReadBook items
 	*/
 	MakeReadBook.list = [];
-	_preferences$70 = Preferences.get("MakeReadBook", {
+	_preferences$60 = Preferences.get("MakeReadBook", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -219839,7 +219839,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$70.show) onClose$14();
+		if (_preferences$60.show) onClose$14();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -219850,12 +219850,12 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onAppend = function OnAppend() {
 		this._host.style.display = "";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$70.y), Renderer.height - 455)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$70.x), Renderer.width - 555)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$60.y), Renderer.height - 455)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$60.x), Renderer.width - 555)}px`;
 		_BOOK_INFORMATION["book_open"] = true;
 		_BOOK_INFORMATION.save();
-		_preferences$70.show = true;
-		_preferences$70.save();
+		_preferences$60.show = true;
+		_preferences$60.save();
 		const root = MakeReadBook.getRoot();
 		this.draggable(root.querySelector(".titlebar"));
 	};
@@ -219864,19 +219864,19 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onRemove = function OnRemove() {
 		try {
-			if (_preferences$70.show) this._host.style.display = "none";
-			_preferences$70.show = this._host.style.display !== "none";
-			_preferences$70.reduce = false;
-			_preferences$70.y = parseInt(this._host.style.top, 10) || 0;
-			_preferences$70.x = parseInt(this._host.style.left, 10) || 0;
-			_preferences$70.magnet_top = this.magnet.TOP;
-			_preferences$70.magnet_bottom = this.magnet.BOTTOM;
-			_preferences$70.magnet_left = this.magnet.LEFT;
-			_preferences$70.magnet_right = this.magnet.RIGHT;
-			_preferences$70.save();
+			if (_preferences$60.show) this._host.style.display = "none";
+			_preferences$60.show = this._host.style.display !== "none";
+			_preferences$60.reduce = false;
+			_preferences$60.y = parseInt(this._host.style.top, 10) || 0;
+			_preferences$60.x = parseInt(this._host.style.left, 10) || 0;
+			_preferences$60.magnet_top = this.magnet.TOP;
+			_preferences$60.magnet_bottom = this.magnet.BOTTOM;
+			_preferences$60.magnet_left = this.magnet.LEFT;
+			_preferences$60.magnet_right = this.magnet.RIGHT;
+			_preferences$60.save();
 		} catch (_error) {
-			_preferences$70.show = false;
-			_preferences$70.save();
+			_preferences$60.show = false;
+			_preferences$60.save();
 		}
 	};
 	/**
@@ -220058,7 +220058,7 @@ function eventsBooks$1() {
 		readCanvas.height = 15;
 		readCanvas.className = "book_read event_add_cursor";
 		event.appendChild(readCanvas);
-		_ctx$15 = readCanvas.getContext("2d");
+		_ctx$10 = readCanvas.getContext("2d");
 		const bookRead = root.querySelector(".book_read");
 		if (bookRead) {
 			bookRead.addEventListener("mouseover", (e) => {
@@ -220091,7 +220091,7 @@ function validateFieldsExist$1(event) {
 	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
 	return true;
 }
-var _sprite$4, _action$4, _ctx$15, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
+var _sprite$4, _action$4, _ctx$10, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
 var init_ItemCompare = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -220237,8 +220237,8 @@ var init_ItemCompare = __esmMin((() => {
 			const animation = action.animations[anim % action.animations.length];
 			let i, count;
 			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$15, 10, 25);
-			_ctx$15.clearRect(0, 0, _ctx$15.canvas.width, _ctx$15.canvas.height);
+			SpriteRenderer.bind2DContext(_ctx$10, 10, 25);
+			_ctx$10.clearRect(0, 0, _ctx$10.canvas.width, _ctx$10.canvas.height);
 			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$4, _sprite$4, 1, position, false);
 		};
 	})();
@@ -220312,7 +220312,7 @@ function applyPreviewItem(entity) {
 	if (_previewLocation & EquipmentLocation_default.COSTUME_HEAD_TOP) entity.accessory2 = _previewSpriteId;
 	if (_previewLocation & EquipmentLocation_default.COSTUME_ROBE) entity.robe = _previewSpriteId;
 }
-var ItemPreview, _ctx$14, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
+var ItemPreview, _ctx$9, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
 var init_ItemPreview = __esmMin((() => {
 	init_DBManager();
 	init_EquipmentLocation();
@@ -220346,7 +220346,7 @@ var init_ItemPreview = __esmMin((() => {
 	*/
 	ItemPreview.init = function init() {
 		const root = this.getRoot();
-		_ctx$14 = root.querySelector("canvas").getContext("2d");
+		_ctx$9 = root.querySelector("canvas").getContext("2d");
 		root.querySelector(".close").addEventListener("click", () => {
 			ItemPreview.remove();
 		});
@@ -220430,8 +220430,8 @@ var init_ItemPreview = __esmMin((() => {
 			save: false
 		};
 		return function render() {
-			if (!_ctx$14) return;
-			_ctx$14.clearRect(0, 0, _ctx$14.canvas.width, _ctx$14.canvas.height);
+			if (!_ctx$9) return;
+			_ctx$9.clearRect(0, 0, _ctx$9.canvas.width, _ctx$9.canvas.height);
 			if (!_previewSpriteId || !_previewLocation || !SessionStorage_default.Entity) return;
 			const previewCharacter = new Entity();
 			previewCharacter.set({
@@ -220457,8 +220457,8 @@ var init_ItemPreview = __esmMin((() => {
 			previewCharacter.headDir = 0;
 			previewCharacter.action = previewCharacter.ACTION.IDLE;
 			previewCharacter.animation = _animation;
-			SpriteRenderer.bind2DContext(_ctx$14, Math.floor(_ctx$14.canvas.width / 2), _ctx$14.canvas.height);
-			previewCharacter.renderEntity(_ctx$14);
+			SpriteRenderer.bind2DContext(_ctx$9, Math.floor(_ctx$9.canvas.width / 2), _ctx$9.canvas.height);
+			previewCharacter.renderEntity(_ctx$9);
 			previewCharacter.effectColor.set(_savedColor);
 		};
 	})();
@@ -220766,6 +220766,18 @@ var init_InventoryV0$2 = __esmMin((() => {
 var InventoryV0_default$1;
 var init_InventoryV0$1 = __esmMin((() => {
 	InventoryV0_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#InventoryV0 {\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n#InventoryV0 table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#InventoryV0 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#InventoryV0 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#InventoryV0 .tabs {\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 3px;\r\n}\r\n\r\n#InventoryV0 .tab-sprite {\r\n	width: 20px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	background-position: top left;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex-shrink: 0;\r\n	align-self: flex-end;\r\n	border-left: 1px solid white;\r\n}\r\n\r\n#InventoryV0 .tab-sprite button {\r\n	flex: 1;\r\n	width: 20px;\r\n	border: none;\r\n	background: transparent;\r\n	cursor: pointer;\r\n	padding: 0;\r\n}\r\n\r\n#InventoryV0 .container {\r\n	flex: 1;\r\n	padding-left: 17px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV0 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV0 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV0 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 90%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#InventoryV0 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV0 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#InventoryV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV0 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#InventoryV0 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#InventoryV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n	border-right: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n}\r\n\r\n#InventoryV0 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV0 .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV1/BasicInfoV1.html?raw
+var BasicInfoV1_default$2;
+var init_BasicInfoV1$2 = __esmMin((() => {
+	BasicInfoV1_default$2 = "<div\r\n	id=\"BasicInfoV1\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n		<button\r\n			class=\"toggle_btns\"\r\n			data-background=\"basic_interface/viewoff.bmp\"\r\n			data-preload=\"basic_interface/viewon.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\">\r\n		<button\r\n			class=\"info\"\r\n			data-background=\"basic_interface/info1.bmp\"\r\n			data-hover=\"basic_interface/info2.bmp\"\r\n			data-down=\"basic_interface/info3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"skill\"\r\n			data-background=\"basic_interface/skill1.bmp\"\r\n			data-hover=\"basic_interface/skill2.bmp\"\r\n			data-down=\"basic_interface/skill3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"item\"\r\n			data-background=\"basic_interface/item1.bmp\"\r\n			data-hover=\"basic_interface/item2.bmp\"\r\n			data-down=\"basic_interface/item3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"map\"\r\n			data-background=\"basic_interface/map1.bmp\"\r\n			data-hover=\"basic_interface/map2.bmp\"\r\n			data-down=\"basic_interface/map3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"party\"\r\n			data-background=\"basic_interface/party1.bmp\"\r\n			data-hover=\"basic_interface/party2.bmp\"\r\n			data-down=\"basic_interface/party3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"guild\"\r\n			data-background=\"basic_interface/guild1.bmp\"\r\n			data-hover=\"basic_interface/guild2.bmp\"\r\n			data-down=\"basic_interface/guild3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"quest\"\r\n			data-background=\"basic_interface/quest1.bmp\"\r\n			data-hover=\"basic_interface/quest2.bmp\"\r\n			data-down=\"basic_interface/quest3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"option\"\r\n			data-background=\"basic_interface/option1.bmp\"\r\n			data-hover=\"basic_interface/option2.bmp\"\r\n			data-down=\"basic_interface/option3.bmp\"\r\n		></button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV1/BasicInfoV1.css?raw
+var BasicInfoV1_default$1;
+var init_BasicInfoV1$1 = __esmMin((() => {
+	BasicInfoV1_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV1 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV1.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV1.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV1.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV1.large .buttons {\r\n	top: 135px;\r\n}\r\n#BasicInfoV1.small .buttons {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV1 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV1 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV1 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV1 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV1 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV1 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .hp_bar,\r\n#BasicInfoV1 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV1 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV1 .large .hp_bar div,\r\n#BasicInfoV1 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#BasicInfoV1 .large div.hp_bar_perc,\r\n#BasicInfoV1 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#BasicInfoV1 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV1 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV1 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .bexp,\r\n#BasicInfoV1 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV1 .large .bexp div,\r\n#BasicInfoV1 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV1 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV1 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: 5px;\r\n	padding-right: 5px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 220px;\r\n	opacity: 0.5;\r\n}\r\n#BasicInfoV1 .buttons:hover {\r\n	opacity: 1;\r\n}\r\n#BasicInfoV1 .buttons button {\r\n	float: left;\r\n	width: 54px;\r\n	height: 18px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n}\r\n#BasicInfoV1 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV1 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.html?raw
@@ -221230,7 +221242,7 @@ function initResizable(instance) {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var WhisperBox, _preferences$69;
+var WhisperBox, _preferences$59;
 var init_WhisperBox = __esmMin((() => {
 	init_DBManager();
 	init_UIManager();
@@ -221267,7 +221279,7 @@ var init_WhisperBox = __esmMin((() => {
 		open1to1Friend: true,
 		alarm1to1: true
 	}, 1);
-	_preferences$69 = WhisperBox.preferences;
+	_preferences$59 = WhisperBox.preferences;
 	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
 	WhisperBox.captureKeyEvents = true;
 	/**
@@ -221300,7 +221312,7 @@ var init_WhisperBox = __esmMin((() => {
 			this.instances[nickname].focus();
 			return this.instances[nickname];
 		}
-		if (_preferences$69.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
+		if (_preferences$59.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
 		const instance = this.clone(nickname);
 		instance.nickname = nickname;
 		instance.name = `WhisperBox:${nickname}`;
@@ -221398,8 +221410,8 @@ var init_WhisperBox = __esmMin((() => {
 		initResizable(instance);
 		const offset = this._spawnCounter % 10 * 20;
 		this._spawnCounter++;
-		instance._host.style.top = `${Math.min(Math.max(0, _preferences$69.y + offset), Renderer.height - 156)}px`;
-		instance._host.style.left = `${Math.min(Math.max(0, _preferences$69.x + offset), Renderer.width - 280)}px`;
+		instance._host.style.top = `${Math.min(Math.max(0, _preferences$59.y + offset), Renderer.height - 156)}px`;
+		instance._host.style.left = `${Math.min(Math.max(0, _preferences$59.x + offset), Renderer.width - 280)}px`;
 		this.instances[nickname] = instance;
 		return instance;
 	};
@@ -222061,7 +222073,7 @@ function stopPropagation$11(event) {
 /**
 * Drop an item in the equipment, equip it if possible
 */
-function onDrop$23(event) {
+function onDrop$18(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -222080,18 +222092,18 @@ function onDrop$23(event) {
 			Mail.parseMailWinopen(1);
 			if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, parseInt(count, 10));
 			Mail.parseMailSetattach(item.index, parseInt(count, 10));
-			_preferences$68.item_add_email = item;
-			_preferences$68.item_add_email.count = parseInt(count, 10);
-			_preferences$68.save();
+			_preferences$58.item_add_email = item;
+			_preferences$58.item_add_email.count = parseInt(count, 10);
+			_preferences$58.save();
 		};
 		return;
 	}
 	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
 	Mail.parseMailWinopen(1);
 	Mail.parseMailSetattach(item.index, 1);
-	_preferences$68.item_add_email = item;
-	_preferences$68.item_add_email.count = 1;
-	_preferences$68.save();
+	_preferences$58.item_add_email = item;
+	_preferences$58.item_add_email.count = 1;
+	_preferences$58.save();
 }
 /**
 * Show item name when mouse is over
@@ -222203,7 +222215,7 @@ function onDropText$1(event) {
 function sleep(time) {
 	return new Promise((resolve) => setTimeout(resolve, time));
 }
-var Mail, _preferences$68, Mail_default;
+var Mail, _preferences$58, Mail_default;
 var init_Mail$1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -222234,7 +222246,7 @@ var init_Mail$1 = __esmMin((() => {
 	* know which page is current
 	*/
 	Mail.page = 0;
-	_preferences$68 = Preferences.get("Mail", {
+	_preferences$58 = Preferences.get("Mail", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -222273,7 +222285,7 @@ var init_Mail$1 = __esmMin((() => {
 		updatePageMailItems();
 		const containerItem = root.querySelector(".container_item");
 		if (containerItem) {
-			containerItem.addEventListener("drop", onDrop$23);
+			containerItem.addEventListener("drop", onDrop$18);
 			containerItem.addEventListener("dragover", stopPropagation$11);
 			containerItem.addEventListener("mouseover", (event) => {
 				const item = event.target.closest(".item");
@@ -222312,8 +222324,8 @@ var init_Mail$1 = __esmMin((() => {
 		onWindowMailbox();
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$68.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$68.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$58.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$58.x), Renderer.width - hostWidth)}px`;
 		this.draggable(".titlebar");
 	};
 	/**
@@ -222321,7 +222333,7 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.addItemSub = function AddItemSub(Index) {
 		const root = _root$18();
-		const item = _preferences$68.item_add_email;
+		const item = _preferences$58.item_add_email;
 		if (item.index !== Index) return false;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
@@ -222356,15 +222368,15 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$68.show = this._host.style.display !== "none";
-		_preferences$68.reduce = false;
-		_preferences$68.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$68.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$68.magnet_top = this.magnet.TOP;
-		_preferences$68.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$68.magnet_left = this.magnet.LEFT;
-		_preferences$68.magnet_right = this.magnet.RIGHT;
-		_preferences$68.save();
+		_preferences$58.show = this._host.style.display !== "none";
+		_preferences$58.reduce = false;
+		_preferences$58.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$58.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$58.magnet_top = this.magnet.TOP;
+		_preferences$58.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$58.magnet_left = this.magnet.LEFT;
+		_preferences$58.magnet_right = this.magnet.RIGHT;
+		_preferences$58.save();
 	};
 	/**
 	* Extend Mail window size
@@ -222414,7 +222426,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Search in a list for an item by its index
 	*/
 	Mail.getItemByIndex = function getItemByIndex(index) {
-		const list = _preferences$68.item_add_email;
+		const list = _preferences$58.item_add_email;
 		if (list.index == index) return list;
 		return null;
 	};
@@ -222842,12 +222854,12 @@ function onClose$13() {
 * Enable or disable the lock features
 */
 function onToggleLock$1() {
-	_preferences$67.lock = !_preferences$67.lock;
-	_preferences$67.save();
+	_preferences$57.lock = !_preferences$57.lock;
+	_preferences$57.save();
 	const root = _root$17();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$67.lock) {
+	if (_preferences$57.lock) {
 		if (lockOn) lockOn.style.display = "inline-block";
 		if (lockOff) lockOff.style.display = "none";
 	} else {
@@ -222860,11 +222872,11 @@ function onToggleLock$1() {
 */
 function onChangeTab$2() {
 	const root = _root$17();
-	_preferences$67.friend = !_preferences$67.friend;
-	_preferences$67.save();
+	_preferences$57.friend = !_preferences$57.friend;
+	_preferences$57.save();
 	const friendEls = root.querySelectorAll(".friend");
 	const partyEls = root.querySelectorAll(".party");
-	if (_preferences$67.friend) {
+	if (_preferences$57.friend) {
 		friendEls.forEach((el) => {
 			el.style.display = "";
 		});
@@ -222899,10 +222911,10 @@ function onChangeTab$2() {
 * Ask confirmation to remove a character from the list
 */
 function onRequestRemoveSelection$1() {
-	if (_index$6 < 0 || _preferences$67.lock || _preferences$67.friend && !_friends$1[_index$6] || !_preferences$67.friend && !_party$3[_index$6]) return;
-	const text = _preferences$67.friend ? DB.getMessage(356) : DB.getMessage(363);
+	if (_index$6 < 0 || _preferences$57.lock || _preferences$57.friend && !_friends$1[_index$6] || !_preferences$57.friend && !_party$3[_index$6]) return;
+	const text = _preferences$57.friend ? DB.getMessage(356) : DB.getMessage(363);
 	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$67.friend) PartyFriendsV0.onRemoveFriend(_index$6);
+		if (_preferences$57.friend) PartyFriendsV0.onRemoveFriend(_index$6);
 		else PartyFriendsV0.onExpelMember(_party$3[_index$6].AID, _party$3[_index$6].characterName);
 	});
 }
@@ -222911,8 +222923,8 @@ function onRequestRemoveSelection$1() {
 * Or open a new conversation window (todo)
 */
 function onRequestPrivateMessage$1() {
-	if (_index$6 < 0 || _preferences$67.lock) return;
-	const name = _preferences$67.friend ? _friends$1[_index$6].Name : _party$3[_index$6].characterName;
+	if (_index$6 < 0 || _preferences$57.lock) return;
+	const name = _preferences$57.friend ? _friends$1[_index$6].Name : _party$3[_index$6].characterName;
 	if (PacketVerManager_default.value >= 20090617) {
 		WhisperBox.show(name);
 		return;
@@ -222929,10 +222941,10 @@ function onRequestPrivateMessage$1() {
 * Right click on a character
 */
 function onRightClickInfo$1() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
-	if (_preferences$67.friend) {
+	if (_preferences$57.friend) {
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
 		if (_friends$1[_index$6].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection$1);
 	} else {
@@ -222951,14 +222963,14 @@ function onRightClickInfo$1() {
 * Request player information
 */
 function onRequestInformation() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	UIManager.showMessageBox(DB.getMessage(191), "ok");
 }
 /**
 * Request to leave a party
 */
 function onRequestLeaveParty$1() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV0.onRequestLeave();
 	});
@@ -222967,7 +222979,7 @@ function onRequestLeaveParty$1() {
 * Request to change party leader
 */
 function onRequestPartyDelegation$1() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
 		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$6].AID);
 	});
@@ -222982,7 +222994,7 @@ function onSelectionChange$1(nodeEl) {
 	const siblings = nodeEl.parentNode.querySelectorAll(".node");
 	_index$6 = Array.prototype.indexOf.call(siblings, nodeEl);
 	if (SkillTargetSelection_default.intersectEntityId) {
-		const entityId = _preferences$67.friend ? _friends$1[_index$6].AID : _party$3[_index$6].AID;
+		const entityId = _preferences$57.friend ? _friends$1[_index$6].AID : _party$3[_index$6].AID;
 		SkillTargetSelection_default.intersectEntityId(entityId);
 	}
 }
@@ -222990,8 +223002,8 @@ function onSelectionChange$1(nodeEl) {
 * Open the party info window
 */
 function onOpenPartyOptionWindow$1() {
-	if (_preferences$67.lock) return;
-	const type = _preferences$67.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
+	if (_preferences$57.lock) return;
+	const type = _preferences$57.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === type) {
 		PartyHelper_default.remove();
 		return;
@@ -223010,7 +223022,7 @@ function onOpenPartyOptionWindow$1() {
 * Open the window to invite people
 */
 function onOpenPartyInviteWindow$1() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.INVITE) {
 		PartyHelper_default.remove();
 		return;
@@ -223022,7 +223034,7 @@ function onOpenPartyInviteWindow$1() {
 * Open the window to create a party
 */
 function onOpenPartyCreationWindow$1() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.CREATE) {
 		PartyHelper_default.remove();
 		return;
@@ -223034,14 +223046,14 @@ function onOpenPartyCreationWindow$1() {
 * Open the window to manage mails
 */
 function onOpenMailCreationWindow$1() {
-	if (_preferences$67.lock) return;
+	if (_preferences$57.lock) return;
 	let recipient = "";
-	if (_preferences$67.friend && _friends$1[_index$6]) recipient = _friends$1[_index$6].Name;
-	else if (!_preferences$67.friend && _party$3[_index$6]) recipient = _party$3[_index$6].characterName;
+	if (_preferences$57.friend && _friends$1[_index$6]) recipient = _friends$1[_index$6].Name;
+	else if (!_preferences$57.friend && _party$3[_index$6]) recipient = _party$3[_index$6].characterName;
 	if (recipient) Mail_default.replyNewMailFriends(recipient);
 	else Mail_default.append();
 }
-var PartyFriendsV0, _index$6, _friends$1, _party$3, _options$1, _preferences$67, PartyFriendsV0_default;
+var PartyFriendsV0, _index$6, _friends$1, _party$3, _options$1, _preferences$57, PartyFriendsV0_default;
 var init_PartyFriendsV0 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -223071,7 +223083,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		item_share: 0,
 		item_sharing_type: 0
 	};
-	_preferences$67 = Preferences.get("PartyFriendsV0", {
+	_preferences$57 = Preferences.get("PartyFriendsV0", {
 		x: 200,
 		y: 200,
 		width: 12,
@@ -223140,22 +223152,22 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	PartyFriendsV0.onAppend = function onAppend() {
-		_preferences$67.friend = !_preferences$67.friend;
+		_preferences$57.friend = !_preferences$57.friend;
 		onChangeTab$2();
 		const root = _root$17();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$67.lock) {
+		if (_preferences$57.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$67.width, _preferences$67.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$67.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$67.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		if (!_preferences$67.show) this.ui.hide();
+		this.resize(_preferences$57.width, _preferences$57.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$57.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$57.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		if (!_preferences$57.show) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -223176,17 +223188,17 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		if (partyContent) partyContent.innerHTML = "";
 		const friendContent = root.querySelector(".content .friend");
 		if (friendContent) friendContent.innerHTML = "";
-		_preferences$67.friend = !_preferences$67.friend;
+		_preferences$57.friend = !_preferences$57.friend;
 		onChangeTab$2();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
 	PartyFriendsV0.onRemove = function onRemove() {
-		_preferences$67.show = this.ui.is(":visible");
-		_preferences$67.y = parseInt(this._host.style.top, 10);
-		_preferences$67.x = parseInt(this._host.style.left, 10);
-		_preferences$67.save();
+		_preferences$57.show = this.ui.is(":visible");
+		_preferences$57.y = parseInt(this._host.style.top, 10);
+		_preferences$57.x = parseInt(this._host.style.left, 10);
+		_preferences$57.save();
 	};
 	/**
 	* Window Shortcuts
@@ -223194,18 +223206,18 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$67.friend) this.ui.toggle();
+				if (_preferences$57.friend) this.ui.toggle();
 				else {
-					_preferences$67.friend = false;
+					_preferences$57.friend = false;
 					onChangeTab$2();
 					this.ui.show();
 				}
 				if (this.ui.is(":visible")) this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$67.friend) this.ui.toggle();
+				if (!_preferences$57.friend) this.ui.toggle();
 				else {
-					_preferences$67.friend = true;
+					_preferences$57.friend = true;
 					onChangeTab$2();
 					this.ui.show();
 				}
@@ -223432,9 +223444,9 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$67.width = width;
-		_preferences$67.height = height;
-		_preferences$67.save();
+		_preferences$57.width = width;
+		_preferences$57.height = height;
+		_preferences$57.save();
 		const content = _root$17().querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
@@ -223535,7 +223547,7 @@ function createAsyncImage$2() {
 	img.decoding = "async";
 	return img;
 }
-var MiniMap, _preferences$66, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$13, _zoomFactor$1, render$18, MiniMap_default;
+var MiniMap, _preferences$56, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$8, _zoomFactor$1, render$18, MiniMap_default;
 var init_MiniMap$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -223559,7 +223571,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	*/
 	MiniMap.needFocus = false;
 	MiniMap.render = () => MiniMap_default$2;
-	_preferences$66 = Preferences.get("MiniMap", {
+	_preferences$56 = Preferences.get("MiniMap", {
 		zoom: 0,
 		opacity: 2
 	}, 1);
@@ -223589,7 +223601,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	*/
 	MiniMap.init = function init() {
 		const root = this.getRoot();
-		_ctx$13 = root.querySelector("canvas").getContext("2d");
+		_ctx$8 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow$2.src = dataURI;
@@ -223630,8 +223642,8 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Once append to HTML
 	*/
 	MiniMap.onAppend = function onAppend() {
-		this.updateZoom(_preferences$66.zoom);
-		this.toggleOpacity(_preferences$66.opacity + 1);
+		this.updateZoom(_preferences$56.zoom);
+		this.toggleOpacity(_preferences$56.opacity + 1);
 		Renderer.render(render$18);
 	};
 	/**
@@ -223789,26 +223801,26 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMap.updateZoom = function updateZoom(value) {
-		_preferences$66.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$66.zoom + value));
-		_preferences$66.save();
+		_preferences$56.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$56.zoom + value));
+		_preferences$56.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMap.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$66.opacity = this.opacity;
-		_preferences$66.save();
+		_preferences$56.opacity = this.opacity;
+		_preferences$56.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
 				break;
 			case 1:
-				_ctx$13.globalAlpha = .5;
+				_ctx$8.globalAlpha = .5;
 				this.ui.show();
 				break;
 			case 2:
-				_ctx$13.globalAlpha = 1;
+				_ctx$8.globalAlpha = 1;
 				this.ui.show();
 				break;
 		}
@@ -223830,16 +223842,16 @@ var init_MiniMap$1 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
-			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$13) return;
-			zoom = _zoomFactor$1[_preferences$66.zoom];
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$8) return;
+			zoom = _zoomFactor$1[_preferences$56.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
 			start_x = (max - width) / 2 * f;
 			start_y = (height - max) / 2 * f;
-			_ctx$13.clearRect(0, 0, 128, 128);
-			if (_map$2.complete && _map$2.width) if (zoom === 1) _ctx$13.drawImage(_map$2, 0, 0, 128, 128);
-			else _ctx$13.drawImage(_map$2, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
+			_ctx$8.clearRect(0, 0, 128, 128);
+			if (_map$2.complete && _map$2.width) if (zoom === 1) _ctx$8.drawImage(_map$2, 0, 0, 128, 128);
+			else _ctx$8.drawImage(_map$2, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
 			if (_towninfo$2 && _towninfo$2.length) {
 				count = _towninfo$2.length;
 				for (i = 0; i < count; ++i) {
@@ -223869,19 +223881,19 @@ var init_MiniMap$1 = __esmMin((() => {
 							break;
 					}
 					if (img.complete && img.width) {
-						_ctx$13.save();
-						_ctx$13.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
-						_ctx$13.drawImage(img, -img.width, -img.height);
-						_ctx$13.restore();
+						_ctx$8.save();
+						_ctx$8.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
+						_ctx$8.drawImage(img, -img.width, -img.height);
+						_ctx$8.restore();
 					}
 				}
 			}
 			if (_arrow$2.complete && _arrow$2.width) {
-				_ctx$13.save();
-				_ctx$13.translate(projectX(pos[0]), projectY(pos[1]));
-				_ctx$13.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-				_ctx$13.drawImage(_arrow$2, -_arrow$2.width * .5, -_arrow$2.height * .5);
-				_ctx$13.restore();
+				_ctx$8.save();
+				_ctx$8.translate(projectX(pos[0]), projectY(pos[1]));
+				_ctx$8.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
+				_ctx$8.drawImage(_arrow$2, -_arrow$2.width * .5, -_arrow$2.height * .5);
+				_ctx$8.restore();
 			}
 			if (tick % 1e3 > 500) {
 				count = _markers$2.length;
@@ -223893,35 +223905,35 @@ var init_MiniMap$1 = __esmMin((() => {
 						count--;
 						continue;
 					}
-					_ctx$13.fillStyle = dot.color;
-					_ctx$13.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
-					_ctx$13.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
+					_ctx$8.fillStyle = dot.color;
+					_ctx$8.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
+					_ctx$8.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
 				}
 			}
 			count = _party$2.length;
 			for (i = 0; i < count; ++i) {
 				dot = _party$2[i];
-				_ctx$13.fillStyle = "white";
-				_ctx$13.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
+				_ctx$8.fillStyle = "white";
+				_ctx$8.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
 				dot.color = MiniMap.getMemberColor(dot.key);
-				_ctx$13.fillStyle = dot.color;
-				_ctx$13.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
+				_ctx$8.fillStyle = dot.color;
+				_ctx$8.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
 			}
 			count = _guild$1.length;
 			if (count) {
-				_ctx$13.fillStyle = "rgb(245,175,200)";
-				_ctx$13.strokeStyle = "white";
-				_ctx$13.lineWidth = 2;
+				_ctx$8.fillStyle = "rgb(245,175,200)";
+				_ctx$8.strokeStyle = "white";
+				_ctx$8.lineWidth = 2;
 				for (i = 0; i < count; ++i) {
 					dot = _guild$1[i];
-					_ctx$13.beginPath();
-					_ctx$13.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-					_ctx$13.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
-					_ctx$13.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
-					_ctx$13.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$8.beginPath();
+					_ctx$8.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$8.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
+					_ctx$8.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
+					_ctx$8.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
 				}
-				_ctx$13.stroke();
-				_ctx$13.fill();
+				_ctx$8.stroke();
+				_ctx$8.fill();
 			}
 		};
 	})();
@@ -224247,7 +224259,7 @@ function resetPathFindingWorker() {
 	terminatePathFindingWorker();
 	initializePathFindingWorker();
 }
-var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$12, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
+var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$7, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
 var init_Navigation = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Renderer();
@@ -224273,7 +224285,7 @@ var init_Navigation = __esmMin((() => {
 	_inn$1 = createAsyncImage$1();
 	_kafra$1 = createAsyncImage$1();
 	_map$1 = createAsyncImage$1();
-	_ctx$12 = null;
+	_ctx$7 = null;
 	_towninfo$1 = [];
 	_markers$1 = [];
 	_path = [];
@@ -224322,7 +224334,7 @@ var init_Navigation = __esmMin((() => {
 		const canvas = document.createElement("canvas");
 		canvas.width = 280;
 		canvas.height = 230;
-		_ctx$12 = canvas.getContext("2d");
+		_ctx$7 = canvas.getContext("2d");
 		const mapDisplay = root.querySelector(".map-display");
 		if (mapDisplay) mapDisplay.appendChild(canvas);
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
@@ -224601,7 +224613,7 @@ var init_Navigation = __esmMin((() => {
 		if ((this._host ? getComputedStyle(this._host).display : "none") === "none") return;
 		const width = 280;
 		const height = 230;
-		const ctx = _ctx$12;
+		const ctx = _ctx$7;
 		if (!ctx) return;
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
@@ -225303,7 +225315,7 @@ function stopPropagation$10(event) {
 function onClose$12() {
 	WorldMap._host.style.display = "none";
 }
-var WorldMap, _preferences$65, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
+var WorldMap, _preferences$55, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
 var init_WorldMap = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -225321,7 +225333,7 @@ var init_WorldMap = __esmMin((() => {
 	init_Navigation();
 	WorldMap = new GUIComponent("WorldMap", WorldMap_default$1);
 	WorldMap.render = () => WorldMap_default$2;
-	_preferences$65 = Preferences.get("WorldMap", {
+	_preferences$55 = Preferences.get("WorldMap", {
 		x: 0,
 		y: 0,
 		width: window.innerWidth,
@@ -225361,7 +225373,7 @@ var init_WorldMap = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	WorldMap.onAppend = function onAppend() {
-		if (!_preferences$65.show) this._host.style.display = "none";
+		if (!_preferences$55.show) this._host.style.display = "none";
 		this.settings = {
 			episode: 98,
 			add: [],
@@ -225384,12 +225396,12 @@ var init_WorldMap = __esmMin((() => {
 		this._host.style.left = "0px";
 	};
 	WorldMap.onRemove = function onRemove() {
-		_preferences$65.show = this._host.style.display !== "none";
-		_preferences$65.y = 0;
-		_preferences$65.x = 0;
-		_preferences$65.width = 0;
-		_preferences$65.height = 0;
-		_preferences$65.save();
+		_preferences$55.show = this._host.style.display !== "none";
+		_preferences$55.y = 0;
+		_preferences$55.x = 0;
+		_preferences$55.width = 0;
+		_preferences$55.height = 0;
+		_preferences$55.save();
 	};
 	/**
 	* Show/Hide UI
@@ -225484,7 +225496,7 @@ function createAsyncImage() {
 	img.decoding = "async";
 	return img;
 }
-var MiniMapV2, _preferences$64, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$11, _zoomFactor, render$17, MiniMapV2_default;
+var MiniMapV2, _preferences$54, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$6, _zoomFactor, render$17, MiniMapV2_default;
 var init_MiniMapV2 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -225509,7 +225521,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	*/
 	MiniMapV2.needFocus = false;
 	MiniMapV2.render = () => MiniMapV2_default$2;
-	_preferences$64 = Preferences.get("MiniMapV2", {
+	_preferences$54 = Preferences.get("MiniMapV2", {
 		zoom: 0,
 		opacity: 2,
 		townInfoShow: true
@@ -225540,7 +225552,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	*/
 	MiniMapV2.init = function init() {
 		const root = this.getRoot();
-		_ctx$11 = root.querySelector("canvas").getContext("2d");
+		_ctx$6 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow.src = dataURI;
@@ -225578,8 +225590,8 @@ var init_MiniMapV2 = __esmMin((() => {
 		});
 		const objectBtn = root.querySelector(".object");
 		if (objectBtn) objectBtn.addEventListener("mousedown", () => {
-			_preferences$64.townInfoShow = !_preferences$64.townInfoShow;
-			_preferences$64.save();
+			_preferences$54.townInfoShow = !_preferences$54.townInfoShow;
+			_preferences$54.save();
 		});
 		const viewonBtn = root.querySelector(".viewon");
 		if (viewonBtn) viewonBtn.addEventListener("mousedown", () => {
@@ -225590,8 +225602,8 @@ var init_MiniMapV2 = __esmMin((() => {
 	* Once append to HTML
 	*/
 	MiniMapV2.onAppend = function onAppend() {
-		this.updateZoom(_preferences$64.zoom);
-		this.toggleOpacity(_preferences$64.opacity + 1);
+		this.updateZoom(_preferences$54.zoom);
+		this.toggleOpacity(_preferences$54.opacity + 1);
 		Renderer.render(render$17);
 	};
 	/**
@@ -225755,26 +225767,26 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMapV2.updateZoom = function updateZoom(value) {
-		_preferences$64.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$64.zoom + value));
-		_preferences$64.save();
+		_preferences$54.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$54.zoom + value));
+		_preferences$54.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMapV2.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$64.opacity = this.opacity;
-		_preferences$64.save();
+		_preferences$54.opacity = this.opacity;
+		_preferences$54.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
 				break;
 			case 1:
-				_ctx$11.globalAlpha = .5;
+				_ctx$6.globalAlpha = .5;
 				this.ui.show();
 				break;
 			case 2:
-				_ctx$11.globalAlpha = 1;
+				_ctx$6.globalAlpha = 1;
 				this.ui.show();
 				break;
 		}
@@ -225796,18 +225808,18 @@ var init_MiniMapV2 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
-			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$11) return;
-			zoom = _zoomFactor[_preferences$64.zoom];
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$6) return;
+			zoom = _zoomFactor[_preferences$54.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
 			start_x = (max - width) / 2 * f;
 			start_y = (height - max) / 2 * f;
 			MiniMapV2.updateCoordinates(pos[0], pos[1]);
-			_ctx$11.clearRect(0, 0, 128, 128);
-			if (_map.complete && _map.width) if (zoom === 1) _ctx$11.drawImage(_map, 0, 0, 128, 128);
-			else _ctx$11.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
-			if (_towninfo && _preferences$64.townInfoShow) {
+			_ctx$6.clearRect(0, 0, 128, 128);
+			if (_map.complete && _map.width) if (zoom === 1) _ctx$6.drawImage(_map, 0, 0, 128, 128);
+			else _ctx$6.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
+			if (_towninfo && _preferences$54.townInfoShow) {
 				count = _towninfo.length;
 				for (i = 0; i < count; ++i) {
 					dot = _towninfo[i];
@@ -225836,27 +225848,27 @@ var init_MiniMapV2 = __esmMin((() => {
 							break;
 					}
 					if (img.complete && img.width) {
-						_ctx$11.save();
-						_ctx$11.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
-						_ctx$11.drawImage(img, -img.width, -img.height);
-						_ctx$11.restore();
+						_ctx$6.save();
+						_ctx$6.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
+						_ctx$6.drawImage(img, -img.width, -img.height);
+						_ctx$6.restore();
 					}
 				}
 			}
 			if (_arrow.complete && _arrow.width) {
-				_ctx$11.save();
-				_ctx$11.translate(projectX(pos[0]), projectY(pos[1]));
-				_ctx$11.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-				_ctx$11.shadowColor = "rgba(0, 0, 0, 1)";
-				_ctx$11.shadowBlur = 5;
-				_ctx$11.shadowOffsetX = 0;
-				_ctx$11.shadowOffsetY = 0;
-				_ctx$11.drawImage(_arrow, -_arrow.width * .5, -_arrow.height * .5);
-				_ctx$11.shadowColor = "rgba(0, 0, 0, 0)";
-				_ctx$11.shadowBlur = 0;
-				_ctx$11.shadowOffsetX = 0;
-				_ctx$11.shadowOffsetY = 0;
-				_ctx$11.restore();
+				_ctx$6.save();
+				_ctx$6.translate(projectX(pos[0]), projectY(pos[1]));
+				_ctx$6.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
+				_ctx$6.shadowColor = "rgba(0, 0, 0, 1)";
+				_ctx$6.shadowBlur = 5;
+				_ctx$6.shadowOffsetX = 0;
+				_ctx$6.shadowOffsetY = 0;
+				_ctx$6.drawImage(_arrow, -_arrow.width * .5, -_arrow.height * .5);
+				_ctx$6.shadowColor = "rgba(0, 0, 0, 0)";
+				_ctx$6.shadowBlur = 0;
+				_ctx$6.shadowOffsetX = 0;
+				_ctx$6.shadowOffsetY = 0;
+				_ctx$6.restore();
 			}
 			if (tick % 1e3 > 500) {
 				count = _markers.length;
@@ -225868,35 +225880,35 @@ var init_MiniMapV2 = __esmMin((() => {
 						count--;
 						continue;
 					}
-					_ctx$11.fillStyle = dot.color;
-					_ctx$11.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
-					_ctx$11.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
+					_ctx$6.fillStyle = dot.color;
+					_ctx$6.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
+					_ctx$6.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
 				}
 			}
 			count = _party$1.length;
 			for (i = 0; i < count; ++i) {
 				dot = _party$1[i];
-				_ctx$11.fillStyle = "white";
-				_ctx$11.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
+				_ctx$6.fillStyle = "white";
+				_ctx$6.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
 				dot.color = MiniMapV2.getMemberColor(dot.key);
-				_ctx$11.fillStyle = dot.color;
-				_ctx$11.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
+				_ctx$6.fillStyle = dot.color;
+				_ctx$6.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
 			}
 			count = _guild.length;
 			if (count) {
-				_ctx$11.fillStyle = "rgb(245,175,200)";
-				_ctx$11.strokeStyle = "white";
-				_ctx$11.lineWidth = 2;
+				_ctx$6.fillStyle = "rgb(245,175,200)";
+				_ctx$6.strokeStyle = "white";
+				_ctx$6.lineWidth = 2;
 				for (i = 0; i < count; ++i) {
 					dot = _guild[i];
-					_ctx$11.beginPath();
-					_ctx$11.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-					_ctx$11.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
-					_ctx$11.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
-					_ctx$11.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$6.beginPath();
+					_ctx$6.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$6.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
+					_ctx$6.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
+					_ctx$6.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
 				}
-				_ctx$11.stroke();
-				_ctx$11.fill();
+				_ctx$6.stroke();
+				_ctx$6.fill();
 			}
 		};
 	})();
@@ -225949,9 +225961,9 @@ function onClickClose$4(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
-	_preferences$63.y = parseInt(Rodex._host.style.top, 10);
-	_preferences$63.x = parseInt(Rodex._host.style.left, 10);
-	_preferences$63.save();
+	_preferences$53.y = parseInt(Rodex._host.style.top, 10);
+	_preferences$53.x = parseInt(Rodex._host.style.left, 10);
+	_preferences$53.save();
 	Rodex._host.style.display = "none";
 }
 function onClickRefresh(e) {
@@ -226047,7 +226059,7 @@ function onClickReplyMail(e) {
 	const sender = e.currentTarget.getAttribute("sender");
 	Rodex.requestOpenWriteRodex(sender);
 }
-var Rodex, _preferences$63, Rodex_default;
+var Rodex, _preferences$53, Rodex_default;
 var init_Rodex$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -226091,7 +226103,7 @@ var init_Rodex$1 = __esmMin((() => {
 		6: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp",
 		12: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp"
 	};
-	_preferences$63 = Preferences.get("Rodex", {
+	_preferences$53 = Preferences.get("Rodex", {
 		x: 350,
 		y: 350,
 		show: false
@@ -226105,8 +226117,8 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onAppend = function OnAppend() {
 		const root = _root$16();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$63.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$63.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - this._host.offsetWidth)}px`;
 		this.draggable(root.querySelector(".titlebar"));
 		root.querySelector(".close").addEventListener("click", onClickClose$4);
 		root.querySelector(".refresh").addEventListener("click", onClickRefresh);
@@ -226131,10 +226143,10 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$63.show = this._host.style.display !== "none";
-		_preferences$63.y = parseInt(this._host.style.top, 10);
-		_preferences$63.x = parseInt(this._host.style.left, 10);
-		_preferences$63.save();
+		_preferences$53.show = this._host.style.display !== "none";
+		_preferences$53.y = parseInt(this._host.style.top, 10);
+		_preferences$53.x = parseInt(this._host.style.left, 10);
+		_preferences$53.save();
 		Rodex.openType = 0;
 	};
 	/**
@@ -226545,7 +226557,7 @@ function onMemberMouseDown(event) {
 	onSelectionChange.call(node, event);
 	const player = _party.find((member) => member.AID == AID);
 	if (!player) return;
-	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$62.friend) {
+	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$52.friend) {
 		if (player.state === 0) SkillTargetSelection_default.intersectEntityId(player.AID);
 		SkillTargetSelection_default.remove();
 		event.preventDefault();
@@ -226554,7 +226566,7 @@ function onMemberMouseDown(event) {
 	}
 	if (_detachedMembers[AID]) return;
 	if (player.state !== 0) return;
-	if (_preferences$62.lock) return;
+	if (_preferences$52.lock) return;
 	const startX = event.pageX;
 	const startY = event.pageY;
 	let isDragging = false;
@@ -226794,11 +226806,11 @@ function onClose$11() {
 */
 function onToggleLock() {
 	const root = _root$14();
-	_preferences$62.lock = !_preferences$62.lock;
-	_preferences$62.save();
+	_preferences$52.lock = !_preferences$52.lock;
+	_preferences$52.save();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$62.lock) {
+	if (_preferences$52.lock) {
 		if (lockOn) lockOn.style.display = "inline-block";
 		if (lockOff) lockOff.style.display = "none";
 	} else {
@@ -226811,15 +226823,15 @@ function onToggleLock() {
 */
 function onChangeTab$1() {
 	const root = _root$14();
-	_preferences$62.friend = !_preferences$62.friend;
-	_preferences$62.save();
+	_preferences$52.friend = !_preferences$52.friend;
+	_preferences$52.save();
 	const showClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
 		el.style.display = "";
 	});
 	const hideClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
 		el.style.display = "none";
 	});
-	if (_preferences$62.friend) {
+	if (_preferences$52.friend) {
 		showClass(".friend");
 		hideClass(".party");
 	} else {
@@ -226847,10 +226859,10 @@ function onChangeTab$1() {
 * Ask confirmation to remove a character from the list
 */
 function onRequestRemoveSelection() {
-	if (_index$5 < 0 || _preferences$62.lock || _preferences$62.friend && !_friends[_index$5] || !_preferences$62.friend && !_party[_index$5]) return;
-	const text = _preferences$62.friend ? DB.getMessage(356) : DB.getMessage(363);
+	if (_index$5 < 0 || _preferences$52.lock || _preferences$52.friend && !_friends[_index$5] || !_preferences$52.friend && !_party[_index$5]) return;
+	const text = _preferences$52.friend ? DB.getMessage(356) : DB.getMessage(363);
 	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$62.friend) PartyFriendsV1.onRemoveFriend(_index$5);
+		if (_preferences$52.friend) PartyFriendsV1.onRemoveFriend(_index$5);
 		else PartyFriendsV1.onExpelMember(_party[_index$5].AID, _party[_index$5].characterName);
 	});
 }
@@ -226858,8 +226870,8 @@ function onRequestRemoveSelection() {
 * Add nick name to chatbox
 */
 function onRequestPrivateMessage() {
-	if (_index$5 < 0 || _preferences$62.lock) return;
-	const name = _preferences$62.friend ? _friends[_index$5].Name : _party[_index$5].characterName;
+	if (_index$5 < 0 || _preferences$52.lock) return;
+	const name = _preferences$52.friend ? _friends[_index$5].Name : _party[_index$5].characterName;
 	WhisperBox.show(name);
 }
 /**
@@ -226871,12 +226883,12 @@ function onRightClickInfo(event) {
 		event.preventDefault();
 	}
 	if (Camera && Camera.rotate) Camera.rotate(false);
-	if (_preferences$62.lock) return;
+	if (_preferences$52.lock) return;
 	onSelectionChange.call(this, event);
 	if (_index$5 < 0) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
-	if (_preferences$62.friend) {
+	if (_preferences$52.friend) {
 		const friend = _friends[_index$5];
 		if (!friend) return;
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
@@ -226914,7 +226926,7 @@ function onRightClickInfo(event) {
 * Request to leave a party
 */
 function onRequestLeaveParty() {
-	if (_preferences$62.lock) return;
+	if (_preferences$52.lock) return;
 	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV1.onRequestLeave();
 	});
@@ -226923,7 +226935,7 @@ function onRequestLeaveParty() {
 * Request to change party leader
 */
 function onRequestPartyDelegation() {
-	if (_preferences$62.lock) return;
+	if (_preferences$52.lock) return;
 	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
 		PartyFriendsV1.onRequestChangeLeader(_party[_index$5].AID);
 	});
@@ -226937,7 +226949,7 @@ function onSelectionChange(event) {
 	node.classList.add("selection");
 	const AID = parseInt(node.dataset.aid, 10);
 	_index$5 = -1;
-	if (_preferences$62.friend) _index$5 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
+	if (_preferences$52.friend) _index$5 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
 	else {
 		const player = _party.find((member) => member.AID == AID);
 		_index$5 = _party.indexOf(player);
@@ -226947,10 +226959,10 @@ function onSelectionChange(event) {
 * Request to create a team (open the window)
 */
 function onOpenMailCreationWindow() {
-	if (_preferences$62.lock) return;
+	if (_preferences$52.lock) return;
 	let recipient = "";
-	if (_preferences$62.friend && _friends[_index$5]) recipient = _friends[_index$5].Name;
-	else if (!_preferences$62.friend && _party[_index$5]) recipient = _party[_index$5].characterName;
+	if (_preferences$52.friend && _friends[_index$5]) recipient = _friends[_index$5].Name;
+	else if (!_preferences$52.friend && _party[_index$5]) recipient = _party[_index$5].characterName;
 	if (recipient) Rodex_default.requestOpenWriteRodex(recipient);
 }
 /**
@@ -226979,7 +226991,7 @@ function onOpenPartyInviteWindow() {
 * Request to open invitation window
 */
 function onOpenPartyOptionWindow() {
-	if (_preferences$62.friend) {
+	if (_preferences$52.friend) {
 		if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.FRIEND_SETUP) {
 			PartyHelper_default.remove();
 			return;
@@ -227033,7 +227045,7 @@ function onTooltipHide(event) {
 	const tooltip = document.getElementById("ro-tooltip-party");
 	if (tooltip) tooltip.style.display = "none";
 }
-var PartyFriendsV1, _detachedMembers, _index$5, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$62, PartyFriendsV1_default;
+var PartyFriendsV1, _detachedMembers, _index$5, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$52, PartyFriendsV1_default;
 var init_PartyFriendsV1 = __esmMin((() => {
 	init_DBManager();
 	init_Camera();
@@ -227069,7 +227081,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	_savedPositions = null;
 	_skipSaveOnRemove = false;
-	_preferences$62 = Preferences.get("PartyFriendsV1", {
+	_preferences$52 = Preferences.get("PartyFriendsV1", {
 		x: 200,
 		y: 200,
 		width: 12,
@@ -227184,27 +227196,27 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	*/
 	PartyFriendsV1.onAppend = function onAppend() {
 		const root = _root$14();
-		_preferences$62.friend = !_preferences$62.friend;
+		_preferences$52.friend = !_preferences$52.friend;
 		onChangeTab$1();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$62.lock) {
+		if (_preferences$52.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$62.width, _preferences$62.height);
+		this.resize(_preferences$52.width, _preferences$52.height);
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$62.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$62.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$52.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$52.x), Renderer.width - hostWidth)}px`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/bg_partymember.bmp", function(url) {
 			const countBox = root.querySelector(".count-box");
 			if (countBox) countBox.style.backgroundImage = `url(${url})`;
 		});
-		if (!_preferences$62.show) this._host.style.display = "none";
+		if (!_preferences$52.show) this._host.style.display = "none";
 		for (let i = 0; i < _party.length; i++) restoreDetachedMember(_party[i]);
 	};
 	/**
@@ -227231,17 +227243,17 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (friendContent) friendContent.innerHTML = "";
 		const innerCount = root.querySelector(".count-box .inner-count");
 		if (innerCount) innerCount.textContent = "0/12";
-		_preferences$62.friend = !_preferences$62.friend;
+		_preferences$52.friend = !_preferences$52.friend;
 		onChangeTab$1();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
 	PartyFriendsV1.onRemove = function onRemove() {
-		_preferences$62.show = this._host.style.display !== "none";
-		_preferences$62.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$62.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$62.save();
+		_preferences$52.show = this._host.style.display !== "none";
+		_preferences$52.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$52.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$52.save();
 		if (!_skipSaveOnRemove && Object.keys(_detachedMembers).length > 0) this.saveDetachedMembers();
 		_skipSaveOnRemove = false;
 		_savedPositions = null;
@@ -227255,18 +227267,18 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const isVisible = this._host.style.display !== "none";
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$62.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (_preferences$52.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
-					_preferences$62.friend = false;
+					_preferences$52.friend = false;
 					onChangeTab$1();
 					this._host.style.display = "block";
 				}
 				if (this._host.style.display !== "none") this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$62.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (!_preferences$52.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
-					_preferences$62.friend = true;
+					_preferences$52.friend = true;
 					onChangeTab$1();
 					this._host.style.display = "block";
 				}
@@ -227529,9 +227541,9 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const root = _root$14();
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$62.width = width;
-		_preferences$62.height = height;
-		_preferences$62.save();
+		_preferences$52.width = width;
+		_preferences$52.height = height;
+		_preferences$52.save();
 		const content = root.querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
@@ -227612,7 +227624,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Check if UI is locked
 	*/
 	PartyFriendsV1.isLocked = function isLocked() {
-		return !!_preferences$62.lock;
+		return !!_preferences$52.lock;
 	};
 	/**
 	* Save the current positions of all detached member windows to character-specific localStorage.
@@ -228369,7 +228381,7 @@ function onValidate() {
 	const btnOk = root.querySelector(".footer .btn_ok");
 	if (btnOk) btnOk.style.display = "none";
 }
-var AccessTypeBit, Guild, _memberViewTemplate, _positionViewTemplate, _expelViewTemplate, _positions, _members, _skills, _btnIncSkillTemplate, _skpoints, _btnLevelUp$7, lArrow, rArrow, _totalExp, _guildAccess, _checkbox_off, _checkbox_on, renderMemberFaces, Guild_default;
+var AccessTypeBit, Guild, _memberViewTemplate, _positionViewTemplate, _expelViewTemplate, _positions, _members, _skills, _btnIncSkillTemplate, _skpoints, _btnLevelUp$2, lArrow, rArrow, _totalExp, _guildAccess, _checkbox_off, _checkbox_on, renderMemberFaces, Guild_default;
 var init_Guild$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -228534,13 +228546,13 @@ var init_Guild$1 = __esmMin((() => {
 		}
 		const lvlupBtn = root.querySelector("#lvlup_job");
 		if (lvlupBtn) {
-			_btnLevelUp$7 = lvlupBtn;
-			_btnLevelUp$7.remove();
-			_btnLevelUp$7.addEventListener("click", () => {
-				if (_btnLevelUp$7.parentNode) _btnLevelUp$7.remove();
+			_btnLevelUp$2 = lvlupBtn;
+			_btnLevelUp$2.remove();
+			_btnLevelUp$2.addEventListener("click", () => {
+				if (_btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
 				Guild.ui.show();
 			});
-			_btnLevelUp$7.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			_btnLevelUp$2.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		}
 		const container = root.querySelector("#Guild") || root;
 		container.addEventListener("dblclick", (e) => {
@@ -228609,7 +228621,7 @@ var init_Guild$1 = __esmMin((() => {
 		if (!SessionStorage_default.hasGuild) return;
 		if (this.ui.is(":visible")) {
 			this.hide();
-			if (_btnLevelUp$7 && _btnLevelUp$7.parentNode) _btnLevelUp$7.remove();
+			if (_btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
 		} else this.show();
 	};
 	Guild.onKeyDown = function onKeyDown(event) {
@@ -228948,7 +228960,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.onLevelUp = function onLevelUp() {
-		if (_btnLevelUp$7) document.body.appendChild(_btnLevelUp$7);
+		if (_btnLevelUp$2) document.body.appendChild(_btnLevelUp$2);
 	};
 	Guild.setNotice = function setNotice(subject, notice) {
 		const root = _root$13(this);
@@ -229014,6 +229026,318 @@ var init_Guild$1 = __esmMin((() => {
 	Guild_default = UIManager.addComponent(Guild);
 }));
 //#endregion
+//#region src/UI/Components/Bank/Bank.html?raw
+var Bank_default$2;
+var init_Bank$3 = __esmMin((() => {
+	Bank_default$2 = "<div id=\"Bank\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"2771\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\" data-background=\"bank/bg_bank.bmp\">\r\n		<div class=\"uppercontainer\">\r\n			<div class=\"inbanktitle\">\r\n				<span class=\"text\" data-text=\"2772\"></span>\r\n			</div>\r\n			<div class=\"inbank currency\">0z</div>\r\n			<div class=\"onhandtitle\">\r\n				<span class=\"text\" data-text=\"2773\"></span>\r\n			</div>\r\n			<div class=\"onhand currency\">0z</div>\r\n		</div>\r\n		<div class=\"midcontainer\">\r\n			<input class=\"depo no-spinners\" type=\"text\" min=\"0\" maxlength=\"10\" />\r\n			<button\r\n				class=\"plus buttons\"\r\n				data-background=\"bank/btn_upper_out.bmp\"\r\n				data-hover=\"bank/btn_upper_over.bmp\"\r\n				data-down=\"bank/btn_upper_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2776\"></span>\r\n			</button>\r\n			<button\r\n				class=\"minus buttons\"\r\n				data-background=\"bank/btn_buttom_out.bmp\"\r\n				data-hover=\"bank/btn_buttom_over.bmp\"\r\n				data-down=\"bank/btn_buttom_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2777\"></span>\r\n			</button>\r\n			<button\r\n				class=\"deposit buttons\"\r\n				data-background=\"bank/btn_deposit_out.bmp\"\r\n				data-hover=\"bank/btn_deposit_over.bmp\"\r\n				data-down=\"bank/btn_deposit_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2774\"></span>\r\n			</button>\r\n			<button\r\n				class=\"withdraw buttons\"\r\n				data-background=\"bank/btn_withdraw_out.bmp\"\r\n				data-hover=\"bank/btn_withdraw_over.bmp\"\r\n				data-down=\"bank/btn_withdraw_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2775\"></span>\r\n			</button>\r\n			<div class=\"errorupdate\"></div>\r\n		</div>\r\n		<div class=\"lowercontainer\">\r\n			<button\r\n				class=\"max buttons\"\r\n				data-background=\"bank/btn_max_out.bmp\"\r\n				data-hover=\"bank/btn_max_over.bmp\"\r\n				data-down=\"bank/btn_max_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2778\"></span>\r\n			</button>\r\n			<button\r\n				class=\"tenmil buttons\"\r\n				data-background=\"bank/btn_1000mil_out.bmp\"\r\n				data-hover=\"bank/btn_1000mil_over.bmp\"\r\n				data-down=\"bank/btn_1000mil_press.bmp\"\r\n			>\r\n				<span class=\"name\">+ 10,000,000</span>\r\n			</button>\r\n			<button\r\n				class=\"onemil buttons\"\r\n				data-background=\"bank/btn_100mil_out.bmp\"\r\n				data-hover=\"bank/btn_100mil_over.bmp\"\r\n				data-down=\"bank/btn_100mil_press.bmp\"\r\n			>\r\n				<span class=\"name\">+ 1,000,000</span>\r\n			</button>\r\n			<button\r\n				class=\"hundtsn buttons\"\r\n				data-background=\"bank/btn_10mil_out.bmp\"\r\n				data-hover=\"bank/btn_10mil_over.bmp\"\r\n				data-down=\"bank/btn_10mil_press.bmp\"\r\n			>\r\n				<span class=\"name\">+ 100,000</span>\r\n			</button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Bank/Bank.css?raw
+var Bank_default$1;
+var init_Bank$2 = __esmMin((() => {
+	Bank_default$1 = ":host {\r\n	width: 280px;\r\n	height: 145px;\r\n	top: 50%;\r\n	left: 50%;\r\n}\r\n\r\n#Bank {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#Bank .clear {\r\n	clear: both;\r\n}\r\n\r\n#Bank .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Bank .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Bank .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Bank .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Bank .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Bank .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Bank .container {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n\r\n#Bank .uppercontainer {\r\n	position: relative;\r\n	height: 53px;\r\n}\r\n\r\n#Bank .inbanktitle {\r\n	height: 15px;\r\n	position: relative;\r\n	width: 50px;\r\n	left: 30px;\r\n	top: 10px;\r\n}\r\n\r\n#Bank .onhandtitle {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 55px;\r\n	left: 28px;\r\n}\r\n\r\n#Bank .inbank.currency {\r\n	position: relative;\r\n	left: 80px;\r\n	top: -5px;\r\n	width: 100px;\r\n	text-align: right;\r\n}\r\n\r\n#Bank .onhand.currency {\r\n	position: relative;\r\n	left: 80px;\r\n	top: -15px;\r\n	width: 100px;\r\n	text-align: right;\r\n}\r\n\r\n#Bank .midcontainer {\r\n	position: relative;\r\n	height: 58px;\r\n}\r\n\r\n#Bank input.depo.no-spinners {\r\n	position: relative;\r\n	left: 75px;\r\n	top: 20px;\r\n	width: 100px;\r\n	height: 10px;\r\n	background-color: #f7f7f7;\r\n	border-style: solid;\r\n	border: 1px;\r\n}\r\n\r\n#Bank .no-spinners::-webkit-inner-spin-button,\r\n#Bank .no-spinners::-webkit-outer-spin-button {\r\n	-webkit-appearance: none;\r\n	margin: 0;\r\n}\r\n\r\n#Bank .plus {\r\n	position: relative;\r\n	height: 10px;\r\n	width: 18px;\r\n	border: 0px;\r\n	left: 70px;\r\n	top: 10px;\r\n}\r\n#Bank .minus {\r\n	position: relative;\r\n	height: 10px;\r\n	width: 18px;\r\n	border: 0px;\r\n	left: 49px;\r\n	top: 20px;\r\n}\r\n\r\n#Bank .deposit {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 42px;\r\n	border: 0px;\r\n	left: 60px;\r\n	top: 5px;\r\n}\r\n\r\n#Bank .withdraw {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 42px;\r\n	border: 0px;\r\n	left: 15px;\r\n	top: 30px;\r\n}\r\n\r\n#Bank .errorupdate {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 150px;\r\n	border: 0px;\r\n	left: 15px;\r\n	top: 42px;\r\n	text-align: center;\r\n	color: red;\r\n}\r\n\r\n#Bank .lowercontainer {\r\n	position: relative;\r\n	height: 19px;\r\n}\r\n\r\n#Bank .max {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .tenmil {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .onemil {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .hundtsn {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .buttons .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: 0px;\r\n	visibility: hidden;\r\n	opacity: 0;\r\n	z-index: 1;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n	pointer-events: none; /* This will make the span not clickable */\r\n}\r\n\r\n#Bank .buttons:hover .name {\r\n	visibility: visible;\r\n	opacity: 1;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Bank/Bank.js
+/**
+* Check if input value is valid
+*/
+function CheckValue(value) {
+	const error = Bank.getRoot().querySelector(".errorupdate");
+	if (value === "") {
+		if (error) error.textContent = DB.getMessage(2781);
+		ChatBox_default.addText(DB.getMessage(2779), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		return false;
+	}
+	if (typeof value === "string" && value !== "MAX" && !/^\d+$/.test(value)) {
+		if (error) error.textContent = DB.getMessage(2782);
+		ChatBox_default.addText(DB.getMessage(2488), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		return false;
+	}
+	if (parseInt(value) <= 0) {
+		if (error) error.textContent = DB.getMessage(2784);
+		ChatBox_default.addText(DB.getMessage(2769), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		return false;
+	}
+	if (parseInt(value) > maxInt) {
+		if (error) error.textContent = DB.getMessage(2783);
+		ChatBox_default.addText(DB.getMessage(2768), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		return false;
+	}
+	return true;
+}
+/**
+* Send Request to server to deposit
+*/
+function sendDepositRequest(value) {
+	const root = Bank.getRoot();
+	const input = root.querySelector(".depo");
+	if (CheckValue(value) === false) {
+		input.value = "";
+		return;
+	}
+	if (value === "MAX") {
+		const inbank = root.querySelector(".inbank.currency");
+		const getval = parseInt(getIntValueFromFormattedString(inbank.textContent));
+		if (SessionStorage_default.zeny + getval > maxInt && getval < maxInt) value = parseInt(maxInt) - getval;
+		else if (SessionStorage_default.zeny === 0) {
+			const error = root.querySelector(".errorupdate");
+			if (error) error.textContent = DB.getMessage(2785);
+			ChatBox_default.addText(DB.getMessage(2770), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+			input.value = "";
+			return;
+		} else value = SessionStorage_default.zeny;
+	}
+	const pkt = new PACKET.CZ.REQ_BANKING_DEPOSIT();
+	pkt.AID = SessionStorage_default.AID;
+	pkt.money = value;
+	Network.sendPacket(pkt);
+	input.value = "";
+}
+/**
+* Send Request to server to withdraw
+*/
+function sendWithdrawRequest(value) {
+	const root = Bank.getRoot();
+	const input = root.querySelector(".depo");
+	const error = root.querySelector(".errorupdate");
+	if (CheckValue(value) === false) {
+		input.value = "";
+		return;
+	}
+	if (value === "MAX") {
+		const inbank = root.querySelector(".inbank.currency");
+		const getval = parseInt(getIntValueFromFormattedString(inbank.textContent));
+		if (SessionStorage_default.zeny + getval > maxInt && SessionStorage_default.zeny < maxInt) value = parseInt(maxInt) - SessionStorage_default.zeny;
+		else if (getval === 0) {
+			if (error) error.textContent = DB.getMessage(2785);
+			ChatBox_default.addText(DB.getMessage(2770), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+			input.value = "";
+			return;
+		} else value = getval;
+	}
+	if (parseInt(SessionStorage_default.zeny) + parseInt(value) > parseInt(maxInt)) {
+		if (error) error.textContent = DB.getMessage(2787);
+		ChatBox_default.addText(DB.getMessage(2459), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		input.value = "";
+		return;
+	}
+	const pkt = new PACKET.CZ.REQ_BANKING_WITHDRAW();
+	pkt.AID = SessionStorage_default.AID;
+	pkt.money = value;
+	Network.sendPacket(pkt);
+	input.value = "";
+}
+/**
+* Get int value from the input box
+*/
+function getIntValueFromFormattedString(formattedString) {
+	const strippedString = formattedString.replace(/,/g, "").replace("z", "");
+	const intValue = parseInt(strippedString, 10);
+	if (!isNaN(intValue)) return intValue;
+	else return null;
+}
+/**
+* Request to open bank
+*/
+function reqOpenBank() {
+	const pkt = new PACKET.CZ.REQ_BANK_OPEN();
+	pkt.AID = SessionStorage_default.AID;
+	Network.sendPacket(pkt);
+}
+/**
+* Request to close bank
+*/
+function reqCloseBank() {
+	const pkt = new PACKET.CZ.REQ_BANK_CLOSE();
+	pkt.AID = SessionStorage_default.AID;
+	Network.sendPacket(pkt);
+}
+var Bank, maxInt, _preferences$51, Bank_default;
+var init_Bank$1 = __esmMin((() => {
+	init_DBManager();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_KeyEventHandler();
+	init_Preferences$1();
+	init_SessionStorage();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Bank$3();
+	init_Bank$2();
+	init_ChatBox();
+	init_NpcBox();
+	init_NpcMenu();
+	init_InputBox();
+	Bank = new GUIComponent("Bank", Bank_default$1);
+	/**
+	* Render HTML
+	*/
+	Bank.render = () => Bank_default$2;
+	maxInt = 2147483647;
+	_preferences$51 = Preferences.get("Bank", {
+		x: 230,
+		y: 295
+	}, 2);
+	/**
+	* Initialize UI
+	*/
+	Bank.init = function init() {
+		const root = this.getRoot();
+		let isMax = false;
+		const inputDepo = root.querySelector(".depo");
+		this.draggable();
+		root.querySelector(".plus").addEventListener("click", () => {
+			if (isMax || inputDepo.value === "") inputDepo.value = 1;
+			else inputDepo.value = parseInt(inputDepo.value) + 1;
+			isMax = false;
+			inputDepo.select();
+		});
+		root.querySelector(".minus").addEventListener("click", () => {
+			if (isMax || inputDepo.value === "") inputDepo.value = 0;
+			else inputDepo.value = Math.max(parseInt(inputDepo.value) - 1, 0);
+			isMax = false;
+			inputDepo.select();
+		});
+		root.querySelector(".max").addEventListener("click", () => {
+			isMax = true;
+			inputDepo.value = "MAX";
+			inputDepo.select();
+		});
+		root.querySelector(".tenmil").addEventListener("click", () => {
+			isMax = false;
+			inputDepo.value = addValueToInput(inputDepo.value, 1e7);
+			inputDepo.select();
+		});
+		root.querySelector(".onemil").addEventListener("click", () => {
+			isMax = false;
+			inputDepo.value = addValueToInput(inputDepo.value, 1e6);
+			inputDepo.select();
+		});
+		root.querySelector(".hundtsn").addEventListener("click", () => {
+			isMax = false;
+			inputDepo.value = addValueToInput(inputDepo.value, 1e5);
+			inputDepo.select();
+		});
+		function addValueToInput(inputValue, addValue) {
+			if (isMax && inputValue === "MAX") return "MAX";
+			const currentValue = parseInt(inputValue) || 0;
+			if (!isMax) return currentValue + addValue;
+		}
+		root.querySelector(".deposit").addEventListener("click", () => {
+			sendDepositRequest(inputDepo.value);
+		});
+		root.querySelector(".withdraw").addEventListener("click", () => {
+			sendWithdrawRequest(inputDepo.value);
+		});
+		root.querySelector(".close").addEventListener("click", reqCloseBank);
+		inputDepo.addEventListener("click", () => {
+			inputDepo.select();
+		});
+	};
+	/**
+	* Append to body
+	*/
+	Bank.onAppend = function onAppend() {
+		const root = this.getRoot();
+		this._host.style.top = Math.min(Math.max(0, _preferences$51.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$51.x), Renderer.width - this._host.offsetWidth) + "px";
+		const input = root.querySelector(".depo");
+		input.value = "";
+		input.focus();
+	};
+	/**
+	* Key Handler
+	*/
+	Bank.onKeyDown = function onKeyDown(event) {
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+		if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
+		if (this.isEditableFocused()) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				reqCloseBank();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			if (event.which === KEYS.ENTER) {
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+			reqCloseBank();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
+	};
+	/**
+	* Process shortcut
+	*/
+	Bank.onShortCut = function onShortCut(key) {
+		switch (key.cmd) {
+			case "TOGGLE":
+				this.toggle();
+				break;
+		}
+	};
+	/**
+	* Request to toggle open/close bank
+	*/
+	Bank.toggle = function toggle() {
+		if (!Bank.__active) reqOpenBank();
+		else reqCloseBank();
+	};
+	/**
+	* Remove Bank from window
+	*/
+	Bank.onRemove = function onRemove() {
+		_preferences$51.y = parseInt(this._host.style.top, 10);
+		_preferences$51.x = parseInt(this._host.style.left, 10);
+		_preferences$51.save();
+		const error = this.getRoot().querySelector(".errorupdate");
+		if (error) error.textContent = "";
+	};
+	/**
+	* Public methods for Engine/MapEngine/Bank.js
+	*/
+	Bank.updateBankDisplay = function updateBankDisplay(bankMoney, handMoney) {
+		const root = this.getRoot();
+		const inbank = root.querySelector(".inbank.currency");
+		const onhand = root.querySelector(".onhand.currency");
+		if (inbank) inbank.textContent = bankMoney.toLocaleString() + "z";
+		if (onhand) onhand.textContent = handMoney.toLocaleString() + "z";
+	};
+	Bank.setError = function setError(message) {
+		const error = this.getRoot().querySelector(".errorupdate");
+		if (error) error.textContent = message;
+	};
+	Bank.clearError = function clearError() {
+		const error = this.getRoot().querySelector(".errorupdate");
+		if (error) error.textContent = "";
+	};
+	Bank.clearInput = function clearInput() {
+		const input = this.getRoot().querySelector(".depo");
+		if (input) input.value = "";
+	};
+	Bank.focusInput = function focusInput() {
+		const input = this.getRoot().querySelector(".depo");
+		if (input) input.focus();
+	};
+	Bank.getBankAmount = function getBankAmount() {
+		const inbank = this.getRoot().querySelector(".inbank.currency");
+		if (inbank) return inbank.textContent;
+		return "0z";
+	};
+	Bank.mouseMode = GUIComponent.MouseMode.STOP;
+	Bank.captureKeyEvents = true;
+	Bank.needFocus = true;
+	Bank_default = UIManager.addComponent(Bank);
+}));
+//#endregion
 //#region src/UI/Components/SoundOption/SoundOption.html?raw
 var SoundOption_default$2;
 var init_SoundOption$2 = __esmMin((() => {
@@ -229054,7 +229378,7 @@ function onToggleBGM() {
 	if (Audio_default.BGM.play) BGM.play(BGM.filename);
 	else BGM.stop();
 }
-var SoundOption, _preferences$61, SoundOption_default;
+var SoundOption, _preferences$50, SoundOption_default;
 var init_SoundOption = __esmMin((() => {
 	init_Preferences$1();
 	init_Audio();
@@ -229067,7 +229391,7 @@ var init_SoundOption = __esmMin((() => {
 	init_SoundOption$1();
 	SoundOption = new GUIComponent("SoundOption", SoundOption_default$1);
 	SoundOption.render = () => SoundOption_default$2;
-	_preferences$61 = Preferences.get("SoundOption", {
+	_preferences$50 = Preferences.get("SoundOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -229092,8 +229416,8 @@ var init_SoundOption = __esmMin((() => {
 		this.draggable(".titlebar");
 	};
 	SoundOption.onAppend = function onAppend() {
-		this._host.style.top = _preferences$61.y + "px";
-		this._host.style.left = _preferences$61.x + "px";
+		this._host.style.top = _preferences$50.y + "px";
+		this._host.style.left = _preferences$50.x + "px";
 		const root = this.getRoot();
 		const soundSlider = root.querySelector(".sound");
 		if (soundSlider) soundSlider.value = Audio_default.Sound.volume * 100;
@@ -229105,9 +229429,9 @@ var init_SoundOption = __esmMin((() => {
 		if (bgmState) bgmState.checked = Audio_default.BGM.play;
 	};
 	SoundOption.onRemove = function onRemove() {
-		_preferences$61.x = parseInt(this._host.style.left, 10);
-		_preferences$61.y = parseInt(this._host.style.top, 10);
-		_preferences$61.save();
+		_preferences$50.x = parseInt(this._host.style.left, 10);
+		_preferences$50.y = parseInt(this._host.style.top, 10);
+		_preferences$50.save();
 	};
 	SoundOption_default = UIManager.addComponent(SoundOption);
 }));
@@ -229125,7 +229449,7 @@ var init_FPS$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.js
-var FPS, _maxFPSRegistered, _tickFn, _preferences$60, FPS_default;
+var FPS, _maxFPSRegistered, _tickFn, _preferences$49, FPS_default;
 var init_FPS = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -229138,7 +229462,7 @@ var init_FPS = __esmMin((() => {
 	FPS.render = () => FPS_default$2;
 	_maxFPSRegistered = 0;
 	_tickFn = null;
-	_preferences$60 = Preferences.get("FPS", {
+	_preferences$49 = Preferences.get("FPS", {
 		show: false,
 		x: 100,
 		y: 100
@@ -229162,9 +229486,9 @@ var init_FPS = __esmMin((() => {
 	* When appended to DOM
 	*/
 	FPS.onAppend = function onAppend() {
-		this._host.style.top = _preferences$60.y + "px";
-		this._host.style.left = _preferences$60.x + "px";
-		this._host.style.display = _preferences$60.show ? "" : "none";
+		this._host.style.top = _preferences$49.y + "px";
+		this._host.style.left = _preferences$49.x + "px";
+		this._host.style.display = _preferences$49.show ? "" : "none";
 		const root = this.getRoot();
 		const fpsEl = root.querySelector("#fpsCounter");
 		const fpsRoot = root.querySelector("#FPS");
@@ -229212,21 +229536,21 @@ var init_FPS = __esmMin((() => {
 			Renderer.stop(_tickFn);
 			_tickFn = null;
 		}
-		_preferences$60.x = parseInt(this._host.style.left, 10);
-		_preferences$60.y = parseInt(this._host.style.top, 10);
-		_preferences$60.show = this._host.style.display !== "none";
-		_preferences$60.save();
+		_preferences$49.x = parseInt(this._host.style.left, 10);
+		_preferences$49.y = parseInt(this._host.style.top, 10);
+		_preferences$49.show = this._host.style.display !== "none";
+		_preferences$49.save();
 	};
 	/**
 	* Show/Hide UI
 	*/
 	FPS.toggle = function toggle(isVisible) {
-		_preferences$60.x = parseInt(this._host.style.left, 10);
-		_preferences$60.y = parseInt(this._host.style.top, 10);
+		_preferences$49.x = parseInt(this._host.style.left, 10);
+		_preferences$49.y = parseInt(this._host.style.top, 10);
 		if (typeof isVisible === "boolean") this._host.style.display = isVisible ? "" : "none";
 		else this._host.style.display = this._host.style.display === "none" ? "" : "none";
-		_preferences$60.show = this._host.style.display !== "none";
-		_preferences$60.save();
+		_preferences$49.show = this._host.style.display !== "none";
+		_preferences$49.save();
 		if (this._host.style.display !== "none") this.focus();
 	};
 	FPS_default = UIManager.addComponent(FPS);
@@ -229480,7 +229804,7 @@ function onResetToDefaults() {
 	GraphicsSettings.save();
 	GraphicsOption.onAppend();
 }
-var GraphicsOption, _preferences$59, GraphicsOption_default;
+var GraphicsOption, _preferences$48, GraphicsOption_default;
 var init_GraphicsOption = __esmMin((() => {
 	init_FPS();
 	init_Configs();
@@ -229495,7 +229819,7 @@ var init_GraphicsOption = __esmMin((() => {
 	init_MemoryManager();
 	init_ChatBox();
 	GraphicsOption = new GUIComponent("GraphicsOption", GraphicsOption_default$1);
-	_preferences$59 = Preferences.get("GraphicsOption", {
+	_preferences$48 = Preferences.get("GraphicsOption", {
 		x: 300,
 		y: 300
 	}, 1.1);
@@ -229561,8 +229885,8 @@ var init_GraphicsOption = __esmMin((() => {
 	* When append the element to html
 	*/
 	GraphicsOption.onAppend = function onAppend() {
-		this._host.style.top = `${_preferences$59.y}px`;
-		this._host.style.left = `${_preferences$59.x}px`;
+		this._host.style.top = `${_preferences$48.y}px`;
+		this._host.style.left = `${_preferences$48.x}px`;
 		const root = this.getRoot();
 		root.querySelector(".details").value = GraphicsSettings.quality;
 		root.querySelector(".screensize").value = GraphicsSettings.screensize;
@@ -229593,9 +229917,9 @@ var init_GraphicsOption = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	GraphicsOption.onRemove = function onRemove() {
-		_preferences$59.x = parseInt(this._host.style.left, 10);
-		_preferences$59.y = parseInt(this._host.style.top, 10);
-		_preferences$59.save();
+		_preferences$48.x = parseInt(this._host.style.left, 10);
+		_preferences$48.y = parseInt(this._host.style.top, 10);
+		_preferences$48.save();
 	};
 	GraphicsOption.needFocus = true;
 	GraphicsOption.mouseMode = GUIComponent.MouseMode.STOP;
@@ -229778,7 +230102,7 @@ function onUpdateDisableVirtualMouse() {
 	Controls_default.joyDisableVirtualMouse = !!this.checked;
 	Controls_default.save();
 }
-var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$58, ShortCutOption_default;
+var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$47, ShortCutOption_default;
 var init_ShortCutOption = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Preferences$1();
@@ -229794,7 +230118,7 @@ var init_ShortCutOption = __esmMin((() => {
 	ShortCuts$1 = ShortCutControls_default.ShortCuts;
 	ShortCutsTemp = {};
 	ShortCutOption.isCapturing = false;
-	_preferences$58 = Preferences.get("ShortCutOption", {
+	_preferences$47 = Preferences.get("ShortCutOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -229880,17 +230204,17 @@ var init_ShortCutOption = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCutOption.onAppend = function() {
-		this._host.style.left = _preferences$58.x + "px";
-		this._host.style.top = _preferences$58.y + "px";
+		this._host.style.left = _preferences$47.x + "px";
+		this._host.style.top = _preferences$47.y + "px";
 		this._host.style.zIndex = 100;
 	};
 	/**
 	* Remove from window (and so clean up)
 	*/
 	ShortCutOption.onRemove = function() {
-		_preferences$58.x = parseInt(this._host.style.left, 10);
-		_preferences$58.y = parseInt(this._host.style.top, 10);
-		_preferences$58.save();
+		_preferences$47.x = parseInt(this._host.style.left, 10);
+		_preferences$47.y = parseInt(this._host.style.top, 10);
+		_preferences$47.save();
 	};
 	/**
 	* Process key
@@ -230131,6 +230455,194 @@ var init_Escape = __esmMin((() => {
 	Escape_default = UIManager.addComponent(Escape);
 }));
 //#endregion
+//#region src/UI/Components/CheckAttendance/CheckAttendance.html?raw
+var CheckAttendance_default$2;
+var init_CheckAttendance$2 = __esmMin((() => {
+	CheckAttendance_default$2 = "<div id=\"CheckAttendance\">\r\n	<div class=\"titlebar\" data-background=\"check_attendance/attendance_bg.bmp\">\r\n		<div class=\"top-panel\">\r\n			<div class=\"top-panel-reward\">\r\n				<div class=\"text\">Check Reward</div>\r\n			</div>\r\n			<div class=\"top-panel-period\"></div>\r\n		</div>\r\n		<div class=\"left-panel\">\r\n			<ul class=\"days-list\"></ul>\r\n		</div>\r\n		<div class=\"right-panel\">\r\n			<div class=\"total-days\"></div>\r\n			<div class=\"npc\"></div>\r\n			<div class=\"remaining-days\">\r\n				<div class=\"remaining-day\">\r\n					<div class=\"remaining-day-text\"></div>\r\n				</div>\r\n				<div class=\"remaining-text\">\r\n					<div class=\"remaining-text-div\">Day</div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"bottom-panel\">\r\n			<div class=\"close-container\">\r\n				<ui-button\r\n					class=\"close-container-btn\"\r\n					bg=\"check_attendance/bt_ok_normal.bmp\"\r\n					down=\"check_attendance/bt_ok_press.bmp\"\r\n					>Close</ui-button\r\n				>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CheckAttendance/CheckAttendance.css?raw
+var CheckAttendance_default$1;
+var init_CheckAttendance$1 = __esmMin((() => {
+	CheckAttendance_default$1 = ":host {\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance {\r\n	position: absolute;\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel {\r\n	width: 100%;\r\n	height: 85px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward {\r\n	width: 100%;\r\n	height: 70px;\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: center;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward .text {\r\n	font-weight: bolder;\r\n	color: #633921;\r\n	display: table;\r\n	position: absolute;\r\n	top: 55%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-period {\r\n	width: 100%;\r\n	height: 15px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #a55239;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel {\r\n	width: 335px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list {\r\n	list-style: none;\r\n	padding-left: 25px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item {\r\n	float: left;\r\n	width: 58px;\r\n	height: 60px;\r\n	margin: 2px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item {\r\n	width: 100%;\r\n	height: 40px;\r\n	position: relative;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .item-quantity {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 15px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -10px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item:hover .name {\r\n	display: table;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .day {\r\n	width: 100%;\r\n	height: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #394aa5;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .completed {\r\n	position: absolute;\r\n	width: 58px;\r\n	height: 60px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel {\r\n	width: 152px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .total-days {\r\n	width: 80%;\r\n	height: 85px;\r\n	text-align: center;\r\n	display: flex;\r\n	align-items: center;\r\n	font-weight: bold;\r\n	color: #a53963;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .npc {\r\n	width: 100%;\r\n	height: 105px;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days {\r\n	width: 100%;\r\n	height: 80px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day {\r\n	height: 100%;\r\n	width: 85px;\r\n	float: left;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day .remaining-day-text {\r\n	position: absolute;\r\n	right: 10px;\r\n	bottom: 20px;\r\n	font-weight: bolder;\r\n	font-size: 20px;\r\n	color: white;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text {\r\n	height: 100%;\r\n	width: 35px;\r\n	float: left;\r\n	position: relative;\r\n	font-weight: bolder;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text .remaining-text-div {\r\n	position: absolute;\r\n	left: 3px;\r\n	bottom: 20px;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel {\r\n	width: 100%;\r\n	height: 58px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container .close-container-btn {\r\n	width: 146px;\r\n	height: 30px;\r\n	border: 0;\r\n	font-weight: bold;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	top: 35%;\r\n	left: 35%;\r\n	display: inline-block;\r\n	text-align: center;\r\n	line-height: 30px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CheckAttendance/CheckAttendance.js
+/**
+* Request Attendance Item
+*/
+function onClickAttendance(e) {
+	const root = CheckAttendance.getRoot();
+	const el = e.currentTarget;
+	const id = el.id;
+	const checkedHidden = root.querySelector(`#${id} .checked-hidden`);
+	if (checkedHidden) checkedHidden.className = "checked";
+	const completedDiv = document.createElement("div");
+	completedDiv.className = "completed";
+	completedDiv.dataset.background = "check_attendance/bt_slot_complete.tga";
+	el.appendChild(completedDiv);
+	GUIComponent.processDataAttrs(completedDiv);
+	const total_days_string = `${parseInt(_checkAttendanceData / 10) + 1} Day attendance success`;
+	const totalDaysEl = root.querySelector(".total-days");
+	if (totalDaysEl) totalDaysEl.innerHTML = total_days_string;
+	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
+	Network.sendPacket(_pkt);
+}
+var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$46, CheckAttendance_default;
+var init_CheckAttendance = __esmMin((() => {
+	init_DBManager();
+	init_Preferences$1();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_CheckAttendance$2();
+	init_CheckAttendance$1();
+	init_ChatBox();
+	init_Elements();
+	CheckAttendance = new GUIComponent("CheckAttendance", CheckAttendance_default$1);
+	CheckAttendance.render = () => CheckAttendance_default$2;
+	_preferences$46 = Preferences.get("CheckAttendance", {
+		x: 200,
+		y: 200
+	}, 1);
+	/**
+	* Initialize the component (event listener, etc.)
+	*/
+	CheckAttendance.init = function init() {
+		_CheckAttendanceInfo = DB.getCheckAttendanceInfo();
+		const root = this.getRoot();
+		const baseEl = root.querySelector(".base");
+		if (baseEl) baseEl.addEventListener("mousedown", (event) => {
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		});
+		root.querySelector(".close-container-btn").addEventListener("click", () => {
+			CheckAttendance._host.style.display = "none";
+		});
+		this.draggable(root.querySelector(".titlebar"));
+	};
+	/**
+	* Once append to the DOM, start to position the UI
+	*/
+	CheckAttendance.onAppend = function onAppend() {
+		Object.assign(this._host.style, {
+			top: `${Math.min(Math.max(0, _preferences$46.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
+			left: `${Math.min(Math.max(0, _preferences$46.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
+		});
+		if (!_preferences$46.show) this._host.style.display = "none";
+		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
+			CheckAttendance.updateUI();
+			this.focus();
+		} else ChatBox_default.addText("Currently there is no attendance check event.", ChatBox_default.TYPE.ERROR | ChatBox_default.TYPE.SELF);
+	};
+	/**
+	* Window Shortcuts
+	*/
+	CheckAttendance.onShortCut = function onShortCut(key) {
+		switch (key.cmd) {
+			case "TOGGLE":
+				if (this._host.style.display === "none") {
+					this._host.style.display = "";
+					this.focus();
+				} else this._host.style.display = "none";
+				break;
+		}
+	};
+	/**
+	* Show/Hide UI
+	*/
+	CheckAttendance.toggle = function toggle() {
+		if (this._host.style.display !== "none") this._host.style.display = "none";
+		else {
+			const _pkt = new PACKET.CZ.UI_OPEN();
+			_pkt.UIType = 5;
+			Network.sendPacket(_pkt);
+		}
+	};
+	/**
+	* Set Data to Attendance
+	*/
+	CheckAttendance.setData = function setData(data) {
+		_checkAttendanceData = data;
+	};
+	/**
+	* Update CheckAttendance UI
+	*/
+	CheckAttendance.updateUI = function updateUI() {
+		const root = this.getRoot();
+		let already_requested = 0;
+		let attendance_count = 0;
+		let current_day = 1;
+		if (_CheckAttendanceInfo.Config) {
+			const regex = /(\d{4})(\d{2})(\d{2})/;
+			const start = regex.exec(_CheckAttendanceInfo.Config.StartDate);
+			const end = regex.exec(_CheckAttendanceInfo.Config.EndDate);
+			const period_string = `Event Period: From ${start[2]}/${start[3]} ~ Until ${end[2]}/${end[3]} (Month/Day) 24:00`;
+			const periodEl = root.querySelector(".top-panel-period");
+			if (periodEl) periodEl.innerHTML = period_string;
+			if (_checkAttendanceData >= 0) {
+				already_requested = _checkAttendanceData % 10;
+				attendance_count = parseInt(_checkAttendanceData / 10);
+				current_day = attendance_count + 1;
+				const total_days_string = attendance_count >= 20 || already_requested ? `${attendance_count} Day attendance success` : `Click the item to claim day ${current_day} reward`;
+				const end_date = /* @__PURE__ */ new Date(`${end[1]}-${end[2]}-${end[3]}`);
+				const now_date = /* @__PURE__ */ new Date();
+				const remaining_days = Math.round(Math.abs((end_date.getTime() - now_date.getTime()) / (1e3 * 3600 * 24)));
+				const totalDaysEl = root.querySelector(".total-days");
+				if (totalDaysEl) totalDaysEl.innerHTML = total_days_string;
+				const remainingEl = root.querySelector(".remaining-day-text");
+				if (remainingEl) remainingEl.textContent = remaining_days;
+			}
+		}
+		if (_CheckAttendanceInfo.Rewards) {
+			const daysList = root.querySelector(".days-list");
+			for (let i = 0; i < 20; i++) {
+				const item = DB.getItemInfo(_CheckAttendanceInfo.Rewards[i].item_id);
+				const day = i + 1;
+				const background = !already_requested && day == current_day ? `data-background="check_attendance/bt_slot_a.bmp" data-down="check_attendance/bt_slot_press.bmp"` : "";
+				const checked = day <= attendance_count ? "checked" : "checked-hidden";
+				const slot_complete_string = day > (already_requested ? attendance_count - 1 : attendance_count) ? "bt_slot_complete" : "bt_slot_off";
+				const item_slot = `<li id="attendance_day_${i}" class="attendance-item" ${background}><div class="item" data-background="${DB.INTERFACE_PATH}item/${item.identifiedResourceName}.bmp"><span class="item-quantity">${_CheckAttendanceInfo.Rewards[i].quantity}</span><span class="name">${item.identifiedDisplayName}</span><div class="${checked}" data-background="check_attendance/${slot_complete_string}.tga"></div></div><div class="day">${day} Day</div></li>`;
+				if (daysList) daysList.insertAdjacentHTML("beforeend", item_slot);
+				if (!already_requested && day == current_day) {
+					const dayEl = root.querySelector(`#attendance_day_${i}`);
+					if (dayEl) {
+						dayEl.addEventListener("click", onClickAttendance);
+						dayEl.classList.add("event_add_cursor");
+					}
+				}
+			}
+			const dataAttrSelector = "[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]";
+			if (daysList) daysList.querySelectorAll(dataAttrSelector).forEach((node) => {
+				GUIComponent.processDataAttrs(node);
+			});
+		}
+	};
+	/**
+	* Clean CheckAttendance UI
+	*/
+	CheckAttendance.cleanUI = function cleanUI() {
+		const root = CheckAttendance.getRoot();
+		const periodEl = root.querySelector(".top-panel-period");
+		if (periodEl) periodEl.innerHTML = "";
+		const daysListEl = root.querySelector(".days-list");
+		if (daysListEl) daysListEl.innerHTML = "";
+		const totalDaysEl = root.querySelector(".total-days");
+		if (totalDaysEl) totalDaysEl.innerHTML = "";
+		const remainingEl = root.querySelector(".remaining-day-text");
+		if (remainingEl) remainingEl.innerHTML = "";
+	};
+	/**
+	* Close the window
+	*/
+	CheckAttendance.onClose = function onClose() {
+		CheckAttendance._host.style.display = "none";
+	};
+	CheckAttendance_default = UIManager.addComponent(CheckAttendance);
+}));
+//#endregion
 //#region src/UI/Components/SkillList/SkillList/SkillList.html?raw
 var SkillList_default$2;
 var init_SkillList$3 = __esmMin((() => {
@@ -230264,8 +230776,8 @@ function getSkillPosition$1(JobId) {
 	return positions;
 }
 function getSkillById$1(id) {
-	const count = _list$15.length;
-	for (let i = 0; i < count; ++i) if (_list$15[i].SKID === id) return _list$15[i];
+	const count = _list$12.length;
+	for (let i = 0; i < count; ++i) if (_list$12[i].SKID === id) return _list$12[i];
 	return null;
 }
 function onResize$14(e, comp) {
@@ -230297,7 +230809,7 @@ function onResize$14(e, comp) {
 }
 function resize$5(comp, width, height) {
 	const root = comp.getRoot();
-	if (_preferences$57.mini) {
+	if (_preferences$45.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -230350,9 +230862,9 @@ function resize$5(comp, width, height) {
 	}
 }
 function onMini$1(comp) {
-	_preferences$57.mini = !_preferences$57.mini;
-	_preferences$57.save();
-	resize$5(comp, _preferences$57.width, _preferences$57.height);
+	_preferences$45.mini = !_preferences$45.mini;
+	_preferences$45.save();
+	resize$5(comp, _preferences$45.width, _preferences$45.height);
 }
 function onApplyChoice$1(comp) {
 	const applyArr = [];
@@ -230496,7 +231008,7 @@ function skillLevelSelectDown$1(skill, root) {
 		});
 	}
 }
-var SkillList, _preferences$57, _list$15, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$6, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
+var SkillList, _preferences$45, _list$12, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$1, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
 var init_SkillList$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -230515,7 +231027,7 @@ var init_SkillList$1 = __esmMin((() => {
 	init_SkillList$2();
 	SkillList = new GUIComponent("SkillList", SkillList_default$1);
 	SkillList.render = () => SkillList_default$2;
-	_preferences$57 = Preferences.get("SkillList", {
+	_preferences$45 = Preferences.get("SkillList", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -230524,7 +231036,7 @@ var init_SkillList$1 = __esmMin((() => {
 		mini: true,
 		skillInfo: false
 	}, 1);
-	_list$15 = [];
+	_list$12 = [];
 	_points$1 = 0;
 	totalCounter$1 = 0;
 	skillPosition$1 = [];
@@ -230547,8 +231059,8 @@ var init_SkillList$1 = __esmMin((() => {
 			onMini$1(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$57.skillInfo = !!this.checked;
-			_preferences$57.save();
+			_preferences$45.skillInfo = !!this.checked;
+			_preferences$45.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice$1(this);
@@ -230567,22 +231079,22 @@ var init_SkillList$1 = __esmMin((() => {
 		}
 		const lvlupBtn = root.querySelector("#lvlup_job");
 		if (lvlupBtn) {
-			_btnLevelUp$6 = lvlupBtn;
-			_btnLevelUp$6.style.zIndex = "51";
-			_btnLevelUp$6.style.position = "absolute";
-			_btnLevelUp$6.style.right = "0px";
-			_btnLevelUp$6.style.bottom = "0px";
-			_btnLevelUp$6.style.width = "43px";
-			_btnLevelUp$6.style.height = "43px";
-			_btnLevelUp$6.style.border = "none";
-			_btnLevelUp$6.style.backgroundColor = "transparent";
-			_btnLevelUp$6.style.backgroundRepeat = "no-repeat";
-			_btnLevelUp$6.remove();
-			_btnLevelUp$6.addEventListener("click", () => {
-				if (_btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
+			_btnLevelUp$1 = lvlupBtn;
+			_btnLevelUp$1.style.zIndex = "51";
+			_btnLevelUp$1.style.position = "absolute";
+			_btnLevelUp$1.style.right = "0px";
+			_btnLevelUp$1.style.bottom = "0px";
+			_btnLevelUp$1.style.width = "43px";
+			_btnLevelUp$1.style.height = "43px";
+			_btnLevelUp$1.style.border = "none";
+			_btnLevelUp$1.style.backgroundColor = "transparent";
+			_btnLevelUp$1.style.backgroundRepeat = "no-repeat";
+			_btnLevelUp$1.remove();
+			_btnLevelUp$1.addEventListener("click", () => {
+				if (_btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
 				SkillList.ui.show();
 			});
-			_btnLevelUp$6.addEventListener("mousedown", (e) => {
+			_btnLevelUp$1.addEventListener("mousedown", (e) => {
 				e.stopImmediatePropagation();
 			});
 		}
@@ -230619,7 +231131,7 @@ var init_SkillList$1 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$57.skillInfo) {
+				if (_preferences$45.skillInfo) {
 					const skillID = _resolveSkillID$1(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -230631,7 +231143,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$57.skillInfo) SkillDescription_default.remove();
+				if (_preferences$45.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -230685,29 +231197,29 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.onAppend = function onAppend() {
-		if (!_preferences$57.show) this.ui.hide();
-		resize$5(this, _preferences$57.width, _preferences$57.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$57.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$57.x), Renderer.width - 100)}px`;
+		if (!_preferences$45.show) this.ui.hide();
+		resize$5(this, _preferences$45.width, _preferences$45.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$45.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - 100)}px`;
 		const cb = this.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$57.skillInfo;
+		if (cb) cb.checked = _preferences$45.skillInfo;
 	};
 	SkillList.onRemove = function onRemove() {
-		if (_btnLevelUp$6 && _btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
-		_preferences$57.show = this.ui.is(":visible");
-		_preferences$57.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$57.x = parseInt(this._host.style.left, 10) || 0;
+		if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
+		_preferences$45.show = this.ui.is(":visible");
+		_preferences$45.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$45.x = parseInt(this._host.style.left, 10) || 0;
 		const content = this.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$57.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$57.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$45.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$45.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$57.save();
+		_preferences$45.save();
 	};
 	SkillList.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
 			this.ui.hide();
-			if (_btnLevelUp$6 && _btnLevelUp$6.parentNode) _btnLevelUp$6.remove();
+			if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
 		} else {
 			this.ui.show();
 			this.focus();
@@ -230729,8 +231241,8 @@ var init_SkillList$1 = __esmMin((() => {
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition$1 = getSkillPosition$1(skillJobId);
 		createSkillDependencyTree$1();
-		for (let i = 0, count = _list$15.length; i < count; ++i) this.onUpdateSkill(_list$15[i].SKID, 0);
-		_list$15.length = 0;
+		for (let i = 0, count = _list$12.length; i < count; ++i) this.onUpdateSkill(_list$12[i].SKID, 0);
+		_list$12.length = 0;
 		root.querySelectorAll(".content table").forEach((t) => {
 			t.innerHTML = "";
 		});
@@ -230928,7 +231440,7 @@ var init_SkillList$1 = __esmMin((() => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$15.push(skill);
+		_list$12.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	SkillList.removeSkill = function removeSkill() {};
@@ -230936,7 +231448,7 @@ var init_SkillList$1 = __esmMin((() => {
 		let target = getSkillById$1(skill.SKID);
 		const root = this.getRoot();
 		if (!target) if (root.querySelector(`.skill.id${skill.SKID}`)) {
-			_list$15.push(skill);
+			_list$12.push(skill);
 			this.onUpdateSkill(skill.SKID, 0);
 			hasSkills$1[skill.SKID] = skill;
 			target = skill;
@@ -230983,13 +231495,13 @@ var init_SkillList$1 = __esmMin((() => {
 			return;
 		}
 		_points$1 = amount;
-		const count = _list$15.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$15[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$15[i].upgradable && amount ? "" : "none";
+		const count = _list$12.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$12[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$12[i].upgradable && amount ? "" : "none";
 		});
 	};
 	SkillList.onLevelUp = function onLevelUp() {
-		if (_btnLevelUp$6) document.body.appendChild(_btnLevelUp$6);
+		if (_btnLevelUp$1) document.body.appendChild(_btnLevelUp$1);
 	};
 	_touchDrag = {
 		timer: null,
@@ -231130,8 +231642,8 @@ function getSkillPosition(JobId) {
 	return positions;
 }
 function getSkillById(id) {
-	const count = _list$14.length;
-	for (let i = 0; i < count; ++i) if (_list$14[i].SKID === id) return _list$14[i];
+	const count = _list$11.length;
+	for (let i = 0; i < count; ++i) if (_list$11[i].SKID === id) return _list$11[i];
 	return null;
 }
 function onResize$13(e, comp) {
@@ -231163,7 +231675,7 @@ function onResize$13(e, comp) {
 }
 function resize$4(comp, width, height) {
 	const root = comp.getRoot();
-	if (_preferences$56.mini) {
+	if (_preferences$44.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -231198,9 +231710,9 @@ function resize$4(comp, width, height) {
 	}
 }
 function onMini(comp) {
-	_preferences$56.mini = !_preferences$56.mini;
-	_preferences$56.save();
-	resize$4(comp, _preferences$56.width, _preferences$56.height);
+	_preferences$44.mini = !_preferences$44.mini;
+	_preferences$44.save();
+	resize$4(comp, _preferences$44.width, _preferences$44.height);
 }
 function onApplyChoice(comp) {
 	const applyArr = [];
@@ -231271,7 +231783,7 @@ function skillLevelSelectDown(skill, root) {
 		});
 	}
 }
-var SkillListV0, _preferences$56, _list$14, _btnIncSkill, _points, totalCounter, _btnLevelUp$5, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
+var SkillListV0, _preferences$44, _list$11, _btnIncSkill, _points, totalCounter, _btnLevelUp, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
 var init_SkillListV0 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -231290,7 +231802,7 @@ var init_SkillListV0 = __esmMin((() => {
 	init_SkillListV0$1();
 	SkillListV0 = new GUIComponent("SkillListV0", SkillListV0_default$1);
 	SkillListV0.render = () => SkillListV0_default$2;
-	_preferences$56 = Preferences.get("SkillListV0", {
+	_preferences$44 = Preferences.get("SkillListV0", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -231299,7 +231811,7 @@ var init_SkillListV0 = __esmMin((() => {
 		mini: true,
 		skillInfo: false
 	}, 1);
-	_list$14 = [];
+	_list$11 = [];
 	_points = 0;
 	totalCounter = 0;
 	skillPosition = [];
@@ -231322,8 +231834,8 @@ var init_SkillListV0 = __esmMin((() => {
 			onMini(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$56.skillInfo = !!this.checked;
-			_preferences$56.save();
+			_preferences$44.skillInfo = !!this.checked;
+			_preferences$44.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice(this);
@@ -231342,22 +231854,22 @@ var init_SkillListV0 = __esmMin((() => {
 		}
 		const lvlupBtn = root.querySelector("#lvlup_job");
 		if (lvlupBtn) {
-			_btnLevelUp$5 = lvlupBtn;
-			_btnLevelUp$5.style.zIndex = "51";
-			_btnLevelUp$5.style.position = "absolute";
-			_btnLevelUp$5.style.right = "0px";
-			_btnLevelUp$5.style.bottom = "0px";
-			_btnLevelUp$5.style.width = "43px";
-			_btnLevelUp$5.style.height = "43px";
-			_btnLevelUp$5.style.border = "none";
-			_btnLevelUp$5.style.backgroundColor = "transparent";
-			_btnLevelUp$5.style.backgroundRepeat = "no-repeat";
-			_btnLevelUp$5.remove();
-			_btnLevelUp$5.addEventListener("click", () => {
-				if (_btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
+			_btnLevelUp = lvlupBtn;
+			_btnLevelUp.style.zIndex = "51";
+			_btnLevelUp.style.position = "absolute";
+			_btnLevelUp.style.right = "0px";
+			_btnLevelUp.style.bottom = "0px";
+			_btnLevelUp.style.width = "43px";
+			_btnLevelUp.style.height = "43px";
+			_btnLevelUp.style.border = "none";
+			_btnLevelUp.style.backgroundColor = "transparent";
+			_btnLevelUp.style.backgroundRepeat = "no-repeat";
+			_btnLevelUp.remove();
+			_btnLevelUp.addEventListener("click", () => {
+				if (_btnLevelUp.parentNode) _btnLevelUp.remove();
 				SkillListV0.ui.show();
 			});
-			_btnLevelUp$5.addEventListener("mousedown", (e) => {
+			_btnLevelUp.addEventListener("mousedown", (e) => {
 				e.stopImmediatePropagation();
 			});
 		}
@@ -231394,7 +231906,7 @@ var init_SkillListV0 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$56.mini || _preferences$56.skillInfo) {
+				if (_preferences$44.mini || _preferences$44.skillInfo) {
 					const skillID = _resolveSkillID(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -231406,7 +231918,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$56.mini || _preferences$56.skillInfo) SkillDescription_default.remove();
+				if (_preferences$44.mini || _preferences$44.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -231450,29 +231962,29 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.onAppend = function onAppend() {
-		if (!_preferences$56.show) this.ui.hide();
-		resize$4(this, _preferences$56.width, _preferences$56.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$56.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$56.x), Renderer.width - 100)}px`;
+		if (!_preferences$44.show) this.ui.hide();
+		resize$4(this, _preferences$44.width, _preferences$44.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - 100)}px`;
 		const cb = SkillListV0.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$56.skillInfo;
+		if (cb) cb.checked = _preferences$44.skillInfo;
 	};
 	SkillListV0.onRemove = function onRemove() {
-		if (_btnLevelUp$5 && _btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
-		_preferences$56.show = this.ui.is(":visible");
-		_preferences$56.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$56.x = parseInt(this._host.style.left, 10) || 0;
+		if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
+		_preferences$44.show = this.ui.is(":visible");
+		_preferences$44.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$44.x = parseInt(this._host.style.left, 10) || 0;
 		const content = SkillListV0.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$56.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$56.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$44.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$44.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$56.save();
+		_preferences$44.save();
 	};
 	SkillListV0.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
 			this.ui.hide();
-			if (_btnLevelUp$5 && _btnLevelUp$5.parentNode) _btnLevelUp$5.remove();
+			if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		} else {
 			this.ui.show();
 			this.focus();
@@ -231494,8 +232006,8 @@ var init_SkillListV0 = __esmMin((() => {
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition = getSkillPosition(skillJobId);
 		createSkillDependencyTree();
-		for (let i = 0, count = _list$14.length; i < count; ++i) this.onUpdateSkill(_list$14[i].SKID, 0);
-		_list$14.length = 0;
+		for (let i = 0, count = _list$11.length; i < count; ++i) this.onUpdateSkill(_list$11[i].SKID, 0);
+		_list$11.length = 0;
 		const table = root.querySelector(".content table");
 		if (table) table.innerHTML = "";
 		root.querySelectorAll(".skillCol").forEach((el) => {
@@ -231621,7 +232133,7 @@ var init_SkillListV0 = __esmMin((() => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$14.push(skill);
+		_list$11.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	SkillListV0.removeSkill = function removeSkill() {};
@@ -231670,13 +232182,13 @@ var init_SkillListV0 = __esmMin((() => {
 			return;
 		}
 		_points = amount;
-		const count = _list$14.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$14[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$14[i].upgradable && amount ? "" : "none";
+		const count = _list$11.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$11[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$11[i].upgradable && amount ? "" : "none";
 		});
 	};
 	SkillListV0.onLevelUp = function onLevelUp() {
-		if (_btnLevelUp$5) document.body.appendChild(_btnLevelUp$5);
+		if (_btnLevelUp) document.body.appendChild(_btnLevelUp);
 	};
 	SkillListV0.onUseSkill = function onUseItem() {};
 	SkillListV0.onIncreaseSkill = function onIncreaseSkill() {};
@@ -231780,7 +232292,7 @@ function onClickClose$3() {
 function onClose$10() {
 	QuestHelper.ui.hide();
 }
-var QuestHelper, _preferences$55, QuestHelper_default;
+var QuestHelper, _preferences$43, QuestHelper_default;
 var init_QuestHelper = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -231795,7 +232307,7 @@ var init_QuestHelper = __esmMin((() => {
 	init_QuestHelper$1();
 	QuestHelper = new GUIComponent("QuestHelper", QuestHelper_default$1);
 	QuestHelper.render = () => QuestHelper_default$2;
-	_preferences$55 = Preferences.get("Quest", {
+	_preferences$43 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false
@@ -231857,8 +232369,8 @@ var init_QuestHelper = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelper.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$55.x + 382), Renderer.width - 342)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$55.y), Renderer.height - 412)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$43.x + 382), Renderer.width - 342)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$43.y), Renderer.height - 412)}px`;
 	};
 	QuestHelper.setQuestInfo = function setQuestInfo(quest) {
 		const root = QuestHelper.getRoot();
@@ -231958,14 +232470,14 @@ function isInCooldown(quest) {
 	if (quest.end_time > epoch_seconds) return true;
 	return false;
 }
-var _preferences$54, QuestWindow, QuestWindow_default;
+var _preferences$42, QuestWindow, QuestWindow_default;
 var init_QuestWindow = __esmMin((() => {
 	init_Preferences$1();
 	init_UIManager();
 	init_GUIComponent();
 	init_QuestWindow$2();
 	init_QuestWindow$1();
-	_preferences$54 = Preferences.get("Quest", {
+	_preferences$42 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -231985,7 +232497,7 @@ var init_QuestWindow = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestWindow.onAppend = function onAppend() {
-		if (!_preferences$54.showwindow) this.ui.hide();
+		if (!_preferences$42.showwindow) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -232077,15 +232589,15 @@ function onClickMenu$2(e) {
 function onClickQuestCheckbox() {
 	const root = Quest.getRoot();
 	let checkbox_background;
-	if (_preferences$53.showwindow) {
+	if (_preferences$41.showwindow) {
 		checkbox_background = "checkbox_off";
 		QuestWindow_default.ui.hide();
 	} else {
 		checkbox_background = "checkbox_on";
 		QuestWindow_default.ui.show();
 	}
-	_preferences$53.showwindow = !_preferences$53.showwindow;
-	_preferences$53.save();
+	_preferences$41.showwindow = !_preferences$41.showwindow;
+	_preferences$41.save();
 	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
 		const el = root.querySelector(".toggle-quest-image");
 		if (el) el.style.backgroundImage = `url(${data})`;
@@ -232131,7 +232643,7 @@ function refreshQuestUI$1() {
 function onClose$9() {
 	Quest.ui.hide();
 }
-var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$53, Quest_default;
+var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$41, Quest_default;
 var init_Quest$2 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -232153,7 +232665,7 @@ var init_Quest$2 = __esmMin((() => {
 	_questList$1 = [];
 	_questNotShowList = [];
 	_active_menu$1 = "active";
-	_preferences$53 = Preferences.get("Quest", {
+	_preferences$41 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -232185,10 +232697,10 @@ var init_Quest$2 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	Quest.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - 381)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - 466)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - 381)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - 466)}px`;
 		const root = Quest.getRoot();
-		const checkbox_background = _preferences$53.showwindow ? "checkbox_on" : "checkbox_off";
+		const checkbox_background = _preferences$41.showwindow ? "checkbox_on" : "checkbox_off";
 		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
 			const el = root.querySelector(".toggle-quest-image");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -232197,7 +232709,7 @@ var init_Quest$2 = __esmMin((() => {
 			const el = root.querySelector(".titlebar");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		if (!_preferences$53.show) this.ui.hide();
+		if (!_preferences$41.show) this.ui.hide();
 		QuestWindow_default.append();
 	};
 	/**
@@ -232227,10 +232739,10 @@ var init_Quest$2 = __esmMin((() => {
 	*/
 	Quest.onRemove = function onRemove() {
 		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
-		_preferences$53.show = hostDisplay !== "none";
-		_preferences$53.y = parseInt(this._host.style.top, 10);
-		_preferences$53.x = parseInt(this._host.style.left, 10);
-		_preferences$53.save();
+		_preferences$41.show = hostDisplay !== "none";
+		_preferences$41.y = parseInt(this._host.style.top, 10);
+		_preferences$41.x = parseInt(this._host.style.left, 10);
+		_preferences$41.save();
 	};
 	/**
 	* Window Shortcuts
@@ -232491,7 +233003,7 @@ function onSelectMonster(e) {
 	const limitedEl = root.querySelector(".limited");
 	if (limitedEl) limitedEl.textContent = selectedOption.getAttribute("max");
 }
-var QuestHelperV1, _preferences$52, QuestHelperV1_default;
+var QuestHelperV1, _preferences$40, QuestHelperV1_default;
 var init_QuestHelperV1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Client();
@@ -232506,7 +233018,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 	init_QuestHelperV1$1();
 	QuestHelperV1 = new GUIComponent("QuestHelperV1", QuestHelperV1_default$1);
 	QuestHelperV1.render = () => QuestHelperV1_default$2;
-	_preferences$52 = Preferences.get("QuestHelperV1", {
+	_preferences$40 = Preferences.get("QuestHelperV1", {
 		x: 200,
 		y: 200,
 		show: false
@@ -232563,8 +233075,8 @@ var init_QuestHelperV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelperV1.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$52.x + 382), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$52.y), Renderer.height - 375)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x + 382), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - 375)}px`;
 	};
 	QuestHelperV1.setQuestInfo = function setQuestInfo(quest) {
 		const root = QuestHelperV1.getRoot();
@@ -232713,7 +233225,7 @@ function refreshQuestUI() {
 function onClose$7() {
 	QuestV1.ui.hide();
 }
-var QuestV1, _index$4, _questList, _active_menu, _preferences$51, QuestV1_default;
+var QuestV1, _index$4, _questList, _active_menu, _preferences$39, QuestV1_default;
 var init_QuestV1 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -232734,7 +233246,7 @@ var init_QuestV1 = __esmMin((() => {
 	_index$4 = -1;
 	_questList = [];
 	_active_menu = "active";
-	_preferences$51 = Preferences.get("QuestV1", {
+	_preferences$39 = Preferences.get("QuestV1", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -232761,8 +233273,8 @@ var init_QuestV1 = __esmMin((() => {
 	*/
 	QuestV1.onAppend = function onAppend() {
 		_index$4 = -1;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$51.x), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$51.y), Renderer.height - 250)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - 250)}px`;
 		const root = QuestV1.getRoot();
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_que_01.bmp`, (data) => {
 			const el = root.querySelector(".quest-menu");
@@ -232771,7 +233283,7 @@ var init_QuestV1 = __esmMin((() => {
 		root.querySelector("#active-quest-list").style.display = "";
 		root.querySelector("#inactive-quest-list").style.display = "none";
 		root.querySelector("#all-quest-list").style.display = "none";
-		if (!_preferences$51.show) this.ui.hide();
+		if (!_preferences$39.show) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -232797,10 +233309,10 @@ var init_QuestV1 = __esmMin((() => {
 	*/
 	QuestV1.onRemove = function onRemove() {
 		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
-		_preferences$51.show = hostDisplay !== "none";
-		_preferences$51.y = parseInt(this._host.style.top, 10);
-		_preferences$51.x = parseInt(this._host.style.left, 10);
-		_preferences$51.save();
+		_preferences$39.show = hostDisplay !== "none";
+		_preferences$39.y = parseInt(this._host.style.top, 10);
+		_preferences$39.x = parseInt(this._host.style.left, 10);
+		_preferences$39.save();
 	};
 	/**
 	* Window Shortcuts
@@ -232967,934 +233479,6 @@ var init_Quest$1 = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.html?raw
-var BasicInfo_default$2;
-var init_BasicInfo$3 = __esmMin((() => {
-	BasicInfo_default$2 = "<div\r\n	id=\"basicinfo\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n		<button\r\n			class=\"toggle_btns\"\r\n			data-background=\"basic_interface/viewoff.bmp\"\r\n			data-preload=\"basic_interface/viewon.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\">\r\n		<button\r\n			class=\"info\"\r\n			data-background=\"basic_interface/info1.bmp\"\r\n			data-hover=\"basic_interface/info2.bmp\"\r\n			data-down=\"basic_interface/info3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"skill\"\r\n			data-background=\"basic_interface/skill1.bmp\"\r\n			data-hover=\"basic_interface/skill2.bmp\"\r\n			data-down=\"basic_interface/skill3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"item\"\r\n			data-background=\"basic_interface/item1.bmp\"\r\n			data-hover=\"basic_interface/item2.bmp\"\r\n			data-down=\"basic_interface/item3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"map\"\r\n			data-background=\"basic_interface/map1.bmp\"\r\n			data-hover=\"basic_interface/map2.bmp\"\r\n			data-down=\"basic_interface/map3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"party\"\r\n			data-background=\"basic_interface/party1.bmp\"\r\n			data-hover=\"basic_interface/party2.bmp\"\r\n			data-down=\"basic_interface/party3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"guild\"\r\n			data-background=\"basic_interface/guild1.bmp\"\r\n			data-hover=\"basic_interface/guild2.bmp\"\r\n			data-down=\"basic_interface/guild3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"quest\"\r\n			data-background=\"basic_interface/quest1.bmp\"\r\n			data-hover=\"basic_interface/quest2.bmp\"\r\n			data-down=\"basic_interface/quest3.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"option\"\r\n			data-background=\"basic_interface/option1.bmp\"\r\n			data-hover=\"basic_interface/option2.bmp\"\r\n			data-down=\"basic_interface/option3.bmp\"\r\n		></button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.css?raw
-var BasicInfo_default$1;
-var init_BasicInfo$2 = __esmMin((() => {
-	BasicInfo_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#basicinfo {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#basicinfo.small .large {\r\n	display: none;\r\n}\r\n#basicinfo.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#basicinfo.small {\r\n	height: 53px;\r\n}\r\n#basicinfo.large .buttons {\r\n	top: 135px;\r\n}\r\n#basicinfo.small .buttons {\r\n	top: 53px;\r\n}\r\n\r\n#basicinfo .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#basicinfo .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#basicinfo .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#basicinfo .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#basicinfo .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#basicinfo .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .hp_bar,\r\n#basicinfo .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#basicinfo .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#basicinfo .large .hp_bar div,\r\n#basicinfo .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#basicinfo .large div.hp_bar_perc,\r\n#basicinfo .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#basicinfo .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#basicinfo .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#basicinfo .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#basicinfo .large .bexp,\r\n#basicinfo .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#basicinfo .large .bexp div,\r\n#basicinfo .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#basicinfo .large .jexp {\r\n	top: 101px;\r\n}\r\n#basicinfo .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: 5px;\r\n	padding-right: 5px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 220px;\r\n	opacity: 0.5;\r\n}\r\n#basicinfo .buttons:hover {\r\n	opacity: 1;\r\n}\r\n#basicinfo .buttons button {\r\n	float: left;\r\n	width: 54px;\r\n	height: 18px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n}\r\n#basicinfo .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#basicinfo .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#basicinfo .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfo/BasicInfo.js
-var BasicInfo, _preferences$50, BasicInfo_default;
-var init_BasicInfo$1 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_SessionStorage();
-	init_UIManager();
-	init_GUIComponent();
-	init_Inventory();
-	init_Equipment();
-	init_PartyFriends();
-	init_Guild$1();
-	init_Escape();
-	init_WorldMap();
-	init_SkillList();
-	init_Quest$1();
-	init_BasicInfo$3();
-	init_BasicInfo$2();
-	BasicInfo = new GUIComponent("BasicInfo", BasicInfo_default$1);
-	/**
-	* Stored data
-	*/
-	BasicInfo.base_exp = 0;
-	BasicInfo.base_exp_next = 1;
-	BasicInfo.job_exp = 0;
-	BasicInfo.job_exp_next = -1;
-	BasicInfo.weight = 0;
-	BasicInfo.weight_max = 1;
-	BasicInfo.render = () => BasicInfo_default$2;
-	_preferences$50 = Preferences.get("BasicInfo", {
-		x: 0,
-		y: 0,
-		reduce: true,
-		buttons: true,
-		magnet_top: true,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	BasicInfo.init = function init() {
-		const root = BasicInfo.getRoot();
-		root.querySelectorAll(".topbar button").forEach((btn) => {
-			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		});
-		const rightBtn = root.querySelector(".topbar .right");
-		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfo.toggleMode());
-		const toggleBtn = root.querySelector(".toggle_btns");
-		if (toggleBtn) toggleBtn.addEventListener("mousedown", (e) => BasicInfo.toggleButtons(e));
-		root.querySelectorAll(".buttons button").forEach((btn) => {
-			btn.addEventListener("mousedown", () => {
-				switch (btn.className.split(" ")[0]) {
-					case "item":
-						InventoryController.getUI().toggle();
-						break;
-					case "info":
-						EquipmentController.getUI().toggle();
-						break;
-					case "skill":
-						Controller$4.getUI().toggle();
-						break;
-					case "option":
-						Escape_default.ui.toggle();
-						break;
-					case "party":
-						controller.toggle();
-						break;
-					case "guild":
-						Guild_default.toggle();
-						break;
-					case "map":
-						WorldMap_default.toggle();
-						break;
-					case "quest":
-						Controller$3.getUI().toggle();
-						break;
-				}
-			});
-		});
-		this.draggable();
-	};
-	/**
-	* When append the element to html
-	* Execute elements in memory
-	*/
-	BasicInfo.onAppend = function onAppend() {
-		const root = BasicInfo.getRoot();
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$50.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$50.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$50.magnet_top;
-		this.magnet.BOTTOM = _preferences$50.magnet_bottom;
-		this.magnet.LEFT = _preferences$50.magnet_left;
-		this.magnet.RIGHT = _preferences$50.magnet_right;
-		const inner = root.querySelector("#basicinfo");
-		if (inner) {
-			inner.classList.remove("small", "large");
-			if (_preferences$50.reduce) {
-				inner.classList.add("small");
-				const buttons = root.querySelector(".buttons");
-				if (buttons) buttons.style.display = _preferences$50.buttons ? "" : "none";
-			} else inner.classList.add("large");
-		}
-	};
-	/**
-	* Once remove, save preferences
-	*/
-	BasicInfo.onRemove = function onRemove() {
-		const root = BasicInfo.getRoot();
-		const inner = root.querySelector("#basicinfo");
-		_preferences$50.x = parseInt(this._host.style.left, 10);
-		_preferences$50.y = parseInt(this._host.style.top, 10);
-		_preferences$50.reduce = inner ? inner.classList.contains("small") : _preferences$50.reduce;
-		const buttons = root.querySelector(".buttons");
-		_preferences$50.buttons = buttons ? buttons.style.display !== "none" : _preferences$50.buttons;
-		_preferences$50.magnet_top = this.magnet.TOP;
-		_preferences$50.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$50.magnet_left = this.magnet.LEFT;
-		_preferences$50.magnet_right = this.magnet.RIGHT;
-		_preferences$50.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	BasicInfo.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "EXTEND":
-				this.toggleMode();
-				break;
-		}
-	};
-	/**
-	* Switch window size
-	*/
-	BasicInfo.toggleMode = function toggleMode() {
-		const root = BasicInfo.getRoot();
-		const inner = root.querySelector("#basicinfo");
-		if (!inner) return;
-		inner.classList.toggle("small");
-		inner.classList.toggle("large");
-		if (inner.classList.contains("large")) {
-			const buttons = root.querySelector(".buttons");
-			if (buttons) buttons.style.display = "";
-			return;
-		}
-		const buttons = root.querySelector(".buttons");
-		if (_preferences$50.buttons) {
-			if (buttons) buttons.style.display = "";
-		} else if (buttons) buttons.style.display = "none";
-		const type = _preferences$50.buttons ? "off" : "on";
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
-			const toggleBtn = root.querySelector(".toggle_btns");
-			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
-		});
-	};
-	/**
-	* Toggle the list of buttons
-	*/
-	BasicInfo.toggleButtons = function toggleButtons(event) {
-		const root = BasicInfo.getRoot();
-		const buttons = root.querySelector(".buttons");
-		if (!buttons) return;
-		_preferences$50.buttons = buttons.style.display === "none";
-		if (_preferences$50.buttons) buttons.style.display = "";
-		else buttons.style.display = "none";
-		const type = _preferences$50.buttons ? "off" : "on";
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
-			const toggleBtn = root.querySelector(".toggle_btns");
-			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
-		});
-		event.stopImmediatePropagation();
-	};
-	/**
-	* Update UI elements
-	*
-	* @param {string} type identifier
-	* @param {number} val1
-	* @param {number} val2 (optional)
-	*/
-	BasicInfo.update = function update(type, val1, val2) {
-		const root = BasicInfo.getRoot();
-		if (!root) return;
-		let perc = 100;
-		let color = "blue";
-		switch (type) {
-			case "name":
-			case "blvl":
-			case "jlvl":
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				break;
-			case "zeny": {
-				SessionStorage_default.zeny = val1;
-				const list = val1.toString().split("");
-				const count = list.length;
-				let str = "";
-				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = str;
-				});
-				break;
-			}
-			case "job":
-				SessionStorage_default.Character.job = val1;
-				root.querySelectorAll(".job_value").forEach((el) => {
-					el.textContent = MonsterTable_default[val1];
-				});
-				break;
-			case "bexp":
-			case "jexp": {
-				const expEl = root.querySelector(`.${type}`);
-				if (!val2) {
-					if (expEl) expEl.style.display = "none";
-					break;
-				}
-				if (expEl) {
-					expEl.style.display = "";
-					const bar = expEl.querySelector("div");
-					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
-					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				}
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
-				});
-				break;
-			}
-			case "weight":
-				root.querySelectorAll(".weight_value").forEach((el) => {
-					el.textContent = val1 / 10 | 0;
-				});
-				root.querySelectorAll(".weight_total").forEach((el) => {
-					el.textContent = val2 / 10 | 0;
-				});
-				root.querySelectorAll(".weight").forEach((el) => {
-					el.style.color = val1 < val2 / 2 ? "" : "red";
-					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				});
-				break;
-			case "hp":
-			case "sp":
-				perc = Math.floor(val1 * 100 / val2);
-				color = perc < 25 ? "red" : "blue";
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
-					el.textContent = val2;
-				});
-				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
-					el.textContent = `${perc}%`;
-				});
-				if (perc <= 0) {
-					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
-						el.style.backgroundImage = "none";
-					});
-					break;
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_left`);
-					if (el) el.style.backgroundImage = `url(${url})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_middle`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_right`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				break;
-		}
-	};
-	BasicInfo_default = UIManager.addComponent(BasicInfo);
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.html?raw
-var BasicInfoV0_default$2;
-var init_BasicInfoV0$2 = __esmMin((() => {
-	BasicInfoV0_default$2 = "<div\r\n	id=\"BasicInfoV0\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg.bmp\"\r\n	data-mini-background=\"basic_interface/basewin_mini.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Info</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\">\r\n		<button\r\n			class=\"option\"\r\n			data-background=\"basic_interface/btn_option_off.bmp\"\r\n			data-hover=\"basic_interface/btn_option_on.bmp\"\r\n			data-down=\"basic_interface/btn_option_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"info\"\r\n			data-background=\"basic_interface/btn_status_off.bmp\"\r\n			data-hover=\"basic_interface/btn_status_on.bmp\"\r\n			data-down=\"basic_interface/btn_status_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"equip\"\r\n			data-background=\"basic_interface/btn_equip_off.bmp\"\r\n			data-hover=\"basic_interface/btn_equip_on.bmp\"\r\n			data-down=\"basic_interface/btn_equip_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"item\"\r\n			data-background=\"basic_interface/btn_items_off.bmp\"\r\n			data-hover=\"basic_interface/btn_items_on.bmp\"\r\n			data-down=\"basic_interface/btn_items_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"map\"\r\n			data-background=\"basic_interface/btn_map_off.bmp\"\r\n			data-hover=\"basic_interface/btn_map_on.bmp\"\r\n			data-down=\"basic_interface/btn_map_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"skill\"\r\n			data-background=\"basic_interface/btn_skill_off.bmp\"\r\n			data-hover=\"basic_interface/btn_skill_on.bmp\"\r\n			data-down=\"basic_interface/btn_skill_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"party\"\r\n			data-background=\"basic_interface/btn_friend_off.bmp\"\r\n			data-hover=\"basic_interface/btn_friend_on.bmp\"\r\n			data-down=\"basic_interface/btn_friend_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"chat\"\r\n			data-background=\"basic_interface/btn_dialog_off.bmp\"\r\n			data-hover=\"basic_interface/btn_dialog_on.bmp\"\r\n			data-down=\"basic_interface/btn_dialog_on.bmp\"\r\n		></button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.css?raw
-var BasicInfoV0_default$1;
-var init_BasicInfoV0$1 = __esmMin((() => {
-	BasicInfoV0_default$1 = ":host {\r\n	width: 280px;\r\n	height: 120px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV0 {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 120px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV0.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV0.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV0.small {\r\n	height: 33px;\r\n}\r\n#BasicInfoV0.large .buttons {\r\n	top: 18px;\r\n	padding-right: 8px;\r\n}\r\n#BasicInfoV0.small .buttons {\r\n	display: none;\r\n	width: 0;\r\n}\r\n\r\n#BasicInfoV0 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV0 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV0 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV0 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV0 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV0 .large .hp_title {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .sp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .hp_bar,\r\n#BasicInfoV0 .large .sp_bar {\r\n	position: absolute;\r\n	top: 22px;\r\n	left: 110px;\r\n	width: 85px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV0 .large .sp_bar {\r\n	top: 43px;\r\n}\r\n#BasicInfoV0 .large .hp_bar div,\r\n#BasicInfoV0 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#BasicInfoV0 .large div.hp_bar_perc,\r\n#BasicInfoV0 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 85px;\r\n	position: absolute;\r\n	top: 9px;\r\n}\r\n\r\n#BasicInfoV0 .large .blvl {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .jlvl {\r\n	position: absolute;\r\n	top: 83px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .bexp,\r\n#BasicInfoV0 .large .jexp {\r\n	position: absolute;\r\n	top: 77px;\r\n	left: 84px;\r\n	width: 100px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV0 .large .bexp div,\r\n#BasicInfoV0 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV0 .large .jexp {\r\n	top: 88px;\r\n}\r\n#BasicInfoV0 .large .extra {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 5px;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .buttons {\r\n	position: absolute;\r\n	right: 0;\r\n	width: 80px;\r\n}\r\n#BasicInfoV0 .buttons button {\r\n	float: right;\r\n	width: 30px;\r\n	height: 20px;\r\n	border: none;\r\n	margin-top: 4px;\r\n	margin-left: 4px;\r\n	background-color: transparent;\r\n}\r\n#BasicInfoV0 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV0 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line2 {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 18px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line3 {\r\n	position: absolute;\r\n	top: 18px;\r\n	right: 5px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.js
-var BasicInfoV0, _preferences$49, BasicInfoV0_default;
-var init_BasicInfoV0 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_SessionStorage();
-	init_UIManager();
-	init_GUIComponent();
-	init_Inventory();
-	init_Equipment();
-	init_PartyFriends();
-	init_Guild$1();
-	init_ChatRoomCreate();
-	init_Escape();
-	init_WorldMap();
-	init_WinStats();
-	init_SkillList();
-	init_Quest$1();
-	init_BasicInfoV0$2();
-	init_BasicInfoV0$1();
-	BasicInfoV0 = new GUIComponent("BasicInfoV0", BasicInfoV0_default$1);
-	/**
-	* Stored data
-	*/
-	BasicInfoV0.base_exp = 0;
-	BasicInfoV0.base_exp_next = 1;
-	BasicInfoV0.job_exp = 0;
-	BasicInfoV0.job_exp_next = -1;
-	BasicInfoV0.weight = 0;
-	BasicInfoV0.weight_max = 1;
-	BasicInfoV0.render = () => BasicInfoV0_default$2;
-	_preferences$49 = Preferences.get("BasicInfoV0", {
-		x: 0,
-		y: 0,
-		reduce: false,
-		buttons: true,
-		magnet_top: true,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	BasicInfoV0.init = function init() {
-		const root = this.getRoot();
-		root.querySelectorAll(".topbar button").forEach((btn) => {
-			btn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		});
-		const rightBtn = root.querySelector(".topbar .right");
-		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV0.toggleMode());
-		const toggleBtn = root.querySelector(".toggle_btns");
-		if (toggleBtn) toggleBtn.addEventListener("mousedown", (e) => BasicInfoV0.toggleButtons(e));
-		root.querySelectorAll(".buttons button").forEach((btn) => {
-			btn.addEventListener("mousedown", () => {
-				switch (btn.className.split(" ")[0]) {
-					case "item":
-						InventoryController.getUI().toggle();
-						break;
-					case "info":
-						WinStatsController.getUI().toggle();
-						break;
-					case "equip":
-						EquipmentController.getUI().toggle();
-						break;
-					case "skill":
-						Controller$4.getUI().toggle();
-						break;
-					case "option":
-						Escape_default.ui.toggle();
-						break;
-					case "party":
-						controller.toggle();
-						break;
-					case "guild":
-						Guild_default.toggle();
-						break;
-					case "chat":
-						ChatRoomCreate_default.toggle();
-						break;
-					case "map":
-						WorldMap_default.toggle();
-						break;
-					case "quest":
-						Controller$3.getUI().toggle();
-						break;
-				}
-			});
-		});
-		this.draggable();
-	};
-	/**
-	* When append the element to html
-	* Execute elements in memory
-	*/
-	BasicInfoV0.onAppend = function onAppend() {
-		const root = this.getRoot();
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$49.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$49.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$49.magnet_top;
-		this.magnet.BOTTOM = _preferences$49.magnet_bottom;
-		this.magnet.LEFT = _preferences$49.magnet_left;
-		this.magnet.RIGHT = _preferences$49.magnet_right;
-		const inner = root.querySelector("#BasicInfoV0");
-		if (inner) {
-			inner.classList.remove("small", "large");
-			if (_preferences$49.reduce) {
-				inner.classList.add("small");
-				const buttons = root.querySelector(".buttons");
-				if (buttons) buttons.style.display = "none";
-				const bgAttr = inner.dataset.miniBackground;
-				if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
-					inner.style.backgroundImage = `url(${url})`;
-				});
-			} else {
-				inner.classList.add("large");
-				const buttons = root.querySelector(".buttons");
-				if (buttons) buttons.style.display = "";
-			}
-		}
-	};
-	/**
-	* Once remove, save preferences
-	*/
-	BasicInfoV0.onRemove = function onRemove() {
-		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV0");
-		_preferences$49.x = parseInt(this._host.style.left, 10);
-		_preferences$49.y = parseInt(this._host.style.top, 10);
-		_preferences$49.reduce = inner ? inner.classList.contains("small") : _preferences$49.reduce;
-		const buttons = root.querySelector(".buttons");
-		_preferences$49.buttons = buttons ? buttons.style.display !== "none" : _preferences$49.buttons;
-		_preferences$49.magnet_top = this.magnet.TOP;
-		_preferences$49.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$49.magnet_left = this.magnet.LEFT;
-		_preferences$49.magnet_right = this.magnet.RIGHT;
-		_preferences$49.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	BasicInfoV0.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "EXTEND":
-				this.toggleMode();
-				break;
-		}
-	};
-	/**
-	* Switch window size
-	*/
-	BasicInfoV0.toggleMode = function toggleMode() {
-		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV0");
-		if (!inner) return;
-		inner.classList.toggle("small");
-		inner.classList.toggle("large");
-		if (inner.classList.contains("large")) {
-			const buttons = root.querySelector(".buttons");
-			if (buttons) buttons.style.display = "";
-			const bgAttr = inner.dataset.background;
-			if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
-				inner.style.backgroundImage = `url(${url})`;
-			});
-			return;
-		}
-		const bgAttr = inner.dataset.miniBackground;
-		if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
-			inner.style.backgroundImage = `url(${url})`;
-		});
-		const buttons = root.querySelector(".buttons");
-		if (buttons) buttons.style.display = "none";
-	};
-	/**
-	* Toggle the list of buttons
-	*/
-	BasicInfoV0.toggleButtons = function toggleButtons(event) {
-		const root = this.getRoot();
-		const buttons = root.querySelector(".buttons");
-		if (!buttons) return;
-		_preferences$49.buttons = buttons.style.display === "none";
-		if (_preferences$49.buttons) buttons.style.display = "";
-		else buttons.style.display = "none";
-		const type = _preferences$49.buttons ? "off" : "on";
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
-			const toggleBtn = root.querySelector(".toggle_btns");
-			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
-		});
-		event.stopImmediatePropagation();
-	};
-	/**
-	* Update UI elements
-	*
-	* @param {string} type identifier
-	* @param {number} val1
-	* @param {number} val2 (optional)
-	*/
-	BasicInfoV0.update = function update(type, val1, val2) {
-		const root = this.getRoot();
-		if (!root) return;
-		let perc = 100;
-		let color = "blue";
-		switch (type) {
-			case "name":
-			case "blvl":
-			case "jlvl":
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				break;
-			case "zeny": {
-				SessionStorage_default.zeny = val1;
-				const list = val1.toString().split("");
-				const count = list.length;
-				let str = "";
-				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = str;
-				});
-				break;
-			}
-			case "job":
-				SessionStorage_default.Character.job = val1;
-				root.querySelectorAll(".job_value").forEach((el) => {
-					el.textContent = MonsterTable_default[val1];
-				});
-				break;
-			case "bexp":
-			case "jexp": {
-				const expEl = root.querySelector(`.${type}`);
-				if (!val2) {
-					if (expEl) expEl.style.display = "none";
-					break;
-				}
-				if (expEl) {
-					expEl.style.display = "";
-					const bar = expEl.querySelector("div");
-					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
-					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				}
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
-				});
-				break;
-			}
-			case "weight":
-				root.querySelectorAll(".weight_value").forEach((el) => {
-					el.textContent = val1 / 10 | 0;
-				});
-				root.querySelectorAll(".weight_total").forEach((el) => {
-					el.textContent = val2 / 10 | 0;
-				});
-				root.querySelectorAll(".weight").forEach((el) => {
-					el.style.color = val1 < val2 / 2 ? "" : "red";
-					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				});
-				break;
-			case "hp":
-			case "sp":
-				perc = Math.floor(val1 * 100 / val2);
-				color = perc < 25 ? "red" : "blue";
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
-					el.textContent = val2;
-				});
-				if (perc <= 0) {
-					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
-						el.style.backgroundImage = "none";
-					});
-					break;
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_left`);
-					if (el) el.style.backgroundImage = `url(${url})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_middle`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.width = `${Math.floor(Math.min(perc, 100) * .77)}px`;
-					}
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_right`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.left = `${Math.floor(Math.min(perc, 100) * .77)}px`;
-					}
-				});
-				break;
-		}
-	};
-	BasicInfoV0_default = UIManager.addComponent(BasicInfoV0);
-}));
-//#endregion
-//#region src/UI/Components/Bank/Bank.html?raw
-var Bank_default$2;
-var init_Bank$3 = __esmMin((() => {
-	Bank_default$2 = "<div id=\"Bank\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"2771\"></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"container\" data-background=\"bank/bg_bank.bmp\">\r\n		<div class=\"uppercontainer\">\r\n			<div class=\"inbanktitle\">\r\n				<span class=\"text\" data-text=\"2772\"></span>\r\n			</div>\r\n			<div class=\"inbank currency\">0z</div>\r\n			<div class=\"onhandtitle\">\r\n				<span class=\"text\" data-text=\"2773\"></span>\r\n			</div>\r\n			<div class=\"onhand currency\">0z</div>\r\n		</div>\r\n		<div class=\"midcontainer\">\r\n			<input class=\"depo no-spinners\" type=\"text\" min=\"0\" maxlength=\"10\" />\r\n			<button\r\n				class=\"plus buttons\"\r\n				data-background=\"bank/btn_upper_out.bmp\"\r\n				data-hover=\"bank/btn_upper_over.bmp\"\r\n				data-down=\"bank/btn_upper_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2776\"></span>\r\n			</button>\r\n			<button\r\n				class=\"minus buttons\"\r\n				data-background=\"bank/btn_buttom_out.bmp\"\r\n				data-hover=\"bank/btn_buttom_over.bmp\"\r\n				data-down=\"bank/btn_buttom_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2777\"></span>\r\n			</button>\r\n			<button\r\n				class=\"deposit buttons\"\r\n				data-background=\"bank/btn_deposit_out.bmp\"\r\n				data-hover=\"bank/btn_deposit_over.bmp\"\r\n				data-down=\"bank/btn_deposit_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2774\"></span>\r\n			</button>\r\n			<button\r\n				class=\"withdraw buttons\"\r\n				data-background=\"bank/btn_withdraw_out.bmp\"\r\n				data-hover=\"bank/btn_withdraw_over.bmp\"\r\n				data-down=\"bank/btn_withdraw_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2775\"></span>\r\n			</button>\r\n			<div class=\"errorupdate\"></div>\r\n		</div>\r\n		<div class=\"lowercontainer\">\r\n			<button\r\n				class=\"max buttons\"\r\n				data-background=\"bank/btn_max_out.bmp\"\r\n				data-hover=\"bank/btn_max_over.bmp\"\r\n				data-down=\"bank/btn_max_press.bmp\"\r\n			>\r\n				<span class=\"name\" data-text=\"2778\"></span>\r\n			</button>\r\n			<button\r\n				class=\"tenmil buttons\"\r\n				data-background=\"bank/btn_1000mil_out.bmp\"\r\n				data-hover=\"bank/btn_1000mil_over.bmp\"\r\n				data-down=\"bank/btn_1000mil_press.bmp\"\r\n			>\r\n				<span class=\"name\">+ 10,000,000</span>\r\n			</button>\r\n			<button\r\n				class=\"onemil buttons\"\r\n				data-background=\"bank/btn_100mil_out.bmp\"\r\n				data-hover=\"bank/btn_100mil_over.bmp\"\r\n				data-down=\"bank/btn_100mil_press.bmp\"\r\n			>\r\n				<span class=\"name\">+ 1,000,000</span>\r\n			</button>\r\n			<button\r\n				class=\"hundtsn buttons\"\r\n				data-background=\"bank/btn_10mil_out.bmp\"\r\n				data-hover=\"bank/btn_10mil_over.bmp\"\r\n				data-down=\"bank/btn_10mil_press.bmp\"\r\n			>\r\n				<span class=\"name\">+ 100,000</span>\r\n			</button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Bank/Bank.css?raw
-var Bank_default$1;
-var init_Bank$2 = __esmMin((() => {
-	Bank_default$1 = ":host {\r\n	width: 280px;\r\n	height: 145px;\r\n	top: 50%;\r\n	left: 50%;\r\n}\r\n\r\n#Bank {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n\r\n#Bank .clear {\r\n	clear: both;\r\n}\r\n\r\n#Bank .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Bank .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Bank .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Bank .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Bank .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Bank .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Bank .container {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n\r\n#Bank .uppercontainer {\r\n	position: relative;\r\n	height: 53px;\r\n}\r\n\r\n#Bank .inbanktitle {\r\n	height: 15px;\r\n	position: relative;\r\n	width: 50px;\r\n	left: 30px;\r\n	top: 10px;\r\n}\r\n\r\n#Bank .onhandtitle {\r\n	position: relative;\r\n	height: 15px;\r\n	width: 55px;\r\n	left: 28px;\r\n}\r\n\r\n#Bank .inbank.currency {\r\n	position: relative;\r\n	left: 80px;\r\n	top: -5px;\r\n	width: 100px;\r\n	text-align: right;\r\n}\r\n\r\n#Bank .onhand.currency {\r\n	position: relative;\r\n	left: 80px;\r\n	top: -15px;\r\n	width: 100px;\r\n	text-align: right;\r\n}\r\n\r\n#Bank .midcontainer {\r\n	position: relative;\r\n	height: 58px;\r\n}\r\n\r\n#Bank input.depo.no-spinners {\r\n	position: relative;\r\n	left: 75px;\r\n	top: 20px;\r\n	width: 100px;\r\n	height: 10px;\r\n	background-color: #f7f7f7;\r\n	border-style: solid;\r\n	border: 1px;\r\n}\r\n\r\n#Bank .no-spinners::-webkit-inner-spin-button,\r\n#Bank .no-spinners::-webkit-outer-spin-button {\r\n	-webkit-appearance: none;\r\n	margin: 0;\r\n}\r\n\r\n#Bank .plus {\r\n	position: relative;\r\n	height: 10px;\r\n	width: 18px;\r\n	border: 0px;\r\n	left: 70px;\r\n	top: 10px;\r\n}\r\n#Bank .minus {\r\n	position: relative;\r\n	height: 10px;\r\n	width: 18px;\r\n	border: 0px;\r\n	left: 49px;\r\n	top: 20px;\r\n}\r\n\r\n#Bank .deposit {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 42px;\r\n	border: 0px;\r\n	left: 60px;\r\n	top: 5px;\r\n}\r\n\r\n#Bank .withdraw {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 42px;\r\n	border: 0px;\r\n	left: 15px;\r\n	top: 30px;\r\n}\r\n\r\n#Bank .errorupdate {\r\n	position: absolute;\r\n	height: 15px;\r\n	width: 150px;\r\n	border: 0px;\r\n	left: 15px;\r\n	top: 42px;\r\n	text-align: center;\r\n	color: red;\r\n}\r\n\r\n#Bank .lowercontainer {\r\n	position: relative;\r\n	height: 19px;\r\n}\r\n\r\n#Bank .max {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .tenmil {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .onemil {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .hundtsn {\r\n	position: relative;\r\n	width: 46px;\r\n	height: 16px;\r\n	border: 0px;\r\n	left: 40px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#Bank .buttons .name {\r\n	position: absolute;\r\n	top: -20px;\r\n	left: 0px;\r\n	visibility: hidden;\r\n	opacity: 0;\r\n	z-index: 1;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n	pointer-events: none; /* This will make the span not clickable */\r\n}\r\n\r\n#Bank .buttons:hover .name {\r\n	visibility: visible;\r\n	opacity: 1;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Bank/Bank.js
-/**
-* Check if input value is valid
-*/
-function CheckValue(value) {
-	const error = Bank.getRoot().querySelector(".errorupdate");
-	if (value === "") {
-		if (error) error.textContent = DB.getMessage(2781);
-		ChatBox_default.addText(DB.getMessage(2779), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return false;
-	}
-	if (typeof value === "string" && value !== "MAX" && !/^\d+$/.test(value)) {
-		if (error) error.textContent = DB.getMessage(2782);
-		ChatBox_default.addText(DB.getMessage(2488), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return false;
-	}
-	if (parseInt(value) <= 0) {
-		if (error) error.textContent = DB.getMessage(2784);
-		ChatBox_default.addText(DB.getMessage(2769), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return false;
-	}
-	if (parseInt(value) > maxInt) {
-		if (error) error.textContent = DB.getMessage(2783);
-		ChatBox_default.addText(DB.getMessage(2768), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return false;
-	}
-	return true;
-}
-/**
-* Send Request to server to deposit
-*/
-function sendDepositRequest(value) {
-	const root = Bank.getRoot();
-	const input = root.querySelector(".depo");
-	if (CheckValue(value) === false) {
-		input.value = "";
-		return;
-	}
-	if (value === "MAX") {
-		const inbank = root.querySelector(".inbank.currency");
-		const getval = parseInt(getIntValueFromFormattedString(inbank.textContent));
-		if (SessionStorage_default.zeny + getval > maxInt && getval < maxInt) value = parseInt(maxInt) - getval;
-		else if (SessionStorage_default.zeny === 0) {
-			const error = root.querySelector(".errorupdate");
-			if (error) error.textContent = DB.getMessage(2785);
-			ChatBox_default.addText(DB.getMessage(2770), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			input.value = "";
-			return;
-		} else value = SessionStorage_default.zeny;
-	}
-	const pkt = new PACKET.CZ.REQ_BANKING_DEPOSIT();
-	pkt.AID = SessionStorage_default.AID;
-	pkt.money = value;
-	Network.sendPacket(pkt);
-	input.value = "";
-}
-/**
-* Send Request to server to withdraw
-*/
-function sendWithdrawRequest(value) {
-	const root = Bank.getRoot();
-	const input = root.querySelector(".depo");
-	const error = root.querySelector(".errorupdate");
-	if (CheckValue(value) === false) {
-		input.value = "";
-		return;
-	}
-	if (value === "MAX") {
-		const inbank = root.querySelector(".inbank.currency");
-		const getval = parseInt(getIntValueFromFormattedString(inbank.textContent));
-		if (SessionStorage_default.zeny + getval > maxInt && SessionStorage_default.zeny < maxInt) value = parseInt(maxInt) - SessionStorage_default.zeny;
-		else if (getval === 0) {
-			if (error) error.textContent = DB.getMessage(2785);
-			ChatBox_default.addText(DB.getMessage(2770), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			input.value = "";
-			return;
-		} else value = getval;
-	}
-	if (parseInt(SessionStorage_default.zeny) + parseInt(value) > parseInt(maxInt)) {
-		if (error) error.textContent = DB.getMessage(2787);
-		ChatBox_default.addText(DB.getMessage(2459), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		input.value = "";
-		return;
-	}
-	const pkt = new PACKET.CZ.REQ_BANKING_WITHDRAW();
-	pkt.AID = SessionStorage_default.AID;
-	pkt.money = value;
-	Network.sendPacket(pkt);
-	input.value = "";
-}
-/**
-* Get int value from the input box
-*/
-function getIntValueFromFormattedString(formattedString) {
-	const strippedString = formattedString.replace(/,/g, "").replace("z", "");
-	const intValue = parseInt(strippedString, 10);
-	if (!isNaN(intValue)) return intValue;
-	else return null;
-}
-/**
-* Request to open bank
-*/
-function reqOpenBank() {
-	const pkt = new PACKET.CZ.REQ_BANK_OPEN();
-	pkt.AID = SessionStorage_default.AID;
-	Network.sendPacket(pkt);
-}
-/**
-* Request to close bank
-*/
-function reqCloseBank() {
-	const pkt = new PACKET.CZ.REQ_BANK_CLOSE();
-	pkt.AID = SessionStorage_default.AID;
-	Network.sendPacket(pkt);
-}
-var Bank, maxInt, _preferences$48, Bank_default;
-var init_Bank$1 = __esmMin((() => {
-	init_DBManager();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_KeyEventHandler();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Bank$3();
-	init_Bank$2();
-	init_ChatBox();
-	init_NpcBox();
-	init_NpcMenu();
-	init_InputBox();
-	Bank = new GUIComponent("Bank", Bank_default$1);
-	/**
-	* Render HTML
-	*/
-	Bank.render = () => Bank_default$2;
-	maxInt = 2147483647;
-	_preferences$48 = Preferences.get("Bank", {
-		x: 230,
-		y: 295
-	}, 2);
-	/**
-	* Initialize UI
-	*/
-	Bank.init = function init() {
-		const root = this.getRoot();
-		let isMax = false;
-		const inputDepo = root.querySelector(".depo");
-		this.draggable();
-		root.querySelector(".plus").addEventListener("click", () => {
-			if (isMax || inputDepo.value === "") inputDepo.value = 1;
-			else inputDepo.value = parseInt(inputDepo.value) + 1;
-			isMax = false;
-			inputDepo.select();
-		});
-		root.querySelector(".minus").addEventListener("click", () => {
-			if (isMax || inputDepo.value === "") inputDepo.value = 0;
-			else inputDepo.value = Math.max(parseInt(inputDepo.value) - 1, 0);
-			isMax = false;
-			inputDepo.select();
-		});
-		root.querySelector(".max").addEventListener("click", () => {
-			isMax = true;
-			inputDepo.value = "MAX";
-			inputDepo.select();
-		});
-		root.querySelector(".tenmil").addEventListener("click", () => {
-			isMax = false;
-			inputDepo.value = addValueToInput(inputDepo.value, 1e7);
-			inputDepo.select();
-		});
-		root.querySelector(".onemil").addEventListener("click", () => {
-			isMax = false;
-			inputDepo.value = addValueToInput(inputDepo.value, 1e6);
-			inputDepo.select();
-		});
-		root.querySelector(".hundtsn").addEventListener("click", () => {
-			isMax = false;
-			inputDepo.value = addValueToInput(inputDepo.value, 1e5);
-			inputDepo.select();
-		});
-		function addValueToInput(inputValue, addValue) {
-			if (isMax && inputValue === "MAX") return "MAX";
-			const currentValue = parseInt(inputValue) || 0;
-			if (!isMax) return currentValue + addValue;
-		}
-		root.querySelector(".deposit").addEventListener("click", () => {
-			sendDepositRequest(inputDepo.value);
-		});
-		root.querySelector(".withdraw").addEventListener("click", () => {
-			sendWithdrawRequest(inputDepo.value);
-		});
-		root.querySelector(".close").addEventListener("click", reqCloseBank);
-		inputDepo.addEventListener("click", () => {
-			inputDepo.select();
-		});
-	};
-	/**
-	* Append to body
-	*/
-	Bank.onAppend = function onAppend() {
-		const root = this.getRoot();
-		this._host.style.top = Math.min(Math.max(0, _preferences$48.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$48.x), Renderer.width - this._host.offsetWidth) + "px";
-		const input = root.querySelector(".depo");
-		input.value = "";
-		input.focus();
-	};
-	/**
-	* Key Handler
-	*/
-	Bank.onKeyDown = function onKeyDown(event) {
-		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
-		if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
-		if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
-		if (this.isEditableFocused()) {
-			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-				reqCloseBank();
-				event.stopImmediatePropagation();
-				return false;
-			}
-			if (event.which === KEYS.ENTER) {
-				event.stopImmediatePropagation();
-				return false;
-			}
-			event.stopImmediatePropagation();
-			return true;
-		}
-		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-			reqCloseBank();
-			event.stopImmediatePropagation();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Process shortcut
-	*/
-	Bank.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-	};
-	/**
-	* Request to toggle open/close bank
-	*/
-	Bank.toggle = function toggle() {
-		if (!Bank.__active) reqOpenBank();
-		else reqCloseBank();
-	};
-	/**
-	* Remove Bank from window
-	*/
-	Bank.onRemove = function onRemove() {
-		_preferences$48.y = parseInt(this._host.style.top, 10);
-		_preferences$48.x = parseInt(this._host.style.left, 10);
-		_preferences$48.save();
-		const error = this.getRoot().querySelector(".errorupdate");
-		if (error) error.textContent = "";
-	};
-	/**
-	* Public methods for Engine/MapEngine/Bank.js
-	*/
-	Bank.updateBankDisplay = function updateBankDisplay(bankMoney, handMoney) {
-		const root = this.getRoot();
-		const inbank = root.querySelector(".inbank.currency");
-		const onhand = root.querySelector(".onhand.currency");
-		if (inbank) inbank.textContent = bankMoney.toLocaleString() + "z";
-		if (onhand) onhand.textContent = handMoney.toLocaleString() + "z";
-	};
-	Bank.setError = function setError(message) {
-		const error = this.getRoot().querySelector(".errorupdate");
-		if (error) error.textContent = message;
-	};
-	Bank.clearError = function clearError() {
-		const error = this.getRoot().querySelector(".errorupdate");
-		if (error) error.textContent = "";
-	};
-	Bank.clearInput = function clearInput() {
-		const input = this.getRoot().querySelector(".depo");
-		if (input) input.value = "";
-	};
-	Bank.focusInput = function focusInput() {
-		const input = this.getRoot().querySelector(".depo");
-		if (input) input.focus();
-	};
-	Bank.getBankAmount = function getBankAmount() {
-		const inbank = this.getRoot().querySelector(".inbank.currency");
-		if (inbank) return inbank.textContent;
-		return "0z";
-	};
-	Bank.mouseMode = GUIComponent.MouseMode.STOP;
-	Bank.captureKeyEvents = true;
-	Bank.needFocus = true;
-	Bank_default = UIManager.addComponent(Bank);
-}));
-//#endregion
 //#region src/UI/Components/Achievement/Achievement.html?raw
 var Achievement_default$2;
 var init_Achievement$3 = __esmMin((() => {
@@ -233908,7 +233492,7 @@ var init_Achievement$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Achievement/Achievement.js
-var _preferences$47, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
+var _preferences$38, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
 var init_Achievement$1 = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -233922,7 +233506,7 @@ var init_Achievement$1 = __esmMin((() => {
 	init_ItemInfo();
 	init_Achievement$3();
 	init_Achievement$2();
-	_preferences$47 = Preferences.get("Achievement", {
+	_preferences$38 = Preferences.get("Achievement", {
 		x: 100,
 		y: 100
 	}, 1);
@@ -234065,15 +233649,15 @@ var init_Achievement$1 = __esmMin((() => {
 			this._host.style.display = "none";
 		}
 		onAppend() {
-			this._host.style.left = `${_preferences$47.x}px`;
-			this._host.style.top = `${_preferences$47.y}px`;
+			this._host.style.left = `${_preferences$38.x}px`;
+			this._host.style.top = `${_preferences$38.y}px`;
 			this._fixPositionOverflow();
 			this.updateHeaderAndView();
 		}
 		onRemove() {
-			_preferences$47.x = parseInt(this._host.style.left, 10);
-			_preferences$47.y = parseInt(this._host.style.top, 10);
-			_preferences$47.save();
+			_preferences$38.x = parseInt(this._host.style.left, 10);
+			_preferences$38.y = parseInt(this._host.style.top, 10);
+			_preferences$38.save();
 		}
 		toggle() {
 			if (this.__active && this._host.style.display !== "none") this._host.style.display = "none";
@@ -234471,884 +234055,6 @@ var init_Achievement$1 = __esmMin((() => {
 	Achievement_default = UIManager.addComponent(Achievement);
 }));
 //#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.html?raw
-var BasicInfoV3_default$2;
-var init_BasicInfoV3$2 = __esmMin((() => {
-	BasicInfoV3_default$2 = "<div\r\n	id=\"BasicInfoV3\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"ro_menu_icon/btn_show1.bmp\"\r\n		data-hover=\"ro_menu_icon/btn_show2.bmp\"\r\n		data-down=\"ro_menu_icon/btn_show3.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"ro_menu_icon/btn_hide1.bmp\"\r\n		data-hover=\"ro_menu_icon/btn_hide2.bmp\"\r\n		data-down=\"ro_menu_icon/btn_hide3.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\">\r\n		<div\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/status_1.bmp\"\r\n			data-down=\"ro_menu_icon/status_1.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</div>\r\n		<div\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/equip_1.bmp\"\r\n			data-down=\"ro_menu_icon/equip_2.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</div>\r\n		<div\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/skill_1.bmp\"\r\n			data-down=\"ro_menu_icon/skill_2.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</div>\r\n		<div\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/item_1.bmp\"\r\n			data-down=\"ro_menu_icon/item_2.bmp\"\r\n		>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</div>\r\n		<div\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/party_1.bmp\"\r\n			data-down=\"ro_menu_icon/party_2.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/guild_1.bmp\"\r\n			data-down=\"ro_menu_icon/guild_2.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</div>\r\n		<div\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/battle_1.bmp\"\r\n			data-down=\"ro_menu_icon/battle_2.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</div>\r\n		<div\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/quest_1.bmp\"\r\n			data-down=\"ro_menu_icon/quest_2.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</div>\r\n		<div\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/map_1.bmp\"\r\n			data-down=\"ro_menu_icon/map_2.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</div>\r\n		<div\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/navigation_1.bmp\"\r\n			data-down=\"ro_menu_icon/navigation_2.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</div>\r\n		<div\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/option_1.bmp\"\r\n			data-down=\"ro_menu_icon/option_2.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</div>\r\n		<div\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/bank_1.bmp\"\r\n			data-down=\"ro_menu_icon/bank_2.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</div>\r\n		<div\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/rec_1.bmp\"\r\n			data-down=\"ro_menu_icon/rec_2.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</div>\r\n		<div\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/mail_1.bmp\"\r\n			data-down=\"ro_menu_icon/mail_2.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</div>\r\n		<div\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/achievement_1.bmp\"\r\n			data-down=\"ro_menu_icon/achievement_2.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.css?raw
-var BasicInfoV3_default$1;
-var init_BasicInfoV3$1 = __esmMin((() => {
-	BasicInfoV3_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV3 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV3.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV3.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV3.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV3.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV3.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV3.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV3.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV3 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV3 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV3 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV3 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV3 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV3 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .hp_bar,\r\n#BasicInfoV3 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV3 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV3 .large .hp_bar div,\r\n#BasicInfoV3 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV3 .large div.hp_bar_perc,\r\n#BasicInfoV3 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV3 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .bexp,\r\n#BasicInfoV3 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV3 .large .bexp div,\r\n#BasicInfoV3 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV3 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV3 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV3 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV3 .buttons:hover {\r\n}\r\n#BasicInfoV3 .buttons div {\r\n	float: left;\r\n	width: 36px;\r\n	height: 36px;\r\n	border: none;\r\n	margin: 0px;\r\n}\r\n#BasicInfoV3 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV3 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV3 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV3 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV3 .buttons div .name {\r\n	display: none;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
-var BasicInfoV3, _preferences$46, BasicInfoV3_default;
-var init_BasicInfoV3 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_SessionStorage();
-	init_UIManager();
-	init_GUIComponent();
-	init_Configs();
-	init_PacketVerManager();
-	init_Inventory();
-	init_Equipment();
-	init_PartyFriends();
-	init_Guild$1();
-	init_Bank$1();
-	init_Escape();
-	init_WorldMap();
-	init_Rodex$1();
-	init_WinStats();
-	init_Navigation();
-	init_SkillList();
-	init_Quest$1();
-	init_Achievement$1();
-	init_BasicInfoV3$2();
-	init_BasicInfoV3$1();
-	BasicInfoV3 = new GUIComponent("BasicInfoV3", BasicInfoV3_default$1);
-	/**
-	* Stored data
-	*/
-	BasicInfoV3.base_exp = 0;
-	BasicInfoV3.base_exp_next = 1;
-	BasicInfoV3.job_exp = 0;
-	BasicInfoV3.job_exp_next = -1;
-	BasicInfoV3.weight = 0;
-	BasicInfoV3.weight_max = 1;
-	BasicInfoV3.render = () => BasicInfoV3_default$2;
-	_preferences$46 = Preferences.get("BasicInfoV3", {
-		x: 0,
-		y: 0,
-		reduce: true,
-		buttons: true,
-		magnet_top: true,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	BasicInfoV3.init = function init() {
-		const root = this.getRoot();
-		root.querySelectorAll(".topbar div").forEach((el) => {
-			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		});
-		const rightBtn = root.querySelector(".topbar .right");
-		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV3.toggleMode());
-		root.querySelectorAll(".toggle_btns").forEach((btn) => {
-			btn.addEventListener("mousedown", (e) => BasicInfoV3.toggleButtons(e));
-		});
-		root.querySelectorAll(".buttons div").forEach((el) => {
-			el.addEventListener("mousedown", () => {
-				switch (el.id) {
-					case "item":
-						InventoryController.getUI().toggle();
-						break;
-					case "info":
-						WinStatsController.getUI().toggle();
-						break;
-					case "equip":
-						EquipmentController.getUI().toggle();
-						break;
-					case "skill":
-						Controller$4.getUI().toggle();
-						break;
-					case "option":
-						Escape_default.ui.toggle();
-						break;
-					case "party":
-						controller.toggle();
-						break;
-					case "guild":
-						Guild_default.toggle();
-						break;
-					case "map":
-						WorldMap_default.toggle();
-						break;
-					case "bank":
-						Bank_default.toggle();
-						break;
-					case "quest":
-						Controller$3.getUI().toggle();
-						break;
-					case "mail":
-						Rodex_default.toggle();
-						break;
-					case "navigation":
-						Navigation_default.toggle();
-						break;
-					case "achievment":
-						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
-						break;
-				}
-			});
-		});
-		this.draggable();
-	};
-	/**
-	* When append the element to html
-	* Execute elements in memory
-	*/
-	BasicInfoV3.onAppend = function onAppend() {
-		const root = this.getRoot();
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$46.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$46.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$46.magnet_top;
-		this.magnet.BOTTOM = _preferences$46.magnet_bottom;
-		this.magnet.LEFT = _preferences$46.magnet_left;
-		this.magnet.RIGHT = _preferences$46.magnet_right;
-		const inner = root.querySelector("#BasicInfoV3");
-		if (inner) {
-			inner.classList.remove("small", "large");
-			if (_preferences$46.reduce) inner.classList.add("small");
-			else inner.classList.add("large");
-		}
-		const buttons = root.querySelector(".buttons");
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$46.buttons) {
-			if (buttons) buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			if (buttons) buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
-		}
-		const battle = root.querySelector("#battle");
-		const replay = root.querySelector("#replay");
-		if (battle) battle.style.display = "none";
-		if (replay) replay.style.display = "none";
-	};
-	/**
-	* Once remove, save preferences
-	*/
-	BasicInfoV3.onRemove = function onRemove() {
-		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV3");
-		const buttons = root.querySelector(".buttons");
-		_preferences$46.x = parseInt(this._host.style.left, 10);
-		_preferences$46.y = parseInt(this._host.style.top, 10);
-		_preferences$46.reduce = inner ? inner.classList.contains("small") : _preferences$46.reduce;
-		_preferences$46.buttons = buttons ? buttons.style.display !== "none" : _preferences$46.buttons;
-		_preferences$46.magnet_top = this.magnet.TOP;
-		_preferences$46.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$46.magnet_left = this.magnet.LEFT;
-		_preferences$46.magnet_right = this.magnet.RIGHT;
-		_preferences$46.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	BasicInfoV3.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "EXTEND":
-				this.toggleMode();
-				break;
-		}
-	};
-	/**
-	* Switch window size
-	*/
-	BasicInfoV3.toggleMode = function toggleMode() {
-		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV3");
-		if (!inner) return;
-		inner.classList.toggle("small");
-		inner.classList.toggle("large");
-		const buttons = root.querySelector(".buttons");
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$46.buttons) {
-			if (buttons) buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			if (buttons) buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
-		}
-	};
-	/**
-	* Toggle the list of buttons
-	*/
-	BasicInfoV3.toggleButtons = function toggleButtons(event) {
-		const root = this.getRoot();
-		const buttons = root.querySelector(".buttons");
-		if (!buttons) return;
-		_preferences$46.buttons = buttons.style.display === "none";
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$46.buttons) {
-			buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
-		}
-		event.stopImmediatePropagation();
-	};
-	/**
-	* Update UI elements
-	*
-	* @param {string} type identifier
-	* @param {number} val1
-	* @param {number} val2 (optional)
-	*/
-	BasicInfoV3.update = function update(type, val1, val2) {
-		const root = this.getRoot();
-		if (!root) return;
-		let perc = 100;
-		let color = "blue";
-		switch (type) {
-			case "name":
-			case "blvl":
-			case "jlvl":
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				break;
-			case "zeny": {
-				SessionStorage_default.zeny = val1;
-				const list = val1.toString().split("");
-				const count = list.length;
-				let str = "";
-				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = str;
-				});
-				break;
-			}
-			case "job":
-				SessionStorage_default.Character.job = val1;
-				root.querySelectorAll(".job_value").forEach((el) => {
-					el.textContent = MonsterTable_default[val1];
-				});
-				break;
-			case "bexp":
-			case "jexp": {
-				const expEl = root.querySelector(`.${type}`);
-				if (!val2) {
-					if (expEl) expEl.style.display = "none";
-					break;
-				}
-				if (expEl) {
-					expEl.style.display = "";
-					const bar = expEl.querySelector("div");
-					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
-					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				}
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
-				});
-				break;
-			}
-			case "weight":
-				root.querySelectorAll(".weight_value").forEach((el) => {
-					el.textContent = val1 / 10 | 0;
-				});
-				root.querySelectorAll(".weight_total").forEach((el) => {
-					el.textContent = val2 / 10 | 0;
-				});
-				root.querySelectorAll(".weight").forEach((el) => {
-					el.style.color = val1 < val2 / 2 ? "" : "red";
-					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				});
-				break;
-			case "hp":
-			case "sp":
-				perc = Math.floor(val1 * 100 / val2);
-				color = perc < 25 ? "red" : "blue";
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
-					el.textContent = val2;
-				});
-				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
-					el.textContent = `${perc}%`;
-				});
-				if (perc <= 0) {
-					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
-						el.style.backgroundImage = "none";
-					});
-					break;
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_left`);
-					if (el) el.style.backgroundImage = `url(${url})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_middle`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_right`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				break;
-		}
-	};
-	BasicInfoV3_default = UIManager.addComponent(BasicInfoV3);
-}));
-//#endregion
-//#region src/UI/Components/CheckAttendance/CheckAttendance.html?raw
-var CheckAttendance_default$2;
-var init_CheckAttendance$2 = __esmMin((() => {
-	CheckAttendance_default$2 = "<div id=\"CheckAttendance\">\r\n	<div class=\"titlebar\" data-background=\"check_attendance/attendance_bg.bmp\">\r\n		<div class=\"top-panel\">\r\n			<div class=\"top-panel-reward\">\r\n				<div class=\"text\">Check Reward</div>\r\n			</div>\r\n			<div class=\"top-panel-period\"></div>\r\n		</div>\r\n		<div class=\"left-panel\">\r\n			<ul class=\"days-list\"></ul>\r\n		</div>\r\n		<div class=\"right-panel\">\r\n			<div class=\"total-days\"></div>\r\n			<div class=\"npc\"></div>\r\n			<div class=\"remaining-days\">\r\n				<div class=\"remaining-day\">\r\n					<div class=\"remaining-day-text\"></div>\r\n				</div>\r\n				<div class=\"remaining-text\">\r\n					<div class=\"remaining-text-div\">Day</div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"bottom-panel\">\r\n			<div class=\"close-container\">\r\n				<ui-button\r\n					class=\"close-container-btn\"\r\n					bg=\"check_attendance/bt_ok_normal.bmp\"\r\n					down=\"check_attendance/bt_ok_press.bmp\"\r\n					>Close</ui-button\r\n				>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CheckAttendance/CheckAttendance.css?raw
-var CheckAttendance_default$1;
-var init_CheckAttendance$1 = __esmMin((() => {
-	CheckAttendance_default$1 = ":host {\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance {\r\n	position: absolute;\r\n	width: 488px;\r\n	height: 413px;\r\n}\r\n\r\n#CheckAttendance .titlebar {\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel {\r\n	width: 100%;\r\n	height: 85px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward {\r\n	width: 100%;\r\n	height: 70px;\r\n	position: relative;\r\n	display: flex;\r\n	justify-content: center;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-reward .text {\r\n	font-weight: bolder;\r\n	color: #633921;\r\n	display: table;\r\n	position: absolute;\r\n	top: 55%;\r\n}\r\n\r\n#CheckAttendance .titlebar .top-panel .top-panel-period {\r\n	width: 100%;\r\n	height: 15px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #a55239;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel {\r\n	width: 335px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list {\r\n	list-style: none;\r\n	padding-left: 25px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item {\r\n	float: left;\r\n	width: 58px;\r\n	height: 60px;\r\n	margin: 2px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item {\r\n	width: 100%;\r\n	height: 40px;\r\n	position: relative;\r\n	background-position: center;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .item-quantity {\r\n	position: absolute;\r\n	bottom: 2px;\r\n	right: 15px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -10px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item:hover .name {\r\n	display: table;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .item .name {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .day {\r\n	width: 100%;\r\n	height: 20px;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #394aa5;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden,\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .completed {\r\n	position: absolute;\r\n	width: 58px;\r\n	height: 60px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#CheckAttendance .titlebar .left-panel .days-list .attendance-item .checked-hidden {\r\n	display: none;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel {\r\n	width: 152px;\r\n	height: 270px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .total-days {\r\n	width: 80%;\r\n	height: 85px;\r\n	text-align: center;\r\n	display: flex;\r\n	align-items: center;\r\n	font-weight: bold;\r\n	color: #a53963;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .npc {\r\n	width: 100%;\r\n	height: 105px;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days {\r\n	width: 100%;\r\n	height: 80px;\r\n	font-weight: bold;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day {\r\n	height: 100%;\r\n	width: 85px;\r\n	float: left;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-day .remaining-day-text {\r\n	position: absolute;\r\n	right: 10px;\r\n	bottom: 20px;\r\n	font-weight: bolder;\r\n	font-size: 20px;\r\n	color: white;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text {\r\n	height: 100%;\r\n	width: 35px;\r\n	float: left;\r\n	position: relative;\r\n	font-weight: bolder;\r\n}\r\n\r\n#CheckAttendance .titlebar .right-panel .remaining-days .remaining-text .remaining-text-div {\r\n	position: absolute;\r\n	left: 3px;\r\n	bottom: 20px;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel {\r\n	width: 100%;\r\n	height: 58px;\r\n	float: left;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container {\r\n	width: 100%;\r\n	height: 100%;\r\n	position: relative;\r\n}\r\n\r\n#CheckAttendance .titlebar .bottom-panel .close-container .close-container-btn {\r\n	width: 146px;\r\n	height: 30px;\r\n	border: 0;\r\n	font-weight: bold;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	position: absolute;\r\n	top: 35%;\r\n	left: 35%;\r\n	display: inline-block;\r\n	text-align: center;\r\n	line-height: 30px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CheckAttendance/CheckAttendance.js
-/**
-* Request Attendance Item
-*/
-function onClickAttendance(e) {
-	const root = CheckAttendance.getRoot();
-	const el = e.currentTarget;
-	const id = el.id;
-	const checkedHidden = root.querySelector(`#${id} .checked-hidden`);
-	if (checkedHidden) checkedHidden.className = "checked";
-	const completedDiv = document.createElement("div");
-	completedDiv.className = "completed";
-	completedDiv.dataset.background = "check_attendance/bt_slot_complete.tga";
-	el.appendChild(completedDiv);
-	GUIComponent.processDataAttrs(completedDiv);
-	const total_days_string = `${parseInt(_checkAttendanceData / 10) + 1} Day attendance success`;
-	const totalDaysEl = root.querySelector(".total-days");
-	if (totalDaysEl) totalDaysEl.innerHTML = total_days_string;
-	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
-	Network.sendPacket(_pkt);
-}
-var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$45, CheckAttendance_default;
-var init_CheckAttendance = __esmMin((() => {
-	init_DBManager();
-	init_Preferences$1();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_CheckAttendance$2();
-	init_CheckAttendance$1();
-	init_ChatBox();
-	init_Elements();
-	CheckAttendance = new GUIComponent("CheckAttendance", CheckAttendance_default$1);
-	CheckAttendance.render = () => CheckAttendance_default$2;
-	_preferences$45 = Preferences.get("CheckAttendance", {
-		x: 200,
-		y: 200
-	}, 1);
-	/**
-	* Initialize the component (event listener, etc.)
-	*/
-	CheckAttendance.init = function init() {
-		_CheckAttendanceInfo = DB.getCheckAttendanceInfo();
-		const root = this.getRoot();
-		const baseEl = root.querySelector(".base");
-		if (baseEl) baseEl.addEventListener("mousedown", (event) => {
-			event.stopImmediatePropagation();
-			event.preventDefault();
-		});
-		root.querySelector(".close-container-btn").addEventListener("click", () => {
-			CheckAttendance._host.style.display = "none";
-		});
-		this.draggable(root.querySelector(".titlebar"));
-	};
-	/**
-	* Once append to the DOM, start to position the UI
-	*/
-	CheckAttendance.onAppend = function onAppend() {
-		Object.assign(this._host.style, {
-			top: `${Math.min(Math.max(0, _preferences$45.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
-			left: `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
-		});
-		if (!_preferences$45.show) this._host.style.display = "none";
-		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
-			CheckAttendance.updateUI();
-			this.focus();
-		} else ChatBox_default.addText("Currently there is no attendance check event.", ChatBox_default.TYPE.ERROR | ChatBox_default.TYPE.SELF);
-	};
-	/**
-	* Window Shortcuts
-	*/
-	CheckAttendance.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				if (this._host.style.display === "none") {
-					this._host.style.display = "";
-					this.focus();
-				} else this._host.style.display = "none";
-				break;
-		}
-	};
-	/**
-	* Show/Hide UI
-	*/
-	CheckAttendance.toggle = function toggle() {
-		if (this._host.style.display !== "none") this._host.style.display = "none";
-		else {
-			const _pkt = new PACKET.CZ.UI_OPEN();
-			_pkt.UIType = 5;
-			Network.sendPacket(_pkt);
-		}
-	};
-	/**
-	* Set Data to Attendance
-	*/
-	CheckAttendance.setData = function setData(data) {
-		_checkAttendanceData = data;
-	};
-	/**
-	* Update CheckAttendance UI
-	*/
-	CheckAttendance.updateUI = function updateUI() {
-		const root = this.getRoot();
-		let already_requested = 0;
-		let attendance_count = 0;
-		let current_day = 1;
-		if (_CheckAttendanceInfo.Config) {
-			const regex = /(\d{4})(\d{2})(\d{2})/;
-			const start = regex.exec(_CheckAttendanceInfo.Config.StartDate);
-			const end = regex.exec(_CheckAttendanceInfo.Config.EndDate);
-			const period_string = `Event Period: From ${start[2]}/${start[3]} ~ Until ${end[2]}/${end[3]} (Month/Day) 24:00`;
-			const periodEl = root.querySelector(".top-panel-period");
-			if (periodEl) periodEl.innerHTML = period_string;
-			if (_checkAttendanceData >= 0) {
-				already_requested = _checkAttendanceData % 10;
-				attendance_count = parseInt(_checkAttendanceData / 10);
-				current_day = attendance_count + 1;
-				const total_days_string = attendance_count >= 20 || already_requested ? `${attendance_count} Day attendance success` : `Click the item to claim day ${current_day} reward`;
-				const end_date = /* @__PURE__ */ new Date(`${end[1]}-${end[2]}-${end[3]}`);
-				const now_date = /* @__PURE__ */ new Date();
-				const remaining_days = Math.round(Math.abs((end_date.getTime() - now_date.getTime()) / (1e3 * 3600 * 24)));
-				const totalDaysEl = root.querySelector(".total-days");
-				if (totalDaysEl) totalDaysEl.innerHTML = total_days_string;
-				const remainingEl = root.querySelector(".remaining-day-text");
-				if (remainingEl) remainingEl.textContent = remaining_days;
-			}
-		}
-		if (_CheckAttendanceInfo.Rewards) {
-			const daysList = root.querySelector(".days-list");
-			for (let i = 0; i < 20; i++) {
-				const item = DB.getItemInfo(_CheckAttendanceInfo.Rewards[i].item_id);
-				const day = i + 1;
-				const background = !already_requested && day == current_day ? `data-background="check_attendance/bt_slot_a.bmp" data-down="check_attendance/bt_slot_press.bmp"` : "";
-				const checked = day <= attendance_count ? "checked" : "checked-hidden";
-				const slot_complete_string = day > (already_requested ? attendance_count - 1 : attendance_count) ? "bt_slot_complete" : "bt_slot_off";
-				const item_slot = `<li id="attendance_day_${i}" class="attendance-item" ${background}><div class="item" data-background="${DB.INTERFACE_PATH}item/${item.identifiedResourceName}.bmp"><span class="item-quantity">${_CheckAttendanceInfo.Rewards[i].quantity}</span><span class="name">${item.identifiedDisplayName}</span><div class="${checked}" data-background="check_attendance/${slot_complete_string}.tga"></div></div><div class="day">${day} Day</div></li>`;
-				if (daysList) daysList.insertAdjacentHTML("beforeend", item_slot);
-				if (!already_requested && day == current_day) {
-					const dayEl = root.querySelector(`#attendance_day_${i}`);
-					if (dayEl) {
-						dayEl.addEventListener("click", onClickAttendance);
-						dayEl.classList.add("event_add_cursor");
-					}
-				}
-			}
-			const dataAttrSelector = "[data-background],[data-hover],[data-down],[data-active],[data-text],[data-preload]";
-			if (daysList) daysList.querySelectorAll(dataAttrSelector).forEach((node) => {
-				GUIComponent.processDataAttrs(node);
-			});
-		}
-	};
-	/**
-	* Clean CheckAttendance UI
-	*/
-	CheckAttendance.cleanUI = function cleanUI() {
-		const root = CheckAttendance.getRoot();
-		const periodEl = root.querySelector(".top-panel-period");
-		if (periodEl) periodEl.innerHTML = "";
-		const daysListEl = root.querySelector(".days-list");
-		if (daysListEl) daysListEl.innerHTML = "";
-		const totalDaysEl = root.querySelector(".total-days");
-		if (totalDaysEl) totalDaysEl.innerHTML = "";
-		const remainingEl = root.querySelector(".remaining-day-text");
-		if (remainingEl) remainingEl.innerHTML = "";
-	};
-	/**
-	* Close the window
-	*/
-	CheckAttendance.onClose = function onClose() {
-		CheckAttendance._host.style.display = "none";
-	};
-	CheckAttendance_default = UIManager.addComponent(CheckAttendance);
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.html?raw
-var BasicInfoV4_default$2;
-var init_BasicInfoV4$2 = __esmMin((() => {
-	BasicInfoV4_default$2 = "<div\r\n	id=\"BasicInfoV4\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_press.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_close_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_close_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_close_press.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\" data-background=\"menu_icon/bg_menu.tga\">\r\n		<button\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_status.bmp\"\r\n			data-down=\"menu_icon/bt_status_press.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</button>\r\n		<button\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_equip.bmp\"\r\n			data-down=\"menu_icon/bt_equip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</button>\r\n		<button\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_item.bmp\"\r\n			data-down=\"menu_icon/bt_item_press.bmp\"\r\n		>\r\n			<div\r\n				class=\"btn_overlay\"\r\n				data-background=\"menu_icon/bt_item_new.bmp\"\r\n				data-down=\"menu_icon/bt_item_new_press.bmp\"\r\n			></div>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</button>\r\n		<button\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_skill.bmp\"\r\n			data-down=\"menu_icon/bt_skill_press.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</button>\r\n		<button\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_party.bmp\"\r\n			data-down=\"menu_icon/bt_party_press.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</button>\r\n		<button\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_guild.bmp\"\r\n			data-down=\"menu_icon/bt_guild_press.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</button>\r\n		<button\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_battle.bmp\"\r\n			data-down=\"menu_icon/bt_battle_press.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</button>\r\n		<button\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_quest.bmp\"\r\n			data-down=\"menu_icon/bt_quest_press.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</button>\r\n		<button\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_map.bmp\"\r\n			data-down=\"menu_icon/bt_map_press.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</button>\r\n		<button\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_navigation.bmp\"\r\n			data-down=\"menu_icon/bt_navigation_press.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</button>\r\n		<button\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_option.bmp\"\r\n			data-down=\"menu_icon/bt_option_press.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</button>\r\n		<button\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_bank.bmp\"\r\n			data-down=\"menu_icon/bt_bank_press.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</button>\r\n		<button\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_rec.bmp\"\r\n			data-down=\"menu_icon/bt_rec_press.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</button>\r\n		<button\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_mail.bmp\"\r\n			data-down=\"menu_icon/bt_mail_press.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</button>\r\n		<button\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_achievement.bmp\"\r\n			data-down=\"menu_icon/bt_achievement_press.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</button>\r\n		<button\r\n			id=\"tipbox\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_tip.bmp\"\r\n			data-down=\"menu_icon/bt_tip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Tipbox (Alt + D)</span>\r\n		</button>\r\n		<button\r\n			id=\"shortcut\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_keyboard.bmp\"\r\n			data-down=\"menu_icon/bt_keyboard_press.bmp\"\r\n		>\r\n			<span class=\"name\">ShortCut Description</span>\r\n		</button>\r\n		<button\r\n			id=\"attendance\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_attendance.bmp\"\r\n			data-down=\"menu_icon/bt_attendance_press.bmp\"\r\n		>\r\n			<span class=\"name\">Attendance Check</span>\r\n		</button>\r\n		<button\r\n			id=\"agency\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_adventureragency.bmp\"\r\n			data-down=\"menu_icon/bt_adventureragency_press.bmp\"\r\n		>\r\n			<span class=\"name\">Adventurer's Agency (Ctrl + Z)</span>\r\n		</button>\r\n		<!--<button class=\"reputation\" data-background=\"menu_icon/\" data-hover=\"menu_icon/\" data-down=\"menu_icon/\"></button> -->\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.css?raw
-var BasicInfoV4_default$1;
-var init_BasicInfoV4$1 = __esmMin((() => {
-	BasicInfoV4_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV4 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV4.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV4.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV4.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV4.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV4.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV4.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV4.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV4 .topbar {\r\n	height: 16px;\r\n}\r\n#BasicInfoV4 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV4 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV4 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV4 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV4 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV4 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .hp_bar,\r\n#BasicInfoV4 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV4 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV4 .large .hp_bar div,\r\n#BasicInfoV4 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV4 .large div.hp_bar_perc,\r\n#BasicInfoV4 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV4 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .bexp,\r\n#BasicInfoV4 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV4 .large .bexp div,\r\n#BasicInfoV4 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV4 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV4 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	display: grid;\r\n	grid-template-columns: auto auto auto auto auto;\r\n	justify-items: center;\r\n	background-position: left bottom;\r\n}\r\n#BasicInfoV4 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV4 .buttons:hover {\r\n}\r\n#BasicInfoV4 .buttons button {\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n	background: transparent;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV4 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV4 .buttons button .name {\r\n	pointer-events: none;\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV4 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV4 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV4 .buttons .btn_overlay {\r\n	pointer-events: none;\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -6px;\r\n	left: 0;\r\n	display: none;\r\n}\r\n#BasicInfoV4 .buttons button:active .btn_overlay {\r\n	pointer-events: none;\r\n	top: -5px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
-var BasicInfoV4, _preferences$44, BasicInfoV4_default;
-var init_BasicInfoV4 = __esmMin((() => {
-	init_DBManager();
-	init_Configs();
-	init_PacketVerManager();
-	init_MonsterTable();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_SessionStorage();
-	init_UIManager();
-	init_GUIComponent();
-	init_Inventory();
-	init_Equipment();
-	init_PartyFriends();
-	init_Guild$1();
-	init_Bank$1();
-	init_Escape();
-	init_WorldMap();
-	init_CheckAttendance();
-	init_Rodex$1();
-	init_WinStats();
-	init_Navigation();
-	init_SkillList();
-	init_Quest$1();
-	init_Achievement$1();
-	init_BasicInfoV4$2();
-	init_BasicInfoV4$1();
-	BasicInfoV4 = new GUIComponent("BasicInfoV4", BasicInfoV4_default$1);
-	/**
-	* Stored data
-	*/
-	BasicInfoV4.base_exp = 0;
-	BasicInfoV4.base_exp_next = 1;
-	BasicInfoV4.job_exp = 0;
-	BasicInfoV4.job_exp_next = -1;
-	BasicInfoV4.weight = 0;
-	BasicInfoV4.weight_max = 1;
-	BasicInfoV4.render = () => BasicInfoV4_default$2;
-	_preferences$44 = Preferences.get("BasicInfoV4", {
-		x: 0,
-		y: 0,
-		reduce: true,
-		buttons: true,
-		magnet_top: true,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	BasicInfoV4.init = function init() {
-		const root = this.getRoot();
-		root.querySelectorAll(".topbar div").forEach((el) => {
-			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		});
-		const topbar = root.querySelector(".topbar");
-		if (topbar) topbar.addEventListener("dblclick", () => BasicInfoV4.toggleMode());
-		const rightBtn = root.querySelector(".topbar .right");
-		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV4.toggleMode());
-		root.querySelectorAll(".toggle_btns").forEach((btn) => {
-			btn.addEventListener("click", (e) => BasicInfoV4.toggleButtons(e));
-		});
-		root.querySelectorAll(".buttons button").forEach((btn) => {
-			btn.addEventListener("click", () => {
-				switch (btn.id) {
-					case "item":
-						InventoryController.getUI().toggle();
-						break;
-					case "info":
-						WinStatsController.getUI().toggle();
-						break;
-					case "equip":
-						EquipmentController.getUI().toggle();
-						break;
-					case "skill":
-						Controller$4.getUI().toggle();
-						break;
-					case "option":
-						Escape_default.ui.toggle();
-						break;
-					case "party":
-						controller.getUI().toggle();
-						break;
-					case "guild":
-						Guild_default.toggle();
-						break;
-					case "quest":
-						Controller$3.getUI().toggle();
-						break;
-					case "map":
-						WorldMap_default.toggle();
-						break;
-					case "bank":
-						Bank_default.toggle();
-						break;
-					case "attendance":
-						if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
-						break;
-					case "mail":
-						Rodex_default.toggle();
-						break;
-					case "navigation":
-						Navigation_default.toggle();
-						break;
-					case "achievment":
-						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
-						break;
-				}
-			});
-		});
-		this.draggable();
-	};
-	/**
-	* When append the element to html
-	* Execute elements in memory
-	*/
-	BasicInfoV4.onAppend = function onAppend() {
-		const root = this.getRoot();
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$44.magnet_top;
-		this.magnet.BOTTOM = _preferences$44.magnet_bottom;
-		this.magnet.LEFT = _preferences$44.magnet_left;
-		this.magnet.RIGHT = _preferences$44.magnet_right;
-		const inner = root.querySelector("#BasicInfoV4");
-		if (inner) {
-			inner.classList.remove("small", "large");
-			if (_preferences$44.reduce) inner.classList.add("small");
-			else inner.classList.add("large");
-		}
-		const buttons = root.querySelector(".buttons");
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$44.buttons) {
-			if (buttons) buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			if (buttons) buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
-		}
-		[
-			"battle",
-			"replay",
-			"tipbox",
-			"shortcut",
-			"agency"
-		].forEach((id) => {
-			const el = root.querySelector(`#${id}`);
-			if (el) el.style.display = "none";
-		});
-	};
-	/**
-	* Once remove, save preferences
-	*/
-	BasicInfoV4.onRemove = function onRemove() {
-		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV4");
-		const buttons = root.querySelector(".buttons");
-		_preferences$44.x = parseInt(this._host.style.left, 10);
-		_preferences$44.y = parseInt(this._host.style.top, 10);
-		_preferences$44.reduce = inner ? inner.classList.contains("small") : _preferences$44.reduce;
-		_preferences$44.buttons = buttons ? buttons.style.display !== "none" : _preferences$44.buttons;
-		_preferences$44.magnet_top = this.magnet.TOP;
-		_preferences$44.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$44.magnet_left = this.magnet.LEFT;
-		_preferences$44.magnet_right = this.magnet.RIGHT;
-		_preferences$44.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	BasicInfoV4.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "EXTEND":
-				this.toggleMode();
-				break;
-		}
-	};
-	/**
-	* Switch window size
-	*/
-	BasicInfoV4.toggleMode = function toggleMode() {
-		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV4");
-		if (!inner) return;
-		inner.classList.toggle("small");
-		inner.classList.toggle("large");
-		const buttons = root.querySelector(".buttons");
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$44.buttons) {
-			if (buttons) buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			if (buttons) buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
-		}
-	};
-	/**
-	* Toggle the list of buttons
-	*/
-	BasicInfoV4.toggleButtons = function toggleButtons(event) {
-		const root = this.getRoot();
-		const buttons = root.querySelector(".buttons");
-		if (!buttons) return;
-		_preferences$44.buttons = buttons.style.display === "none";
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$44.buttons) {
-			buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
-		}
-		event.stopImmediatePropagation();
-	};
-	/**
-	* Update UI elements
-	*
-	* @param {string} type identifier
-	* @param {number} val1
-	* @param {number} val2 (optional)
-	*/
-	BasicInfoV4.update = function update(type, val1, val2) {
-		const root = this.getRoot();
-		if (!root) return;
-		let perc = 100;
-		let color = "blue";
-		switch (type) {
-			case "name":
-			case "blvl":
-			case "jlvl":
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				break;
-			case "zeny": {
-				SessionStorage_default.zeny = val1;
-				const list = val1.toString().split("");
-				const count = list.length;
-				let str = "";
-				for (let i = 0; i < count; i++) str = list[count - i - 1] + (i && i % 3 === 0 ? "," : "") + str;
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = str;
-				});
-				break;
-			}
-			case "job":
-				SessionStorage_default.Character.job = val1;
-				root.querySelectorAll(".job_value").forEach((el) => {
-					el.textContent = MonsterTable_default[val1];
-				});
-				break;
-			case "bexp":
-			case "jexp": {
-				const expEl = root.querySelector(`.${type}`);
-				if (!val2) {
-					if (expEl) expEl.style.display = "none";
-					break;
-				}
-				if (expEl) {
-					expEl.style.display = "";
-					const bar = expEl.querySelector("div");
-					if (bar) bar.style.width = `${Math.min(100, Math.floor(val1 * 100 / val2))}%`;
-					expEl.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				}
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = `${Math.min(100, (Math.floor(val1 * 1e3 / val2) * .1).toFixed(1))}%`;
-				});
-				break;
-			}
-			case "weight":
-				root.querySelectorAll(".weight_value").forEach((el) => {
-					el.textContent = val1 / 10 | 0;
-				});
-				root.querySelectorAll(".weight_total").forEach((el) => {
-					el.textContent = val2 / 10 | 0;
-				});
-				root.querySelectorAll(".weight").forEach((el) => {
-					el.style.color = val1 < val2 / 2 ? "" : "red";
-					el.title = `${(val1 / val2 * 100).toFixed(1)}%`;
-				});
-				break;
-			case "hp":
-			case "sp":
-				perc = Math.floor(val1 * 100 / val2);
-				color = perc < 25 ? "red" : "blue";
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
-					el.textContent = val2;
-				});
-				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
-					el.textContent = `${perc}%`;
-				});
-				if (perc <= 0) {
-					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
-						el.style.backgroundImage = "none";
-					});
-					break;
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_left`);
-					if (el) el.style.backgroundImage = `url(${url})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_middle`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_right`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				break;
-		}
-	};
-	BasicInfoV4_default = UIManager.addComponent(BasicInfoV4);
-}));
-//#endregion
 //#region src/UI/Components/Reputation/Reputation.html?raw
 var Reputation_default$2;
 var init_Reputation$2 = __esmMin((() => {
@@ -235703,7 +234409,7 @@ function clearHighlights() {
 		el.dataset.highlight = "false";
 	});
 }
-var Reputation, _preferences$43, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
+var Reputation, _preferences$37, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
 var init_Reputation = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -235716,7 +234422,7 @@ var init_Reputation = __esmMin((() => {
 	init_Reputation$2();
 	init_Reputation$1();
 	Reputation = new GUIComponent("Reputation", Reputation_default$1);
-	_preferences$43 = Preferences.get("Reputation", {
+	_preferences$37 = Preferences.get("Reputation", {
 		x: 400,
 		y: 200,
 		show: true
@@ -235799,8 +234505,8 @@ var init_Reputation = __esmMin((() => {
 	* binding group selector events and rendering the default view.
 	*/
 	Reputation.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$43.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$43.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
 		buildGroupSelector();
 		bindGroupSelector();
 		bindSearch();
@@ -235811,10 +234517,10 @@ var init_Reputation = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	Reputation.onRemove = function onRemove() {
-		_preferences$43.show = this._host.style.display !== "none";
-		_preferences$43.y = parseInt(this._host.style.top, 10);
-		_preferences$43.x = parseInt(this._host.style.left, 10);
-		_preferences$43.save();
+		_preferences$37.show = this._host.style.display !== "none";
+		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$37.save();
 	};
 	/**
 	* Request to toggle open/close reputation
@@ -235842,63 +234548,27 @@ var init_Reputation = __esmMin((() => {
 	Reputation_default = UIManager.addComponent(Reputation);
 }));
 //#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.html?raw
-var BasicInfoV5_default$2;
-var init_BasicInfoV5$2 = __esmMin((() => {
-	BasicInfoV5_default$2 = "<div\r\n	id=\"BasicInfoV5\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/w_basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"ap_title\">AP</div>\r\n		<div class=\"ap_bar\">\r\n			<div class=\"ap_bar_left\"></div>\r\n			<div class=\"ap_bar_middle\"></div>\r\n			<div class=\"ap_bar_right\"></div>\r\n			<div class=\"ap_bar_perc\"><span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"ap_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"info-container\">\r\n			<div class=\"line2\">\r\n				Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span\r\n					class=\"jlvl_value\"\r\n				></span>\r\n			</div>\r\n			<div class=\"line3\">\r\n				<span class=\"hpcontainer\">HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></span\r\n				><span class=\"expcontainer\">| Exp. <span class=\"bexp_value\"></span></span>\r\n			</div>\r\n			<div class=\"line4\">\r\n				<span class=\"spcontainer\">SP. <span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></span\r\n				><span class=\"apcontainer\"\r\n					>| AP. <span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span\r\n				></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_press.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_close_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_close_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_close_press.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\" data-background=\"menu_icon/bg_menu.tga\">\r\n		<div\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_status.bmp\"\r\n			data-down=\"menu_icon/bt_status_press.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</div>\r\n		<div\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_equip.bmp\"\r\n			data-down=\"menu_icon/bt_equip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</div>\r\n		<div\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_item.bmp\"\r\n			data-down=\"menu_icon/bt_item_press.bmp\"\r\n		>\r\n			<div\r\n				class=\"btn_overlay\"\r\n				data-background=\"menu_icon/bt_item_new.bmp\"\r\n				data-down=\"menu_icon/bt_item_new_press.bmp\"\r\n			></div>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</div>\r\n		<div\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_skill.bmp\"\r\n			data-down=\"menu_icon/bt_skill_press.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</div>\r\n		<div\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_party.bmp\"\r\n			data-down=\"menu_icon/bt_party_press.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_guild.bmp\"\r\n			data-down=\"menu_icon/bt_guild_press.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</div>\r\n		<div\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_battle.bmp\"\r\n			data-down=\"menu_icon/bt_battle_press.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</div>\r\n		<div\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_quest.bmp\"\r\n			data-down=\"menu_icon/bt_quest_press.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</div>\r\n		<div\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_map.bmp\"\r\n			data-down=\"menu_icon/bt_map_press.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</div>\r\n		<div\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_navigation.bmp\"\r\n			data-down=\"menu_icon/bt_navigation_press.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</div>\r\n		<div\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_option.bmp\"\r\n			data-down=\"menu_icon/bt_option_press.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</div>\r\n		<div\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_bank.bmp\"\r\n			data-down=\"menu_icon/bt_bank_press.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</div>\r\n		<div\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_rec.bmp\"\r\n			data-down=\"menu_icon/bt_rec_press.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</div>\r\n		<div\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_mail.bmp\"\r\n			data-down=\"menu_icon/bt_mail_press.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</div>\r\n		<div\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_achievement.bmp\"\r\n			data-down=\"menu_icon/bt_achievement_press.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</div>\r\n		<div\r\n			id=\"tipbox\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_tip.bmp\"\r\n			data-down=\"menu_icon/bt_tip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Tipbox (Alt + D)</span>\r\n		</div>\r\n		<div\r\n			id=\"shortcut\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_keyboard.bmp\"\r\n			data-down=\"menu_icon/bt_keyboard_press.bmp\"\r\n		>\r\n			<span class=\"name\">ShortCut Description</span>\r\n		</div>\r\n		<div\r\n			id=\"attendance\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_attendance.bmp\"\r\n			data-down=\"menu_icon/bt_attendance_press.bmp\"\r\n		>\r\n			<span class=\"name\">Attendance Check</span>\r\n		</div>\r\n		<div\r\n			id=\"agency\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_adventureragency.bmp\"\r\n			data-down=\"menu_icon/bt_adventureragency_press.bmp\"\r\n		>\r\n			<span class=\"name\">Adventurer's Agency (Ctrl + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"repute\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_repute.bmp\"\r\n			data-down=\"menu_icon/bt_repute_press.bmp\"\r\n		>\r\n			<span class=\"name\">Reputation Status</span>\r\n		</div>\r\n		<!-- <div class=\"clear\"></div> -->\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.css?raw
-var BasicInfoV5_default$1;
-var init_BasicInfoV5$1 = __esmMin((() => {
-	BasicInfoV5_default$1 = ":host {\r\n	width: 220px;\r\n	height: 150px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV5 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 104px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 116px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 134px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 132px;\r\n	background-repeat: no-repeat;\r\n	background-position: bottom; /* alinha o fundo pela base */\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons > div[id] {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
-var BasicInfoV5, _preferences$42, BasicInfoV5_default;
-var init_BasicInfoV5 = __esmMin((() => {
-	init_DBManager();
-	init_Configs();
-	init_PacketVerManager();
-	init_MonsterTable();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_SessionStorage();
-	init_UIManager();
-	init_GUIComponent();
-	init_Inventory();
-	init_Equipment();
-	init_PartyFriends();
-	init_Guild$1();
-	init_Bank$1();
-	init_Escape();
-	init_WorldMap();
-	init_CheckAttendance();
-	init_Rodex$1();
-	init_WinStats();
-	init_Navigation();
-	init_SkillList();
-	init_Quest$1();
-	init_Achievement$1();
-	init_Reputation();
-	init_BasicInfoV5$2();
-	init_BasicInfoV5$1();
-	BasicInfoV5 = new GUIComponent("BasicInfoV5", BasicInfoV5_default$1);
+//#region src/UI/Components/BasicInfo/BasicInfoCommon.js
+function createBasicInfo(config) {
+	const { name, htmlText, cssText, prefKey, reduceDefault = true, innerId, topbarItemSelector = ".topbar button", topbarDblClick = false, toggleButtonsEvent = "mousedown", buttonsSelector = ".buttons button", buttonsEvent = "mousedown", buttonKeyBy = "class", infoOpensWinStats = true, partyViaGetUI = false, hasToolbarToggle = false, miniLayout = false, hideIds = [], barScale = 1.27, hasApBar = false } = config;
+	const Component = new GUIComponent(name, cssText);
 	/**
 	* Stored data
 	*/
-	BasicInfoV5.base_exp = 0;
-	BasicInfoV5.base_exp_next = 1;
-	BasicInfoV5.job_exp = 0;
-	BasicInfoV5.job_exp_next = -1;
-	BasicInfoV5.weight = 0;
-	BasicInfoV5.weight_max = 1;
-	BasicInfoV5.render = () => BasicInfoV5_default$2;
-	_preferences$42 = Preferences.get("BasicInfoV5", {
+	Component.base_exp = 0;
+	Component.base_exp_next = 1;
+	Component.job_exp = 0;
+	Component.job_exp_next = -1;
+	Component.weight = 0;
+	Component.weight_max = 1;
+	Component.render = () => htmlText;
+	/**
+	* @let {Preferences} structure
+	*/
+	const _preferences = Preferences.get(prefKey, {
 		x: 0,
 		y: 0,
-		reduce: true,
+		reduce: reduceDefault,
 		buttons: true,
 		magnet_top: true,
 		magnet_bottom: false,
@@ -235906,96 +234576,71 @@ var init_BasicInfoV5 = __esmMin((() => {
 		magnet_right: false
 	}, 1);
 	/**
-	* Initialize UI
+	* Dispatch a top-level shortcut button to its window.
+	*
+	* @param {string} key button identifier
 	*/
-	BasicInfoV5.init = function init() {
-		const root = this.getRoot();
-		root.querySelectorAll(".topbar div").forEach((el) => {
-			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		});
-		const topbar = root.querySelector(".topbar");
-		if (topbar) topbar.addEventListener("dblclick", () => BasicInfoV5.toggleMode());
-		const rightBtn = root.querySelector(".topbar .right");
-		if (rightBtn) rightBtn.addEventListener("click", () => BasicInfoV5.toggleMode());
-		root.querySelectorAll(".toggle_btns").forEach((btn) => {
-			btn.addEventListener("click", (e) => BasicInfoV5.toggleButtons(e));
-		});
-		root.querySelectorAll(".buttons > div[id]").forEach((btn) => {
-			btn.addEventListener("click", () => {
-				switch (btn.id) {
-					case "item":
-						InventoryController.getUI().toggle();
-						break;
-					case "info":
-						WinStatsController.getUI().toggle();
-						break;
-					case "equip":
-						EquipmentController.getUI().toggle();
-						break;
-					case "skill":
-						Controller$4.getUI().toggle();
-						break;
-					case "option":
-						Escape_default.ui.toggle();
-						break;
-					case "party":
-						controller.getUI().toggle();
-						break;
-					case "guild":
-						Guild_default.toggle();
-						break;
-					case "quest":
-						Controller$3.getUI().toggle();
-						break;
-					case "map":
-						WorldMap_default.toggle();
-						break;
-					case "bank":
-						Bank_default.toggle();
-						break;
-					case "attendance":
-						if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
-						break;
-					case "mail":
-						Rodex_default.toggle();
-						break;
-					case "navigation":
-						Navigation_default.toggle();
-						break;
-					case "achievment":
-						if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
-						break;
-					case "repute":
-						Reputation_default.toggle();
-						break;
-				}
-			});
-		});
-		this.draggable();
-	};
-	/**
-	* When append the element to html
-	* Execute elements in memory
-	*/
-	BasicInfoV5.onAppend = function onAppend() {
-		const root = this.getRoot();
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$42.magnet_top;
-		this.magnet.BOTTOM = _preferences$42.magnet_bottom;
-		this.magnet.LEFT = _preferences$42.magnet_left;
-		this.magnet.RIGHT = _preferences$42.magnet_right;
-		const inner = root.querySelector("#BasicInfoV5");
-		if (inner) {
-			inner.classList.remove("small", "large");
-			if (_preferences$42.reduce) inner.classList.add("small");
-			else inner.classList.add("large");
+	function dispatchButton(key) {
+		switch (key) {
+			case "item":
+				InventoryController.getUI().toggle();
+				break;
+			case "info":
+				(infoOpensWinStats ? WinStatsController.getUI() : EquipmentController.getUI()).toggle();
+				break;
+			case "equip":
+				EquipmentController.getUI().toggle();
+				break;
+			case "skill":
+				Controller$4.getUI().toggle();
+				break;
+			case "option":
+				Escape_default.ui.toggle();
+				break;
+			case "party":
+				if (partyViaGetUI) controller.getUI().toggle();
+				else controller.toggle();
+				break;
+			case "guild":
+				Guild_default.toggle();
+				break;
+			case "chat":
+				ChatRoomCreate_default.toggle();
+				break;
+			case "map":
+				WorldMap_default.toggle();
+				break;
+			case "bank":
+				Bank_default.toggle();
+				break;
+			case "quest":
+				Controller$3.getUI().toggle();
+				break;
+			case "mail":
+				Rodex_default.toggle();
+				break;
+			case "navigation":
+				Navigation_default.toggle();
+				break;
+			case "attendance":
+				if (Configs.get("enableCheckAttendance") && PacketVerManager_default.value >= 20180307) CheckAttendance_default.toggle();
+				break;
+			case "achievment":
+				if (Configs.get("enableAchievements") && PacketVerManager_default.value >= 20150513) Achievement_default.toggle();
+				break;
+			case "repute":
+				Reputation_default.toggle();
+				break;
 		}
+	}
+	/**
+	* Apply the button-panel visibility for the toolbar layout (btn_open/btn_close).
+	*/
+	function applyToolbarButtons(root) {
 		const buttons = root.querySelector(".buttons");
 		const btnOpen = root.querySelector(".btn_open");
 		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$42.buttons) {
+		if (_preferences.buttons) {
 			if (buttons) buttons.style.display = "";
 			if (btnOpen) btnOpen.style.display = "none";
 			if (btnClose) btnClose.style.display = "";
@@ -236004,13 +234649,73 @@ var init_BasicInfoV5 = __esmMin((() => {
 			if (btnOpen) btnOpen.style.display = "";
 			if (btnClose) btnClose.style.display = "none";
 		}
-		[
-			"battle",
-			"replay",
-			"tipbox",
-			"shortcut",
-			"agency"
-		].forEach((id) => {
+	}
+	/**
+	* Swap the `.toggle_btns` background between the view-on / view-off images.
+	*/
+	function loadViewToggleImage(root) {
+		const type = _preferences.buttons ? "off" : "on";
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/view${type}.bmp`, (url) => {
+			const toggleBtn = root.querySelector(".toggle_btns");
+			if (toggleBtn) toggleBtn.style.backgroundImage = `url(${url})`;
+		});
+	}
+	/**
+	* Initialize UI
+	*/
+	Component.init = function init() {
+		const root = this.getRoot();
+		root.querySelectorAll(topbarItemSelector).forEach((el) => {
+			el.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+		});
+		if (topbarDblClick) {
+			const topbar = root.querySelector(".topbar");
+			if (topbar) topbar.addEventListener("dblclick", () => Component.toggleMode());
+		}
+		const rightBtn = root.querySelector(".topbar .right");
+		if (rightBtn) rightBtn.addEventListener("click", () => Component.toggleMode());
+		root.querySelectorAll(".toggle_btns").forEach((btn) => {
+			btn.addEventListener(toggleButtonsEvent, (e) => Component.toggleButtons(e));
+		});
+		root.querySelectorAll(buttonsSelector).forEach((el) => {
+			el.addEventListener(buttonsEvent, () => {
+				dispatchButton(buttonKeyBy === "id" ? el.id : el.className.split(" ")[0]);
+			});
+		});
+		this.draggable();
+	};
+	/**
+	* When append the element to html
+	* Execute elements in memory
+	*/
+	Component.onAppend = function onAppend() {
+		const root = this.getRoot();
+		const hostRect = this._host.getBoundingClientRect();
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences.magnet_top;
+		this.magnet.BOTTOM = _preferences.magnet_bottom;
+		this.magnet.LEFT = _preferences.magnet_left;
+		this.magnet.RIGHT = _preferences.magnet_right;
+		const inner = root.querySelector(innerId);
+		if (inner) {
+			inner.classList.remove("small", "large");
+			inner.classList.add(_preferences.reduce ? "small" : "large");
+		}
+		if (hasToolbarToggle) applyToolbarButtons(root);
+		else if (inner) {
+			const buttons = root.querySelector(".buttons");
+			if (_preferences.reduce) {
+				if (miniLayout) {
+					if (buttons) buttons.style.display = "none";
+					const bgAttr = inner.dataset.miniBackground;
+					if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
+						inner.style.backgroundImage = `url(${url})`;
+					});
+				} else if (buttons) buttons.style.display = _preferences.buttons ? "" : "none";
+			} else if (miniLayout && buttons) buttons.style.display = "";
+		}
+		hideIds.forEach((id) => {
 			const el = root.querySelector(`#${id}`);
 			if (el) el.style.display = "none";
 		});
@@ -236018,26 +234723,26 @@ var init_BasicInfoV5 = __esmMin((() => {
 	/**
 	* Once remove, save preferences
 	*/
-	BasicInfoV5.onRemove = function onRemove() {
+	Component.onRemove = function onRemove() {
 		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV5");
+		const inner = root.querySelector(innerId);
 		const buttons = root.querySelector(".buttons");
-		_preferences$42.x = parseInt(this._host.style.left, 10);
-		_preferences$42.y = parseInt(this._host.style.top, 10);
-		_preferences$42.reduce = inner ? inner.classList.contains("small") : _preferences$42.reduce;
-		_preferences$42.buttons = buttons ? buttons.style.display !== "none" : _preferences$42.buttons;
-		_preferences$42.magnet_top = this.magnet.TOP;
-		_preferences$42.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$42.magnet_left = this.magnet.LEFT;
-		_preferences$42.magnet_right = this.magnet.RIGHT;
-		_preferences$42.save();
+		_preferences.x = parseInt(this._host.style.left, 10);
+		_preferences.y = parseInt(this._host.style.top, 10);
+		_preferences.reduce = inner ? inner.classList.contains("small") : _preferences.reduce;
+		_preferences.buttons = buttons ? buttons.style.display !== "none" : _preferences.buttons;
+		_preferences.magnet_top = this.magnet.TOP;
+		_preferences.magnet_bottom = this.magnet.BOTTOM;
+		_preferences.magnet_left = this.magnet.LEFT;
+		_preferences.magnet_right = this.magnet.RIGHT;
+		_preferences.save();
 	};
 	/**
 	* Process shortcut
 	*
 	* @param {object} key
 	*/
-	BasicInfoV5.onShortCut = function onShortCut(key) {
+	Component.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "EXTEND":
 				this.toggleMode();
@@ -236047,46 +234752,97 @@ var init_BasicInfoV5 = __esmMin((() => {
 	/**
 	* Switch window size
 	*/
-	BasicInfoV5.toggleMode = function toggleMode() {
+	Component.toggleMode = function toggleMode() {
 		const root = this.getRoot();
-		const inner = root.querySelector("#BasicInfoV5");
+		const inner = root.querySelector(innerId);
 		if (!inner) return;
 		inner.classList.toggle("small");
 		inner.classList.toggle("large");
+		if (hasToolbarToggle) {
+			applyToolbarButtons(root);
+			return;
+		}
 		const buttons = root.querySelector(".buttons");
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$42.buttons) {
+		if (inner.classList.contains("large")) {
 			if (buttons) buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
+			if (miniLayout) {
+				const bgAttr = inner.dataset.background;
+				if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
+					inner.style.backgroundImage = `url(${url})`;
+				});
+			}
+			return;
+		}
+		if (miniLayout) {
+			const bgAttr = inner.dataset.miniBackground;
+			if (bgAttr) Client.loadFile(DB.INTERFACE_PATH + bgAttr, (url) => {
+				inner.style.backgroundImage = `url(${url})`;
+			});
 			if (buttons) buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
+		} else {
+			if (buttons) buttons.style.display = _preferences.buttons ? "" : "none";
+			loadViewToggleImage(root);
 		}
 	};
 	/**
 	* Toggle the list of buttons
 	*/
-	BasicInfoV5.toggleButtons = function toggleButtons(event) {
+	Component.toggleButtons = function toggleButtons(event) {
 		const root = this.getRoot();
 		const buttons = root.querySelector(".buttons");
 		if (!buttons) return;
-		_preferences$42.buttons = buttons.style.display === "none";
-		const btnOpen = root.querySelector(".btn_open");
-		const btnClose = root.querySelector(".btn_close");
-		if (_preferences$42.buttons) {
-			buttons.style.display = "";
-			if (btnOpen) btnOpen.style.display = "none";
-			if (btnClose) btnClose.style.display = "";
-		} else {
-			buttons.style.display = "none";
-			if (btnOpen) btnOpen.style.display = "";
-			if (btnClose) btnClose.style.display = "none";
+		_preferences.buttons = buttons.style.display === "none";
+		if (hasToolbarToggle) applyToolbarButtons(root);
+		else {
+			buttons.style.display = _preferences.buttons ? "" : "none";
+			loadViewToggleImage(root);
 		}
 		event.stopImmediatePropagation();
 	};
+	/**
+	* Update a gauge bar (hp / sp / ap) and its numeric readouts
+	*
+	* @param {string} type gauge identifier
+	* @param {number} val1 current value
+	* @param {number} val2 maximum value
+	* @param {string} color bar color prefix
+	*/
+	function updateBar(root, type, val1, val2, color) {
+		const perc = Math.floor(val1 * 100 / val2);
+		root.querySelectorAll(`.${type}_value`).forEach((el) => {
+			el.textContent = val1;
+		});
+		root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
+			el.textContent = val2;
+		});
+		root.querySelectorAll(`.${type}_perc`).forEach((el) => {
+			el.textContent = `${perc}%`;
+		});
+		if (perc <= 0) {
+			root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
+				el.style.backgroundImage = "none";
+			});
+			return;
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
+			const el = root.querySelector(`.${type}_bar_left`);
+			if (el) el.style.backgroundImage = `url(${url})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
+			const el = root.querySelector(`.${type}_bar_middle`);
+			if (el) {
+				el.style.backgroundImage = `url(${url})`;
+				el.style.width = `${Math.floor(Math.min(perc, 100) * barScale)}px`;
+			}
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
+			const el = root.querySelector(`.${type}_bar_right`);
+			if (el) {
+				el.style.backgroundImage = `url(${url})`;
+				el.style.left = `${Math.floor(Math.min(perc, 100) * barScale)}px`;
+			}
+		});
+	}
 	/**
 	* Update UI elements
 	*
@@ -236094,13 +234850,9 @@ var init_BasicInfoV5 = __esmMin((() => {
 	* @param {number} val1
 	* @param {number} val2 (optional)
 	*/
-	BasicInfoV5.update = function update(type, val1, val2) {
+	Component.update = function update(type, val1, val2) {
 		const root = this.getRoot();
 		if (!root) return;
-		let perc = 100;
-		let color = "blue";
-		let ap_perc = 100;
-		let ap_color = "blue";
 		switch (type) {
 			case "name":
 			case "blvl":
@@ -236158,88 +234910,235 @@ var init_BasicInfoV5 = __esmMin((() => {
 				break;
 			case "hp":
 			case "sp":
-				perc = Math.floor(val1 * 100 / val2);
-				color = perc < 25 ? "red" : "blue";
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
-					el.textContent = val2;
-				});
-				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
-					el.textContent = `${perc}%`;
-				});
-				if (perc <= 0) {
-					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
-						el.style.backgroundImage = "none";
-					});
-					break;
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_left.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_left`);
-					if (el) el.style.backgroundImage = `url(${url})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_mid.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_middle`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.width = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${color}_right.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_right`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.left = `${Math.floor(Math.min(perc, 100) * 1.27)}px`;
-					}
-				});
+				updateBar(root, type, val1, val2, Math.floor(val1 * 100 / val2) < 25 ? "red" : "blue");
 				break;
 			case "ap":
-				ap_perc = Math.floor(val1 * 100 / val2);
-				ap_color = ap_perc === 100 ? "red" : "blue";
-				root.querySelectorAll(`.${type}_value`).forEach((el) => {
-					el.textContent = val1;
-				});
-				root.querySelectorAll(`.${type}_max_value`).forEach((el) => {
-					el.textContent = val2;
-				});
-				root.querySelectorAll(`.${type}_perc`).forEach((el) => {
-					el.textContent = `${ap_perc}%`;
-				});
-				if (ap_perc <= 0) {
-					root.querySelectorAll(`.${type}_bar div`).forEach((el) => {
-						el.style.backgroundImage = "none";
-					});
-					break;
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${ap_color}_left.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_left`);
-					if (el) el.style.backgroundImage = `url(${url})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${ap_color}_mid.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_middle`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.width = `${Math.floor(Math.min(ap_perc, 100) * 1.27)}px`;
-					}
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/gze${ap_color}_right.bmp`, (url) => {
-					const el = root.querySelector(`.${type}_bar_right`);
-					if (el) {
-						el.style.backgroundImage = `url(${url})`;
-						el.style.left = `${Math.floor(Math.min(ap_perc, 100) * 1.27)}px`;
-					}
-				});
+				if (!hasApBar) break;
+				updateBar(root, type, val1, val2, Math.floor(val1 * 100 / val2) === 100 ? "red" : "blue");
 				break;
 		}
 	};
-	BasicInfoV5_default = UIManager.addComponent(BasicInfoV5);
+	/**
+	* Create component and export it
+	*/
+	return UIManager.addComponent(Component);
+}
+var init_BasicInfoCommon = __esmMin((() => {
+	init_DBManager();
+	init_Configs();
+	init_PacketVerManager();
+	init_MonsterTable();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_SessionStorage();
+	init_UIManager();
+	init_GUIComponent();
+	init_Inventory();
+	init_Equipment();
+	init_PartyFriends();
+	init_Guild$1();
+	init_Bank$1();
+	init_Escape();
+	init_WorldMap();
+	init_CheckAttendance();
+	init_ChatRoomCreate();
+	init_Rodex$1();
+	init_WinStats();
+	init_Navigation();
+	init_SkillList();
+	init_Quest$1();
+	init_Achievement$1();
+	init_Reputation();
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV1/BasicInfoV1.js
+var BasicInfoV1_default;
+var init_BasicInfoV1 = __esmMin((() => {
+	init_BasicInfoV1$2();
+	init_BasicInfoV1$1();
+	init_BasicInfoCommon();
+	BasicInfoV1_default = createBasicInfo({
+		name: "BasicInfoV1",
+		htmlText: BasicInfoV1_default$2,
+		cssText: BasicInfoV1_default$1,
+		prefKey: "BasicInfoV1",
+		reduceDefault: true,
+		innerId: "#BasicInfoV1",
+		topbarItemSelector: ".topbar button",
+		toggleButtonsEvent: "mousedown",
+		buttonsSelector: ".buttons button",
+		buttonsEvent: "mousedown",
+		buttonKeyBy: "class",
+		infoOpensWinStats: false,
+		barScale: 1.27
+	});
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.html?raw
+var BasicInfoV0_default$2;
+var init_BasicInfoV0$2 = __esmMin((() => {
+	BasicInfoV0_default$2 = "<div\r\n	id=\"BasicInfoV0\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg.bmp\"\r\n	data-mini-background=\"basic_interface/basewin_mini.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Info</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\">\r\n		<button\r\n			class=\"option\"\r\n			data-background=\"basic_interface/btn_option_off.bmp\"\r\n			data-hover=\"basic_interface/btn_option_on.bmp\"\r\n			data-down=\"basic_interface/btn_option_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"info\"\r\n			data-background=\"basic_interface/btn_status_off.bmp\"\r\n			data-hover=\"basic_interface/btn_status_on.bmp\"\r\n			data-down=\"basic_interface/btn_status_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"equip\"\r\n			data-background=\"basic_interface/btn_equip_off.bmp\"\r\n			data-hover=\"basic_interface/btn_equip_on.bmp\"\r\n			data-down=\"basic_interface/btn_equip_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"item\"\r\n			data-background=\"basic_interface/btn_items_off.bmp\"\r\n			data-hover=\"basic_interface/btn_items_on.bmp\"\r\n			data-down=\"basic_interface/btn_items_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"map\"\r\n			data-background=\"basic_interface/btn_map_off.bmp\"\r\n			data-hover=\"basic_interface/btn_map_on.bmp\"\r\n			data-down=\"basic_interface/btn_map_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"skill\"\r\n			data-background=\"basic_interface/btn_skill_off.bmp\"\r\n			data-hover=\"basic_interface/btn_skill_on.bmp\"\r\n			data-down=\"basic_interface/btn_skill_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"party\"\r\n			data-background=\"basic_interface/btn_friend_off.bmp\"\r\n			data-hover=\"basic_interface/btn_friend_on.bmp\"\r\n			data-down=\"basic_interface/btn_friend_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"chat\"\r\n			data-background=\"basic_interface/btn_dialog_off.bmp\"\r\n			data-hover=\"basic_interface/btn_dialog_on.bmp\"\r\n			data-down=\"basic_interface/btn_dialog_on.bmp\"\r\n		></button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.css?raw
+var BasicInfoV0_default$1;
+var init_BasicInfoV0$1 = __esmMin((() => {
+	BasicInfoV0_default$1 = ":host {\r\n	width: 280px;\r\n	height: 120px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV0 {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 120px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV0.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV0.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV0.small {\r\n	height: 33px;\r\n}\r\n#BasicInfoV0.large .buttons {\r\n	top: 18px;\r\n	padding-right: 8px;\r\n}\r\n#BasicInfoV0.small .buttons {\r\n	display: none;\r\n	width: 0;\r\n}\r\n\r\n#BasicInfoV0 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV0 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV0 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV0 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV0 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV0 .large .hp_title {\r\n	position: absolute;\r\n	top: 30px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .sp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 90px;\r\n}\r\n#BasicInfoV0 .large .hp_bar,\r\n#BasicInfoV0 .large .sp_bar {\r\n	position: absolute;\r\n	top: 22px;\r\n	left: 110px;\r\n	width: 85px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV0 .large .sp_bar {\r\n	top: 43px;\r\n}\r\n#BasicInfoV0 .large .hp_bar div,\r\n#BasicInfoV0 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#BasicInfoV0 .large div.hp_bar_perc,\r\n#BasicInfoV0 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 85px;\r\n	position: absolute;\r\n	top: 9px;\r\n}\r\n\r\n#BasicInfoV0 .large .blvl {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .jlvl {\r\n	position: absolute;\r\n	top: 83px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV0 .large .bexp,\r\n#BasicInfoV0 .large .jexp {\r\n	position: absolute;\r\n	top: 77px;\r\n	left: 84px;\r\n	width: 100px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV0 .large .bexp div,\r\n#BasicInfoV0 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV0 .large .jexp {\r\n	top: 88px;\r\n}\r\n#BasicInfoV0 .large .extra {\r\n	position: absolute;\r\n	top: 105px;\r\n	left: 5px;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .buttons {\r\n	position: absolute;\r\n	right: 0;\r\n	width: 80px;\r\n}\r\n#BasicInfoV0 .buttons button {\r\n	float: right;\r\n	width: 30px;\r\n	height: 20px;\r\n	border: none;\r\n	margin-top: 4px;\r\n	margin-left: 4px;\r\n	background-color: transparent;\r\n}\r\n#BasicInfoV0 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV0 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line2 {\r\n	position: absolute;\r\n	top: 2px;\r\n	right: 18px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .line3 {\r\n	position: absolute;\r\n	top: 18px;\r\n	right: 5px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV0 .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV0/BasicInfoV0.js
+var BasicInfoV0_default;
+var init_BasicInfoV0 = __esmMin((() => {
+	init_BasicInfoV0$2();
+	init_BasicInfoV0$1();
+	init_BasicInfoCommon();
+	BasicInfoV0_default = createBasicInfo({
+		name: "BasicInfoV0",
+		htmlText: BasicInfoV0_default$2,
+		cssText: BasicInfoV0_default$1,
+		prefKey: "BasicInfoV0",
+		reduceDefault: false,
+		innerId: "#BasicInfoV0",
+		topbarItemSelector: ".topbar button",
+		toggleButtonsEvent: "mousedown",
+		buttonsSelector: ".buttons button",
+		buttonsEvent: "mousedown",
+		buttonKeyBy: "class",
+		miniLayout: true,
+		barScale: .77
+	});
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.html?raw
+var BasicInfoV3_default$2;
+var init_BasicInfoV3$2 = __esmMin((() => {
+	BasicInfoV3_default$2 = "<div\r\n	id=\"BasicInfoV3\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"ro_menu_icon/btn_show1.bmp\"\r\n		data-hover=\"ro_menu_icon/btn_show2.bmp\"\r\n		data-down=\"ro_menu_icon/btn_show3.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"ro_menu_icon/btn_hide1.bmp\"\r\n		data-hover=\"ro_menu_icon/btn_hide2.bmp\"\r\n		data-down=\"ro_menu_icon/btn_hide3.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\">\r\n		<div\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/status_1.bmp\"\r\n			data-down=\"ro_menu_icon/status_1.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</div>\r\n		<div\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/equip_1.bmp\"\r\n			data-down=\"ro_menu_icon/equip_2.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</div>\r\n		<div\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/skill_1.bmp\"\r\n			data-down=\"ro_menu_icon/skill_2.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</div>\r\n		<div\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/item_1.bmp\"\r\n			data-down=\"ro_menu_icon/item_2.bmp\"\r\n		>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</div>\r\n		<div\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/party_1.bmp\"\r\n			data-down=\"ro_menu_icon/party_2.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/guild_1.bmp\"\r\n			data-down=\"ro_menu_icon/guild_2.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</div>\r\n		<div\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/battle_1.bmp\"\r\n			data-down=\"ro_menu_icon/battle_2.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</div>\r\n		<div\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/quest_1.bmp\"\r\n			data-down=\"ro_menu_icon/quest_2.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</div>\r\n		<div\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/map_1.bmp\"\r\n			data-down=\"ro_menu_icon/map_2.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</div>\r\n		<div\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/navigation_1.bmp\"\r\n			data-down=\"ro_menu_icon/navigation_2.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</div>\r\n		<div\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/option_1.bmp\"\r\n			data-down=\"ro_menu_icon/option_2.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</div>\r\n		<div\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/bank_1.bmp\"\r\n			data-down=\"ro_menu_icon/bank_2.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</div>\r\n		<div\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/rec_1.bmp\"\r\n			data-down=\"ro_menu_icon/rec_2.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</div>\r\n		<div\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/mail_1.bmp\"\r\n			data-down=\"ro_menu_icon/mail_2.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</div>\r\n		<div\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"ro_menu_icon/achievement_1.bmp\"\r\n			data-down=\"ro_menu_icon/achievement_2.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.css?raw
+var BasicInfoV3_default$1;
+var init_BasicInfoV3$1 = __esmMin((() => {
+	BasicInfoV3_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV3 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV3.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV3.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV3.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV3.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV3.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV3.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV3.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV3 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV3 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV3 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV3 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV3 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV3 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .hp_bar,\r\n#BasicInfoV3 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV3 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV3 .large .hp_bar div,\r\n#BasicInfoV3 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV3 .large div.hp_bar_perc,\r\n#BasicInfoV3 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV3 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV3 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV3 .large .bexp,\r\n#BasicInfoV3 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV3 .large .bexp div,\r\n#BasicInfoV3 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV3 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV3 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 184px;\r\n}\r\n#BasicInfoV3 .bt_menu {\r\n	position: absolute;\r\n	left: 2px;\r\n	width: 216px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV3 .buttons:hover {\r\n}\r\n#BasicInfoV3 .buttons div {\r\n	float: left;\r\n	width: 36px;\r\n	height: 36px;\r\n	border: none;\r\n	margin: 0px;\r\n}\r\n#BasicInfoV3 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV3 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV3 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV3 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV3 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV3 .buttons div .name {\r\n	display: none;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV3/BasicInfoV3.js
+var BasicInfoV3_default;
+var init_BasicInfoV3 = __esmMin((() => {
+	init_BasicInfoV3$2();
+	init_BasicInfoV3$1();
+	init_BasicInfoCommon();
+	BasicInfoV3_default = createBasicInfo({
+		name: "BasicInfoV3",
+		htmlText: BasicInfoV3_default$2,
+		cssText: BasicInfoV3_default$1,
+		prefKey: "BasicInfoV3",
+		reduceDefault: true,
+		innerId: "#BasicInfoV3",
+		topbarItemSelector: ".topbar div",
+		toggleButtonsEvent: "mousedown",
+		buttonsSelector: ".buttons div",
+		buttonsEvent: "mousedown",
+		buttonKeyBy: "id",
+		hasToolbarToggle: true,
+		hideIds: ["battle", "replay"],
+		barScale: 1.27
+	});
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.html?raw
+var BasicInfoV4_default$2;
+var init_BasicInfoV4$2 = __esmMin((() => {
+	BasicInfoV4_default$2 = "<div\r\n	id=\"BasicInfoV4\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"line2\">\r\n			Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span class=\"jlvl_value\"></span>\r\n			/ Exp. <span class=\"bexp_value\"></span>\r\n		</div>\r\n		<div class=\"line3\">\r\n			HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span> | SP.\r\n			<span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_press.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_close_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_close_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_close_press.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\" data-background=\"menu_icon/bg_menu.tga\">\r\n		<button\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_status.bmp\"\r\n			data-down=\"menu_icon/bt_status_press.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</button>\r\n		<button\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_equip.bmp\"\r\n			data-down=\"menu_icon/bt_equip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</button>\r\n		<button\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_item.bmp\"\r\n			data-down=\"menu_icon/bt_item_press.bmp\"\r\n		>\r\n			<div\r\n				class=\"btn_overlay\"\r\n				data-background=\"menu_icon/bt_item_new.bmp\"\r\n				data-down=\"menu_icon/bt_item_new_press.bmp\"\r\n			></div>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</button>\r\n		<button\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_skill.bmp\"\r\n			data-down=\"menu_icon/bt_skill_press.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</button>\r\n		<button\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_party.bmp\"\r\n			data-down=\"menu_icon/bt_party_press.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</button>\r\n		<button\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_guild.bmp\"\r\n			data-down=\"menu_icon/bt_guild_press.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</button>\r\n		<button\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_battle.bmp\"\r\n			data-down=\"menu_icon/bt_battle_press.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</button>\r\n		<button\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_quest.bmp\"\r\n			data-down=\"menu_icon/bt_quest_press.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</button>\r\n		<button\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_map.bmp\"\r\n			data-down=\"menu_icon/bt_map_press.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</button>\r\n		<button\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_navigation.bmp\"\r\n			data-down=\"menu_icon/bt_navigation_press.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</button>\r\n		<button\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_option.bmp\"\r\n			data-down=\"menu_icon/bt_option_press.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</button>\r\n		<button\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_bank.bmp\"\r\n			data-down=\"menu_icon/bt_bank_press.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</button>\r\n		<button\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_rec.bmp\"\r\n			data-down=\"menu_icon/bt_rec_press.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</button>\r\n		<button\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_mail.bmp\"\r\n			data-down=\"menu_icon/bt_mail_press.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</button>\r\n		<button\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_achievement.bmp\"\r\n			data-down=\"menu_icon/bt_achievement_press.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</button>\r\n		<button\r\n			id=\"tipbox\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_tip.bmp\"\r\n			data-down=\"menu_icon/bt_tip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Tipbox (Alt + D)</span>\r\n		</button>\r\n		<button\r\n			id=\"shortcut\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_keyboard.bmp\"\r\n			data-down=\"menu_icon/bt_keyboard_press.bmp\"\r\n		>\r\n			<span class=\"name\">ShortCut Description</span>\r\n		</button>\r\n		<button\r\n			id=\"attendance\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_attendance.bmp\"\r\n			data-down=\"menu_icon/bt_attendance_press.bmp\"\r\n		>\r\n			<span class=\"name\">Attendance Check</span>\r\n		</button>\r\n		<button\r\n			id=\"agency\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_adventureragency.bmp\"\r\n			data-down=\"menu_icon/bt_adventureragency_press.bmp\"\r\n		>\r\n			<span class=\"name\">Adventurer's Agency (Ctrl + Z)</span>\r\n		</button>\r\n		<!--<button class=\"reputation\" data-background=\"menu_icon/\" data-hover=\"menu_icon/\" data-down=\"menu_icon/\"></button> -->\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.css?raw
+var BasicInfoV4_default$1;
+var init_BasicInfoV4$1 = __esmMin((() => {
+	BasicInfoV4_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV4 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV4.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV4.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV4.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV4.large .bt_menu {\r\n	top: 135px;\r\n}\r\n#BasicInfoV4.small .bt_menu {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV4.large .buttons {\r\n	top: 144px;\r\n}\r\n#BasicInfoV4.small .buttons {\r\n	top: 62px;\r\n}\r\n\r\n#BasicInfoV4 .topbar {\r\n	height: 16px;\r\n}\r\n#BasicInfoV4 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV4 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV4 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV4 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV4 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV4 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .hp_bar,\r\n#BasicInfoV4 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV4 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV4 .large .hp_bar div,\r\n#BasicInfoV4 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV4 .large div.hp_bar_perc,\r\n#BasicInfoV4 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV4 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV4 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV4 .large .bexp,\r\n#BasicInfoV4 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV4 .large .bexp div,\r\n#BasicInfoV4 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV4 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV4 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	display: grid;\r\n	grid-template-columns: auto auto auto auto auto;\r\n	justify-items: center;\r\n	background-position: left bottom;\r\n}\r\n#BasicInfoV4 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV4 .buttons:hover {\r\n}\r\n#BasicInfoV4 .buttons button {\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n	background: transparent;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV4 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV4 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV4 .buttons button .name {\r\n	pointer-events: none;\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV4 .buttons button:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV4 .buttons button .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV4 .buttons .btn_overlay {\r\n	pointer-events: none;\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -6px;\r\n	left: 0;\r\n	display: none;\r\n}\r\n#BasicInfoV4 .buttons button:active .btn_overlay {\r\n	pointer-events: none;\r\n	top: -5px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV4/BasicInfoV4.js
+var BasicInfoV4_default;
+var init_BasicInfoV4 = __esmMin((() => {
+	init_BasicInfoV4$2();
+	init_BasicInfoV4$1();
+	init_BasicInfoCommon();
+	BasicInfoV4_default = createBasicInfo({
+		name: "BasicInfoV4",
+		htmlText: BasicInfoV4_default$2,
+		cssText: BasicInfoV4_default$1,
+		prefKey: "BasicInfoV4",
+		reduceDefault: true,
+		innerId: "#BasicInfoV4",
+		topbarItemSelector: ".topbar div",
+		topbarDblClick: true,
+		toggleButtonsEvent: "click",
+		buttonsSelector: ".buttons button",
+		buttonsEvent: "click",
+		buttonKeyBy: "id",
+		partyViaGetUI: true,
+		hasToolbarToggle: true,
+		hideIds: [
+			"battle",
+			"replay",
+			"tipbox",
+			"shortcut",
+			"agency"
+		],
+		barScale: 1.27
+	});
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.html?raw
+var BasicInfoV5_default$2;
+var init_BasicInfoV5$2 = __esmMin((() => {
+	BasicInfoV5_default$2 = "<div\r\n	id=\"BasicInfoV5\"\r\n	class=\"large\"\r\n	data-background=\"basic_interface/w_basewin_bg2.bmp\"\r\n	data-preload=\"basic_interface/gzered_left.bmp;basic_interface/gzered_mid.bmp;basic_interface/gzered_right.bmp;basic_interface/gzeblue_left.bmp;basic_interface/gzeblue_mid.bmp;basic_interface/gzeblue_right.bmp\"\r\n>\r\n	<div class=\"topbar\">\r\n		<button\r\n			class=\"left\"\r\n			data-background=\"basic_interface/sys_base_off.bmp\"\r\n			data-hover=\"basic_interface/sys_base_on.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"right\"\r\n			data-background=\"basic_interface/sys_mini_off.bmp\"\r\n			data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n		></button>\r\n	</div>\r\n\r\n	<!-- LARGE INTERFACE -->\r\n	<div class=\"large\">\r\n		<div class=\"title\" data-text=\"238\">Basic Information</div>\r\n		<div class=\"name\"><span class=\"name_value\"></span></div>\r\n		<div class=\"job\"><span class=\"job_value\"></span></div>\r\n\r\n		<div class=\"hp_title\">HP</div>\r\n		<div class=\"hp_bar\">\r\n			<div class=\"hp_bar_left\"></div>\r\n			<div class=\"hp_bar_middle\"></div>\r\n			<div class=\"hp_bar_right\"></div>\r\n			<div class=\"hp_bar_perc\"><span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"hp_perc\"></div>\r\n\r\n		<div class=\"sp_title\">SP</div>\r\n		<div class=\"sp_bar\">\r\n			<div class=\"sp_bar_left\"></div>\r\n			<div class=\"sp_bar_middle\"></div>\r\n			<div class=\"sp_bar_right\"></div>\r\n			<div class=\"sp_bar_perc\"><span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"sp_perc\"></div>\r\n\r\n		<div class=\"ap_title\">AP</div>\r\n		<div class=\"ap_bar\">\r\n			<div class=\"ap_bar_left\"></div>\r\n			<div class=\"ap_bar_middle\"></div>\r\n			<div class=\"ap_bar_right\"></div>\r\n			<div class=\"ap_bar_perc\"><span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span></div>\r\n		</div>\r\n		<div class=\"ap_perc\"></div>\r\n\r\n		<div class=\"blvl\">Base Lv. <span class=\"blvl_value\"></span></div>\r\n		<div class=\"bexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"jlvl\">Job Lv. <span class=\"jlvl_value\"></span></div>\r\n		<div class=\"jexp\">\r\n			<div></div>\r\n		</div>\r\n\r\n		<div class=\"extra\">\r\n			<span class=\"weight\"\r\n				>Weight : <span class=\"weight_value\">0</span> / <span class=\"weight_total\">0</span></span\r\n			>\r\n			Zeny : <span class=\"zeny_value\">0</span>\r\n		</div>\r\n	</div>\r\n\r\n	<!-- SMALL INTERFACE -->\r\n	<div class=\"small\">\r\n		<div class=\"line1 name_value\"></div>\r\n		<div class=\"info-container\">\r\n			<div class=\"line2\">\r\n				Lv.<span class=\"blvl_value\"></span> / <span class=\"job_value\"></span> / Lv.<span\r\n					class=\"jlvl_value\"\r\n				></span>\r\n			</div>\r\n			<div class=\"line3\">\r\n				<span class=\"hpcontainer\">HP. <span class=\"hp_value\"></span> / <span class=\"hp_max_value\"></span></span\r\n				><span class=\"expcontainer\">| Exp. <span class=\"bexp_value\"></span></span>\r\n			</div>\r\n			<div class=\"line4\">\r\n				<span class=\"spcontainer\">SP. <span class=\"sp_value\"></span> / <span class=\"sp_max_value\"></span></span\r\n				><span class=\"apcontainer\"\r\n					>| AP. <span class=\"ap_value\"></span> / <span class=\"ap_max_value\"></span\r\n				></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<button\r\n		id=\"btn_open\"\r\n		class=\"btn_open bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_press.bmp\"\r\n	></button>\r\n	<button\r\n		id=\"btn_close\"\r\n		class=\"btn_close bt_menu toggle_btns\"\r\n		data-background=\"menu_icon/bt_menu_close_normal.bmp\"\r\n		data-hover=\"menu_icon/bt_menu_close_over.bmp\"\r\n		data-down=\"menu_icon/bt_menu_close_press.bmp\"\r\n	></button>\r\n\r\n	<!-- BUTTONS -->\r\n	<div class=\"buttons\" data-background=\"menu_icon/bg_menu.tga\">\r\n		<div\r\n			id=\"info\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_status.bmp\"\r\n			data-down=\"menu_icon/bt_status_press.bmp\"\r\n		>\r\n			<span class=\"name\">Status (Alt + A)</span>\r\n		</div>\r\n		<div\r\n			id=\"equip\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_equip.bmp\"\r\n			data-down=\"menu_icon/bt_equip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Equip (Alt + Q)</span>\r\n		</div>\r\n		<div\r\n			id=\"item\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_item.bmp\"\r\n			data-down=\"menu_icon/bt_item_press.bmp\"\r\n		>\r\n			<div\r\n				class=\"btn_overlay\"\r\n				data-background=\"menu_icon/bt_item_new.bmp\"\r\n				data-down=\"menu_icon/bt_item_new_press.bmp\"\r\n			></div>\r\n			<span class=\"name\">Inventory (Alt + E)</span>\r\n		</div>\r\n		<div\r\n			id=\"skill\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_skill.bmp\"\r\n			data-down=\"menu_icon/bt_skill_press.bmp\"\r\n		>\r\n			<span class=\"name\">SkillTree (Alt + S)</span>\r\n		</div>\r\n		<div\r\n			id=\"party\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_party.bmp\"\r\n			data-down=\"menu_icon/bt_party_press.bmp\"\r\n		>\r\n			<span class=\"name\">Party (Alt + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"guild\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_guild.bmp\"\r\n			data-down=\"menu_icon/bt_guild_press.bmp\"\r\n		>\r\n			<span class=\"name\">Guild (Alt + G)</span>\r\n		</div>\r\n		<div\r\n			id=\"battle\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_battle.bmp\"\r\n			data-down=\"menu_icon/bt_battle_press.bmp\"\r\n		>\r\n			<span class=\"name\">Battleground</span>\r\n		</div>\r\n		<div\r\n			id=\"quest\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_quest.bmp\"\r\n			data-down=\"menu_icon/bt_quest_press.bmp\"\r\n		>\r\n			<span class=\"name\">Quest List (Alt + U)</span>\r\n		</div>\r\n		<div\r\n			id=\"map\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_map.bmp\"\r\n			data-down=\"menu_icon/bt_map_press.bmp\"\r\n		>\r\n			<span class=\"name\">World Map (Ctrl + ')</span>\r\n		</div>\r\n		<div\r\n			id=\"navigation\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_navigation.bmp\"\r\n			data-down=\"menu_icon/bt_navigation_press.bmp\"\r\n		>\r\n			<span class=\"name\">Navigation</span>\r\n		</div>\r\n		<div\r\n			id=\"option\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_option.bmp\"\r\n			data-down=\"menu_icon/bt_option_press.bmp\"\r\n		>\r\n			<span class=\"name\">Option (Esc)</span>\r\n		</div>\r\n		<div\r\n			id=\"bank\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_bank.bmp\"\r\n			data-down=\"menu_icon/bt_bank_press.bmp\"\r\n		>\r\n			<span class=\"name\">Bank (Ctrl + B)</span>\r\n		</div>\r\n		<div\r\n			id=\"replay\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_rec.bmp\"\r\n			data-down=\"menu_icon/bt_rec_press.bmp\"\r\n		>\r\n			<span class=\"name\">Replay</span>\r\n		</div>\r\n		<div\r\n			id=\"mail\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_mail.bmp\"\r\n			data-down=\"menu_icon/bt_mail_press.bmp\"\r\n		>\r\n			<span class=\"name\">Mail</span>\r\n		</div>\r\n		<div\r\n			id=\"achievment\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_achievement.bmp\"\r\n			data-down=\"menu_icon/bt_achievement_press.bmp\"\r\n		>\r\n			<span class=\"name\">Achievement</span>\r\n		</div>\r\n		<div\r\n			id=\"tipbox\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_tip.bmp\"\r\n			data-down=\"menu_icon/bt_tip_press.bmp\"\r\n		>\r\n			<span class=\"name\">Tipbox (Alt + D)</span>\r\n		</div>\r\n		<div\r\n			id=\"shortcut\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_keyboard.bmp\"\r\n			data-down=\"menu_icon/bt_keyboard_press.bmp\"\r\n		>\r\n			<span class=\"name\">ShortCut Description</span>\r\n		</div>\r\n		<div\r\n			id=\"attendance\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_attendance.bmp\"\r\n			data-down=\"menu_icon/bt_attendance_press.bmp\"\r\n		>\r\n			<span class=\"name\">Attendance Check</span>\r\n		</div>\r\n		<div\r\n			id=\"agency\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_adventureragency.bmp\"\r\n			data-down=\"menu_icon/bt_adventureragency_press.bmp\"\r\n		>\r\n			<span class=\"name\">Adventurer's Agency (Ctrl + Z)</span>\r\n		</div>\r\n		<div\r\n			id=\"repute\"\r\n			class=\"event_add_cursor\"\r\n			data-background=\"menu_icon/bt_repute.bmp\"\r\n			data-down=\"menu_icon/bt_repute_press.bmp\"\r\n		>\r\n			<span class=\"name\">Reputation Status</span>\r\n		</div>\r\n		<!-- <div class=\"clear\"></div> -->\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.css?raw
+var BasicInfoV5_default$1;
+var init_BasicInfoV5$1 = __esmMin((() => {
+	BasicInfoV5_default$1 = ":host {\r\n	width: 220px;\r\n	height: 150px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV5 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 150px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV5.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV5.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV5.small {\r\n	height: 70px;\r\n}\r\n#BasicInfoV5.large .bt_menu {\r\n	top: 150px;\r\n}\r\n#BasicInfoV5.small .bt_menu {\r\n	top: 70px;\r\n}\r\n\r\n#BasicInfoV5.large .buttons {\r\n	top: 160px;\r\n}\r\n#BasicInfoV5.small .buttons {\r\n	top: 80px;\r\n}\r\n\r\n#BasicInfoV5 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV5 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV5 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV5 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV5 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV5 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .ap_title {\r\n	position: absolute;\r\n	top: 80px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .hp_bar,\r\n#BasicInfoV5 .large .sp_bar,\r\n#BasicInfoV5 .large .ap_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 9px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV5 .large .ap_bar {\r\n	top: 83px;\r\n	background: linear-gradient(\r\n		to bottom,\r\n		#5a5a63 0%,\r\n		#a5a5ad 15%,\r\n		#bdc6ce 30%,\r\n		#ceced6 45%,\r\n		#d6dede 65%,\r\n		#e7e7ef 70%,\r\n		#f7f7f7 80%\r\n	);\r\n	border-radius: 15px;\r\n	border: 1px solid #b5b5b5;\r\n}\r\n#BasicInfoV5 .large .hp_bar div,\r\n#BasicInfoV5 .large .sp_bar div,\r\n#BasicInfoV5 .large .ap_bar div {\r\n	width: 4px;\r\n	height: 9px;\r\n	float: left;\r\n}\r\n#BasicInfoV5 .large div.hp_bar_perc,\r\n#BasicInfoV5 .large div.sp_bar_perc,\r\n#BasicInfoV5 .large div.ap_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -1px;\r\n}\r\n#BasicInfoV5 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .ap_perc {\r\n	position: absolute;\r\n	top: 80px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV5 .large .blvl {\r\n	position: absolute;\r\n	top: 101px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .jlvl {\r\n	position: absolute;\r\n	top: 112px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV5 .large .bexp,\r\n#BasicInfoV5 .large .jexp {\r\n	position: absolute;\r\n	top: 104px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV5 .large .bexp div,\r\n#BasicInfoV5 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV5 .large .jexp {\r\n	top: 116px;\r\n}\r\n#BasicInfoV5 .large .extra {\r\n	position: absolute;\r\n	top: 134px;\r\n	right: -15px;\r\n	width: 100%;\r\n	padding-right: 20px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	top: 9px;\r\n	width: 220px;\r\n	height: 132px;\r\n	background-repeat: no-repeat;\r\n	background-position: bottom; /* alinha o fundo pela base */\r\n}\r\n#BasicInfoV5 .bt_menu {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 219px;\r\n	height: 9px;\r\n}\r\n#BasicInfoV5 .buttons:hover {\r\n}\r\n#BasicInfoV5 .buttons > div[id] {\r\n	float: left;\r\n	width: 32px;\r\n	height: 32px;\r\n	border: none;\r\n	margin: 6px;\r\n}\r\n#BasicInfoV5 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV5 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .info-container {\r\n	position: absolute;\r\n	top: 17px;\r\n	height: 60px;\r\n	width: 220px;\r\n	background-color: #ffffff;\r\n}\r\n#BasicInfoV5 .small .hpcontainer,\r\n#BasicInfoV5 .small .spcontainer {\r\n	position: absolute;\r\n	width: 130px;\r\n}\r\n#BasicInfoV5 .small .expcontainer,\r\n#BasicInfoV5 .small .apcontainer {\r\n	position: absolute;\r\n	width: 65px;\r\n	left: 140px;\r\n}\r\n#BasicInfoV5 .small .line2 {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV5 .small .line3 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line3 .hp_max_value {\r\n	display: inline-block;\r\n	width: 65px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 {\r\n	position: absolute;\r\n	top: 35px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .small .line4 .sp_max_value {\r\n	display: inline-block;\r\n	width: 73px;\r\n	text-align: left;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV5 .toggle_btns {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n\r\n#BasicInfoV5 .buttons div .name {\r\n	position: relative;\r\n	display: none;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n#BasicInfoV5 .buttons div:hover .name {\r\n	display: table;\r\n}\r\n#BasicInfoV5 .buttons div .name {\r\n	display: none;\r\n}\r\n\r\n#BasicInfoV5 .buttons .btn_overlay {\r\n	width: 35px;\r\n	height: 40px;\r\n	border: none;\r\n	position: relative;\r\n	top: -13px;\r\n	left: -7px;\r\n	z-index: 10;\r\n	display: none;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/BasicInfo/BasicInfoV5/BasicInfoV5.js
+var BasicInfoV5_default;
+var init_BasicInfoV5 = __esmMin((() => {
+	init_BasicInfoV5$2();
+	init_BasicInfoV5$1();
+	init_BasicInfoCommon();
+	BasicInfoV5_default = createBasicInfo({
+		name: "BasicInfoV5",
+		htmlText: BasicInfoV5_default$2,
+		cssText: BasicInfoV5_default$1,
+		prefKey: "BasicInfoV5",
+		reduceDefault: true,
+		innerId: "#BasicInfoV5",
+		topbarItemSelector: ".topbar div",
+		topbarDblClick: true,
+		toggleButtonsEvent: "click",
+		buttonsSelector: ".buttons > div[id]",
+		buttonsEvent: "click",
+		buttonKeyBy: "id",
+		partyViaGetUI: true,
+		hasToolbarToggle: true,
+		hideIds: [
+			"battle",
+			"replay",
+			"tipbox",
+			"shortcut",
+			"agency"
+		],
+		barScale: 1.27,
+		hasApBar: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/BasicInfo/BasicInfo.js
 var publicName$7, versionInfo$7, BasicInfoController;
 var init_BasicInfo = __esmMin((() => {
-	init_BasicInfo$1();
+	init_BasicInfoV1();
 	init_BasicInfoV0();
 	init_BasicInfoV3();
 	init_BasicInfoV4();
@@ -236252,7 +235151,7 @@ var init_BasicInfo = __esmMin((() => {
 			20200520: BasicInfoV5_default,
 			20180124: BasicInfoV4_default,
 			20160101: BasicInfoV3_default,
-			20090601: BasicInfo_default
+			20090601: BasicInfoV1_default
 		},
 		re: {},
 		prere: {},
@@ -236346,7 +235245,7 @@ function onClickValidateName(e) {
 *
 * @param {event}
 */
-function onDrop$22(event) {
+function onDrop$17(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -236522,7 +235421,7 @@ var init_WriteRodex = __esmMin((() => {
 		valueInput.max = SessionStorage_default.zeny;
 		root.querySelector(".item-list").innerHTML = "";
 		const itemsEl = root.querySelector(".items");
-		itemsEl.addEventListener("drop", onDrop$22);
+		itemsEl.addEventListener("drop", onDrop$17);
 		itemsEl.addEventListener("dragover", stopPropagation$9);
 		this._host.style.display = "";
 		this.focus();
@@ -236704,7 +235603,7 @@ function onSwitchTab$5() {
 	const root = InventoryV0.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$41.tab = parseInt(idx, 10);
+	_preferences$36.tab = parseInt(idx, 10);
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", (data) => {
 		const tabSprite = root.querySelector(".tab-sprite");
 		if (tabSprite) tabSprite.style.backgroundImage = `url(${data})`;
@@ -236744,7 +235643,7 @@ function requestFilter$5() {
 *
 * @param {event}
 */
-function onDrop$21(event) {
+function onDrop$16(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -236915,7 +235814,7 @@ function onItemClick$3(event) {
 	}
 	return false;
 }
-var InventoryV0, _realSize$5, _preferences$41, InventoryV0_default;
+var InventoryV0, _realSize$5, _preferences$36, InventoryV0_default;
 var init_InventoryV0 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -236958,7 +235857,7 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.newItems = [];
 	InventoryV0.equippedItems = [];
 	_realSize$5 = 0;
-	_preferences$41 = Preferences.get("InventoryV0", {
+	_preferences$36 = Preferences.get("InventoryV0", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -236989,7 +235888,7 @@ var init_InventoryV0 = __esmMin((() => {
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV0._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$21);
+		this._host.addEventListener("drop", onDrop$16);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
@@ -237032,20 +235931,20 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.onAppend = function OnAppend() {
 		const root = InventoryV0.getRoot();
-		if (!_preferences$41.show) this._host.style.display = "none";
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$41.tab + 1) + ".bmp", (data) => {
+		if (!_preferences$36.show) this._host.style.display = "none";
+		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$36.tab + 1) + ".bmp", (data) => {
 			const tabSprite = root.querySelector(".tab-sprite");
 			if (tabSprite) tabSprite.style.backgroundImage = `url("${data}")`;
 		});
-		this.resize(_preferences$41.width, _preferences$41.height);
+		this.resize(_preferences$36.width, _preferences$36.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$41.magnet_top;
-		this.magnet.BOTTOM = _preferences$41.magnet_bottom;
-		this.magnet.LEFT = _preferences$41.magnet_left;
-		this.magnet.RIGHT = _preferences$41.magnet_right;
-		_realSize$5 = _preferences$41.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$36.magnet_top;
+		this.magnet.BOTTOM = _preferences$36.magnet_bottom;
+		this.magnet.LEFT = _preferences$36.magnet_left;
+		this.magnet.RIGHT = _preferences$36.magnet_right;
+		_realSize$5 = _preferences$36.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = root.querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -237058,18 +235957,18 @@ var init_InventoryV0 = __esmMin((() => {
 		this.list.length = 0;
 		InventoryV0.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$41.show = this._host.style.display !== "none";
-		_preferences$41.reduce = !!_realSize$5;
-		_preferences$41.y = parseInt(this._host.style.top, 10);
-		_preferences$41.x = parseInt(this._host.style.left, 10);
+		_preferences$36.show = this._host.style.display !== "none";
+		_preferences$36.reduce = !!_realSize$5;
+		_preferences$36.y = parseInt(this._host.style.top, 10);
+		_preferences$36.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$41.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$41.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$41.magnet_top = this.magnet.TOP;
-		_preferences$41.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$41.magnet_left = this.magnet.LEFT;
-		_preferences$41.magnet_right = this.magnet.RIGHT;
-		_preferences$41.save();
+		_preferences$36.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$36.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$36.magnet_top = this.magnet.TOP;
+		_preferences$36.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$36.magnet_left = this.magnet.LEFT;
+		_preferences$36.magnet_right = this.magnet.RIGHT;
+		_preferences$36.save();
 	};
 	/**
 	* Process shortcut
@@ -237228,7 +236127,7 @@ var init_InventoryV0 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV0.newItems.indexOf(item.index) === -1) InventoryV0.newItems.push(item.index);
-			if (getItemTab$3(item) === _preferences$41.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$3(item) === _preferences$36.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -237259,7 +236158,7 @@ var init_InventoryV0 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$41.tab) {
+		if (tab === _preferences$36.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV0.getRoot();
 			const content = root.querySelector(".container .content");
@@ -237445,11 +236344,11 @@ function onSwitchTab$4() {
 	const root = InventoryV1.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$40.tab = parseInt(idx, 10);
+	_preferences$35.tab = parseInt(idx, 10);
 	requestFilter$4();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$40.tab !== InventoryV1.TAB.FAV) {
+	if (_preferences$35.tab !== InventoryV1.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -237461,7 +236360,7 @@ function onSwitchTab$4() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$40.npcsalelock) {
+		if (_preferences$35.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -237513,7 +236412,7 @@ function requestFilter$4() {
 /**
 * Drop an item from storage to inventory
 */
-function onDrop$20(event) {
+function onDrop$15(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -237717,9 +236616,9 @@ function onTabDrop$2(event) {
 * Toggle the item drop lock preference
 */
 function onItemLock$2() {
-	_preferences$40.itemlock = !_preferences$40.itemlock;
-	InventoryV1.itemlock = _preferences$40.itemlock;
-	const lockImg = _preferences$40.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$35.itemlock = !_preferences$35.itemlock;
+	InventoryV1.itemlock = _preferences$35.itemlock;
+	const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 		const lockBtn = InventoryV1.getRoot().querySelector(".item_drop_lock");
 		if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
@@ -237729,9 +236628,9 @@ function onItemLock$2() {
 * Toggles the value of Item Compare
 */
 function onItemCompare$2() {
-	_preferences$40.itemcomp = !_preferences$40.itemcomp;
-	InventoryV1.itemcomp = _preferences$40.itemcomp;
-	const compImg = _preferences$40.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$35.itemcomp = !_preferences$35.itemcomp;
+	InventoryV1.itemcomp = _preferences$35.itemcomp;
+	const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 		const compBtn = InventoryV1.getRoot().querySelector(".item_compare");
 		if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
@@ -237741,10 +236640,10 @@ function onItemCompare$2() {
 * Toggles the value of Item Lock NPCSale
 */
 function onNPCLock$2() {
-	_preferences$40.npcsalelock = !_preferences$40.npcsalelock;
-	InventoryV1.npcsalelock = _preferences$40.npcsalelock;
+	_preferences$35.npcsalelock = !_preferences$35.npcsalelock;
+	InventoryV1.npcsalelock = _preferences$35.npcsalelock;
 	const root = InventoryV1.getRoot();
-	if (_preferences$40.npcsalelock) {
+	if (_preferences$35.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -237768,7 +236667,7 @@ function onNPCLock$2() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV1, _realSize$4, _preferences$40, lockOverlayTimeout$2, InventoryV1_default;
+var InventoryV1, _realSize$4, _preferences$35, lockOverlayTimeout$2, InventoryV1_default;
 var init_InventoryV1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -237815,7 +236714,7 @@ var init_InventoryV1 = __esmMin((() => {
 	InventoryV1.newItems = [];
 	InventoryV1.equippedItems = [];
 	_realSize$4 = 0;
-	_preferences$40 = Preferences.get("InventoryV1", {
+	_preferences$35 = Preferences.get("InventoryV1", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -237834,9 +236733,9 @@ var init_InventoryV1 = __esmMin((() => {
 	/**
 	* Store variables from preferences
 	*/
-	InventoryV1.itemlock = _preferences$40.itemlock;
-	InventoryV1.itemcomp = _preferences$40.itemcomp;
-	InventoryV1.npcsalelock = _preferences$40.npcsalelock;
+	InventoryV1.itemlock = _preferences$35.itemlock;
+	InventoryV1.itemcomp = _preferences$35.itemcomp;
+	InventoryV1.npcsalelock = _preferences$35.npcsalelock;
 	/**
 	* Initialize UI
 	*/
@@ -237856,7 +236755,7 @@ var init_InventoryV1 = __esmMin((() => {
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV1._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$20);
+		this._host.addEventListener("drop", onDrop$15);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
@@ -237899,19 +236798,19 @@ var init_InventoryV1 = __esmMin((() => {
 		});
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$40.tab]) allTabs[_preferences$40.tab].classList.add("selected");
-		const lockImg = _preferences$40.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$35.tab]) allTabs[_preferences$35.tab].classList.add("selected");
+		const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const lockBtn = root.querySelector(".item_drop_lock");
 			if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$40.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const compBtn = root.querySelector(".item_compare");
 			if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$40.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$40.tab !== InventoryV1.TAB.FAV) {
+		const lockSale = _preferences$35.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$35.tab !== InventoryV1.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -237940,16 +236839,16 @@ var init_InventoryV1 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV1.onAppend = function OnAppend() {
-		if (!_preferences$40.show) this._host.style.display = "none";
-		this.resize(_preferences$40.width, _preferences$40.height);
+		if (!_preferences$35.show) this._host.style.display = "none";
+		this.resize(_preferences$35.width, _preferences$35.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$40.magnet_top;
-		this.magnet.BOTTOM = _preferences$40.magnet_bottom;
-		this.magnet.LEFT = _preferences$40.magnet_left;
-		this.magnet.RIGHT = _preferences$40.magnet_right;
-		_realSize$4 = _preferences$40.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$35.magnet_top;
+		this.magnet.BOTTOM = _preferences$35.magnet_bottom;
+		this.magnet.LEFT = _preferences$35.magnet_left;
+		this.magnet.RIGHT = _preferences$35.magnet_right;
+		_realSize$4 = _preferences$35.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = InventoryV1.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -237962,17 +236861,17 @@ var init_InventoryV1 = __esmMin((() => {
 		this.list.length = 0;
 		InventoryV1.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$40.show = this._host.style.display !== "none";
-		_preferences$40.reduce = !!_realSize$4;
-		_preferences$40.y = parseInt(this._host.style.top, 10);
-		_preferences$40.x = parseInt(this._host.style.left, 10);
+		_preferences$35.show = this._host.style.display !== "none";
+		_preferences$35.reduce = !!_realSize$4;
+		_preferences$35.y = parseInt(this._host.style.top, 10);
+		_preferences$35.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$40.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$40.magnet_top = this.magnet.TOP;
-		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$40.magnet_left = this.magnet.LEFT;
-		_preferences$40.magnet_right = this.magnet.RIGHT;
-		_preferences$40.save();
+		_preferences$35.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$35.magnet_top = this.magnet.TOP;
+		_preferences$35.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$35.magnet_left = this.magnet.LEFT;
+		_preferences$35.magnet_right = this.magnet.RIGHT;
+		_preferences$35.save();
 	};
 	/**
 	* Process shortcut
@@ -238125,7 +237024,7 @@ var init_InventoryV1 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV1.newItems.indexOf(item.index) === -1) InventoryV1.newItems.push(item.index);
-			if (getItemTab$2(item) === _preferences$40.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$2(item) === _preferences$35.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -238155,7 +237054,7 @@ var init_InventoryV1 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$40.tab) {
+		if (tab === _preferences$35.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV1.getRoot();
 			const content = root.querySelector(".container .content");
@@ -238316,7 +237215,7 @@ function _escapeHtml(str) {
 * @param {number} location
 * @returns {string} selector
 */
-function getSelectorFromLocation$6(location) {
+function getSelectorFromLocation$2(location) {
 	const selector = [];
 	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".swap_head_top");
 	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".swap_head_mid");
@@ -238344,13 +237243,13 @@ function getSelectorFromLocation$6(location) {
 /**
 * Drag an item over the equipment, show where to place the item
 */
-function onDragOver$6(event) {
+function onDragOver$1(event) {
 	if (window._OBJ_DRAG_) {
 		const data = window._OBJ_DRAG_;
 		if (data.type === "item") {
 			const item = data.data;
 			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$6("location" in item ? item.location : item.WearLocation);
+				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
 				const el = SwitchEquip.getRoot().querySelector(selector);
 				if (el) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
 					el.style.backgroundImage = `url(${_data})`;
@@ -238365,7 +237264,7 @@ function onDragOver$6(event) {
 /**
 * Drag out the window
 */
-function onDragLeave$5(event) {
+function onDragLeave(event) {
 	SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
 		td.style.backgroundImage = "none";
 	});
@@ -238375,7 +237274,7 @@ function onDragLeave$5(event) {
 /**
 * Drop an item in the equipment, equip it if possible
 */
-function onDrop$19(event) {
+function onDrop$14(event) {
 	let data;
 	try {
 		data = JSON.parse(event.dataTransfer.getData("Text"));
@@ -238485,9 +237384,9 @@ var init_SwitchEquip = __esmMin((() => {
 		_swapctx.push(canvases[1].getContext("2d"));
 		const panel = root.querySelector(".panel");
 		if (panel) {
-			panel.addEventListener("dragover", onDragOver$6);
-			panel.addEventListener("dragleave", onDragLeave$5);
-			panel.addEventListener("drop", onDrop$19);
+			panel.addEventListener("dragover", onDragOver$1);
+			panel.addEventListener("dragleave", onDragLeave);
+			panel.addEventListener("drop", onDrop$14);
 		}
 		const closeBtn = root.querySelector(".closeswap");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
@@ -238596,7 +237495,7 @@ var init_SwitchEquip = __esmMin((() => {
 			return string;
 		};
 		const root = SwitchEquip.getRoot();
-		const selector = getSelectorFromLocation$6(location);
+		const selector = getSelectorFromLocation$2(location);
 		const el = root.querySelector(selector);
 		if (el) el.innerHTML = `<div class="item" data-index="${item.index}"><button></button><span class="itemName">${add3Dots(_escapeHtml(DB.getItemName(item)), 19)}</span></div>`;
 		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
@@ -238615,7 +237514,7 @@ var init_SwitchEquip = __esmMin((() => {
 	*/
 	SwitchEquip.unEquip = function unEquip(index, location) {
 		const root = SwitchEquip.getRoot();
-		const selector = getSelectorFromLocation$6(location);
+		const selector = getSelectorFromLocation$2(location);
 		const item = SwitchEquip._list[index];
 		item.equipped = 0;
 		const el = root.querySelector(selector);
@@ -238815,11 +237714,11 @@ function onSwitchTab$3() {
 	const root = InventoryV2.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$39.tab = parseInt(idx, 10);
+	_preferences$34.tab = parseInt(idx, 10);
 	requestFilter$3();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$39.tab !== InventoryV2.TAB.FAV) {
+	if (_preferences$34.tab !== InventoryV2.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -238831,7 +237730,7 @@ function onSwitchTab$3() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$39.npcsalelock) {
+		if (_preferences$34.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -238874,7 +237773,7 @@ function requestFilter$3() {
 	for (let i = 0, count = list.length; i < count; ++i) InventoryV2.addItemSub(list[i]);
 	InventoryV2.updateScroll();
 }
-function onDrop$18(event) {
+function onDrop$13(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -239048,28 +237947,28 @@ function onTabDrop$1(event) {
 	Network.sendPacket(pkt);
 }
 function onItemLock$1() {
-	_preferences$39.itemlock = !_preferences$39.itemlock;
-	InventoryV2.itemlock = _preferences$39.itemlock;
-	const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$34.itemlock = !_preferences$34.itemlock;
+	InventoryV2.itemlock = _preferences$34.itemlock;
+	const lockImg = _preferences$34.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 		const btn = InventoryV2.getRoot().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onItemCompare$1() {
-	_preferences$39.itemcomp = !_preferences$39.itemcomp;
-	InventoryV2.itemcomp = _preferences$39.itemcomp;
-	const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$34.itemcomp = !_preferences$34.itemcomp;
+	InventoryV2.itemcomp = _preferences$34.itemcomp;
+	const compImg = _preferences$34.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 		const btn = InventoryV2.getRoot().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock$1() {
-	_preferences$39.npcsalelock = !_preferences$39.npcsalelock;
-	InventoryV2.npcsalelock = _preferences$39.npcsalelock;
+	_preferences$34.npcsalelock = !_preferences$34.npcsalelock;
+	InventoryV2.npcsalelock = _preferences$34.npcsalelock;
 	const root = InventoryV2.getRoot();
-	if (_preferences$39.npcsalelock) {
+	if (_preferences$34.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -239093,7 +237992,7 @@ function onNPCLock$1() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV2, _realSize$3, _preferences$39, lockOverlayTimeout$1, InventoryV2_default;
+var InventoryV2, _realSize$3, _preferences$34, lockOverlayTimeout$1, InventoryV2_default;
 var init_InventoryV2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -239133,7 +238032,7 @@ var init_InventoryV2 = __esmMin((() => {
 	InventoryV2.newItems = [];
 	InventoryV2.equippedItems = [];
 	_realSize$3 = 0;
-	_preferences$39 = Preferences.get("InventoryV2", {
+	_preferences$34 = Preferences.get("InventoryV2", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -239149,9 +238048,9 @@ var init_InventoryV2 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	InventoryV2.itemlock = _preferences$39.itemlock;
-	InventoryV2.itemcomp = _preferences$39.itemcomp;
-	InventoryV2.npcsalelock = _preferences$39.npcsalelock;
+	InventoryV2.itemlock = _preferences$34.itemlock;
+	InventoryV2.itemcomp = _preferences$34.itemcomp;
+	InventoryV2.npcsalelock = _preferences$34.npcsalelock;
 	InventoryV2.init = function Init() {
 		const root = InventoryV2.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
@@ -239169,7 +238068,7 @@ var init_InventoryV2 = __esmMin((() => {
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV2._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$18);
+		this._host.addEventListener("drop", onDrop$13);
 		this._host.addEventListener("dragover", (e) => {
 			e.stopImmediatePropagation();
 			e.preventDefault();
@@ -239211,19 +238110,19 @@ var init_InventoryV2 = __esmMin((() => {
 		this.draggable(".titlebar");
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$39.tab]) allTabs[_preferences$39.tab].classList.add("selected");
-		const lockImg = _preferences$39.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$34.tab]) allTabs[_preferences$34.tab].classList.add("selected");
+		const lockImg = _preferences$34.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const btn = root.querySelector(".item_drop_lock");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$39.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$34.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$39.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$39.tab !== InventoryV2.TAB.FAV) {
+		const lockSale = _preferences$34.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$34.tab !== InventoryV2.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -239247,16 +238146,16 @@ var init_InventoryV2 = __esmMin((() => {
 		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$3());
 	};
 	InventoryV2.onAppend = function OnAppend() {
-		if (!_preferences$39.show) this._host.style.display = "none";
-		this.resize(_preferences$39.width, _preferences$39.height);
+		if (!_preferences$34.show) this._host.style.display = "none";
+		this.resize(_preferences$34.width, _preferences$34.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$39.magnet_top;
-		this.magnet.BOTTOM = _preferences$39.magnet_bottom;
-		this.magnet.LEFT = _preferences$39.magnet_left;
-		this.magnet.RIGHT = _preferences$39.magnet_right;
-		_realSize$3 = _preferences$39.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$34.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$34.magnet_top;
+		this.magnet.BOTTOM = _preferences$34.magnet_bottom;
+		this.magnet.LEFT = _preferences$34.magnet_left;
+		this.magnet.RIGHT = _preferences$34.magnet_right;
+		_realSize$3 = _preferences$34.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = InventoryV2.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -239267,17 +238166,17 @@ var init_InventoryV2 = __esmMin((() => {
 		this.equipswitchlist.length = 0;
 		InventoryV2.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$39.show = this._host.style.display !== "none";
-		_preferences$39.reduce = !!_realSize$3;
-		_preferences$39.y = parseInt(this._host.style.top, 10);
-		_preferences$39.x = parseInt(this._host.style.left, 10);
+		_preferences$34.show = this._host.style.display !== "none";
+		_preferences$34.reduce = !!_realSize$3;
+		_preferences$34.y = parseInt(this._host.style.top, 10);
+		_preferences$34.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$39.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$39.magnet_top = this.magnet.TOP;
-		_preferences$39.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$39.magnet_left = this.magnet.LEFT;
-		_preferences$39.magnet_right = this.magnet.RIGHT;
-		_preferences$39.save();
+		_preferences$34.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$34.magnet_top = this.magnet.TOP;
+		_preferences$34.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$34.magnet_left = this.magnet.LEFT;
+		_preferences$34.magnet_right = this.magnet.RIGHT;
+		_preferences$34.save();
 	};
 	InventoryV2.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
@@ -239393,7 +238292,7 @@ var init_InventoryV2 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV2.newItems.indexOf(item.index) === -1) InventoryV2.newItems.push(item.index);
-			if (getItemTab$1(item) === _preferences$39.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$1(item) === _preferences$34.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -239419,7 +238318,7 @@ var init_InventoryV2 = __esmMin((() => {
 		}
 		const isInSwitchList = InventoryV2.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$39.tab) {
+		if (tab === _preferences$34.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV2.getRoot();
 			const content = root.querySelector(".container .content");
@@ -243326,7 +242225,7 @@ function onSwitchTab$2() {
 	const root = InventoryV3.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$38.tab = parseInt(idx, 10);
+	_preferences$33.tab = parseInt(idx, 10);
 	requestFilter$2();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
@@ -243335,10 +242234,10 @@ function onSwitchTab$2() {
 	const lockOverlay = root.querySelector(".lockoverlay");
 	const lockMsg = root.querySelector(".lockoverlaymsg");
 	const sort = root.querySelector(".sort");
-	const onFavTab = _preferences$38.tab === InventoryV3.TAB.FAV;
-	if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$38.npcsalelock));
-	if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$38.npcsalelock));
-	if (lockOverlay) lockOverlay.classList.toggle("hidden", !(onFavTab && _preferences$38.npcsalelock));
+	const onFavTab = _preferences$33.tab === InventoryV3.TAB.FAV;
+	if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$33.npcsalelock));
+	if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$33.npcsalelock));
+	if (lockOverlay) lockOverlay.classList.toggle("hidden", !(onFavTab && _preferences$33.npcsalelock));
 	if (lockMsg) lockMsg.classList.add("hidden");
 	if (sort) sort.classList.toggle("hidden", !onFavTab);
 }
@@ -243364,7 +242263,7 @@ function requestFilter$2() {
 	for (let i = 0, count = list.length; i < count; ++i) InventoryV3.addItemSub(list[i]);
 	InventoryV3.updateScroll();
 }
-function onDrop$17(event) {
+function onDrop$12(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -243611,32 +242510,32 @@ function onFinalReqInventoryExpandResult(pkt) {
 	}
 }
 function onItemLock() {
-	_preferences$38.itemlock = !_preferences$38.itemlock;
-	InventoryV3.itemlock = _preferences$38.itemlock;
-	const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$33.itemlock = !_preferences$33.itemlock;
+	InventoryV3.itemlock = _preferences$33.itemlock;
+	const lockImg = _preferences$33.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 		const btn = InventoryV3.getRoot().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onItemCompare() {
-	_preferences$38.itemcomp = !_preferences$38.itemcomp;
-	InventoryV3.itemcomp = _preferences$38.itemcomp;
-	const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$33.itemcomp = !_preferences$33.itemcomp;
+	InventoryV3.itemcomp = _preferences$33.itemcomp;
+	const compImg = _preferences$33.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 		const btn = InventoryV3.getRoot().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock() {
-	_preferences$38.npcsalelock = !_preferences$38.npcsalelock;
-	InventoryV3.npcsalelock = _preferences$38.npcsalelock;
+	_preferences$33.npcsalelock = !_preferences$33.npcsalelock;
+	InventoryV3.npcsalelock = _preferences$33.npcsalelock;
 	const root = InventoryV3.getRoot();
 	const dealOn = root.querySelector(".deallock_on");
 	const dealOff = root.querySelector(".deallock_off");
-	if (dealOn) dealOn.classList.toggle("hidden", !_preferences$38.npcsalelock);
-	if (dealOff) dealOff.classList.toggle("hidden", _preferences$38.npcsalelock);
-	if (_preferences$38.npcsalelock) {
+	if (dealOn) dealOn.classList.toggle("hidden", !_preferences$33.npcsalelock);
+	if (dealOff) dealOff.classList.toggle("hidden", _preferences$33.npcsalelock);
+	if (_preferences$33.npcsalelock) {
 		const lockOverlay = root.querySelector(".lockoverlay");
 		if (lockOverlay) lockOverlay.classList.remove("hidden");
 		const lockMsg = root.querySelector(".lockoverlaymsg");
@@ -243652,7 +242551,7 @@ function onNPCLock() {
 		if (lockMsg) lockMsg.classList.add("hidden");
 	}
 }
-var InventoryV3, _realSize$2, _preferences$38, lockOverlayTimeout, InventoryV3_default;
+var InventoryV3, _realSize$2, _preferences$33, lockOverlayTimeout, InventoryV3_default;
 var init_InventoryV3 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -243697,7 +242596,7 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.newItems = [];
 	InventoryV3.equippedItems = [];
 	_realSize$2 = 0;
-	_preferences$38 = Preferences.get("InventoryV3", {
+	_preferences$33 = Preferences.get("InventoryV3", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -243713,9 +242612,9 @@ var init_InventoryV3 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	InventoryV3.itemlock = _preferences$38.itemlock;
-	InventoryV3.itemcomp = _preferences$38.itemcomp;
-	InventoryV3.npcsalelock = _preferences$38.npcsalelock;
+	InventoryV3.itemlock = _preferences$33.itemlock;
+	InventoryV3.itemcomp = _preferences$33.itemcomp;
+	InventoryV3.npcsalelock = _preferences$33.npcsalelock;
 	InventoryV3.init = function Init() {
 		const root = InventoryV3.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
@@ -243736,7 +242635,7 @@ var init_InventoryV3 = __esmMin((() => {
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			InventoryV3._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$17);
+		this._host.addEventListener("drop", onDrop$12);
 		this._host.addEventListener("dragover", (e) => {
 			e.stopImmediatePropagation();
 			e.preventDefault();
@@ -243778,22 +242677,22 @@ var init_InventoryV3 = __esmMin((() => {
 		this.draggable(".titlebar");
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$38.tab]) allTabs[_preferences$38.tab].classList.add("selected");
-		const lockImg = _preferences$38.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$33.tab]) allTabs[_preferences$33.tab].classList.add("selected");
+		const lockImg = _preferences$33.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const btn = root.querySelector(".item_drop_lock");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$38.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$33.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 		const dealOn = root.querySelector(".deallock_on");
 		const dealOff = root.querySelector(".deallock_off");
-		const onFavTab = _preferences$38.tab === InventoryV3.TAB.FAV;
-		if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$38.npcsalelock));
-		if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$38.npcsalelock));
+		const onFavTab = _preferences$33.tab === InventoryV3.TAB.FAV;
+		if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$33.npcsalelock));
+		if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$33.npcsalelock));
 		const sortEl = root.querySelector(".sort");
 		if (sortEl) sortEl.classList.toggle("hidden", !onFavTab);
 		const itemExpansion = root.querySelector(".item_expansion");
@@ -243813,16 +242712,16 @@ var init_InventoryV3 = __esmMin((() => {
 		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$2());
 	};
 	InventoryV3.onAppend = function OnAppend() {
-		if (!_preferences$38.show) this._host.style.display = "none";
-		this.resize(_preferences$38.width, _preferences$38.height);
+		if (!_preferences$33.show) this._host.style.display = "none";
+		this.resize(_preferences$33.width, _preferences$33.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$38.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$38.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$38.magnet_top;
-		this.magnet.BOTTOM = _preferences$38.magnet_bottom;
-		this.magnet.LEFT = _preferences$38.magnet_left;
-		this.magnet.RIGHT = _preferences$38.magnet_right;
-		_realSize$2 = _preferences$38.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$33.magnet_top;
+		this.magnet.BOTTOM = _preferences$33.magnet_bottom;
+		this.magnet.LEFT = _preferences$33.magnet_left;
+		this.magnet.RIGHT = _preferences$33.magnet_right;
+		_realSize$2 = _preferences$33.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = InventoryV3.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -243833,17 +242732,17 @@ var init_InventoryV3 = __esmMin((() => {
 		this.equipswitchlist.length = 0;
 		InventoryV3.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$38.show = this._host.style.display !== "none";
-		_preferences$38.reduce = !!_realSize$2;
-		_preferences$38.y = parseInt(this._host.style.top, 10);
-		_preferences$38.x = parseInt(this._host.style.left, 10);
+		_preferences$33.show = this._host.style.display !== "none";
+		_preferences$33.reduce = !!_realSize$2;
+		_preferences$33.y = parseInt(this._host.style.top, 10);
+		_preferences$33.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$38.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$38.magnet_top = this.magnet.TOP;
-		_preferences$38.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$38.magnet_left = this.magnet.LEFT;
-		_preferences$38.magnet_right = this.magnet.RIGHT;
-		_preferences$38.save();
+		_preferences$33.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$33.magnet_top = this.magnet.TOP;
+		_preferences$33.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$33.magnet_left = this.magnet.LEFT;
+		_preferences$33.magnet_right = this.magnet.RIGHT;
+		_preferences$33.save();
 	};
 	InventoryV3.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
@@ -243967,7 +242866,7 @@ var init_InventoryV3 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV3.newItems.indexOf(item.index) === -1) InventoryV3.newItems.push(item.index);
-			if (getItemTab(item) === _preferences$38.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab(item) === _preferences$33.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (el) el.style.backgroundImage = `url(${data})`;
 			});
@@ -243993,7 +242892,7 @@ var init_InventoryV3 = __esmMin((() => {
 		}
 		const isInSwitchList = InventoryV3.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$38.tab) {
+		if (tab === _preferences$33.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV3.getRoot();
 			const content = root.querySelector(".container .content");
@@ -244260,14 +243159,14 @@ function resizeHeight$3(height) {
 	Storage$1._host.style.height = `${50 + height * 32}px`;
 }
 function onSwitchTab$1(idx) {
-	_preferences$37.tab = idx;
+	_preferences$32.tab = idx;
 	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
 		const tabs = Storage$1.getRoot().querySelector(".tabs");
 		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		requestFilter$1();
 	});
 }
-function onDrop$16(event) {
+function onDrop$11(event) {
 	let data;
 	try {
 		data = JSON.parse(event.dataTransfer.getData("Text"));
@@ -244292,10 +243191,10 @@ function onDrop$16(event) {
 function requestFilter$1() {
 	const content = Storage$1.getRoot().querySelector(".container .content");
 	if (content) content.innerHTML = "";
-	for (let i = 0, count = _list$13.length; i < count; ++i) Storage$1.addItemSub(_list$13[i]);
+	for (let i = 0, count = _list$10.length; i < count; ++i) Storage$1.addItemSub(_list$10[i]);
 }
 function getItemIndexById$3(index) {
-	for (let i = 0, count = _list$13.length; i < count; ++i) if (_list$13[i].index === index) return i;
+	for (let i = 0, count = _list$10.length; i < count; ++i) if (_list$10[i].index === index) return i;
 	return -1;
 }
 function onScroll$7(event, contentEl) {
@@ -244309,7 +243208,7 @@ function onScroll$7(event, contentEl) {
 function onItemOver$12(itemEl, root) {
 	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i < 0) return;
-	const item = _list$13[i];
+	const item = _list$10[i];
 	const overlay = root.querySelector(".overlay");
 	if (overlay) {
 		overlay.style.display = "";
@@ -244336,7 +243235,7 @@ function onItemDragStart$7(event, itemEl) {
 	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Storage",
-		data: _list$13[i]
+		data: _list$10[i]
 	}));
 }
 function onItemDragEnd$8() {
@@ -244348,13 +243247,13 @@ function onItemInfo$15(event, itemEl) {
 	if (i === -1) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		transferItemToOtherUI$1(_list$13[i]);
+		transferItemToOtherUI$1(_list$10[i]);
 		return false;
 	}
-	if (ItemInfo_default.uid === _list$13[i].ITID) ItemInfo_default.remove();
+	if (ItemInfo_default.uid === _list$10[i].ITID) ItemInfo_default.remove();
 	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$13[i].ITID;
-	ItemInfo_default.setItem(_list$13[i]);
+	ItemInfo_default.uid = _list$10[i].ITID;
+	ItemInfo_default.setItem(_list$10[i]);
 	return false;
 }
 function transferItemToOtherUI$1(item) {
@@ -244366,7 +243265,7 @@ function transferItemToOtherUI$1(item) {
 	else if (isCartOpen) Storage$1.reqMoveItemToCart(item.index, count);
 	return true;
 }
-var Storage$1, _list$13, _preferences$37, Storage_default$3;
+var Storage$1, _list$10, _preferences$32, Storage_default$3;
 var init_Storage$5 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -244395,8 +243294,8 @@ var init_Storage$5 = __esmMin((() => {
 		CARD: 5,
 		ETC: 6
 	};
-	_list$13 = [];
-	_preferences$37 = Preferences.get("Storage", {
+	_list$10 = [];
+	_preferences$32 = Preferences.get("Storage", {
 		x: 200,
 		y: 500,
 		height: 8,
@@ -244416,11 +243315,11 @@ var init_Storage$5 = __esmMin((() => {
 				if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
 			});
 		}
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$37.tab + 1}.bmp`, (data) => {
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$32.tab + 1}.bmp`, (data) => {
 			const tabs = root.querySelector(".tabs");
 			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
-		resizeHeight$3(_preferences$37.height);
+		resizeHeight$3(_preferences$32.height);
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("wheel", (e) => onScroll$7(e, content));
@@ -244449,7 +243348,7 @@ var init_Storage$5 = __esmMin((() => {
 				}
 			});
 		}
-		this._host.addEventListener("drop", (e) => onDrop$16(e));
+		this._host.addEventListener("drop", (e) => onDrop$11(e));
 		this._host.addEventListener("dragover", (e) => {
 			e.stopImmediatePropagation();
 			e.preventDefault();
@@ -244459,30 +243358,30 @@ var init_Storage$5 = __esmMin((() => {
 	};
 	Storage$1.onAppend = function onAppend() {
 		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
 	};
 	Storage$1.onRemove = function onRemove() {
 		const content = this.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
-		_list$13.length = 0;
-		_preferences$37.y = parseInt(this._host.style.top, 10);
-		_preferences$37.x = parseInt(this._host.style.left, 10);
-		_preferences$37.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$37.save();
+		_list$10.length = 0;
+		_preferences$32.y = parseInt(this._host.style.top, 10);
+		_preferences$32.x = parseInt(this._host.style.left, 10);
+		_preferences$32.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$32.save();
 	};
 	Storage$1.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$13.push(items[i]);
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$10.push(items[i]);
 	};
 	Storage$1.addItem = function addItem(item) {
 		const i = getItemIndexById$3(item.index);
 		if (i > -1) {
-			_list$13[i].count += item.count;
+			_list$10[i].count += item.count;
 			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$13[i].count;
+			if (countEl) countEl.textContent = _list$10[i].count;
 			return;
 		}
-		if (this.addItemSub(item)) _list$13.push(item);
+		if (this.addItemSub(item)) _list$10.push(item);
 	};
 	Storage$1.addItemSub = function addItemSub(item) {
 		let tab;
@@ -244515,7 +243414,7 @@ var init_Storage$5 = __esmMin((() => {
 				tab = Storage$1.TAB.ETC;
 				break;
 		}
-		if (tab === _preferences$37.tab) {
+		if (tab === _preferences$32.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = this.getRoot();
 			const content = root.querySelector(".container .content");
@@ -244552,16 +243451,16 @@ var init_Storage$5 = __esmMin((() => {
 		const i = getItemIndexById$3(index);
 		if (i < 0) return null;
 		const root = this.getRoot();
-		if (_list$13[i].count) {
-			_list$13[i].count -= count;
-			if (_list$13[i].count > 0) {
+		if (_list$10[i].count) {
+			_list$10[i].count -= count;
+			if (_list$10[i].count > 0) {
 				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$13[i].count;
-				return _list$13[i];
+				if (countEl) countEl.textContent = _list$10[i].count;
+				return _list$10[i];
 			}
 		}
-		const item = _list$13[i];
-		_list$13.splice(i, 1);
+		const item = _list$10[i];
+		_list$10.splice(i, 1);
 		const el = root.querySelector(`.item[data-index="${index}"]`);
 		if (el) el.remove();
 		return item;
@@ -244887,14 +243786,14 @@ function resizeHeight$2(height) {
 	Storage._host.style.height = `${50 + height * 32}px`;
 }
 function onSwitchTab(idx) {
-	_preferences$36.tab = idx;
+	_preferences$31.tab = idx;
 	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
 		const tabs = Storage.getRoot().querySelector(".tabs");
 		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		requestFilter();
 	});
 }
-function onDrop$15(event) {
+function onDrop$10(event) {
 	let data;
 	try {
 		data = JSON.parse(event.dataTransfer.getData("Text"));
@@ -244920,11 +243819,11 @@ function requestFilter() {
 	const root = Storage.getRoot();
 	const content = root.querySelector(".container .content");
 	if (content) content.innerHTML = "";
-	let list = _list$12;
+	let list = _list$9;
 	const orderBySelect = root.querySelector(".storage-order-by");
 	const orderBy = orderBySelect ? orderBySelect.value : "BASE";
 	if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
-		list = _list$12.slice(0);
+		list = _list$9.slice(0);
 		list.sort((a, b) => {
 			const nameA = DB.getItemName(a);
 			const nameB = DB.getItemName(b);
@@ -244934,7 +243833,7 @@ function requestFilter() {
 	for (let i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
 }
 function getItemIndexById$2(index) {
-	for (let i = 0, count = _list$12.length; i < count; ++i) if (_list$12[i].index === index) return i;
+	for (let i = 0, count = _list$9.length; i < count; ++i) if (_list$9[i].index === index) return i;
 	return -1;
 }
 function onScroll$6(event, contentEl) {
@@ -244955,8 +243854,8 @@ function onFilterWindowOpen(button) {
 		return;
 	}
 	const filtered_list = [];
-	for (let i = 0, count = _list$12.length; i < count; ++i) {
-		const item = _list$12[i];
+	for (let i = 0, count = _list$9.length; i < count; ++i) {
+		const item = _list$9[i];
 		let tab;
 		switch (item.type) {
 			case ItemType_default.HEALING:
@@ -245019,7 +243918,7 @@ function onFilterWindowHoverOut(root) {
 function onItemOver$11(itemEl, root) {
 	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i < 0) return;
-	const item = _list$12[i];
+	const item = _list$9[i];
 	const overlay = root.querySelector(".overlay");
 	if (overlay) {
 		overlay.style.display = "";
@@ -245045,7 +243944,7 @@ function onItemDragStart$6(event, itemEl) {
 	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Storage",
-		data: _list$12[i]
+		data: _list$9[i]
 	}));
 }
 function onItemDragEnd$7() {
@@ -245057,16 +243956,16 @@ function onItemInfo$14(event, itemEl) {
 	if (i === -1) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		Storage.transferItemToOtherUI(_list$12[i]);
+		Storage.transferItemToOtherUI(_list$9[i]);
 		return false;
 	}
-	if (ItemInfo_default.uid === _list$12[i].ITID) ItemInfo_default.remove();
+	if (ItemInfo_default.uid === _list$9[i].ITID) ItemInfo_default.remove();
 	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$12[i].ITID;
-	ItemInfo_default.setItem(_list$12[i]);
+	ItemInfo_default.uid = _list$9[i].ITID;
+	ItemInfo_default.setItem(_list$9[i]);
 	return false;
 }
-var Storage, _list$12, _openFilters, _preferences$36, Storage_default;
+var Storage, _list$9, _openFilters, _preferences$31, Storage_default;
 var init_Storage$2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -245096,9 +243995,9 @@ var init_Storage$2 = __esmMin((() => {
 		CARD: 5,
 		ETC: 6
 	};
-	_list$12 = [];
+	_list$9 = [];
 	_openFilters = {};
-	_preferences$36 = Preferences.get("Storage", {
+	_preferences$31 = Preferences.get("Storage", {
 		x: 200,
 		y: 500,
 		height: 8,
@@ -245130,11 +244029,11 @@ var init_Storage$2 = __esmMin((() => {
 		}
 		const orderBySelect = root.querySelector(".storage-order-by");
 		if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter());
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$36.tab + 1}.bmp`, (data) => {
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$31.tab + 1}.bmp`, (data) => {
 			const tabs = root.querySelector(".tabs");
 			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
-		resizeHeight$2(_preferences$36.height);
+		resizeHeight$2(_preferences$31.height);
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("wheel", (e) => onScroll$6(e, content));
@@ -245163,7 +244062,7 @@ var init_Storage$2 = __esmMin((() => {
 				}
 			});
 		}
-		this._host.addEventListener("drop", (e) => onDrop$15(e));
+		this._host.addEventListener("drop", (e) => onDrop$10(e));
 		this._host.addEventListener("dragover", (e) => {
 			e.stopImmediatePropagation();
 			e.preventDefault();
@@ -245173,25 +244072,25 @@ var init_Storage$2 = __esmMin((() => {
 	};
 	Storage.onAppend = function onAppend() {
 		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$31.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
 	};
 	Storage.onRemove = function onRemove() {
 		const root = this.getRoot();
 		const content = root.querySelector(".container .content");
 		if (content) content.innerHTML = "";
-		_list$12.length = 0;
-		_preferences$36.y = parseInt(this._host.style.top, 10);
-		_preferences$36.x = parseInt(this._host.style.left, 10);
-		_preferences$36.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$36.save();
+		_list$9.length = 0;
+		_preferences$31.y = parseInt(this._host.style.top, 10);
+		_preferences$31.x = parseInt(this._host.style.left, 10);
+		_preferences$31.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$31.save();
 		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
 		_openFilters = {};
 		const searchInput = root.querySelector("#storage-search-input");
 		if (searchInput) searchInput.value = "";
 	};
 	Storage.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$12.push(items[i]);
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$9.push(items[i]);
 	};
 	Storage.addItem = function addItem(item) {
 		const i = getItemIndexById$2(item.index);
@@ -245227,12 +244126,12 @@ var init_Storage$2 = __esmMin((() => {
 		}
 		if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
 		if (i > -1) {
-			_list$12[i].count += item.count;
+			_list$9[i].count += item.count;
 			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$12[i].count;
+			if (countEl) countEl.textContent = _list$9[i].count;
 			return;
 		}
-		if (this.addItemSub(item)) _list$12.push(item);
+		if (this.addItemSub(item)) _list$9.push(item);
 	};
 	Storage.addItemSub = function addItemSub(item) {
 		let tab;
@@ -245265,7 +244164,7 @@ var init_Storage$2 = __esmMin((() => {
 				tab = Storage.TAB.ETC;
 				break;
 		}
-		if (tab === _preferences$36.tab) {
+		if (tab === _preferences$31.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = this.getRoot();
 			const content = root.querySelector(".container .content");
@@ -245303,16 +244202,16 @@ var init_Storage$2 = __esmMin((() => {
 		if (i < 0) return null;
 		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].removeItem(index, count);
 		const root = this.getRoot();
-		if (_list$12[i].count) {
-			_list$12[i].count -= count;
-			if (_list$12[i].count > 0) {
+		if (_list$9[i].count) {
+			_list$9[i].count -= count;
+			if (_list$9[i].count > 0) {
 				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$12[i].count;
-				return _list$12[i];
+				if (countEl) countEl.textContent = _list$9[i].count;
+				return _list$9[i];
 			}
 		}
-		const item = _list$12[i];
-		_list$12.splice(i, 1);
+		const item = _list$9[i];
+		_list$9.splice(i, 1);
 		const el = root.querySelector(`.item[data-index="${index}"]`);
 		if (el) el.remove();
 		const overlay = root.querySelector(".overlay");
@@ -245340,7 +244239,7 @@ var init_Storage$2 = __esmMin((() => {
 		const searchInput = this.getRoot().querySelector("#storage-search-input");
 		if (!searchInput) return;
 		const searchTerm = searchInput.value.toLowerCase();
-		const filteredItems = _list$12.filter((item) => {
+		const filteredItems = _list$9.filter((item) => {
 			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
 		});
 		if (!_openFilters[ItemType_default.SEARCH]) {
@@ -245465,7 +244364,7 @@ function onToggleReduction() {
 *
 * @param {event}
 */
-function onDrop$14(event) {
+function onDrop$9(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	try {
@@ -245627,7 +244526,7 @@ function onItemUsed$1(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-var CartItems, _realSize$1, _preferences$35, CartItems_default;
+var CartItems, _realSize$1, _preferences$30, CartItems_default;
 var init_CartItems = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -245655,7 +244554,7 @@ var init_CartItems = __esmMin((() => {
 	*/
 	CartItems.list = [];
 	_realSize$1 = 0;
-	_preferences$35 = Preferences.get("CartItems", {
+	_preferences$30 = Preferences.get("CartItems", {
 		x: 200,
 		y: 200,
 		width: 7,
@@ -245678,7 +244577,7 @@ var init_CartItems = __esmMin((() => {
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			CartItems._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$14);
+		this._host.addEventListener("drop", onDrop$9);
 		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
 		const content = root.querySelector(".container .content");
 		if (content) {
@@ -245714,12 +244613,12 @@ var init_CartItems = __esmMin((() => {
 	*/
 	CartItems.onAppend = function OnAppend() {
 		if (SessionStorage_default.Entity.hasCart === false) this._host.style.display = "none";
-		if (!_preferences$35.show) this._host.style.display = "none";
-		this.resize(_preferences$35.width, _preferences$35.height);
+		if (!_preferences$30.show) this._host.style.display = "none";
+		this.resize(_preferences$30.width, _preferences$30.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
-		_realSize$1 = _preferences$35.reduce ? 0 : hostRect.height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
+		_realSize$1 = _preferences$30.reduce ? 0 : hostRect.height;
 		const miniBtn = this.getRoot().querySelector(".titlebar .mini");
 		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
 	};
@@ -245731,14 +244630,14 @@ var init_CartItems = __esmMin((() => {
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$35.show = this._host.style.display !== "none";
-		_preferences$35.reduce = !!_realSize$1;
-		_preferences$35.y = parseInt(this._host.style.top, 10);
-		_preferences$35.x = parseInt(this._host.style.left, 10);
+		_preferences$30.show = this._host.style.display !== "none";
+		_preferences$30.reduce = !!_realSize$1;
+		_preferences$30.y = parseInt(this._host.style.top, 10);
+		_preferences$30.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$35.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$35.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$35.save();
+		_preferences$30.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$30.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$30.save();
 	};
 	/**
 	* Process shortcut
@@ -245922,2215 +244821,11 @@ var init_CartItems = __esmMin((() => {
 	CartItems_default = UIManager.addComponent(CartItems);
 }));
 //#endregion
-//#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.html?raw
-var EquipmentV0_default$2;
-var init_EquipmentV0$2 = __esmMin((() => {
-	EquipmentV0_default$2 = "<div id=\"EquipmentV0\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n\r\n	<div class=\"panel\">\r\n		<table class=\"content\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n\r\n		<div class=\"footer\" id=\"equipment_footer\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"view_status\"\r\n					data-background=\"basic_interface/viewoff.bmp\"\r\n					data-preload=\"basic_interface/viewon.bmp\"\r\n				></button>\r\n				<span data-text=\"105\">Status</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.css?raw
-var EquipmentV0_default$1;
-var init_EquipmentV0$1 = __esmMin((() => {
-	EquipmentV0_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV0 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV0 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .panel {\r\n	background-color: white;\r\n}\r\n#EquipmentV0.equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV0 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV0 .col1,\r\n#EquipmentV0 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV0 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV0 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV0 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV0 .col3 .item button,\r\n#EquipmentV0 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV0 .col1 .item button,\r\n#EquipmentV0 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV0 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV0 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV0 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV0 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV0 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV0 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV0 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV0 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV0 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV0 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV0 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV0 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.js
-function escapeHTML$5(str) {
-	const div = document.createElement("div");
-	div.textContent = str;
-	return div.innerHTML;
-}
-function onCartItems$4() {
-	if (SessionStorage_default.Entity.hasCart === false) return;
-	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
-}
-function onRemoveOption$5() {
-	const pkt = new PACKET.CZ.REQ_CARTOFF();
-	Network.sendPacket(pkt);
-}
-function hideStatus$2() {
-	const winStats = WinStatsController.getUI();
-	if (winStats.isEmbedded()) winStats.unembed();
-}
-function toggleStatus$5() {
-	const self = EquipmentV0.getRoot().querySelector(".view_status");
-	const winStats = WinStatsController.getUI();
-	const isVisible = winStats.isEmbedded();
-	const state = isVisible ? "on" : "off";
-	if (isVisible) {
-		winStats.unembed();
-		_preferences$34.stats = false;
-	} else {
-		winStats.embed(EquipmentV0._host);
-		_preferences$34.stats = true;
-	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
-		if (self) self.style.backgroundImage = `url(${data})`;
-	});
-}
-function toggleEquip$4() {
-	EquipmentV0.onConfigUpdate(0, !_showEquip$4 ? 1 : 0);
-}
-function getSelectorFromLocation$5(location) {
-	const selector = [];
-	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
-	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".head_mid");
-	if (location & EquipmentLocation_default.HEAD_BOTTOM) selector.push(".head_bottom");
-	if (location & EquipmentLocation_default.ARMOR) selector.push(".armor");
-	if (location & EquipmentLocation_default.WEAPON) selector.push(".weapon");
-	if (location & EquipmentLocation_default.SHIELD) selector.push(".shield");
-	if (location & EquipmentLocation_default.GARMENT) selector.push(".garment");
-	if (location & EquipmentLocation_default.SHOES) selector.push(".shoes");
-	if (location & EquipmentLocation_default.ACCESSORY1) selector.push(".accessory1");
-	if (location & EquipmentLocation_default.ACCESSORY2) selector.push(".accessory2");
-	if (location & EquipmentLocation_default.AMMO) selector.push(".ammo");
-	return selector.join(", ");
-}
-function onDragOver$5(event) {
-	if (window._OBJ_DRAG_) {
-		const data = window._OBJ_DRAG_;
-		if (data.type === "item") {
-			const item = data.data;
-			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$5("location" in item ? item.location : item.WearLocation);
-				const cells = EquipmentV0.getRoot().querySelectorAll(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
-					cells.forEach((c) => {
-						c.style.backgroundImage = `url(${_data})`;
-					});
-				});
-			}
-		}
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDragLeave$4(event) {
-	EquipmentV0.getRoot().querySelectorAll("td").forEach((td) => {
-		td.style.backgroundImage = "none";
-	});
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDrop$13(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {
-		return false;
-	}
-	if (data && data.type === "item") {
-		item = data.data;
-		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV0.getRoot().querySelectorAll("td").forEach((td) => {
-				td.style.backgroundImage = "none";
-			});
-			EquipmentV0.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
-		}
-	}
-	return false;
-}
-function onEquipmentInfo$4(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = _list$11[index];
-	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-	else {
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onEquipmentUnEquip$4() {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	EquipmentV0.onUnEquip(index);
-	const overlay = EquipmentV0.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onEquipmentOver$4() {
-	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	const item = _list$11[idx];
-	if (!item) return;
-	const root = EquipmentV0.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#EquipmentV0") || root;
-	const btnRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	const top = btnRect.top - rootRect.top;
-	const left = btnRect.left - rootRect.left;
-	if (!top && !left) return;
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${top - 22}px`;
-		overlay.style.left = `${left - 22}px`;
-		overlay.textContent = DB.getItemName(item);
-	}
-}
-function onEquipmentOut$4() {
-	const overlay = EquipmentV0.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-var EquipmentV0, _preferences$34, _list$11, _ctx$10, _showEquip$4, _btnLevelUp$4, renderCharacter$4, EquipmentV0_default;
-var init_EquipmentV0 = __esmMin((() => {
-	init_DBManager();
-	init_StatusState();
-	init_EquipmentLocation();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Camera();
-	init_SpriteRenderer();
-	init_UIVersionManager();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_CartItems();
-	init_WinStats();
-	init_EquipmentV0$2();
-	init_EquipmentV0$1();
-	init_Inventory();
-	EquipmentV0 = new GUIComponent("EquipmentV0", EquipmentV0_default$1);
-	EquipmentV0.render = () => EquipmentV0_default$2;
-	_preferences$34 = Preferences.get("EquipmentV0", {
-		x: 480,
-		y: 200,
-		show: false,
-		reduce: false,
-		stats: false
-	}, 1);
-	_list$11 = {};
-	_showEquip$4 = false;
-	EquipmentV0.init = function init() {
-		const root = EquipmentV0.getRoot();
-		const canvas = root.querySelector("canvas");
-		if (canvas) _ctx$10 = canvas.getContext("2d");
-		if (UIVersionManager.getEquipmentVersion() > 0) {
-			const lvlupEl = root.querySelector("#lvlup_base");
-			if (lvlupEl) {
-				_btnLevelUp$4 = lvlupEl;
-				lvlupEl.remove();
-				_btnLevelUp$4.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-				_btnLevelUp$4.addEventListener("click", () => {
-					if (_btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
-					EquipmentV0._host.style.display = "";
-					EquipmentV0._host.parentNode.appendChild(EquipmentV0._host);
-					if (EquipmentV0._host.style.display !== "none") Renderer.render(renderCharacter$4);
-				});
-			}
-		} else {
-			const footer = root.querySelector("#equipment_footer");
-			if (footer) footer.remove();
-			const rootEl = root.querySelector("#EquipmentV0");
-			if (rootEl) rootEl.classList.add("equipmentV0");
-			const lvlup = root.querySelector("#lvlup_base");
-			if (lvlup) lvlup.remove();
-		}
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", () => {
-			const panel = root.querySelector(".panel");
-			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
-		});
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			EquipmentV0._host.style.display = "none";
-			Renderer.stop(renderCharacter$4);
-			hideStatus$2();
-		});
-		const removeOptBtn = root.querySelector(".removeOption");
-		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$5);
-		const viewStatusBtn = root.querySelector(".view_status");
-		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$5);
-		const showEquipBtn = root.querySelector(".show_equip");
-		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$4);
-		const cartBtn = root.querySelector(".cartitems");
-		if (cartBtn) cartBtn.addEventListener("click", onCartItems$4);
-		this._host.addEventListener("dragover", onDragOver$5);
-		this._host.addEventListener("dragleave", onDragLeave$4);
-		this._host.addEventListener("drop", onDrop$13);
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onEquipmentInfo$4.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onEquipmentUnEquip$4.call(item, e);
-			});
-			content.addEventListener("mouseover", (e) => {
-				const btn = e.target.closest("button");
-				if (btn) onEquipmentOver$4.call(btn, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest("button")) onEquipmentOut$4();
-			});
-		}
-		this.draggable(".titlebar");
-	};
-	EquipmentV0.onAppend = function onAppend() {
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$34.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - hostRect.width)}px`;
-		if (!_preferences$34.show) this._host.style.display = "none";
-		if (_preferences$34.reduce) {
-			const panel = EquipmentV0.getRoot().querySelector(".panel");
-			if (panel) panel.style.display = "none";
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$34.stats && _preferences$34.show) WinStatsController.getUI().embed(EquipmentV0._host);
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = EquipmentV0.getRoot().querySelector(".view_status");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		if (EquipmentV0.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$4);
-	};
-	EquipmentV0.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$4 && _btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
-		Renderer.stop(renderCharacter$4);
-		_list$11 = {};
-		const root = EquipmentV0.getRoot();
-		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
-			el.innerHTML = "";
-		});
-		_preferences$34.show = this._host.style.display !== "none";
-		const panel = root.querySelector(".panel");
-		_preferences$34.reduce = panel ? panel.style.display === "none" : false;
-		const winStats = WinStatsController.getUI();
-		_preferences$34.stats = winStats.isEmbedded();
-		hideStatus$2();
-		_preferences$34.y = parseInt(this._host.style.top, 10);
-		_preferences$34.x = parseInt(this._host.style.left, 10);
-		_preferences$34.save();
-	};
-	EquipmentV0.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			Renderer.render(renderCharacter$4);
-			if (UIVersionManager.getEquipmentVersion() > 0) {
-				if (_btnLevelUp$4 && _btnLevelUp$4.parentNode) _btnLevelUp$4.remove();
-				if (_preferences$34.stats) WinStatsController.getUI().embed(EquipmentV0._host);
-			}
-			this.focus();
-		} else {
-			this._host.style.display = "none";
-			Renderer.stop(renderCharacter$4);
-			hideStatus$2();
-		}
-	};
-	EquipmentV0.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-	};
-	EquipmentV0.setEquipConfig = function setEquipConfig(on) {
-		_showEquip$4 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = EquipmentV0.getRoot().querySelector(".show_equip");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-	};
-	EquipmentV0.setCostumeConfig = function setCostumeConfig(_on) {};
-	EquipmentV0.equip = function equip(item, location) {
-		const it = DB.getItemInfo(item.ITID);
-		_list$11[item.index] = item;
-		if (arguments.length === 1) {
-			if ("WearState" in item) location = item.WearState;
-			else if ("location" in item) location = item.location;
-		}
-		function add3Dots(string, limit) {
-			function stripHTML(str) {
-				const div = document.createElement("div");
-				div.innerHTML = str;
-				return div.textContent || div.innerText || "";
-			}
-			const text = stripHTML(string);
-			if (text.length > limit) return text.substring(0, limit) + "...";
-			return text;
-		}
-		const root = EquipmentV0.getRoot();
-		const selector = getSelectorFromLocation$5(location);
-		root.querySelectorAll(selector).forEach((cell) => {
-			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$5(add3Dots(DB.getItemName(item, {
-				showItemGrade: false,
-				showItemSlots: false,
-				showItemOptions: false
-			}), 25)) + "</span></div>";
-		});
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
-			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
-				btn.style.backgroundImage = `url(${data})`;
-			});
-		});
-		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
-	};
-	EquipmentV0.unEquip = function unEquip(index, location) {
-		const selector = getSelectorFromLocation$5(location);
-		const root = EquipmentV0.getRoot();
-		const item = _list$11[index];
-		root.querySelectorAll(selector).forEach((el) => {
-			el.innerHTML = "";
-		});
-		delete _list$11[index];
-		return item;
-	};
-	EquipmentV0.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$4) document.body.appendChild(_btnLevelUp$4);
-	};
-	renderCharacter$4 = (function renderCharacterClosure() {
-		let _lastState = 0;
-		let _hasCart = 0;
-		const _cleanColor = new Float32Array([
-			1,
-			1,
-			1,
-			1
-		]);
-		const _savedColor = /* @__PURE__ */ new Float32Array(4);
-		const _animation = {
-			tick: 0,
-			frame: 0,
-			repeat: true,
-			play: true,
-			next: false,
-			delay: 0,
-			save: false
-		};
-		const HasAttachmentState = StatusState_default.EffectState.FALCON | StatusState_default.EffectState.RIDING | StatusState_default.EffectState.DRAGON1 | StatusState_default.EffectState.DRAGON2 | StatusState_default.EffectState.DRAGON3 | StatusState_default.EffectState.DRAGON4 | StatusState_default.EffectState.DRAGON5 | StatusState_default.EffectState.MADOGEAR | StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		const HasCartState = StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		return function renderChar() {
-			const character = SessionStorage_default.Entity;
-			const direction = character.direction;
-			const headDir = character.headDir;
-			const action = character.action;
-			const animation = character.animation;
-			if (character.effectState !== _lastState || _hasCart !== character.hasCart) {
-				_lastState = character.effectState;
-				_hasCart = character.hasCart;
-				const root = EquipmentV0.getRoot();
-				const removeOpt = root.querySelector(".removeOption");
-				const cartBtn = root.querySelector(".cartitems");
-				if (_lastState & HasAttachmentState || _hasCart) {
-					if (removeOpt) removeOpt.style.display = "";
-				} else if (removeOpt) removeOpt.style.display = "none";
-				if (_lastState & HasCartState || _hasCart) {
-					if (cartBtn) cartBtn.style.display = "";
-				} else if (cartBtn) cartBtn.style.display = "none";
-			}
-			Camera.direction = 4;
-			character.direction = 4;
-			character.headDir = 0;
-			character.action = character.ACTION.IDLE;
-			character.animation = _animation;
-			_savedColor.set(character.effectColor);
-			character.effectColor.set(_cleanColor);
-			SpriteRenderer.bind2DContext(_ctx$10, 30, 130);
-			_ctx$10.clearRect(0, 0, _ctx$10.canvas.width, _ctx$10.canvas.height);
-			character.renderEntity();
-			character.direction = direction;
-			character.headDir = headDir;
-			character.action = action;
-			character.animation = animation;
-			character.effectColor.set(_savedColor);
-		};
-	})();
-	EquipmentV0.onUpdateOwnerName = function() {
-		const root = EquipmentV0.getRoot();
-		for (const index in _list$11) {
-			const item = _list$11[index];
-			if (item.slot && [
-				255,
-				254,
-				65280
-			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
-				nameEl.textContent = DB.getItemName(item);
-			});
-		}
-	};
-	EquipmentV0.getNumber = function() {
-		let num = 0;
-		for (const key in _list$11) if (_list$11[key].location && _list$11[key].location !== EquipmentLocation_default.AMMO) num++;
-		return num;
-	};
-	EquipmentV0.checkEquipLoc = function checkEquipLoc(_location) {
-		return 0;
-	};
-	EquipmentV0.getCurrentTabId = function() {
-		return "general";
-	};
-	EquipmentV0.onUnEquip = function onUnEquip() {};
-	EquipmentV0.onConfigUpdate = function onConfigUpdate() {};
-	EquipmentV0.onEquipItem = function onEquipItem() {};
-	EquipmentV0.onRemoveCart = function onRemoveCart() {};
-	EquipmentV0_default = UIManager.addComponent(EquipmentV0);
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.html?raw
-var EquipmentV1_default$2;
-var init_EquipmentV1$2 = __esmMin((() => {
-	EquipmentV1_default$2 = "<div id=\"EquipmentV1\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\"></table>\r\n		<div class=\"footer\" id=\"equipment_footer\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"view_status\"\r\n					data-background=\"basic_interface/viewoff.bmp\"\r\n					data-preload=\"basic_interface/viewon.bmp\"\r\n				></button>\r\n				<span data-text=\"105\">Status</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.css?raw
-var EquipmentV1_default$1;
-var init_EquipmentV1$1 = __esmMin((() => {
-	EquipmentV1_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV1 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV1 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV1 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV1 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV1 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV1 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV1 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV1 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 .col1,\r\n#EquipmentV1 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV1 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV1 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV1 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV1 .col3 .item button,\r\n#EquipmentV1 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV1 .col1 .item button,\r\n#EquipmentV1 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV1 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV1 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV1 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV1 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV1 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV1 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV1 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV1 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV1 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV1 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV1 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.js
-function escapeHTML$4(str) {
-	const div = document.createElement("div");
-	div.textContent = str;
-	return div.innerHTML;
-}
-function showTab$3() {
-	const selectedId = getHash$3(this.getAttribute("href"));
-	for (const id in contentDivs$3) if (id === selectedId) {
-		tabLinks$3[id].className = "tab selected";
-		if (contentDivs$3[id]) contentDivs$3[id].className = "content";
-	} else {
-		tabLinks$3[id].className = "tab";
-		if (contentDivs$3[id]) contentDivs$3[id].classList.add("content", "hide");
-	}
-	currentTabId$3 = selectedId;
-	return false;
-}
-function getFirstChildWithTagName$3(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
-}
-function getHash$3(url) {
-	const hashPos = url.lastIndexOf("#");
-	return url.substring(hashPos + 1);
-}
-function onCartItems$3() {
-	if (SessionStorage_default.Entity.hasCart === false) return;
-	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
-}
-function onRemoveOption$4() {
-	const pkt = new PACKET.CZ.REQ_CARTOFF();
-	Network.sendPacket(pkt);
-}
-function hideStatus$1() {
-	const winStats = WinStatsController.getUI();
-	if (winStats.isEmbedded()) winStats.unembed();
-}
-function toggleStatus$4() {
-	const self = EquipmentV1.getRoot().querySelector(".view_status");
-	const winStats = WinStatsController.getUI();
-	const isVisible = winStats.isEmbedded();
-	const state = isVisible ? "on" : "off";
-	if (isVisible) {
-		winStats.unembed();
-		_preferences$33.stats = false;
-	} else {
-		winStats.embed(EquipmentV1._host);
-		_preferences$33.stats = true;
-	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
-		if (self) self.style.backgroundImage = `url(${data})`;
-	});
-}
-function toggleEquip$3() {
-	EquipmentV1.onConfigUpdate(0, !_showEquip$3 ? 1 : 0);
-}
-function getSelectorFromLocation$4(location) {
-	const selector = [];
-	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
-	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".head_mid");
-	if (location & EquipmentLocation_default.HEAD_BOTTOM) selector.push(".head_bottom");
-	if (location & EquipmentLocation_default.ARMOR) selector.push(".armor");
-	if (location & EquipmentLocation_default.WEAPON) selector.push(".weapon");
-	if (location & EquipmentLocation_default.SHIELD) selector.push(".shield");
-	if (location & EquipmentLocation_default.GARMENT) selector.push(".garment");
-	if (location & EquipmentLocation_default.SHOES) selector.push(".shoes");
-	if (location & EquipmentLocation_default.ACCESSORY1) selector.push(".accessory1");
-	if (location & EquipmentLocation_default.ACCESSORY2) selector.push(".accessory2");
-	if (location & EquipmentLocation_default.AMMO) selector.push(".ammo");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_TOP) selector.push(".costume_head_top");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_MID) selector.push(".costume_head_mid");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_BOTTOM) selector.push(".costume_head_bottom");
-	if (location & EquipmentLocation_default.SHADOW_ARMOR) selector.push(".shadow_armor");
-	if (location & EquipmentLocation_default.SHADOW_WEAPON) selector.push(".shadow_weapon");
-	if (location & EquipmentLocation_default.SHADOW_SHIELD) selector.push(".shadow_shield");
-	if (location & EquipmentLocation_default.COSTUME_ROBE) selector.push(".shadow_garment");
-	if (location & EquipmentLocation_default.SHADOW_SHOES) selector.push(".shadow_shoes");
-	if (location & EquipmentLocation_default.SHADOW_R_ACCESSORY_SHADOW) selector.push(".shadow_accessory1");
-	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
-	return selector.join(", ");
-}
-function onDragOver$4(event) {
-	if (window._OBJ_DRAG_) {
-		const data = window._OBJ_DRAG_;
-		if (data.type === "item") {
-			const item = data.data;
-			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$4("location" in item ? item.location : item.WearLocation);
-				const cells = EquipmentV1.getRoot().querySelectorAll(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
-					cells.forEach((c) => {
-						c.style.backgroundImage = `url(${_data})`;
-					});
-				});
-			}
-		}
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDragLeave$3(event) {
-	EquipmentV1.getRoot().querySelectorAll("td").forEach((td) => {
-		td.style.backgroundImage = "none";
-	});
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDrop$12(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {
-		return false;
-	}
-	if (data && data.type === "item") {
-		item = data.data;
-		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV1.getRoot().querySelectorAll("td").forEach((td) => {
-				td.style.backgroundImage = "none";
-			});
-			EquipmentV1.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
-		}
-	}
-	return false;
-}
-function onEquipmentInfo$3(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = _list$10[index];
-	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-	else {
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onEquipmentUnEquip$3() {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	EquipmentV1.onUnEquip(index);
-	const overlay = EquipmentV1.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onEquipmentOver$3() {
-	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	const item = _list$10[idx];
-	if (!item) return;
-	const root = EquipmentV1.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#EquipmentV1") || root;
-	const btnRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	const top = btnRect.top - rootRect.top;
-	const left = btnRect.left - rootRect.left;
-	if (!top && !left) return;
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${top - 22}px`;
-		overlay.style.left = `${left - 22}px`;
-		overlay.textContent = DB.getItemName(item);
-	}
-}
-function onEquipmentOut$3() {
-	const overlay = EquipmentV1.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-var EquipmentV1, _preferences$33, _list$10, _ctx$9, _showEquip$3, _btnLevelUp$3, tabLinks$3, contentDivs$3, currentTabId$3, renderCharacter$3, EquipmentV1_default;
-var init_EquipmentV1 = __esmMin((() => {
-	init_DBManager();
-	init_StatusState();
-	init_EquipmentLocation();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Camera();
-	init_SpriteRenderer();
-	init_UIVersionManager();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_CartItems();
-	init_WinStats();
-	init_EquipmentV1$2();
-	init_EquipmentV1$1();
-	init_Inventory();
-	init_Entity$1();
-	EquipmentV1 = new GUIComponent("EquipmentV1", EquipmentV1_default$1);
-	EquipmentV1.render = () => EquipmentV1_default$2;
-	_preferences$33 = Preferences.get("EquipmentV1", {
-		x: 480,
-		y: 200,
-		show: false,
-		reduce: false,
-		stats: true
-	}, 1);
-	_list$10 = {};
-	_ctx$9 = [];
-	_showEquip$3 = false;
-	tabLinks$3 = {};
-	contentDivs$3 = {};
-	currentTabId$3 = "general";
-	EquipmentV1.init = function init() {
-		const root = EquipmentV1.getRoot();
-		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$9.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$9.push(canvases[1].getContext("2d"));
-		const tabsEl = root.querySelector("#tabs");
-		if (tabsEl) {
-			const tabListItems = tabsEl.childNodes;
-			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
-				const tabLink = getFirstChildWithTagName$3(tabListItems[i], "A");
-				if (tabLink) {
-					const id = getHash$3(tabLink.getAttribute("href"));
-					tabLinks$3[id] = tabLink;
-					contentDivs$3[id] = root.querySelector(`#${id}`);
-				}
-			}
-		}
-		let idx = 0;
-		for (const id in tabLinks$3) {
-			tabLinks$3[id].onclick = showTab$3;
-			tabLinks$3[id].onfocus = function() {
-				this.blur();
-			};
-			if (idx === 0) tabLinks$3[id].className = "tab selected";
-			idx++;
-		}
-		idx = 0;
-		for (const id in contentDivs$3) if (contentDivs$3[id]) {
-			if (idx !== 0) contentDivs$3[id].classList.add("content", "hide");
-			idx++;
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) {
-			const lvlupEl = root.querySelector("#lvlup_base");
-			if (lvlupEl) {
-				_btnLevelUp$3 = lvlupEl;
-				lvlupEl.remove();
-				_btnLevelUp$3.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-				_btnLevelUp$3.addEventListener("click", () => {
-					if (_btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
-					EquipmentV1._host.style.display = "";
-					EquipmentV1._host.parentNode.appendChild(EquipmentV1._host);
-					if (EquipmentV1._host.style.display !== "none") Renderer.render(renderCharacter$3);
-				});
-			}
-		} else {
-			const footer = root.querySelector("#equipment_footer");
-			if (footer) footer.remove();
-			const rootEl = root.querySelector("#EquipmentV1");
-			if (rootEl) rootEl.classList.add("equipmentV0");
-			const lvlup = root.querySelector("#lvlup_base");
-			if (lvlup) lvlup.remove();
-		}
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", () => {
-			const panel = root.querySelector(".panel");
-			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
-		});
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			EquipmentV1._host.style.display = "none";
-			Renderer.stop(renderCharacter$3);
-			hideStatus$1();
-		});
-		const removeOptBtn = root.querySelector(".removeOption");
-		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$4);
-		const viewStatusBtn = root.querySelector(".view_status");
-		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$4);
-		const showEquipBtn = root.querySelector(".show_equip");
-		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$3);
-		const cartBtn = root.querySelector(".cartitems");
-		if (cartBtn) cartBtn.addEventListener("click", onCartItems$3);
-		this._host.addEventListener("dragover", onDragOver$4);
-		this._host.addEventListener("dragleave", onDragLeave$3);
-		this._host.addEventListener("drop", onDrop$12);
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onEquipmentInfo$3.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onEquipmentUnEquip$3.call(item, e);
-			});
-			content.addEventListener("mouseover", (e) => {
-				const btn = e.target.closest("button");
-				if (btn) onEquipmentOver$3.call(btn, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest("button")) onEquipmentOut$3();
-			});
-		}
-		this.draggable(".titlebar");
-	};
-	EquipmentV1.getCurrentTabId = function() {
-		return currentTabId$3;
-	};
-	EquipmentV1.onAppend = function onAppend() {
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - hostRect.width)}px`;
-		if (!_preferences$33.show) this._host.style.display = "none";
-		if (_preferences$33.reduce) {
-			const panel = EquipmentV1.getRoot().querySelector(".panel");
-			if (panel) panel.style.display = "none";
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$33.stats && _preferences$33.show) WinStatsController.getUI().embed(EquipmentV1._host);
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = EquipmentV1.getRoot().querySelector(".view_status");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		if (EquipmentV1.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$3);
-	};
-	EquipmentV1.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$3 && _btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
-		Renderer.stop(renderCharacter$3);
-		_list$10 = {};
-		const root = EquipmentV1.getRoot();
-		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
-			el.innerHTML = "";
-		});
-		_preferences$33.show = this._host.style.display !== "none";
-		const panel = root.querySelector(".panel");
-		_preferences$33.reduce = panel ? panel.style.display === "none" : false;
-		const winStats = WinStatsController.getUI();
-		_preferences$33.stats = winStats.isEmbedded();
-		hideStatus$1();
-		_preferences$33.y = parseInt(this._host.style.top, 10);
-		_preferences$33.x = parseInt(this._host.style.left, 10);
-		_preferences$33.save();
-	};
-	EquipmentV1.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			Renderer.render(renderCharacter$3);
-			if (UIVersionManager.getEquipmentVersion() > 0) {
-				if (_btnLevelUp$3 && _btnLevelUp$3.parentNode) _btnLevelUp$3.remove();
-				if (_preferences$33.stats) WinStatsController.getUI().embed(EquipmentV1._host);
-			}
-			this.focus();
-		} else {
-			this._host.style.display = "none";
-			Renderer.stop(renderCharacter$3);
-			hideStatus$1();
-		}
-	};
-	EquipmentV1.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-	};
-	EquipmentV1.setEquipConfig = function setEquipConfig(on) {
-		_showEquip$3 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = EquipmentV1.getRoot().querySelector(".show_equip");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-	};
-	EquipmentV1.setCostumeConfig = function setCostumeConfig(_on) {};
-	EquipmentV1.equip = function equip(item, location) {
-		const it = DB.getItemInfo(item.ITID);
-		item.equipped = location;
-		_list$10[item.index] = item;
-		function add3Dots(string, limit) {
-			function stripHTML(str) {
-				const div = document.createElement("div");
-				div.innerHTML = str;
-				return div.textContent || div.innerText || "";
-			}
-			const text = stripHTML(string);
-			if (text.length > limit) return text.substring(0, limit) + "...";
-			return text;
-		}
-		const root = EquipmentV1.getRoot();
-		const selector = getSelectorFromLocation$4(location);
-		root.querySelectorAll(selector).forEach((cell) => {
-			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$4(add3Dots(DB.getItemName(item, {
-				showItemGrade: false,
-				showItemSlots: false,
-				showItemOptions: false
-			}), 25)) + "</span></div>";
-		});
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
-			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
-				btn.style.backgroundImage = `url(${data})`;
-			});
-		});
-		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
-	};
-	EquipmentV1.unEquip = function unEquip(index, location) {
-		const selector = getSelectorFromLocation$4(location);
-		const root = EquipmentV1.getRoot();
-		const item = _list$10[index];
-		item.equipped = 0;
-		root.querySelectorAll(selector).forEach((el) => {
-			el.innerHTML = "";
-		});
-		delete _list$10[index];
-		return item;
-	};
-	EquipmentV1.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$3) document.body.appendChild(_btnLevelUp$3);
-	};
-	EquipmentV1.checkEquipLoc = function checkEquipLoc(location) {
-		for (const key in _list$10) if (_list$10[key].equipped & location) return _list$10[key].wItemSpriteNumber;
-		return 0;
-	};
-	renderCharacter$3 = (function renderCharacterClosure() {
-		let _lastState = 0;
-		let _hasCart = 0;
-		const _cleanColor = new Float32Array([
-			1,
-			1,
-			1,
-			1
-		]);
-		const _savedColor = /* @__PURE__ */ new Float32Array(4);
-		const _animation = {
-			tick: 0,
-			frame: 0,
-			repeat: true,
-			play: true,
-			next: false,
-			delay: 0,
-			save: false
-		};
-		const HasAttachmentState = StatusState_default.EffectState.FALCON | StatusState_default.EffectState.RIDING | StatusState_default.EffectState.DRAGON1 | StatusState_default.EffectState.DRAGON2 | StatusState_default.EffectState.DRAGON3 | StatusState_default.EffectState.DRAGON4 | StatusState_default.EffectState.DRAGON5 | StatusState_default.EffectState.MADOGEAR | StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		const HasCartState = StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		return function renderChar() {
-			const equip_character = new Entity();
-			equip_character.set({
-				GID: SessionStorage_default.Entity.GID + "_EQUIP",
-				objecttype: equip_character.constructor.TYPE_PC,
-				job: SessionStorage_default.Entity.job,
-				sex: SessionStorage_default.Entity.sex,
-				name: "",
-				hideShadow: true,
-				head: SessionStorage_default.Entity.head,
-				headpalette: SessionStorage_default.Entity.headpalette,
-				bodypalette: SessionStorage_default.Entity.bodypalette
-			});
-			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
-				_lastState = SessionStorage_default.Entity.effectState;
-				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = EquipmentV1.getRoot();
-				const removeOpt = root.querySelector(".removeOption");
-				const cartBtn = root.querySelector(".cartitems");
-				if (_lastState & HasAttachmentState || _hasCart) {
-					if (removeOpt) removeOpt.style.display = "";
-				} else if (removeOpt) removeOpt.style.display = "none";
-				if (_lastState & HasCartState || _hasCart) {
-					if (cartBtn) cartBtn.style.display = "";
-				} else if (cartBtn) cartBtn.style.display = "none";
-			}
-			if (currentTabId$3 === "general") {
-				equip_character.accessory = EquipmentV1.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV1.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
-				equip_character.accessory3 = EquipmentV1.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
-				equip_character.robe = EquipmentV1.checkEquipLoc(EquipmentLocation_default.GARMENT);
-			} else if (currentTabId$3 === "costume") {
-				equip_character.accessory = EquipmentV1.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV1.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
-				equip_character.accessory3 = EquipmentV1.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
-				equip_character.robe = EquipmentV1.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
-			}
-			_savedColor.set(equip_character.effectColor);
-			equip_character.effectColor.set(_cleanColor);
-			Camera.direction = 0;
-			equip_character.direction = 0;
-			equip_character.headDir = 0;
-			equip_character.action = equip_character.ACTION.IDLE;
-			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$9.length; i++) {
-				const ctx = _ctx$9[i];
-				SpriteRenderer.bind2DContext(ctx, 30, 130);
-				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-				equip_character.renderEntity(ctx);
-			}
-		};
-	})();
-	EquipmentV1.onUpdateOwnerName = function() {
-		const root = EquipmentV1.getRoot();
-		for (const index in _list$10) {
-			const item = _list$10[index];
-			if (item.slot && [
-				255,
-				254,
-				65280
-			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
-				nameEl.textContent = DB.getItemName(item);
-			});
-		}
-	};
-	EquipmentV1.getNumber = function() {
-		let num = 0;
-		for (const key in _list$10) if (_list$10[key].location && _list$10[key].location !== EquipmentLocation_default.AMMO) num++;
-		return num;
-	};
-	EquipmentV1.isInEquipList = function() {
-		return 0;
-	};
-	EquipmentV1.onUnEquip = function onUnEquip() {};
-	EquipmentV1.onConfigUpdate = function onConfigUpdate() {};
-	EquipmentV1.onEquipItem = function onEquipItem() {};
-	EquipmentV1.onRemoveCart = function onRemoveCart() {};
-	EquipmentV1_default = UIManager.addComponent(EquipmentV1);
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.html?raw
-var EquipmentV2_default$2;
-var init_EquipmentV2$2 = __esmMin((() => {
-	EquipmentV2_default$2 = "<div id=\"EquipmentV2\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\"></table>\r\n		<div class=\"footer\" id=\"equipment_footer\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"view_status\"\r\n					data-background=\"basic_interface/viewoff.bmp\"\r\n					data-preload=\"basic_interface/viewon.bmp\"\r\n				></button>\r\n				<span data-text=\"105\">Status</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.css?raw
-var EquipmentV2_default$1;
-var init_EquipmentV2$1 = __esmMin((() => {
-	EquipmentV2_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV2 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV2 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV2 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV2 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV2 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV2 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV2 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV2 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 .col1,\r\n#EquipmentV2 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV2 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV2 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV2 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV2 .col3 .item button,\r\n#EquipmentV2 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV2 .col1 .item button,\r\n#EquipmentV2 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV2 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV2 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV2 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV2 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV2 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV2 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV2 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV2 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV2 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV2 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV2 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.js
-function escapeHTML$3(str) {
-	const div = document.createElement("div");
-	div.textContent = str;
-	return div.innerHTML;
-}
-function showTab$2() {
-	const selectedId = getHash$2(this.getAttribute("href"));
-	for (const id in contentDivs$2) if (id === selectedId) {
-		tabLinks$2[id].className = "tab selected";
-		if (contentDivs$2[id]) contentDivs$2[id].className = "content";
-	} else {
-		tabLinks$2[id].className = "tab";
-		if (contentDivs$2[id]) contentDivs$2[id].classList.add("content", "hide");
-	}
-	currentTabId$2 = selectedId;
-	return false;
-}
-function getFirstChildWithTagName$2(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
-}
-function getHash$2(url) {
-	const hashPos = url.lastIndexOf("#");
-	return url.substring(hashPos + 1);
-}
-function onCartItems$2() {
-	if (SessionStorage_default.Entity.hasCart === false) return;
-	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
-}
-function onRemoveOption$3() {
-	const pkt = new PACKET.CZ.REQ_CARTOFF();
-	Network.sendPacket(pkt);
-}
-function hideStatus() {
-	const winStats = WinStatsController.getUI();
-	if (winStats.isEmbedded()) winStats.unembed();
-}
-function toggleStatus$3() {
-	const self = EquipmentV2.getRoot().querySelector(".view_status");
-	const winStats = WinStatsController.getUI();
-	const isVisible = winStats.isEmbedded();
-	const state = isVisible ? "on" : "off";
-	if (isVisible) {
-		winStats.unembed();
-		_preferences$32.stats = false;
-	} else {
-		winStats.embed(EquipmentV2._host);
-		_preferences$32.stats = true;
-	}
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
-		if (self) self.style.backgroundImage = `url(${data})`;
-	});
-}
-function toggleEquip$2() {
-	EquipmentV2.onConfigUpdate(0, !_showEquip$2 ? 1 : 0);
-}
-function getSelectorFromLocation$3(location) {
-	const selector = [];
-	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
-	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".head_mid");
-	if (location & EquipmentLocation_default.HEAD_BOTTOM) selector.push(".head_bottom");
-	if (location & EquipmentLocation_default.ARMOR) selector.push(".armor");
-	if (location & EquipmentLocation_default.WEAPON) selector.push(".weapon");
-	if (location & EquipmentLocation_default.SHIELD) selector.push(".shield");
-	if (location & EquipmentLocation_default.GARMENT) selector.push(".garment");
-	if (location & EquipmentLocation_default.SHOES) selector.push(".shoes");
-	if (location & EquipmentLocation_default.ACCESSORY1) selector.push(".accessory1");
-	if (location & EquipmentLocation_default.ACCESSORY2) selector.push(".accessory2");
-	if (location & EquipmentLocation_default.AMMO) selector.push(".ammo");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_TOP) selector.push(".costume_head_top");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_MID) selector.push(".costume_head_mid");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_BOTTOM) selector.push(".costume_head_bottom");
-	if (location & EquipmentLocation_default.SHADOW_ARMOR) selector.push(".shadow_armor");
-	if (location & EquipmentLocation_default.SHADOW_WEAPON) selector.push(".shadow_weapon");
-	if (location & EquipmentLocation_default.SHADOW_SHIELD) selector.push(".shadow_shield");
-	if (location & EquipmentLocation_default.COSTUME_ROBE) selector.push(".shadow_garment");
-	if (location & EquipmentLocation_default.SHADOW_SHOES) selector.push(".shadow_shoes");
-	if (location & EquipmentLocation_default.SHADOW_R_ACCESSORY_SHADOW) selector.push(".shadow_accessory1");
-	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
-	return selector.join(", ");
-}
-function onDragOver$3(event) {
-	if (window._OBJ_DRAG_) {
-		const data = window._OBJ_DRAG_;
-		if (data.type === "item") {
-			const item = data.data;
-			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$3("location" in item ? item.location : item.WearLocation);
-				const cells = EquipmentV2.getRoot().querySelectorAll(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
-					cells.forEach((c) => {
-						c.style.backgroundImage = `url(${_data})`;
-					});
-				});
-			}
-		}
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDragLeave$2(event) {
-	EquipmentV2.getRoot().querySelectorAll("td").forEach((td) => {
-		td.style.backgroundImage = "none";
-	});
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDrop$11(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {
-		return false;
-	}
-	if (data && data.type === "item") {
-		item = data.data;
-		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV2.getRoot().querySelectorAll("td").forEach((td) => {
-				td.style.backgroundImage = "none";
-			});
-			EquipmentV2.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
-		}
-	}
-	return false;
-}
-function onEquipmentInfo$2(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = _list$9[index];
-	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-	else {
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onEquipmentUnEquip$2() {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	EquipmentV2.onUnEquip(index);
-	const overlay = EquipmentV2.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onEquipmentOver$2() {
-	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	const item = _list$9[idx];
-	if (!item) return;
-	const root = EquipmentV2.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#EquipmentV2") || root;
-	const btnRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	const top = btnRect.top - rootRect.top;
-	const left = btnRect.left - rootRect.left;
-	if (!top && !left) return;
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${top - 22}px`;
-		overlay.style.left = `${left - 22}px`;
-		overlay.textContent = DB.getItemName(item);
-	}
-}
-function onEquipmentOut$2() {
-	const overlay = EquipmentV2.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-var EquipmentV2, _preferences$32, _list$9, _ctx$8, _showEquip$2, _btnLevelUp$2, tabLinks$2, contentDivs$2, currentTabId$2, renderCharacter$2, EquipmentV2_default;
-var init_EquipmentV2 = __esmMin((() => {
-	init_DBManager();
-	init_StatusState();
-	init_EquipmentLocation();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Camera();
-	init_SpriteRenderer();
-	init_UIVersionManager();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_CartItems();
-	init_WinStats();
-	init_EquipmentV2$2();
-	init_EquipmentV2$1();
-	init_Inventory();
-	init_Entity$1();
-	EquipmentV2 = new GUIComponent("EquipmentV2", EquipmentV2_default$1);
-	EquipmentV2.render = () => EquipmentV2_default$2;
-	_preferences$32 = Preferences.get("EquipmentV2", {
-		x: 480,
-		y: 200,
-		show: false,
-		reduce: false,
-		stats: true
-	}, 1);
-	_list$9 = {};
-	_ctx$8 = [];
-	_showEquip$2 = false;
-	tabLinks$2 = {};
-	contentDivs$2 = {};
-	currentTabId$2 = "general";
-	EquipmentV2.init = function init() {
-		const root = EquipmentV2.getRoot();
-		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$8.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$8.push(canvases[1].getContext("2d"));
-		const tabsEl = root.querySelector("#tabs");
-		if (tabsEl) {
-			const tabListItems = tabsEl.childNodes;
-			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
-				const tabLink = getFirstChildWithTagName$2(tabListItems[i], "A");
-				if (tabLink) {
-					const id = getHash$2(tabLink.getAttribute("href"));
-					tabLinks$2[id] = tabLink;
-					contentDivs$2[id] = root.querySelector(`#${id}`);
-				}
-			}
-		}
-		let idx = 0;
-		for (const id in tabLinks$2) {
-			tabLinks$2[id].onclick = showTab$2;
-			tabLinks$2[id].onfocus = function() {
-				this.blur();
-			};
-			if (idx === 0) tabLinks$2[id].className = "tab selected";
-			idx++;
-		}
-		idx = 0;
-		for (const id in contentDivs$2) if (contentDivs$2[id]) {
-			if (idx !== 0) contentDivs$2[id].classList.add("content", "hide");
-			idx++;
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) {
-			const lvlupEl = root.querySelector("#lvlup_base");
-			if (lvlupEl) {
-				_btnLevelUp$2 = lvlupEl;
-				lvlupEl.remove();
-				_btnLevelUp$2.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-				_btnLevelUp$2.addEventListener("click", () => {
-					if (_btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
-					EquipmentV2._host.style.display = "";
-					EquipmentV2._host.parentNode.appendChild(EquipmentV2._host);
-					if (EquipmentV2._host.style.display !== "none") Renderer.render(renderCharacter$2);
-				});
-			}
-		} else {
-			const footer = root.querySelector("#equipment_footer");
-			if (footer) footer.remove();
-			const rootEl = root.querySelector("#EquipmentV2");
-			if (rootEl) rootEl.classList.add("equipmentV0");
-			const lvlup = root.querySelector("#lvlup_base");
-			if (lvlup) lvlup.remove();
-		}
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", () => {
-			const panel = root.querySelector(".panel");
-			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
-		});
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			EquipmentV2._host.style.display = "none";
-			Renderer.stop(renderCharacter$2);
-			hideStatus();
-		});
-		const removeOptBtn = root.querySelector(".removeOption");
-		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$3);
-		const viewStatusBtn = root.querySelector(".view_status");
-		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$3);
-		const showEquipBtn = root.querySelector(".show_equip");
-		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$2);
-		const cartBtn = root.querySelector(".cartitems");
-		if (cartBtn) cartBtn.addEventListener("click", onCartItems$2);
-		this._host.addEventListener("dragover", onDragOver$3);
-		this._host.addEventListener("dragleave", onDragLeave$2);
-		this._host.addEventListener("drop", onDrop$11);
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onEquipmentInfo$2.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onEquipmentUnEquip$2.call(item, e);
-			});
-			content.addEventListener("mouseover", (e) => {
-				const btn = e.target.closest("button");
-				if (btn) onEquipmentOver$2.call(btn, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest("button")) onEquipmentOut$2();
-			});
-		}
-		this.draggable(".titlebar");
-	};
-	EquipmentV2.getCurrentTabId = function() {
-		return currentTabId$2;
-	};
-	EquipmentV2.onAppend = function onAppend() {
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - hostRect.width)}px`;
-		if (!_preferences$32.show) this._host.style.display = "none";
-		if (_preferences$32.reduce) {
-			const panel = EquipmentV2.getRoot().querySelector(".panel");
-			if (panel) panel.style.display = "none";
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences$32.stats && _preferences$32.show) WinStatsController.getUI().embed(EquipmentV2._host);
-		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-			const btn = EquipmentV2.getRoot().querySelector(".view_status");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		if (EquipmentV2.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$2);
-	};
-	EquipmentV2.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
-		Renderer.stop(renderCharacter$2);
-		_list$9 = {};
-		const root = EquipmentV2.getRoot();
-		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
-			el.innerHTML = "";
-		});
-		_preferences$32.show = this._host.style.display !== "none";
-		const panel = root.querySelector(".panel");
-		_preferences$32.reduce = panel ? panel.style.display === "none" : false;
-		const winStats = WinStatsController.getUI();
-		_preferences$32.stats = winStats.isEmbedded();
-		hideStatus();
-		_preferences$32.y = parseInt(this._host.style.top, 10);
-		_preferences$32.x = parseInt(this._host.style.left, 10);
-		_preferences$32.save();
-	};
-	EquipmentV2.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			Renderer.render(renderCharacter$2);
-			if (UIVersionManager.getEquipmentVersion() > 0) {
-				if (_btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
-				if (_preferences$32.stats) WinStatsController.getUI().embed(EquipmentV2._host);
-			}
-			this.focus();
-		} else {
-			this._host.style.display = "none";
-			Renderer.stop(renderCharacter$2);
-			hideStatus();
-		}
-	};
-	EquipmentV2.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-	};
-	EquipmentV2.setEquipConfig = function setEquipConfig(on) {
-		_showEquip$2 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = EquipmentV2.getRoot().querySelector(".show_equip");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-	};
-	EquipmentV2.setCostumeConfig = function setCostumeConfig(_on) {};
-	EquipmentV2.equip = function equip(item, location) {
-		const it = DB.getItemInfo(item.ITID);
-		item.equipped = location;
-		_list$9[item.index] = item;
-		function add3Dots(string, limit) {
-			function stripHTML(str) {
-				const div = document.createElement("div");
-				div.innerHTML = str;
-				return div.textContent || div.innerText || "";
-			}
-			const text = stripHTML(string);
-			if (text.length > limit) return text.substring(0, limit) + "...";
-			return text;
-		}
-		const root = EquipmentV2.getRoot();
-		const selector = getSelectorFromLocation$3(location);
-		root.querySelectorAll(selector).forEach((cell) => {
-			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button></button><span class=\"itemName\">" + escapeHTML$3(add3Dots(DB.getItemName(item, {
-				showItemGrade: false,
-				showItemSlots: false,
-				showItemOptions: false
-			}), 25)) + "</span></div>";
-		});
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
-			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
-				btn.style.backgroundImage = `url(${data})`;
-			});
-		});
-		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
-	};
-	EquipmentV2.unEquip = function unEquip(index, location) {
-		const selector = getSelectorFromLocation$3(location);
-		const root = EquipmentV2.getRoot();
-		const item = _list$9[index];
-		item.equipped = 0;
-		root.querySelectorAll(selector).forEach((el) => {
-			el.innerHTML = "";
-		});
-		delete _list$9[index];
-		return item;
-	};
-	EquipmentV2.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$2) document.body.appendChild(_btnLevelUp$2);
-	};
-	EquipmentV2.checkEquipLoc = function checkEquipLoc(location) {
-		for (const key in _list$9) if (_list$9[key].equipped & location) return _list$9[key].wItemSpriteNumber;
-		return 0;
-	};
-	renderCharacter$2 = (function renderCharacterClosure() {
-		let _lastState = 0;
-		let _hasCart = 0;
-		const _cleanColor = new Float32Array([
-			1,
-			1,
-			1,
-			1
-		]);
-		const _savedColor = /* @__PURE__ */ new Float32Array(4);
-		const _animation = {
-			tick: 0,
-			frame: 0,
-			repeat: true,
-			play: true,
-			next: false,
-			delay: 0,
-			save: false
-		};
-		const HasAttachmentState = StatusState_default.EffectState.FALCON | StatusState_default.EffectState.RIDING | StatusState_default.EffectState.DRAGON1 | StatusState_default.EffectState.DRAGON2 | StatusState_default.EffectState.DRAGON3 | StatusState_default.EffectState.DRAGON4 | StatusState_default.EffectState.DRAGON5 | StatusState_default.EffectState.MADOGEAR | StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		const HasCartState = StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		return function renderChar() {
-			const equip_character = new Entity();
-			equip_character.set({
-				GID: SessionStorage_default.Entity.GID + "_EQUIP",
-				objecttype: equip_character.constructor.TYPE_PC,
-				job: SessionStorage_default.Entity.job,
-				sex: SessionStorage_default.Entity.sex,
-				name: "",
-				hideShadow: true,
-				head: SessionStorage_default.Entity.head,
-				headpalette: SessionStorage_default.Entity.headpalette,
-				bodypalette: SessionStorage_default.Entity.bodypalette
-			});
-			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
-				_lastState = SessionStorage_default.Entity.effectState;
-				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = EquipmentV2.getRoot();
-				const removeOpt = root.querySelector(".removeOption");
-				const cartBtn = root.querySelector(".cartitems");
-				if (_lastState & HasAttachmentState || _hasCart) {
-					if (removeOpt) removeOpt.style.display = "";
-				} else if (removeOpt) removeOpt.style.display = "none";
-				if (_lastState & HasCartState || _hasCart) {
-					if (cartBtn) cartBtn.style.display = "";
-				} else if (cartBtn) cartBtn.style.display = "none";
-			}
-			if (currentTabId$2 === "general") {
-				equip_character.accessory = EquipmentV2.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV2.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
-				equip_character.accessory3 = EquipmentV2.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
-				equip_character.robe = EquipmentV2.checkEquipLoc(EquipmentLocation_default.GARMENT);
-			} else if (currentTabId$2 === "costume") {
-				equip_character.accessory = EquipmentV2.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV2.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
-				equip_character.accessory3 = EquipmentV2.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
-				equip_character.robe = EquipmentV2.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
-			}
-			_savedColor.set(equip_character.effectColor);
-			equip_character.effectColor.set(_cleanColor);
-			Camera.direction = 0;
-			equip_character.direction = 0;
-			equip_character.headDir = 0;
-			equip_character.action = equip_character.ACTION.IDLE;
-			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$8.length; i++) {
-				const ctx = _ctx$8[i];
-				SpriteRenderer.bind2DContext(ctx, 30, 130);
-				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-				equip_character.renderEntity(ctx);
-			}
-		};
-	})();
-	EquipmentV2.onUpdateOwnerName = function() {
-		const root = EquipmentV2.getRoot();
-		for (const index in _list$9) {
-			const item = _list$9[index];
-			if (item.slot && [
-				255,
-				254,
-				65280
-			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
-				nameEl.textContent = DB.getItemName(item);
-			});
-		}
-	};
-	EquipmentV2.getNumber = function() {
-		let num = 0;
-		for (const key in _list$9) if (_list$9[key].location && _list$9[key].location !== EquipmentLocation_default.AMMO) num++;
-		return num;
-	};
-	EquipmentV2.isInEquipList = function() {
-		return 0;
-	};
-	EquipmentV2.onUnEquip = function onUnEquip() {};
-	EquipmentV2.onConfigUpdate = function onConfigUpdate() {};
-	EquipmentV2.onEquipItem = function onEquipItem() {};
-	EquipmentV2.onRemoveCart = function onRemoveCart() {};
-	EquipmentV2_default = UIManager.addComponent(EquipmentV2);
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.html?raw
-var EquipmentV3_default$2;
-var init_EquipmentV3$2 = __esmMin((() => {
-	EquipmentV3_default$2 = "<div id=\"EquipmentV3\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\">\r\n			<tr>\r\n				<td colspan=\"3\">\r\n					<div class=\"title-list\" id=\"title_list\"></div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n		<div class=\"footer\" id=\"equipment_footer\" data-background=\"basic_interface/equipwin_bg2.bmp\">\r\n			<div class=\"left\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"switch_equip\"\r\n					data-background=\"basic_interface/btn_e_change_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_change_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"remove_equip\"\r\n					data-background=\"basic_interface/btn_e_off_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_off_b.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.css?raw
-var EquipmentV3_default$1;
-var init_EquipmentV3$1 = __esmMin((() => {
-	EquipmentV3_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV3 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV3 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV3 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV3 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV3 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV3 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV3 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV3 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 .col1,\r\n#EquipmentV3 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV3 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV3 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV3 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV3 .col3 .item button,\r\n#EquipmentV3 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV3 .col1 .item button,\r\n#EquipmentV3 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV3 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV3 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV3 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV3 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV3 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV3 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV3 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV3 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV3 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV3 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV3 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV3 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV3 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.js
-function escapeHTML$2(str) {
-	const div = document.createElement("div");
-	div.textContent = str;
-	return div.innerHTML;
-}
-function showTab$1() {
-	const selectedId = getHash$1(this.getAttribute("href"));
-	const root = EquipmentV3.getRoot();
-	for (const id in contentDivs$1) if (id === selectedId) {
-		tabLinks$1[id].className = "tab selected";
-		if (contentDivs$1[id]) contentDivs$1[id].className = "content";
-	} else {
-		tabLinks$1[id].className = "tab";
-		if (contentDivs$1[id]) contentDivs$1[id].classList.add("content", "hide");
-	}
-	currentTabId$1 = selectedId;
-	if (SwitchEquip_default.ui) SwitchEquip_default.showSwapTab(currentTabId$1);
-	if (currentTabId$1 === "title") {
-		if (SwitchEquip_default.ui) {
-			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-			switchUIopen$1 = switchHost.style ? switchHost.style.display !== "none" : false;
-			if (switchHost.style) switchHost.style.display = "none";
-		}
-		const switchBtn = root.querySelector(".switch_equip");
-		if (switchBtn) switchBtn.style.display = "none";
-	} else {
-		if (SwitchEquip_default.ui && switchUIopen$1) {
-			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-			if (switchHost.style) switchHost.style.display = "";
-		}
-		const switchBtn = root.querySelector(".switch_equip");
-		if (switchBtn) switchBtn.style.display = "";
-	}
-	return false;
-}
-function getFirstChildWithTagName$1(element, tagName) {
-	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
-}
-function getHash$1(url) {
-	const hashPos = url.lastIndexOf("#");
-	return url.substring(hashPos + 1);
-}
-function onCartItems$1() {
-	if (SessionStorage_default.Entity.hasCart === false) return;
-	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
-}
-function onRemoveOption$2() {
-	const pkt = new PACKET.CZ.REQ_CARTOFF();
-	Network.sendPacket(pkt);
-}
-function toggleStatus$2() {
-	const self = EquipmentV3.getRoot().querySelector(".view_status");
-	const winStatsUI = WinStatsController.getUI();
-	const statusHost = winStatsUI._host || winStatsUI.ui;
-	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
-	const state = isVisible ? "on" : "off";
-	if (statusHost && statusHost.style) statusHost.style.display = isVisible ? "none" : "";
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
-		if (self) self.style.backgroundImage = `url(${data})`;
-	});
-}
-function toggleEquip$1() {
-	EquipmentV3.onConfigUpdate(0, !_showEquip$1 ? 1 : 0);
-}
-function getSelectorFromLocation$2(location) {
-	const selector = [];
-	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".head_top");
-	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".head_mid");
-	if (location & EquipmentLocation_default.HEAD_BOTTOM) selector.push(".head_bottom");
-	if (location & EquipmentLocation_default.ARMOR) selector.push(".armor");
-	if (location & EquipmentLocation_default.WEAPON) selector.push(".weapon");
-	if (location & EquipmentLocation_default.SHIELD) selector.push(".shield");
-	if (location & EquipmentLocation_default.GARMENT) selector.push(".garment");
-	if (location & EquipmentLocation_default.SHOES) selector.push(".shoes");
-	if (location & EquipmentLocation_default.ACCESSORY1) selector.push(".accessory1");
-	if (location & EquipmentLocation_default.ACCESSORY2) selector.push(".accessory2");
-	if (location & EquipmentLocation_default.AMMO) selector.push(".ammo");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_TOP) selector.push(".costume_head_top");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_MID) selector.push(".costume_head_mid");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_BOTTOM) selector.push(".costume_head_bottom");
-	if (location & EquipmentLocation_default.SHADOW_ARMOR) selector.push(".shadow_armor");
-	if (location & EquipmentLocation_default.SHADOW_WEAPON) selector.push(".shadow_weapon");
-	if (location & EquipmentLocation_default.SHADOW_SHIELD) selector.push(".shadow_shield");
-	if (location & EquipmentLocation_default.COSTUME_ROBE) selector.push(".shadow_garment");
-	if (location & EquipmentLocation_default.SHADOW_SHOES) selector.push(".shadow_shoes");
-	if (location & EquipmentLocation_default.SHADOW_R_ACCESSORY_SHADOW) selector.push(".shadow_accessory1");
-	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
-	return selector.join(", ");
-}
-function onDragOver$2(event) {
-	if (window._OBJ_DRAG_) {
-		const data = window._OBJ_DRAG_;
-		if (data.type === "item") {
-			const item = data.data;
-			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
-				const cells = EquipmentV3.getRoot().querySelectorAll(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
-					cells.forEach((c) => {
-						c.style.backgroundImage = `url(${_data})`;
-					});
-				});
-			}
-		}
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDragLeave$1(event) {
-	EquipmentV3.getRoot().querySelectorAll("td").forEach((td) => {
-		td.style.backgroundImage = "none";
-	});
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDrop$10(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {
-		return false;
-	}
-	if (data && data.type === "item") {
-		item = data.data;
-		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV3.getRoot().querySelectorAll("td").forEach((td) => {
-				td.style.backgroundImage = "none";
-			});
-			EquipmentV3.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
-		}
-	}
-	return false;
-}
-function onEquipmentInfo$1(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = EquipmentV3._itemlist[index];
-	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-	else {
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onEquipmentUnEquip$1() {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	EquipmentV3.onUnEquip(index);
-	const overlay = EquipmentV3.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onEquipmentOver$1() {
-	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	const item = EquipmentV3._itemlist[idx];
-	if (!item) return;
-	const root = EquipmentV3.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#EquipmentV3") || root;
-	const btnRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	const top = btnRect.top - rootRect.top;
-	const left = btnRect.left - rootRect.left;
-	if (!top && !left) return;
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${top - 22}px`;
-		overlay.style.left = `${left - 22}px`;
-		overlay.textContent = DB.getItemName(item);
-	}
-}
-function onEquipmentOut$1() {
-	const overlay = EquipmentV3.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onSwtichEquip$1() {
-	SwitchEquip_default.toggle();
-	if (SwitchEquip_default.ui) {
-		const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-		if (switchHost.style) {
-			switchHost.style.position = "absolute";
-			switchHost.style.top = "0";
-			switchHost.style.left = "0";
-			switchHost.style.zIndex = "100";
-		}
-	}
-}
-var EquipmentV3, _preferences$31, _ctx$7, _showEquip$1, _btnLevelUp$1, tabLinks$1, contentDivs$1, currentTabId$1, switchappend$1, switchUIopen$1, _currentTitleId$1, renderCharacter$1, EquipmentV3_default;
-var init_EquipmentV3 = __esmMin((() => {
-	init_DBManager();
-	init_StatusState();
-	init_EquipmentLocation();
-	init_NetworkManager();
-	init_PacketVerManager();
-	init_PacketStructure();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Camera();
-	init_SpriteRenderer();
-	init_UIVersionManager();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_CartItems();
-	init_SwitchEquip();
-	init_WinStats();
-	init_EquipmentV3$2();
-	init_EquipmentV3$1();
-	init_Inventory();
-	init_Entity$1();
-	EquipmentV3 = new GUIComponent("EquipmentV3", EquipmentV3_default$1);
-	EquipmentV3.render = () => EquipmentV3_default$2;
-	_preferences$31 = Preferences.get("EquipmentV3", {
-		x: 480,
-		y: 200,
-		show: false,
-		reduce: false,
-		stats: true
-	}, 1);
-	EquipmentV3._itemlist = {};
-	_ctx$7 = [];
-	_showEquip$1 = false;
-	tabLinks$1 = {};
-	contentDivs$1 = {};
-	currentTabId$1 = "general";
-	_currentTitleId$1 = 0;
-	EquipmentV3.init = function init() {
-		const root = EquipmentV3.getRoot();
-		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$7.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$7.push(canvases[1].getContext("2d"));
-		const tabsEl = root.querySelector("#tabs");
-		if (tabsEl) {
-			const tabListItems = tabsEl.childNodes;
-			for (let i = 0; i < tabListItems.length; i++) if (tabListItems[i].nodeName === "DIV") {
-				const tabLink = getFirstChildWithTagName$1(tabListItems[i], "A");
-				if (tabLink) {
-					const id = getHash$1(tabLink.getAttribute("href"));
-					tabLinks$1[id] = tabLink;
-					contentDivs$1[id] = root.querySelector(`#${id}`);
-				}
-			}
-		}
-		let idx = 0;
-		for (const id in tabLinks$1) {
-			tabLinks$1[id].onclick = showTab$1;
-			tabLinks$1[id].onfocus = function() {
-				this.blur();
-			};
-			if (idx === 0) tabLinks$1[id].className = "tab selected";
-			idx++;
-		}
-		idx = 0;
-		for (const id in contentDivs$1) if (contentDivs$1[id]) {
-			if (idx !== 0) contentDivs$1[id].classList.add("content", "hide");
-			idx++;
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) {
-			const lvlupEl = root.querySelector("#lvlup_base");
-			if (lvlupEl) {
-				_btnLevelUp$1 = lvlupEl;
-				lvlupEl.remove();
-				_btnLevelUp$1.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-				_btnLevelUp$1.addEventListener("click", () => {
-					if (_btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-					const winStatsUI = WinStatsController.getUI();
-					if (winStatsUI._host) winStatsUI._host.style.display = "";
-				});
-			}
-		} else {
-			const footer = root.querySelector("#equipment_footer");
-			if (footer) footer.remove();
-			const rootEl = root.querySelector("#EquipmentV3");
-			if (rootEl) rootEl.classList.add("equipmentV0");
-			const lvlup = root.querySelector("#lvlup_base");
-			if (lvlup) lvlup.remove();
-		}
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", () => {
-			const panel = root.querySelector(".panel");
-			if (panel) panel.style.display = panel.style.display === "none" ? "" : "none";
-		});
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			EquipmentV3._host.style.display = "none";
-			Renderer.stop(renderCharacter$1);
-		});
-		const removeOptBtn = root.querySelector(".removeOption");
-		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$2);
-		const viewStatusBtn = root.querySelector(".view_status");
-		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$2);
-		const showEquipBtn = root.querySelector(".show_equip");
-		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip$1);
-		const cartBtn = root.querySelector(".cartitems");
-		if (cartBtn) cartBtn.addEventListener("click", onCartItems$1);
-		const switchEquipBtn = root.querySelector(".switch_equip");
-		if (switchEquipBtn) switchEquipBtn.addEventListener("click", onSwtichEquip$1);
-		this.loadTitles();
-		this._host.addEventListener("dragover", onDragOver$2);
-		this._host.addEventListener("dragleave", onDragLeave$1);
-		this._host.addEventListener("drop", onDrop$10);
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onEquipmentInfo$1.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onEquipmentUnEquip$1.call(item, e);
-			});
-			content.addEventListener("mouseover", (e) => {
-				const btn = e.target.closest("button");
-				if (btn) onEquipmentOver$1.call(btn, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest("button")) onEquipmentOut$1();
-			});
-		}
-		this.draggable(".titlebar");
-		switchappend$1 = root.querySelector(".footer");
-	};
-	EquipmentV3.getCurrentTabId = function() {
-		return currentTabId$1;
-	};
-	EquipmentV3.onAppend = function onAppend() {
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$31.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - hostRect.width)}px`;
-		if (!_preferences$31.show) this._host.style.display = "none";
-		if (_preferences$31.reduce) {
-			const panel = EquipmentV3.getRoot().querySelector(".panel");
-			if (panel) panel.style.display = "none";
-		}
-		if (UIVersionManager.getEquipmentVersion() > 0) {
-			if (!_preferences$31.stats) {
-				const statusComp = EquipmentV3.getRoot().querySelector(".status_component");
-				if (statusComp) statusComp.style.display = "none";
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-					const btn = EquipmentV3.getRoot().querySelector(".view_status");
-					if (btn) btn.style.backgroundImage = `url(${data})`;
-				});
-			}
-		}
-		if (EquipmentV3.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter$1);
-		SwitchEquip_default.append(switchappend$1);
-		if (SwitchEquip_default.ui) {
-			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-			if (switchHost.style) switchHost.style.display = "none";
-		}
-	};
-	EquipmentV3.onRemove = function onRemove() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-		Renderer.stop(renderCharacter$1);
-		EquipmentV3._itemlist = {};
-		const root = EquipmentV3.getRoot();
-		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
-			el.innerHTML = "";
-		});
-		_preferences$31.show = this._host.style.display !== "none";
-		const panel = root.querySelector(".panel");
-		_preferences$31.reduce = panel ? panel.style.display === "none" : false;
-		const statusComp = root.querySelector(".status_component");
-		_preferences$31.stats = statusComp ? statusComp.style.display !== "none" : false;
-		_preferences$31.y = parseInt(this._host.style.top, 10);
-		_preferences$31.x = parseInt(this._host.style.left, 10);
-		_preferences$31.save();
-	};
-	EquipmentV3.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			Renderer.render(renderCharacter$1);
-			if (UIVersionManager.getEquipmentVersion() > 0) {
-				if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-			}
-			this.focus();
-		} else {
-			this._host.style.display = "none";
-			Renderer.stop(renderCharacter$1);
-		}
-	};
-	EquipmentV3.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-	};
-	EquipmentV3.setEquipConfig = function setEquipConfig(on) {
-		_showEquip$1 = on;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = EquipmentV3.getRoot().querySelector(".show_equip");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-	};
-	EquipmentV3.setCostumeConfig = function setCostumeConfig(_on) {};
-	EquipmentV3.equip = function equip(item, location) {
-		const it = DB.getItemInfo(item.ITID);
-		item.equipped = location;
-		EquipmentV3._itemlist[item.index] = item;
-		function add3Dots(string, limit) {
-			function stripHTML(str) {
-				const div = document.createElement("div");
-				div.innerHTML = str;
-				return div.textContent || div.innerText || "";
-			}
-			const text = stripHTML(string);
-			if (text.length > limit) return text.substring(0, limit) + "...";
-			return text;
-		}
-		const root = EquipmentV3.getRoot();
-		const selector = getSelectorFromLocation$2(location);
-		root.querySelectorAll(selector).forEach((cell) => {
-			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$2(add3Dots(DB.getItemName(item, {
-				showItemGrade: false,
-				showItemSlots: false,
-				showItemOptions: false
-			}), 25)) + "</span></div>";
-		});
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
-			root.querySelectorAll(`.item[data-index="${item.index}"] button`).forEach((btn) => {
-				btn.style.backgroundImage = `url(${data})`;
-			});
-		});
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
-			root.querySelectorAll(`.item[data-index="${item.index}"] .grade`).forEach((el) => {
-				el.style.backgroundImage = `url(${data})`;
-			});
-		});
-		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
-		if (PacketVerManager_default.value >= 20170621) {
-			if (!InventoryController.getUI().isInEquipSwitchList(location)) SwitchEquip_default.equip(item, location, false);
-		}
-	};
-	EquipmentV3.unEquip = function unEquip(index, location) {
-		const selector = getSelectorFromLocation$2(location);
-		const root = EquipmentV3.getRoot();
-		const item = EquipmentV3._itemlist[index];
-		item.equipped = 0;
-		root.querySelectorAll(selector).forEach((el) => {
-			el.innerHTML = "";
-		});
-		delete EquipmentV3._itemlist[index];
-		return item;
-	};
-	EquipmentV3.onLevelUp = function onLevelUp() {
-		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp$1) document.body.appendChild(_btnLevelUp$1);
-	};
-	EquipmentV3.checkEquipLoc = function checkEquipLoc(location) {
-		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location & location) return EquipmentV3._itemlist[key].wItemSpriteNumber;
-		return 0;
-	};
-	renderCharacter$1 = (function renderCharacterClosure() {
-		let _lastState = 0;
-		let _hasCart = 0;
-		const _cleanColor = new Float32Array([
-			1,
-			1,
-			1,
-			1
-		]);
-		const _savedColor = /* @__PURE__ */ new Float32Array(4);
-		const _animation = {
-			tick: 0,
-			frame: 0,
-			repeat: true,
-			play: true,
-			next: false,
-			delay: 0,
-			save: false
-		};
-		const HasAttachmentState = StatusState_default.EffectState.FALCON | StatusState_default.EffectState.RIDING | StatusState_default.EffectState.DRAGON1 | StatusState_default.EffectState.DRAGON2 | StatusState_default.EffectState.DRAGON3 | StatusState_default.EffectState.DRAGON4 | StatusState_default.EffectState.DRAGON5 | StatusState_default.EffectState.MADOGEAR | StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		const HasCartState = StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		return function renderChar() {
-			const equip_character = new Entity();
-			equip_character.set({
-				GID: SessionStorage_default.Entity.GID + "_EQUIP",
-				objecttype: equip_character.constructor.TYPE_PC,
-				job: SessionStorage_default.Entity.job,
-				sex: SessionStorage_default.Entity.sex,
-				name: "",
-				hideShadow: true,
-				head: SessionStorage_default.Entity.head,
-				headpalette: SessionStorage_default.Entity.headpalette,
-				bodypalette: SessionStorage_default.Entity.bodypalette
-			});
-			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
-				_lastState = SessionStorage_default.Entity.effectState;
-				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = EquipmentV3.getRoot();
-				const removeOpt = root.querySelector(".removeOption");
-				const cartBtn = root.querySelector(".cartitems");
-				if (_lastState & HasAttachmentState || _hasCart) {
-					if (removeOpt) removeOpt.style.display = "";
-				} else if (removeOpt) removeOpt.style.display = "none";
-				if (_lastState & HasCartState || _hasCart) {
-					if (cartBtn) cartBtn.style.display = "";
-				} else if (cartBtn) cartBtn.style.display = "none";
-			}
-			if (currentTabId$1 === "general") {
-				equip_character.accessory = EquipmentV3.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV3.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
-				equip_character.accessory3 = EquipmentV3.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
-				equip_character.robe = EquipmentV3.checkEquipLoc(EquipmentLocation_default.GARMENT);
-			} else if (currentTabId$1 === "costume") {
-				equip_character.accessory = EquipmentV3.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV3.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
-				equip_character.accessory3 = EquipmentV3.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
-				equip_character.robe = EquipmentV3.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
-			}
-			_savedColor.set(equip_character.effectColor);
-			equip_character.effectColor.set(_cleanColor);
-			Camera.direction = 0;
-			equip_character.direction = 0;
-			equip_character.headDir = 0;
-			equip_character.action = equip_character.ACTION.IDLE;
-			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$7.length; i++) {
-				const ctx = _ctx$7[i];
-				SpriteRenderer.bind2DContext(ctx, 30, 130);
-				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-				equip_character.renderEntity(ctx);
-			}
-		};
-	})();
-	EquipmentV3.onUpdateOwnerName = function() {
-		const root = EquipmentV3.getRoot();
-		for (const index in EquipmentV3._itemlist) {
-			const item = EquipmentV3._itemlist[index];
-			if (item.slot && [
-				255,
-				254,
-				65280
-			].includes(item.slot.card1)) root.querySelectorAll(`.item[data-index="${index}"] .itemName`).forEach((nameEl) => {
-				nameEl.textContent = DB.getItemName(item);
-			});
-		}
-	};
-	EquipmentV3.getNumber = function() {
-		let num = 0;
-		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location && EquipmentV3._itemlist[key].location !== EquipmentLocation_default.AMMO) num++;
-		return num;
-	};
-	EquipmentV3.loadTitles = function() {
-		const titleList = EquipmentV3.getRoot().querySelector("#title_list");
-		if (!titleList) return;
-		titleList.innerHTML = "";
-		const removeTitleText = DB.getMessage(2686) || "Remove Title";
-		const removeSelectedClass = _currentTitleId$1 === 0 ? " selected" : "";
-		const removeEl = document.createElement("div");
-		removeEl.className = `title-option${removeSelectedClass}`;
-		removeEl.setAttribute("data-title", "0");
-		removeEl.textContent = removeTitleText;
-		titleList.appendChild(removeEl);
-		const allTitles = DB.getAllTitles();
-		for (const titleId in allTitles) if (allTitles.hasOwnProperty(titleId)) {
-			const titleName = allTitles[titleId];
-			const selectedClass = parseInt(titleId) === _currentTitleId$1 ? " selected" : "";
-			const titleEl = document.createElement("div");
-			titleEl.className = `title-option${selectedClass}`;
-			titleEl.setAttribute("data-title", titleId);
-			titleEl.textContent = titleName;
-			titleList.appendChild(titleEl);
-		}
-		titleList.addEventListener("click", (e) => {
-			const option = e.target.closest(".title-option");
-			if (option) {
-				e.preventDefault();
-				e.stopPropagation();
-				const titleId = parseInt(option.getAttribute("data-title"));
-				EquipmentV3.selectTitle(titleId);
-			}
-		});
-	};
-	EquipmentV3.selectTitle = function(titleId) {
-		const pkt = new PACKET.CZ.REQ_CHANGE_TITLE();
-		pkt.title_id = titleId;
-		Network.sendPacket(pkt);
-	};
-	EquipmentV3.setTitle = function OnSetTitle(titleId) {
-		_currentTitleId$1 = titleId;
-		EquipmentV3.loadTitles();
-	};
-	EquipmentV3.isInEquipList = function(data) {
-		for (const key in EquipmentV3._itemlist) if (EquipmentV3._itemlist[key].location & data) return EquipmentV3._itemlist[key];
-		return 0;
-	};
-	EquipmentV3.equipItemsToSwitch = function() {
-		const equipmentKeys = Object.keys(EquipmentV3._itemlist);
-		for (let i = 0; i < equipmentKeys.length; i++) {
-			const key = equipmentKeys[i];
-			const equipmentItem = EquipmentV3._itemlist[key];
-			if (equipmentItem.location) SwitchEquip_default.equip(equipmentItem, equipmentItem.location, false);
-		}
-	};
-	EquipmentV3.onUnEquip = function onUnEquip() {};
-	EquipmentV3.onConfigUpdate = function onConfigUpdate() {};
-	EquipmentV3.onEquipItem = function onEquipItem() {};
-	EquipmentV3.onRemoveCart = function onRemoveCart() {};
-	EquipmentV3_default = UIManager.addComponent(EquipmentV3);
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.html?raw
-var EquipmentV4_default$2;
-var init_EquipmentV4$2 = __esmMin((() => {
-	EquipmentV4_default$2 = "<div id=\"EquipmentV4\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#damageskin\"><span data-text=\"3990\">Damage Font</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\">\r\n			<tr>\r\n				<td colspan=\"3\">\r\n					<div class=\"title-list\" id=\"title_list\"></div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"damageskin\">\r\n			<!-- Select Damage Font -->\r\n			<tr>\r\n				<td colspan=\"3\">\r\n					<div class=\"damageskin-selector\" data-background=\"showdamage/bg_damage.bmp\">\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"0\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3994\">Default</span>\r\n							</div>\r\n							<!-- Damage Skin 0: Default -->\r\n							<button class=\"skin-option\" data-skin=\"0\">\r\n								<span>Default</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage00.bmp\"></div>\r\n							</button>\r\n						</div>\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"1\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3993\">Left</span>\r\n							</div>\r\n							<!-- Damage Skin 1: Color -->\r\n							<button class=\"skin-option\" data-skin=\"1\">\r\n								<span>Color</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage01.bmp\"></div>\r\n							</button>\r\n						</div>\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"2\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3992\">Top</span>\r\n							</div>\r\n							<!-- Damage Skin 2: Han -->\r\n							<button class=\"skin-option\" data-skin=\"2\">\r\n								<span>Han</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage02.bmp\"></div>\r\n							</button>\r\n						</div>\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"3\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3991\">Right</span>\r\n							</div>\r\n							<!-- Damage Skin 3: Hidden -->\r\n							<button class=\"skin-option\" data-skin=\"3\">\r\n								<span>Hidden</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage03.bmp\"></div>\r\n							</button>\r\n						</div>\r\n					</div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n		<div class=\"footer\" id=\"equipment_footer\" data-background=\"basic_interface/equipwin_bg2.bmp\">\r\n			<div class=\"left\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n				<button class=\"show_costume\" data-background=\"checkbox_1.bmp\" data-preload=\"checkbox_0.bmp\"></button>\r\n				<span data-text=\"4103\">Show Costume</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"switch_equip\"\r\n					data-background=\"basic_interface/btn_e_change_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_change_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"remove_equip\"\r\n					data-background=\"basic_interface/btn_e_off_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_off_b.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.css?raw
-var EquipmentV4_default$1;
-var init_EquipmentV4$1 = __esmMin((() => {
-	EquipmentV4_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV4 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV4 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV4 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV4 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV4 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV4 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV4 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV4 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV4 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV4 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV4 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV4 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 .col1,\r\n#EquipmentV4 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV4 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV4 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV4 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV4 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV4 .col3 .item button,\r\n#EquipmentV4 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV4 .col1 .item button,\r\n#EquipmentV4 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV4 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV4 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV4 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV4 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV4 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV4 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV4 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV4 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV4 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV4 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_costume {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 #damageskin .damageskin-selector {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	width: 280px;\r\n	margin: 0 auto;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option {\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	width: 64px;\r\n	height: 92px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	margin-top: 3px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option span {\r\n	position: relative;\r\n	top: -9px;\r\n	font-weight: bold;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option .icon {\r\n	width: 36px;\r\n	height: 36px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper {\r\n	width: 64px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n	gap: 0;\r\n	padding: 0;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper > div:first-child {\r\n	margin-top: 8px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper .label {\r\n	margin-top: 6px;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 .motion-check {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n	cursor: pointer;\r\n	width: 10px;\r\n	height: 12px;\r\n	margin-right: 4px;\r\n}\r\n\r\n#EquipmentV4 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV4 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV4 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV4 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.js
+//#region src/UI/Components/Equipment/EquipmentCommon.js
 function escapeHTML$1(str) {
 	const div = document.createElement("div");
 	div.textContent = str;
 	return div.innerHTML;
-}
-function showTab() {
-	const selectedId = getHash(this.getAttribute("href"));
-	const root = EquipmentV4.getRoot();
-	for (const id in contentDivs) if (id === selectedId) {
-		tabLinks[id].className = "tab selected";
-		if (contentDivs[id]) contentDivs[id].className = "content";
-	} else {
-		tabLinks[id].className = "tab";
-		if (contentDivs[id]) contentDivs[id].classList.add("content", "hide");
-	}
-	currentTabId = selectedId;
-	if (SwitchEquip_default.ui) SwitchEquip_default.showSwapTab(currentTabId);
-	if (currentTabId !== "general") {
-		if (SwitchEquip_default.ui) {
-			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-			switchUIopen = switchHost.style ? switchHost.style.display !== "none" : false;
-			if (switchHost.style) switchHost.style.display = "none";
-		}
-		const switchBtn = root.querySelector(".switch_equip");
-		if (switchBtn) switchBtn.style.display = "none";
-		const showEquipEl = root.querySelector(".show_equip");
-		if (showEquipEl) showEquipEl.style.display = "none";
-		const showEquipSpan = showEquipEl ? showEquipEl.nextElementSibling : null;
-		if (showEquipSpan && showEquipSpan.tagName === "SPAN") showEquipSpan.style.display = "none";
-		if (currentTabId === "costume") {
-			const costumeEl = root.querySelector(".show_costume");
-			if (costumeEl) costumeEl.style.display = "";
-			const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
-			if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "";
-		} else {
-			const costumeEl = root.querySelector(".show_costume");
-			if (costumeEl) costumeEl.style.display = "none";
-			const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
-			if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
-		}
-	} else {
-		const showEquipEl = root.querySelector(".show_equip");
-		if (showEquipEl) showEquipEl.style.display = "";
-		const showEquipSpan = showEquipEl ? showEquipEl.nextElementSibling : null;
-		if (showEquipSpan && showEquipSpan.tagName === "SPAN") showEquipSpan.style.display = "";
-		const costumeEl = root.querySelector(".show_costume");
-		if (costumeEl) costumeEl.style.display = "none";
-		const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
-		if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
-		if (SwitchEquip_default.ui && switchUIopen) {
-			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-			if (switchHost.style) switchHost.style.display = "";
-		}
-		const switchBtn = root.querySelector(".switch_equip");
-		if (switchBtn) switchBtn.style.display = "";
-	}
-	return false;
 }
 function getFirstChildWithTagName(element, tagName) {
 	for (let i = 0; i < element.childNodes.length; i++) if (element.childNodes[i].nodeName === tagName.toUpperCase()) return element.childNodes[i];
@@ -248138,31 +244833,6 @@ function getFirstChildWithTagName(element, tagName) {
 function getHash(url) {
 	const hashPos = url.lastIndexOf("#");
 	return url.substring(hashPos + 1);
-}
-function onCartItems() {
-	if (SessionStorage_default.Entity.hasCart === false) return;
-	if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
-}
-function onRemoveOption$1() {
-	const pkt = new PACKET.CZ.REQ_CARTOFF();
-	Network.sendPacket(pkt);
-}
-function toggleStatus$1() {
-	const self = EquipmentV4.getRoot().querySelector(".view_status");
-	const winStatsUI = WinStatsController.getUI();
-	const statusHost = winStatsUI._host || winStatsUI.ui;
-	const isVisible = statusHost ? statusHost.style ? statusHost.style.display !== "none" : true : false;
-	const state = isVisible ? "on" : "off";
-	if (statusHost && statusHost.style) statusHost.style.display = isVisible ? "none" : "";
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
-		if (self) self.style.backgroundImage = `url(${data})`;
-	});
-}
-function toggleEquip() {
-	EquipmentV4.onConfigUpdate(0, !_showEquip ? 1 : 0);
-}
-function toggleCostume() {
-	EquipmentV4.onConfigUpdate(5, !_hideCostume ? 1 : 0);
 }
 function getSelectorFromLocation$1(location) {
 	const selector = [];
@@ -248189,154 +244859,32 @@ function getSelectorFromLocation$1(location) {
 	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".shadow_accessory2");
 	return selector.join(", ");
 }
-function onDragOver$1(event) {
-	if (window._OBJ_DRAG_) {
-		const data = window._OBJ_DRAG_;
-		if (data.type === "item") {
-			const item = data.data;
-			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$1("location" in item ? item.location : item.WearLocation);
-				const cells = EquipmentV4.getRoot().querySelectorAll(selector);
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
-					cells.forEach((c) => {
-						c.style.backgroundImage = `url(${_data})`;
-					});
-				});
-			}
-		}
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDragLeave(event) {
-	EquipmentV4.getRoot().querySelectorAll("td").forEach((td) => {
-		td.style.backgroundImage = "none";
-	});
-	event.stopImmediatePropagation();
-	return false;
-}
-function onDrop$9(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {
-		return false;
-	}
-	if (data && data.type === "item") {
-		item = data.data;
-		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
-			EquipmentV4.getRoot().querySelectorAll("td").forEach((td) => {
-				td.style.backgroundImage = "none";
-			});
-			EquipmentV4.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
-		}
-	}
-	return false;
-}
-function onEquipmentInfo(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = EquipmentV4._itemlist[index];
-	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-	else {
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-function onEquipmentUnEquip() {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	EquipmentV4.onUnEquip(index);
-	const overlay = EquipmentV4.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onEquipmentOver() {
-	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	const item = EquipmentV4._itemlist[idx];
-	if (!item) return;
-	const root = EquipmentV4.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#EquipmentV4") || root;
-	const btnRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	const top = btnRect.top - rootRect.top;
-	const left = btnRect.left - rootRect.left;
-	if (!top && !left) return;
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${top - 22}px`;
-		overlay.style.left = `${left - 22}px`;
-		overlay.textContent = DB.getItemName(item);
-	}
-}
-function onEquipmentOut() {
-	const overlay = EquipmentV4.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onSwtichEquip() {
-	SwitchEquip_default.toggle();
-	if (SwitchEquip_default.ui) {
-		const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-		if (switchHost.style) {
-			switchHost.style.position = "absolute";
-			switchHost.style.top = "0";
-			switchHost.style.left = "0";
-			switchHost.style.zIndex = "100";
-		}
-	}
-}
-var EquipmentV4, _preferences$30, _ctx$6, _showEquip, _hideCostume, _currentTitleId, _btnLevelUp, tabLinks, contentDivs, currentTabId, switchappend, switchUIopen, renderCharacter, EquipmentV4_default;
-var init_EquipmentV4 = __esmMin((() => {
-	init_DBManager();
-	init_StatusState();
-	init_EquipmentLocation();
-	init_NetworkManager();
-	init_PacketVerManager();
-	init_PacketStructure();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Camera();
-	init_SpriteRenderer();
-	init_UIVersionManager();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_CartItems();
-	init_SwitchEquip();
-	init_WinStats();
-	init_Graphics();
-	init_EquipmentV4$2();
-	init_EquipmentV4$1();
-	init_Inventory();
-	init_Entity$1();
-	EquipmentV4 = new GUIComponent("EquipmentV4", EquipmentV4_default$1);
-	EquipmentV4.render = () => EquipmentV4_default$2;
-	_preferences$30 = Preferences.get("EquipmentV4", {
+function createEquipment({ name, htmlText, cssText, entityRender = true, enchantGrade = false, switchEquip = false, titles = false, costumeConfig = false, damageSkin = false, statsDefault = true }) {
+	const Component = new GUIComponent(name, cssText);
+	Component.render = () => htmlText;
+	const _preferences = Preferences.get(name, {
 		x: 480,
 		y: 200,
 		show: false,
 		reduce: false,
-		stats: true
+		stats: statsDefault
 	}, 1);
-	EquipmentV4._itemlist = {};
-	_ctx$6 = [];
-	_showEquip = false;
-	_hideCostume = false;
-	_currentTitleId = 0;
-	tabLinks = {};
-	contentDivs = {};
-	currentTabId = "general";
-	EquipmentV4.init = function init() {
-		const root = EquipmentV4.getRoot();
+	let _list = {};
+	const _ctx = [];
+	let _showEquip = false;
+	let _hideCostume = false;
+	let _currentTitleId = 0;
+	let _btnLevelUp;
+	const tabLinks = {};
+	const contentDivs = {};
+	let currentTabId = "general";
+	let switchappend;
+	let switchUIopen;
+	Component.init = function init() {
+		const root = Component.getRoot();
 		const canvases = root.querySelectorAll("canvas");
-		if (canvases[0]) _ctx$6.push(canvases[0].getContext("2d"));
-		if (canvases[1]) _ctx$6.push(canvases[1].getContext("2d"));
+		if (canvases[0]) _ctx.push(canvases[0].getContext("2d"));
+		if (canvases[1]) _ctx.push(canvases[1].getContext("2d"));
 		const tabsEl = root.querySelector("#tabs");
 		if (tabsEl) {
 			const tabListItems = tabsEl.childNodes;
@@ -248371,14 +244919,15 @@ var init_EquipmentV4 = __esmMin((() => {
 				_btnLevelUp.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 				_btnLevelUp.addEventListener("click", () => {
 					if (_btnLevelUp.parentNode) _btnLevelUp.remove();
-					const winStatsUI = WinStatsController.getUI();
-					if (winStatsUI._host) winStatsUI._host.style.display = "";
+					Component._host.style.display = "";
+					Component._host.parentNode.appendChild(Component._host);
+					if (Component._host.style.display !== "none") Renderer.render(renderCharacter);
 				});
 			}
 		} else {
 			const footer = root.querySelector("#equipment_footer");
 			if (footer) footer.remove();
-			const rootEl = root.querySelector("#EquipmentV4");
+			const rootEl = root.querySelector("#" + name);
 			if (rootEl) rootEl.classList.add("equipmentV0");
 			const lvlup = root.querySelector("#lvlup_base");
 			if (lvlup) lvlup.remove();
@@ -248392,25 +244941,30 @@ var init_EquipmentV4 = __esmMin((() => {
 		});
 		const closeBtn = root.querySelector(".titlebar .close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
-			EquipmentV4._host.style.display = "none";
+			Component._host.style.display = "none";
 			Renderer.stop(renderCharacter);
+			hideStatus();
 		});
 		const removeOptBtn = root.querySelector(".removeOption");
-		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption$1);
+		if (removeOptBtn) removeOptBtn.addEventListener("mousedown", onRemoveOption);
 		const viewStatusBtn = root.querySelector(".view_status");
-		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus$1);
+		if (viewStatusBtn) viewStatusBtn.addEventListener("mousedown", toggleStatus);
 		const showEquipBtn = root.querySelector(".show_equip");
 		if (showEquipBtn) showEquipBtn.addEventListener("mousedown", toggleEquip);
-		const showCostumeBtn = root.querySelector(".show_costume");
-		if (showCostumeBtn) showCostumeBtn.addEventListener("mousedown", toggleCostume);
+		if (costumeConfig) {
+			const showCostumeBtn = root.querySelector(".show_costume");
+			if (showCostumeBtn) showCostumeBtn.addEventListener("mousedown", toggleCostume);
+		}
 		const cartBtn = root.querySelector(".cartitems");
 		if (cartBtn) cartBtn.addEventListener("click", onCartItems);
-		const switchEquipBtn = root.querySelector(".switch_equip");
-		if (switchEquipBtn) switchEquipBtn.addEventListener("click", onSwtichEquip);
-		this.loadTitles();
-		this._host.addEventListener("dragover", onDragOver$1);
+		if (switchEquip) {
+			const switchEquipBtn = root.querySelector(".switch_equip");
+			if (switchEquipBtn) switchEquipBtn.addEventListener("click", onSwtichEquip);
+		}
+		if (titles) this.loadTitles();
+		this._host.addEventListener("dragover", onDragOver);
 		this._host.addEventListener("dragleave", onDragLeave);
-		this._host.addEventListener("drop", onDrop$9);
+		this._host.addEventListener("drop", onDrop);
 		const content = root.querySelector(".content");
 		if (content) {
 			content.addEventListener("contextmenu", (e) => {
@@ -248431,167 +244985,202 @@ var init_EquipmentV4 = __esmMin((() => {
 			});
 		}
 		this.draggable(".titlebar");
-		switchappend = root.querySelector(".footer");
-		const costumeBtn2 = root.querySelector(".show_costume");
-		if (costumeBtn2) costumeBtn2.style.display = "none";
-		const costumeSpan = costumeBtn2 ? costumeBtn2.nextElementSibling : null;
-		if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
-		const skinButtons = root.querySelectorAll("#damageskin .skin-option");
-		skinButtons.forEach((btn) => {
-			btn.setAttribute("data-background", "showdamage/btn_damage.bmp");
-			btn.setAttribute("data-hover", "showdamage/btn_damage_press.bmp");
-			btn.setAttribute("data-down", "showdamage/btn_damage_pick.bmp");
-		});
-		if (this.parseHTML) skinButtons.forEach((btn) => {
-			this.parseHTML.call(btn);
-		});
-		skinButtons.forEach((btn) => {
-			btn.addEventListener("mousedown", function() {
-				const skinId = parseInt(this.getAttribute("data-skin"), 10);
-				EquipmentV4.setDamageSkin(skinId);
-			});
-		});
-		let savedSkin = GraphicsSettings.damageSkin;
-		savedSkin = savedSkin !== void 0 && savedSkin !== null ? savedSkin : 0;
-		EquipmentV4.setDamageSkin(savedSkin);
-		const motionChecks = root.querySelectorAll(".motion-check");
-		if (this.parseHTML) motionChecks.forEach((btn) => {
-			this.parseHTML.call(btn);
-		});
-		motionChecks.forEach((btn) => {
-			btn.addEventListener("mousedown", function() {
-				const motionId = parseInt(this.getAttribute("data-motion"), 10);
-				EquipmentV4.setDamageMotion(motionId);
-			});
-		});
-		let savedMotion = GraphicsSettings.damageMotion;
-		savedMotion = savedMotion !== void 0 && savedMotion !== null ? savedMotion : 0;
-		EquipmentV4.setDamageMotion(savedMotion);
-	};
-	EquipmentV4.loadTitles = function() {
-		const titleList = EquipmentV4.getRoot().querySelector("#title_list");
-		if (!titleList) return;
-		titleList.innerHTML = "";
-		const removeTitleText = DB.getMessage(2686) || "Remove Title";
-		const removeSelectedClass = _currentTitleId === 0 ? " selected" : "";
-		const removeEl = document.createElement("div");
-		removeEl.className = `title-option${removeSelectedClass}`;
-		removeEl.setAttribute("data-title", "0");
-		removeEl.textContent = removeTitleText;
-		titleList.appendChild(removeEl);
-		const allTitles = DB.getAllTitles();
-		for (const titleId in allTitles) if (allTitles.hasOwnProperty(titleId)) {
-			const titleName = allTitles[titleId];
-			const selectedClass = parseInt(titleId) === _currentTitleId ? " selected" : "";
-			const titleEl = document.createElement("div");
-			titleEl.className = `title-option${selectedClass}`;
-			titleEl.setAttribute("data-title", titleId);
-			titleEl.textContent = titleName;
-			titleList.appendChild(titleEl);
+		if (switchEquip) switchappend = root.querySelector(".footer");
+		if (costumeConfig) {
+			const costumeBtn2 = root.querySelector(".show_costume");
+			if (costumeBtn2) costumeBtn2.style.display = "none";
+			const costumeSpan = costumeBtn2 ? costumeBtn2.nextElementSibling : null;
+			if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
 		}
-		titleList.addEventListener("click", (e) => {
-			const option = e.target.closest(".title-option");
-			if (option) {
-				e.preventDefault();
-				e.stopPropagation();
-				const titleId = parseInt(option.getAttribute("data-title"));
-				EquipmentV4.selectTitle(titleId);
+		if (damageSkin) {
+			const skinButtons = root.querySelectorAll("#damageskin .skin-option");
+			skinButtons.forEach((btn) => {
+				btn.setAttribute("data-background", "showdamage/btn_damage.bmp");
+				btn.setAttribute("data-hover", "showdamage/btn_damage_press.bmp");
+				btn.setAttribute("data-down", "showdamage/btn_damage_pick.bmp");
+			});
+			if (this.parseHTML) skinButtons.forEach((btn) => {
+				this.parseHTML.call(btn);
+			});
+			skinButtons.forEach((btn) => {
+				btn.addEventListener("mousedown", function() {
+					const skinId = parseInt(this.getAttribute("data-skin"), 10);
+					Component.setDamageSkin(skinId);
+				});
+			});
+			let savedSkin = GraphicsSettings.damageSkin;
+			savedSkin = savedSkin !== void 0 && savedSkin !== null ? savedSkin : 0;
+			Component.setDamageSkin(savedSkin);
+			const motionChecks = root.querySelectorAll(".motion-check");
+			if (this.parseHTML) motionChecks.forEach((btn) => {
+				this.parseHTML.call(btn);
+			});
+			motionChecks.forEach((btn) => {
+				btn.addEventListener("mousedown", function() {
+					const motionId = parseInt(this.getAttribute("data-motion"), 10);
+					Component.setDamageMotion(motionId);
+				});
+			});
+			let savedMotion = GraphicsSettings.damageMotion;
+			savedMotion = savedMotion !== void 0 && savedMotion !== null ? savedMotion : 0;
+			Component.setDamageMotion(savedMotion);
+		}
+	};
+	function showTab() {
+		const selectedId = getHash(this.getAttribute("href"));
+		const root = Component.getRoot();
+		for (const id in contentDivs) if (id === selectedId) {
+			tabLinks[id].className = "tab selected";
+			if (contentDivs[id]) contentDivs[id].className = "content";
+		} else {
+			tabLinks[id].className = "tab";
+			if (contentDivs[id]) contentDivs[id].classList.add("content", "hide");
+		}
+		currentTabId = selectedId;
+		if (switchEquip) {
+			if (SwitchEquip_default.ui) SwitchEquip_default.showSwapTab(currentTabId);
+			if (costumeConfig ? currentTabId !== "general" : currentTabId === "title") {
+				if (SwitchEquip_default.ui) {
+					const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+					switchUIopen = switchHost.style ? switchHost.style.display !== "none" : false;
+					if (switchHost.style) switchHost.style.display = "none";
+				}
+				const switchBtn = root.querySelector(".switch_equip");
+				if (switchBtn) switchBtn.style.display = "none";
+			} else {
+				if (SwitchEquip_default.ui && switchUIopen) {
+					const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+					if (switchHost.style) switchHost.style.display = "";
+				}
+				const switchBtn = root.querySelector(".switch_equip");
+				if (switchBtn) switchBtn.style.display = "";
 			}
-		});
-	};
-	EquipmentV4.selectTitle = function(titleId) {
-		const pkt = new PACKET.CZ.REQ_CHANGE_TITLE();
-		pkt.title_id = titleId;
-		Network.sendPacket(pkt);
-	};
-	EquipmentV4.setTitle = function OnSetTitle(titleId) {
-		_currentTitleId = titleId;
-		EquipmentV4.loadTitles();
-	};
-	EquipmentV4.getCurrentTabId = function() {
+			if (costumeConfig) if (currentTabId !== "general") {
+				const showEquipEl = root.querySelector(".show_equip");
+				if (showEquipEl) showEquipEl.style.display = "none";
+				const showEquipSpan = showEquipEl ? showEquipEl.nextElementSibling : null;
+				if (showEquipSpan && showEquipSpan.tagName === "SPAN") showEquipSpan.style.display = "none";
+				if (currentTabId === "costume") {
+					const costumeEl = root.querySelector(".show_costume");
+					if (costumeEl) costumeEl.style.display = "";
+					const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
+					if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "";
+				} else {
+					const costumeEl = root.querySelector(".show_costume");
+					if (costumeEl) costumeEl.style.display = "none";
+					const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
+					if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
+				}
+			} else {
+				const showEquipEl = root.querySelector(".show_equip");
+				if (showEquipEl) showEquipEl.style.display = "";
+				const showEquipSpan = showEquipEl ? showEquipEl.nextElementSibling : null;
+				if (showEquipSpan && showEquipSpan.tagName === "SPAN") showEquipSpan.style.display = "";
+				const costumeEl = root.querySelector(".show_costume");
+				if (costumeEl) costumeEl.style.display = "none";
+				const costumeSpan = costumeEl ? costumeEl.nextElementSibling : null;
+				if (costumeSpan && costumeSpan.tagName === "SPAN") costumeSpan.style.display = "none";
+			}
+		}
+		return false;
+	}
+	Component.getCurrentTabId = function() {
 		return currentTabId;
 	};
-	EquipmentV4.onAppend = function onAppend() {
+	function onCartItems() {
+		if (SessionStorage_default.Entity.hasCart === false) return;
+		if (CartItems_default._host) CartItems_default._host.style.display = CartItems_default._host.style.display === "none" ? "" : "none";
+	}
+	function onRemoveOption() {
+		const pkt = new PACKET.CZ.REQ_CARTOFF();
+		Network.sendPacket(pkt);
+	}
+	Component.onAppend = function onAppend() {
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
-		if (!_preferences$30.show) this._host.style.display = "none";
-		if (_preferences$30.reduce) {
-			const panel = EquipmentV4.getRoot().querySelector(".panel");
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - hostRect.width)}px`;
+		if (!_preferences.show) this._host.style.display = "none";
+		if (_preferences.reduce) {
+			const panel = Component.getRoot().querySelector(".panel");
 			if (panel) panel.style.display = "none";
 		}
-		if (UIVersionManager.getEquipmentVersion() > 0) {
-			if (!_preferences$30.stats) {
-				const statusComp = EquipmentV4.getRoot().querySelector(".status_component");
-				if (statusComp) statusComp.style.display = "none";
-				Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
-					const btn = EquipmentV4.getRoot().querySelector(".view_status");
-					if (btn) btn.style.backgroundImage = `url(${data})`;
-				});
+		if (UIVersionManager.getEquipmentVersion() > 0) if (_preferences.stats && _preferences.show) WinStatsController.getUI().embed(Component._host);
+		else Client.loadFile(DB.INTERFACE_PATH + "basic_interface/viewon.bmp", (data) => {
+			const btn = Component.getRoot().querySelector(".view_status");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
+		});
+		if (Component.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
+		if (switchEquip) {
+			SwitchEquip_default.append(switchappend);
+			if (SwitchEquip_default.ui) {
+				const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+				if (switchHost.style) switchHost.style.display = "none";
 			}
 		}
-		if (EquipmentV4.getRoot().querySelector("canvas") && this._host.style.display !== "none") Renderer.render(renderCharacter);
-		SwitchEquip_default.append(switchappend);
-		if (SwitchEquip_default.ui) {
-			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
-			if (switchHost.style) switchHost.style.display = "none";
-		}
 	};
-	EquipmentV4.onRemove = function onRemove() {
+	Component.onRemove = function onRemove() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		Renderer.stop(renderCharacter);
-		EquipmentV4._itemlist = {};
-		const root = EquipmentV4.getRoot();
+		_list = {};
+		const root = Component.getRoot();
 		root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
 			el.innerHTML = "";
 		});
-		_preferences$30.show = this._host.style.display !== "none";
+		_preferences.show = this._host.style.display !== "none";
 		const panel = root.querySelector(".panel");
-		_preferences$30.reduce = panel ? panel.style.display === "none" : false;
-		const statusComp = root.querySelector(".status_component");
-		_preferences$30.stats = statusComp ? statusComp.style.display !== "none" : false;
-		_preferences$30.y = parseInt(this._host.style.top, 10);
-		_preferences$30.x = parseInt(this._host.style.left, 10);
-		_preferences$30.save();
+		_preferences.reduce = panel ? panel.style.display === "none" : false;
+		const winStats = WinStatsController.getUI();
+		_preferences.stats = winStats.isEmbedded();
+		hideStatus();
+		_preferences.y = parseInt(this._host.style.top, 10);
+		_preferences.x = parseInt(this._host.style.left, 10);
+		_preferences.save();
 	};
-	EquipmentV4.toggle = function toggle() {
+	Component.toggle = function toggle() {
 		if (this._host.style.display === "none") {
 			this._host.style.display = "";
 			Renderer.render(renderCharacter);
 			if (UIVersionManager.getEquipmentVersion() > 0) {
 				if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
+				if (_preferences.stats) WinStatsController.getUI().embed(Component._host);
 			}
 			this.focus();
 		} else {
 			this._host.style.display = "none";
 			Renderer.stop(renderCharacter);
+			hideStatus();
 		}
 	};
-	EquipmentV4.onShortCut = function onShurtCut(key) {
+	Component.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
 				this.toggle();
 				break;
 		}
 	};
-	EquipmentV4.setEquipConfig = function setEquipConfig(on) {
+	Component.setEquipConfig = function setEquipConfig(on) {
 		_showEquip = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "1" : "0") + ".bmp", (data) => {
-			const btn = EquipmentV4.getRoot().querySelector(".show_equip");
+			const btn = Component.getRoot().querySelector(".show_equip");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	EquipmentV4.setCostumeConfig = function setCostumeConfig(on) {
+	if (costumeConfig) Component.setCostumeConfig = function setCostumeConfig(on) {
 		_hideCostume = on;
 		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (on ? "0" : "1") + ".bmp", (data) => {
-			const btn = EquipmentV4.getRoot().querySelector(".show_costume");
+			const btn = Component.getRoot().querySelector(".show_costume");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 	};
-	EquipmentV4.equip = function equip(item, location) {
+	else Component.setCostumeConfig = function setCostumeConfig(_on) {};
+	Component.equip = function equip(item, location) {
 		const it = DB.getItemInfo(item.ITID);
-		item.equipped = location;
-		EquipmentV4._itemlist[item.index] = item;
+		if (entityRender) item.equipped = location;
+		_list[item.index] = item;
+		if (!entityRender && arguments.length === 1) {
+			if ("WearState" in item) location = item.WearState;
+			else if ("location" in item) location = item.location;
+		}
 		function add3Dots(string, limit) {
 			function stripHTML(str) {
 				const div = document.createElement("div");
@@ -248602,10 +245191,11 @@ var init_EquipmentV4 = __esmMin((() => {
 			if (text.length > limit) return text.substring(0, limit) + "...";
 			return text;
 		}
-		const root = EquipmentV4.getRoot();
+		const root = Component.getRoot();
 		const selector = getSelectorFromLocation$1(location);
+		const gradeInner = enchantGrade ? "<div class=\"grade\"></div>" : "";
 		root.querySelectorAll(selector).forEach((cell) => {
-			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button><div class=\"grade\"></div></button><span class=\"itemName\">" + escapeHTML$1(add3Dots(DB.getItemName(item, {
+			cell.innerHTML = "<div class=\"item\" data-index=\"" + item.index + "\"><button>" + gradeInner + "</button><span class=\"itemName\">" + escapeHTML$1(add3Dots(DB.getItemName(item, {
 				showItemGrade: false,
 				showItemSlots: false,
 				showItemOptions: false
@@ -248616,35 +245206,74 @@ var init_EquipmentV4 = __esmMin((() => {
 				btn.style.backgroundImage = `url(${data})`;
 			});
 		});
-		if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+		if (enchantGrade && item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
 			root.querySelectorAll(`.item[data-index="${item.index}"] .grade`).forEach((el) => {
 				el.style.backgroundImage = `url(${data})`;
 			});
 		});
 		if (!InventoryController.getUI().equippedItems.includes(item.index)) InventoryController.getUI().equippedItems.push(item.index);
-		if (PacketVerManager_default.value >= 20170621) {
+		if (switchEquip && PacketVerManager_default.value >= 20170621) {
 			if (!InventoryController.getUI().isInEquipSwitchList(location)) SwitchEquip_default.equip(item, location, false);
 		}
 	};
-	EquipmentV4.unEquip = function unEquip(index, location) {
+	Component.unEquip = function unEquip(index, location) {
 		const selector = getSelectorFromLocation$1(location);
-		const root = EquipmentV4.getRoot();
-		const item = EquipmentV4._itemlist[index];
-		item.equipped = 0;
+		const root = Component.getRoot();
+		const item = _list[index];
+		if (entityRender) item.equipped = 0;
 		root.querySelectorAll(selector).forEach((el) => {
 			el.innerHTML = "";
 		});
-		delete EquipmentV4._itemlist[index];
+		delete _list[index];
 		return item;
 	};
-	EquipmentV4.onLevelUp = function onLevelUp() {
+	Component.onLevelUp = function onLevelUp() {
 		if (UIVersionManager.getEquipmentVersion() > 0 && _btnLevelUp) document.body.appendChild(_btnLevelUp);
 	};
-	EquipmentV4.checkEquipLoc = function checkEquipLoc(location) {
-		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location & location) return EquipmentV4._itemlist[key].wItemSpriteNumber;
+	Component.checkEquipLoc = function checkEquipLoc(location) {
+		if (!entityRender) return 0;
+		for (const key in _list) if ((switchEquip ? _list[key].location : _list[key].equipped) & location) return _list[key].wItemSpriteNumber;
 		return 0;
 	};
-	renderCharacter = (function renderCharacterClosure() {
+	function hideStatus() {
+		const winStats = WinStatsController.getUI();
+		if (winStats.isEmbedded()) winStats.unembed();
+	}
+	function toggleStatus() {
+		const self = Component.getRoot().querySelector(".view_status");
+		const winStats = WinStatsController.getUI();
+		const isVisible = winStats.isEmbedded();
+		const state = isVisible ? "on" : "off";
+		if (isVisible) {
+			winStats.unembed();
+			_preferences.stats = false;
+		} else {
+			winStats.embed(Component._host);
+			_preferences.stats = true;
+		}
+		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/view" + state + ".bmp", (data) => {
+			if (self) self.style.backgroundImage = `url(${data})`;
+		});
+	}
+	function toggleEquip() {
+		Component.onConfigUpdate(0, !_showEquip ? 1 : 0);
+	}
+	function toggleCostume() {
+		Component.onConfigUpdate(5, !_hideCostume ? 1 : 0);
+	}
+	function onSwtichEquip() {
+		SwitchEquip_default.toggle();
+		if (SwitchEquip_default.ui) {
+			const switchHost = SwitchEquip_default._host || SwitchEquip_default.ui;
+			if (switchHost.style) {
+				switchHost.style.position = "absolute";
+				switchHost.style.top = "0";
+				switchHost.style.left = "0";
+				switchHost.style.zIndex = "100";
+			}
+		}
+	}
+	const renderCharacter = (function renderCharacterClosure() {
 		let _lastState = 0;
 		let _hasCart = 0;
 		const _cleanColor = new Float32Array([
@@ -248665,7 +245294,45 @@ var init_EquipmentV4 = __esmMin((() => {
 		};
 		const HasAttachmentState = StatusState_default.EffectState.FALCON | StatusState_default.EffectState.RIDING | StatusState_default.EffectState.DRAGON1 | StatusState_default.EffectState.DRAGON2 | StatusState_default.EffectState.DRAGON3 | StatusState_default.EffectState.DRAGON4 | StatusState_default.EffectState.DRAGON5 | StatusState_default.EffectState.MADOGEAR | StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
 		const HasCartState = StatusState_default.EffectState.CART1 | StatusState_default.EffectState.CART2 | StatusState_default.EffectState.CART3 | StatusState_default.EffectState.CART4 | StatusState_default.EffectState.CART5;
-		return function renderChar() {
+		function updateAttachmentButtons() {
+			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
+				_lastState = SessionStorage_default.Entity.effectState;
+				_hasCart = SessionStorage_default.Entity.hasCart;
+				const root = Component.getRoot();
+				const removeOpt = root.querySelector(".removeOption");
+				const cartBtn = root.querySelector(".cartitems");
+				if (_lastState & HasAttachmentState || _hasCart) {
+					if (removeOpt) removeOpt.style.display = "";
+				} else if (removeOpt) removeOpt.style.display = "none";
+				if (_lastState & HasCartState || _hasCart) {
+					if (cartBtn) cartBtn.style.display = "";
+				} else if (cartBtn) cartBtn.style.display = "none";
+			}
+		}
+		function renderLegacy() {
+			const character = SessionStorage_default.Entity;
+			const direction = character.direction;
+			const headDir = character.headDir;
+			const action = character.action;
+			const animation = character.animation;
+			updateAttachmentButtons();
+			Camera.direction = 4;
+			character.direction = 4;
+			character.headDir = 0;
+			character.action = character.ACTION.IDLE;
+			character.animation = _animation;
+			_savedColor.set(character.effectColor);
+			character.effectColor.set(_cleanColor);
+			SpriteRenderer.bind2DContext(_ctx[0], 30, 130);
+			_ctx[0].clearRect(0, 0, _ctx[0].canvas.width, _ctx[0].canvas.height);
+			character.renderEntity();
+			character.direction = direction;
+			character.headDir = headDir;
+			character.action = action;
+			character.animation = animation;
+			character.effectColor.set(_savedColor);
+		}
+		function renderEntity() {
 			const equip_character = new Entity();
 			equip_character.set({
 				GID: SessionStorage_default.Entity.GID + "_EQUIP",
@@ -248678,29 +245345,17 @@ var init_EquipmentV4 = __esmMin((() => {
 				headpalette: SessionStorage_default.Entity.headpalette,
 				bodypalette: SessionStorage_default.Entity.bodypalette
 			});
-			if (SessionStorage_default.Entity.effectState !== _lastState || _hasCart !== SessionStorage_default.Entity.hasCart) {
-				_lastState = SessionStorage_default.Entity.effectState;
-				_hasCart = SessionStorage_default.Entity.hasCart;
-				const root = EquipmentV4.getRoot();
-				const removeOpt = root.querySelector(".removeOption");
-				const cartBtn = root.querySelector(".cartitems");
-				if (_lastState & HasAttachmentState || _hasCart) {
-					if (removeOpt) removeOpt.style.display = "";
-				} else if (removeOpt) removeOpt.style.display = "none";
-				if (_lastState & HasCartState || _hasCart) {
-					if (cartBtn) cartBtn.style.display = "";
-				} else if (cartBtn) cartBtn.style.display = "none";
-			}
+			updateAttachmentButtons();
 			if (currentTabId === "general") {
-				equip_character.accessory = EquipmentV4.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV4.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
-				equip_character.accessory3 = EquipmentV4.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
-				equip_character.robe = EquipmentV4.checkEquipLoc(EquipmentLocation_default.GARMENT);
+				equip_character.accessory = Component.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
+				equip_character.accessory2 = Component.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
+				equip_character.accessory3 = Component.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
+				equip_character.robe = Component.checkEquipLoc(EquipmentLocation_default.GARMENT);
 			} else if (currentTabId === "costume") {
-				equip_character.accessory = EquipmentV4.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
-				equip_character.accessory2 = EquipmentV4.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
-				equip_character.accessory3 = EquipmentV4.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
-				equip_character.robe = EquipmentV4.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
+				equip_character.accessory = Component.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
+				equip_character.accessory2 = Component.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
+				equip_character.accessory3 = Component.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
+				equip_character.robe = Component.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
 			}
 			_savedColor.set(equip_character.effectColor);
 			equip_character.effectColor.set(_cleanColor);
@@ -248709,18 +245364,108 @@ var init_EquipmentV4 = __esmMin((() => {
 			equip_character.headDir = 0;
 			equip_character.action = equip_character.ACTION.IDLE;
 			equip_character.animation = _animation;
-			for (let i = 0; i < _ctx$6.length; i++) {
-				const ctx = _ctx$6[i];
+			for (let i = 0; i < _ctx.length; i++) {
+				const ctx = _ctx[i];
 				SpriteRenderer.bind2DContext(ctx, 30, 130);
 				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 				equip_character.renderEntity(ctx);
 			}
+		}
+		return function renderChar() {
+			if (entityRender) renderEntity();
+			else renderLegacy();
 		};
 	})();
-	EquipmentV4.onUpdateOwnerName = function() {
-		const root = EquipmentV4.getRoot();
-		for (const index in EquipmentV4._itemlist) {
-			const item = EquipmentV4._itemlist[index];
+	function onDragOver(event) {
+		if (window._OBJ_DRAG_) {
+			const data = window._OBJ_DRAG_;
+			if (data.type === "item") {
+				const item = data.data;
+				if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
+					const selector = getSelectorFromLocation$1("location" in item ? item.location : item.WearLocation);
+					const cells = Component.getRoot().querySelectorAll(selector);
+					Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+						cells.forEach((c) => {
+							c.style.backgroundImage = `url(${_data})`;
+						});
+					});
+				}
+			}
+		}
+		event.stopImmediatePropagation();
+		return false;
+	}
+	function onDragLeave(event) {
+		Component.getRoot().querySelectorAll("td").forEach((td) => {
+			td.style.backgroundImage = "none";
+		});
+		event.stopImmediatePropagation();
+		return false;
+	}
+	function onDrop(event) {
+		let item, data;
+		event.stopImmediatePropagation();
+		try {
+			data = JSON.parse(event.dataTransfer.getData("Text"));
+		} catch (_e) {
+			return false;
+		}
+		if (data && data.type === "item") {
+			item = data.data;
+			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO || item.type === ItemType_default.SHADOWGEAR) && item.IsIdentified && !item.IsDamaged) {
+				Component.getRoot().querySelectorAll("td").forEach((td) => {
+					td.style.backgroundImage = "none";
+				});
+				Component.onEquipItem(item.index, "location" in item ? item.location : item.WearState);
+			}
+		}
+		return false;
+	}
+	function onEquipmentInfo(event) {
+		const index = parseInt(this.getAttribute("data-index"), 10);
+		const item = _list[index];
+		if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
+		else {
+			ItemInfo_default.append();
+			ItemInfo_default.uid = item.ITID;
+			ItemInfo_default.setItem(item);
+		}
+		event.stopImmediatePropagation();
+		return false;
+	}
+	function onEquipmentUnEquip() {
+		const index = parseInt(this.getAttribute("data-index"), 10);
+		Component.onUnEquip(index);
+		const overlay = Component.getRoot().querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	}
+	function onEquipmentOver() {
+		const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
+		const item = _list[idx];
+		if (!item) return;
+		const root = Component.getRoot();
+		const overlay = root.querySelector(".overlay");
+		const rootEl = root.querySelector("#" + name) || root;
+		const btnRect = this.getBoundingClientRect();
+		const rootRect = rootEl.getBoundingClientRect();
+		const top = btnRect.top - rootRect.top;
+		const left = btnRect.left - rootRect.left;
+		if (!top && !left) return;
+		if (overlay) {
+			overlay.style.display = "block";
+			overlay.style.top = `${top - 22}px`;
+			overlay.style.left = `${left - 22}px`;
+			overlay.textContent = DB.getItemName(item);
+		}
+	}
+	function onEquipmentOut() {
+		const overlay = Component.getRoot().querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	}
+	Component.onUpdateOwnerName = function() {
+		const root = Component.getRoot();
+		for (const index in _list) {
+			const item = _list[index];
 			if (item.slot && [
 				255,
 				254,
@@ -248730,65 +245475,274 @@ var init_EquipmentV4 = __esmMin((() => {
 			});
 		}
 	};
-	EquipmentV4.getNumber = function() {
+	Component.getNumber = function() {
 		let num = 0;
-		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location && EquipmentV4._itemlist[key].location !== EquipmentLocation_default.AMMO) num++;
+		for (const key in _list) if (_list[key].location && _list[key].location !== EquipmentLocation_default.AMMO) num++;
 		return num;
 	};
-	EquipmentV4.setDamageSkin = function setDamageSkin(skinId) {
-		const root = EquipmentV4.getRoot();
-		const buttons = root.querySelectorAll("#damageskin .skin-option");
-		const buttonSelected = root.querySelector(`#damageskin .skin-option[data-skin="${skinId}"]`);
-		GraphicsSettings.damageSkin = skinId;
-		GraphicsSettings.save();
-		buttons.forEach((btn) => {
-			btn.setAttribute("data-background", "showdamage/btn_damage.bmp");
-			btn.setAttribute("data-hover", "showdamage/btn_damage_press.bmp");
-			btn.setAttribute("data-down", "showdamage/btn_damage_pick.bmp");
-		});
-		if (this.parseHTML) buttons.forEach((btn) => {
-			this.parseHTML.call(btn);
-		});
-		Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage.bmp", (data) => {
-			buttons.forEach((btn) => {
-				btn.style.backgroundImage = `url(${data})`;
-			});
-		});
-		if (buttonSelected) {
-			Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage_pick.bmp", (data) => {
-				buttonSelected.style.backgroundImage = `url(${data})`;
-			});
-			buttonSelected.onmouseover = null;
-			buttonSelected.onmouseout = null;
-		}
-	};
-	EquipmentV4.setDamageMotion = function setDamageMotion(motionId) {
-		GraphicsSettings.damageMotion = motionId;
-		GraphicsSettings.save();
-		EquipmentV4.getRoot().querySelectorAll(".motion-check").forEach((btn) => {
-			const bgImage = parseInt(btn.getAttribute("data-motion"), 10) === motionId ? "checkbox_1.bmp" : "checkbox_0.bmp";
-			Client.loadFile(DB.INTERFACE_PATH + bgImage, (data) => {
-				btn.style.backgroundImage = `url(${data})`;
-			});
-		});
-	};
-	EquipmentV4.isInEquipList = function(data) {
-		for (const key in EquipmentV4._itemlist) if (EquipmentV4._itemlist[key].location & data) return EquipmentV4._itemlist[key];
+	if (switchEquip) {
+		Component.isInEquipList = function(data) {
+			for (const key in _list) if (_list[key].location & data) return _list[key];
+			return 0;
+		};
+		Component.equipItemsToSwitch = function() {
+			const equipmentKeys = Object.keys(_list);
+			for (let i = 0; i < equipmentKeys.length; i++) {
+				const key = equipmentKeys[i];
+				const equipmentItem = _list[key];
+				if (equipmentItem.location) SwitchEquip_default.equip(equipmentItem, equipmentItem.location, false);
+			}
+		};
+	} else Component.isInEquipList = function() {
 		return 0;
 	};
-	EquipmentV4.equipItemsToSwitch = function() {
-		const equipmentKeys = Object.keys(EquipmentV4._itemlist);
-		for (let i = 0; i < equipmentKeys.length; i++) {
-			const key = equipmentKeys[i];
-			const equipmentItem = EquipmentV4._itemlist[key];
-			if (equipmentItem.location) SwitchEquip_default.equip(equipmentItem, equipmentItem.location, false);
-		}
-	};
-	EquipmentV4.onUnEquip = function onUnEquip() {};
-	EquipmentV4.onConfigUpdate = function onConfigUpdate() {};
-	EquipmentV4.onEquipItem = function onEquipItem() {};
-	EquipmentV4.onRemoveCart = function onRemoveCart() {};
-	EquipmentV4_default = UIManager.addComponent(EquipmentV4);
+	if (titles) {
+		Component.loadTitles = function() {
+			const titleList = Component.getRoot().querySelector("#title_list");
+			if (!titleList) return;
+			titleList.innerHTML = "";
+			const removeTitleText = DB.getMessage(2686) || "Remove Title";
+			const removeSelectedClass = _currentTitleId === 0 ? " selected" : "";
+			const removeEl = document.createElement("div");
+			removeEl.className = `title-option${removeSelectedClass}`;
+			removeEl.setAttribute("data-title", "0");
+			removeEl.textContent = removeTitleText;
+			titleList.appendChild(removeEl);
+			const allTitles = DB.getAllTitles();
+			for (const titleId in allTitles) if (allTitles.hasOwnProperty(titleId)) {
+				const titleName = allTitles[titleId];
+				const selectedClass = parseInt(titleId) === _currentTitleId ? " selected" : "";
+				const titleEl = document.createElement("div");
+				titleEl.className = `title-option${selectedClass}`;
+				titleEl.setAttribute("data-title", titleId);
+				titleEl.textContent = titleName;
+				titleList.appendChild(titleEl);
+			}
+			titleList.addEventListener("click", (e) => {
+				const option = e.target.closest(".title-option");
+				if (option) {
+					e.preventDefault();
+					e.stopPropagation();
+					const titleId = parseInt(option.getAttribute("data-title"));
+					Component.selectTitle(titleId);
+				}
+			});
+		};
+		Component.selectTitle = function(titleId) {
+			const pkt = new PACKET.CZ.REQ_CHANGE_TITLE();
+			pkt.title_id = titleId;
+			Network.sendPacket(pkt);
+		};
+		Component.setTitle = function OnSetTitle(titleId) {
+			_currentTitleId = titleId;
+			Component.loadTitles();
+		};
+	}
+	if (damageSkin) {
+		Component.setDamageSkin = function setDamageSkin(skinId) {
+			const root = Component.getRoot();
+			const buttons = root.querySelectorAll("#damageskin .skin-option");
+			const buttonSelected = root.querySelector(`#damageskin .skin-option[data-skin="${skinId}"]`);
+			GraphicsSettings.damageSkin = skinId;
+			GraphicsSettings.save();
+			buttons.forEach((btn) => {
+				btn.setAttribute("data-background", "showdamage/btn_damage.bmp");
+				btn.setAttribute("data-hover", "showdamage/btn_damage_press.bmp");
+				btn.setAttribute("data-down", "showdamage/btn_damage_pick.bmp");
+			});
+			if (this.parseHTML) buttons.forEach((btn) => {
+				this.parseHTML.call(btn);
+			});
+			Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage.bmp", (data) => {
+				buttons.forEach((btn) => {
+					btn.style.backgroundImage = `url(${data})`;
+				});
+			});
+			if (buttonSelected) {
+				Client.loadFile(DB.INTERFACE_PATH + "showdamage/btn_damage_pick.bmp", (data) => {
+					buttonSelected.style.backgroundImage = `url(${data})`;
+				});
+				buttonSelected.onmouseover = null;
+				buttonSelected.onmouseout = null;
+			}
+		};
+		Component.setDamageMotion = function setDamageMotion(motionId) {
+			GraphicsSettings.damageMotion = motionId;
+			GraphicsSettings.save();
+			Component.getRoot().querySelectorAll(".motion-check").forEach((btn) => {
+				const bgImage = parseInt(btn.getAttribute("data-motion"), 10) === motionId ? "checkbox_1.bmp" : "checkbox_0.bmp";
+				Client.loadFile(DB.INTERFACE_PATH + bgImage, (data) => {
+					btn.style.backgroundImage = `url(${data})`;
+				});
+			});
+		};
+	}
+	Component.onUnEquip = function onUnEquip() {};
+	Component.onConfigUpdate = function onConfigUpdate() {};
+	Component.onEquipItem = function onEquipItem() {};
+	Component.onRemoveCart = function onRemoveCart() {};
+	return UIManager.addComponent(Component);
+}
+var init_EquipmentCommon = __esmMin((() => {
+	init_DBManager();
+	init_StatusState();
+	init_EquipmentLocation();
+	init_NetworkManager();
+	init_PacketVerManager();
+	init_PacketStructure();
+	init_ItemType();
+	init_Client();
+	init_Preferences$1();
+	init_SessionStorage();
+	init_Renderer();
+	init_Camera();
+	init_SpriteRenderer();
+	init_UIVersionManager();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_ItemInfo();
+	init_CartItems();
+	init_SwitchEquip();
+	init_WinStats();
+	init_Graphics();
+	init_Inventory();
+	init_Entity$1();
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.html?raw
+var EquipmentV0_default$2;
+var init_EquipmentV0$2 = __esmMin((() => {
+	EquipmentV0_default$2 = "<div id=\"EquipmentV0\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n\r\n	<div class=\"panel\">\r\n		<table class=\"content\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n\r\n		<div class=\"footer\" id=\"equipment_footer\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"view_status\"\r\n					data-background=\"basic_interface/viewoff.bmp\"\r\n					data-preload=\"basic_interface/viewon.bmp\"\r\n				></button>\r\n				<span data-text=\"105\">Status</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.css?raw
+var EquipmentV0_default$1;
+var init_EquipmentV0$1 = __esmMin((() => {
+	EquipmentV0_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV0 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV0 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV0 .panel {\r\n	background-color: white;\r\n}\r\n#EquipmentV0.equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV0 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV0 .col1,\r\n#EquipmentV0 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV0 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV0 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV0 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV0 .col3 .item button,\r\n#EquipmentV0 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV0 .col1 .item button,\r\n#EquipmentV0 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV0 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV0 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV0 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV0 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV0 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV0 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV0 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV0 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV0 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV0 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV0 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV0 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV0 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV0 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV0/EquipmentV0.js
+var EquipmentV0_default;
+var init_EquipmentV0 = __esmMin((() => {
+	init_EquipmentCommon();
+	init_EquipmentV0$2();
+	init_EquipmentV0$1();
+	EquipmentV0_default = createEquipment({
+		name: "EquipmentV0",
+		htmlText: EquipmentV0_default$2,
+		cssText: EquipmentV0_default$1,
+		entityRender: false,
+		statsDefault: false
+	});
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.html?raw
+var EquipmentV1_default$2;
+var init_EquipmentV1$2 = __esmMin((() => {
+	EquipmentV1_default$2 = "<div id=\"EquipmentV1\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\"></table>\r\n		<div class=\"footer\" id=\"equipment_footer\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"view_status\"\r\n					data-background=\"basic_interface/viewoff.bmp\"\r\n					data-preload=\"basic_interface/viewon.bmp\"\r\n				></button>\r\n				<span data-text=\"105\">Status</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.css?raw
+var EquipmentV1_default$1;
+var init_EquipmentV1$1 = __esmMin((() => {
+	EquipmentV1_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV1 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV1 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV1 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV1 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV1 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV1 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV1 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV1 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV1 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV1 .col1,\r\n#EquipmentV1 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV1 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV1 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV1 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV1 .col3 .item button,\r\n#EquipmentV1 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV1 .col1 .item button,\r\n#EquipmentV1 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV1 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV1 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV1 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV1 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV1 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV1 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV1 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV1 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV1 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV1 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV1 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV1 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV1 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV1 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV1/EquipmentV1.js
+var EquipmentV1_default;
+var init_EquipmentV1 = __esmMin((() => {
+	init_EquipmentCommon();
+	init_EquipmentV1$2();
+	init_EquipmentV1$1();
+	EquipmentV1_default = createEquipment({
+		name: "EquipmentV1",
+		htmlText: EquipmentV1_default$2,
+		cssText: EquipmentV1_default$1
+	});
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.html?raw
+var EquipmentV2_default$2;
+var init_EquipmentV2$2 = __esmMin((() => {
+	EquipmentV2_default$2 = "<div id=\"EquipmentV2\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\"></table>\r\n		<div class=\"footer\" id=\"equipment_footer\">\r\n			<div class=\"left\">\r\n				<button\r\n					class=\"view_status\"\r\n					data-background=\"basic_interface/viewoff.bmp\"\r\n					data-preload=\"basic_interface/viewon.bmp\"\r\n				></button>\r\n				<span data-text=\"105\">Status</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.css?raw
+var EquipmentV2_default$1;
+var init_EquipmentV2$1 = __esmMin((() => {
+	EquipmentV2_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV2 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV2 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV2 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV2 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV2 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV2 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n}\r\n#EquipmentV2 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV2 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV2 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV2 .col1,\r\n#EquipmentV2 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV2 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV2 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV2 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV2 .col3 .item button,\r\n#EquipmentV2 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV2 .col1 .item button,\r\n#EquipmentV2 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV2 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV2 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV2 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV2 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV2 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV2 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV2 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV2 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV2 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV2 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV2 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n}\r\n#EquipmentV2 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV2 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV2 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV2/EquipmentV2.js
+var EquipmentV2_default;
+var init_EquipmentV2 = __esmMin((() => {
+	init_EquipmentCommon();
+	init_EquipmentV2$2();
+	init_EquipmentV2$1();
+	EquipmentV2_default = createEquipment({
+		name: "EquipmentV2",
+		htmlText: EquipmentV2_default$2,
+		cssText: EquipmentV2_default$1
+	});
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.html?raw
+var EquipmentV3_default$2;
+var init_EquipmentV3$2 = __esmMin((() => {
+	EquipmentV3_default$2 = "<div id=\"EquipmentV3\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\">\r\n			<tr>\r\n				<td colspan=\"3\">\r\n					<div class=\"title-list\" id=\"title_list\"></div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n		<div class=\"footer\" id=\"equipment_footer\" data-background=\"basic_interface/equipwin_bg2.bmp\">\r\n			<div class=\"left\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"switch_equip\"\r\n					data-background=\"basic_interface/btn_e_change_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_change_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"remove_equip\"\r\n					data-background=\"basic_interface/btn_e_off_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_off_b.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.css?raw
+var EquipmentV3_default$1;
+var init_EquipmentV3$1 = __esmMin((() => {
+	EquipmentV3_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV3 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV3 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV3 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV3 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV3 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV3 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV3 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV3 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV3 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV3 .col1,\r\n#EquipmentV3 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV3 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV3 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV3 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV3 .col3 .item button,\r\n#EquipmentV3 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV3 .col1 .item button,\r\n#EquipmentV3 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV3 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV3 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV3 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV3 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV3 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV3 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV3 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV3 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV3 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV3 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV3 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV3 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV3 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV3 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV3 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV3 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV3 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV3 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV3 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV3/EquipmentV3.js
+var EquipmentV3_default;
+var init_EquipmentV3 = __esmMin((() => {
+	init_EquipmentCommon();
+	init_EquipmentV3$2();
+	init_EquipmentV3$1();
+	EquipmentV3_default = createEquipment({
+		name: "EquipmentV3",
+		htmlText: EquipmentV3_default$2,
+		cssText: EquipmentV3_default$1,
+		enchantGrade: true,
+		switchEquip: true,
+		titles: true
+	});
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.html?raw
+var EquipmentV4_default$2;
+var init_EquipmentV4$2 = __esmMin((() => {
+	EquipmentV4_default$2 = "<div id=\"EquipmentV4\" data-repload=\"basic_interface/item_invert.bmp\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"104\">Equipment</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"tab-manager\" id=\"tabs\">\r\n		<div class=\"tab\">\r\n			<a href=\"#general\"><span data-text=\"3158\">General</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#costume\"><span data-text=\"3159\">Costume</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#title\"><span data-text=\"3160\">Title</span></a>\r\n		</div>\r\n		<div class=\"tab\">\r\n			<a href=\"#damageskin\"><span data-text=\"3990\">Damage Font</span></a>\r\n		</div>\r\n	</div>\r\n	<div class=\"panel\">\r\n		<table class=\"content\" id=\"general\" data-background=\"basic_interface/equipwin_bg.bmp\">\r\n			<tr>\r\n				<td class=\"head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<div class=\"ammo\"></div>\r\n						<button\r\n							class=\"cartitems\"\r\n							data-background=\"basic_interface/btn_items_off.bmp\"\r\n							data-hover=\"basic_interface/btn_items_on.bmp\"\r\n						></button>\r\n						<button class=\"removeOption\" data-background=\"basic_interface/btn_off.bmp\"></button>\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"head_bottom col1\"></td>\r\n				<td class=\"armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"weapon col1\"></td>\r\n				<td class=\"shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"garment col1\"></td>\r\n				<td class=\"shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"accessory1 col1\"></td>\r\n				<td class=\"accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"costume\" data-background=\"basic_interface/equipwin_special.bmp\">\r\n			<tr>\r\n				<td class=\"costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"costume_head_bottom col1\"></td>\r\n				<td class=\"shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_weapon col1\"></td>\r\n				<td class=\"shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_garment col1\"></td>\r\n				<td class=\"shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"shadow_accessory1 col1\"></td>\r\n				<td class=\"shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"title\">\r\n			<tr>\r\n				<td colspan=\"3\">\r\n					<div class=\"title-list\" id=\"title_list\"></div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"content\" id=\"damageskin\">\r\n			<!-- Select Damage Font -->\r\n			<tr>\r\n				<td colspan=\"3\">\r\n					<div class=\"damageskin-selector\" data-background=\"showdamage/bg_damage.bmp\">\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"0\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3994\">Default</span>\r\n							</div>\r\n							<!-- Damage Skin 0: Default -->\r\n							<button class=\"skin-option\" data-skin=\"0\">\r\n								<span>Default</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage00.bmp\"></div>\r\n							</button>\r\n						</div>\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"1\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3993\">Left</span>\r\n							</div>\r\n							<!-- Damage Skin 1: Color -->\r\n							<button class=\"skin-option\" data-skin=\"1\">\r\n								<span>Color</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage01.bmp\"></div>\r\n							</button>\r\n						</div>\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"2\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3992\">Top</span>\r\n							</div>\r\n							<!-- Damage Skin 2: Han -->\r\n							<button class=\"skin-option\" data-skin=\"2\">\r\n								<span>Han</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage02.bmp\"></div>\r\n							</button>\r\n						</div>\r\n						<div class=\"skin-wrapper\">\r\n							<div>\r\n								<button\r\n									class=\"checkbox motion-check\"\r\n									data-motion=\"3\"\r\n									data-background=\"checkbox_0.bmp\"\r\n								></button>\r\n								<span data-text=\"3991\">Right</span>\r\n							</div>\r\n							<!-- Damage Skin 3: Hidden -->\r\n							<button class=\"skin-option\" data-skin=\"3\">\r\n								<span>Hidden</span>\r\n								<div class=\"icon\" data-background=\"showdamage/icon_damage03.bmp\"></div>\r\n							</button>\r\n						</div>\r\n					</div>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n		<div class=\"footer\" id=\"equipment_footer\" data-background=\"basic_interface/equipwin_bg2.bmp\">\r\n			<div class=\"left\">\r\n				<button class=\"show_equip\" data-background=\"checkbox_0.bmp\" data-preload=\"checkbox_1.bmp\"></button>\r\n				<span data-text=\"1362\">Show Equip</span>\r\n				<button class=\"show_costume\" data-background=\"checkbox_1.bmp\" data-preload=\"checkbox_0.bmp\"></button>\r\n				<span data-text=\"4103\">Show Costume</span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"switch_equip\"\r\n					data-background=\"basic_interface/btn_e_change_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_change_b.bmp\"\r\n				></button>\r\n				<button\r\n					class=\"remove_equip\"\r\n					data-background=\"basic_interface/btn_e_off_a.bmp\"\r\n					data-hover=\"basic_interface/btn_e_off_b.bmp\"\r\n				></button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n		<div class=\"status_component\">\r\n			<!-- Import status component -->\r\n		</div>\r\n	</div>\r\n	<button\r\n		id=\"lvlup_base\"\r\n		data-background=\"basic_interface/lv_up_off.bmp\"\r\n		data-sown=\"basic_interface/lv_up_on.bmp\"\r\n	></button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.css?raw
+var EquipmentV4_default$1;
+var init_EquipmentV4$1 = __esmMin((() => {
+	EquipmentV4_default$1 = ":host {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#EquipmentV4 {\r\n	position: relative;\r\n	width: 280px;\r\n}\r\n\r\n#EquipmentV4 .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .titlebar {\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#EquipmentV4 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#EquipmentV4 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#EquipmentV4 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#EquipmentV4 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#EquipmentV4 .tab-manager {\r\n	position: relative;\r\n	width: inherit;\r\n	background-color: white;\r\n	height: 15px;\r\n	display: flex;\r\n}\r\n\r\n#EquipmentV4 .tab a {\r\n	width: 60px;\r\n	height: 100%;\r\n	color: #42454a;\r\n	border: 1px solid #c9c3ba;\r\n	border-bottom: none;\r\n	text-decoration: none;\r\n	display: inline-block;\r\n	vertical-align: bottom;\r\n	border-radius: 3px 3px 0 0;\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .tab a.selected {\r\n	color: #000;\r\n	font-weight: bold;\r\n	border-bottom: 1px solid white;\r\n	position: relative;\r\n	z-index: 100;\r\n	background-color: white;\r\n}\r\n#EquipmentV4 .tab a.selected:after {\r\n	content: '';\r\n	display: block;\r\n	height: 1px;\r\n	width: 1px;\r\n	position: absolute;\r\n	bottom: -1px;\r\n	left: -1px;\r\n}\r\n\r\n#EquipmentV4 .panel {\r\n	background-color: white;\r\n	border-top: 1px solid gray;\r\n	height: 150px;\r\n}\r\n#EquipmentV4 .equipmentV0 .panel {\r\n	background-color: inherit;\r\n}\r\n#EquipmentV4 table.content {\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 table.content.hide {\r\n	display: none;\r\n}\r\n#EquipmentV4 .content {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 130px;\r\n	border-spacing: 0;\r\n}\r\n#EquipmentV4 .col1,\r\n#EquipmentV4 .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#EquipmentV4 .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#EquipmentV4 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#EquipmentV4 .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#EquipmentV4 .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#EquipmentV4 .col3 .item button,\r\n#EquipmentV4 .col3 .item span {\r\n	float: right;\r\n}\r\n#EquipmentV4 .col1 .item button,\r\n#EquipmentV4 .col1 .item span {\r\n	float: left;\r\n}\r\n#EquipmentV4 .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#EquipmentV4 .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#EquipmentV4 .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#EquipmentV4 .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#EquipmentV4 .ammo_container {\r\n	position: relative;\r\n}\r\n#EquipmentV4 .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#EquipmentV4 .ammo .item {\r\n	text-align: center;\r\n}\r\n#EquipmentV4 .ammo .item span {\r\n	width: 45px;\r\n}\r\n#EquipmentV4 .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#EquipmentV4 .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#EquipmentV4 .footer {\r\n	height: 20px;\r\n	border-bottom: 1px solid #c0c0c0;\r\n	background-position: 0px -130px;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .left {\r\n	float: left;\r\n	text-align: left;\r\n	margin-left: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .right {\r\n	float: right;\r\n	text-align: right;\r\n	margin-right: 5px;\r\n	margin-top: 3px;\r\n}\r\n#EquipmentV4 .footer .view_status {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_equip {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#EquipmentV4 .footer .show_costume {\r\n	width: 10px;\r\n	height: 12px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 .footer .switch_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n#EquipmentV4 .footer .remove_equip {\r\n	width: 40px;\r\n	height: 20px;\r\n	border: none;\r\n	position: relative;\r\n	top: -3px;\r\n}\r\n\r\n#lvlup_base {\r\n	z-index: 51;\r\n	position: absolute;\r\n	left: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#EquipmentV4 #damageskin .damageskin-selector {\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	width: 280px;\r\n	margin: 0 auto;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option {\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n\r\n	width: 64px;\r\n	height: 92px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	margin-top: 3px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option span {\r\n	position: relative;\r\n	top: -9px;\r\n	font-weight: bold;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-option .icon {\r\n	width: 36px;\r\n	height: 36px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper {\r\n	width: 64px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	align-items: center;\r\n	justify-content: center;\r\n	gap: 0;\r\n	padding: 0;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper > div:first-child {\r\n	margin-top: 8px;\r\n}\r\n\r\n#EquipmentV4 #damageskin .skin-wrapper .label {\r\n	margin-top: 6px;\r\n	text-align: center;\r\n}\r\n\r\n#EquipmentV4 .motion-check {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n	cursor: pointer;\r\n	width: 10px;\r\n	height: 12px;\r\n	margin-right: 4px;\r\n}\r\n\r\n#EquipmentV4 .item .grade {\r\n	position: relative;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 5px;\r\n}\r\n\r\n#EquipmentV4 #title .title-list {\r\n	height: 125px;\r\n	width: 280px;\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	padding: 8px 8px;\r\n	border: 1px solid #c0c0c0;\r\n	background-color: #f8f8f8;\r\n}\r\n\r\n#EquipmentV4 .title-option {\r\n	padding: 1px;\r\n	margin: 1px 0;\r\n	cursor: pointer;\r\n	background-color: transparent;\r\n	border: 1px solid transparent;\r\n	white-space: nowrap;\r\n	width: 100%;\r\n}\r\n\r\n#EquipmentV4 .title-option.selected {\r\n	background-color: #e0e0e0;\r\n	font-weight: bold;\r\n}\r\n\r\n#EquipmentV4 .title-option:hover {\r\n	background-color: #e0e0e0;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Equipment/EquipmentV4/EquipmentV4.js
+var EquipmentV4_default;
+var init_EquipmentV4 = __esmMin((() => {
+	init_EquipmentCommon();
+	init_EquipmentV4$2();
+	init_EquipmentV4$1();
+	EquipmentV4_default = createEquipment({
+		name: "EquipmentV4",
+		htmlText: EquipmentV4_default$2,
+		cssText: EquipmentV4_default$1,
+		enchantGrade: true,
+		switchEquip: true,
+		titles: true,
+		costumeConfig: true,
+		damageSkin: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/Equipment/Equipment.js
