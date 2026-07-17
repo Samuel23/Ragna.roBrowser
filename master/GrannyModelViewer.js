@@ -205388,7 +205388,7 @@ function Packets(name, Struct, size) {
 * @param {function} callback once connected or not
 * @param {boolean} is zone server ?
 */
-function connect$4(host, port, callback, isZone) {
+function connect(host, port, callback, isZone) {
 	const socket = _socketFactory ? _socketFactory(host, port) : defaultSocketFactory(host, port);
 	socket.isZone = !!isZone;
 	socket.onClose = onClose$15;
@@ -205643,7 +205643,7 @@ var init_NetworkManager = __esmMin((() => {
 			sendPacket,
 			send,
 			setPing,
-			connect: connect$4,
+			connect,
 			hookPacket,
 			close,
 			read: read$1,
@@ -205797,8 +205797,8 @@ var init_HtmlHelper = __esmMin((() => {
 /**
 * Render background (or a black background if no image is loaded yet)
 */
-function render$26() {
-	_ctx$12.clearRect(0, 0, _canvas.width, _canvas.height);
+function render$18() {
+	_ctx$8.clearRect(0, 0, _canvas.width, _canvas.height);
 	if (_progress > -1) Background.setPercent(_progress);
 }
 /**
@@ -205818,7 +205818,7 @@ function transition(callback) {
 		});
 	});
 }
-var _overlay, _container, _canvas, _ctx$12, _progress, _overlayAnim, _loading, Background;
+var _overlay, _container, _canvas, _ctx$8, _progress, _overlayAnim, _loading, Background;
 var init_Background = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -205851,7 +205851,7 @@ var init_Background = __esmMin((() => {
 		left: "0",
 		zIndex: "2"
 	});
-	_ctx$12 = _canvas.getContext("2d");
+	_ctx$8 = _canvas.getContext("2d");
 	_progress = -1;
 	_overlayAnim = null;
 	_loading = [];
@@ -205865,7 +205865,7 @@ var init_Background = __esmMin((() => {
 			let i;
 			_progress = 0;
 			_canvas.style.zIndex = "1";
-			render$26();
+			render$18();
 			if (loading) {
 				_loading = loading;
 				return;
@@ -205887,8 +205887,8 @@ var init_Background = __esmMin((() => {
 				width: width + "px",
 				height: height + "px"
 			});
-			_ctx$12.clearRect(0, 0, width, height);
-			render$26();
+			_ctx$8.clearRect(0, 0, width, height);
+			render$18();
 		}
 		/**
 		* Set an image as background
@@ -205901,7 +205901,7 @@ var init_Background = __esmMin((() => {
 			_progress = -1;
 			_container.innerHTML = "";
 			_container.style.backgroundImage = "none";
-			render$26();
+			render$18();
 			if (Array.isArray(filename)) {
 				let loadedCount = 0;
 				const total = filename.length;
@@ -206023,14 +206023,14 @@ var init_Background = __esmMin((() => {
 			const height = 15;
 			const x = Math.floor((_canvas.width - width) * .5);
 			const y = Math.floor(_canvas.height * .75);
-			_ctx$12.fillStyle = "rgb(0,255,255)";
-			_ctx$12.fillRect(x, y, width, height);
-			_ctx$12.fillStyle = "rgb(140,140,140)";
-			_ctx$12.fillRect(x + 1, y + 1, width - 2, height - 2);
-			_ctx$12.fillStyle = "rgb(66,99,165)";
-			_ctx$12.fillRect(x + 2, y + 2, Math.floor(percent * (width - 4) * .01), height - 4);
-			_ctx$12.fillStyle = "rgb(255,255,0)";
-			_ctx$12.fillText(percent + "%", Math.floor((_canvas.width - _ctx$12.measureText(percent + "%").width) * .5), y + 11);
+			_ctx$8.fillStyle = "rgb(0,255,255)";
+			_ctx$8.fillRect(x, y, width, height);
+			_ctx$8.fillStyle = "rgb(140,140,140)";
+			_ctx$8.fillRect(x + 1, y + 1, width - 2, height - 2);
+			_ctx$8.fillStyle = "rgb(66,99,165)";
+			_ctx$8.fillRect(x + 2, y + 2, Math.floor(percent * (width - 4) * .01), height - 4);
+			_ctx$8.fillStyle = "rgb(255,255,0)";
+			_ctx$8.fillText(percent + "%", Math.floor((_canvas.width - _ctx$8.measureText(percent + "%").width) * .5), y + 11);
 		}
 	};
 }));
@@ -206663,7 +206663,7 @@ function init$14(gl) {
 * @param {number} x
 * @param {number} y
 */
-function render$25(gl, modelView, projection, fog, x, y) {
+function render$17(gl, modelView, projection, fog, x, y) {
 	if (!_texture$5) return;
 	const uniform = _program$27.uniform;
 	const attribute = _program$27.attribute;
@@ -206757,7 +206757,7 @@ var init_GridSelector = __esmMin((() => {
 	GridSelector_default = {
 		init: init$14,
 		free: free$9,
-		render: render$25
+		render: render$17
 	};
 }));
 //#endregion
@@ -206840,7 +206840,7 @@ var init_Ground$1 = __esmMin((() => {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$24(gl, modelView, projection, normalMat, fog, light) {
+function render$16(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program$26.uniform;
 	const attribute = _program$26.attribute;
 	gl.useProgram(_program$26);
@@ -207085,7 +207085,7 @@ var init_Ground = __esmMin((() => {
 	Ground_default = {
 		init: init$13,
 		free: free$8,
-		render: render$24,
+		render: render$16,
 		getShadowFactor
 	};
 }));
@@ -207149,7 +207149,7 @@ function RenderCanvas3D(isBlendModeOne) {
 	}
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
-var mat4$22, RenderCanvas2D, _program$25, _buffer$18, _ctx$11, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
+var mat4$22, RenderCanvas2D, _program$25, _buffer$18, _ctx$7, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
 var init_SpriteRenderer = __esmMin((() => {
 	init_WebGL();
 	init_gl_matrix();
@@ -207247,17 +207247,17 @@ var init_SpriteRenderer = __esmMin((() => {
 				}
 			}
 			ctx.putImageData(imageData, 0, 0, 0, 0, width, height);
-			_ctx$11.save();
-			_ctx$11.translate(_x | 0, _y | 0);
-			_ctx$11.rotate(this.angle / 180 * Math.PI);
-			_ctx$11.scale(scale_x, scale_y);
-			_ctx$11.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
-			_ctx$11.restore();
+			_ctx$7.save();
+			_ctx$7.translate(_x | 0, _y | 0);
+			_ctx$7.rotate(this.angle / 180 * Math.PI);
+			_ctx$7.scale(scale_x, scale_y);
+			_ctx$7.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
+			_ctx$7.restore();
 		};
 	})();
 	_program$25 = null;
 	_buffer$18 = null;
-	_ctx$11 = null;
+	_ctx$7 = null;
 	_gl$2 = null;
 	_groupId = 0;
 	_lastGroupId = 0;
@@ -207422,7 +207422,7 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {number} y position
 		*/
 		static bind2DContext(ctx, x, y) {
-			_ctx$11 = ctx;
+			_ctx$7 = ctx;
 			_pos$8[0] = x;
 			_pos$8[1] = y;
 			this.render = RenderCanvas2D;
@@ -207523,7 +207523,7 @@ function init$12(gl, water) {
 * @param {object} light structure
 * @param {number} tick (game tick)
 */
-function render$23(gl, modelView, projection, fog, light, tick) {
+function render$15(gl, modelView, projection, fog, light, tick) {
 	if (!_vertCount) return;
 	const uniform = _program$24.uniform;
 	const attribute = _program$24.attribute;
@@ -207592,7 +207592,7 @@ var init_Water = __esmMin((() => {
 	Water_default = {
 		init: init$12,
 		free: free$7,
-		render: render$23
+		render: render$15
 	};
 }));
 //#endregion
@@ -207670,7 +207670,7 @@ function init$11(gl, data) {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$22(gl, modelView, projection, normalMat, fog, light) {
+function render$14(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program$23.uniform;
 	const attribute = _program$23.attribute;
 	let i, count;
@@ -207753,7 +207753,7 @@ var init_Models = __esmMin((() => {
 	_pendingTextures = 0;
 	Models_default = {
 		init: init$11,
-		render: render$22,
+		render: render$14,
 		free: free$6
 	};
 }));
@@ -208172,7 +208172,7 @@ function updateModelBuffer(gl, model, frame, force) {
 /**
 * Render animated models
 */
-function render$21(gl, modelView, projection, normalMat, fog, light, tick) {
+function render$13(gl, modelView, projection, normalMat, fog, light, tick) {
 	if (_animatedModels.length === 0) return;
 	if (!_program$22) init$10(gl);
 	const uniform = _program$22.uniform;
@@ -208238,7 +208238,7 @@ var init_AnimatedModels = __esmMin((() => {
 		init: init$10,
 		free: free$5,
 		add: add$2,
-		render: render$21,
+		render: render$13,
 		hasAnimatedModels
 	};
 }));
@@ -212242,7 +212242,7 @@ function normalize3(v) {
 * sits next to): (gl, modelView, projection, normalMat, fog, light, tick). modelView is
 * Camera.modelView (the view matrix); the per-instance world is composed on top.
 */
-function render$20(gl, modelView, projection, normalMat, fog, light, tick) {
+function render$12(gl, modelView, projection, normalMat, fog, light, tick) {
 	_gl$1 = gl;
 	if (_instances.length === 0 || !light) return;
 	if (!_program$21) init$9(gl);
@@ -212734,7 +212734,7 @@ var init_GR2ModelRenderer = __esmMin((() => {
 	GR2ModelRenderer_default = {
 		init: init$9,
 		free: free$4,
-		render: render$20,
+		render: render$12,
 		attach: attach$1,
 		detach,
 		isMissing: function(path) {
@@ -212761,21 +212761,21 @@ var init_GR2ModelRenderer = __esmMin((() => {
 * Add 3D sound to the list
 */
 function add$1(sound) {
-	_list$13.push(sound);
+	_list$9.push(sound);
 }
 /**
 * Remove data from memory
 */
 function free$3() {
-	_list$13.length = 0;
+	_list$9.length = 0;
 }
 /**
 * Rendering sounds
 *
 * @param {vec2} position
 */
-function render$19(position, tick) {
-	_list$13.forEach((sound) => {
+function render$11(position, tick) {
+	_list$9.forEach((sound) => {
 		const dist = Math.floor(vec2$3.dist(sound.pos, position));
 		if (sound.tick < tick && dist <= sound.range) {
 			SoundManager.playPosition(sound.file, sound.pos);
@@ -212783,16 +212783,16 @@ function render$19(position, tick) {
 		}
 	});
 }
-var vec2$3, _list$13, Sounds_default;
+var vec2$3, _list$9, Sounds_default;
 var init_Sounds = __esmMin((() => {
 	init_gl_matrix();
 	init_SoundManager();
 	vec2$3 = gl_matrix_default.vec2;
-	_list$13 = [];
+	_list$9 = [];
 	Sounds_default = {
 		add: add$1,
 		free: free$3,
-		render: render$19
+		render: render$11
 	};
 }));
 //#endregion
@@ -218311,10 +218311,10 @@ function resize$7(height) {
 	if (list) list.style.height = height * 32 - 31 + "px";
 	const inner = root.querySelector("#ChatBoxSettings");
 	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$62.height = height;
-	_preferences$62.save();
+	_preferences$58.height = height;
+	_preferences$58.save();
 }
-var ChatBoxSettings, _preferences$62, ChatBoxSettings_default;
+var ChatBoxSettings, _preferences$58, ChatBoxSettings_default;
 var init_ChatBoxSettings = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -218336,7 +218336,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.isOpen = false;
 	ChatBoxSettings.tabOption = [];
 	ChatBoxSettings.activeTab = 0;
-	_preferences$62 = Preferences.get("ChatBoxSettings", {
+	_preferences$58 = Preferences.get("ChatBoxSettings", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -218364,10 +218364,10 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Once in HTML
 	*/
 	ChatBoxSettings.onAppend = function onAppend() {
-		resize$7(_preferences$62.height);
+		resize$7(_preferences$58.height);
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$62.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$62.x), Renderer.width - rect.width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$58.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$58.x), Renderer.width - rect.width) + "px";
 		this._host.style.display = "none";
 	};
 	/**
@@ -218401,9 +218401,9 @@ var init_ChatBoxSettings = __esmMin((() => {
 		});
 	};
 	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$62.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$62.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$62.save();
+		_preferences$58.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$58.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$58.save();
 	};
 	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
 	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
@@ -218585,8 +218585,8 @@ function onChangeTargetMessage(type) {
 }
 function setChatFontScale(scale) {
 	return function setChatFontScaleClosure() {
-		_preferences$61.fontScale = clampChatFontScale(scale);
-		_preferences$61.save();
+		_preferences$57.fontScale = clampChatFontScale(scale);
+		_preferences$57.save();
 		ChatBox.applyFontScale();
 	};
 }
@@ -218650,7 +218650,7 @@ function makeResizableDiv() {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$61, ChatBox, ChatBox_default;
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$57, ChatBox, ChatBox_default;
 var init_ChatBox = __esmMin((() => {
 	init_DBManager();
 	init_Renderer();
@@ -218680,7 +218680,7 @@ var init_ChatBox = __esmMin((() => {
 	_heightIndex = 2;
 	_messageBuffer = [];
 	_rafScheduled = false;
-	_preferences$61 = Preferences.get("ChatBox", {
+	_preferences$57 = Preferences.get("ChatBox", {
 		x: 0,
 		y: Infinity,
 		height: 2,
@@ -218764,15 +218764,15 @@ var init_ChatBox = __esmMin((() => {
 	ChatBox.init = function init() {
 		const root = _root$20();
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$61.height - 1;
+		_heightIndex = _preferences$57.height - 1;
 		ChatBox.updateHeight();
 		ChatBox.applyFontScale();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$61.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$61.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		this.magnet.TOP = _preferences$61.magnet_top;
-		this.magnet.BOTTOM = _preferences$61.magnet_bottom;
-		this.magnet.LEFT = _preferences$61.magnet_left;
-		this.magnet.RIGHT = _preferences$61.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$57.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$57.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		this.magnet.TOP = _preferences$57.magnet_top;
+		this.magnet.BOTTOM = _preferences$57.magnet_bottom;
+		this.magnet.LEFT = _preferences$57.magnet_left;
+		this.magnet.RIGHT = _preferences$57.magnet_right;
 		this.draggable(".input");
 		this.draggable(".battlemode");
 		root.querySelectorAll(".input, .chat-function, .battlemode, .event_add_cursor").forEach((el) => {
@@ -219058,13 +219058,13 @@ var init_ChatBox = __esmMin((() => {
 			ChatBox.toggleChatBattleOption();
 		});
 		ChatBoxSettings_default.append();
-		if (_preferences$61.tabs.length > 0 && _preferences$61.tabs.length == _preferences$61.tabOption.length) {
-			for (let i = 0; i < _preferences$61.tabs.length; i++) if (_preferences$61.tabs[i]) {
-				const tabName = _preferences$61.tabs[i].name;
-				const tabSettings = _preferences$61.tabOption[i];
+		if (_preferences$57.tabs.length > 0 && _preferences$57.tabs.length == _preferences$57.tabOption.length) {
+			for (let i = 0; i < _preferences$57.tabs.length; i++) if (_preferences$57.tabs[i]) {
+				const tabName = _preferences$57.tabs[i].name;
+				const tabSettings = _preferences$57.tabOption[i];
 				ChatBox.addNewTab(tabName, tabSettings);
 			}
-			if (_preferences$61.activeTab !== void 0 && ChatBox.tabs[_preferences$61.activeTab]) ChatBox.switchTab(_preferences$61.activeTab);
+			if (_preferences$57.activeTab !== void 0 && ChatBox.tabs[_preferences$57.activeTab]) ChatBox.switchTab(_preferences$57.activeTab);
 		} else {
 			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
 				ChatBox.FILTER.PUBLIC_LOG,
@@ -219223,17 +219223,17 @@ var init_ChatBox = __esmMin((() => {
 	* Stop custom scroll
 	*/
 	ChatBox.onRemove = function OnRemove() {
-		_preferences$61.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
-		_preferences$61.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$61.height = _heightIndex;
-		_preferences$61.magnet_top = this.magnet.TOP;
-		_preferences$61.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$61.magnet_left = this.magnet.LEFT;
-		_preferences$61.magnet_right = this.magnet.RIGHT;
-		_preferences$61.tabs = this.tabs;
-		_preferences$61.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$61.activeTab = this.activeTab;
-		_preferences$61.save();
+		_preferences$57.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
+		_preferences$57.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$57.height = _heightIndex;
+		_preferences$57.magnet_top = this.magnet.TOP;
+		_preferences$57.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$57.magnet_left = this.magnet.LEFT;
+		_preferences$57.magnet_right = this.magnet.RIGHT;
+		_preferences$57.tabs = this.tabs;
+		_preferences$57.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$57.activeTab = this.activeTab;
+		_preferences$57.save();
 		this.lastTabID = -1;
 		this.activeTab = 0;
 	};
@@ -219538,14 +219538,14 @@ var init_ChatBox = __esmMin((() => {
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
 		const root = _root$20();
-		const scale = clampChatFontScale(_preferences$61.fontScale || 1);
+		const scale = clampChatFontScale(_preferences$57.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
 		const baseInputLineHeight = 18;
 		const fontSize = Math.max(10, Math.round(baseFont * scale));
 		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
 		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$61.fontScale = scale;
+		_preferences$57.fontScale = scale;
 		root.querySelectorAll(".content").forEach((el) => {
 			el.style.fontSize = `${fontSize}px`;
 			el.style.lineHeight = `${lineHeight}px`;
@@ -219646,7 +219646,7 @@ function onClose$14(e) {
 	} catch (_error) {}
 	_BOOK_INFORMATION["book_open"] = false;
 	_BOOK_INFORMATION.save();
-	if (_preferences$60.show) MakeReadBook.onRemove();
+	if (_preferences$56.show) MakeReadBook.onRemove();
 }
 function page() {
 	const root = MakeReadBook.getRoot();
@@ -219666,7 +219666,7 @@ function adjustButtons$1() {
 	const prevBtn = root.querySelector(".previous_btn");
 	if (prevBtn) prevBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] == 0;
 }
-var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$60, MakeReadBook_default;
+var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$56, MakeReadBook_default;
 var init_MakeReadBook = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -219698,7 +219698,7 @@ var init_MakeReadBook = __esmMin((() => {
 	* Store MakeReadBook items
 	*/
 	MakeReadBook.list = [];
-	_preferences$60 = Preferences.get("MakeReadBook", {
+	_preferences$56 = Preferences.get("MakeReadBook", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -219839,7 +219839,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$60.show) onClose$14();
+		if (_preferences$56.show) onClose$14();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -219850,12 +219850,12 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onAppend = function OnAppend() {
 		this._host.style.display = "";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$60.y), Renderer.height - 455)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$60.x), Renderer.width - 555)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$56.y), Renderer.height - 455)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$56.x), Renderer.width - 555)}px`;
 		_BOOK_INFORMATION["book_open"] = true;
 		_BOOK_INFORMATION.save();
-		_preferences$60.show = true;
-		_preferences$60.save();
+		_preferences$56.show = true;
+		_preferences$56.save();
 		const root = MakeReadBook.getRoot();
 		this.draggable(root.querySelector(".titlebar"));
 	};
@@ -219864,19 +219864,19 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onRemove = function OnRemove() {
 		try {
-			if (_preferences$60.show) this._host.style.display = "none";
-			_preferences$60.show = this._host.style.display !== "none";
-			_preferences$60.reduce = false;
-			_preferences$60.y = parseInt(this._host.style.top, 10) || 0;
-			_preferences$60.x = parseInt(this._host.style.left, 10) || 0;
-			_preferences$60.magnet_top = this.magnet.TOP;
-			_preferences$60.magnet_bottom = this.magnet.BOTTOM;
-			_preferences$60.magnet_left = this.magnet.LEFT;
-			_preferences$60.magnet_right = this.magnet.RIGHT;
-			_preferences$60.save();
+			if (_preferences$56.show) this._host.style.display = "none";
+			_preferences$56.show = this._host.style.display !== "none";
+			_preferences$56.reduce = false;
+			_preferences$56.y = parseInt(this._host.style.top, 10) || 0;
+			_preferences$56.x = parseInt(this._host.style.left, 10) || 0;
+			_preferences$56.magnet_top = this.magnet.TOP;
+			_preferences$56.magnet_bottom = this.magnet.BOTTOM;
+			_preferences$56.magnet_left = this.magnet.LEFT;
+			_preferences$56.magnet_right = this.magnet.RIGHT;
+			_preferences$56.save();
 		} catch (_error) {
-			_preferences$60.show = false;
-			_preferences$60.save();
+			_preferences$56.show = false;
+			_preferences$56.save();
 		}
 	};
 	/**
@@ -220058,7 +220058,7 @@ function eventsBooks$1() {
 		readCanvas.height = 15;
 		readCanvas.className = "book_read event_add_cursor";
 		event.appendChild(readCanvas);
-		_ctx$10 = readCanvas.getContext("2d");
+		_ctx$6 = readCanvas.getContext("2d");
 		const bookRead = root.querySelector(".book_read");
 		if (bookRead) {
 			bookRead.addEventListener("mouseover", (e) => {
@@ -220091,7 +220091,7 @@ function validateFieldsExist$1(event) {
 	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
 	return true;
 }
-var _sprite$4, _action$4, _ctx$10, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
+var _sprite$4, _action$4, _ctx$6, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
 var init_ItemCompare = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -220237,8 +220237,8 @@ var init_ItemCompare = __esmMin((() => {
 			const animation = action.animations[anim % action.animations.length];
 			let i, count;
 			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$10, 10, 25);
-			_ctx$10.clearRect(0, 0, _ctx$10.canvas.width, _ctx$10.canvas.height);
+			SpriteRenderer.bind2DContext(_ctx$6, 10, 25);
+			_ctx$6.clearRect(0, 0, _ctx$6.canvas.width, _ctx$6.canvas.height);
 			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$4, _sprite$4, 1, position, false);
 		};
 	})();
@@ -220312,7 +220312,7 @@ function applyPreviewItem(entity) {
 	if (_previewLocation & EquipmentLocation_default.COSTUME_HEAD_TOP) entity.accessory2 = _previewSpriteId;
 	if (_previewLocation & EquipmentLocation_default.COSTUME_ROBE) entity.robe = _previewSpriteId;
 }
-var ItemPreview, _ctx$9, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
+var ItemPreview, _ctx$5, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
 var init_ItemPreview = __esmMin((() => {
 	init_DBManager();
 	init_EquipmentLocation();
@@ -220346,7 +220346,7 @@ var init_ItemPreview = __esmMin((() => {
 	*/
 	ItemPreview.init = function init() {
 		const root = this.getRoot();
-		_ctx$9 = root.querySelector("canvas").getContext("2d");
+		_ctx$5 = root.querySelector("canvas").getContext("2d");
 		root.querySelector(".close").addEventListener("click", () => {
 			ItemPreview.remove();
 		});
@@ -220430,8 +220430,8 @@ var init_ItemPreview = __esmMin((() => {
 			save: false
 		};
 		return function render() {
-			if (!_ctx$9) return;
-			_ctx$9.clearRect(0, 0, _ctx$9.canvas.width, _ctx$9.canvas.height);
+			if (!_ctx$5) return;
+			_ctx$5.clearRect(0, 0, _ctx$5.canvas.width, _ctx$5.canvas.height);
 			if (!_previewSpriteId || !_previewLocation || !SessionStorage_default.Entity) return;
 			const previewCharacter = new Entity();
 			previewCharacter.set({
@@ -220457,8 +220457,8 @@ var init_ItemPreview = __esmMin((() => {
 			previewCharacter.headDir = 0;
 			previewCharacter.action = previewCharacter.ACTION.IDLE;
 			previewCharacter.animation = _animation;
-			SpriteRenderer.bind2DContext(_ctx$9, Math.floor(_ctx$9.canvas.width / 2), _ctx$9.canvas.height);
-			previewCharacter.renderEntity(_ctx$9);
+			SpriteRenderer.bind2DContext(_ctx$5, Math.floor(_ctx$5.canvas.width / 2), _ctx$5.canvas.height);
+			previewCharacter.renderEntity(_ctx$5);
 			previewCharacter.effectColor.set(_savedColor);
 		};
 	})();
@@ -220829,12 +220829,12 @@ function _escapeHTML$8(text) {
 * Submit an index
 */
 function validate() {
-	NpcMenu.onSelectMenu(_ownerID, _index$7 + 1);
+	NpcMenu.onSelectMenu(_ownerID, _index$3 + 1);
 }
 /**
 * Pressed cancel, client send "255" as value
 */
-function cancel$9() {
+function cancel$1() {
 	NpcMenu.onSelectMenu(_ownerID, 255);
 }
 /**
@@ -220843,9 +220843,9 @@ function cancel$9() {
 function selectIndex(div) {
 	NpcMenu.getRoot().querySelector(".content").querySelectorAll("div").forEach((d) => d.classList.remove("selected"));
 	div.classList.add("selected");
-	_index$7 = parseInt(div.dataset.index, 10);
+	_index$3 = parseInt(div.dataset.index, 10);
 }
-var NpcMenu, _index$7, _ownerID, NpcMenu_default;
+var NpcMenu, _index$3, _ownerID, NpcMenu_default;
 var init_NpcMenu = __esmMin((() => {
 	init_KeyEventHandler();
 	init_DBManager();
@@ -220862,7 +220862,7 @@ var init_NpcMenu = __esmMin((() => {
 	* Freeze mouse — NPC menu blocks interaction
 	*/
 	NpcMenu.mouseMode = GUIComponent.MouseMode.FREEZE;
-	_index$7 = 0;
+	_index$3 = 0;
 	_ownerID = 0;
 	/**
 	* Initialize component
@@ -220872,7 +220872,7 @@ var init_NpcMenu = __esmMin((() => {
 		const okBtn = root.querySelector(".ok");
 		if (okBtn) okBtn.addEventListener("click", () => validate());
 		const cancelBtn = root.querySelector(".cancel");
-		if (cancelBtn) cancelBtn.addEventListener("click", () => cancel$9());
+		if (cancelBtn) cancelBtn.addEventListener("click", () => cancel$1());
 		this._host.style.top = `${Math.max(376, Renderer.height / 2 + 76)}px`;
 		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
 		this.draggable();
@@ -220909,24 +220909,24 @@ var init_NpcMenu = __esmMin((() => {
 				validate();
 				break;
 			case KEYS.ESCAPE:
-				cancel$9();
+				cancel$1();
 				break;
 			case KEYS.UP: {
 				const divs = content.querySelectorAll("div");
-				_index$7 = Math.max(_index$7 - 1, 0);
+				_index$3 = Math.max(_index$3 - 1, 0);
 				divs.forEach((d) => d.classList.remove("selected"));
-				if (divs[_index$7]) divs[_index$7].classList.add("selected");
-				const top = _index$7 * 20;
+				if (divs[_index$3]) divs[_index$3].classList.add("selected");
+				const top = _index$3 * 20;
 				if (top < content.scrollTop) content.scrollTop = top;
 				break;
 			}
 			case KEYS.DOWN: {
 				const divs = content.querySelectorAll("div");
 				const count = divs.length;
-				_index$7 = Math.min(_index$7 + 1, count - 1);
+				_index$3 = Math.min(_index$3 + 1, count - 1);
 				divs.forEach((d) => d.classList.remove("selected"));
-				if (divs[_index$7]) divs[_index$7].classList.add("selected");
-				const top = _index$7 * 20;
+				if (divs[_index$3]) divs[_index$3].classList.add("selected");
+				const top = _index$3 * 20;
 				if (top >= content.scrollTop + 80) content.scrollTop = top - 60;
 				break;
 			}
@@ -220945,7 +220945,7 @@ var init_NpcMenu = __esmMin((() => {
 		const content = NpcMenu.getRoot().querySelector(".content");
 		const list = menu.split(":");
 		_ownerID = gid;
-		_index$7 = 0;
+		_index$3 = 0;
 		content.innerHTML = "";
 		let j = 0;
 		for (let i = 0, count = list.length; i < count; ++i) if (list[i].length) {
@@ -221242,7 +221242,7 @@ function initResizable(instance) {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var WhisperBox, _preferences$59;
+var WhisperBox, _preferences$55;
 var init_WhisperBox = __esmMin((() => {
 	init_DBManager();
 	init_UIManager();
@@ -221279,7 +221279,7 @@ var init_WhisperBox = __esmMin((() => {
 		open1to1Friend: true,
 		alarm1to1: true
 	}, 1);
-	_preferences$59 = WhisperBox.preferences;
+	_preferences$55 = WhisperBox.preferences;
 	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
 	WhisperBox.captureKeyEvents = true;
 	/**
@@ -221312,7 +221312,7 @@ var init_WhisperBox = __esmMin((() => {
 			this.instances[nickname].focus();
 			return this.instances[nickname];
 		}
-		if (_preferences$59.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
+		if (_preferences$55.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
 		const instance = this.clone(nickname);
 		instance.nickname = nickname;
 		instance.name = `WhisperBox:${nickname}`;
@@ -221410,8 +221410,8 @@ var init_WhisperBox = __esmMin((() => {
 		initResizable(instance);
 		const offset = this._spawnCounter % 10 * 20;
 		this._spawnCounter++;
-		instance._host.style.top = `${Math.min(Math.max(0, _preferences$59.y + offset), Renderer.height - 156)}px`;
-		instance._host.style.left = `${Math.min(Math.max(0, _preferences$59.x + offset), Renderer.width - 280)}px`;
+		instance._host.style.top = `${Math.min(Math.max(0, _preferences$55.y + offset), Renderer.height - 156)}px`;
+		instance._host.style.left = `${Math.min(Math.max(0, _preferences$55.x + offset), Renderer.width - 280)}px`;
 		this.instances[nickname] = instance;
 		return instance;
 	};
@@ -222092,18 +222092,18 @@ function onDrop$18(event) {
 			Mail.parseMailWinopen(1);
 			if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, parseInt(count, 10));
 			Mail.parseMailSetattach(item.index, parseInt(count, 10));
-			_preferences$58.item_add_email = item;
-			_preferences$58.item_add_email.count = parseInt(count, 10);
-			_preferences$58.save();
+			_preferences$54.item_add_email = item;
+			_preferences$54.item_add_email.count = parseInt(count, 10);
+			_preferences$54.save();
 		};
 		return;
 	}
 	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
 	Mail.parseMailWinopen(1);
 	Mail.parseMailSetattach(item.index, 1);
-	_preferences$58.item_add_email = item;
-	_preferences$58.item_add_email.count = 1;
-	_preferences$58.save();
+	_preferences$54.item_add_email = item;
+	_preferences$54.item_add_email.count = 1;
+	_preferences$54.save();
 }
 /**
 * Show item name when mouse is over
@@ -222215,7 +222215,7 @@ function onDropText$1(event) {
 function sleep(time) {
 	return new Promise((resolve) => setTimeout(resolve, time));
 }
-var Mail, _preferences$58, Mail_default;
+var Mail, _preferences$54, Mail_default;
 var init_Mail$1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -222246,7 +222246,7 @@ var init_Mail$1 = __esmMin((() => {
 	* know which page is current
 	*/
 	Mail.page = 0;
-	_preferences$58 = Preferences.get("Mail", {
+	_preferences$54 = Preferences.get("Mail", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -222324,8 +222324,8 @@ var init_Mail$1 = __esmMin((() => {
 		onWindowMailbox();
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$58.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$58.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$54.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$54.x), Renderer.width - hostWidth)}px`;
 		this.draggable(".titlebar");
 	};
 	/**
@@ -222333,7 +222333,7 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.addItemSub = function AddItemSub(Index) {
 		const root = _root$18();
-		const item = _preferences$58.item_add_email;
+		const item = _preferences$54.item_add_email;
 		if (item.index !== Index) return false;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
@@ -222368,15 +222368,15 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$58.show = this._host.style.display !== "none";
-		_preferences$58.reduce = false;
-		_preferences$58.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$58.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$58.magnet_top = this.magnet.TOP;
-		_preferences$58.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$58.magnet_left = this.magnet.LEFT;
-		_preferences$58.magnet_right = this.magnet.RIGHT;
-		_preferences$58.save();
+		_preferences$54.show = this._host.style.display !== "none";
+		_preferences$54.reduce = false;
+		_preferences$54.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$54.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$54.magnet_top = this.magnet.TOP;
+		_preferences$54.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$54.magnet_left = this.magnet.LEFT;
+		_preferences$54.magnet_right = this.magnet.RIGHT;
+		_preferences$54.save();
 	};
 	/**
 	* Extend Mail window size
@@ -222426,7 +222426,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Search in a list for an item by its index
 	*/
 	Mail.getItemByIndex = function getItemByIndex(index) {
-		const list = _preferences$58.item_add_email;
+		const list = _preferences$54.item_add_email;
 		if (list.index == index) return list;
 		return null;
 	};
@@ -222854,12 +222854,12 @@ function onClose$13() {
 * Enable or disable the lock features
 */
 function onToggleLock$1() {
-	_preferences$57.lock = !_preferences$57.lock;
-	_preferences$57.save();
+	_preferences$53.lock = !_preferences$53.lock;
+	_preferences$53.save();
 	const root = _root$17();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$57.lock) {
+	if (_preferences$53.lock) {
 		if (lockOn) lockOn.style.display = "inline-block";
 		if (lockOff) lockOff.style.display = "none";
 	} else {
@@ -222872,11 +222872,11 @@ function onToggleLock$1() {
 */
 function onChangeTab$2() {
 	const root = _root$17();
-	_preferences$57.friend = !_preferences$57.friend;
-	_preferences$57.save();
+	_preferences$53.friend = !_preferences$53.friend;
+	_preferences$53.save();
 	const friendEls = root.querySelectorAll(".friend");
 	const partyEls = root.querySelectorAll(".party");
-	if (_preferences$57.friend) {
+	if (_preferences$53.friend) {
 		friendEls.forEach((el) => {
 			el.style.display = "";
 		});
@@ -222905,17 +222905,17 @@ function onChangeTab$2() {
 		}
 	}
 	root.querySelectorAll(".node").forEach((n) => n.classList.remove("selection"));
-	_index$6 = -1;
+	_index$2 = -1;
 }
 /**
 * Ask confirmation to remove a character from the list
 */
 function onRequestRemoveSelection$1() {
-	if (_index$6 < 0 || _preferences$57.lock || _preferences$57.friend && !_friends$1[_index$6] || !_preferences$57.friend && !_party$3[_index$6]) return;
-	const text = _preferences$57.friend ? DB.getMessage(356) : DB.getMessage(363);
+	if (_index$2 < 0 || _preferences$53.lock || _preferences$53.friend && !_friends$1[_index$2] || !_preferences$53.friend && !_party$3[_index$2]) return;
+	const text = _preferences$53.friend ? DB.getMessage(356) : DB.getMessage(363);
 	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$57.friend) PartyFriendsV0.onRemoveFriend(_index$6);
-		else PartyFriendsV0.onExpelMember(_party$3[_index$6].AID, _party$3[_index$6].characterName);
+		if (_preferences$53.friend) PartyFriendsV0.onRemoveFriend(_index$2);
+		else PartyFriendsV0.onExpelMember(_party$3[_index$2].AID, _party$3[_index$2].characterName);
 	});
 }
 /**
@@ -222923,8 +222923,8 @@ function onRequestRemoveSelection$1() {
 * Or open a new conversation window (todo)
 */
 function onRequestPrivateMessage$1() {
-	if (_index$6 < 0 || _preferences$57.lock) return;
-	const name = _preferences$57.friend ? _friends$1[_index$6].Name : _party$3[_index$6].characterName;
+	if (_index$2 < 0 || _preferences$53.lock) return;
+	const name = _preferences$53.friend ? _friends$1[_index$2].Name : _party$3[_index$2].characterName;
 	if (PacketVerManager_default.value >= 20090617) {
 		WhisperBox.show(name);
 		return;
@@ -222941,15 +222941,15 @@ function onRequestPrivateMessage$1() {
 * Right click on a character
 */
 function onRightClickInfo$1() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
-	if (_preferences$57.friend) {
+	if (_preferences$53.friend) {
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
-		if (_friends$1[_index$6].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection$1);
+		if (_friends$1[_index$2].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection$1);
 	} else {
 		ContextMenu_default.addElement(DB.getMessage(129), onRequestInformation);
-		if (_party$3[_index$6].GID === SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty$1);
+		if (_party$3[_index$2].GID === SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty$1);
 		else {
 			ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
 			if (SessionStorage_default.isPartyLeader) {
@@ -222963,14 +222963,14 @@ function onRightClickInfo$1() {
 * Request player information
 */
 function onRequestInformation() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	UIManager.showMessageBox(DB.getMessage(191), "ok");
 }
 /**
 * Request to leave a party
 */
 function onRequestLeaveParty$1() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV0.onRequestLeave();
 	});
@@ -222979,9 +222979,9 @@ function onRequestLeaveParty$1() {
 * Request to change party leader
 */
 function onRequestPartyDelegation$1() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
-		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$6].AID);
+		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$2].AID);
 	});
 }
 /**
@@ -222992,9 +222992,9 @@ function onSelectionChange$1(nodeEl) {
 	const nameEl = nodeEl.querySelector(".name");
 	if (nameEl) nameEl.classList.add("selection");
 	const siblings = nodeEl.parentNode.querySelectorAll(".node");
-	_index$6 = Array.prototype.indexOf.call(siblings, nodeEl);
+	_index$2 = Array.prototype.indexOf.call(siblings, nodeEl);
 	if (SkillTargetSelection_default.intersectEntityId) {
-		const entityId = _preferences$57.friend ? _friends$1[_index$6].AID : _party$3[_index$6].AID;
+		const entityId = _preferences$53.friend ? _friends$1[_index$2].AID : _party$3[_index$2].AID;
 		SkillTargetSelection_default.intersectEntityId(entityId);
 	}
 }
@@ -223002,8 +223002,8 @@ function onSelectionChange$1(nodeEl) {
 * Open the party info window
 */
 function onOpenPartyOptionWindow$1() {
-	if (_preferences$57.lock) return;
-	const type = _preferences$57.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
+	if (_preferences$53.lock) return;
+	const type = _preferences$53.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === type) {
 		PartyHelper_default.remove();
 		return;
@@ -223022,7 +223022,7 @@ function onOpenPartyOptionWindow$1() {
 * Open the window to invite people
 */
 function onOpenPartyInviteWindow$1() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.INVITE) {
 		PartyHelper_default.remove();
 		return;
@@ -223034,7 +223034,7 @@ function onOpenPartyInviteWindow$1() {
 * Open the window to create a party
 */
 function onOpenPartyCreationWindow$1() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.CREATE) {
 		PartyHelper_default.remove();
 		return;
@@ -223046,14 +223046,14 @@ function onOpenPartyCreationWindow$1() {
 * Open the window to manage mails
 */
 function onOpenMailCreationWindow$1() {
-	if (_preferences$57.lock) return;
+	if (_preferences$53.lock) return;
 	let recipient = "";
-	if (_preferences$57.friend && _friends$1[_index$6]) recipient = _friends$1[_index$6].Name;
-	else if (!_preferences$57.friend && _party$3[_index$6]) recipient = _party$3[_index$6].characterName;
+	if (_preferences$53.friend && _friends$1[_index$2]) recipient = _friends$1[_index$2].Name;
+	else if (!_preferences$53.friend && _party$3[_index$2]) recipient = _party$3[_index$2].characterName;
 	if (recipient) Mail_default.replyNewMailFriends(recipient);
 	else Mail_default.append();
 }
-var PartyFriendsV0, _index$6, _friends$1, _party$3, _options$1, _preferences$57, PartyFriendsV0_default;
+var PartyFriendsV0, _index$2, _friends$1, _party$3, _options$1, _preferences$53, PartyFriendsV0_default;
 var init_PartyFriendsV0 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -223075,7 +223075,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	init_PartyFriendsV0$2();
 	init_PartyFriendsV0$1();
 	PartyFriendsV0 = new GUIComponent("PartyFriendsV0", PartyFriendsV0_default$1);
-	_index$6 = -1;
+	_index$2 = -1;
 	_friends$1 = [];
 	_party$3 = [];
 	_options$1 = {
@@ -223083,7 +223083,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		item_share: 0,
 		item_sharing_type: 0
 	};
-	_preferences$57 = Preferences.get("PartyFriendsV0", {
+	_preferences$53 = Preferences.get("PartyFriendsV0", {
 		x: 200,
 		y: 200,
 		width: 12,
@@ -223152,22 +223152,22 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	PartyFriendsV0.onAppend = function onAppend() {
-		_preferences$57.friend = !_preferences$57.friend;
+		_preferences$53.friend = !_preferences$53.friend;
 		onChangeTab$2();
 		const root = _root$17();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$57.lock) {
+		if (_preferences$53.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$57.width, _preferences$57.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$57.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$57.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		if (!_preferences$57.show) this.ui.hide();
+		this.resize(_preferences$53.width, _preferences$53.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		if (!_preferences$53.show) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -223175,7 +223175,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.clean = function clean() {
 		_party$3.length = 0;
 		_friends$1.length = 0;
-		_index$6 = -1;
+		_index$2 = -1;
 		_options$1.exp_share = 0;
 		_options$1.item_share = 0;
 		_options$1.item_sharing_type = 0;
@@ -223188,17 +223188,17 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		if (partyContent) partyContent.innerHTML = "";
 		const friendContent = root.querySelector(".content .friend");
 		if (friendContent) friendContent.innerHTML = "";
-		_preferences$57.friend = !_preferences$57.friend;
+		_preferences$53.friend = !_preferences$53.friend;
 		onChangeTab$2();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
 	PartyFriendsV0.onRemove = function onRemove() {
-		_preferences$57.show = this.ui.is(":visible");
-		_preferences$57.y = parseInt(this._host.style.top, 10);
-		_preferences$57.x = parseInt(this._host.style.left, 10);
-		_preferences$57.save();
+		_preferences$53.show = this.ui.is(":visible");
+		_preferences$53.y = parseInt(this._host.style.top, 10);
+		_preferences$53.x = parseInt(this._host.style.left, 10);
+		_preferences$53.save();
 	};
 	/**
 	* Window Shortcuts
@@ -223206,18 +223206,18 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$57.friend) this.ui.toggle();
+				if (_preferences$53.friend) this.ui.toggle();
 				else {
-					_preferences$57.friend = false;
+					_preferences$53.friend = false;
 					onChangeTab$2();
 					this.ui.show();
 				}
 				if (this.ui.is(":visible")) this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$57.friend) this.ui.toggle();
+				if (!_preferences$53.friend) this.ui.toggle();
 				else {
-					_preferences$57.friend = true;
+					_preferences$53.friend = true;
 					onChangeTab$2();
 					this.ui.show();
 				}
@@ -223256,7 +223256,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		}
 		const friendCount = root.querySelector(".friendcount");
 		if (friendCount) friendCount.textContent = String(count);
-		_index$6 = -1;
+		_index$2 = -1;
 	};
 	/**
 	* Update friend (online/offline) state
@@ -223322,7 +223322,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		if (nodes[index]) nodes[index].remove();
 		const friendCount = root.querySelector(".friendcount");
 		if (friendCount) friendCount.textContent = String(_friends$1.length);
-		if (_index$6 === index) _index$6 = -1;
+		if (_index$2 === index) _index$2 = -1;
 	};
 	/**
 	* Add members to party
@@ -223344,7 +223344,7 @@ var init_PartyFriendsV0 = __esmMin((() => {
 		const count = members.length;
 		_party$3.length = 0;
 		for (let i = 0; i < count; i++) PartyFriendsV0.addPartyMember(members[i]);
-		_index$6 = -1;
+		_index$2 = -1;
 	};
 	/**
 	* Add a new party member to the list
@@ -223444,9 +223444,9 @@ var init_PartyFriendsV0 = __esmMin((() => {
 	PartyFriendsV0.resize = function resize(width, height) {
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$57.width = width;
-		_preferences$57.height = height;
-		_preferences$57.save();
+		_preferences$53.width = width;
+		_preferences$53.height = height;
+		_preferences$53.save();
 		const content = _root$17().querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
@@ -223547,7 +223547,7 @@ function createAsyncImage$2() {
 	img.decoding = "async";
 	return img;
 }
-var MiniMap, _preferences$56, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$8, _zoomFactor$1, render$18, MiniMap_default;
+var MiniMap, _preferences$52, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$4, _zoomFactor$1, render$10, MiniMap_default;
 var init_MiniMap$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -223571,7 +223571,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	*/
 	MiniMap.needFocus = false;
 	MiniMap.render = () => MiniMap_default$2;
-	_preferences$56 = Preferences.get("MiniMap", {
+	_preferences$52 = Preferences.get("MiniMap", {
 		zoom: 0,
 		opacity: 2
 	}, 1);
@@ -223601,7 +223601,7 @@ var init_MiniMap$1 = __esmMin((() => {
 	*/
 	MiniMap.init = function init() {
 		const root = this.getRoot();
-		_ctx$8 = root.querySelector("canvas").getContext("2d");
+		_ctx$4 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow$2.src = dataURI;
@@ -223642,9 +223642,9 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Once append to HTML
 	*/
 	MiniMap.onAppend = function onAppend() {
-		this.updateZoom(_preferences$56.zoom);
-		this.toggleOpacity(_preferences$56.opacity + 1);
-		Renderer.render(render$18);
+		this.updateZoom(_preferences$52.zoom);
+		this.toggleOpacity(_preferences$52.opacity + 1);
+		Renderer.render(render$10);
 	};
 	/**
 	* Set map
@@ -223801,31 +223801,31 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMap.updateZoom = function updateZoom(value) {
-		_preferences$56.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$56.zoom + value));
-		_preferences$56.save();
+		_preferences$52.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$52.zoom + value));
+		_preferences$52.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMap.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$56.opacity = this.opacity;
-		_preferences$56.save();
+		_preferences$52.opacity = this.opacity;
+		_preferences$52.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
 				break;
 			case 1:
-				_ctx$8.globalAlpha = .5;
+				_ctx$4.globalAlpha = .5;
 				this.ui.show();
 				break;
 			case 2:
-				_ctx$8.globalAlpha = 1;
+				_ctx$4.globalAlpha = 1;
 				this.ui.show();
 				break;
 		}
 	};
-	render$18 = (function renderClosure() {
+	render$10 = (function renderClosure() {
 		const ZOOM_SIZE = 20;
 		let max, start_x, start_y, zoom, f;
 		let pos;
@@ -223842,16 +223842,16 @@ var init_MiniMap$1 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
-			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$8) return;
-			zoom = _zoomFactor$1[_preferences$56.zoom];
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$4) return;
+			zoom = _zoomFactor$1[_preferences$52.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
 			start_x = (max - width) / 2 * f;
 			start_y = (height - max) / 2 * f;
-			_ctx$8.clearRect(0, 0, 128, 128);
-			if (_map$2.complete && _map$2.width) if (zoom === 1) _ctx$8.drawImage(_map$2, 0, 0, 128, 128);
-			else _ctx$8.drawImage(_map$2, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
+			_ctx$4.clearRect(0, 0, 128, 128);
+			if (_map$2.complete && _map$2.width) if (zoom === 1) _ctx$4.drawImage(_map$2, 0, 0, 128, 128);
+			else _ctx$4.drawImage(_map$2, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
 			if (_towninfo$2 && _towninfo$2.length) {
 				count = _towninfo$2.length;
 				for (i = 0; i < count; ++i) {
@@ -223881,19 +223881,19 @@ var init_MiniMap$1 = __esmMin((() => {
 							break;
 					}
 					if (img.complete && img.width) {
-						_ctx$8.save();
-						_ctx$8.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
-						_ctx$8.drawImage(img, -img.width, -img.height);
-						_ctx$8.restore();
+						_ctx$4.save();
+						_ctx$4.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
+						_ctx$4.drawImage(img, -img.width, -img.height);
+						_ctx$4.restore();
 					}
 				}
 			}
 			if (_arrow$2.complete && _arrow$2.width) {
-				_ctx$8.save();
-				_ctx$8.translate(projectX(pos[0]), projectY(pos[1]));
-				_ctx$8.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-				_ctx$8.drawImage(_arrow$2, -_arrow$2.width * .5, -_arrow$2.height * .5);
-				_ctx$8.restore();
+				_ctx$4.save();
+				_ctx$4.translate(projectX(pos[0]), projectY(pos[1]));
+				_ctx$4.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
+				_ctx$4.drawImage(_arrow$2, -_arrow$2.width * .5, -_arrow$2.height * .5);
+				_ctx$4.restore();
 			}
 			if (tick % 1e3 > 500) {
 				count = _markers$2.length;
@@ -223905,35 +223905,35 @@ var init_MiniMap$1 = __esmMin((() => {
 						count--;
 						continue;
 					}
-					_ctx$8.fillStyle = dot.color;
-					_ctx$8.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
-					_ctx$8.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
+					_ctx$4.fillStyle = dot.color;
+					_ctx$4.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
+					_ctx$4.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
 				}
 			}
 			count = _party$2.length;
 			for (i = 0; i < count; ++i) {
 				dot = _party$2[i];
-				_ctx$8.fillStyle = "white";
-				_ctx$8.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
+				_ctx$4.fillStyle = "white";
+				_ctx$4.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
 				dot.color = MiniMap.getMemberColor(dot.key);
-				_ctx$8.fillStyle = dot.color;
-				_ctx$8.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
+				_ctx$4.fillStyle = dot.color;
+				_ctx$4.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
 			}
 			count = _guild$1.length;
 			if (count) {
-				_ctx$8.fillStyle = "rgb(245,175,200)";
-				_ctx$8.strokeStyle = "white";
-				_ctx$8.lineWidth = 2;
+				_ctx$4.fillStyle = "rgb(245,175,200)";
+				_ctx$4.strokeStyle = "white";
+				_ctx$4.lineWidth = 2;
 				for (i = 0; i < count; ++i) {
 					dot = _guild$1[i];
-					_ctx$8.beginPath();
-					_ctx$8.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-					_ctx$8.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
-					_ctx$8.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
-					_ctx$8.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$4.beginPath();
+					_ctx$4.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$4.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
+					_ctx$4.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
+					_ctx$4.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
 				}
-				_ctx$8.stroke();
-				_ctx$8.fill();
+				_ctx$4.stroke();
+				_ctx$4.fill();
 			}
 		};
 	})();
@@ -224259,7 +224259,7 @@ function resetPathFindingWorker() {
 	terminatePathFindingWorker();
 	initializePathFindingWorker();
 }
-var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$7, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
+var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$3, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
 var init_Navigation = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Renderer();
@@ -224285,7 +224285,7 @@ var init_Navigation = __esmMin((() => {
 	_inn$1 = createAsyncImage$1();
 	_kafra$1 = createAsyncImage$1();
 	_map$1 = createAsyncImage$1();
-	_ctx$7 = null;
+	_ctx$3 = null;
 	_towninfo$1 = [];
 	_markers$1 = [];
 	_path = [];
@@ -224334,7 +224334,7 @@ var init_Navigation = __esmMin((() => {
 		const canvas = document.createElement("canvas");
 		canvas.width = 280;
 		canvas.height = 230;
-		_ctx$7 = canvas.getContext("2d");
+		_ctx$3 = canvas.getContext("2d");
 		const mapDisplay = root.querySelector(".map-display");
 		if (mapDisplay) mapDisplay.appendChild(canvas);
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
@@ -224613,7 +224613,7 @@ var init_Navigation = __esmMin((() => {
 		if ((this._host ? getComputedStyle(this._host).display : "none") === "none") return;
 		const width = 280;
 		const height = 230;
-		const ctx = _ctx$7;
+		const ctx = _ctx$3;
 		if (!ctx) return;
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
@@ -225315,7 +225315,7 @@ function stopPropagation$10(event) {
 function onClose$12() {
 	WorldMap._host.style.display = "none";
 }
-var WorldMap, _preferences$55, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
+var WorldMap, _preferences$51, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
 var init_WorldMap = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -225333,7 +225333,7 @@ var init_WorldMap = __esmMin((() => {
 	init_Navigation();
 	WorldMap = new GUIComponent("WorldMap", WorldMap_default$1);
 	WorldMap.render = () => WorldMap_default$2;
-	_preferences$55 = Preferences.get("WorldMap", {
+	_preferences$51 = Preferences.get("WorldMap", {
 		x: 0,
 		y: 0,
 		width: window.innerWidth,
@@ -225373,7 +225373,7 @@ var init_WorldMap = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	WorldMap.onAppend = function onAppend() {
-		if (!_preferences$55.show) this._host.style.display = "none";
+		if (!_preferences$51.show) this._host.style.display = "none";
 		this.settings = {
 			episode: 98,
 			add: [],
@@ -225396,12 +225396,12 @@ var init_WorldMap = __esmMin((() => {
 		this._host.style.left = "0px";
 	};
 	WorldMap.onRemove = function onRemove() {
-		_preferences$55.show = this._host.style.display !== "none";
-		_preferences$55.y = 0;
-		_preferences$55.x = 0;
-		_preferences$55.width = 0;
-		_preferences$55.height = 0;
-		_preferences$55.save();
+		_preferences$51.show = this._host.style.display !== "none";
+		_preferences$51.y = 0;
+		_preferences$51.x = 0;
+		_preferences$51.width = 0;
+		_preferences$51.height = 0;
+		_preferences$51.save();
 	};
 	/**
 	* Show/Hide UI
@@ -225496,7 +225496,7 @@ function createAsyncImage() {
 	img.decoding = "async";
 	return img;
 }
-var MiniMapV2, _preferences$54, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$6, _zoomFactor, render$17, MiniMapV2_default;
+var MiniMapV2, _preferences$50, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$2, _zoomFactor, render$9, MiniMapV2_default;
 var init_MiniMapV2 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -225521,7 +225521,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	*/
 	MiniMapV2.needFocus = false;
 	MiniMapV2.render = () => MiniMapV2_default$2;
-	_preferences$54 = Preferences.get("MiniMapV2", {
+	_preferences$50 = Preferences.get("MiniMapV2", {
 		zoom: 0,
 		opacity: 2,
 		townInfoShow: true
@@ -225552,7 +225552,7 @@ var init_MiniMapV2 = __esmMin((() => {
 	*/
 	MiniMapV2.init = function init() {
 		const root = this.getRoot();
-		_ctx$6 = root.querySelector("canvas").getContext("2d");
+		_ctx$2 = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
 			_arrow.src = dataURI;
@@ -225590,8 +225590,8 @@ var init_MiniMapV2 = __esmMin((() => {
 		});
 		const objectBtn = root.querySelector(".object");
 		if (objectBtn) objectBtn.addEventListener("mousedown", () => {
-			_preferences$54.townInfoShow = !_preferences$54.townInfoShow;
-			_preferences$54.save();
+			_preferences$50.townInfoShow = !_preferences$50.townInfoShow;
+			_preferences$50.save();
 		});
 		const viewonBtn = root.querySelector(".viewon");
 		if (viewonBtn) viewonBtn.addEventListener("mousedown", () => {
@@ -225602,9 +225602,9 @@ var init_MiniMapV2 = __esmMin((() => {
 	* Once append to HTML
 	*/
 	MiniMapV2.onAppend = function onAppend() {
-		this.updateZoom(_preferences$54.zoom);
-		this.toggleOpacity(_preferences$54.opacity + 1);
-		Renderer.render(render$17);
+		this.updateZoom(_preferences$50.zoom);
+		this.toggleOpacity(_preferences$50.opacity + 1);
+		Renderer.render(render$9);
 	};
 	/**
 	* Set map
@@ -225767,31 +225767,31 @@ var init_MiniMapV2 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMapV2.updateZoom = function updateZoom(value) {
-		_preferences$54.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$54.zoom + value));
-		_preferences$54.save();
+		_preferences$50.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$50.zoom + value));
+		_preferences$50.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMapV2.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$54.opacity = this.opacity;
-		_preferences$54.save();
+		_preferences$50.opacity = this.opacity;
+		_preferences$50.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
 				break;
 			case 1:
-				_ctx$6.globalAlpha = .5;
+				_ctx$2.globalAlpha = .5;
 				this.ui.show();
 				break;
 			case 2:
-				_ctx$6.globalAlpha = 1;
+				_ctx$2.globalAlpha = 1;
 				this.ui.show();
 				break;
 		}
 	};
-	render$17 = (function renderClosure() {
+	render$9 = (function renderClosure() {
 		const ZOOM_SIZE = 20;
 		let max, start_x, start_y, zoom, f;
 		let pos;
@@ -225808,18 +225808,18 @@ var init_MiniMapV2 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
-			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$6) return;
-			zoom = _zoomFactor[_preferences$54.zoom];
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$2) return;
+			zoom = _zoomFactor[_preferences$50.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
 			start_x = (max - width) / 2 * f;
 			start_y = (height - max) / 2 * f;
 			MiniMapV2.updateCoordinates(pos[0], pos[1]);
-			_ctx$6.clearRect(0, 0, 128, 128);
-			if (_map.complete && _map.width) if (zoom === 1) _ctx$6.drawImage(_map, 0, 0, 128, 128);
-			else _ctx$6.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
-			if (_towninfo && _preferences$54.townInfoShow) {
+			_ctx$2.clearRect(0, 0, 128, 128);
+			if (_map.complete && _map.width) if (zoom === 1) _ctx$2.drawImage(_map, 0, 0, 128, 128);
+			else _ctx$2.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
+			if (_towninfo && _preferences$50.townInfoShow) {
 				count = _towninfo.length;
 				for (i = 0; i < count; ++i) {
 					dot = _towninfo[i];
@@ -225848,27 +225848,27 @@ var init_MiniMapV2 = __esmMin((() => {
 							break;
 					}
 					if (img.complete && img.width) {
-						_ctx$6.save();
-						_ctx$6.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
-						_ctx$6.drawImage(img, -img.width, -img.height);
-						_ctx$6.restore();
+						_ctx$2.save();
+						_ctx$2.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
+						_ctx$2.drawImage(img, -img.width, -img.height);
+						_ctx$2.restore();
 					}
 				}
 			}
 			if (_arrow.complete && _arrow.width) {
-				_ctx$6.save();
-				_ctx$6.translate(projectX(pos[0]), projectY(pos[1]));
-				_ctx$6.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-				_ctx$6.shadowColor = "rgba(0, 0, 0, 1)";
-				_ctx$6.shadowBlur = 5;
-				_ctx$6.shadowOffsetX = 0;
-				_ctx$6.shadowOffsetY = 0;
-				_ctx$6.drawImage(_arrow, -_arrow.width * .5, -_arrow.height * .5);
-				_ctx$6.shadowColor = "rgba(0, 0, 0, 0)";
-				_ctx$6.shadowBlur = 0;
-				_ctx$6.shadowOffsetX = 0;
-				_ctx$6.shadowOffsetY = 0;
-				_ctx$6.restore();
+				_ctx$2.save();
+				_ctx$2.translate(projectX(pos[0]), projectY(pos[1]));
+				_ctx$2.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
+				_ctx$2.shadowColor = "rgba(0, 0, 0, 1)";
+				_ctx$2.shadowBlur = 5;
+				_ctx$2.shadowOffsetX = 0;
+				_ctx$2.shadowOffsetY = 0;
+				_ctx$2.drawImage(_arrow, -_arrow.width * .5, -_arrow.height * .5);
+				_ctx$2.shadowColor = "rgba(0, 0, 0, 0)";
+				_ctx$2.shadowBlur = 0;
+				_ctx$2.shadowOffsetX = 0;
+				_ctx$2.shadowOffsetY = 0;
+				_ctx$2.restore();
 			}
 			if (tick % 1e3 > 500) {
 				count = _markers.length;
@@ -225880,35 +225880,35 @@ var init_MiniMapV2 = __esmMin((() => {
 						count--;
 						continue;
 					}
-					_ctx$6.fillStyle = dot.color;
-					_ctx$6.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
-					_ctx$6.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
+					_ctx$2.fillStyle = dot.color;
+					_ctx$2.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
+					_ctx$2.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
 				}
 			}
 			count = _party$1.length;
 			for (i = 0; i < count; ++i) {
 				dot = _party$1[i];
-				_ctx$6.fillStyle = "white";
-				_ctx$6.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
+				_ctx$2.fillStyle = "white";
+				_ctx$2.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
 				dot.color = MiniMapV2.getMemberColor(dot.key);
-				_ctx$6.fillStyle = dot.color;
-				_ctx$6.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
+				_ctx$2.fillStyle = dot.color;
+				_ctx$2.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
 			}
 			count = _guild.length;
 			if (count) {
-				_ctx$6.fillStyle = "rgb(245,175,200)";
-				_ctx$6.strokeStyle = "white";
-				_ctx$6.lineWidth = 2;
+				_ctx$2.fillStyle = "rgb(245,175,200)";
+				_ctx$2.strokeStyle = "white";
+				_ctx$2.lineWidth = 2;
 				for (i = 0; i < count; ++i) {
 					dot = _guild[i];
-					_ctx$6.beginPath();
-					_ctx$6.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-					_ctx$6.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
-					_ctx$6.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
-					_ctx$6.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$2.beginPath();
+					_ctx$2.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx$2.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
+					_ctx$2.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
+					_ctx$2.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
 				}
-				_ctx$6.stroke();
-				_ctx$6.fill();
+				_ctx$2.stroke();
+				_ctx$2.fill();
 			}
 		};
 	})();
@@ -225961,9 +225961,9 @@ function onClickClose$4(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
-	_preferences$53.y = parseInt(Rodex._host.style.top, 10);
-	_preferences$53.x = parseInt(Rodex._host.style.left, 10);
-	_preferences$53.save();
+	_preferences$49.y = parseInt(Rodex._host.style.top, 10);
+	_preferences$49.x = parseInt(Rodex._host.style.left, 10);
+	_preferences$49.save();
 	Rodex._host.style.display = "none";
 }
 function onClickRefresh(e) {
@@ -226059,7 +226059,7 @@ function onClickReplyMail(e) {
 	const sender = e.currentTarget.getAttribute("sender");
 	Rodex.requestOpenWriteRodex(sender);
 }
-var Rodex, _preferences$53, Rodex_default;
+var Rodex, _preferences$49, Rodex_default;
 var init_Rodex$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -226103,7 +226103,7 @@ var init_Rodex$1 = __esmMin((() => {
 		6: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp",
 		12: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp"
 	};
-	_preferences$53 = Preferences.get("Rodex", {
+	_preferences$49 = Preferences.get("Rodex", {
 		x: 350,
 		y: 350,
 		show: false
@@ -226117,8 +226117,8 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onAppend = function OnAppend() {
 		const root = _root$16();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$49.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$49.x), Renderer.width - this._host.offsetWidth)}px`;
 		this.draggable(root.querySelector(".titlebar"));
 		root.querySelector(".close").addEventListener("click", onClickClose$4);
 		root.querySelector(".refresh").addEventListener("click", onClickRefresh);
@@ -226143,10 +226143,10 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$53.show = this._host.style.display !== "none";
-		_preferences$53.y = parseInt(this._host.style.top, 10);
-		_preferences$53.x = parseInt(this._host.style.left, 10);
-		_preferences$53.save();
+		_preferences$49.show = this._host.style.display !== "none";
+		_preferences$49.y = parseInt(this._host.style.top, 10);
+		_preferences$49.x = parseInt(this._host.style.left, 10);
+		_preferences$49.save();
 		Rodex.openType = 0;
 	};
 	/**
@@ -226557,7 +226557,7 @@ function onMemberMouseDown(event) {
 	onSelectionChange.call(node, event);
 	const player = _party.find((member) => member.AID == AID);
 	if (!player) return;
-	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$52.friend) {
+	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$48.friend) {
 		if (player.state === 0) SkillTargetSelection_default.intersectEntityId(player.AID);
 		SkillTargetSelection_default.remove();
 		event.preventDefault();
@@ -226566,7 +226566,7 @@ function onMemberMouseDown(event) {
 	}
 	if (_detachedMembers[AID]) return;
 	if (player.state !== 0) return;
-	if (_preferences$52.lock) return;
+	if (_preferences$48.lock) return;
 	const startX = event.pageX;
 	const startY = event.pageY;
 	let isDragging = false;
@@ -226806,11 +226806,11 @@ function onClose$11() {
 */
 function onToggleLock() {
 	const root = _root$14();
-	_preferences$52.lock = !_preferences$52.lock;
-	_preferences$52.save();
+	_preferences$48.lock = !_preferences$48.lock;
+	_preferences$48.save();
 	const lockOn = root.querySelector(".lock.on");
 	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$52.lock) {
+	if (_preferences$48.lock) {
 		if (lockOn) lockOn.style.display = "inline-block";
 		if (lockOff) lockOff.style.display = "none";
 	} else {
@@ -226823,15 +226823,15 @@ function onToggleLock() {
 */
 function onChangeTab$1() {
 	const root = _root$14();
-	_preferences$52.friend = !_preferences$52.friend;
-	_preferences$52.save();
+	_preferences$48.friend = !_preferences$48.friend;
+	_preferences$48.save();
 	const showClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
 		el.style.display = "";
 	});
 	const hideClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
 		el.style.display = "none";
 	});
-	if (_preferences$52.friend) {
+	if (_preferences$48.friend) {
 		showClass(".friend");
 		hideClass(".party");
 	} else {
@@ -226853,25 +226853,25 @@ function onChangeTab$1() {
 		}
 	}
 	root.querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
-	_index$5 = -1;
+	_index$1 = -1;
 }
 /**
 * Ask confirmation to remove a character from the list
 */
 function onRequestRemoveSelection() {
-	if (_index$5 < 0 || _preferences$52.lock || _preferences$52.friend && !_friends[_index$5] || !_preferences$52.friend && !_party[_index$5]) return;
-	const text = _preferences$52.friend ? DB.getMessage(356) : DB.getMessage(363);
+	if (_index$1 < 0 || _preferences$48.lock || _preferences$48.friend && !_friends[_index$1] || !_preferences$48.friend && !_party[_index$1]) return;
+	const text = _preferences$48.friend ? DB.getMessage(356) : DB.getMessage(363);
 	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$52.friend) PartyFriendsV1.onRemoveFriend(_index$5);
-		else PartyFriendsV1.onExpelMember(_party[_index$5].AID, _party[_index$5].characterName);
+		if (_preferences$48.friend) PartyFriendsV1.onRemoveFriend(_index$1);
+		else PartyFriendsV1.onExpelMember(_party[_index$1].AID, _party[_index$1].characterName);
 	});
 }
 /**
 * Add nick name to chatbox
 */
 function onRequestPrivateMessage() {
-	if (_index$5 < 0 || _preferences$52.lock) return;
-	const name = _preferences$52.friend ? _friends[_index$5].Name : _party[_index$5].characterName;
+	if (_index$1 < 0 || _preferences$48.lock) return;
+	const name = _preferences$48.friend ? _friends[_index$1].Name : _party[_index$1].characterName;
 	WhisperBox.show(name);
 }
 /**
@@ -226883,18 +226883,18 @@ function onRightClickInfo(event) {
 		event.preventDefault();
 	}
 	if (Camera && Camera.rotate) Camera.rotate(false);
-	if (_preferences$52.lock) return;
+	if (_preferences$48.lock) return;
 	onSelectionChange.call(this, event);
-	if (_index$5 < 0) return;
+	if (_index$1 < 0) return;
 	ContextMenu_default.remove();
 	ContextMenu_default.append();
-	if (_preferences$52.friend) {
-		const friend = _friends[_index$5];
+	if (_preferences$48.friend) {
+		const friend = _friends[_index$1];
 		if (!friend) return;
 		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
 		if (friend.GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection);
 	} else {
-		const player = _party[_index$5];
+		const player = _party[_index$1];
 		if (!player) return;
 		const isMe = player.AID === SessionStorage_default.AID;
 		const isLeader = SessionStorage_default.isPartyLeader;
@@ -226926,7 +226926,7 @@ function onRightClickInfo(event) {
 * Request to leave a party
 */
 function onRequestLeaveParty() {
-	if (_preferences$52.lock) return;
+	if (_preferences$48.lock) return;
 	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
 		PartyFriendsV1.onRequestLeave();
 	});
@@ -226935,9 +226935,9 @@ function onRequestLeaveParty() {
 * Request to change party leader
 */
 function onRequestPartyDelegation() {
-	if (_preferences$52.lock) return;
+	if (_preferences$48.lock) return;
 	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
-		PartyFriendsV1.onRequestChangeLeader(_party[_index$5].AID);
+		PartyFriendsV1.onRequestChangeLeader(_party[_index$1].AID);
 	});
 }
 /**
@@ -226948,21 +226948,21 @@ function onSelectionChange(event) {
 	const node = this;
 	node.classList.add("selection");
 	const AID = parseInt(node.dataset.aid, 10);
-	_index$5 = -1;
-	if (_preferences$52.friend) _index$5 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
+	_index$1 = -1;
+	if (_preferences$48.friend) _index$1 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
 	else {
 		const player = _party.find((member) => member.AID == AID);
-		_index$5 = _party.indexOf(player);
+		_index$1 = _party.indexOf(player);
 	}
 }
 /**
 * Request to create a team (open the window)
 */
 function onOpenMailCreationWindow() {
-	if (_preferences$52.lock) return;
+	if (_preferences$48.lock) return;
 	let recipient = "";
-	if (_preferences$52.friend && _friends[_index$5]) recipient = _friends[_index$5].Name;
-	else if (!_preferences$52.friend && _party[_index$5]) recipient = _party[_index$5].characterName;
+	if (_preferences$48.friend && _friends[_index$1]) recipient = _friends[_index$1].Name;
+	else if (!_preferences$48.friend && _party[_index$1]) recipient = _party[_index$1].characterName;
 	if (recipient) Rodex_default.requestOpenWriteRodex(recipient);
 }
 /**
@@ -226991,7 +226991,7 @@ function onOpenPartyInviteWindow() {
 * Request to open invitation window
 */
 function onOpenPartyOptionWindow() {
-	if (_preferences$52.friend) {
+	if (_preferences$48.friend) {
 		if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.FRIEND_SETUP) {
 			PartyHelper_default.remove();
 			return;
@@ -227045,7 +227045,7 @@ function onTooltipHide(event) {
 	const tooltip = document.getElementById("ro-tooltip-party");
 	if (tooltip) tooltip.style.display = "none";
 }
-var PartyFriendsV1, _detachedMembers, _index$5, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$52, PartyFriendsV1_default;
+var PartyFriendsV1, _detachedMembers, _index$1, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$48, PartyFriendsV1_default;
 var init_PartyFriendsV1 = __esmMin((() => {
 	init_DBManager();
 	init_Camera();
@@ -227071,7 +227071,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	init_SkillTargetSelection();
 	PartyFriendsV1 = new GUIComponent("PartyFriendsV1", PartyFriendsV1_default$1);
 	_detachedMembers = {};
-	_index$5 = -1;
+	_index$1 = -1;
 	_friends = [];
 	_party = [];
 	_options = {
@@ -227081,7 +227081,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	_savedPositions = null;
 	_skipSaveOnRemove = false;
-	_preferences$52 = Preferences.get("PartyFriendsV1", {
+	_preferences$48 = Preferences.get("PartyFriendsV1", {
 		x: 200,
 		y: 200,
 		width: 12,
@@ -227196,27 +227196,27 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	*/
 	PartyFriendsV1.onAppend = function onAppend() {
 		const root = _root$14();
-		_preferences$52.friend = !_preferences$52.friend;
+		_preferences$48.friend = !_preferences$48.friend;
 		onChangeTab$1();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$52.lock) {
+		if (_preferences$48.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$52.width, _preferences$52.height);
+		this.resize(_preferences$48.width, _preferences$48.height);
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$52.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$52.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$48.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$48.x), Renderer.width - hostWidth)}px`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/bg_partymember.bmp", function(url) {
 			const countBox = root.querySelector(".count-box");
 			if (countBox) countBox.style.backgroundImage = `url(${url})`;
 		});
-		if (!_preferences$52.show) this._host.style.display = "none";
+		if (!_preferences$48.show) this._host.style.display = "none";
 		for (let i = 0; i < _party.length; i++) restoreDetachedMember(_party[i]);
 	};
 	/**
@@ -227243,17 +227243,17 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (friendContent) friendContent.innerHTML = "";
 		const innerCount = root.querySelector(".count-box .inner-count");
 		if (innerCount) innerCount.textContent = "0/12";
-		_preferences$52.friend = !_preferences$52.friend;
+		_preferences$48.friend = !_preferences$48.friend;
 		onChangeTab$1();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
 	PartyFriendsV1.onRemove = function onRemove() {
-		_preferences$52.show = this._host.style.display !== "none";
-		_preferences$52.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$52.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$52.save();
+		_preferences$48.show = this._host.style.display !== "none";
+		_preferences$48.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$48.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$48.save();
 		if (!_skipSaveOnRemove && Object.keys(_detachedMembers).length > 0) this.saveDetachedMembers();
 		_skipSaveOnRemove = false;
 		_savedPositions = null;
@@ -227267,18 +227267,18 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const isVisible = this._host.style.display !== "none";
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$52.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (_preferences$48.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
-					_preferences$52.friend = false;
+					_preferences$48.friend = false;
 					onChangeTab$1();
 					this._host.style.display = "block";
 				}
 				if (this._host.style.display !== "none") this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$52.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (!_preferences$48.friend) this._host.style.display = isVisible ? "none" : "block";
 				else {
-					_preferences$52.friend = true;
+					_preferences$48.friend = true;
 					onChangeTab$1();
 					this._host.style.display = "block";
 				}
@@ -227315,7 +227315,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		}
 		const friendCountEl = root.querySelector(".friendcount");
 		if (friendCountEl) friendCountEl.textContent = String(count);
-		_index$5 = -1;
+		_index$1 = -1;
 	};
 	/**
 	* Update friend (online/offline) state
@@ -227368,7 +227368,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (nodes[index]) nodes[index].remove();
 		const friendCountEl = root.querySelector(".friendcount");
 		if (friendCountEl) friendCountEl.textContent = String(_friends.length);
-		if (_index$5 === index) _index$5 = -1;
+		if (_index$1 === index) _index$1 = -1;
 	};
 	/**
 	* Add members to party
@@ -227541,9 +227541,9 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const root = _root$14();
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$52.width = width;
-		_preferences$52.height = height;
-		_preferences$52.save();
+		_preferences$48.width = width;
+		_preferences$48.height = height;
+		_preferences$48.save();
 		const content = root.querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
@@ -227624,7 +227624,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	* Check if UI is locked
 	*/
 	PartyFriendsV1.isLocked = function isLocked() {
-		return !!_preferences$52.lock;
+		return !!_preferences$48.lock;
 	};
 	/**
 	* Save the current positions of all detached member windows to character-specific localStorage.
@@ -229153,7 +229153,7 @@ function reqCloseBank() {
 	pkt.AID = SessionStorage_default.AID;
 	Network.sendPacket(pkt);
 }
-var Bank, maxInt, _preferences$51, Bank_default;
+var Bank, maxInt, _preferences$47, Bank_default;
 var init_Bank$1 = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -229176,7 +229176,7 @@ var init_Bank$1 = __esmMin((() => {
 	*/
 	Bank.render = () => Bank_default$2;
 	maxInt = 2147483647;
-	_preferences$51 = Preferences.get("Bank", {
+	_preferences$47 = Preferences.get("Bank", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -229241,8 +229241,8 @@ var init_Bank$1 = __esmMin((() => {
 	*/
 	Bank.onAppend = function onAppend() {
 		const root = this.getRoot();
-		this._host.style.top = Math.min(Math.max(0, _preferences$51.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$51.x), Renderer.width - this._host.offsetWidth) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$47.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$47.x), Renderer.width - this._host.offsetWidth) + "px";
 		const input = root.querySelector(".depo");
 		input.value = "";
 		input.focus();
@@ -229295,9 +229295,9 @@ var init_Bank$1 = __esmMin((() => {
 	* Remove Bank from window
 	*/
 	Bank.onRemove = function onRemove() {
-		_preferences$51.y = parseInt(this._host.style.top, 10);
-		_preferences$51.x = parseInt(this._host.style.left, 10);
-		_preferences$51.save();
+		_preferences$47.y = parseInt(this._host.style.top, 10);
+		_preferences$47.x = parseInt(this._host.style.left, 10);
+		_preferences$47.save();
 		const error = this.getRoot().querySelector(".errorupdate");
 		if (error) error.textContent = "";
 	};
@@ -229378,7 +229378,7 @@ function onToggleBGM() {
 	if (Audio_default.BGM.play) BGM.play(BGM.filename);
 	else BGM.stop();
 }
-var SoundOption, _preferences$50, SoundOption_default;
+var SoundOption, _preferences$46, SoundOption_default;
 var init_SoundOption = __esmMin((() => {
 	init_Preferences$1();
 	init_Audio();
@@ -229391,7 +229391,7 @@ var init_SoundOption = __esmMin((() => {
 	init_SoundOption$1();
 	SoundOption = new GUIComponent("SoundOption", SoundOption_default$1);
 	SoundOption.render = () => SoundOption_default$2;
-	_preferences$50 = Preferences.get("SoundOption", {
+	_preferences$46 = Preferences.get("SoundOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -229416,8 +229416,8 @@ var init_SoundOption = __esmMin((() => {
 		this.draggable(".titlebar");
 	};
 	SoundOption.onAppend = function onAppend() {
-		this._host.style.top = _preferences$50.y + "px";
-		this._host.style.left = _preferences$50.x + "px";
+		this._host.style.top = _preferences$46.y + "px";
+		this._host.style.left = _preferences$46.x + "px";
 		const root = this.getRoot();
 		const soundSlider = root.querySelector(".sound");
 		if (soundSlider) soundSlider.value = Audio_default.Sound.volume * 100;
@@ -229429,9 +229429,9 @@ var init_SoundOption = __esmMin((() => {
 		if (bgmState) bgmState.checked = Audio_default.BGM.play;
 	};
 	SoundOption.onRemove = function onRemove() {
-		_preferences$50.x = parseInt(this._host.style.left, 10);
-		_preferences$50.y = parseInt(this._host.style.top, 10);
-		_preferences$50.save();
+		_preferences$46.x = parseInt(this._host.style.left, 10);
+		_preferences$46.y = parseInt(this._host.style.top, 10);
+		_preferences$46.save();
 	};
 	SoundOption_default = UIManager.addComponent(SoundOption);
 }));
@@ -229449,7 +229449,7 @@ var init_FPS$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.js
-var FPS, _maxFPSRegistered, _tickFn, _preferences$49, FPS_default;
+var FPS, _maxFPSRegistered, _tickFn, _preferences$45, FPS_default;
 var init_FPS = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -229462,7 +229462,7 @@ var init_FPS = __esmMin((() => {
 	FPS.render = () => FPS_default$2;
 	_maxFPSRegistered = 0;
 	_tickFn = null;
-	_preferences$49 = Preferences.get("FPS", {
+	_preferences$45 = Preferences.get("FPS", {
 		show: false,
 		x: 100,
 		y: 100
@@ -229486,9 +229486,9 @@ var init_FPS = __esmMin((() => {
 	* When appended to DOM
 	*/
 	FPS.onAppend = function onAppend() {
-		this._host.style.top = _preferences$49.y + "px";
-		this._host.style.left = _preferences$49.x + "px";
-		this._host.style.display = _preferences$49.show ? "" : "none";
+		this._host.style.top = _preferences$45.y + "px";
+		this._host.style.left = _preferences$45.x + "px";
+		this._host.style.display = _preferences$45.show ? "" : "none";
 		const root = this.getRoot();
 		const fpsEl = root.querySelector("#fpsCounter");
 		const fpsRoot = root.querySelector("#FPS");
@@ -229536,21 +229536,21 @@ var init_FPS = __esmMin((() => {
 			Renderer.stop(_tickFn);
 			_tickFn = null;
 		}
-		_preferences$49.x = parseInt(this._host.style.left, 10);
-		_preferences$49.y = parseInt(this._host.style.top, 10);
-		_preferences$49.show = this._host.style.display !== "none";
-		_preferences$49.save();
+		_preferences$45.x = parseInt(this._host.style.left, 10);
+		_preferences$45.y = parseInt(this._host.style.top, 10);
+		_preferences$45.show = this._host.style.display !== "none";
+		_preferences$45.save();
 	};
 	/**
 	* Show/Hide UI
 	*/
 	FPS.toggle = function toggle(isVisible) {
-		_preferences$49.x = parseInt(this._host.style.left, 10);
-		_preferences$49.y = parseInt(this._host.style.top, 10);
+		_preferences$45.x = parseInt(this._host.style.left, 10);
+		_preferences$45.y = parseInt(this._host.style.top, 10);
 		if (typeof isVisible === "boolean") this._host.style.display = isVisible ? "" : "none";
 		else this._host.style.display = this._host.style.display === "none" ? "" : "none";
-		_preferences$49.show = this._host.style.display !== "none";
-		_preferences$49.save();
+		_preferences$45.show = this._host.style.display !== "none";
+		_preferences$45.save();
 		if (this._host.style.display !== "none") this.focus();
 	};
 	FPS_default = UIManager.addComponent(FPS);
@@ -229804,7 +229804,7 @@ function onResetToDefaults() {
 	GraphicsSettings.save();
 	GraphicsOption.onAppend();
 }
-var GraphicsOption, _preferences$48, GraphicsOption_default;
+var GraphicsOption, _preferences$44, GraphicsOption_default;
 var init_GraphicsOption = __esmMin((() => {
 	init_FPS();
 	init_Configs();
@@ -229819,7 +229819,7 @@ var init_GraphicsOption = __esmMin((() => {
 	init_MemoryManager();
 	init_ChatBox();
 	GraphicsOption = new GUIComponent("GraphicsOption", GraphicsOption_default$1);
-	_preferences$48 = Preferences.get("GraphicsOption", {
+	_preferences$44 = Preferences.get("GraphicsOption", {
 		x: 300,
 		y: 300
 	}, 1.1);
@@ -229885,8 +229885,8 @@ var init_GraphicsOption = __esmMin((() => {
 	* When append the element to html
 	*/
 	GraphicsOption.onAppend = function onAppend() {
-		this._host.style.top = `${_preferences$48.y}px`;
-		this._host.style.left = `${_preferences$48.x}px`;
+		this._host.style.top = `${_preferences$44.y}px`;
+		this._host.style.left = `${_preferences$44.x}px`;
 		const root = this.getRoot();
 		root.querySelector(".details").value = GraphicsSettings.quality;
 		root.querySelector(".screensize").value = GraphicsSettings.screensize;
@@ -229917,9 +229917,9 @@ var init_GraphicsOption = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	GraphicsOption.onRemove = function onRemove() {
-		_preferences$48.x = parseInt(this._host.style.left, 10);
-		_preferences$48.y = parseInt(this._host.style.top, 10);
-		_preferences$48.save();
+		_preferences$44.x = parseInt(this._host.style.left, 10);
+		_preferences$44.y = parseInt(this._host.style.top, 10);
+		_preferences$44.save();
 	};
 	GraphicsOption.needFocus = true;
 	GraphicsOption.mouseMode = GUIComponent.MouseMode.STOP;
@@ -230102,7 +230102,7 @@ function onUpdateDisableVirtualMouse() {
 	Controls_default.joyDisableVirtualMouse = !!this.checked;
 	Controls_default.save();
 }
-var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$47, ShortCutOption_default;
+var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$43, ShortCutOption_default;
 var init_ShortCutOption = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Preferences$1();
@@ -230118,7 +230118,7 @@ var init_ShortCutOption = __esmMin((() => {
 	ShortCuts$1 = ShortCutControls_default.ShortCuts;
 	ShortCutsTemp = {};
 	ShortCutOption.isCapturing = false;
-	_preferences$47 = Preferences.get("ShortCutOption", {
+	_preferences$43 = Preferences.get("ShortCutOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -230204,17 +230204,17 @@ var init_ShortCutOption = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCutOption.onAppend = function() {
-		this._host.style.left = _preferences$47.x + "px";
-		this._host.style.top = _preferences$47.y + "px";
+		this._host.style.left = _preferences$43.x + "px";
+		this._host.style.top = _preferences$43.y + "px";
 		this._host.style.zIndex = 100;
 	};
 	/**
 	* Remove from window (and so clean up)
 	*/
 	ShortCutOption.onRemove = function() {
-		_preferences$47.x = parseInt(this._host.style.left, 10);
-		_preferences$47.y = parseInt(this._host.style.top, 10);
-		_preferences$47.save();
+		_preferences$43.x = parseInt(this._host.style.left, 10);
+		_preferences$43.y = parseInt(this._host.style.top, 10);
+		_preferences$43.save();
 	};
 	/**
 	* Process key
@@ -230488,7 +230488,7 @@ function onClickAttendance(e) {
 	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
 	Network.sendPacket(_pkt);
 }
-var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$46, CheckAttendance_default;
+var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$42, CheckAttendance_default;
 var init_CheckAttendance = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -230503,7 +230503,7 @@ var init_CheckAttendance = __esmMin((() => {
 	init_Elements();
 	CheckAttendance = new GUIComponent("CheckAttendance", CheckAttendance_default$1);
 	CheckAttendance.render = () => CheckAttendance_default$2;
-	_preferences$46 = Preferences.get("CheckAttendance", {
+	_preferences$42 = Preferences.get("CheckAttendance", {
 		x: 200,
 		y: 200
 	}, 1);
@@ -230528,10 +230528,10 @@ var init_CheckAttendance = __esmMin((() => {
 	*/
 	CheckAttendance.onAppend = function onAppend() {
 		Object.assign(this._host.style, {
-			top: `${Math.min(Math.max(0, _preferences$46.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
-			left: `${Math.min(Math.max(0, _preferences$46.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
+			top: `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
+			left: `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
 		});
-		if (!_preferences$46.show) this._host.style.display = "none";
+		if (!_preferences$42.show) this._host.style.display = "none";
 		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
 			CheckAttendance.updateUI();
 			this.focus();
@@ -230776,8 +230776,8 @@ function getSkillPosition$1(JobId) {
 	return positions;
 }
 function getSkillById$1(id) {
-	const count = _list$12.length;
-	for (let i = 0; i < count; ++i) if (_list$12[i].SKID === id) return _list$12[i];
+	const count = _list$8.length;
+	for (let i = 0; i < count; ++i) if (_list$8[i].SKID === id) return _list$8[i];
 	return null;
 }
 function onResize$14(e, comp) {
@@ -230809,7 +230809,7 @@ function onResize$14(e, comp) {
 }
 function resize$5(comp, width, height) {
 	const root = comp.getRoot();
-	if (_preferences$45.mini) {
+	if (_preferences$41.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -230862,9 +230862,9 @@ function resize$5(comp, width, height) {
 	}
 }
 function onMini$1(comp) {
-	_preferences$45.mini = !_preferences$45.mini;
-	_preferences$45.save();
-	resize$5(comp, _preferences$45.width, _preferences$45.height);
+	_preferences$41.mini = !_preferences$41.mini;
+	_preferences$41.save();
+	resize$5(comp, _preferences$41.width, _preferences$41.height);
 }
 function onApplyChoice$1(comp) {
 	const applyArr = [];
@@ -231008,7 +231008,7 @@ function skillLevelSelectDown$1(skill, root) {
 		});
 	}
 }
-var SkillList, _preferences$45, _list$12, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$1, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
+var SkillList, _preferences$41, _list$8, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$1, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
 var init_SkillList$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -231027,7 +231027,7 @@ var init_SkillList$1 = __esmMin((() => {
 	init_SkillList$2();
 	SkillList = new GUIComponent("SkillList", SkillList_default$1);
 	SkillList.render = () => SkillList_default$2;
-	_preferences$45 = Preferences.get("SkillList", {
+	_preferences$41 = Preferences.get("SkillList", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -231036,7 +231036,7 @@ var init_SkillList$1 = __esmMin((() => {
 		mini: true,
 		skillInfo: false
 	}, 1);
-	_list$12 = [];
+	_list$8 = [];
 	_points$1 = 0;
 	totalCounter$1 = 0;
 	skillPosition$1 = [];
@@ -231059,8 +231059,8 @@ var init_SkillList$1 = __esmMin((() => {
 			onMini$1(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$45.skillInfo = !!this.checked;
-			_preferences$45.save();
+			_preferences$41.skillInfo = !!this.checked;
+			_preferences$41.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice$1(this);
@@ -231131,7 +231131,7 @@ var init_SkillList$1 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$45.skillInfo) {
+				if (_preferences$41.skillInfo) {
 					const skillID = _resolveSkillID$1(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -231143,7 +231143,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$45.skillInfo) SkillDescription_default.remove();
+				if (_preferences$41.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -231197,24 +231197,24 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.onAppend = function onAppend() {
-		if (!_preferences$45.show) this.ui.hide();
-		resize$5(this, _preferences$45.width, _preferences$45.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$45.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - 100)}px`;
+		if (!_preferences$41.show) this.ui.hide();
+		resize$5(this, _preferences$41.width, _preferences$41.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - 100)}px`;
 		const cb = this.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$45.skillInfo;
+		if (cb) cb.checked = _preferences$41.skillInfo;
 	};
 	SkillList.onRemove = function onRemove() {
 		if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-		_preferences$45.show = this.ui.is(":visible");
-		_preferences$45.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$45.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$41.show = this.ui.is(":visible");
+		_preferences$41.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$41.x = parseInt(this._host.style.left, 10) || 0;
 		const content = this.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$45.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$45.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$41.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$41.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$45.save();
+		_preferences$41.save();
 	};
 	SkillList.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
@@ -231241,8 +231241,8 @@ var init_SkillList$1 = __esmMin((() => {
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition$1 = getSkillPosition$1(skillJobId);
 		createSkillDependencyTree$1();
-		for (let i = 0, count = _list$12.length; i < count; ++i) this.onUpdateSkill(_list$12[i].SKID, 0);
-		_list$12.length = 0;
+		for (let i = 0, count = _list$8.length; i < count; ++i) this.onUpdateSkill(_list$8[i].SKID, 0);
+		_list$8.length = 0;
 		root.querySelectorAll(".content table").forEach((t) => {
 			t.innerHTML = "";
 		});
@@ -231440,7 +231440,7 @@ var init_SkillList$1 = __esmMin((() => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$12.push(skill);
+		_list$8.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	SkillList.removeSkill = function removeSkill() {};
@@ -231448,7 +231448,7 @@ var init_SkillList$1 = __esmMin((() => {
 		let target = getSkillById$1(skill.SKID);
 		const root = this.getRoot();
 		if (!target) if (root.querySelector(`.skill.id${skill.SKID}`)) {
-			_list$12.push(skill);
+			_list$8.push(skill);
 			this.onUpdateSkill(skill.SKID, 0);
 			hasSkills$1[skill.SKID] = skill;
 			target = skill;
@@ -231495,9 +231495,9 @@ var init_SkillList$1 = __esmMin((() => {
 			return;
 		}
 		_points$1 = amount;
-		const count = _list$12.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$12[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$12[i].upgradable && amount ? "" : "none";
+		const count = _list$8.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$8[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$8[i].upgradable && amount ? "" : "none";
 		});
 	};
 	SkillList.onLevelUp = function onLevelUp() {
@@ -231642,8 +231642,8 @@ function getSkillPosition(JobId) {
 	return positions;
 }
 function getSkillById(id) {
-	const count = _list$11.length;
-	for (let i = 0; i < count; ++i) if (_list$11[i].SKID === id) return _list$11[i];
+	const count = _list$7.length;
+	for (let i = 0; i < count; ++i) if (_list$7[i].SKID === id) return _list$7[i];
 	return null;
 }
 function onResize$13(e, comp) {
@@ -231675,7 +231675,7 @@ function onResize$13(e, comp) {
 }
 function resize$4(comp, width, height) {
 	const root = comp.getRoot();
-	if (_preferences$44.mini) {
+	if (_preferences$40.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -231710,9 +231710,9 @@ function resize$4(comp, width, height) {
 	}
 }
 function onMini(comp) {
-	_preferences$44.mini = !_preferences$44.mini;
-	_preferences$44.save();
-	resize$4(comp, _preferences$44.width, _preferences$44.height);
+	_preferences$40.mini = !_preferences$40.mini;
+	_preferences$40.save();
+	resize$4(comp, _preferences$40.width, _preferences$40.height);
 }
 function onApplyChoice(comp) {
 	const applyArr = [];
@@ -231783,7 +231783,7 @@ function skillLevelSelectDown(skill, root) {
 		});
 	}
 }
-var SkillListV0, _preferences$44, _list$11, _btnIncSkill, _points, totalCounter, _btnLevelUp, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
+var SkillListV0, _preferences$40, _list$7, _btnIncSkill, _points, totalCounter, _btnLevelUp, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
 var init_SkillListV0 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -231802,7 +231802,7 @@ var init_SkillListV0 = __esmMin((() => {
 	init_SkillListV0$1();
 	SkillListV0 = new GUIComponent("SkillListV0", SkillListV0_default$1);
 	SkillListV0.render = () => SkillListV0_default$2;
-	_preferences$44 = Preferences.get("SkillListV0", {
+	_preferences$40 = Preferences.get("SkillListV0", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -231811,7 +231811,7 @@ var init_SkillListV0 = __esmMin((() => {
 		mini: true,
 		skillInfo: false
 	}, 1);
-	_list$11 = [];
+	_list$7 = [];
 	_points = 0;
 	totalCounter = 0;
 	skillPosition = [];
@@ -231834,8 +231834,8 @@ var init_SkillListV0 = __esmMin((() => {
 			onMini(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$44.skillInfo = !!this.checked;
-			_preferences$44.save();
+			_preferences$40.skillInfo = !!this.checked;
+			_preferences$40.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice(this);
@@ -231906,7 +231906,7 @@ var init_SkillListV0 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$44.mini || _preferences$44.skillInfo) {
+				if (_preferences$40.mini || _preferences$40.skillInfo) {
 					const skillID = _resolveSkillID(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -231918,7 +231918,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$44.mini || _preferences$44.skillInfo) SkillDescription_default.remove();
+				if (_preferences$40.mini || _preferences$40.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -231962,24 +231962,24 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.onAppend = function onAppend() {
-		if (!_preferences$44.show) this.ui.hide();
-		resize$4(this, _preferences$44.width, _preferences$44.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - 100)}px`;
+		if (!_preferences$40.show) this.ui.hide();
+		resize$4(this, _preferences$40.width, _preferences$40.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - 100)}px`;
 		const cb = SkillListV0.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$44.skillInfo;
+		if (cb) cb.checked = _preferences$40.skillInfo;
 	};
 	SkillListV0.onRemove = function onRemove() {
 		if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
-		_preferences$44.show = this.ui.is(":visible");
-		_preferences$44.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$44.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$40.show = this.ui.is(":visible");
+		_preferences$40.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$40.x = parseInt(this._host.style.left, 10) || 0;
 		const content = SkillListV0.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$44.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$44.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$40.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$40.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$44.save();
+		_preferences$40.save();
 	};
 	SkillListV0.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
@@ -232006,8 +232006,8 @@ var init_SkillListV0 = __esmMin((() => {
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
 		skillPosition = getSkillPosition(skillJobId);
 		createSkillDependencyTree();
-		for (let i = 0, count = _list$11.length; i < count; ++i) this.onUpdateSkill(_list$11[i].SKID, 0);
-		_list$11.length = 0;
+		for (let i = 0, count = _list$7.length; i < count; ++i) this.onUpdateSkill(_list$7[i].SKID, 0);
+		_list$7.length = 0;
 		const table = root.querySelector(".content table");
 		if (table) table.innerHTML = "";
 		root.querySelectorAll(".skillCol").forEach((el) => {
@@ -232133,7 +232133,7 @@ var init_SkillListV0 = __esmMin((() => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$11.push(skill);
+		_list$7.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	SkillListV0.removeSkill = function removeSkill() {};
@@ -232182,9 +232182,9 @@ var init_SkillListV0 = __esmMin((() => {
 			return;
 		}
 		_points = amount;
-		const count = _list$11.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$11[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$11[i].upgradable && amount ? "" : "none";
+		const count = _list$7.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$7[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list$7[i].upgradable && amount ? "" : "none";
 		});
 	};
 	SkillListV0.onLevelUp = function onLevelUp() {
@@ -232292,7 +232292,7 @@ function onClickClose$3() {
 function onClose$10() {
 	QuestHelper.ui.hide();
 }
-var QuestHelper, _preferences$43, QuestHelper_default;
+var QuestHelper, _preferences$39, QuestHelper_default;
 var init_QuestHelper = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -232307,7 +232307,7 @@ var init_QuestHelper = __esmMin((() => {
 	init_QuestHelper$1();
 	QuestHelper = new GUIComponent("QuestHelper", QuestHelper_default$1);
 	QuestHelper.render = () => QuestHelper_default$2;
-	_preferences$43 = Preferences.get("Quest", {
+	_preferences$39 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false
@@ -232369,8 +232369,8 @@ var init_QuestHelper = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelper.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$43.x + 382), Renderer.width - 342)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$43.y), Renderer.height - 412)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x + 382), Renderer.width - 342)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - 412)}px`;
 	};
 	QuestHelper.setQuestInfo = function setQuestInfo(quest) {
 		const root = QuestHelper.getRoot();
@@ -232470,14 +232470,14 @@ function isInCooldown(quest) {
 	if (quest.end_time > epoch_seconds) return true;
 	return false;
 }
-var _preferences$42, QuestWindow, QuestWindow_default;
+var _preferences$38, QuestWindow, QuestWindow_default;
 var init_QuestWindow = __esmMin((() => {
 	init_Preferences$1();
 	init_UIManager();
 	init_GUIComponent();
 	init_QuestWindow$2();
 	init_QuestWindow$1();
-	_preferences$42 = Preferences.get("Quest", {
+	_preferences$38 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -232497,7 +232497,7 @@ var init_QuestWindow = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestWindow.onAppend = function onAppend() {
-		if (!_preferences$42.showwindow) this.ui.hide();
+		if (!_preferences$38.showwindow) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -232589,15 +232589,15 @@ function onClickMenu$2(e) {
 function onClickQuestCheckbox() {
 	const root = Quest.getRoot();
 	let checkbox_background;
-	if (_preferences$41.showwindow) {
+	if (_preferences$37.showwindow) {
 		checkbox_background = "checkbox_off";
 		QuestWindow_default.ui.hide();
 	} else {
 		checkbox_background = "checkbox_on";
 		QuestWindow_default.ui.show();
 	}
-	_preferences$41.showwindow = !_preferences$41.showwindow;
-	_preferences$41.save();
+	_preferences$37.showwindow = !_preferences$37.showwindow;
+	_preferences$37.save();
 	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
 		const el = root.querySelector(".toggle-quest-image");
 		if (el) el.style.backgroundImage = `url(${data})`;
@@ -232643,7 +232643,7 @@ function refreshQuestUI$1() {
 function onClose$9() {
 	Quest.ui.hide();
 }
-var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$41, Quest_default;
+var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$37, Quest_default;
 var init_Quest$2 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -232665,7 +232665,7 @@ var init_Quest$2 = __esmMin((() => {
 	_questList$1 = [];
 	_questNotShowList = [];
 	_active_menu$1 = "active";
-	_preferences$41 = Preferences.get("Quest", {
+	_preferences$37 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -232697,10 +232697,10 @@ var init_Quest$2 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	Quest.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - 381)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - 466)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - 381)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - 466)}px`;
 		const root = Quest.getRoot();
-		const checkbox_background = _preferences$41.showwindow ? "checkbox_on" : "checkbox_off";
+		const checkbox_background = _preferences$37.showwindow ? "checkbox_on" : "checkbox_off";
 		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
 			const el = root.querySelector(".toggle-quest-image");
 			if (el) el.style.backgroundImage = `url(${data})`;
@@ -232709,7 +232709,7 @@ var init_Quest$2 = __esmMin((() => {
 			const el = root.querySelector(".titlebar");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
-		if (!_preferences$41.show) this.ui.hide();
+		if (!_preferences$37.show) this.ui.hide();
 		QuestWindow_default.append();
 	};
 	/**
@@ -232739,10 +232739,10 @@ var init_Quest$2 = __esmMin((() => {
 	*/
 	Quest.onRemove = function onRemove() {
 		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
-		_preferences$41.show = hostDisplay !== "none";
-		_preferences$41.y = parseInt(this._host.style.top, 10);
-		_preferences$41.x = parseInt(this._host.style.left, 10);
-		_preferences$41.save();
+		_preferences$37.show = hostDisplay !== "none";
+		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$37.save();
 	};
 	/**
 	* Window Shortcuts
@@ -233003,7 +233003,7 @@ function onSelectMonster(e) {
 	const limitedEl = root.querySelector(".limited");
 	if (limitedEl) limitedEl.textContent = selectedOption.getAttribute("max");
 }
-var QuestHelperV1, _preferences$40, QuestHelperV1_default;
+var QuestHelperV1, _preferences$36, QuestHelperV1_default;
 var init_QuestHelperV1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Client();
@@ -233018,7 +233018,7 @@ var init_QuestHelperV1 = __esmMin((() => {
 	init_QuestHelperV1$1();
 	QuestHelperV1 = new GUIComponent("QuestHelperV1", QuestHelperV1_default$1);
 	QuestHelperV1.render = () => QuestHelperV1_default$2;
-	_preferences$40 = Preferences.get("QuestHelperV1", {
+	_preferences$36 = Preferences.get("QuestHelperV1", {
 		x: 200,
 		y: 200,
 		show: false
@@ -233075,8 +233075,8 @@ var init_QuestHelperV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelperV1.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x + 382), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - 375)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x + 382), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - 375)}px`;
 	};
 	QuestHelperV1.setQuestInfo = function setQuestInfo(quest) {
 		const root = QuestHelperV1.getRoot();
@@ -233189,14 +233189,14 @@ function onClickQuest(e) {
 	const tid = toggleEl.id || toggleEl.className.match(/qid(\d+)/)?.[0];
 	const id = tid ? tid.replace("qid", "") : null;
 	if (!id) return;
-	if (_index$4 > -1) {
-		root.querySelectorAll(`.qid${_index$4}`).forEach((el) => {
+	if (_index > -1) {
+		root.querySelectorAll(`.qid${_index}`).forEach((el) => {
 			el.style.backgroundColor = "white";
 		});
-		const prevById = root.querySelector(`#qid${_index$4}`);
+		const prevById = root.querySelector(`#qid${_index}`);
 		if (prevById) prevById.style.backgroundColor = "white";
 	}
-	_index$4 = id;
+	_index = id;
 	toggleEl.style.backgroundColor = "lightgray";
 }
 function onClickQuestToggle(e) {
@@ -233207,9 +233207,9 @@ function onClickQuestToggle(e) {
 	Network.sendPacket(_pkt);
 }
 function onClickView() {
-	if (_index$4 > -1) {
+	if (_index > -1) {
 		QuestHelperV1_default.clearQuestDesc();
-		QuestHelperV1_default.setQuestInfo(_questList[_index$4]);
+		QuestHelperV1_default.setQuestInfo(_questList[_index]);
 		QuestHelperV1_default.prepare();
 		QuestHelperV1_default.append();
 		QuestHelperV1_default.ui.show();
@@ -233225,7 +233225,7 @@ function refreshQuestUI() {
 function onClose$7() {
 	QuestV1.ui.hide();
 }
-var QuestV1, _index$4, _questList, _active_menu, _preferences$39, QuestV1_default;
+var QuestV1, _index, _questList, _active_menu, _preferences$35, QuestV1_default;
 var init_QuestV1 = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -233243,10 +233243,10 @@ var init_QuestV1 = __esmMin((() => {
 	init_SessionStorage();
 	QuestV1 = new GUIComponent("QuestV1", QuestV1_default$1);
 	QuestV1.render = () => QuestV1_default$2;
-	_index$4 = -1;
+	_index = -1;
 	_questList = [];
 	_active_menu = "active";
-	_preferences$39 = Preferences.get("QuestV1", {
+	_preferences$35 = Preferences.get("QuestV1", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -233272,9 +233272,9 @@ var init_QuestV1 = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestV1.onAppend = function onAppend() {
-		_index$4 = -1;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - 250)}px`;
+		_index = -1;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - 350)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - 250)}px`;
 		const root = QuestV1.getRoot();
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_que_01.bmp`, (data) => {
 			const el = root.querySelector(".quest-menu");
@@ -233283,7 +233283,7 @@ var init_QuestV1 = __esmMin((() => {
 		root.querySelector("#active-quest-list").style.display = "";
 		root.querySelector("#inactive-quest-list").style.display = "none";
 		root.querySelector("#all-quest-list").style.display = "none";
-		if (!_preferences$39.show) this.ui.hide();
+		if (!_preferences$35.show) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -233309,10 +233309,10 @@ var init_QuestV1 = __esmMin((() => {
 	*/
 	QuestV1.onRemove = function onRemove() {
 		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
-		_preferences$39.show = hostDisplay !== "none";
-		_preferences$39.y = parseInt(this._host.style.top, 10);
-		_preferences$39.x = parseInt(this._host.style.left, 10);
-		_preferences$39.save();
+		_preferences$35.show = hostDisplay !== "none";
+		_preferences$35.y = parseInt(this._host.style.top, 10);
+		_preferences$35.x = parseInt(this._host.style.left, 10);
+		_preferences$35.save();
 	};
 	/**
 	* Window Shortcuts
@@ -233492,7 +233492,7 @@ var init_Achievement$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Achievement/Achievement.js
-var _preferences$38, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
+var _preferences$34, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
 var init_Achievement$1 = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -233506,7 +233506,7 @@ var init_Achievement$1 = __esmMin((() => {
 	init_ItemInfo();
 	init_Achievement$3();
 	init_Achievement$2();
-	_preferences$38 = Preferences.get("Achievement", {
+	_preferences$34 = Preferences.get("Achievement", {
 		x: 100,
 		y: 100
 	}, 1);
@@ -233649,15 +233649,15 @@ var init_Achievement$1 = __esmMin((() => {
 			this._host.style.display = "none";
 		}
 		onAppend() {
-			this._host.style.left = `${_preferences$38.x}px`;
-			this._host.style.top = `${_preferences$38.y}px`;
+			this._host.style.left = `${_preferences$34.x}px`;
+			this._host.style.top = `${_preferences$34.y}px`;
 			this._fixPositionOverflow();
 			this.updateHeaderAndView();
 		}
 		onRemove() {
-			_preferences$38.x = parseInt(this._host.style.left, 10);
-			_preferences$38.y = parseInt(this._host.style.top, 10);
-			_preferences$38.save();
+			_preferences$34.x = parseInt(this._host.style.left, 10);
+			_preferences$34.y = parseInt(this._host.style.top, 10);
+			_preferences$34.save();
 		}
 		toggle() {
 			if (this.__active && this._host.style.display !== "none") this._host.style.display = "none";
@@ -234409,7 +234409,7 @@ function clearHighlights() {
 		el.dataset.highlight = "false";
 	});
 }
-var Reputation, _preferences$37, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
+var Reputation, _preferences$33, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
 var init_Reputation = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -234422,7 +234422,7 @@ var init_Reputation = __esmMin((() => {
 	init_Reputation$2();
 	init_Reputation$1();
 	Reputation = new GUIComponent("Reputation", Reputation_default$1);
-	_preferences$37 = Preferences.get("Reputation", {
+	_preferences$33 = Preferences.get("Reputation", {
 		x: 400,
 		y: 200,
 		show: true
@@ -234505,8 +234505,8 @@ var init_Reputation = __esmMin((() => {
 	* binding group selector events and rendering the default view.
 	*/
 	Reputation.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
 		buildGroupSelector();
 		bindGroupSelector();
 		bindSearch();
@@ -234517,10 +234517,10 @@ var init_Reputation = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	Reputation.onRemove = function onRemove() {
-		_preferences$37.show = this._host.style.display !== "none";
-		_preferences$37.y = parseInt(this._host.style.top, 10);
-		_preferences$37.x = parseInt(this._host.style.left, 10);
-		_preferences$37.save();
+		_preferences$33.show = this._host.style.display !== "none";
+		_preferences$33.y = parseInt(this._host.style.top, 10);
+		_preferences$33.x = parseInt(this._host.style.left, 10);
+		_preferences$33.save();
 	};
 	/**
 	* Request to toggle open/close reputation
@@ -235603,7 +235603,7 @@ function onSwitchTab$5() {
 	const root = InventoryV0.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$36.tab = parseInt(idx, 10);
+	_preferences$32.tab = parseInt(idx, 10);
 	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", (data) => {
 		const tabSprite = root.querySelector(".tab-sprite");
 		if (tabSprite) tabSprite.style.backgroundImage = `url(${data})`;
@@ -235814,7 +235814,7 @@ function onItemClick$3(event) {
 	}
 	return false;
 }
-var InventoryV0, _realSize$5, _preferences$36, InventoryV0_default;
+var InventoryV0, _realSize$5, _preferences$32, InventoryV0_default;
 var init_InventoryV0 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -235857,7 +235857,7 @@ var init_InventoryV0 = __esmMin((() => {
 	InventoryV0.newItems = [];
 	InventoryV0.equippedItems = [];
 	_realSize$5 = 0;
-	_preferences$36 = Preferences.get("InventoryV0", {
+	_preferences$32 = Preferences.get("InventoryV0", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -235931,20 +235931,20 @@ var init_InventoryV0 = __esmMin((() => {
 	*/
 	InventoryV0.onAppend = function OnAppend() {
 		const root = InventoryV0.getRoot();
-		if (!_preferences$36.show) this._host.style.display = "none";
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$36.tab + 1) + ".bmp", (data) => {
+		if (!_preferences$32.show) this._host.style.display = "none";
+		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$32.tab + 1) + ".bmp", (data) => {
 			const tabSprite = root.querySelector(".tab-sprite");
 			if (tabSprite) tabSprite.style.backgroundImage = `url("${data}")`;
 		});
-		this.resize(_preferences$36.width, _preferences$36.height);
+		this.resize(_preferences$32.width, _preferences$32.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$36.magnet_top;
-		this.magnet.BOTTOM = _preferences$36.magnet_bottom;
-		this.magnet.LEFT = _preferences$36.magnet_left;
-		this.magnet.RIGHT = _preferences$36.magnet_right;
-		_realSize$5 = _preferences$36.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$32.magnet_top;
+		this.magnet.BOTTOM = _preferences$32.magnet_bottom;
+		this.magnet.LEFT = _preferences$32.magnet_left;
+		this.magnet.RIGHT = _preferences$32.magnet_right;
+		_realSize$5 = _preferences$32.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = root.querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -235957,18 +235957,18 @@ var init_InventoryV0 = __esmMin((() => {
 		this.list.length = 0;
 		InventoryV0.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$36.show = this._host.style.display !== "none";
-		_preferences$36.reduce = !!_realSize$5;
-		_preferences$36.y = parseInt(this._host.style.top, 10);
-		_preferences$36.x = parseInt(this._host.style.left, 10);
+		_preferences$32.show = this._host.style.display !== "none";
+		_preferences$32.reduce = !!_realSize$5;
+		_preferences$32.y = parseInt(this._host.style.top, 10);
+		_preferences$32.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$36.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$36.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$36.magnet_top = this.magnet.TOP;
-		_preferences$36.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$36.magnet_left = this.magnet.LEFT;
-		_preferences$36.magnet_right = this.magnet.RIGHT;
-		_preferences$36.save();
+		_preferences$32.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$32.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$32.magnet_top = this.magnet.TOP;
+		_preferences$32.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$32.magnet_left = this.magnet.LEFT;
+		_preferences$32.magnet_right = this.magnet.RIGHT;
+		_preferences$32.save();
 	};
 	/**
 	* Process shortcut
@@ -236127,7 +236127,7 @@ var init_InventoryV0 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV0.newItems.indexOf(item.index) === -1) InventoryV0.newItems.push(item.index);
-			if (getItemTab$3(item) === _preferences$36.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$3(item) === _preferences$32.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -236158,7 +236158,7 @@ var init_InventoryV0 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$36.tab) {
+		if (tab === _preferences$32.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV0.getRoot();
 			const content = root.querySelector(".container .content");
@@ -236344,11 +236344,11 @@ function onSwitchTab$4() {
 	const root = InventoryV1.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$35.tab = parseInt(idx, 10);
+	_preferences$31.tab = parseInt(idx, 10);
 	requestFilter$4();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$35.tab !== InventoryV1.TAB.FAV) {
+	if (_preferences$31.tab !== InventoryV1.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -236360,7 +236360,7 @@ function onSwitchTab$4() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$35.npcsalelock) {
+		if (_preferences$31.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -236616,9 +236616,9 @@ function onTabDrop$2(event) {
 * Toggle the item drop lock preference
 */
 function onItemLock$2() {
-	_preferences$35.itemlock = !_preferences$35.itemlock;
-	InventoryV1.itemlock = _preferences$35.itemlock;
-	const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$31.itemlock = !_preferences$31.itemlock;
+	InventoryV1.itemlock = _preferences$31.itemlock;
+	const lockImg = _preferences$31.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 		const lockBtn = InventoryV1.getRoot().querySelector(".item_drop_lock");
 		if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
@@ -236628,9 +236628,9 @@ function onItemLock$2() {
 * Toggles the value of Item Compare
 */
 function onItemCompare$2() {
-	_preferences$35.itemcomp = !_preferences$35.itemcomp;
-	InventoryV1.itemcomp = _preferences$35.itemcomp;
-	const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$31.itemcomp = !_preferences$31.itemcomp;
+	InventoryV1.itemcomp = _preferences$31.itemcomp;
+	const compImg = _preferences$31.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 		const compBtn = InventoryV1.getRoot().querySelector(".item_compare");
 		if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
@@ -236640,10 +236640,10 @@ function onItemCompare$2() {
 * Toggles the value of Item Lock NPCSale
 */
 function onNPCLock$2() {
-	_preferences$35.npcsalelock = !_preferences$35.npcsalelock;
-	InventoryV1.npcsalelock = _preferences$35.npcsalelock;
+	_preferences$31.npcsalelock = !_preferences$31.npcsalelock;
+	InventoryV1.npcsalelock = _preferences$31.npcsalelock;
 	const root = InventoryV1.getRoot();
-	if (_preferences$35.npcsalelock) {
+	if (_preferences$31.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -236667,7 +236667,7 @@ function onNPCLock$2() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV1, _realSize$4, _preferences$35, lockOverlayTimeout$2, InventoryV1_default;
+var InventoryV1, _realSize$4, _preferences$31, lockOverlayTimeout$2, InventoryV1_default;
 var init_InventoryV1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -236714,7 +236714,7 @@ var init_InventoryV1 = __esmMin((() => {
 	InventoryV1.newItems = [];
 	InventoryV1.equippedItems = [];
 	_realSize$4 = 0;
-	_preferences$35 = Preferences.get("InventoryV1", {
+	_preferences$31 = Preferences.get("InventoryV1", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -236733,9 +236733,9 @@ var init_InventoryV1 = __esmMin((() => {
 	/**
 	* Store variables from preferences
 	*/
-	InventoryV1.itemlock = _preferences$35.itemlock;
-	InventoryV1.itemcomp = _preferences$35.itemcomp;
-	InventoryV1.npcsalelock = _preferences$35.npcsalelock;
+	InventoryV1.itemlock = _preferences$31.itemlock;
+	InventoryV1.itemcomp = _preferences$31.itemcomp;
+	InventoryV1.npcsalelock = _preferences$31.npcsalelock;
 	/**
 	* Initialize UI
 	*/
@@ -236798,19 +236798,19 @@ var init_InventoryV1 = __esmMin((() => {
 		});
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$35.tab]) allTabs[_preferences$35.tab].classList.add("selected");
-		const lockImg = _preferences$35.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$31.tab]) allTabs[_preferences$31.tab].classList.add("selected");
+		const lockImg = _preferences$31.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const lockBtn = root.querySelector(".item_drop_lock");
 			if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$35.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$31.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const compBtn = root.querySelector(".item_compare");
 			if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$35.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$35.tab !== InventoryV1.TAB.FAV) {
+		const lockSale = _preferences$31.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$31.tab !== InventoryV1.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -236839,16 +236839,16 @@ var init_InventoryV1 = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	InventoryV1.onAppend = function OnAppend() {
-		if (!_preferences$35.show) this._host.style.display = "none";
-		this.resize(_preferences$35.width, _preferences$35.height);
+		if (!_preferences$31.show) this._host.style.display = "none";
+		this.resize(_preferences$31.width, _preferences$31.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$35.magnet_top;
-		this.magnet.BOTTOM = _preferences$35.magnet_bottom;
-		this.magnet.LEFT = _preferences$35.magnet_left;
-		this.magnet.RIGHT = _preferences$35.magnet_right;
-		_realSize$4 = _preferences$35.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$31.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$31.magnet_top;
+		this.magnet.BOTTOM = _preferences$31.magnet_bottom;
+		this.magnet.LEFT = _preferences$31.magnet_left;
+		this.magnet.RIGHT = _preferences$31.magnet_right;
+		_realSize$4 = _preferences$31.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = InventoryV1.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -236861,17 +236861,17 @@ var init_InventoryV1 = __esmMin((() => {
 		this.list.length = 0;
 		InventoryV1.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$35.show = this._host.style.display !== "none";
-		_preferences$35.reduce = !!_realSize$4;
-		_preferences$35.y = parseInt(this._host.style.top, 10);
-		_preferences$35.x = parseInt(this._host.style.left, 10);
+		_preferences$31.show = this._host.style.display !== "none";
+		_preferences$31.reduce = !!_realSize$4;
+		_preferences$31.y = parseInt(this._host.style.top, 10);
+		_preferences$31.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$35.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$35.magnet_top = this.magnet.TOP;
-		_preferences$35.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$35.magnet_left = this.magnet.LEFT;
-		_preferences$35.magnet_right = this.magnet.RIGHT;
-		_preferences$35.save();
+		_preferences$31.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$31.magnet_top = this.magnet.TOP;
+		_preferences$31.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$31.magnet_left = this.magnet.LEFT;
+		_preferences$31.magnet_right = this.magnet.RIGHT;
+		_preferences$31.save();
 	};
 	/**
 	* Process shortcut
@@ -237024,7 +237024,7 @@ var init_InventoryV1 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV1.newItems.indexOf(item.index) === -1) InventoryV1.newItems.push(item.index);
-			if (getItemTab$2(item) === _preferences$35.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$2(item) === _preferences$31.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -237054,7 +237054,7 @@ var init_InventoryV1 = __esmMin((() => {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		if (tab === _preferences$35.tab) {
+		if (tab === _preferences$31.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV1.getRoot();
 			const content = root.querySelector(".container .content");
@@ -237714,11 +237714,11 @@ function onSwitchTab$3() {
 	const root = InventoryV2.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$34.tab = parseInt(idx, 10);
+	_preferences$30.tab = parseInt(idx, 10);
 	requestFilter$3();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
-	if (_preferences$34.tab !== InventoryV2.TAB.FAV) {
+	if (_preferences$30.tab !== InventoryV2.TAB.FAV) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "none";
 		const dealOff = root.querySelector(".deallock_off");
@@ -237730,7 +237730,7 @@ function onSwitchTab$3() {
 		const sort = root.querySelector(".sort");
 		if (sort) sort.style.display = "none";
 	} else {
-		if (_preferences$34.npcsalelock) {
+		if (_preferences$30.npcsalelock) {
 			const dealOn = root.querySelector(".deallock_on");
 			if (dealOn) dealOn.style.display = "";
 			const lockOverlay = root.querySelector(".lockoverlay");
@@ -237947,28 +237947,28 @@ function onTabDrop$1(event) {
 	Network.sendPacket(pkt);
 }
 function onItemLock$1() {
-	_preferences$34.itemlock = !_preferences$34.itemlock;
-	InventoryV2.itemlock = _preferences$34.itemlock;
-	const lockImg = _preferences$34.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$30.itemlock = !_preferences$30.itemlock;
+	InventoryV2.itemlock = _preferences$30.itemlock;
+	const lockImg = _preferences$30.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 		const btn = InventoryV2.getRoot().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onItemCompare$1() {
-	_preferences$34.itemcomp = !_preferences$34.itemcomp;
-	InventoryV2.itemcomp = _preferences$34.itemcomp;
-	const compImg = _preferences$34.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$30.itemcomp = !_preferences$30.itemcomp;
+	InventoryV2.itemcomp = _preferences$30.itemcomp;
+	const compImg = _preferences$30.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 		const btn = InventoryV2.getRoot().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock$1() {
-	_preferences$34.npcsalelock = !_preferences$34.npcsalelock;
-	InventoryV2.npcsalelock = _preferences$34.npcsalelock;
+	_preferences$30.npcsalelock = !_preferences$30.npcsalelock;
+	InventoryV2.npcsalelock = _preferences$30.npcsalelock;
 	const root = InventoryV2.getRoot();
-	if (_preferences$34.npcsalelock) {
+	if (_preferences$30.npcsalelock) {
 		const dealOn = root.querySelector(".deallock_on");
 		if (dealOn) dealOn.style.display = "";
 		const lockOverlay = root.querySelector(".lockoverlay");
@@ -237992,7 +237992,7 @@ function onNPCLock$1() {
 		if (dealOff) dealOff.style.display = "";
 	}
 }
-var InventoryV2, _realSize$3, _preferences$34, lockOverlayTimeout$1, InventoryV2_default;
+var InventoryV2, _realSize$3, _preferences$30, lockOverlayTimeout$1, InventoryV2_default;
 var init_InventoryV2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -238032,7 +238032,7 @@ var init_InventoryV2 = __esmMin((() => {
 	InventoryV2.newItems = [];
 	InventoryV2.equippedItems = [];
 	_realSize$3 = 0;
-	_preferences$34 = Preferences.get("InventoryV2", {
+	_preferences$30 = Preferences.get("InventoryV2", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -238048,9 +238048,9 @@ var init_InventoryV2 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	InventoryV2.itemlock = _preferences$34.itemlock;
-	InventoryV2.itemcomp = _preferences$34.itemcomp;
-	InventoryV2.npcsalelock = _preferences$34.npcsalelock;
+	InventoryV2.itemlock = _preferences$30.itemlock;
+	InventoryV2.itemcomp = _preferences$30.itemcomp;
+	InventoryV2.npcsalelock = _preferences$30.npcsalelock;
 	InventoryV2.init = function Init() {
 		const root = InventoryV2.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
@@ -238110,19 +238110,19 @@ var init_InventoryV2 = __esmMin((() => {
 		this.draggable(".titlebar");
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$34.tab]) allTabs[_preferences$34.tab].classList.add("selected");
-		const lockImg = _preferences$34.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$30.tab]) allTabs[_preferences$30.tab].classList.add("selected");
+		const lockImg = _preferences$30.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const btn = root.querySelector(".item_drop_lock");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$34.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$30.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const lockSale = _preferences$34.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$34.tab !== InventoryV2.TAB.FAV) {
+		const lockSale = _preferences$30.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
+		if (_preferences$30.tab !== InventoryV2.TAB.FAV) {
 			if (lockSale) lockSale.style.display = "none";
 			const sortEl = root.querySelector(".sort");
 			if (sortEl) sortEl.style.display = "none";
@@ -238146,16 +238146,16 @@ var init_InventoryV2 = __esmMin((() => {
 		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$3());
 	};
 	InventoryV2.onAppend = function OnAppend() {
-		if (!_preferences$34.show) this._host.style.display = "none";
-		this.resize(_preferences$34.width, _preferences$34.height);
+		if (!_preferences$30.show) this._host.style.display = "none";
+		this.resize(_preferences$30.width, _preferences$30.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$34.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$34.magnet_top;
-		this.magnet.BOTTOM = _preferences$34.magnet_bottom;
-		this.magnet.LEFT = _preferences$34.magnet_left;
-		this.magnet.RIGHT = _preferences$34.magnet_right;
-		_realSize$3 = _preferences$34.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$30.magnet_top;
+		this.magnet.BOTTOM = _preferences$30.magnet_bottom;
+		this.magnet.LEFT = _preferences$30.magnet_left;
+		this.magnet.RIGHT = _preferences$30.magnet_right;
+		_realSize$3 = _preferences$30.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = InventoryV2.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -238166,17 +238166,17 @@ var init_InventoryV2 = __esmMin((() => {
 		this.equipswitchlist.length = 0;
 		InventoryV2.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$34.show = this._host.style.display !== "none";
-		_preferences$34.reduce = !!_realSize$3;
-		_preferences$34.y = parseInt(this._host.style.top, 10);
-		_preferences$34.x = parseInt(this._host.style.left, 10);
+		_preferences$30.show = this._host.style.display !== "none";
+		_preferences$30.reduce = !!_realSize$3;
+		_preferences$30.y = parseInt(this._host.style.top, 10);
+		_preferences$30.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$34.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$34.magnet_top = this.magnet.TOP;
-		_preferences$34.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$34.magnet_left = this.magnet.LEFT;
-		_preferences$34.magnet_right = this.magnet.RIGHT;
-		_preferences$34.save();
+		_preferences$30.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$30.magnet_top = this.magnet.TOP;
+		_preferences$30.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$30.magnet_left = this.magnet.LEFT;
+		_preferences$30.magnet_right = this.magnet.RIGHT;
+		_preferences$30.save();
 	};
 	InventoryV2.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
@@ -238292,7 +238292,7 @@ var init_InventoryV2 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV2.newItems.indexOf(item.index) === -1) InventoryV2.newItems.push(item.index);
-			if (getItemTab$1(item) === _preferences$34.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab$1(item) === _preferences$30.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
 			});
@@ -238318,7 +238318,7 @@ var init_InventoryV2 = __esmMin((() => {
 		}
 		const isInSwitchList = InventoryV2.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$34.tab) {
+		if (tab === _preferences$30.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV2.getRoot();
 			const content = root.querySelector(".container .content");
@@ -242225,7 +242225,7 @@ function onSwitchTab$2() {
 	const root = InventoryV3.getRoot();
 	const buttons = root.querySelectorAll(".tabs button");
 	const idx = Array.from(buttons).indexOf(this);
-	_preferences$33.tab = parseInt(idx, 10);
+	_preferences$29.tab = parseInt(idx, 10);
 	requestFilter$2();
 	buttons.forEach((b) => b.classList.remove("selected"));
 	this.classList.add("selected");
@@ -242234,10 +242234,10 @@ function onSwitchTab$2() {
 	const lockOverlay = root.querySelector(".lockoverlay");
 	const lockMsg = root.querySelector(".lockoverlaymsg");
 	const sort = root.querySelector(".sort");
-	const onFavTab = _preferences$33.tab === InventoryV3.TAB.FAV;
-	if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$33.npcsalelock));
-	if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$33.npcsalelock));
-	if (lockOverlay) lockOverlay.classList.toggle("hidden", !(onFavTab && _preferences$33.npcsalelock));
+	const onFavTab = _preferences$29.tab === InventoryV3.TAB.FAV;
+	if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$29.npcsalelock));
+	if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$29.npcsalelock));
+	if (lockOverlay) lockOverlay.classList.toggle("hidden", !(onFavTab && _preferences$29.npcsalelock));
 	if (lockMsg) lockMsg.classList.add("hidden");
 	if (sort) sort.classList.toggle("hidden", !onFavTab);
 }
@@ -242510,32 +242510,32 @@ function onFinalReqInventoryExpandResult(pkt) {
 	}
 }
 function onItemLock() {
-	_preferences$33.itemlock = !_preferences$33.itemlock;
-	InventoryV3.itemlock = _preferences$33.itemlock;
-	const lockImg = _preferences$33.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+	_preferences$29.itemlock = !_preferences$29.itemlock;
+	InventoryV3.itemlock = _preferences$29.itemlock;
+	const lockImg = _preferences$29.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 		const btn = InventoryV3.getRoot().querySelector(".item_drop_lock");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onItemCompare() {
-	_preferences$33.itemcomp = !_preferences$33.itemcomp;
-	InventoryV3.itemcomp = _preferences$33.itemcomp;
-	const compImg = _preferences$33.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+	_preferences$29.itemcomp = !_preferences$29.itemcomp;
+	InventoryV3.itemcomp = _preferences$29.itemcomp;
+	const compImg = _preferences$29.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 		const btn = InventoryV3.getRoot().querySelector(".item_compare");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
 }
 function onNPCLock() {
-	_preferences$33.npcsalelock = !_preferences$33.npcsalelock;
-	InventoryV3.npcsalelock = _preferences$33.npcsalelock;
+	_preferences$29.npcsalelock = !_preferences$29.npcsalelock;
+	InventoryV3.npcsalelock = _preferences$29.npcsalelock;
 	const root = InventoryV3.getRoot();
 	const dealOn = root.querySelector(".deallock_on");
 	const dealOff = root.querySelector(".deallock_off");
-	if (dealOn) dealOn.classList.toggle("hidden", !_preferences$33.npcsalelock);
-	if (dealOff) dealOff.classList.toggle("hidden", _preferences$33.npcsalelock);
-	if (_preferences$33.npcsalelock) {
+	if (dealOn) dealOn.classList.toggle("hidden", !_preferences$29.npcsalelock);
+	if (dealOff) dealOff.classList.toggle("hidden", _preferences$29.npcsalelock);
+	if (_preferences$29.npcsalelock) {
 		const lockOverlay = root.querySelector(".lockoverlay");
 		if (lockOverlay) lockOverlay.classList.remove("hidden");
 		const lockMsg = root.querySelector(".lockoverlaymsg");
@@ -242551,7 +242551,7 @@ function onNPCLock() {
 		if (lockMsg) lockMsg.classList.add("hidden");
 	}
 }
-var InventoryV3, _realSize$2, _preferences$33, lockOverlayTimeout, InventoryV3_default;
+var InventoryV3, _realSize$2, _preferences$29, lockOverlayTimeout, InventoryV3_default;
 var init_InventoryV3 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -242596,7 +242596,7 @@ var init_InventoryV3 = __esmMin((() => {
 	InventoryV3.newItems = [];
 	InventoryV3.equippedItems = [];
 	_realSize$2 = 0;
-	_preferences$33 = Preferences.get("InventoryV3", {
+	_preferences$29 = Preferences.get("InventoryV3", {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
@@ -242612,9 +242612,9 @@ var init_InventoryV3 = __esmMin((() => {
 		magnet_left: true,
 		magnet_right: false
 	}, 1);
-	InventoryV3.itemlock = _preferences$33.itemlock;
-	InventoryV3.itemcomp = _preferences$33.itemcomp;
-	InventoryV3.npcsalelock = _preferences$33.npcsalelock;
+	InventoryV3.itemlock = _preferences$29.itemlock;
+	InventoryV3.itemcomp = _preferences$29.itemcomp;
+	InventoryV3.npcsalelock = _preferences$29.npcsalelock;
 	InventoryV3.init = function Init() {
 		const root = InventoryV3.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
@@ -242677,22 +242677,22 @@ var init_InventoryV3 = __esmMin((() => {
 		this.draggable(".titlebar");
 		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
 		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$33.tab]) allTabs[_preferences$33.tab].classList.add("selected");
-		const lockImg = _preferences$33.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		if (allTabs[_preferences$29.tab]) allTabs[_preferences$29.tab].classList.add("selected");
+		const lockImg = _preferences$29.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
 			const btn = root.querySelector(".item_drop_lock");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		const compImg = _preferences$33.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		const compImg = _preferences$29.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
 		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
 			const btn = root.querySelector(".item_compare");
 			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
 		const dealOn = root.querySelector(".deallock_on");
 		const dealOff = root.querySelector(".deallock_off");
-		const onFavTab = _preferences$33.tab === InventoryV3.TAB.FAV;
-		if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$33.npcsalelock));
-		if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$33.npcsalelock));
+		const onFavTab = _preferences$29.tab === InventoryV3.TAB.FAV;
+		if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$29.npcsalelock));
+		if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$29.npcsalelock));
 		const sortEl = root.querySelector(".sort");
 		if (sortEl) sortEl.classList.toggle("hidden", !onFavTab);
 		const itemExpansion = root.querySelector(".item_expansion");
@@ -242712,16 +242712,16 @@ var init_InventoryV3 = __esmMin((() => {
 		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$2());
 	};
 	InventoryV3.onAppend = function OnAppend() {
-		if (!_preferences$33.show) this._host.style.display = "none";
-		this.resize(_preferences$33.width, _preferences$33.height);
+		if (!_preferences$29.show) this._host.style.display = "none";
+		this.resize(_preferences$29.width, _preferences$29.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$33.magnet_top;
-		this.magnet.BOTTOM = _preferences$33.magnet_bottom;
-		this.magnet.LEFT = _preferences$33.magnet_left;
-		this.magnet.RIGHT = _preferences$33.magnet_right;
-		_realSize$2 = _preferences$33.reduce ? 0 : this._host.getBoundingClientRect().height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$29.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$29.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences$29.magnet_top;
+		this.magnet.BOTTOM = _preferences$29.magnet_bottom;
+		this.magnet.LEFT = _preferences$29.magnet_left;
+		this.magnet.RIGHT = _preferences$29.magnet_right;
+		_realSize$2 = _preferences$29.reduce ? 0 : this._host.getBoundingClientRect().height;
 		const miniBtnAppend = InventoryV3.getRoot().querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
@@ -242732,17 +242732,17 @@ var init_InventoryV3 = __esmMin((() => {
 		this.equipswitchlist.length = 0;
 		InventoryV3.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$33.show = this._host.style.display !== "none";
-		_preferences$33.reduce = !!_realSize$2;
-		_preferences$33.y = parseInt(this._host.style.top, 10);
-		_preferences$33.x = parseInt(this._host.style.left, 10);
+		_preferences$29.show = this._host.style.display !== "none";
+		_preferences$29.reduce = !!_realSize$2;
+		_preferences$29.y = parseInt(this._host.style.top, 10);
+		_preferences$29.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$33.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$33.magnet_top = this.magnet.TOP;
-		_preferences$33.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$33.magnet_left = this.magnet.LEFT;
-		_preferences$33.magnet_right = this.magnet.RIGHT;
-		_preferences$33.save();
+		_preferences$29.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$29.magnet_top = this.magnet.TOP;
+		_preferences$29.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$29.magnet_left = this.magnet.LEFT;
+		_preferences$29.magnet_right = this.magnet.RIGHT;
+		_preferences$29.save();
 	};
 	InventoryV3.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
@@ -242866,7 +242866,7 @@ var init_InventoryV3 = __esmMin((() => {
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
 			if (InventoryV3.newItems.indexOf(item.index) === -1) InventoryV3.newItems.push(item.index);
-			if (getItemTab(item) === _preferences$33.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (getItemTab(item) === _preferences$29.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (el) el.style.backgroundImage = `url(${data})`;
 			});
@@ -242892,7 +242892,7 @@ var init_InventoryV3 = __esmMin((() => {
 		}
 		const isInSwitchList = InventoryV3.equipswitchlist.some((equipItem) => equipItem.index === item.index);
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$33.tab) {
+		if (tab === _preferences$29.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = InventoryV3.getRoot();
 			const content = root.querySelector(".container .content");
@@ -243159,7 +243159,7 @@ function resizeHeight$3(height) {
 	Storage$1._host.style.height = `${50 + height * 32}px`;
 }
 function onSwitchTab$1(idx) {
-	_preferences$32.tab = idx;
+	_preferences$28.tab = idx;
 	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
 		const tabs = Storage$1.getRoot().querySelector(".tabs");
 		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
@@ -243191,10 +243191,10 @@ function onDrop$11(event) {
 function requestFilter$1() {
 	const content = Storage$1.getRoot().querySelector(".container .content");
 	if (content) content.innerHTML = "";
-	for (let i = 0, count = _list$10.length; i < count; ++i) Storage$1.addItemSub(_list$10[i]);
+	for (let i = 0, count = _list$6.length; i < count; ++i) Storage$1.addItemSub(_list$6[i]);
 }
 function getItemIndexById$3(index) {
-	for (let i = 0, count = _list$10.length; i < count; ++i) if (_list$10[i].index === index) return i;
+	for (let i = 0, count = _list$6.length; i < count; ++i) if (_list$6[i].index === index) return i;
 	return -1;
 }
 function onScroll$7(event, contentEl) {
@@ -243208,7 +243208,7 @@ function onScroll$7(event, contentEl) {
 function onItemOver$12(itemEl, root) {
 	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i < 0) return;
-	const item = _list$10[i];
+	const item = _list$6[i];
 	const overlay = root.querySelector(".overlay");
 	if (overlay) {
 		overlay.style.display = "";
@@ -243235,7 +243235,7 @@ function onItemDragStart$7(event, itemEl) {
 	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Storage",
-		data: _list$10[i]
+		data: _list$6[i]
 	}));
 }
 function onItemDragEnd$8() {
@@ -243247,13 +243247,13 @@ function onItemInfo$15(event, itemEl) {
 	if (i === -1) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		transferItemToOtherUI$1(_list$10[i]);
+		transferItemToOtherUI$1(_list$6[i]);
 		return false;
 	}
-	if (ItemInfo_default.uid === _list$10[i].ITID) ItemInfo_default.remove();
+	if (ItemInfo_default.uid === _list$6[i].ITID) ItemInfo_default.remove();
 	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$10[i].ITID;
-	ItemInfo_default.setItem(_list$10[i]);
+	ItemInfo_default.uid = _list$6[i].ITID;
+	ItemInfo_default.setItem(_list$6[i]);
 	return false;
 }
 function transferItemToOtherUI$1(item) {
@@ -243265,7 +243265,7 @@ function transferItemToOtherUI$1(item) {
 	else if (isCartOpen) Storage$1.reqMoveItemToCart(item.index, count);
 	return true;
 }
-var Storage$1, _list$10, _preferences$32, Storage_default$3;
+var Storage$1, _list$6, _preferences$28, Storage_default$3;
 var init_Storage$5 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -243294,8 +243294,8 @@ var init_Storage$5 = __esmMin((() => {
 		CARD: 5,
 		ETC: 6
 	};
-	_list$10 = [];
-	_preferences$32 = Preferences.get("Storage", {
+	_list$6 = [];
+	_preferences$28 = Preferences.get("Storage", {
 		x: 200,
 		y: 500,
 		height: 8,
@@ -243315,11 +243315,11 @@ var init_Storage$5 = __esmMin((() => {
 				if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
 			});
 		}
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$32.tab + 1}.bmp`, (data) => {
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$28.tab + 1}.bmp`, (data) => {
 			const tabs = root.querySelector(".tabs");
 			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
-		resizeHeight$3(_preferences$32.height);
+		resizeHeight$3(_preferences$28.height);
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("wheel", (e) => onScroll$7(e, content));
@@ -243358,30 +243358,30 @@ var init_Storage$5 = __esmMin((() => {
 	};
 	Storage$1.onAppend = function onAppend() {
 		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$28.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$28.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
 	};
 	Storage$1.onRemove = function onRemove() {
 		const content = this.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
-		_list$10.length = 0;
-		_preferences$32.y = parseInt(this._host.style.top, 10);
-		_preferences$32.x = parseInt(this._host.style.left, 10);
-		_preferences$32.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$32.save();
+		_list$6.length = 0;
+		_preferences$28.y = parseInt(this._host.style.top, 10);
+		_preferences$28.x = parseInt(this._host.style.left, 10);
+		_preferences$28.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$28.save();
 	};
 	Storage$1.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$10.push(items[i]);
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$6.push(items[i]);
 	};
 	Storage$1.addItem = function addItem(item) {
 		const i = getItemIndexById$3(item.index);
 		if (i > -1) {
-			_list$10[i].count += item.count;
+			_list$6[i].count += item.count;
 			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$10[i].count;
+			if (countEl) countEl.textContent = _list$6[i].count;
 			return;
 		}
-		if (this.addItemSub(item)) _list$10.push(item);
+		if (this.addItemSub(item)) _list$6.push(item);
 	};
 	Storage$1.addItemSub = function addItemSub(item) {
 		let tab;
@@ -243414,7 +243414,7 @@ var init_Storage$5 = __esmMin((() => {
 				tab = Storage$1.TAB.ETC;
 				break;
 		}
-		if (tab === _preferences$32.tab) {
+		if (tab === _preferences$28.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = this.getRoot();
 			const content = root.querySelector(".container .content");
@@ -243451,16 +243451,16 @@ var init_Storage$5 = __esmMin((() => {
 		const i = getItemIndexById$3(index);
 		if (i < 0) return null;
 		const root = this.getRoot();
-		if (_list$10[i].count) {
-			_list$10[i].count -= count;
-			if (_list$10[i].count > 0) {
+		if (_list$6[i].count) {
+			_list$6[i].count -= count;
+			if (_list$6[i].count > 0) {
 				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$10[i].count;
-				return _list$10[i];
+				if (countEl) countEl.textContent = _list$6[i].count;
+				return _list$6[i];
 			}
 		}
-		const item = _list$10[i];
-		_list$10.splice(i, 1);
+		const item = _list$6[i];
+		_list$6.splice(i, 1);
 		const el = root.querySelector(`.item[data-index="${index}"]`);
 		if (el) el.remove();
 		return item;
@@ -243786,7 +243786,7 @@ function resizeHeight$2(height) {
 	Storage._host.style.height = `${50 + height * 32}px`;
 }
 function onSwitchTab(idx) {
-	_preferences$31.tab = idx;
+	_preferences$27.tab = idx;
 	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
 		const tabs = Storage.getRoot().querySelector(".tabs");
 		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
@@ -243819,11 +243819,11 @@ function requestFilter() {
 	const root = Storage.getRoot();
 	const content = root.querySelector(".container .content");
 	if (content) content.innerHTML = "";
-	let list = _list$9;
+	let list = _list$5;
 	const orderBySelect = root.querySelector(".storage-order-by");
 	const orderBy = orderBySelect ? orderBySelect.value : "BASE";
 	if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
-		list = _list$9.slice(0);
+		list = _list$5.slice(0);
 		list.sort((a, b) => {
 			const nameA = DB.getItemName(a);
 			const nameB = DB.getItemName(b);
@@ -243833,7 +243833,7 @@ function requestFilter() {
 	for (let i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
 }
 function getItemIndexById$2(index) {
-	for (let i = 0, count = _list$9.length; i < count; ++i) if (_list$9[i].index === index) return i;
+	for (let i = 0, count = _list$5.length; i < count; ++i) if (_list$5[i].index === index) return i;
 	return -1;
 }
 function onScroll$6(event, contentEl) {
@@ -243854,8 +243854,8 @@ function onFilterWindowOpen(button) {
 		return;
 	}
 	const filtered_list = [];
-	for (let i = 0, count = _list$9.length; i < count; ++i) {
-		const item = _list$9[i];
+	for (let i = 0, count = _list$5.length; i < count; ++i) {
+		const item = _list$5[i];
 		let tab;
 		switch (item.type) {
 			case ItemType_default.HEALING:
@@ -243918,7 +243918,7 @@ function onFilterWindowHoverOut(root) {
 function onItemOver$11(itemEl, root) {
 	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
 	if (i < 0) return;
-	const item = _list$9[i];
+	const item = _list$5[i];
 	const overlay = root.querySelector(".overlay");
 	if (overlay) {
 		overlay.style.display = "";
@@ -243944,7 +243944,7 @@ function onItemDragStart$6(event, itemEl) {
 	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 		type: "item",
 		from: "Storage",
-		data: _list$9[i]
+		data: _list$5[i]
 	}));
 }
 function onItemDragEnd$7() {
@@ -243956,16 +243956,16 @@ function onItemInfo$14(event, itemEl) {
 	if (i === -1) return false;
 	if (event.altKey && event.which === 3) {
 		event.stopImmediatePropagation();
-		Storage.transferItemToOtherUI(_list$9[i]);
+		Storage.transferItemToOtherUI(_list$5[i]);
 		return false;
 	}
-	if (ItemInfo_default.uid === _list$9[i].ITID) ItemInfo_default.remove();
+	if (ItemInfo_default.uid === _list$5[i].ITID) ItemInfo_default.remove();
 	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$9[i].ITID;
-	ItemInfo_default.setItem(_list$9[i]);
+	ItemInfo_default.uid = _list$5[i].ITID;
+	ItemInfo_default.setItem(_list$5[i]);
 	return false;
 }
-var Storage, _list$9, _openFilters, _preferences$31, Storage_default;
+var Storage, _list$5, _openFilters, _preferences$27, Storage_default;
 var init_Storage$2 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -243995,9 +243995,9 @@ var init_Storage$2 = __esmMin((() => {
 		CARD: 5,
 		ETC: 6
 	};
-	_list$9 = [];
+	_list$5 = [];
 	_openFilters = {};
-	_preferences$31 = Preferences.get("Storage", {
+	_preferences$27 = Preferences.get("Storage", {
 		x: 200,
 		y: 500,
 		height: 8,
@@ -244029,11 +244029,11 @@ var init_Storage$2 = __esmMin((() => {
 		}
 		const orderBySelect = root.querySelector(".storage-order-by");
 		if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter());
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$31.tab + 1}.bmp`, (data) => {
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$27.tab + 1}.bmp`, (data) => {
 			const tabs = root.querySelector(".tabs");
 			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
-		resizeHeight$2(_preferences$31.height);
+		resizeHeight$2(_preferences$27.height);
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("wheel", (e) => onScroll$6(e, content));
@@ -244072,25 +244072,25 @@ var init_Storage$2 = __esmMin((() => {
 	};
 	Storage.onAppend = function onAppend() {
 		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$31.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$27.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$27.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
 	};
 	Storage.onRemove = function onRemove() {
 		const root = this.getRoot();
 		const content = root.querySelector(".container .content");
 		if (content) content.innerHTML = "";
-		_list$9.length = 0;
-		_preferences$31.y = parseInt(this._host.style.top, 10);
-		_preferences$31.x = parseInt(this._host.style.left, 10);
-		_preferences$31.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$31.save();
+		_list$5.length = 0;
+		_preferences$27.y = parseInt(this._host.style.top, 10);
+		_preferences$27.x = parseInt(this._host.style.left, 10);
+		_preferences$27.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$27.save();
 		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
 		_openFilters = {};
 		const searchInput = root.querySelector("#storage-search-input");
 		if (searchInput) searchInput.value = "";
 	};
 	Storage.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$9.push(items[i]);
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$5.push(items[i]);
 	};
 	Storage.addItem = function addItem(item) {
 		const i = getItemIndexById$2(item.index);
@@ -244126,12 +244126,12 @@ var init_Storage$2 = __esmMin((() => {
 		}
 		if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
 		if (i > -1) {
-			_list$9[i].count += item.count;
+			_list$5[i].count += item.count;
 			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$9[i].count;
+			if (countEl) countEl.textContent = _list$5[i].count;
 			return;
 		}
-		if (this.addItemSub(item)) _list$9.push(item);
+		if (this.addItemSub(item)) _list$5.push(item);
 	};
 	Storage.addItemSub = function addItemSub(item) {
 		let tab;
@@ -244164,7 +244164,7 @@ var init_Storage$2 = __esmMin((() => {
 				tab = Storage.TAB.ETC;
 				break;
 		}
-		if (tab === _preferences$31.tab) {
+		if (tab === _preferences$27.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = this.getRoot();
 			const content = root.querySelector(".container .content");
@@ -244202,16 +244202,16 @@ var init_Storage$2 = __esmMin((() => {
 		if (i < 0) return null;
 		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].removeItem(index, count);
 		const root = this.getRoot();
-		if (_list$9[i].count) {
-			_list$9[i].count -= count;
-			if (_list$9[i].count > 0) {
+		if (_list$5[i].count) {
+			_list$5[i].count -= count;
+			if (_list$5[i].count > 0) {
 				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$9[i].count;
-				return _list$9[i];
+				if (countEl) countEl.textContent = _list$5[i].count;
+				return _list$5[i];
 			}
 		}
-		const item = _list$9[i];
-		_list$9.splice(i, 1);
+		const item = _list$5[i];
+		_list$5.splice(i, 1);
 		const el = root.querySelector(`.item[data-index="${index}"]`);
 		if (el) el.remove();
 		const overlay = root.querySelector(".overlay");
@@ -244239,7 +244239,7 @@ var init_Storage$2 = __esmMin((() => {
 		const searchInput = this.getRoot().querySelector("#storage-search-input");
 		if (!searchInput) return;
 		const searchTerm = searchInput.value.toLowerCase();
-		const filteredItems = _list$9.filter((item) => {
+		const filteredItems = _list$5.filter((item) => {
 			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
 		});
 		if (!_openFilters[ItemType_default.SEARCH]) {
@@ -244526,7 +244526,7 @@ function onItemUsed$1(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-var CartItems, _realSize$1, _preferences$30, CartItems_default;
+var CartItems, _realSize$1, _preferences$26, CartItems_default;
 var init_CartItems = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -244554,7 +244554,7 @@ var init_CartItems = __esmMin((() => {
 	*/
 	CartItems.list = [];
 	_realSize$1 = 0;
-	_preferences$30 = Preferences.get("CartItems", {
+	_preferences$26 = Preferences.get("CartItems", {
 		x: 200,
 		y: 200,
 		width: 7,
@@ -244613,12 +244613,12 @@ var init_CartItems = __esmMin((() => {
 	*/
 	CartItems.onAppend = function OnAppend() {
 		if (SessionStorage_default.Entity.hasCart === false) this._host.style.display = "none";
-		if (!_preferences$30.show) this._host.style.display = "none";
-		this.resize(_preferences$30.width, _preferences$30.height);
+		if (!_preferences$26.show) this._host.style.display = "none";
+		this.resize(_preferences$26.width, _preferences$26.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
-		_realSize$1 = _preferences$30.reduce ? 0 : hostRect.height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$26.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$26.x), Renderer.width - hostRect.width)}px`;
+		_realSize$1 = _preferences$26.reduce ? 0 : hostRect.height;
 		const miniBtn = this.getRoot().querySelector(".titlebar .mini");
 		if (miniBtn) miniBtn.dispatchEvent(new Event("mousedown"));
 	};
@@ -244630,14 +244630,14 @@ var init_CartItems = __esmMin((() => {
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$30.show = this._host.style.display !== "none";
-		_preferences$30.reduce = !!_realSize$1;
-		_preferences$30.y = parseInt(this._host.style.top, 10);
-		_preferences$30.x = parseInt(this._host.style.left, 10);
+		_preferences$26.show = this._host.style.display !== "none";
+		_preferences$26.reduce = !!_realSize$1;
+		_preferences$26.y = parseInt(this._host.style.top, 10);
+		_preferences$26.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$30.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$30.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$30.save();
+		_preferences$26.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$26.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$26.save();
 	};
 	/**
 	* Process shortcut
@@ -245975,7 +245975,7 @@ function eventsBooks() {
 		readCanvas.height = 15;
 		readCanvas.className = "book_read event_add_cursor";
 		event.appendChild(readCanvas);
-		_ctx$5 = readCanvas.getContext("2d");
+		_ctx$1 = readCanvas.getContext("2d");
 		const bookRead = root.querySelector(".book_read");
 		if (bookRead) {
 			bookRead.addEventListener("mouseover", (e) => {
@@ -246046,7 +246046,7 @@ function buildMoveInfoTooltip(moveInfo) {
 	for (const entry of MOVE_INFO_MESSAGES) if (moveInfo[entry.key] === true) lines.push(DB.getMessage(entry.msgId));
 	return lines.map((l) => `<div>${l}</div>`).join("");
 }
-var ItemInfo, _sprite$3, _action$3, _ctx$5, _type$5, _start$1, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
+var ItemInfo, _sprite$3, _action$3, _ctx$1, _type$5, _start$1, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
 var init_ItemInfo = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -246297,8 +246297,8 @@ var init_ItemInfo = __esmMin((() => {
 			const animation = action.animations[anim % action.animations.length];
 			let i, count;
 			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$5, 10, 25);
-			_ctx$5.clearRect(0, 0, _ctx$5.canvas.width, _ctx$5.canvas.height);
+			SpriteRenderer.bind2DContext(_ctx$1, 10, 25);
+			_ctx$1.clearRect(0, 0, _ctx$1.canvas.width, _ctx$1.canvas.height);
 			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$3, _sprite$3, 1, position, false);
 		};
 	})();
@@ -246578,7 +246578,7 @@ function parseChatSetup() {
 	this.requestRoom();
 	this.hide();
 }
-var ChatRoomCreate, _preferences$29, ChatRoomCreate_default;
+var ChatRoomCreate, _preferences$25, ChatRoomCreate_default;
 var init_ChatRoomCreate = __esmMin((() => {
 	init_DBManager();
 	init_KeyEventHandler();
@@ -246614,7 +246614,7 @@ var init_ChatRoomCreate = __esmMin((() => {
 	* @var {string} password
 	*/
 	ChatRoomCreate.password = "";
-	_preferences$29 = Preferences.get("ChatRoomCreate", {
+	_preferences$25 = Preferences.get("ChatRoomCreate", {
 		x: 480,
 		y: 200,
 		show: false
@@ -246648,18 +246648,18 @@ var init_ChatRoomCreate = __esmMin((() => {
 	* Once append to body
 	*/
 	ChatRoomCreate.onAppend = function onAppend() {
-		if (!_preferences$29.show) this._host.style.display = "none";
-		this._host.style.top = Math.min(Math.max(0, _preferences$29.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$29.x), Renderer.width - this._host.offsetWidth) + "px";
+		if (!_preferences$25.show) this._host.style.display = "none";
+		this._host.style.top = Math.min(Math.max(0, _preferences$25.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$25.x), Renderer.width - this._host.offsetWidth) + "px";
 	};
 	/**
 	* Once removed from DOM, save preferences
 	*/
 	ChatRoomCreate.onRemove = function onRemove() {
-		_preferences$29.show = this._host.style.display !== "none";
-		_preferences$29.y = parseInt(this._host.style.top, 10);
-		_preferences$29.x = parseInt(this._host.style.left, 10);
-		_preferences$29.save();
+		_preferences$25.show = this._host.style.display !== "none";
+		_preferences$25.y = parseInt(this._host.style.top, 10);
+		_preferences$25.x = parseInt(this._host.style.left, 10);
+		_preferences$25.save();
 		ChatRoomCreate.editMode = false;
 	};
 	/**
@@ -246669,7 +246669,7 @@ var init_ChatRoomCreate = __esmMin((() => {
 		this._host.style.display = "";
 		this.getRoot().querySelector(".title").focus();
 		this._fixPositionOverflow();
-		_preferences$29.show = true;
+		_preferences$25.show = true;
 	};
 	/**
 	* Hide the setup ui
@@ -246678,7 +246678,7 @@ var init_ChatRoomCreate = __esmMin((() => {
 		this._host.style.display = "none";
 		this.getRoot().querySelector(".setup").reset();
 		ChatRoomCreate.editMode = false;
-		_preferences$29.show = false;
+		_preferences$25.show = false;
 	};
 	/**
 	* Pre-fill form with values (used by ChatRoom.openRoomSettings)
@@ -246889,7 +246889,7 @@ function resize$2(width, height) {
 		if (inner) ChatRoom._host.style.height = inner.offsetHeight + "px";
 	}
 }
-var ChatRoom, _gridWidth, _gridHeight, _preferences$28, ChatRoom_default;
+var ChatRoom, _gridWidth, _gridHeight, _preferences$24, ChatRoom_default;
 var init_ChatRoom$1 = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -246946,7 +246946,7 @@ var init_ChatRoom$1 = __esmMin((() => {
 	ChatRoom.isOpen = false;
 	_gridWidth = 7;
 	_gridHeight = 3;
-	_preferences$28 = Preferences.get("ChatRoom", {
+	_preferences$24 = Preferences.get("ChatRoom", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -246975,11 +246975,11 @@ var init_ChatRoom$1 = __esmMin((() => {
 	ChatRoom.onAppend = function onAppend() {
 		const root = this.getRoot();
 		this.isOpen = true;
-		_gridWidth = _preferences$28.width;
-		_gridHeight = _preferences$28.height;
+		_gridWidth = _preferences$24.width;
+		_gridHeight = _preferences$24.height;
 		resize$2(_gridWidth, _gridHeight);
-		this._host.style.top = Math.min(Math.max(0, _preferences$28.y), Renderer.height - this._host.getBoundingClientRect().height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$28.x), Renderer.width - this._host.getBoundingClientRect().width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$24.y), Renderer.height - this._host.getBoundingClientRect().height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$24.x), Renderer.width - this._host.getBoundingClientRect().width) + "px";
 		root.querySelector(".sendmsg").focus();
 		this.updateChat();
 	};
@@ -246996,11 +246996,11 @@ var init_ChatRoom$1 = __esmMin((() => {
 		this.isOpen = false;
 		const messages = this.getRoot().querySelector(".messages");
 		if (messages) messages.innerHTML = "";
-		_preferences$28.y = parseInt(this._host.style.top, 10);
-		_preferences$28.x = parseInt(this._host.style.left, 10);
-		_preferences$28.width = _gridWidth;
-		_preferences$28.height = _gridHeight;
-		_preferences$28.save();
+		_preferences$24.y = parseInt(this._host.style.top, 10);
+		_preferences$24.x = parseInt(this._host.style.left, 10);
+		_preferences$24.width = _gridWidth;
+		_preferences$24.height = _gridHeight;
+		_preferences$24.save();
 		this.exitRoom();
 	};
 	/**
@@ -249850,7 +249850,7 @@ var init_HomunInformations$1 = __esmMin((() => {
 * Checks if homun should be fed or not
 */
 function autoFeedCheck() {
-	if (_preferences$27.autoFeed != 1) return;
+	if (_preferences$23.autoFeed != 1) return;
 	const player = SessionStorage_default.Entity;
 	if (!player) return;
 	if (player.life.hp <= 0) return;
@@ -249865,11 +249865,11 @@ function autoFeedCheck() {
 * Toggle AutoFeed
 */
 function homunToggleAutoFeed() {
-	HomunInformations.setFeedConfig(_preferences$27.autoFeed == 1 ? 0 : 1);
+	HomunInformations.setFeedConfig(_preferences$23.autoFeed == 1 ? 0 : 1);
 	if (PacketVerManager_default.value < 20170920) return;
-	HomunInformations.onConfigUpdate(3, _preferences$27.autoFeed ? 1 : 0);
+	HomunInformations.onConfigUpdate(3, _preferences$23.autoFeed ? 1 : 0);
 }
-var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$27, HomunInformations_default;
+var autoFeedInterval, autoFeedIntervalMs, autoFeedPercent, HomunInformations, _preferences$23, HomunInformations_default;
 var init_HomunInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -249892,7 +249892,7 @@ var init_HomunInformations = __esmMin((() => {
 	HomunInformations = new GUIComponent("HomunInformations", HomunInformations_default$1);
 	HomunInformations.render = () => HomunInformations_default$2;
 	HomunInformations.captureKeyEvents = true;
-	_preferences$27 = Preferences.get("HomunInformations", {
+	_preferences$23 = Preferences.get("HomunInformations", {
 		x: 100,
 		y: 200,
 		show: false,
@@ -249932,7 +249932,7 @@ var init_HomunInformations = __esmMin((() => {
 		if (autoFeedBtn) autoFeedBtn.addEventListener("click", () => {
 			homunToggleAutoFeed();
 		});
-		if (!_preferences$27.show) this._host.style.display = "none";
+		if (!_preferences$23.show) this._host.style.display = "none";
 		const skillBtn = root.querySelector(".skill");
 		if (skillBtn) skillBtn.addEventListener("mousedown", () => {
 			SkillListMH_default.homunculus.toggle();
@@ -249942,7 +249942,7 @@ var init_HomunInformations = __esmMin((() => {
 	};
 	HomunInformations.onAppend = function onAppend() {
 		const root = HomunInformations.getRoot();
-		Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$27.autoFeed ? "1" : "0"}.bmp`, (data) => {
+		Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$23.autoFeed ? "1" : "0"}.bmp`, (data) => {
 			const el = root.querySelector(".homun_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
@@ -249951,8 +249951,8 @@ var init_HomunInformations = __esmMin((() => {
 			const feeding = root.querySelector(".feeding");
 			if (feeding) feeding.style.display = "none";
 		}
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$27.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$27.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$23.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$23.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	HomunInformations.startAutoFeed = function startAutoFeed() {
 		window.clearInterval(autoFeedInterval);
@@ -249966,10 +249966,10 @@ var init_HomunInformations = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	HomunInformations.onRemove = function onRemove() {
-		_preferences$27.show = this._host.style.display !== "none";
-		_preferences$27.y = parseInt(this._host.style.top, 10);
-		_preferences$27.x = parseInt(this._host.style.left, 10);
-		_preferences$27.save();
+		_preferences$23.show = this._host.style.display !== "none";
+		_preferences$23.y = parseInt(this._host.style.top, 10);
+		_preferences$23.x = parseInt(this._host.style.left, 10);
+		_preferences$23.save();
 		HomunInformations.stopAutoFeed();
 		this.stopAI();
 	};
@@ -250213,10 +250213,10 @@ var init_HomunInformations = __esmMin((() => {
 		this.startAI();
 	};
 	HomunInformations.setFeedConfig = function setFeedConfig(flag) {
-		_preferences$27.autoFeed = flag;
-		_preferences$27.save();
+		_preferences$23.autoFeed = flag;
+		_preferences$23.save();
 		const root = HomunInformations.getRoot();
-		if (root) Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$27.autoFeed ? "1" : "0"}.bmp`, (data) => {
+		if (root) Client.loadFile(DB.INTERFACE_PATH + `checkbox_${_preferences$23.autoFeed ? "1" : "0"}.bmp`, (data) => {
 			const el = root.querySelector(".homun_auto_feed");
 			if (el) el.style.backgroundImage = `url(${data})`;
 		});
@@ -250248,7 +250248,7 @@ var init_MercenaryInformations$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MercenaryInformations/MercenaryInformations.js
-var MercenaryInformations, _preferences$26, MercenaryInformations_default;
+var MercenaryInformations, _preferences$22, MercenaryInformations_default;
 var init_MercenaryInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -250266,7 +250266,7 @@ var init_MercenaryInformations = __esmMin((() => {
 	init_MercenaryInformations$1();
 	MercenaryInformations = new GUIComponent("MercenaryInformations", MercenaryInformations_default$1);
 	MercenaryInformations.render = () => MercenaryInformations_default$2;
-	_preferences$26 = Preferences.get("MercenaryInformations", {
+	_preferences$22 = Preferences.get("MercenaryInformations", {
 		x: 100,
 		y: 100,
 		show: false,
@@ -250295,7 +250295,7 @@ var init_MercenaryInformations = __esmMin((() => {
 		if (dismissBtn) dismissBtn.addEventListener("click", () => {
 			MercenaryInformations.reqDeleteMercenary();
 		});
-		if (!_preferences$26.show) this._host.style.display = "none";
+		if (!_preferences$22.show) this._host.style.display = "none";
 		const skillBtn = root.querySelector(".skill");
 		if (skillBtn) skillBtn.addEventListener("mousedown", () => {
 			SkillListMH_default.mercenary.toggle();
@@ -250307,18 +250307,18 @@ var init_MercenaryInformations = __esmMin((() => {
 	* Once append to body
 	*/
 	MercenaryInformations.onAppend = function onAppend() {
-		if (!_preferences$26.show) this._host.style.display = "none";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$26.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$26.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		if (!_preferences$22.show) this._host.style.display = "none";
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$22.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$22.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body
 	*/
 	MercenaryInformations.onRemove = function onRemove() {
-		_preferences$26.show = this._host.style.display !== "none";
-		_preferences$26.y = parseInt(this._host.style.top, 10);
-		_preferences$26.x = parseInt(this._host.style.left, 10);
-		_preferences$26.save();
+		_preferences$22.show = this._host.style.display !== "none";
+		_preferences$22.y = parseInt(this._host.style.top, 10);
+		_preferences$22.x = parseInt(this._host.style.left, 10);
+		_preferences$22.save();
 		this.stopAI();
 	};
 	/**
@@ -250547,7 +250547,7 @@ var init_CaptchaUpload$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaUpload.js
-var CaptchaUpload, _preferences$25, CaptchaUpload_default;
+var CaptchaUpload, _preferences$21, CaptchaUpload_default;
 var init_CaptchaUpload = __esmMin((() => {
 	init_UIManager();
 	init_GUIComponent();
@@ -250558,7 +250558,7 @@ var init_CaptchaUpload = __esmMin((() => {
 	init_CaptchaUpload$2();
 	init_CaptchaUpload$1();
 	CaptchaUpload = new GUIComponent("CaptchaUpload", CaptchaUpload_default$1);
-	_preferences$25 = Preferences.get("CaptchaUpload", {
+	_preferences$21 = Preferences.get("CaptchaUpload", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -250629,16 +250629,16 @@ var init_CaptchaUpload = __esmMin((() => {
 	* Append to DOM
 	*/
 	CaptchaUpload.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$25.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$25.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$21.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$21.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaUpload.onRemove = function onRemove() {
-		_preferences$25.y = parseInt(this._host.style.top, 10);
-		_preferences$25.x = parseInt(this._host.style.left, 10);
-		_preferences$25.save();
+		_preferences$21.y = parseInt(this._host.style.top, 10);
+		_preferences$21.x = parseInt(this._host.style.left, 10);
+		_preferences$21.save();
 		const root = this.getRoot();
 		const previewBox = root.querySelector(".preview_box");
 		if (previewBox) previewBox.innerHTML = "";
@@ -250676,7 +250676,7 @@ var init_CaptchaSelector$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaSelector.js
-var CaptchaSelector, _preferences$24, _aidList, _aidInformation, _range, _active$2, CaptchaSelector_default;
+var CaptchaSelector, _preferences$20, _aidList, _aidInformation, _range, _active$2, CaptchaSelector_default;
 var init_CaptchaSelector = __esmMin((() => {
 	init_UIManager();
 	init_GUIComponent();
@@ -250690,7 +250690,7 @@ var init_CaptchaSelector = __esmMin((() => {
 	init_CaptchaSelector$2();
 	init_CaptchaSelector$1();
 	CaptchaSelector = new GUIComponent("CaptchaSelector", CaptchaSelector_default$1);
-	_preferences$24 = Preferences.get("CaptchaSelector", {
+	_preferences$20 = Preferences.get("CaptchaSelector", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -250753,16 +250753,16 @@ var init_CaptchaSelector = __esmMin((() => {
 	* Append to DOM
 	*/
 	CaptchaSelector.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$24.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$24.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$20.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$20.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaSelector.onRemove = function onRemove() {
-		_preferences$24.y = parseInt(this._host.style.top, 10);
-		_preferences$24.x = parseInt(this._host.style.left, 10);
-		_preferences$24.save();
+		_preferences$20.y = parseInt(this._host.style.top, 10);
+		_preferences$20.x = parseInt(this._host.style.left, 10);
+		_preferences$20.save();
 		const charInfo = this.getRoot().querySelector(".character_info");
 		if (charInfo) charInfo.style.display = "none";
 		this.cleanUIList();
@@ -255965,7 +255965,7 @@ function repeatEffect(effect) {
 function clean(name, AID, effectID) {
 	const effectIdList = Array.isArray(effectID) ? effectID : [effectID];
 	let i, count;
-	const list = _list$8[name];
+	const list = _list$4[name];
 	count = list.length;
 	for (i = 0; i < count; ++i) if ((!AID || list[i]._Params.Init.ownerAID === AID) && (!effectID || effectIdList.includes(list[i]._Params.Inst.effectID))) {
 		if (list[i].free) list[i].free(_gl);
@@ -255973,18 +255973,18 @@ function clean(name, AID, effectID) {
 		i--;
 		count--;
 	}
-	if (!count) delete _list$8[name];
+	if (!count) delete _list$4[name];
 }
 function cleanRepeat(name, AID, effectID) {
 	const effectIdList = Array.isArray(effectID) ? effectID : [effectID];
-	_list$8[name].forEach((item) => {
+	_list$4[name].forEach((item) => {
 		if ((!AID || item._Params.Init.ownerAID === AID) && (!effectID || effectIdList.includes(item.effectID))) {
 			if (item._Params.Inst.persistent) item._Params.Inst.persistent = false;
 			if (item._Params.Inst.repeatEnd) item._Params.Inst.repeatEnd = false;
 		}
 	});
 }
-var _gl, _list$8, _uniqueId, targetableUnits, traps, EffectManager;
+var _gl, _list$4, _uniqueId, targetableUnits, traps, EffectManager;
 var init_EffectManager = __esmMin((() => {
 	init_EffectTable();
 	init_SkillEffect();
@@ -256008,7 +256008,7 @@ var init_EffectManager = __esmMin((() => {
 	init_QuadHorn();
 	init_SessionStorage();
 	init_Graphics();
-	_list$8 = {};
+	_list$4 = {};
 	_uniqueId = 1;
 	targetableUnits = [SkillUnitConst_default.UNT_ICEWALL, SkillUnitConst_default.UNT_REVERBERATION];
 	traps = [
@@ -256052,8 +256052,8 @@ var init_EffectManager = __esmMin((() => {
 		*/
 		static add(effect, Params) {
 			const name = effect.constructor.name || effect.constructor._uid || (effect.constructor._uid = _uniqueId++);
-			if (!(name in _list$8)) {
-				_list$8[name] = [];
+			if (!(name in _list$4)) {
+				_list$4[name] = [];
 				if (effect.constructor.init) effect.constructor.needInit = true;
 			}
 			if (effect.init) effect.needInit = true;
@@ -256071,20 +256071,20 @@ var init_EffectManager = __esmMin((() => {
 					881
 				].indexOf(effect._Params.Inst.effectID) !== -1) effect.renderBeforeEntities = true;
 			}
-			_list$8[name].push(effect);
+			_list$4[name].push(effect);
 		}
 		/**
 		* Destroy all effects
 		*/
 		static free(gl) {
-			Object.keys(_list$8).forEach((key) => {
-				const list = _list$8[key];
+			Object.keys(_list$4).forEach((key) => {
+				const list = _list$4[key];
 				const constructor = list[0].constructor;
 				list.forEach((item) => {
 					if (item.free) item.free(gl);
 				});
 				if (constructor.free) constructor.free(gl);
-				delete _list$8[key];
+				delete _list$4[key];
 			});
 		}
 		/**
@@ -256100,7 +256100,7 @@ var init_EffectManager = __esmMin((() => {
 		* @param {boolean} render before entities ?
 		*/
 		static render(gl, modelView, projection, fog, tick, renderBeforeEntities) {
-			const keys = Object.keys(_list$8);
+			const keys = Object.keys(_list$4);
 			const count = keys.length;
 			let i, j, size, list, constructor;
 			let center = [
@@ -256112,9 +256112,9 @@ var init_EffectManager = __esmMin((() => {
 			const area_size = GraphicsSettings.performanceMode ? GraphicsSettings.viewArea : 20;
 			const cullDistanceSq = area_size * area_size;
 			for (i = 0; i < count; ++i) {
-				list = _list$8[keys[i]];
+				list = _list$4[keys[i]];
 				if (!list.length) {
-					delete _list$8[keys[i]];
+					delete _list$4[keys[i]];
 					continue;
 				}
 				constructor = list[0].constructor;
@@ -256160,7 +256160,7 @@ var init_EffectManager = __esmMin((() => {
 					constructor.afterRender(gl);
 					if (size === 0) {
 						if (constructor.free) constructor.free(gl);
-						delete _list$8[keys[i]];
+						delete _list$4[keys[i]];
 					}
 				}
 			}
@@ -256606,7 +256606,7 @@ var init_EffectManager = __esmMin((() => {
 			if (hatEffects) delete hatEffects[effectID];
 		}
 		static debug() {
-			console.log("%c[DEBUG] EffectManager _list: ", "color:#F5B342", _list$8);
+			console.log("%c[DEBUG] EffectManager _list: ", "color:#F5B342", _list$4);
 		}
 		/**
 		* Remove an effect
@@ -256615,7 +256615,7 @@ var init_EffectManager = __esmMin((() => {
 		* @param {mixed} effect owner ID
 		*/
 		static remove(effect, AID, effectID) {
-			if (!effect || !(effect.name in _list$8)) Object.keys(_list$8).forEach((key) => clean(key, AID, effectID));
+			if (!effect || !(effect.name in _list$4)) Object.keys(_list$4).forEach((key) => clean(key, AID, effectID));
 			else clean(effect.name, AID, effectID);
 			if (!(AID == null)) {
 				const entity = EntityManager.get(AID);
@@ -256636,8 +256636,8 @@ var init_EffectManager = __esmMin((() => {
 		* @param {mixed} effect ID
 		*/
 		static endRepeat(effect, AID, effectID) {
-			if (!effect || !(effect.name in _list$8)) {
-				Object.keys(_list$8).forEach((key) => cleanRepeat(key, AID, effectID));
+			if (!effect || !(effect.name in _list$4)) {
+				Object.keys(_list$4).forEach((key) => cleanRepeat(key, AID, effectID));
 				return;
 			}
 			cleanRepeat(effect.name, AID, effectID);
@@ -256650,26 +256650,26 @@ var init_EffectManager = __esmMin((() => {
 * Add 3D sound to the list
 */
 function add(mapEffect) {
-	_list$7.push(mapEffect);
+	_list$3.push(mapEffect);
 }
 /**
 * Remove data from memory
 */
 function free$2() {
-	_list$7.length = 0;
+	_list$3.length = 0;
 }
 /**
 * Get effect from list
 */
 function get(GID) {
-	return _list$7.find((mapEffect) => mapEffect.name == GID) || null;
+	return _list$3.find((mapEffect) => mapEffect.name == GID) || null;
 }
 /**
 * Remove effect from list
 */
 function remove(GID) {
-	const index = _list$7.findIndex((mapEffect) => mapEffect.name == GID);
-	if (index !== -1) _list$7.splice(index, 1);
+	const index = _list$3.findIndex((mapEffect) => mapEffect.name == GID);
+	if (index !== -1) _list$3.splice(index, 1);
 }
 /**
 * Add effects to scene
@@ -256677,7 +256677,7 @@ function remove(GID) {
 * @param {vec3} position
 */
 function spam(position, tick) {
-	_list$7.forEach((mapEffect) => {
+	_list$3.forEach((mapEffect) => {
 		if (!mapEffect.isVisible && vec3$2.dist(mapEffect.pos, position) < 25) {
 			const EF_Init_Par = {
 				effectId: mapEffect.id,
@@ -256694,12 +256694,12 @@ function spam(position, tick) {
 		}
 	});
 }
-var vec3$2, _list$7, Effects_default;
+var vec3$2, _list$3, Effects_default;
 var init_Effects = __esmMin((() => {
 	init_gl_matrix();
 	init_EffectManager();
 	vec3$2 = gl_matrix_default.vec3;
-	_list$7 = [];
+	_list$3 = [];
 	Effects_default = {
 		add,
 		free: free$2,
@@ -257488,7 +257488,7 @@ function cloudInit(cloud) {
 * @param {object} fog structure
 * @param {number} tick - game tick
 */
-function render$16(gl, modelView, projection, fog, tick) {
+function render$8(gl, modelView, projection, fog, tick) {
 	if (!_display) return;
 	let i, cloud, opacity;
 	SpriteRenderer.bind3DContext(gl, modelView, projection, fog);
@@ -257536,12 +257536,12 @@ var init_Sky = __esmMin((() => {
 	Sky_default = {
 		init: init$8,
 		setUpCloudData,
-		render: render$16
+		render: render$8
 	};
 }));
 //#endregion
 //#region src/Renderer/Effects/Damage.js
-var EndureSound, dpr$1, procCanvas$1, procCtx$1, _skin, _damageSkins, _loadedSkinsData, _enableSuffix, _msgNames, _list$6, prevCombo, Damage;
+var EndureSound, dpr$1, procCanvas$1, procCtx$1, _skin, _damageSkins, _loadedSkinsData, _enableSuffix, _msgNames, _list$2, prevCombo, Damage;
 var init_Damage = __esmMin((() => {
 	init_WebGL();
 	init_Client();
@@ -257595,7 +257595,7 @@ var init_Damage = __esmMin((() => {
 		4: "luckybg",
 		5: "lucky"
 	};
-	_list$6 = [];
+	_list$2 = [];
 	prevCombo = [];
 	Damage = class Damage {
 		constructor() {
@@ -257788,7 +257788,7 @@ var init_Damage = __esmMin((() => {
 				bgObj.height = msgData.critbg.canvas.height * .6;
 				bgObj.offset = [0, -6];
 				bgObj.isDisposable = false;
-				_list$6.push(bgObj);
+				_list$2.push(bgObj);
 				const EF_Init_Par = {
 					effectId: 1,
 					ownerAID: entity.GID,
@@ -257816,7 +257816,7 @@ var init_Damage = __esmMin((() => {
 				bgObj.height = msgBlueData.critbg.canvas.height * .6;
 				bgObj.offset = [0, -6];
 				bgObj.isDisposable = false;
-				_list$6.push(bgObj);
+				_list$2.push(bgObj);
 			} else {
 				obj.color[0] = 1;
 				obj.color[1] = 1;
@@ -257828,7 +257828,7 @@ var init_Damage = __esmMin((() => {
 					obj.width = msgData.miss.canvas.width;
 					obj.height = msgData.miss.canvas.height;
 					obj.isDisposable = false;
-					_list$6.push(obj);
+					_list$2.push(obj);
 				}
 				return;
 			}
@@ -257866,7 +257866,7 @@ var init_Damage = __esmMin((() => {
 			if (entity.objecttype === Entity.TYPE_PC) hitSound = DB.getJobHitSound(entity._job);
 			else if (weapon || weapon === 0) hitSound = DB.getWeaponHitSound(weapon);
 			if (hitSound) obj.soundFile = hitSound;
-			_list$6.push(obj);
+			_list$2.push(obj);
 		}
 		/**
 		* Remove damages from map, clean up memory
@@ -257874,10 +257874,10 @@ var init_Damage = __esmMin((() => {
 		* @param {object} gl context
 		*/
 		static free(gl) {
-			_list$6.forEach((item) => {
+			_list$2.forEach((item) => {
 				if (item.isDisposable) gl.deleteTexture(item.texture);
 			});
-			_list$6.length = 0;
+			_list$2.length = 0;
 		}
 		/**
 		* Rendering damages on maps
@@ -257889,7 +257889,7 @@ var init_Damage = __esmMin((() => {
 		* @param {number} tick - game tick
 		*/
 		static render(gl, modelView, projection, fog, tick) {
-			if (!_list$6.length) return;
+			if (!_list$2.length) return;
 			SpriteRenderer.bind3DContext(gl, modelView, projection, fog);
 			SpriteRenderer.shadow = 1;
 			SpriteRenderer.angle = 0;
@@ -257898,12 +257898,12 @@ var init_Damage = __esmMin((() => {
 			let damage;
 			let size;
 			const skinData = _loadedSkinsData[_skin];
-			for (i = 0, count = _list$6.length; i < count; ++i) {
-				damage = _list$6[i];
+			for (i = 0, count = _list$2.length; i < count; ++i) {
+				damage = _list$2[i];
 				if (damage.startTick > tick) continue;
 				if (damage.startTick + damage.delay < tick) {
 					if (damage.isDisposable) gl.deleteTexture(damage.texture);
-					_list$6.splice(i, 1);
+					_list$2.splice(i, 1);
 					count--;
 					i--;
 					continue;
@@ -258041,7 +258041,7 @@ var ShortCut_exports = /* @__PURE__ */ __exportAll({ default: () => ShortCut_def
 */
 function updateEmptySlotTooltips() {
 	const containers = ShortCut.getRoot().querySelectorAll(".container");
-	for (let i = 0; i < containers.length; ++i) if (!_list$5[i] || !_list$5[i].isSkill && !_list$5[i].ID) {
+	for (let i = 0; i < containers.length; ++i) if (!_list$1[i] || !_list$1[i].isSkill && !_list$1[i].ID) {
 		const hotkey = getHotKeyString(i);
 		if (hotkey) containers[i].setAttribute("data-tooltip", hotkey);
 	}
@@ -258146,8 +258146,8 @@ function onResize$3(event) {
 		h = Math.min(Math.max(h, 1), _rowCount);
 		if (h === lastHeight) return;
 		host.style.height = `${h * 34}px`;
-		_preferences$23.size = h;
-		_preferences$23.save();
+		_preferences$19.size = h;
+		_preferences$19.save();
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
@@ -258168,9 +258168,9 @@ function onResize$3(event) {
 * @param {number} delay in ms
 */
 function setDelayOnIndex(index, delay) {
-	if (!_list$5[index]) return;
-	if (_list$5[index].Delay && _list$5[index].Delay >= Renderer.tick + delay) return;
-	_list$5[index].Delay = Renderer.tick + delay;
+	if (!_list$1[index]) return;
+	if (_list$1[index].Delay && _list$1[index].Delay >= Renderer.tick + delay) return;
+	_list$1[index].Delay = Renderer.tick + delay;
 	const ui = ShortCut.getRoot().querySelector(`.container[data-index="${index}"]`);
 	if (!ui) return;
 	const existing = ui.querySelector(".cooldown-overlay");
@@ -258188,7 +258188,7 @@ function setDelayOnIndex(index, delay) {
 		_activeAnimations.delete(index);
 	}
 	function updateCooldown() {
-		if (!_list$5 || !_list$5[index]) {
+		if (!_list$1 || !_list$1[index]) {
 			overlay.remove();
 			if (_activeAnimations.has(index)) {
 				cancelAnimationFrame(_activeAnimations.get(index));
@@ -258197,10 +258197,10 @@ function setDelayOnIndex(index, delay) {
 			return;
 		}
 		const now = Renderer.tick;
-		const remaining = _list$5[index].Delay - now;
-		if (remaining <= 0 || !_list$5[index].Delay) {
+		const remaining = _list$1[index].Delay - now;
+		if (remaining <= 0 || !_list$1[index].Delay) {
 			overlay.remove();
-			_list$5[index].Delay = 0;
+			_list$1[index].Delay = 0;
 			if (_activeAnimations.has(index)) {
 				cancelAnimationFrame(_activeAnimations.get(index));
 				_activeAnimations.delete(index);
@@ -258272,9 +258272,9 @@ function onDragStart$2(event, icon) {
 	img.src = icon.querySelector(".img").style.backgroundImage.match(/\(([^)]+)/)[1].replace(/"/g, "");
 	event.dataTransfer.setDragImage(img, 12, 12);
 	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: _list$5[index].isSkill ? "skill" : "item",
+		type: _list$1[index].isSkill ? "skill" : "item",
 		from: "ShortCut",
-		data: _list$5[index]
+		data: _list$1[index]
 	}));
 }
 /**
@@ -258283,22 +258283,22 @@ function onDragStart$2(event, icon) {
 */
 function onElementInfo(event, icon) {
 	const index = parseInt(icon.parentNode.getAttribute("data-index"), 10);
-	const element = _list$5[index];
+	const element = _list$1[index];
 	event.stopImmediatePropagation();
 	event.preventDefault();
-	if (element.isSkill) if (SkillDescription_default.uid === _list$5[index].ID) SkillDescription_default.remove();
+	if (element.isSkill) if (SkillDescription_default.uid === _list$1[index].ID) SkillDescription_default.remove();
 	else {
 		SkillDescription_default.append();
-		SkillDescription_default.setSkill(_list$5[index].ID);
+		SkillDescription_default.setSkill(_list$1[index].ID);
 	}
 	else {
-		if (ItemInfo_default.uid === _list$5[index].ID) {
+		if (ItemInfo_default.uid === _list$1[index].ID) {
 			ItemInfo_default.remove();
 			return;
 		}
 		ItemInfo_default.append();
-		ItemInfo_default.uid = _list$5[index].ID;
-		ItemInfo_default.setItem(InventoryController.getUI().getItemById(_list$5[index].ID));
+		ItemInfo_default.uid = _list$1[index].ID;
+		ItemInfo_default.setItem(InventoryController.getUI().getItemById(_list$1[index].ID));
 	}
 }
 /**
@@ -258313,12 +258313,12 @@ function onUseShortCut(icon) {
 * @param {number} shortcut index
 */
 function clickElement(index) {
-	const shortcut = _list$5[index];
+	const shortcut = _list$1[index];
 	SkillTargetSelection_default.remove();
 	if (!shortcut) return;
 	if (shortcut.isSkill) ShortCut.useSkill(shortcut.ID, shortcut.count);
 	else {
-		const item = InventoryController.getUI().getItemById(_list$5[index].ID);
+		const item = InventoryController.getUI().getItemById(_list$1[index].ID);
 		if (item) InventoryController.getUI().useItem(item);
 	}
 }
@@ -258327,8 +258327,8 @@ function clickElement(index) {
 */
 function onClose$5() {
 	ShortCut._host.style.height = "0px";
-	_preferences$23.size = 0;
-	_preferences$23.save();
+	_preferences$19.size = 0;
+	_preferences$19.save();
 }
 /**
 * Hook Inventory, get informations when there is a change
@@ -258351,7 +258351,7 @@ function onUpdateSkill(id, level) {
 	ShortCut.setElement(true, id, level);
 }
 function onUpdateOwnerName$1() {
-	for (const index in _list$5) if (!_list$5[index].isSkill) ShortCut.setElement(false, _list$5[index].ID, _list$5[index].count);
+	for (const index in _list$1) if (!_list$1[index].isSkill) ShortCut.setElement(false, _list$1[index].ID, _list$1[index].count);
 }
 function convertHotkeysToServerFormat() {
 	const serverData = {
@@ -258503,7 +258503,7 @@ function haveHotkeysChanged(currentData) {
 	if (!_lastServerHotkeys) return true;
 	return JSON.stringify(currentData) !== JSON.stringify(_lastServerHotkeys);
 }
-var ShortCut, _list$5, _rowCount, _lastServerHotkeys, _activeAnimations, _preferences$23, ShortCut_default;
+var ShortCut, _list$1, _rowCount, _lastServerHotkeys, _activeAnimations, _preferences$19, ShortCut_default;
 var init_ShortCut = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -258530,11 +258530,11 @@ var init_ShortCut = __esmMin((() => {
 	init_ShortCut$1();
 	ShortCut = new GUIComponent("ShortCut", ShortCut_default$1);
 	ShortCut.render = () => ShortCut_default$2;
-	_list$5 = [];
+	_list$1 = [];
 	_rowCount = 0;
 	_lastServerHotkeys = null;
 	_activeAnimations = /* @__PURE__ */ new Map();
-	_preferences$23 = Preferences.get("ShortCut", {
+	_preferences$19 = Preferences.get("ShortCut", {
 		x: 480,
 		y: 0,
 		size: 1,
@@ -258600,14 +258600,14 @@ var init_ShortCut = __esmMin((() => {
 	* Append to body
 	*/
 	ShortCut.onAppend = function onAppend() {
-		this._host.style.height = `${34 * _preferences$23.size}px`;
+		this._host.style.height = `${34 * _preferences$19.size}px`;
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$23.y), Renderer.height - rect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$23.x), Renderer.width - rect.width)}px`;
-		this.magnet.TOP = _preferences$23.magnet_top;
-		this.magnet.BOTTOM = _preferences$23.magnet_bottom;
-		this.magnet.LEFT = _preferences$23.magnet_left;
-		this.magnet.RIGHT = _preferences$23.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$19.y), Renderer.height - rect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$19.x), Renderer.width - rect.width)}px`;
+		this.magnet.TOP = _preferences$19.magnet_top;
+		this.magnet.BOTTOM = _preferences$19.magnet_bottom;
+		this.magnet.LEFT = _preferences$19.magnet_left;
+		this.magnet.RIGHT = _preferences$19.magnet_right;
 		Controller$4.getUI().onUpdateSkill = onUpdateSkill;
 		updateEmptySlotTooltips();
 	};
@@ -258619,14 +258619,14 @@ var init_ShortCut = __esmMin((() => {
 		if (tooltip) tooltip.classList.remove("show");
 		for (const [index, animationId] of _activeAnimations.entries()) cancelAnimationFrame(animationId);
 		_activeAnimations.clear();
-		_preferences$23.y = parseInt(this._host.style.top, 10);
-		_preferences$23.x = parseInt(this._host.style.left, 10);
-		_preferences$23.size = Math.floor(parseInt(this._host.style.height, 10) / 34);
-		_preferences$23.magnet_top = this.magnet.TOP;
-		_preferences$23.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$23.magnet_left = this.magnet.LEFT;
-		_preferences$23.magnet_right = this.magnet.RIGHT;
-		_preferences$23.save();
+		_preferences$19.y = parseInt(this._host.style.top, 10);
+		_preferences$19.x = parseInt(this._host.style.left, 10);
+		_preferences$19.size = Math.floor(parseInt(this._host.style.height, 10) / 34);
+		_preferences$19.magnet_top = this.magnet.TOP;
+		_preferences$19.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$19.magnet_left = this.magnet.LEFT;
+		_preferences$19.magnet_right = this.magnet.RIGHT;
+		_preferences$19.save();
 	};
 	/**
 	* Request to clean the list
@@ -258635,7 +258635,7 @@ var init_ShortCut = __esmMin((() => {
 	ShortCut.clean = function clean() {
 		for (const [index, animationId] of _activeAnimations.entries()) cancelAnimationFrame(animationId);
 		_activeAnimations.clear();
-		_list$5.length = 0;
+		_list$1.length = 0;
 		ShortCut.getRoot().querySelectorAll(".container").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -258651,9 +258651,9 @@ var init_ShortCut = __esmMin((() => {
 				clickElement(parseInt(key.cmd.match(/\d+$/).toString(), 10));
 				break;
 			case "EXTEND":
-				_preferences$23.size = (_preferences$23.size + 1) % (_rowCount + 1);
-				_preferences$23.save();
-				this._host.style.height = `${_preferences$23.size * 34}px`;
+				_preferences$19.size = (_preferences$19.size + 1) % (_rowCount + 1);
+				_preferences$19.save();
+				this._host.style.height = `${_preferences$19.size * 34}px`;
 				break;
 		}
 	};
@@ -258683,16 +258683,16 @@ var init_ShortCut = __esmMin((() => {
 		ShortCut.getRoot().querySelectorAll(".container").forEach((el) => {
 			el.innerHTML = "";
 		});
-		_list$5.length = list.length;
+		_list$1.length = list.length;
 		_rowCount = Math.min(4, Math.floor(list.length / 9));
 		for (let i = 0, count = list.length; i < count; ++i) if (list[i].isSkill) {
 			skill = ShortCut.getSkillById(list[i].ID);
 			if (skill && skill.level) ShortCut.addElement(i, true, list[i].ID, list[i].count || skill.level);
 			else {
-				if (!_list$5[i]) _list$5[i] = {};
-				_list$5[i].isSkill = true;
-				_list$5[i].ID = list[i].ID;
-				_list$5[i].count = list[i].count;
+				if (!_list$1[i]) _list$1[i] = {};
+				_list$1[i].isSkill = true;
+				_list$1[i].ID = list[i].ID;
+				_list$1[i].count = list[i].count;
 			}
 		} else ShortCut.addElement(i, list[i].isSkill, list[i].ID, list[i].count);
 	};
@@ -258702,17 +258702,17 @@ var init_ShortCut = __esmMin((() => {
 	*/
 	ShortCut.updateAllTooltips = function updateAllTooltips() {
 		const root = ShortCut.getRoot();
-		for (let i = 0, size = _list$5.length; i < size; ++i) {
+		for (let i = 0, size = _list$1.length; i < size; ++i) {
 			const container = root.querySelector(`.container[data-index="${i}"]`);
 			if (!container) continue;
 			const hotkey = getHotKeyString(i);
-			if (!_list$5[i] || !_list$5[i].isSkill && !_list$5[i].ID) {
+			if (!_list$1[i] || !_list$1[i].isSkill && !_list$1[i].ID) {
 				if (hotkey) container.setAttribute("data-tooltip", hotkey);
-			} else if (_list$5[i] && (_list$5[i].isSkill || _list$5[i].ID)) {
+			} else if (_list$1[i] && (_list$1[i].isSkill || _list$1[i].ID)) {
 				let name = "";
-				if (_list$5[i].isSkill && SkillInfo[_list$5[i].ID]) name = SkillInfo[_list$5[i].ID].SkillName;
-				else if (_list$5[i].ID) {
-					const item = InventoryController.getUI().getItemById(_list$5[i].ID);
+				if (_list$1[i].isSkill && SkillInfo[_list$1[i].ID]) name = SkillInfo[_list$1[i].ID].SkillName;
+				else if (_list$1[i].ID) {
+					const item = InventoryController.getUI().getItemById(_list$1[i].ID);
 					if (item) name = DB.getItemName(item);
 				}
 				if (name) {
@@ -258723,7 +258723,7 @@ var init_ShortCut = __esmMin((() => {
 		}
 	};
 	ShortCut.setElement = function setElement(isSkill, ID, count) {
-		for (let i = 0, size = _list$5.length; i < size; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID) if (isSkill && _list$5[i].count && _list$5[i].count <= count) ShortCut.addElement(i, isSkill, ID, _list$5[i].count);
+		for (let i = 0, size = _list$1.length; i < size; ++i) if (_list$1[i] && _list$1[i].isSkill == isSkill && _list$1[i].ID === ID) if (isSkill && _list$1[i].count && _list$1[i].count <= count) ShortCut.addElement(i, isSkill, ID, _list$1[i].count);
 		else ShortCut.addElement(i, isSkill, ID, count);
 	};
 	/**
@@ -258739,17 +258739,17 @@ var init_ShortCut = __esmMin((() => {
 		const ui = ShortCut.getRoot().querySelector(`.container[data-index="${index}"]`);
 		if (!ui) return;
 		ui.innerHTML = "";
-		if (!_list$5[index]) _list$5[index] = {};
-		_list$5[index].isSkill = isSkill;
-		_list$5[index].ID = ID;
+		if (!_list$1[index]) _list$1[index] = {};
+		_list$1[index].isSkill = isSkill;
+		_list$1[index].ID = ID;
 		if (isSkill) if (!count) return;
 		else {
-			_list$5[index].count = count;
+			_list$1[index].count = count;
 			file = SkillInfo[ID].Name;
 			name = SkillInfo[ID].SkillName;
 		}
 		else {
-			_list$5[index].count = count;
+			_list$1[index].count = count;
 			const item = InventoryController.getUI().getItemById(ID);
 			if (!item) return;
 			const it = DB.getItemInfo(ID);
@@ -258774,7 +258774,7 @@ var init_ShortCut = __esmMin((() => {
 	* @param {number} delay in ms
 	*/
 	ShortCut.setGlobalSkillDelay = function setGlobalSkillDelay(delay) {
-		_list$5.forEach((element, index) => {
+		_list$1.forEach((element, index) => {
 			if (element.isSkill) setDelayOnIndex(index, delay);
 		});
 	};
@@ -258785,7 +258785,7 @@ var init_ShortCut = __esmMin((() => {
 	* @param {number} delay in ms
 	*/
 	ShortCut.setSkillDelay = function setSkillDelay(ID, delay) {
-		_list$5.forEach((element, index) => {
+		_list$1.forEach((element, index) => {
 			if (element.isSkill && element.ID == ID) setDelayOnIndex(index, delay);
 		});
 	};
@@ -258800,12 +258800,12 @@ var init_ShortCut = __esmMin((() => {
 	ShortCut.removeElement = function removeElement(isSkill, ID, row, amount) {
 		if (!ID) return;
 		const root = ShortCut.getRoot();
-		for (let i = row * 9, count = Math.min(_list$5.length, row * 9 + 9); i < count; ++i) if (_list$5[i] && _list$5[i].isSkill == isSkill && _list$5[i].ID === ID && (!isSkill || _list$5[i].count == amount)) {
+		for (let i = row * 9, count = Math.min(_list$1.length, row * 9 + 9); i < count; ++i) if (_list$1[i] && _list$1[i].isSkill == isSkill && _list$1[i].ID === ID && (!isSkill || _list$1[i].count == amount)) {
 			const container = root.querySelector(`.container[data-index="${i}"]`);
 			if (container) container.innerHTML = "";
-			_list$5[i].isSkill = 0;
-			_list$5[i].ID = 0;
-			_list$5[i].count = 0;
+			_list$1[i].isSkill = 0;
+			_list$1[i].ID = 0;
+			_list$1[i].count = 0;
 			ShortCut.onChange(i, 0, 0, 0);
 		}
 	};
@@ -258888,7 +258888,7 @@ var init_ShortCut = __esmMin((() => {
 		} else if (callback) callback();
 	};
 	ShortCut.getList = function getList() {
-		return _list$5;
+		return _list$1;
 	};
 	ShortCut_default = UIManager.addComponent(ShortCut);
 }));
@@ -302698,7 +302698,7 @@ var init_PetInformations$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/PetInformations/PetInformations.js
-var PetInformations, _preferences$22, petAutoFeeding, PetInformations_default;
+var PetInformations, _preferences$18, petAutoFeeding, PetInformations_default;
 var init_PetInformations = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -302713,7 +302713,7 @@ var init_PetInformations = __esmMin((() => {
 	PetInformations = new GUIComponent("PetInformations", PetInformations_default$1);
 	PetInformations.render = () => PetInformations_default$2;
 	PetInformations.captureKeyEvents = true;
-	_preferences$22 = Preferences.get("PetInformations", {
+	_preferences$18 = Preferences.get("PetInformations", {
 		x: 100,
 		y: 200,
 		show: true
@@ -302778,17 +302778,17 @@ var init_PetInformations = __esmMin((() => {
 			const feeding = root.querySelector(".feeding");
 			if (feeding) feeding.style.display = "none";
 		}
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$22.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$22.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$18.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$18.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
 	};
 	/**
 	* Once remove from body, save user preferences
 	*/
 	PetInformations.onRemove = function onRemove() {
-		_preferences$22.show = this._host.style.display !== "none";
-		_preferences$22.y = parseInt(this._host.style.top, 10);
-		_preferences$22.x = parseInt(this._host.style.left, 10);
-		_preferences$22.save();
+		_preferences$18.show = this._host.style.display !== "none";
+		_preferences$18.y = parseInt(this._host.style.top, 10);
+		_preferences$18.x = parseInt(this._host.style.left, 10);
+		_preferences$18.save();
 	};
 	/**
 	* Process shortcut
@@ -306225,7 +306225,7 @@ var init_EntityWalk = __esmMin((() => {
 * @param {mat4} modelView
 * @param {mat4} projection
 */
-function render$15(modelView, projection) {
+function render$7(modelView, projection) {
 	if (this.gr2Model && this.gr2Model.path !== this.gr2) {
 		GR2ModelRenderer_default.detach(this.gr2Model);
 		this.gr2Model = null;
@@ -306513,7 +306513,7 @@ function renderLayer(layer, spr, pal, size, pos, type, isBlendModeOne) {
 * Export
 */
 function Init$3() {
-	this.render = render$15;
+	this.render = render$7;
 	this.renderLayer = renderLayer;
 	this.renderEntity = renderEntity;
 }
@@ -308450,8 +308450,8 @@ function getEntityByGID(gid) {
 */
 function getEntityIndexBy(getter, value) {
 	if (value < 0) return -1;
-	const count = _list$4.length;
-	for (let i = 0; i < count; ++i) if (getter(_list$4[i]) === value) return i;
+	const count = _list.length;
+	for (let i = 0; i < count; ++i) if (getter(_list[i]) === value) return i;
 	return -1;
 }
 /**
@@ -308460,8 +308460,8 @@ function getEntityIndexBy(getter, value) {
 * @param {function} callback
 */
 function forEach(callback) {
-	const count = _list$4.length;
-	for (let i = 0; i < count; ++i) if (callback(_list$4[i]) === false) return;
+	const count = _list.length;
+	for (let i = 0; i < count; ++i) if (callback(_list[i]) === false) return;
 }
 /**
 * Find an Entity and return it
@@ -308494,7 +308494,7 @@ function storePendingTransform(aid, key, value) {
 function getEntityByCID(aid) {
 	if (SessionStorage_default.Entity.AID === aid) return SessionStorage_default.Entity;
 	const index = getEntityIndexBy((e) => e.AID, aid);
-	return index < 0 ? null : _list$4[index];
+	return index < 0 ? null : _list[index];
 }
 /**
 * Add or replace entity
@@ -308505,7 +308505,7 @@ function getEntityByCID(aid) {
 function addEntity(entity) {
 	const existing = getEntityByGID(entity.GID);
 	if (!existing) {
-		_list$4.push(entity);
+		_list.push(entity);
 		_gidMap.set(entity.GID, entity);
 		_renderSortDirty = true;
 		_pickSortDirty = true;
@@ -308519,11 +308519,11 @@ function addEntity(entity) {
 * Clean up entities from list
 */
 function free$1() {
-	_list$4.forEach((entity) => {
+	_list.forEach((entity) => {
 		releaseGr2(entity);
 		entity.clean();
 	});
-	_list$4.length = 0;
+	_list.length = 0;
 	_gidMap.clear();
 	_pickList.length = 0;
 	_renderSortDirty = true;
@@ -308548,8 +308548,8 @@ function removeEntity(gid) {
 		releaseGr2(entity);
 		entity.clean();
 		_gidMap.delete(gid);
-		const index = _list$4.indexOf(entity);
-		if (index > -1) _list$4.splice(index, 1);
+		const index = _list.indexOf(entity);
+		if (index > -1) _list.splice(index, 1);
 		_renderSortDirty = true;
 		_pickSortDirty = true;
 	}
@@ -308632,13 +308632,13 @@ function sortByPriority(a, b) {
 *
 * Infos: RO Game doesn't seems to render ambiant and diffuse on Sprites
 */
-function render$14(gl, modelView, projection, fog, renderEffects) {
+function render$6(gl, modelView, projection, fog, renderEffects) {
 	let i, count;
 	const tick = Date.now();
-	if (!_list$4.length) return;
+	if (!_list.length) return;
 	_renderFrameCounter++;
 	if (_renderSortDirty || (GraphicsSettings.performanceMode ? _renderFrameCounter >= 6 : _renderFrameCounter >= 3)) {
-		_list$4.sort(sort);
+		_list.sort(sort);
 		_renderSortDirty = false;
 		_renderFrameCounter = 0;
 		_pickSortDirty = true;
@@ -308651,28 +308651,28 @@ function render$14(gl, modelView, projection, fog, renderEffects) {
 		playerY = SessionStorage_default.Entity.position[1];
 		viewAreaSq = GraphicsSettings.viewArea * GraphicsSettings.viewArea;
 	}
-	for (i = 0, count = _list$4.length; i < count; ++i) if (_list$4[i].objecttype != _list$4[i].constructor.TYPE_EFFECT && !renderEffects || _list$4[i].objecttype == _list$4[i].constructor.TYPE_EFFECT && renderEffects) {
-		if (_list$4[i].remove_tick && _list$4[i].remove_tick + _list$4[i].remove_delay < tick) {
+	for (i = 0, count = _list.length; i < count; ++i) if (_list[i].objecttype != _list[i].constructor.TYPE_EFFECT && !renderEffects || _list[i].objecttype == _list[i].constructor.TYPE_EFFECT && renderEffects) {
+		if (_list[i].remove_tick && _list[i].remove_tick + _list[i].remove_delay < tick) {
 			const entityFocus = getFocusEntity();
-			if (entityFocus && entityFocus.GID === _list$4[i].GID) {
+			if (entityFocus && entityFocus.GID === _list[i].GID) {
 				entityFocus.onFocusEnd();
 				setFocusEntity(null);
 			}
-			_gidMap.delete(_list$4[i].GID);
-			releaseGr2(_list$4[i]);
-			_list$4[i].clean();
-			_list$4.splice(i, 1);
+			_gidMap.delete(_list[i].GID);
+			releaseGr2(_list[i]);
+			_list[i].clean();
+			_list.splice(i, 1);
 			i--;
 			count--;
 			_pickSortDirty = true;
 			continue;
 		}
 		if (doCulling) {
-			const dx = _list$4[i].position[0] - playerX;
-			const dy = _list$4[i].position[1] - playerY;
+			const dx = _list[i].position[0] - playerX;
+			const dy = _list[i].position[1] - playerY;
 			if (dx * dx + dy * dy > viewAreaSq) continue;
 		}
-		_list$4[i].render(modelView, projection);
+		_list[i].render(modelView, projection);
 	}
 	SpriteRenderer.unbind(gl);
 }
@@ -308682,9 +308682,9 @@ function render$14(gl, modelView, projection, fog, renderEffects) {
 function intersect() {
 	let i, count;
 	let entity;
-	if (!_list$4.length) return;
+	if (!_list.length) return;
 	if (_pickSortDirty || _lastSupportPriority !== _supportPriority) {
-		_pickList = _list$4.slice();
+		_pickList = _list.slice();
 		_pickList.sort(sortByPriority);
 		_pickSortDirty = false;
 		_lastSupportPriority = _supportPriority;
@@ -308724,7 +308724,7 @@ function getClosestEntity(sourceEntity, type) {
 	const srcY = sourceEntity.position[1];
 	const view_range = GraphicsSettings.performanceMode ? GraphicsSettings.viewArea : 20;
 	const viewRangeSq = view_range * view_range;
-	_list$4.forEach((entity) => {
+	_list.forEach((entity) => {
 		if (entity.GID !== sourceEntity.GID && entity.objecttype === type && entity.action !== entity.ACTION.DIE && entity.remove_tick === 0) {
 			const dx = entity.position[0] - srcX;
 			const dy = entity.position[1] - srcY;
@@ -308763,7 +308763,7 @@ function getLowestHpEntity(sourceEntity, type) {
 	const srcY = sourceEntity.position[1];
 	const view_range = GraphicsSettings.performanceMode ? GraphicsSettings.viewArea : 20;
 	const viewRangeSq = view_range * view_range;
-	_list$4.forEach((entity) => {
+	_list.forEach((entity) => {
 		if (entity.GID !== sourceEntity.GID && entity.objecttype === type && entity.life && entity.life.hp > 0 && entity.action !== entity.ACTION.DIE && entity.remove_tick === 0) {
 			const dx = entity.position[0] - srcX;
 			const dy = entity.position[1] - srcY;
@@ -308804,7 +308804,7 @@ function removeLife(gid) {
 function clearLifeCache() {
 	_lifeCache.clear();
 }
-var _list$4, _gidMap, _renderSortDirty, _renderFrameCounter, _pickSortDirty, _pickList, _lastSupportPriority, pendingTransformations, _over, _saveShift, _focus, _supportPriority, _lifeCache, EntityManager;
+var _list, _gidMap, _renderSortDirty, _renderFrameCounter, _pickSortDirty, _pickList, _lastSupportPriority, pendingTransformations, _over, _saveShift, _focus, _supportPriority, _lifeCache, EntityManager;
 var init_EntityManager = __esmMin((() => {
 	init_SessionStorage();
 	init_Entity$1();
@@ -308815,7 +308815,7 @@ var init_EntityManager = __esmMin((() => {
 	init_Graphics();
 	init_Altitude();
 	init_GR2ModelRenderer();
-	_list$4 = [];
+	_list = [];
 	_gidMap = /* @__PURE__ */ new Map();
 	_renderSortDirty = true;
 	_renderFrameCounter = 0;
@@ -308846,7 +308846,7 @@ var init_EntityManager = __esmMin((() => {
 		getLife,
 		removeLife,
 		clearLifeCache,
-		render: render$14,
+		render: render$6,
 		intersect,
 		setSupportPicking,
 		pendingTransformations,
@@ -311120,7 +311120,7 @@ function isFreeCell$2(x, y) {
 	});
 	return free;
 }
-var vec2, mat2, direction, rotate, targetPos, movementTimer, MobileUI, _preferences$21, showButtons, C_AUTOTARGET_DELAY, centerX, centerY, maxDistance, normalizedX, normalizedY, _joystickBase, _joystickThumb, MobileUI_default;
+var vec2, mat2, direction, rotate, targetPos, movementTimer, MobileUI, _preferences$17, showButtons, C_AUTOTARGET_DELAY, centerX, centerY, maxDistance, normalizedX, normalizedY, _joystickBase, _joystickThumb, MobileUI_default;
 var init_MobileUI = __esmMin((() => {
 	init_Context();
 	init_UIManager();
@@ -311148,7 +311148,7 @@ var init_MobileUI = __esmMin((() => {
 	movementTimer = null;
 	MobileUI = new GUIComponent("MobileUI", MobileUI_default$1);
 	MobileUI.render = () => MobileUI_default$2;
-	_preferences$21 = Preferences.get("MobileUI", {
+	_preferences$17 = Preferences.get("MobileUI", {
 		x: 0,
 		y: 0,
 		zIndex: 1e3,
@@ -311322,12 +311322,12 @@ var init_MobileUI = __esmMin((() => {
 	* Removes MobileUI
 	*/
 	MobileUI.onRemove = function onRemove() {
-		_preferences$21.y = 0;
-		_preferences$21.x = 0;
-		_preferences$21.zIndex = 1e3;
-		_preferences$21.width = Renderer.width;
-		_preferences$21.height = Renderer.height;
-		_preferences$21.save();
+		_preferences$17.y = 0;
+		_preferences$17.x = 0;
+		_preferences$17.zIndex = 1e3;
+		_preferences$17.width = Renderer.width;
+		_preferences$17.height = Renderer.height;
+		_preferences$17.save();
 		if (SessionStorage_default.AutoTargeting) toggleAutoTargeting();
 	};
 	/**
@@ -313673,7 +313673,7 @@ function requestMoveItem$1(index, fromContent, toContent, isAdding) {
 	const item_price = 0;
 	const item = isAdding ? _input$1[index] : _output$1[index];
 	if (isAdding) {
-		if (!(countSlotsUsed() < _slots$4)) return false;
+		if (!(countSlotsUsed() < _slots)) return false;
 		count = _input$1[index].count;
 	} else count = _output$1[index].count;
 	if ((item.count === 1 || !item.IsStackable) && _type$3 === Vending.Type.VENDING_STORE) {
@@ -313831,7 +313831,7 @@ function onItemOut$9() {
 	const overlay = Vending.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var Vending, _preferences$20, _input$1, _output$1, _slots$4, _type$3, transferItem$1, Vending_default;
+var Vending, _preferences$16, _input$1, _output$1, _slots, _type$3, transferItem$1, Vending_default;
 var init_Vending = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -313861,7 +313861,7 @@ var init_Vending = __esmMin((() => {
 		VENDING_STORE: 0,
 		BUYING_STORE: 1
 	};
-	_preferences$20 = Preferences.get("Vending", {
+	_preferences$16 = Preferences.get("Vending", {
 		inputWindow: {
 			x: 100,
 			y: 100,
@@ -313876,7 +313876,7 @@ var init_Vending = __esmMin((() => {
 	}, 1);
 	_input$1 = [];
 	_output$1 = [];
-	_slots$4 = 0;
+	_slots = 0;
 	Vending.captureKeyEvents = true;
 	Vending.init = function init() {
 		const root = Vending.getRoot();
@@ -313974,12 +313974,12 @@ var init_Vending = __esmMin((() => {
 		const outputWin = root.querySelector(".OutputWindow");
 		const inputContent = inputWin.querySelector(".content");
 		const outputContent = outputWin.querySelector(".content");
-		inputWin.style.top = `${Math.min(Math.max(0, _preferences$20.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
-		inputWin.style.left = `${Math.min(Math.max(0, _preferences$20.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
-		outputWin.style.top = `${Math.min(Math.max(0, _preferences$20.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
-		outputWin.style.left = `${Math.min(Math.max(0, _preferences$20.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
-		resize$1(inputContent, _preferences$20.inputWindow.height);
-		resize$1(outputContent, _preferences$20.outputWindow.height);
+		inputWin.style.top = `${Math.min(Math.max(0, _preferences$16.inputWindow.y), Renderer.height - inputContent.offsetHeight)}px`;
+		inputWin.style.left = `${Math.min(Math.max(0, _preferences$16.inputWindow.x), Renderer.width - inputContent.offsetWidth)}px`;
+		outputWin.style.top = `${Math.min(Math.max(0, _preferences$16.outputWindow.y), Renderer.height - outputContent.offsetHeight)}px`;
+		outputWin.style.left = `${Math.min(Math.max(0, _preferences$16.outputWindow.x), Renderer.width - outputContent.offsetWidth)}px`;
+		resize$1(inputContent, _preferences$16.inputWindow.height);
+		resize$1(outputContent, _preferences$16.outputWindow.height);
 		this._host.style.display = "none";
 	};
 	Vending.setType = function setType(type) {
@@ -314016,13 +314016,13 @@ var init_Vending = __esmMin((() => {
 		const outputWin = root.querySelector(".OutputWindow");
 		_input$1.length = 0;
 		_output$1.length = 0;
-		_preferences$20.inputWindow.x = parseInt(inputWin.style.left, 10);
-		_preferences$20.inputWindow.y = parseInt(inputWin.style.top, 10);
-		_preferences$20.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$20.outputWindow.x = parseInt(outputWin.style.left, 10);
-		_preferences$20.outputWindow.y = parseInt(outputWin.style.top, 10);
-		_preferences$20.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$20.save();
+		_preferences$16.inputWindow.x = parseInt(inputWin.style.left, 10);
+		_preferences$16.inputWindow.y = parseInt(inputWin.style.top, 10);
+		_preferences$16.inputWindow.height = inputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$16.outputWindow.x = parseInt(outputWin.style.left, 10);
+		_preferences$16.outputWindow.y = parseInt(outputWin.style.top, 10);
+		_preferences$16.outputWindow.height = outputWin.querySelector(".content").offsetHeight / 32 | 0;
+		_preferences$16.save();
 		root.querySelectorAll(".content").forEach((el) => {
 			el.innerHTML = "";
 		});
@@ -314088,10 +314088,10 @@ var init_Vending = __esmMin((() => {
 	})();
 	Vending.onVendingSkill = function onVendingSkill(pkt) {
 		if (Vending.isOpen) return;
-		_slots$4 = pkt.itemcount;
+		_slots = pkt.itemcount;
 		this.setList(CartItems_default.list);
 		const root = Vending.getRoot();
-		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
+		root.querySelector(".add_shop").style.height = `${32 * _slots}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
 		this._fixPositionOverflow();
@@ -314099,7 +314099,7 @@ var init_Vending = __esmMin((() => {
 	};
 	Vending.onBuyingSkill = function onBuyingSkill(pkt) {
 		if (Vending.isOpen) return;
-		_slots$4 = pkt.itemcount;
+		_slots = pkt.itemcount;
 		const buyable = [];
 		for (const key in InventoryController.getUI().list) {
 			const item = InventoryController.getUI().list[key];
@@ -314107,7 +314107,7 @@ var init_Vending = __esmMin((() => {
 		}
 		this.setList(buyable);
 		const root = Vending.getRoot();
-		root.querySelector(".add_shop").style.height = `${32 * _slots$4}px`;
+		root.querySelector(".add_shop").style.height = `${32 * _slots}px`;
 		root.querySelector(".shopname").value = "";
 		this._host.style.display = "";
 		this._fixPositionOverflow();
@@ -314292,7 +314292,7 @@ function onItemUsed(event, itemEl) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-var VendingShop, _realSize, _type$2, _preferences$19, VendingShop_default;
+var VendingShop, _realSize, _type$2, _preferences$15, VendingShop_default;
 var init_VendingShop = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -314324,7 +314324,7 @@ var init_VendingShop = __esmMin((() => {
 	*/
 	VendingShop.list = [];
 	_realSize = 0;
-	_preferences$19 = Preferences.get("VendingShop", {
+	_preferences$15 = Preferences.get("VendingShop", {
 		x: 200,
 		y: 200,
 		width: 8,
@@ -314378,11 +314378,11 @@ var init_VendingShop = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	VendingShop.onAppend = function onAppend() {
-		this.resize(_preferences$19.width, _preferences$19.height);
+		this.resize(_preferences$15.width, _preferences$15.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$19.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$19.x), Renderer.width - hostRect.width)}px`;
-		_realSize = _preferences$19.reduce ? 0 : hostRect.height;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$15.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$15.x), Renderer.width - hostRect.width)}px`;
+		_realSize = _preferences$15.reduce ? 0 : hostRect.height;
 		const messageText = DB.getMessage(226);
 		const titleShop = Vending_default._shopname.length > 25 ? `${Vending_default._shopname.substring(0, 25)}...` : Vending_default._shopname;
 		const shopnameEl = this.getRoot().querySelector(".text.shopname");
@@ -314405,12 +314405,12 @@ var init_VendingShop = __esmMin((() => {
 		this.list.length = 0;
 		const itemInfoEl = document.querySelector(".ItemInfo");
 		if (itemInfoEl) itemInfoEl.remove();
-		_preferences$19.reduce = !!_realSize;
-		_preferences$19.y = parseInt(this._host.style.top, 10);
-		_preferences$19.x = parseInt(this._host.style.left, 10);
-		_preferences$19.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
-		_preferences$19.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$19.save();
+		_preferences$15.reduce = !!_realSize;
+		_preferences$15.y = parseInt(this._host.style.top, 10);
+		_preferences$15.x = parseInt(this._host.style.left, 10);
+		_preferences$15.width = Math.floor((this._host.getBoundingClientRect().width - 25) / 32);
+		_preferences$15.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences$15.save();
 		this._host.style.display = "none";
 	};
 	/**
@@ -314703,7 +314703,7 @@ function formatUnixDate(unixTimestamp) {
 	const d = /* @__PURE__ */ new Date(unixTimestamp * 1e3);
 	return String(d.getMonth() + 1).padStart(2, "0") + "/" + String(d.getDate()).padStart(2, "0") + " - " + String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0") + ":" + String(d.getSeconds()).padStart(2, "0");
 }
-var VendingReport, VendingReportTable, _preferences$18, VendingReport_default;
+var VendingReport, VendingReportTable, _preferences$14, VendingReport_default;
 var init_VendingReport = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -314729,7 +314729,7 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport._startHeight = 0;
 	VendingReport._boundResizeDrag = null;
 	VendingReport._boundResizeStop = null;
-	_preferences$18 = Preferences.get("VendingReport", {
+	_preferences$14 = Preferences.get("VendingReport", {
 		x: 200,
 		y: 200,
 		width: 400,
@@ -314791,9 +314791,9 @@ var init_VendingReport = __esmMin((() => {
 	VendingReport.onRemove = function OnRemove() {
 		VendingReport.reset();
 		ItemInfo_default.remove();
-		_preferences$18.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$18.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$18.save();
+		_preferences$14.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$14.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$14.save();
 		this._host.style.display = "none";
 	};
 	VendingReport.reset = function reset() {
@@ -314934,7 +314934,7 @@ function onCart(num) {
 	pkt.num = num;
 	Network.sendPacket(pkt);
 	ChangeCart._host.style.display = "none";
-	Renderer.stop(render$13);
+	Renderer.stop(render$5);
 }
 function updateList(blvl) {
 	if (SessionStorage_default.Entity.hasCart == false) return;
@@ -314972,7 +314972,7 @@ function drawActionToCanvas$3(ctx, act, spr, actionId, x, y) {
 /**
 * Rendering the Carts
 */
-function render$13(tick) {
+function render$5(tick) {
 	ChangeCart.getRoot().querySelectorAll(".canvas").forEach((el) => {
 		if (el.offsetParent === null) return;
 		const id = el.getAttribute("data-id");
@@ -315018,7 +315018,7 @@ var init_ChangeCart = __esmMin((() => {
 		this._host.style.left = (Renderer.width - 400) / 2 + "px";
 		root.querySelector(".titlebar .close").addEventListener("click", () => {
 			ChangeCart._host.style.display = "none";
-			Renderer.stop(render$13);
+			Renderer.stop(render$5);
 		});
 		this.draggable(".titlebar");
 		carts.forEach((el) => {
@@ -315049,8 +315049,8 @@ var init_ChangeCart = __esmMin((() => {
 		if (SessionStorage_default.Entity) SessionStorage_default.Entity.dialog.set(msg);
 		ChangeCart.ui.show();
 		updateList(SessionStorage_default.Character.level);
-		Renderer.stop(render$13);
-		Renderer.render(render$13);
+		Renderer.stop(render$5);
+		Renderer.render(render$5);
 	};
 	ChangeCart.onLevelUp = function onLevelUp(blvl) {
 		updateList(blvl);
@@ -315060,13 +315060,13 @@ var init_ChangeCart = __esmMin((() => {
 	* Stop rendering
 	*/
 	ChangeCart.onRemove = function onRemove() {
-		Renderer.stop(render$13);
+		Renderer.stop(render$5);
 	};
 	ChangeCart.onKeyDown = function onKeyDown(event) {
 		if (this._host.style.display === "none") return true;
 		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
 			this._host.style.display = "none";
-			Renderer.stop(render$13);
+			Renderer.stop(render$5);
 			event.stopImmediatePropagation();
 			return false;
 		}
@@ -315113,7 +315113,7 @@ function onCartSelected(type) {
 	pkt.type = type;
 	Network.sendPacket(pkt);
 	CartDecoration._host.style.display = "none";
-	Renderer.stop(render$12);
+	Renderer.stop(render$4);
 }
 /**
 * Pick layers from action file
@@ -315135,7 +315135,7 @@ function drawActionToCanvas$2(ctx, act, spr, actionId, x, y) {
 /**
 * Render loop
 */
-function render$12() {
+function render$4() {
 	CartDecoration.getRoot().querySelectorAll(".canvas").forEach((el) => {
 		if (el.offsetParent === null) return;
 		const id = parseInt(el.getAttribute("data-id"), 10);
@@ -315182,7 +315182,7 @@ var init_CartDecoration = __esmMin((() => {
 		this._host.style.left = (Renderer.width - 255) / 2 + "px";
 		root.querySelector(".titlebar .close").addEventListener("click", () => {
 			CartDecoration._host.style.display = "none";
-			Renderer.stop(render$12);
+			Renderer.stop(render$4);
 		});
 		this.draggable(".titlebar");
 		root.querySelectorAll(".cart").forEach((el) => {
@@ -315215,19 +315215,19 @@ var init_CartDecoration = __esmMin((() => {
 			if (el) el.style.display = "";
 		}
 		CartDecoration.ui.show();
-		Renderer.stop(render$12);
-		Renderer.render(render$12);
+		Renderer.stop(render$4);
+		Renderer.render(render$4);
 	};
 	/**
 	* Remove component
 	*/
 	CartDecoration.onRemove = function onRemove() {
-		Renderer.stop(render$12);
+		Renderer.stop(render$4);
 	};
 	CartDecoration.onKeyDown = function onKeyDown(event) {
 		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
 			this._host.style.display = "none";
-			Renderer.stop(render$12);
+			Renderer.stop(render$4);
 		}
 	};
 	CartDecoration.mouseMode = GUIComponent.MouseMode.STOP;
@@ -315313,7 +315313,7 @@ function refreshList(contentEl) {
 		index++;
 	}
 }
-var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$17, Emoticons_default;
+var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$13, Emoticons_default;
 var init_Emoticons = __esmMin((() => {
 	init_Emotions();
 	init_Client();
@@ -315337,7 +315337,7 @@ var init_Emoticons = __esmMin((() => {
 	TOTAL_PAGES = 0;
 	EMOTICONS_COUNT = Object.keys(Emotions_default.order).length;
 	_entity$1 = new Entity();
-	_preferences$17 = Preferences.get("Emoticons", {
+	_preferences$13 = Preferences.get("Emoticons", {
 		x: 600,
 		y: 200,
 		show: false
@@ -315383,18 +315383,18 @@ var init_Emoticons = __esmMin((() => {
 	* Appending to html
 	*/
 	Emoticons.onAppend = function onAppend() {
-		if (!_preferences$17.show) this._host.style.display = "none";
-		this._host.style.top = Math.min(Math.max(0, _preferences$17.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$17.x), Renderer.width - this._host.offsetWidth) + "px";
+		if (!_preferences$13.show) this._host.style.display = "none";
+		this._host.style.top = Math.min(Math.max(0, _preferences$13.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$13.x), Renderer.width - this._host.offsetWidth) + "px";
 	};
 	/**
 	* Once removed from DOM, save preferences
 	*/
 	Emoticons.onRemove = function onRemove() {
-		_preferences$17.show = this._host.style.display !== "none";
-		_preferences$17.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$17.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$17.save();
+		_preferences$13.show = this._host.style.display !== "none";
+		_preferences$13.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$13.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$13.save();
 	};
 	/**
 	* Update page
@@ -315507,7 +315507,7 @@ function onDropText(event) {
 	if (data.type === "item") return;
 	event.currentTarget.value = data;
 }
-var ShortCuts, _MACRO_INIT, _FLAG_INIT, _preferences$16, ShortCuts_default;
+var ShortCuts, _MACRO_INIT, _FLAG_INIT, _preferences$12, ShortCuts_default;
 var init_ShortCuts = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -315551,7 +315551,7 @@ var init_ShortCuts = __esmMin((() => {
 	* Store ShortCuts items
 	*/
 	ShortCuts.list = [];
-	_preferences$16 = Preferences.get("ShortCuts", {
+	_preferences$12 = Preferences.get("ShortCuts", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -315617,10 +315617,10 @@ var init_ShortCuts = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCuts.onAppend = function onAppend() {
-		if (!_preferences$16.show) this._host.style.display = "none";
+		if (!_preferences$12.show) this._host.style.display = "none";
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$16.y), Renderer.height - rect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$16.x), Renderer.width - rect.width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$12.y), Renderer.height - rect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$12.x), Renderer.width - rect.width)}px`;
 	};
 	/**
 	* Remove ShortCuts from window (and so clean up items)
@@ -315630,18 +315630,18 @@ var init_ShortCuts = __esmMin((() => {
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$16.show = this._host.style.display !== "none";
-		_preferences$16.reduce = false;
-		_preferences$16.y = parseInt(this._host.style.top, 10);
-		_preferences$16.x = parseInt(this._host.style.left, 10);
+		_preferences$12.show = this._host.style.display !== "none";
+		_preferences$12.reduce = false;
+		_preferences$12.y = parseInt(this._host.style.top, 10);
+		_preferences$12.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$16.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$16.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$16.magnet_top = this.magnet.TOP;
-		_preferences$16.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$16.magnet_left = this.magnet.LEFT;
-		_preferences$16.magnet_right = this.magnet.RIGHT;
-		_preferences$16.save();
+		_preferences$12.width = Math.floor((hostRect.width - 25) / 32);
+		_preferences$12.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences$12.magnet_top = this.magnet.TOP;
+		_preferences$12.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$12.magnet_left = this.magnet.LEFT;
+		_preferences$12.magnet_right = this.magnet.RIGHT;
+		_preferences$12.save();
 	};
 	/**
 	* Process shortcut
@@ -316378,7 +316378,7 @@ function stopPropagation$6(event) {
 	event.preventDefault();
 	return false;
 }
-var CashShop, _preferences$15, CashShop_default;
+var CashShop, _preferences$11, CashShop_default;
 var init_CashShop$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -316401,7 +316401,7 @@ var init_CashShop$1 = __esmMin((() => {
 	* Store cash shop items
 	*/
 	CashShop.list = [];
-	_preferences$15 = Preferences.get("CashShop", {
+	_preferences$11 = Preferences.get("CashShop", {
 		x: 80,
 		y: 100,
 		magnet_top: false,
@@ -316570,25 +316570,25 @@ var init_CashShop$1 = __esmMin((() => {
 	CashShop.onAppend = function OnAppend() {
 		const hostHeight = this._host.offsetHeight || 540;
 		const hostWidth = this._host.offsetWidth || 723;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$15.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$15.x), Renderer.width - hostWidth)}px`;
-		this.magnet.TOP = _preferences$15.magnet_top;
-		this.magnet.BOTTOM = _preferences$15.magnet_bottom;
-		this.magnet.LEFT = _preferences$15.magnet_left;
-		this.magnet.RIGHT = _preferences$15.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$11.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$11.x), Renderer.width - hostWidth)}px`;
+		this.magnet.TOP = _preferences$11.magnet_top;
+		this.magnet.BOTTOM = _preferences$11.magnet_bottom;
+		this.magnet.LEFT = _preferences$11.magnet_left;
+		this.magnet.RIGHT = _preferences$11.magnet_right;
 		CashShop.loadComponentCashShop();
 	};
 	/**
 	* Remove Cash shop
 	*/
 	CashShop.onRemove = function onRemove() {
-		_preferences$15.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$15.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$15.magnet_top = this.magnet.TOP;
-		_preferences$15.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$15.magnet_left = this.magnet.LEFT;
-		_preferences$15.magnet_right = this.magnet.RIGHT;
-		_preferences$15.save();
+		_preferences$11.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$11.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$11.magnet_top = this.magnet.TOP;
+		_preferences$11.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$11.magnet_left = this.magnet.LEFT;
+		_preferences$11.magnet_right = this.magnet.RIGHT;
+		_preferences$11.save();
 		CashShop.stopBannerRotation();
 		CashShop.csListItemSearchResult = [];
 		CashShop.cashShopBannerTable = [];
@@ -318681,7 +318681,7 @@ function addRouletteIcon() {
 		if (_iconBtn) _iconBtn.style.backgroundImage = `url(${data})`;
 	});
 }
-var Roulette, _preferences$14, _rouletteInfo, _isSpinning, _responseTimeout, _iconBtn, Roulette_default;
+var Roulette, _preferences$10, _rouletteInfo, _isSpinning, _responseTimeout, _iconBtn, Roulette_default;
 var init_Roulette$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -318699,7 +318699,7 @@ var init_Roulette$1 = __esmMin((() => {
 	* Render HTML
 	*/
 	Roulette.render = () => Roulette_default$2;
-	_preferences$14 = Preferences.get("Roulette", {
+	_preferences$10 = Preferences.get("Roulette", {
 		x: 200,
 		y: 200,
 		show: false
@@ -318738,9 +318738,9 @@ var init_Roulette$1 = __esmMin((() => {
 	* Once append to the DOM
 	*/
 	Roulette.onAppend = function onAppend() {
-		this._host.style.top = Math.min(Math.max(0, _preferences$14.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$14.x), Renderer.width - this._host.offsetWidth) + "px";
-		if (!_preferences$14.show) this._host.style.display = "none";
+		this._host.style.top = Math.min(Math.max(0, _preferences$10.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$10.x), Renderer.width - this._host.offsetWidth) + "px";
+		if (!_preferences$10.show) this._host.style.display = "none";
 		if (ROConfig.enableRoulette === false) return;
 		if (PacketVerManager_default.value < 20141008) return;
 		addRouletteIcon();
@@ -318754,10 +318754,10 @@ var init_Roulette$1 = __esmMin((() => {
 			_iconBtn.remove();
 			_iconBtn = null;
 		}
-		_preferences$14.show = this._host.style.display !== "none";
-		_preferences$14.x = parseInt(this._host.style.left, 10);
-		_preferences$14.y = parseInt(this._host.style.top, 10);
-		_preferences$14.save();
+		_preferences$10.show = this._host.style.display !== "none";
+		_preferences$10.x = parseInt(this._host.style.left, 10);
+		_preferences$10.y = parseInt(this._host.style.top, 10);
+		_preferences$10.save();
 	};
 	/**
 	* Open Roulette Window
@@ -319138,7 +319138,7 @@ var init_CaptchaAnswer$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaAnswer.js
-var CaptchaAnswer, _preferences$13, timer, CaptchaAnswer_default;
+var CaptchaAnswer, _preferences$9, timer, CaptchaAnswer_default;
 var init_CaptchaAnswer = __esmMin((() => {
 	init_UIManager();
 	init_GUIComponent();
@@ -319149,7 +319149,7 @@ var init_CaptchaAnswer = __esmMin((() => {
 	init_CaptchaAnswer$2();
 	init_CaptchaAnswer$1();
 	CaptchaAnswer = new GUIComponent("CaptchaAnswer", CaptchaAnswer_default$1);
-	_preferences$13 = Preferences.get("CaptchaAnswer", {
+	_preferences$9 = Preferences.get("CaptchaAnswer", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -319180,8 +319180,8 @@ var init_CaptchaAnswer = __esmMin((() => {
 	* Append to DOM
 	*/
 	CaptchaAnswer.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$13.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$13.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$9.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$9.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Set Image
@@ -319235,9 +319235,9 @@ var init_CaptchaAnswer = __esmMin((() => {
 	* Remove data from UI
 	*/
 	CaptchaAnswer.onRemove = function onRemove() {
-		_preferences$13.y = parseInt(this._host.style.top, 10);
-		_preferences$13.x = parseInt(this._host.style.left, 10);
-		_preferences$13.save();
+		_preferences$9.y = parseInt(this._host.style.top, 10);
+		_preferences$9.x = parseInt(this._host.style.left, 10);
+		_preferences$9.save();
 		const root = this.getRoot();
 		const imageContainer = root.querySelector(".image_container");
 		if (imageContainer) imageContainer.innerHTML = "";
@@ -319272,7 +319272,7 @@ var init_CaptchaPreview$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Captcha/CaptchaPreview.js
-var CaptchaPreview, _preferences$12, CaptchaPreview_default;
+var CaptchaPreview, _preferences$8, CaptchaPreview_default;
 var init_CaptchaPreview = __esmMin((() => {
 	init_UIManager();
 	init_GUIComponent();
@@ -319282,7 +319282,7 @@ var init_CaptchaPreview = __esmMin((() => {
 	init_CaptchaPreview$2();
 	init_CaptchaPreview$1();
 	CaptchaPreview = new GUIComponent("CaptchaPreview", CaptchaPreview_default$1);
-	_preferences$12 = Preferences.get("CaptchaPreview", {
+	_preferences$8 = Preferences.get("CaptchaPreview", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -319299,16 +319299,16 @@ var init_CaptchaPreview = __esmMin((() => {
 	* Append to DOM
 	*/
 	CaptchaPreview.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$12.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$12.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$8.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$8.x), Renderer.width - this._host.offsetWidth)}px`;
 	};
 	/**
 	* Remove data from UI
 	*/
 	CaptchaPreview.onRemove = function onRemove() {
-		_preferences$12.y = parseInt(this._host.style.top, 10);
-		_preferences$12.x = parseInt(this._host.style.left, 10);
-		_preferences$12.save();
+		_preferences$8.y = parseInt(this._host.style.top, 10);
+		_preferences$8.x = parseInt(this._host.style.left, 10);
+		_preferences$8.save();
 		const previewBox = this.getRoot().querySelector(".preview_box");
 		if (previewBox) previewBox.innerHTML = "";
 	};
@@ -319342,7 +319342,7 @@ var init_Clan$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Clan/Clan.js
-var Clan, _preferences$11, Clan_default;
+var Clan, _preferences$7, Clan_default;
 var init_Clan$1 = __esmMin((() => {
 	init_KeyEventHandler();
 	init_SessionStorage();
@@ -319355,7 +319355,7 @@ var init_Clan$1 = __esmMin((() => {
 	init_Clan$3();
 	init_Clan$2();
 	Clan = new GUIComponent("Clan", Clan_default$1);
-	_preferences$11 = Preferences.get("Clan", {
+	_preferences$7 = Preferences.get("Clan", {
 		x: 150,
 		y: 150
 	}, 1);
@@ -319370,13 +319370,13 @@ var init_Clan$1 = __esmMin((() => {
 		this.ui.hide();
 	};
 	Clan.onAppend = function onAppend() {
-		this._host.style.left = `${_preferences$11.x}px`;
-		this._host.style.top = `${_preferences$11.y}px`;
+		this._host.style.left = `${_preferences$7.x}px`;
+		this._host.style.top = `${_preferences$7.y}px`;
 	};
 	Clan.onRemove = function onRemove() {
-		_preferences$11.x = parseInt(this._host.style.left, 10);
-		_preferences$11.y = parseInt(this._host.style.top, 10);
-		_preferences$11.save();
+		_preferences$7.x = parseInt(this._host.style.left, 10);
+		_preferences$7.y = parseInt(this._host.style.top, 10);
+		_preferences$7.save();
 	};
 	Clan.onShortCut = function onShortCut(key) {
 		if (key.cmd === "TOGGLE") this.toggle();
@@ -325180,7 +325180,7 @@ function onItemOver$2() {
 	if (item.IsIdentified) overlay.classList.remove("grey");
 	else overlay.classList.add("grey");
 }
-var _preferences$10, ConvertItems, ConvertItems_default;
+var _preferences$6, ConvertItems, ConvertItems_default;
 var init_ConvertItems = __esmMin((() => {
 	init_DBManager();
 	init_ItemInfo();
@@ -325196,7 +325196,7 @@ var init_ConvertItems = __esmMin((() => {
 	init_Elements();
 	init_ConvertItems$2();
 	init_ConvertItems$1();
-	_preferences$10 = Preferences.get("ConvertItems", {
+	_preferences$6 = Preferences.get("ConvertItems", {
 		x: 200,
 		y: 500,
 		height: 8
@@ -325219,7 +325219,7 @@ var init_ConvertItems = __esmMin((() => {
 		root.querySelector(".footer .extend").addEventListener("mousedown", onResize$2);
 		root.querySelector("ui-button.trade").addEventListener("click", onMessageModel);
 		root.querySelector("ui-button.cancel").addEventListener("click", onClose$2);
-		resizeHeight$1(_preferences$10.height);
+		resizeHeight$1(_preferences$6.height);
 		const mainEl = root.querySelector("#ConvertItems");
 		mainEl.addEventListener("drop", onDrop$2);
 		mainEl.addEventListener("dragover", stopPropagation$2);
@@ -325454,8 +325454,8 @@ function onItemDragStart(event) {
 */
 function onToggleSelectAmount$1() {
 	const root = ItemListWindowSelection.getRoot();
-	_preferences$9.select_all = !_preferences$9.select_all;
-	Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$9.select_all ? 1 : 0) + ".bmp", (data) => {
+	_preferences$5.select_all = !_preferences$5.select_all;
+	Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$5.select_all ? 1 : 0) + ".bmp", (data) => {
 		const btn = root.querySelector(".selectall");
 		if (btn) btn.style.backgroundImage = `url(${data})`;
 	});
@@ -325555,7 +325555,7 @@ function onItemOver$1() {
 	if (item.IsIdentified) overlay.classList.remove("grey");
 	else overlay.classList.add("grey");
 }
-var _preferences$9, ItemListWindowSelection, ItemListWindowSelection_default;
+var _preferences$5, ItemListWindowSelection, ItemListWindowSelection_default;
 var init_ItemListWindowSelection = __esmMin((() => {
 	init_DBManager();
 	init_ItemInfo();
@@ -325571,7 +325571,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 	init_Elements();
 	init_ItemListWindowSelection$2();
 	init_ItemListWindowSelection$1();
-	_preferences$9 = Preferences.get("ItemListWindowSelection", {
+	_preferences$5 = Preferences.get("ItemListWindowSelection", {
 		x: 200,
 		y: 500,
 		height: 8,
@@ -325594,7 +325594,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 		this.draggable(root.querySelector(".head"));
 		root.querySelector(".footer .extend").addEventListener("mousedown", onResize$1);
 		root.querySelector(".event_selectall").addEventListener("mousedown", onToggleSelectAmount$1);
-		resizeHeight(_preferences$9.height);
+		resizeHeight(_preferences$5.height);
 		const mainEl = root.querySelector("#ItemListWindowSelection");
 		mainEl.addEventListener("drop", onDrop$1);
 		mainEl.addEventListener("dragover", stopPropagation$1);
@@ -325738,7 +325738,7 @@ var init_ItemListWindowSelection = __esmMin((() => {
 		return null;
 	};
 	ItemListWindowSelection.getSelectAll = function getSelectAll() {
-		return _preferences$9.select_all;
+		return _preferences$5.select_all;
 	};
 	ItemListWindowSelection.onItemListWindowSelected = function onItemListWindowSelected() {};
 	ItemListWindowSelection_default = UIManager.addComponent(ItemListWindowSelection);
@@ -326385,8 +326385,8 @@ function addItemSub(itemMail) {
 			if (box) box.style.display = "none";
 		});
 	}
-	_preferences$8.item_add_email = itemMail;
-	_preferences$8.save();
+	_preferences$4.item_add_email = itemMail;
+	_preferences$4.save();
 	if (inforEl) inforEl.addEventListener("click", (event) => {
 		event.stopImmediatePropagation();
 		if (!validItemMoneyExists()) {
@@ -326411,7 +326411,7 @@ function onItemOut(event) {
 function onItemOver(event) {
 	const root = _root$1();
 	event.stopImmediatePropagation();
-	const item = _preferences$8.item_add_email;
+	const item = _preferences$4.item_add_email;
 	if (!item) return;
 	const overlay = root.querySelector(".container_item .overlay");
 	if (overlay) {
@@ -326426,7 +326426,7 @@ function onItemOver(event) {
 */
 function onItemInfo$2(event) {
 	event.stopImmediatePropagation();
-	const item = _preferences$8.item_add_email;
+	const item = _preferences$4.item_add_email;
 	if (!item) return;
 	if (ItemInfo_default.uid === item.ITID) {
 		ItemInfo_default.remove();
@@ -326453,10 +326453,10 @@ function deleteMail(event) {
 	} else ChatBox_default.addText(DB.getMessage(1105), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
 }
 function validItemMoneyExists() {
-	let validItem = _preferences$8.item_add_email.count === 0 && _preferences$8.item_add_email.ITID === 0;
-	validItem = _preferences$8.item_add_email.ITID === void 0 ? true : validItem;
-	let validMoney = _preferences$8.item_add_email.Money === 0;
-	validMoney = _preferences$8.item_add_email.Money === void 0 ? true : validMoney;
+	let validItem = _preferences$4.item_add_email.count === 0 && _preferences$4.item_add_email.ITID === 0;
+	validItem = _preferences$4.item_add_email.ITID === void 0 ? true : validItem;
+	let validMoney = _preferences$4.item_add_email.Money === 0;
+	validMoney = _preferences$4.item_add_email.Money === void 0 ? true : validMoney;
 	return validItem && validMoney;
 }
 function returnMail(event) {
@@ -326490,7 +326490,7 @@ function removeValueItemZeny() {
 	const zenyInput = root.querySelector(".input_zeny_amt");
 	if (zenyInput) zenyInput.value = "";
 }
-var ReadMail, _preferences$8, ReadMail_default;
+var ReadMail, _preferences$4, ReadMail_default;
 var init_ReadMail = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -326510,7 +326510,7 @@ var init_ReadMail = __esmMin((() => {
 	* Store ReadMail items
 	*/
 	ReadMail.list = [];
-	_preferences$8 = Preferences.get("ReadMail", {
+	_preferences$4 = Preferences.get("ReadMail", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -326557,15 +326557,15 @@ var init_ReadMail = __esmMin((() => {
 	*/
 	ReadMail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$8.show = this._host.style.display !== "none";
-		_preferences$8.reduce = false;
-		_preferences$8.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$8.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$8.magnet_top = this.magnet.TOP;
-		_preferences$8.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$8.magnet_left = this.magnet.LEFT;
-		_preferences$8.magnet_right = this.magnet.RIGHT;
-		_preferences$8.save();
+		_preferences$4.show = this._host.style.display !== "none";
+		_preferences$4.reduce = false;
+		_preferences$4.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$4.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$4.magnet_top = this.magnet.TOP;
+		_preferences$4.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$4.magnet_left = this.magnet.LEFT;
+		_preferences$4.magnet_right = this.magnet.RIGHT;
+		_preferences$4.save();
 	};
 	ReadMail.openEmail = function openEmail(inforMail) {
 		ReadMail.remove();
@@ -326587,8 +326587,8 @@ var init_ReadMail = __esmMin((() => {
 	};
 	ReadMail.resetItemZeny = function resetItemZeny() {
 		const root = _root$1();
-		_preferences$8.item_add_email = {};
-		_preferences$8.save();
+		_preferences$4.item_add_email = {};
+		_preferences$4.save();
 		removeValueItemZeny();
 		const infoBox = root.querySelector(".zeny_item_infor_box");
 		if (infoBox) infoBox.remove();
@@ -327402,12 +327402,12 @@ function _setElementClass(el, value, label) {
 /**
 * Rendering the Character
 */
-function render$11() {
-	SpriteRenderer.bind2DContext(_model$2.ctx, Math.floor(_model$2.ctx.canvas.width / 2), _model$2.ctx.canvas.height);
-	_model$2.ctx.clearRect(0, 0, _model$2.ctx.canvas.width, _model$2.ctx.canvas.height);
-	_model$2.entity.renderEntity();
+function render$3() {
+	SpriteRenderer.bind2DContext(_model.ctx, Math.floor(_model.ctx.canvas.width / 2), _model.ctx.canvas.height);
+	_model.ctx.clearRect(0, 0, _model.ctx.canvas.width, _model.ctx.canvas.height);
+	_model.entity.renderEntity();
 }
-var Sense, Elements, Sizes, Races, _model$2, Sense_default;
+var Sense, Elements, Sizes, Races, _model, Sense_default;
 var init_Sense = __esmMin((() => {
 	init_DBManager();
 	init_Renderer();
@@ -327422,7 +327422,7 @@ var init_Sense = __esmMin((() => {
 	Elements = [];
 	Sizes = [];
 	Races = [];
-	_model$2 = {
+	_model = {
 		entity: new Entity(),
 		ctx: null,
 		render: false,
@@ -327445,7 +327445,7 @@ var init_Sense = __esmMin((() => {
 		}
 		this.draggable(".header");
 		const canvas = root.querySelector("#canvas_model");
-		_model$2.ctx = canvas.getContext("2d");
+		_model.ctx = canvas.getContext("2d");
 		Elements = [
 			DB.getMessage(414),
 			DB.getMessage(415),
@@ -327484,12 +327484,12 @@ var init_Sense = __esmMin((() => {
 	Sense.setWindow = function setWindow(pkt) {
 		const root = this.getRoot();
 		root.querySelector(".header .title").textContent = DB.getMessage(406);
-		_model$2.entity.set({
+		_model.entity.set({
 			job: pkt.job,
 			action: 0,
 			direction: 0
 		});
-		_model$2.render = true;
+		_model.render = true;
 		root.querySelector("#label_name").textContent = DB.getMessage(407);
 		const valueName = root.querySelector("#value_name");
 		valueName.innerHTML = `<a href="https://ratemyserver.net/mob_db.php?small=1&mob_id=${pkt.job}" target="_blank">${DB.getMonsterName(pkt.job)} </a>`;
@@ -327517,14 +327517,14 @@ var init_Sense = __esmMin((() => {
 		_setElementClass(root.querySelector("#element_holy"), pkt.propertyTable.saint, DB.getMessage(420));
 		_setElementClass(root.querySelector("#element_undead"), pkt.propertyTable.undead, DB.getMessage(423));
 		this._host.style.display = "";
-		Renderer.render(render$11);
+		Renderer.render(render$3);
 	};
 	/**
 	* Remove component from HTML
 	* Stop rendering
 	*/
 	Sense.onRemove = function onRemove() {
-		Renderer.stop(render$11);
+		Renderer.stop(render$3);
 	};
 	Sense_default = UIManager.addComponent(Sense);
 }));
@@ -328447,7 +328447,7 @@ var init_SlotMachine$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SlotMachine/SlotMachine.js
-var SlotMachine, _sprite, _action, _type$1, _result, _ctx$4, _entity, _start, rendering, SlotMachine_default;
+var SlotMachine, _sprite, _action, _type$1, _result, _ctx, _entity, _start, rendering, SlotMachine_default;
 var init_SlotMachine = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -328469,7 +328469,7 @@ var init_SlotMachine = __esmMin((() => {
 	*/
 	SlotMachine.init = function init() {
 		const canvas = this.getRoot().querySelector("canvas");
-		_ctx$4 = canvas.getContext("2d");
+		_ctx = canvas.getContext("2d");
 		this._host.style.zIndex = "500";
 		Client.loadFiles(["data/sprite/slotmachine.spr", "data/sprite/slotmachine.act"], (spr, act) => {
 			_sprite = spr;
@@ -328549,8 +328549,8 @@ var init_SlotMachine = __esmMin((() => {
 				}
 			}
 			const animation = action.animations[anim % action.animations.length];
-			SpriteRenderer.bind2DContext(_ctx$4, 140, 165);
-			_ctx$4.clearRect(0, 0, _ctx$4.canvas.width, _ctx$4.canvas.height);
+			SpriteRenderer.bind2DContext(_ctx, 140, 165);
+			_ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
 			for (let i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite, _sprite, 1, position, false);
 		};
 	})();
@@ -328641,7 +328641,7 @@ function onPetEvolveResult(pkt) {
 		default: break;
 	}
 }
-var PetEvolution, currentMaterials, targetEvoPetEggId, _preferences$7, PetEvolution_default;
+var PetEvolution, currentMaterials, targetEvoPetEggId, _preferences$3, PetEvolution_default;
 var init_PetEvolution = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -328660,7 +328660,7 @@ var init_PetEvolution = __esmMin((() => {
 	PetEvolution.render = () => PetEvolution_default$2;
 	currentMaterials = [];
 	targetEvoPetEggId = 0;
-	_preferences$7 = Preferences.get("PetEvolution", {
+	_preferences$3 = Preferences.get("PetEvolution", {
 		x: 200,
 		y: 200,
 		show: true
@@ -328691,17 +328691,17 @@ var init_PetEvolution = __esmMin((() => {
 		const rect = this._host.getBoundingClientRect();
 		const hostHeight = rect.height || 380;
 		const hostWidth = rect.width || 280;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$7.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$7.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$3.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$3.x), Renderer.width - hostWidth)}px`;
 	};
 	/**
 	* Once remove from body, save user preferences
 	*/
 	PetEvolution.onRemove = function onRemove() {
-		_preferences$7.show = this._host.style.display !== "none";
-		_preferences$7.y = parseInt(this._host.style.top, 10);
-		_preferences$7.x = parseInt(this._host.style.left, 10);
-		_preferences$7.save();
+		_preferences$3.show = this._host.style.display !== "none";
+		_preferences$3.y = parseInt(this._host.style.top, 10);
+		_preferences$3.x = parseInt(this._host.style.left, 10);
+		_preferences$3.save();
 		currentMaterials = [];
 		targetEvoPetEggId = 0;
 	};
@@ -329699,7 +329699,7 @@ function requestMoveItem(index, fromContent, toContent, isAdding) {
 	if ((_type === NpcStore.Type.BUY || _type === NpcStore.Type.VENDING_STORE) && !isStackable && isAdding) {
 		if (toContent.querySelector(`.item[data-index="${item.index}"]`)) return false;
 	}
-	if (item.count === 1 || _type === NpcStore.Type.SELL && _preferences$6.select_all || !isStackable) {
+	if (item.count === 1 || _type === NpcStore.Type.SELL && _preferences$2.select_all || !isStackable) {
 		transferItem(fromContent, toContent, isAdding, index, isFinite(item.count) ? item.count : 1);
 		return false;
 	}
@@ -329809,8 +329809,8 @@ function onDragStart(event) {
 * Option to automatically buy/sell all items instead of specify the amount
 */
 function onToggleSelectAmount() {
-	_preferences$6.select_all = !_preferences$6.select_all;
-	Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$6.select_all ? 1 : 0) + ".bmp", function(data) {
+	_preferences$2.select_all = !_preferences$2.select_all;
+	Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$2.select_all ? 1 : 0) + ".bmp", function(data) {
 		this.style.backgroundImage = `url(${data})`;
 	}.bind(this));
 }
@@ -329818,10 +329818,10 @@ function onToggleSelectAmount() {
 * Returns the current preference for NPCStore Type
 */
 function getCurrentPref() {
-	if (!_preferences$6[_type]) _preferences$6[_type] = JSON.parse(JSON.stringify(initialPreferences[_type] || initialPreferences.DEFAULT));
-	return _preferences$6[_type];
+	if (!_preferences$2[_type]) _preferences$2[_type] = JSON.parse(JSON.stringify(initialPreferences[_type] || initialPreferences.DEFAULT));
+	return _preferences$2[_type];
 }
-var NpcStore, initialPreferences, _preferences$6, _input, _output, _type, _closePacketSent, transferItem, NpcStore_default;
+var NpcStore, initialPreferences, _preferences$2, _input, _output, _type, _closePacketSent, transferItem, NpcStore_default;
 var init_NpcStore = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -329911,7 +329911,7 @@ var init_NpcStore = __esmMin((() => {
 			}
 		}
 	};
-	_preferences$6 = Preferences.get("NpcStore", {}, 1);
+	_preferences$2 = Preferences.get("NpcStore", {}, 1);
 	_input = [];
 	_output = [];
 	_closePacketSent = false;
@@ -329992,7 +329992,7 @@ var init_NpcStore = __esmMin((() => {
 	*/
 	NpcStore.onAppend = function onAppend() {
 		_closePacketSent = false;
-		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$6.select_all ? 1 : 0) + ".bmp", function(data) {
+		Client.loadFile(DB.INTERFACE_PATH + "checkbox_" + (_preferences$2.select_all ? 1 : 0) + ".bmp", function(data) {
 			const selectall = NpcStore.getRoot().querySelector(".selectall");
 			if (selectall) selectall.style.backgroundImage = `url(${data})`;
 		});
@@ -330021,7 +330021,7 @@ var init_NpcStore = __esmMin((() => {
 		currentPref.PurchaseResult.x = parseInt(PurchaseResult.style.left, 10);
 		currentPref.PurchaseResult.y = parseInt(PurchaseResult.style.top, 10);
 		currentPref.PurchaseResult.height = PurchaseResult.querySelector(".content").offsetHeight / 32 | 0;
-		_preferences$6.save();
+		_preferences$2.save();
 		root.querySelectorAll(".content").forEach((c) => {
 			c.innerHTML = "";
 		});
@@ -331314,7 +331314,7 @@ function prettifyZeny(value) {
 	}
 	return out;
 }
-var ReadRodex, _preferences$5, ReadRodex_default;
+var ReadRodex, _preferences$1, ReadRodex_default;
 var init_ReadRodex = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -331328,7 +331328,7 @@ var init_ReadRodex = __esmMin((() => {
 	ReadRodex = new GUIComponent("ReadRodex", ReadRodex_default$1);
 	ReadRodex.MailID = 0;
 	ReadRodex.openType = 0;
-	_preferences$5 = Preferences.get("ReadRodex", { show: false }, 1);
+	_preferences$1 = Preferences.get("ReadRodex", { show: false }, 1);
 	/**
 	* Render HTML
 	*/
@@ -331349,8 +331349,8 @@ var init_ReadRodex = __esmMin((() => {
 	* Remove Mail from window (and so clean up items)
 	*/
 	ReadRodex.onRemove = function OnRemove() {
-		_preferences$5.show = this._host.style.display !== "none";
-		_preferences$5.save();
+		_preferences$1.show = this._host.style.display !== "none";
+		_preferences$1.save();
 	};
 	ReadRodex.initData = function initData(data, mail) {
 		const root = _root();
@@ -333505,7 +333505,7 @@ function success() {
 /**
 * Press "cancel" or ESCAPE key
 */
-function cancel$8() {
+function cancel() {
 	UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
 		PincodeWindow.resetPins();
 		PincodeWindow.onExitRequest();
@@ -333524,7 +333524,7 @@ function keyNum(num) {
 			break;
 	}
 }
-function render$10() {
+function render$2() {
 	const root = PincodeWindow.getRoot();
 	if (!root) return;
 	let str = "";
@@ -333620,7 +333620,7 @@ var init_PincodeWindow = __esmMin((() => {
 				numBtn.addEventListener("click", () => keyNum(num));
 			}
 		}
-		cancelBtn.addEventListener("click", cancel$8);
+		cancelBtn.addEventListener("click", cancel);
 		okBtnNew.addEventListener("click", success);
 		changeBtnNew.addEventListener("click", PincodeWindow.userChangePin);
 		numResetBtn.addEventListener("click", () => {
@@ -333646,7 +333646,7 @@ var init_PincodeWindow = __esmMin((() => {
 			document.body.appendChild(overlay);
 			PincodeWindow._overlay = overlay;
 		}
-		Renderer.render(render$10);
+		Renderer.render(render$2);
 		queueMicrotask(() => {
 			if (PincodeWindow._overlay && PincodeWindow._host) {
 				const hostZ = parseInt(PincodeWindow._host.style.zIndex, 10) || 100;
@@ -333658,7 +333658,7 @@ var init_PincodeWindow = __esmMin((() => {
 	* Stop rendering
 	*/
 	PincodeWindow.onRemove = function onRemove() {
-		Renderer.stop(render$10);
+		Renderer.stop(render$2);
 		if (PincodeWindow._overlay) {
 			PincodeWindow._overlay.remove();
 			PincodeWindow._overlay = null;
@@ -333852,1764 +333852,169 @@ var init_CharSelect$2 = __esmMin((() => {
 	CharSelect_default$1 = ":host {\r\n	width: 576px;\r\n	height: 342px;\r\n}\r\n\r\n#charselect {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 342px;\r\n}\r\n\r\n/** Box **/\r\n#charselect .box_select {\r\n	position: absolute;\r\n	width: 139px;\r\n	height: 144px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#charselect canvas {\r\n	position: absolute;\r\n	top: 44px;\r\n}\r\n#charselect .slot1 {\r\n	left: 60px;\r\n}\r\n#charselect .slot2 {\r\n	left: 224px;\r\n}\r\n#charselect .slot3 {\r\n	left: 386px;\r\n}\r\n\r\n/** Arrow **/\r\n#charselect .arrow {\r\n	position: absolute;\r\n	top: 105px;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n#charselect .arrow.left {\r\n	left: 40px;\r\n}\r\n#charselect .arrow.right {\r\n	right: 40px;\r\n}\r\n\r\n/** Slot info **/\r\n#charselect .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#charselect .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#charselect .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#charselect .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#charselect .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#charselect .charinfo {\r\n	position: absolute;\r\n	width: 285px;\r\n	top: 204px;\r\n	left: 16px;\r\n}\r\n#charselect .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#charselect .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#charselect .charinfo .job {\r\n	left: 52px;\r\n	top: 18px;\r\n}\r\n#charselect .charinfo .lvl {\r\n	left: 52px;\r\n	top: 34px;\r\n}\r\n#charselect .charinfo .exp {\r\n	left: 52px;\r\n	top: 50px;\r\n}\r\n#charselect .charinfo .hp {\r\n	left: 52px;\r\n	top: 66px;\r\n}\r\n#charselect .charinfo .sp {\r\n	left: 52px;\r\n	top: 82px;\r\n}\r\n#charselect .charinfo .map {\r\n	left: 52px;\r\n	top: 98px;\r\n	width: 238px;\r\n}\r\n#charselect .charinfo .str {\r\n	left: 200px;\r\n	top: 2px;\r\n}\r\n#charselect .charinfo .agi {\r\n	left: 200px;\r\n	top: 18px;\r\n}\r\n#charselect .charinfo .vit {\r\n	left: 200px;\r\n	top: 34px;\r\n}\r\n#charselect .charinfo .int {\r\n	left: 200px;\r\n	top: 50px;\r\n}\r\n#charselect .charinfo .dex {\r\n	left: 200px;\r\n	top: 66px;\r\n}\r\n#charselect .charinfo .luk {\r\n	left: 200px;\r\n	top: 82px;\r\n}\r\n\r\n/** Buttons **/\r\n#charselect .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#charselect .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n\r\n#charselect .ok,\r\n#charselect .make {\r\n	right: 50px;\r\n}\r\n#charselect .cancel {\r\n	right: 4px;\r\n}\r\n#charselect .delete {\r\n	left: 4px;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/CharSelect/CharSelect/CharSelect.js
-/**
-* Generic method to handle mousedown on arrow
-*
-* @param {number} value to move
-*/
-function genericArrowDown$2(value) {
-	return (event) => {
-		moveCursorTo$3((_index$3 + _maxSlots$3 + value) % _maxSlots$3);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Generic method to handle mousedown on arrow
-*
-* @param {number} value to move
-*/
-function genericCanvasDown$3(value) {
-	return (event) => {
-		moveCursorTo$3(Math.floor(_index$3 / 3) * 3 + value);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Press "cancel" or ESCAPE key
-*/
-function cancel$7() {
-	if (_disable_UI$3 === false) UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
-		CharSelect.onExitRequest();
-	}, null);
-}
-/**
-* Jumping to Character creation window
-*/
-function create$7() {
-	if (_disable_UI$3 === false) CharSelect.onCreateRequest(_index$3);
-}
-/**
-* Select Player, connect
-*/
-function connect$3() {
-	if (_disable_UI$3 === false) {
-		if (_slots$3[_index$3]) {
-			_preferences$4.index = _index$3;
-			_preferences$4.save();
-			CharSelect.onConnectRequest(_slots$3[_index$3]);
-		}
-	}
-}
-/**
-* Delete a character
-*/
-function suppress$3() {
-	if (_disable_UI$3 === false) {
-		if (_slots$3[_index$3]) {
-			CharSelect.off("keydown");
-			CharSelect.onDeleteRequest(_slots$3[_index$3].GID);
-		}
-	}
-}
-/**
-* Move cursor, update window value
-*
-* @param {number} index
-*/
-function moveCursorTo$3(index) {
-	const root = CharSelect.getRoot();
-	const charinfo = root.querySelector(".charinfo");
-	let entity = _entitySlots$3[_index$3];
-	if (entity) entity.setAction({
-		action: entity.ACTION.IDLE,
-		frame: 0,
-		play: true,
-		repeat: true
-	});
-	_index$3 = (index + _maxSlots$3) % _maxSlots$3;
-	const boxSelect = root.querySelector(".box_select");
-	boxSelect.classList.remove("slot1", "slot2", "slot3");
-	boxSelect.classList.add(`slot${_index$3 % 3 + 1}`);
-	root.querySelector(".pageinfo .current").textContent = Math.floor(_index$3 / 3) + 1;
-	entity = _entitySlots$3[_index$3];
-	if (!entity) {
-		charinfo.querySelectorAll("div").forEach((div) => {
-			div.textContent = "";
-		});
-		root.querySelector(".make").style.display = "block";
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".ok").style.display = "none";
-		return;
-	}
-	entity.setAction({
-		action: entity.ACTION.READYFIGHT,
-		frame: 0,
-		play: true,
-		repeat: true
-	});
-	root.querySelector(".make").style.display = "none";
-	root.querySelector(".delete").style.display = "block";
-	root.querySelector(".ok").style.display = "block";
-	const info = _slots$3[_index$3];
-	charinfo.querySelector(".name").textContent = info.name;
-	charinfo.querySelector(".job").textContent = MonsterTable_default[info.job] || "";
-	charinfo.querySelector(".lvl").textContent = info.level;
-	charinfo.querySelector(".exp").textContent = info.exp;
-	charinfo.querySelector(".hp").textContent = info.hp;
-	charinfo.querySelector(".sp").textContent = info.sp;
-	charinfo.querySelector(".map").textContent = DB.getMapName(info.lastMap, "") || "";
-	charinfo.querySelector(".str").textContent = info.Str;
-	charinfo.querySelector(".agi").textContent = info.Agi;
-	charinfo.querySelector(".vit").textContent = info.Vit;
-	charinfo.querySelector(".int").textContent = info.Int;
-	charinfo.querySelector(".dex").textContent = info.Dex;
-	charinfo.querySelector(".luk").textContent = info.Luk;
-}
-/**
-* Render sprites to canvas
-*/
-function render$9() {
-	Camera.direction = 4;
-	const idx = Math.floor(_index$3 / 3) * 3;
-	const count = _ctx$3.length;
-	for (let i = 0; i < count; ++i) {
-		_ctx$3[i].clearRect(0, 0, _ctx$3[i].canvas.width, _ctx$3[i].canvas.height);
-		if (_entitySlots$3[idx + i]) {
-			SpriteRenderer.bind2DContext(_ctx$3[i], 63, 130);
-			_entitySlots$3[idx + i].renderEntity();
-		}
-	}
-}
-var CharSelect, _preferences$4, _maxSlots$3, _list$3, _slots$3, _entitySlots$3, _index$3, _ctx$3, _sex$3, _disable_UI$3, CharSelect_default;
-var init_CharSelect$1 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Preferences$1();
-	init_KeyEventHandler();
-	init_Renderer();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_StatusState();
-	init_Camera();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CharSelect$3();
-	init_CharSelect$2();
-	CharSelect = new GUIComponent("CharSelect", CharSelect_default$1);
-	CharSelect.render = () => CharSelect_default$2;
-	_preferences$4 = Preferences.get("CharSelect", { index: 0 }, 1);
-	_maxSlots$3 = 27;
-	_list$3 = [];
-	_slots$3 = [];
-	_entitySlots$3 = [];
-	_index$3 = 0;
-	_ctx$3 = [];
-	_sex$3 = 0;
-	_disable_UI$3 = false;
+//#region src/UI/Components/CharSelect/CharSelectCommon.js
+function createCharSelect(config) {
+	const { name, htmlText, cssText, gridLayout = false, hostHeight = 342, defaultMaxSlots = 27, deleteReservation = false, packetverGatedDelete = false, pageBalls = false } = config;
+	const Component = new GUIComponent(name, cssText);
+	Component.render = () => htmlText;
+	/**
+	* @var {Preferences} save where the cursor position is
+	*/
+	const _preferences = Preferences.get(name, { index: 0 }, 1);
+	/**
+	* @var {number} max slots
+	*/
+	let _maxSlots = defaultMaxSlots;
+	/**
+	* var {Array} list of characters
+	*/
+	const _list = [];
+	/**
+	* @var {Array} list of characters (index by slot)
+	*/
+	const _slots = [];
+	/**
+	* @var {Array} list of entities (index by slot)
+	*/
+	const _entitySlots = [];
+	/**
+	* @var {number} selector index
+	*/
+	let _index = 0;
+	/**
+	* @var {Array} canvas context
+	*/
+	const _ctx = [];
+	/**
+	* var {number} sex
+	*/
+	let _sex = 0;
+	/**
+	* var {boolean} disable input
+	*/
+	let _disable_UI = false;
+	/**
+	* Grid (V4) background/countdown state
+	*/
+	let img = 0;
+	let _curindex = 0;
+	let shouldRunBackgroundChange = false;
+	let countdownInterval;
+	let _bgInterval = null;
+	const render = gridLayout ? renderGrid : renderPaginated;
+	const moveCursorTo = gridLayout ? moveCursorToGrid : moveCursorToPaginated;
 	/**
 	* Initialize UI
 	*/
-	CharSelect.init = function init() {
+	Component.init = function init() {
 		const root = this.getRoot();
-		this.draggable();
-		root.querySelector(".ok").addEventListener("click", connect$3);
-		root.querySelector(".cancel").addEventListener("click", cancel$7);
-		root.querySelector(".make").addEventListener("click", create$7);
-		root.querySelector(".delete").addEventListener("click", suppress$3);
-		root.querySelector(".arrow.left").addEventListener("mousedown", genericArrowDown$2(-1));
-		root.querySelector(".arrow.right").addEventListener("mousedown", genericArrowDown$2(1));
-		root.querySelector(".slot1").addEventListener("mousedown", genericCanvasDown$3(0));
-		root.querySelector(".slot2").addEventListener("mousedown", genericCanvasDown$3(1));
-		root.querySelector(".slot3").addEventListener("mousedown", genericCanvasDown$3(2));
-		root.querySelectorAll("canvas").forEach((canvas) => {
-			canvas.addEventListener("dblclick", () => {
-				if (_slots$3[_index$3]) connect$3();
-				else create$7();
+		if (gridLayout) {
+			root.querySelector(".ok").addEventListener("click", connect);
+			root.querySelector(".cancel").addEventListener("click", cancel);
+			root.querySelector(".delete").addEventListener("click", reserve);
+			root.querySelector(".canceldelete").addEventListener("click", removedelete);
+			root.querySelector(".finaldelete").addEventListener("click", suppress);
+			for (let i = 0; i < 15; i++) {
+				const slot = root.querySelector(`#slot${i}`);
+				if (slot) slot.addEventListener("mousedown", genericCanvasDown(i));
+			}
+			root.querySelectorAll("canvas").forEach((canvas) => {
+				canvas.addEventListener("dblclick", () => {
+					if (_slots[_index]) connect();
+					else create();
+				});
+				_ctx.push(canvas.getContext("2d"));
 			});
-			_ctx$3.push(canvas.getContext("2d"));
-		});
-	};
-	/**
-	* Once append to body
-	*/
-	CharSelect.onAppend = function onAppend() {
-		const root = this.getRoot();
-		this._host.style.top = `${(Renderer.height - 342) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
-		_index$3 = _preferences$4.index;
-		root.querySelector(".slotinfo .number").textContent = `${_list$3.length} / ${_maxSlots$3}`;
-		root.querySelector(".pageinfo .count").textContent = _maxSlots$3 / 3;
-		moveCursorTo$3(_index$3);
-		Renderer.render(render$9);
-	};
-	/**
-	* Stop rendering
-	*/
-	CharSelect.onRemove = function onRemove() {
-		_preferences$4.index = _index$3;
-		_preferences$4.save();
-		Renderer.stop();
-	};
-	/**
-	* Bind Key events
-	*
-	* @param {object} event
-	*/
-	CharSelect.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display === "none") return true;
-		switch (event.which) {
-			case KEYS.ESCAPE:
-				cancel$7();
-				break;
-			case KEYS.LEFT:
-				moveCursorTo$3(_index$3 - 1);
-				break;
-			case KEYS.RIGHT:
-				moveCursorTo$3(_index$3 + 1);
-				break;
-			case KEYS.SUPR:
-				if (_slots$3[_index$3]) suppress$3();
-				break;
-			case KEYS.ENTER:
-				if (_slots$3[_index$3]) connect$3();
-				else create$7();
-				break;
-			default: return true;
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	/**
-	* Add players to window
-	*
-	* @param {object} pkt - packet structure
-	*/
-	CharSelect.setInfo = function setInfo(pkt) {
-		const root = this.getRoot();
-		_maxSlots$3 = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
-		_sex$3 = pkt.sex;
-		_slots$3.length = 0;
-		_entitySlots$3.length = 0;
-		_list$3.length = 0;
-		if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) {
-			CharSelect.addCharacter(pkt.charInfo[i]);
-			_maxSlots$3 = Math.max(_maxSlots$3, Math.floor(pkt.charInfo[i].CharNum / 3 + 1) * 3);
-		}
-		root.querySelector(".slotinfo .number").textContent = `${_list$3.length} / ${_maxSlots$3}`;
-		root.querySelector(".pageinfo .count").textContent = _maxSlots$3 / 3;
-		moveCursorTo$3(_index$3);
-	};
-	/**
-	* Answer from server to delete a character
-	*
-	* @param {number} error id
-	*/
-	CharSelect.deleteAnswer = function deleteAnswer(error) {
-		this.on("keydown");
-		switch (error) {
-			case -2: return;
-			case -1: {
-				const root = this.getRoot();
-				delete _slots$3[_index$3];
-				delete _entitySlots$3[_index$3];
-				let i = 0;
-				let count = _list$3.length;
-				while (i < count) if (_list$3[i].CharNum === _index$3) {
-					_list$3.splice(i, 1);
-					--count;
-				} else i++;
-				moveCursorTo$3(_index$3);
-				root.querySelector(".slotinfo .number").textContent = `${_list$3.length} / ${_maxSlots$3}`;
-				return;
-			}
-			default:
-			case 0:
-				UIManager.showMessageBox(DB.getMessage(301), "ok");
-				break;
-		}
-	};
-	/**
-	* Adding a Character to the list
-	*
-	* @param {object} character data
-	*/
-	CharSelect.addCharacter = function addCharacter(character) {
-		if (!("sex" in character) || character.sex === 99) character.sex = _sex$3;
-		_list$3.push(character);
-		_slots$3[character.CharNum] = character;
-		_entitySlots$3[character.CharNum] = new Entity();
-		_entitySlots$3[character.CharNum].set(character);
-		_entitySlots$3[character.CharNum].effectState = _entitySlots$3[character.CharNum]._effectState & ~StatusState_default.EffectState.INVISIBLE;
-	};
-	/**
-	* Disable or Enable the UI.
-	*
-	* @param {boolean}
-	*/
-	CharSelect.setUIEnabled = function setUIEnabled(value) {
-		_disable_UI$3 = !value;
-	};
-	/**
-	* Callback to use
-	*/
-	CharSelect.onExitRequest = function onExitRequest() {};
-	CharSelect.onDeleteRequest = function onDeleteRequest() {};
-	CharSelect.onCreateRequest = function onCreateRequest() {};
-	CharSelect.onConnectRequest = function onConnectRequest() {};
-	CharSelect_default = UIManager.addComponent(CharSelect);
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.html?raw
-var CharSelectV2_default$2;
-var init_CharSelectV2$2 = __esmMin((() => {
-	CharSelectV2_default$2 = "<div id=\"CharSelectV2\">\r\n	<ui-image src=\"login_interface/win_select2.bmp\"></ui-image>\r\n	<!-- BOX -->\r\n	<div class=\"box_select\"><ui-image src=\"login_interface/box_select.bmp\"></ui-image></div>\r\n	<canvas class=\"slot1\" width=\"126\" height=\"132\"></canvas>\r\n	<canvas class=\"slot2\" width=\"126\" height=\"132\"></canvas>\r\n	<canvas class=\"slot3\" width=\"126\" height=\"132\"></canvas>\r\n	<div class=\"timedelete slot1 hidden\"></div>\r\n	<div class=\"timedelete slot2 hidden\"></div>\r\n	<div class=\"timedelete slot3 hidden\"></div>\r\n\r\n	<!-- Arrows -->\r\n	<ui-button class=\"arrow left\" bg=\"scroll1left.bmp\"></ui-button>\r\n	<ui-button class=\"arrow right\" bg=\"scroll1right.bmp\"></ui-button>\r\n\r\n	<!-- Slots infos -->\r\n	<div class=\"slotinfo\">\r\n		<span class=\"number\">0 / 27</span>\r\n		<span class=\"content\"></span>\r\n	</div>\r\n\r\n	<!-- Pages infos -->\r\n	<div class=\"pageinfo\"><span class=\"current\">1</span> / <span class=\"count\">9</span></div>\r\n\r\n	<!-- Characters infos -->\r\n	<div class=\"charinfo\">\r\n		<div class=\"name\"></div>\r\n		<div class=\"job\"></div>\r\n		<div class=\"lvl\"></div>\r\n		<div class=\"exp\"></div>\r\n		<div class=\"hp\"></div>\r\n		<div class=\"sp\"></div>\r\n		<div class=\"map\"></div>\r\n		<div class=\"str\"></div>\r\n		<div class=\"agi\"></div>\r\n		<div class=\"vit\"></div>\r\n		<div class=\"int\"></div>\r\n		<div class=\"dex\"></div>\r\n		<div class=\"luk\"></div>\r\n	</div>\r\n\r\n	<!-- Buttons -->\r\n	<div class=\"btns\">\r\n		<ui-button\r\n			class=\"btn delete\"\r\n			bg=\"btn_del_res.bmp\"\r\n			hover=\"btn_del_res_a.bmp\"\r\n			down=\"btn_del_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"btn canceldelete\"\r\n			bg=\"btn_cancel_res.bmp\"\r\n			hover=\"btn_cancel_res_a.bmp\"\r\n			down=\"btn_cancel_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn finaldelete\" bg=\"btn_del.bmp\" hover=\"btn_del_a.bmp\" down=\"btn_del_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn make\" bg=\"btn_make.bmp\" hover=\"btn_make_a.bmp\" down=\"btn_make_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.css?raw
-var CharSelectV2_default$1;
-var init_CharSelectV2$1 = __esmMin((() => {
-	CharSelectV2_default$1 = ":host {\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#CharSelectV2 {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV2 .box_select {\r\n	position: absolute;\r\n	width: 139px;\r\n	height: 144px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#CharSelectV2 canvas {\r\n	position: absolute;\r\n	top: 44px;\r\n}\r\n#CharSelectV2 .slot1 {\r\n	left: 60px;\r\n}\r\n#CharSelectV2 .slot2 {\r\n	left: 224px;\r\n}\r\n#CharSelectV2 .slot3 {\r\n	left: 386px;\r\n}\r\n\r\n/** Arrow **/\r\n#CharSelectV2 .arrow {\r\n	position: absolute;\r\n	top: 105px;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n#CharSelectV2 .arrow.left {\r\n	left: 40px;\r\n}\r\n#CharSelectV2 .arrow.right {\r\n	right: 40px;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV2 .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV2 .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV2 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV2 .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#CharSelectV2 .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV2 .charinfo {\r\n	position: absolute;\r\n	width: 285px;\r\n	top: 204px;\r\n	left: 16px;\r\n}\r\n#CharSelectV2 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV2 .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV2 .charinfo .job {\r\n	left: 52px;\r\n	top: 18px;\r\n}\r\n#CharSelectV2 .charinfo .lvl {\r\n	left: 52px;\r\n	top: 34px;\r\n}\r\n#CharSelectV2 .charinfo .exp {\r\n	left: 52px;\r\n	top: 50px;\r\n}\r\n#CharSelectV2 .charinfo .hp {\r\n	left: 52px;\r\n	top: 66px;\r\n}\r\n#CharSelectV2 .charinfo .sp {\r\n	left: 52px;\r\n	top: 82px;\r\n}\r\n#CharSelectV2 .charinfo .map {\r\n	left: 52px;\r\n	top: 98px;\r\n	width: 238px;\r\n}\r\n#CharSelectV2 .charinfo .str {\r\n	left: 200px;\r\n	top: 2px;\r\n}\r\n#CharSelectV2 .charinfo .agi {\r\n	left: 200px;\r\n	top: 18px;\r\n}\r\n#CharSelectV2 .charinfo .vit {\r\n	left: 200px;\r\n	top: 34px;\r\n}\r\n#CharSelectV2 .charinfo .int {\r\n	left: 200px;\r\n	top: 50px;\r\n}\r\n#CharSelectV2 .charinfo .dex {\r\n	left: 200px;\r\n	top: 66px;\r\n}\r\n#CharSelectV2 .charinfo .luk {\r\n	left: 200px;\r\n	top: 82px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV2 .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#CharSelectV2 .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n\r\n#CharSelectV2 .ok,\r\n#CharSelectV2 .make {\r\n	right: 50px;\r\n}\r\n#CharSelectV2 .cancel {\r\n	right: 4px;\r\n}\r\n#CharSelectV2 .delete {\r\n	left: 4px;\r\n	width: 67px;\r\n}\r\n#CharSelectV2 .canceldelete {\r\n	left: 50px;\r\n	width: 67px;\r\n}\r\n#CharSelectV2 .finaldelete {\r\n	left: 4px;\r\n}\r\n#CharSelectV2 .timedelete {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 120px;\r\n	top: 75px;\r\n}\r\n#CharSelectV2 .timedelete.waitdelete {\r\n	color: blue;\r\n}\r\n#CharSelectV2 .timedelete.candelete {\r\n	color: red;\r\n}\r\n#CharSelectV2 .timedelete.slot1 {\r\n	left: 63px;\r\n}\r\n#CharSelectV2 .timedelete.slot2 {\r\n	left: 227px;\r\n}\r\n#CharSelectV2 .timedelete.slot3 {\r\n	left: 389px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.js
-/**
-* Generic method to handle mousedown on arrow
-*
-* @param {number} value to move
-*/
-function genericArrowDown$1(value) {
-	return (event) => {
-		moveCursorTo$2((_index$2 + _maxSlots$2 + value) % _maxSlots$2);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Generic method to handle mousedown on canvas
-*
-* @param {number} value to move
-*/
-function genericCanvasDown$2(value) {
-	return (event) => {
-		moveCursorTo$2(Math.floor(_index$2 / 3) * 3 + value);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Press "cancel" or ESCAPE key
-*/
-function cancel$6() {
-	if (_disable_UI$2 === false) UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
-		CharSelectV2.onExitRequest();
-	}, null);
-}
-/**
-* Jumping to Character creation window
-*/
-function create$6() {
-	if (_disable_UI$2 === false) CharSelectV2.onCreateRequest(_index$2);
-}
-/**
-* Select Player, connect
-*/
-function connect$2() {
-	if (_disable_UI$2 === false) {
-		if (_slots$2[_index$2]) {
-			_preferences$3.index = _index$2;
-			_preferences$3.save();
-			CharSelectV2.onConnectRequest(_slots$2[_index$2]);
-		}
-	}
-}
-/**
-* Format delay date time
-*/
-function formatDatetime$1(epoch) {
-	const datetime = /* @__PURE__ */ new Date(0);
-	datetime.setSeconds(epoch);
-	const month = datetime.getMonth() + 1;
-	const day = datetime.getDate();
-	const hours = datetime.getHours();
-	const minutes = datetime.getMinutes();
-	const seconds = datetime.getSeconds();
-	return DB.getMessage(2097).replace("%d", `${month}`).replace("%d", `${day}`).replace("%d", `${hours}`).replace("%d", `${minutes}`).replace("%d", `${seconds}`);
-}
-/**
-* When successfully requested for character deletion
-* Update UI and add timer
-*/
-function requestdelete$2(index, timer) {
-	const root = CharSelectV2.getRoot();
-	const entity = _entitySlots$2[index];
-	let action;
-	const countdown = root.querySelector(`.timedelete.slot${index % 3 + 1}`);
-	if (countdown) {
-		countdown.dataset.datetime = timer;
-		countdown.textContent = formatDatetime$1(timer);
-		countdown.style.display = "block";
-		if (Math.floor(Date.now() / 1e3) > timer) {
-			countdown.classList.remove("waitdelete");
-			countdown.classList.add("candelete");
-			action = entity.ACTION.DIE;
-		} else {
-			countdown.classList.remove("candelete");
-			countdown.classList.add("waitdelete");
-			action = entity.ACTION.SIT;
-		}
-	}
-	entity.action = action;
-	root.querySelector(".delete").style.display = "none";
-	root.querySelector(".canceldelete").style.display = "block";
-	if (Math.floor(Date.now() / 1e3) > timer) root.querySelector(".finaldelete").style.display = "block";
-	else root.querySelector(".finaldelete").style.display = "none";
-}
-/**
-* Cancel reservation of character for deletion
-* Update UI and remove timer
-*/
-function removedelete$2() {
-	if (_slots$2[_index$2]) {
-		const root = CharSelectV2.getRoot();
-		_slots$2[_index$2].DeleteDate = 0;
-		_entitySlots$2[_index$2].action = _entitySlots$2[_index$2].ACTION.READYFIGHT;
-		render$8();
-		const countdown = root.querySelector(`.timedelete.slot${_index$2 % 3 + 1}`);
-		countdown.dataset.datetime = 0;
-		countdown.textContent = formatDatetime$1("");
-		countdown.style.display = "none";
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".delete").style.display = "block";
-		CharSelectV2.onCancelDeleteRequest(_slots$2[_index$2].GID);
-	}
-}
-/**
-* Request to delete a character
-*/
-function reserve$2() {
-	if (_disable_UI$2 === false) {
-		if (_slots$2[_index$2]) {
-			CharSelectV2.off("keydown");
-			CharSelectV2.onDeleteReqDelay(_slots$2[_index$2].GID);
-		}
-	}
-}
-/**
-* Delete a character
-*/
-function suppress$2() {
-	if (_disable_UI$2 === false) {
-		if (_slots$2[_index$2]) {
-			CharSelectV2.off("keydown");
-			CharSelectV2.onDeleteRequest(_slots$2[_index$2].GID);
-		}
-	}
-}
-/**
-* Move cursor, update window value
-*
-* @param {number} index
-*/
-function moveCursorTo$2(index) {
-	const root = CharSelectV2.getRoot();
-	const charinfo = root.querySelector(".charinfo");
-	let entity = _entitySlots$2[_index$2];
-	let info = _slots$2[_index$2];
-	let action;
-	if (entity) {
-		if (PacketVerManager_default.value >= 20100803 && info.DeleteDate) action = entity.ACTION.SIT;
-		else action = entity.ACTION.IDLE;
-		entity.setAction({
-			action,
-			frame: 0,
-			play: true,
-			repeat: true
-		});
-	}
-	_index$2 = (index + _maxSlots$2) % _maxSlots$2;
-	const boxSelect = root.querySelector(".box_select");
-	boxSelect.classList.remove("slot1", "slot2", "slot3");
-	boxSelect.classList.add(`slot${_index$2 % 3 + 1}`);
-	root.querySelector(".pageinfo .current").textContent = Math.floor(_index$2 / 3) + 1;
-	for (let i = 0; i < 3; i++) {
-		const tmpIndex = _index$2 - _index$2 % 3 + i;
-		info = _slots$2[tmpIndex];
-		entity = _entitySlots$2[tmpIndex];
-		const countdown = root.querySelector(`.timedelete.slot${tmpIndex % 3 + 1}`);
-		if (info && entity) if (info.DeleteDate && PacketVerManager_default.value >= 20100803) {
-			countdown.dataset.datetime = info.DeleteDate;
-			countdown.textContent = formatDatetime$1(info.DeleteDate);
-			countdown.style.display = "block";
-			if (Math.floor(Date.now() / 1e3) > info.DeleteDate) {
-				countdown.classList.remove("waitdelete");
-				countdown.classList.add("candelete");
-			} else {
-				countdown.classList.remove("candelete");
-				countdown.classList.add("waitdelete");
-			}
-			entity.action = entity.ACTION.SIT;
-		} else {
-			countdown.dataset.datetime = 0;
-			countdown.textContent = formatDatetime$1("");
-			countdown.style.display = "none";
-			entity.action = entity.ACTION.IDLE;
-		}
-		else {
-			countdown.dataset.datetime = 0;
-			countdown.textContent = formatDatetime$1("");
-			countdown.style.display = "none";
-		}
-	}
-	entity = _entitySlots$2[_index$2];
-	if (!entity) {
-		charinfo.querySelectorAll("div").forEach((div) => {
-			div.textContent = "";
-		});
-		root.querySelector(".make").style.display = "block";
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".ok").style.display = "none";
-		return;
-	}
-	info = _slots$2[_index$2];
-	if (info.DeleteDate && PacketVerManager_default.value >= 20100803) {
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".canceldelete").style.display = "block";
-		if (Math.floor(Date.now() / 1e3) > info.DeleteDate) {
-			root.querySelector(".finaldelete").style.display = "block";
-			action = entity.ACTION.DIE;
-		} else {
-			root.querySelector(".finaldelete").style.display = "none";
-			action = entity.ACTION.SIT;
-		}
-		root.querySelector(".make").style.display = "none";
-		root.querySelector(".ok").style.display = "block";
-	} else {
-		if (PacketVerManager_default.value >= 20100803) {
-			root.querySelector(".delete").style.display = "block";
-			root.querySelector(".canceldelete").style.display = "none";
-			root.querySelector(".finaldelete").style.display = "none";
-		} else {
-			root.querySelector(".delete").style.display = "none";
-			root.querySelector(".canceldelete").style.display = "none";
-			root.querySelector(".finaldelete").style.display = "block";
-		}
-		root.querySelector(".make").style.display = "none";
-		root.querySelector(".ok").style.display = "block";
-		action = entity.ACTION.READYFIGHT;
-	}
-	entity.setAction({
-		action,
-		frame: 0,
-		play: true,
-		repeat: true
-	});
-	charinfo.querySelector(".name").textContent = info.name;
-	charinfo.querySelector(".job").textContent = MonsterTable_default[info.job] || "";
-	charinfo.querySelector(".lvl").textContent = info.level;
-	charinfo.querySelector(".exp").textContent = info.exp;
-	charinfo.querySelector(".hp").textContent = info.hp;
-	charinfo.querySelector(".sp").textContent = info.sp;
-	charinfo.querySelector(".map").textContent = DB.getMapName(info.lastMap, "") || "";
-	charinfo.querySelector(".str").textContent = info.Str;
-	charinfo.querySelector(".agi").textContent = info.Agi;
-	charinfo.querySelector(".vit").textContent = info.Vit;
-	charinfo.querySelector(".int").textContent = info.Int;
-	charinfo.querySelector(".dex").textContent = info.Dex;
-	charinfo.querySelector(".luk").textContent = info.Luk;
-}
-/**
-* Render sprites to canvas
-*/
-function render$8() {
-	Camera.direction = 4;
-	const idx = Math.floor(_index$2 / 3) * 3;
-	const count = _ctx$2.length;
-	for (let i = 0; i < count; ++i) {
-		_ctx$2[i].clearRect(0, 0, _ctx$2[i].canvas.width, _ctx$2[i].canvas.height);
-		if (_entitySlots$2[idx + i]) {
-			SpriteRenderer.bind2DContext(_ctx$2[i], 63, 130);
-			_entitySlots$2[idx + i].renderEntity();
-		}
-	}
-}
-var CharSelectV2, _preferences$3, _maxSlots$2, _list$2, _slots$2, _entitySlots$2, _index$2, _ctx$2, _sex$2, _disable_UI$2, CharSelectV2_default;
-var init_CharSelectV2 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Preferences$1();
-	init_KeyEventHandler();
-	init_Renderer();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_StatusState();
-	init_Camera();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_PacketVerManager();
-	init_CharSelectV2$2();
-	init_CharSelectV2$1();
-	CharSelectV2 = new GUIComponent("CharSelectV2", CharSelectV2_default$1);
-	CharSelectV2.render = () => CharSelectV2_default$2;
-	_preferences$3 = Preferences.get("CharSelectV2", { index: 0 }, 1);
-	_maxSlots$2 = 27;
-	_list$2 = [];
-	_slots$2 = [];
-	_entitySlots$2 = [];
-	_index$2 = 0;
-	_ctx$2 = [];
-	_sex$2 = 0;
-	_disable_UI$2 = false;
-	/**
-	* Initialize UI
-	*/
-	CharSelectV2.init = function init() {
-		const root = this.getRoot();
-		this.draggable();
-		root.querySelector(".ok").addEventListener("click", connect$2);
-		root.querySelector(".cancel").addEventListener("click", cancel$6);
-		root.querySelector(".make").addEventListener("click", create$6);
-		root.querySelector(".delete").addEventListener("click", reserve$2);
-		root.querySelector(".canceldelete").addEventListener("click", removedelete$2);
-		root.querySelector(".finaldelete").addEventListener("click", suppress$2);
-		root.querySelector(".arrow.left").addEventListener("mousedown", genericArrowDown$1(-1));
-		root.querySelector(".arrow.right").addEventListener("mousedown", genericArrowDown$1(1));
-		root.querySelector(".slot1").addEventListener("mousedown", genericCanvasDown$2(0));
-		root.querySelector(".slot2").addEventListener("mousedown", genericCanvasDown$2(1));
-		root.querySelector(".slot3").addEventListener("mousedown", genericCanvasDown$2(2));
-		root.querySelectorAll("canvas").forEach((canvas) => {
-			canvas.addEventListener("dblclick", () => {
-				if (_slots$2[_index$2]) connect$2();
-				else create$6();
+			Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_info.bmp`, (dataURI) => {
+				root.querySelector(".charinfo").style.backgroundImage = `url(${dataURI})`;
 			});
-			_ctx$2.push(canvas.getContext("2d"));
-		});
-	};
-	/**
-	* Once append to body
-	*/
-	CharSelectV2.onAppend = function onAppend() {
-		const root = this.getRoot();
-		this._host.style.top = `${(Renderer.height - 358) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
-		_index$2 = _preferences$3.index;
-		root.querySelector(".slotinfo .number").textContent = `${_list$2.length} / ${_maxSlots$2}`;
-		root.querySelector(".pageinfo .count").textContent = _maxSlots$2 / 3;
-		moveCursorTo$2(_index$2);
-		Renderer.render(render$8);
-	};
-	/**
-	* Stop rendering
-	*/
-	CharSelectV2.onRemove = function onRemove() {
-		const root = this.getRoot();
-		_preferences$3.index = _index$2;
-		_preferences$3.save();
-		root.querySelectorAll(".timedelete").forEach((el) => {
-			el.style.display = "none";
-			el.textContent = "";
-		});
-		Renderer.stop();
-	};
-	/**
-	* Bind Key events
-	*
-	* @param {object} event
-	*/
-	CharSelectV2.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display === "none") return true;
-		switch (event.which) {
-			case KEYS.ESCAPE:
-				cancel$6();
-				break;
-			case KEYS.LEFT:
-				moveCursorTo$2(_index$2 - 1);
-				break;
-			case KEYS.RIGHT:
-				moveCursorTo$2(_index$2 + 1);
-				break;
-			case KEYS.SUPR:
-				if (_slots$2[_index$2]) suppress$2();
-				break;
-			case KEYS.ENTER:
-				if (_slots$2[_index$2]) connect$2();
-				else create$6();
-				break;
-			default: return true;
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	/**
-	* Add players to window
-	*
-	* @param {object} pkt - packet structure
-	*/
-	CharSelectV2.setInfo = function setInfo(pkt) {
-		const root = this.getRoot();
-		_maxSlots$2 = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
-		_sex$2 = pkt.sex;
-		_slots$2.length = 0;
-		_entitySlots$2.length = 0;
-		_list$2.length = 0;
-		if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) {
-			CharSelectV2.addCharacter(pkt.charInfo[i]);
-			_maxSlots$2 = Math.max(_maxSlots$2, Math.floor(pkt.charInfo[i].CharNum / 3 + 1) * 3);
-		}
-		root.querySelector(".slotinfo .number").textContent = `${_list$2.length} / ${_maxSlots$2}`;
-		root.querySelector(".pageinfo .count").textContent = _maxSlots$2 / 3;
-		moveCursorTo$2(_index$2);
-	};
-	/**
-	* Answer from server to delete a character
-	*
-	* @param {number} error id
-	*/
-	CharSelectV2.deleteAnswer = function deleteAnswer(error) {
-		this.on("keydown");
-		if (PacketVerManager_default.value >= 20100803) switch (error) {
-			case -1:
-			case -2: return;
-			case 1: {
-				const root = this.getRoot();
-				delete _slots$2[_index$2];
-				delete _entitySlots$2[_index$2];
-				let i = 0;
-				let count = _list$2.length;
-				while (i < count) if (_list$2[i].CharNum === _index$2) {
-					_list$2.splice(i, 1);
-					--count;
-				} else i++;
-				moveCursorTo$2(_index$2);
-				root.querySelector(".slotinfo .number").textContent = `${_list$2.length} / ${_maxSlots$2}`;
-				return;
-			}
-			default:
-			case 0:
-			case 2:
-			case 6:
-				UIManager.showMessageBox(DB.getMessage(1821), "ok");
-				return;
-			case 3:
-				UIManager.showMessageBox(DB.getMessage(1817), "ok");
-				return;
-			case 4:
-				UIManager.showMessageBox(DB.getMessage(1820), "ok");
-				return;
-			case 5:
-				UIManager.showMessageBox(DB.getMessage(1822), "ok");
-				return;
-			case 7:
-				UIManager.showMessageBox(DB.getMessage(301), "ok");
-				return;
-		}
-		else switch (error) {
-			case -2: return;
-			case -1: {
-				const root = this.getRoot();
-				delete _slots$2[_index$2];
-				delete _entitySlots$2[_index$2];
-				let i = 0;
-				let count = _list$2.length;
-				while (i < count) if (_list$2[i].CharNum === _index$2) {
-					_list$2.splice(i, 1);
-					--count;
-				} else i++;
-				moveCursorTo$2(_index$2);
-				root.querySelector(".slotinfo .number").textContent = `${_list$2.length} / ${_maxSlots$2}`;
-				return;
-			}
-			default:
-			case 0:
-				UIManager.showMessageBox(DB.getMessage(301), "ok");
-				break;
-		}
-	};
-	/**
-	* Adding a Character to the list
-	*
-	* @param {object} character data
-	*/
-	CharSelectV2.addCharacter = function addCharacter(character) {
-		const root = this.getRoot();
-		if (!("sex" in character) || character.sex === 99) character.sex = _sex$2;
-		if (character.DeleteDate) {
-			const now = Math.floor(Date.now() / 1e3);
-			character.DeleteDate = PacketVerManager_default.value > 2013e4 && PacketVerManager_default.value <= 20141022 || PacketVerManager_default.value >= 20150513 ? character.DeleteDate + now : character.DeleteDate;
-		}
-		_list$2.push(character);
-		_slots$2[character.CharNum] = character;
-		_entitySlots$2[character.CharNum] = new Entity();
-		_entitySlots$2[character.CharNum].set(character);
-		_entitySlots$2[character.CharNum].effectState = _entitySlots$2[character.CharNum]._effectState & ~StatusState_default.EffectState.INVISIBLE;
-		if (PacketVerManager_default.value >= 20100803) {
-			if (_slots$2[character.CharNum].DeleteDate && Math.floor(_index$2 / 3) === Math.floor(character.CharNum / 3)) {
-				const slotNum = (character.CharNum + _maxSlots$2) % _maxSlots$2 + 1;
-				const countdown = root.querySelector(`.timedelete.slot${slotNum}`);
-				const entity = _entitySlots$2[character.CharNum];
-				if (countdown) {
-					countdown.dataset.datetime = _slots$2[character.CharNum].DeleteDate;
-					countdown.textContent = formatDatetime$1(_slots$2[character.CharNum].DeleteDate);
-					countdown.style.display = "block";
-				}
-				entity.setAction({
-					action: entity.ACTION.SIT,
-					frame: 0,
-					play: true,
-					repeat: true
+			for (let i = 0; i < 15; i++) {
+				const slotCanvas = root.querySelector(`#slot${i}`);
+				if (slotCanvas) Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot2_normal.bmp`, (dataURI) => {
+					slotCanvas.style.backgroundImage = `url(${dataURI})`;
 				});
 			}
+			return;
 		}
-	};
-	/**
-	* Disable or Enable the UI.
-	*
-	* @param {boolean}
-	*/
-	CharSelectV2.setUIEnabled = function setUIEnabled(value) {
-		_disable_UI$2 = !value;
-	};
-	/**
-	* Callback to use
-	*/
-	CharSelectV2.onExitRequest = function onExitRequest() {};
-	CharSelectV2.onDeleteReqDelay = function onDeleteReqDelay() {};
-	CharSelectV2.onCancelDeleteRequest = function onCancelDeleteRequest() {};
-	CharSelectV2.onDeleteRequest = function onDeleteRequest() {};
-	CharSelectV2.onCreateRequest = function onCreateRequest() {};
-	CharSelectV2.onConnectRequest = function onConnectRequest() {};
-	/**
-	* Result of Request in Deleting the Character
-	*
-	* @param {object} pkt - packet structure
-	*/
-	CharSelectV2.reqdeleteAnswer = function reqdeleteAnswer(pkt) {
-		this.on("keydown");
-		const now = Math.floor(Date.now() / 1e3);
-		const result = typeof pkt.Result === "undefined" ? -1 : pkt.Result;
-		const info = _slots$2[_index$2];
-		switch (result) {
-			case 0: return;
-			case 1: {
-				const timer = PacketVerManager_default.value > 2013e4 && PacketVerManager_default.value <= 20141022 || PacketVerManager_default.value >= 20150513 ? pkt.DeleteReservedDate + now : pkt.DeleteReservedDate;
-				info.DeleteDate = timer;
-				requestdelete$2(_index$2, timer);
-				break;
-			}
-			case 3: return;
-			case 4:
-				UIManager.showMessageBox(DB.getMessage(1818), "ok");
-				break;
-			case 5:
-				UIManager.showMessageBox(DB.getMessage(1819), "ok");
-				break;
-			default: return;
-		}
-	};
-	CharSelectV2_default = UIManager.addComponent(CharSelectV2);
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.html?raw
-var CharSelectV3_default$2;
-var init_CharSelectV3$2 = __esmMin((() => {
-	CharSelectV3_default$2 = "<div id=\"CharSelectV3\">\r\n	<ui-image src=\"select_character/bg_select_character.bmp\"></ui-image>\r\n	<!-- BOX -->\r\n	<div class=\"box_select\"><ui-image src=\"select_character/select_mark.bmp\"></ui-image></div>\r\n	<canvas class=\"slot1\" width=\"133\" height=\"132\"></canvas>\r\n	<canvas class=\"slot2\" width=\"133\" height=\"132\"></canvas>\r\n	<canvas class=\"slot3\" width=\"133\" height=\"132\"></canvas>\r\n	<div class=\"timedelete slot1 hidden\"></div>\r\n	<div class=\"timedelete slot2 hidden\"></div>\r\n	<div class=\"timedelete slot3 hidden\"></div>\r\n	<ui-button\r\n		class=\"make1\"\r\n		bg=\"select_character/btn_add_out.bmp\"\r\n		hover=\"select_character/btn_add_over.bmp\"\r\n		down=\"select_character/btn_add_press.bmp\"\r\n	></ui-button>\r\n	<ui-button\r\n		class=\"make2\"\r\n		bg=\"select_character/btn_add_out.bmp\"\r\n		hover=\"select_character/btn_add_over.bmp\"\r\n		down=\"select_character/btn_add_press.bmp\"\r\n	></ui-button>\r\n	<ui-button\r\n		class=\"make3\"\r\n		bg=\"select_character/btn_add_out.bmp\"\r\n		hover=\"select_character/btn_add_over.bmp\"\r\n		down=\"select_character/btn_add_press.bmp\"\r\n	></ui-button>\r\n\r\n	<!-- Arrows -->\r\n	<ui-button\r\n		class=\"arrow left\"\r\n		bg=\"select_character/chr_arrow_l_out.bmp\"\r\n		hover=\"select_character/chr_arrow_l_over.bmp\"\r\n		down=\"select_character/chr_arrow_l_press.bmp\"\r\n	></ui-button>\r\n	<ui-button\r\n		class=\"arrow right\"\r\n		bg=\"select_character/chr_arrow_r_out.bmp\"\r\n		hover=\"select_character/chr_arrow_r_over.bmp\"\r\n		down=\"select_character/chr_arrow_r_press.bmp\"\r\n	></ui-button>\r\n\r\n	<!-- Slots infos -->\r\n	<div class=\"slotinfo\">\r\n		<span class=\"number\">0 / 27</span>\r\n		<span class=\"content\"></span>\r\n	</div>\r\n	<!-- Pages infos -->\r\n	<div class=\"pageinfo\">\r\n		<div class=\"pagebtn\"></div>\r\n	</div>\r\n	<!-- Characters infos -->\r\n	<div class=\"charinfo\">\r\n		<div class=\"name\"></div>\r\n		<div class=\"job\"></div>\r\n		<div class=\"lvl\"></div>\r\n		<div class=\"exp\"></div>\r\n		<div class=\"hp\"></div>\r\n		<div class=\"sp\"></div>\r\n		<div class=\"map\"></div>\r\n		<div class=\"str\"></div>\r\n		<div class=\"agi\"></div>\r\n		<div class=\"vit\"></div>\r\n		<div class=\"int\"></div>\r\n		<div class=\"dex\"></div>\r\n		<div class=\"luk\"></div>\r\n	</div>\r\n	<!-- Buttons -->\r\n	<div class=\"btns\">\r\n		<ui-button\r\n			class=\"btn delete\"\r\n			bg=\"btn_del_res.bmp\"\r\n			hover=\"btn_del_res_a.bmp\"\r\n			down=\"btn_del_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"btn canceldelete\"\r\n			bg=\"btn_cancel_res.bmp\"\r\n			hover=\"btn_cancel_res_a.bmp\"\r\n			down=\"btn_cancel_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn finaldelete\" bg=\"btn_del.bmp\" hover=\"btn_del_a.bmp\" down=\"btn_del_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn make\" bg=\"btn_make.bmp\" hover=\"btn_make_a.bmp\" down=\"btn_make_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.css?raw
-var CharSelectV3_default$1;
-var init_CharSelectV3$1 = __esmMin((() => {
-	CharSelectV3_default$1 = ":host {\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#CharSelectV3 {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV3 .box_select {\r\n	position: absolute;\r\n	width: 134px;\r\n	height: 144px;\r\n	top: 30px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#CharSelectV3 canvas {\r\n	position: absolute;\r\n	top: 35px;\r\n}\r\n#CharSelectV3 .slot1 {\r\n	left: 57px;\r\n}\r\n#CharSelectV3 .slot2 {\r\n	left: 220px;\r\n}\r\n#CharSelectV3 .slot3 {\r\n	left: 386px;\r\n}\r\n\r\n#CharSelectV3 .make1 {\r\n	position: absolute;\r\n	top: 84px;\r\n	left: 107px;\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n#CharSelectV3 .make2 {\r\n	position: absolute;\r\n	top: 84px;\r\n	left: 270px;\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n#CharSelectV3 .make3 {\r\n	position: absolute;\r\n	top: 84px;\r\n	left: 436px;\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n\r\n/** Arrow **/\r\n#CharSelectV3 .arrow {\r\n	position: absolute;\r\n	top: 95px;\r\n	width: 14px;\r\n	height: 20px;\r\n}\r\n#CharSelectV3 .arrow.left {\r\n	left: 40px;\r\n}\r\n#CharSelectV3 .arrow.right {\r\n	right: 40px;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV3 .slotinfo {\r\n	position: absolute;\r\n	top: 180px;\r\n	right: 40px;\r\n	height: 20px;\r\n	display: block;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV3 .slotinfo .number {\r\n	/*color: #58709e;\r\n    font-weight: bold;*/\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV3 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV3 .pageinfo {\r\n	position: absolute;\r\n	top: 180px;\r\n}\r\n\r\n#CharSelectV3 .pageinfo .pagebtn .btn_pageinfo {\r\n	border: 0;\r\n	width: 8px;\r\n	height: 8px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV3 .charinfo {\r\n	position: absolute;\r\n	width: 285px;\r\n	top: 204px;\r\n	left: 16px;\r\n}\r\n#CharSelectV3 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV3 .charinfo .name {\r\n	left: 95px;\r\n	top: -4px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV3 .charinfo .job {\r\n	left: 95px;\r\n	top: 12px;\r\n}\r\n#CharSelectV3 .charinfo .lvl {\r\n	left: 95px;\r\n	top: 30px;\r\n}\r\n#CharSelectV3 .charinfo .exp {\r\n	left: 95px;\r\n	top: 47px;\r\n}\r\n#CharSelectV3 .charinfo .hp {\r\n	left: 95px;\r\n	top: 64px;\r\n}\r\n#CharSelectV3 .charinfo .sp {\r\n	left: 95px;\r\n	top: 81px;\r\n}\r\n#CharSelectV3 .charinfo .map {\r\n	left: 95px;\r\n	top: 104px;\r\n	width: 238px;\r\n}\r\n#CharSelectV3 .charinfo .str {\r\n	left: 250px;\r\n	top: -4px;\r\n}\r\n#CharSelectV3 .charinfo .agi {\r\n	left: 250px;\r\n	top: 12px;\r\n}\r\n#CharSelectV3 .charinfo .vit {\r\n	left: 250px;\r\n	top: 30px;\r\n}\r\n#CharSelectV3 .charinfo .int {\r\n	left: 250px;\r\n	top: 47px;\r\n}\r\n#CharSelectV3 .charinfo .dex {\r\n	left: 250px;\r\n	top: 64px;\r\n}\r\n#CharSelectV3 .charinfo .luk {\r\n	left: 250px;\r\n	top: 81px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV3 .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#CharSelectV3 .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n\r\n#CharSelectV3 .ok,\r\n#CharSelectV3 .make {\r\n	right: 50px;\r\n}\r\n#CharSelectV3 .cancel {\r\n	right: 4px;\r\n}\r\n#CharSelectV3 .delete {\r\n	left: 4px;\r\n	width: 67px;\r\n}\r\n#CharSelectV3 .canceldelete {\r\n	left: 50px;\r\n	width: 67px;\r\n}\r\n#CharSelectV3 .finaldelete {\r\n	left: 4px;\r\n}\r\n#CharSelectV3 .timedelete {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 120px;\r\n	top: 75px;\r\n}\r\n#CharSelectV3 .timedelete.waitdelete {\r\n	color: blue;\r\n}\r\n#CharSelectV3 .timedelete.candelete {\r\n	color: red;\r\n}\r\n#CharSelectV3 .timedelete.slot1 {\r\n	left: 63px;\r\n}\r\n#CharSelectV3 .timedelete.slot2 {\r\n	left: 227px;\r\n}\r\n#CharSelectV3 .timedelete.slot3 {\r\n	left: 389px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.js
-function drawBall(btnContainer, index, sel) {
-	const btn = document.createElement("button");
-	btn.className = `btn_pageinfo btn_pageinfo${index}`;
-	btn.style.border = "0";
-	btn.style.width = "8px";
-	btn.style.height = "8px";
-	btn.style.backgroundColor = "transparent";
-	btn.style.backgroundRepeat = "no-repeat";
-	btn.style.cursor = "pointer";
-	const img = document.createElement("img");
-	img.width = 8;
-	const imagePath = sel ? "select_character/page_ball_fill.bmp" : "select_character/page_ball_empty.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + imagePath, (data) => {
-		btn.style.backgroundImage = `url("${data}")`;
-	});
-	btn.addEventListener("click", () => {
-		moveCursorTo$1((index - 1) * 3);
-	});
-	btnContainer.appendChild(btn);
-	btnContainer.appendChild(img);
-}
-/**
-* Generic method to handle mousedown on arrow
-*
-* @param {number} value to move
-*/
-function genericArrowDown(value) {
-	return (event) => {
-		moveCursorTo$1((_index$1 + _maxSlots$1 + value) % _maxSlots$1);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Generic method to handle mousedown on canvas
-*
-* @param {number} value to move
-*/
-function genericCanvasDown$1(value) {
-	return (event) => {
-		moveCursorTo$1(Math.floor(_index$1 / 3) * 3 + value);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Press "cancel" or ESCAPE key
-*/
-function cancel$5() {
-	if (_disable_UI$1 === false) UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
-		CharSelectV3.onExitRequest();
-	}, null);
-}
-/**
-* Jumping to Character creation window
-*/
-function create$5() {
-	if (_disable_UI$1 === false) CharSelectV3.onCreateRequest(_index$1);
-}
-/**
-* Select Player, connect
-*/
-function connect$1() {
-	if (_disable_UI$1 === false) {
-		if (_slots$1[_index$1]) {
-			_preferences$2.index = _index$1;
-			_preferences$2.save();
-			CharSelectV3.onConnectRequest(_slots$1[_index$1]);
-		}
-	}
-}
-/**
-* Format delay date time
-*/
-function formatDatetime(epoch) {
-	const datetime = /* @__PURE__ */ new Date(0);
-	datetime.setSeconds(epoch);
-	const month = datetime.getMonth() + 1;
-	const day = datetime.getDate();
-	const hours = datetime.getHours();
-	const minutes = datetime.getMinutes();
-	const seconds = datetime.getSeconds();
-	return DB.getMessage(2097).replace("%d", `${month}`).replace("%d", `${day}`).replace("%d", `${hours}`).replace("%d", `${minutes}`).replace("%d", `${seconds}`);
-}
-/**
-* When successfully requested for character deletion
-* Update UI and add timer
-*/
-function requestdelete$1(index, timer) {
-	const root = CharSelectV3.getRoot();
-	const entity = _entitySlots$1[index];
-	let action;
-	const countdown = root.querySelector(`.timedelete.slot${index % 3 + 1}`);
-	if (countdown) {
-		countdown.dataset.datetime = timer;
-		countdown.textContent = formatDatetime(timer);
-		countdown.style.display = "block";
-		if (Math.floor(Date.now() / 1e3) > timer) {
-			countdown.classList.remove("waitdelete");
-			countdown.classList.add("candelete");
-			action = entity.ACTION.DIE;
-		} else {
-			countdown.classList.remove("candelete");
-			countdown.classList.add("waitdelete");
-			action = entity.ACTION.SIT;
-		}
-	}
-	entity.action = action;
-	root.querySelector(".delete").style.display = "none";
-	root.querySelector(".canceldelete").style.display = "block";
-	if (Math.floor(Date.now() / 1e3) > timer) root.querySelector(".finaldelete").style.display = "block";
-	else root.querySelector(".finaldelete").style.display = "none";
-}
-/**
-* Cancel reservation of character for deletion
-* Update UI and remove timer
-*/
-function removedelete$1() {
-	if (_slots$1[_index$1]) {
-		const root = CharSelectV3.getRoot();
-		_slots$1[_index$1].DeleteDate = 0;
-		_entitySlots$1[_index$1].action = _entitySlots$1[_index$1].ACTION.READYFIGHT;
-		render$7();
-		const countdown = root.querySelector(`.timedelete.slot${_index$1 % 3 + 1}`);
-		countdown.dataset.datetime = 0;
-		countdown.textContent = formatDatetime("");
-		countdown.style.display = "none";
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".delete").style.display = "block";
-		CharSelectV3.onCancelDeleteRequest(_slots$1[_index$1].GID);
-	}
-}
-/**
-* Request to delete a character
-*/
-function reserve$1() {
-	if (_disable_UI$1 === false) {
-		if (_slots$1[_index$1]) {
-			CharSelectV3.off("keydown");
-			CharSelectV3.onDeleteReqDelay(_slots$1[_index$1].GID);
-		}
-	}
-}
-/**
-* Delete a character
-*/
-function suppress$1() {
-	if (_disable_UI$1 === false) {
-		if (_slots$1[_index$1]) {
-			CharSelectV3.off("keydown");
-			CharSelectV3.onDeleteRequest(_slots$1[_index$1].GID);
-		}
-	}
-}
-/**
-* Move cursor, update window value
-*
-* @param {number} index
-*/
-function moveCursorTo$1(index) {
-	const root = CharSelectV3.getRoot();
-	const charinfo = root.querySelector(".charinfo");
-	let entity = _entitySlots$1[_index$1];
-	let info = _slots$1[_index$1];
-	let action;
-	if (entity) {
-		if (info.DeleteDate) action = entity.ACTION.SIT;
-		else action = entity.ACTION.IDLE;
-		entity.setAction({
-			action,
-			frame: 0,
-			play: true,
-			repeat: true
-		});
-	}
-	_index$1 = (index + _maxSlots$1) % _maxSlots$1;
-	const boxSelect = root.querySelector(".box_select");
-	boxSelect.classList.remove("slot1", "slot2", "slot3");
-	boxSelect.classList.add(`slot${_index$1 % 3 + 1}`);
-	const pagebtn = root.querySelector(".pageinfo .pagebtn");
-	pagebtn.textContent = "";
-	for (let i = 1; i <= _maxSlots$1 / 3; i++) drawBall(pagebtn, i, Math.floor(_index$1 / 3) + 1 === i);
-	root.querySelector(".pageinfo").style.left = `${576 / 2 - _maxSlots$1 / 3 * 8}px`;
-	let mix = (index + 1) % 3 === 0 ? index + 1 - 3 : index + 1 - (index + 1) % 3;
-	mix = mix >= _maxSlots$1 ? 0 : mix;
-	for (let i = 1; i <= 3; i++) {
-		root.querySelector(`.make${i}`).style.display = "none";
-		if (!_entitySlots$1[mix + (i - 1)]) root.querySelector(`.make${i}`).style.display = "block";
-	}
-	for (let i = 0; i < 3; i++) {
-		const tmpIndex = _index$1 - _index$1 % 3 + i;
-		info = _slots$1[tmpIndex];
-		entity = _entitySlots$1[tmpIndex];
-		const countdown = root.querySelector(`.timedelete.slot${tmpIndex % 3 + 1}`);
-		if (info && entity) if (info.DeleteDate) {
-			countdown.dataset.datetime = info.DeleteDate;
-			countdown.textContent = formatDatetime(info.DeleteDate);
-			countdown.style.display = "block";
-			if (Math.floor(Date.now() / 1e3) > info.DeleteDate) {
-				countdown.classList.remove("waitdelete");
-				countdown.classList.add("candelete");
-			} else {
-				countdown.classList.remove("candelete");
-				countdown.classList.add("waitdelete");
-			}
-			entity.action = entity.ACTION.SIT;
-		} else {
-			countdown.dataset.datetime = 0;
-			countdown.textContent = formatDatetime("");
-			countdown.style.display = "none";
-			entity.action = entity.ACTION.IDLE;
-		}
-		else {
-			countdown.dataset.datetime = 0;
-			countdown.textContent = formatDatetime("");
-			countdown.style.display = "none";
-		}
-	}
-	entity = _entitySlots$1[_index$1];
-	if (!entity) {
-		charinfo.querySelectorAll("div").forEach((div) => {
-			div.textContent = "";
-		});
-		root.querySelector(".make").style.display = "block";
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".ok").style.display = "none";
-		return;
-	}
-	info = _slots$1[_index$1];
-	if (info.DeleteDate) {
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".canceldelete").style.display = "block";
-		if (Math.floor(Date.now() / 1e3) > info.DeleteDate) {
-			root.querySelector(".finaldelete").style.display = "block";
-			action = entity.ACTION.DIE;
-		} else {
-			root.querySelector(".finaldelete").style.display = "none";
-			action = entity.ACTION.SIT;
-		}
-		root.querySelector(".make").style.display = "none";
-		root.querySelector(".ok").style.display = "block";
-	} else {
-		root.querySelector(".delete").style.display = "block";
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".make").style.display = "none";
-		root.querySelector(".ok").style.display = "block";
-		action = entity.ACTION.READYFIGHT;
-	}
-	entity.setAction({
-		action,
-		frame: 0,
-		play: true,
-		repeat: true
-	});
-	charinfo.querySelector(".name").textContent = info.name;
-	charinfo.querySelector(".job").textContent = MonsterTable_default[info.job] || "";
-	charinfo.querySelector(".lvl").textContent = info.level;
-	charinfo.querySelector(".exp").textContent = info.exp;
-	charinfo.querySelector(".hp").textContent = info.hp;
-	charinfo.querySelector(".sp").textContent = info.sp;
-	charinfo.querySelector(".map").textContent = DB.getMapName(info.lastMap, "") || "";
-	charinfo.querySelector(".str").textContent = info.Str;
-	charinfo.querySelector(".agi").textContent = info.Agi;
-	charinfo.querySelector(".vit").textContent = info.Vit;
-	charinfo.querySelector(".int").textContent = info.Int;
-	charinfo.querySelector(".dex").textContent = info.Dex;
-	charinfo.querySelector(".luk").textContent = info.Luk;
-}
-/**
-* Render sprites to canvas
-*/
-function render$7() {
-	Camera.direction = 4;
-	const idx = Math.floor(_index$1 / 3) * 3;
-	const count = _ctx$1.length;
-	for (let i = 0; i < count; ++i) {
-		_ctx$1[i].clearRect(0, 0, _ctx$1[i].canvas.width, _ctx$1[i].canvas.height);
-		if (_entitySlots$1[idx + i]) {
-			SpriteRenderer.bind2DContext(_ctx$1[i], 63, 130);
-			_entitySlots$1[idx + i].renderEntity();
-		}
-	}
-}
-var CharSelectV3, _preferences$2, _maxSlots$1, _list$1, _slots$1, _entitySlots$1, _index$1, _ctx$1, _sex$1, _disable_UI$1, CharSelectV3_default;
-var init_CharSelectV3 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Preferences$1();
-	init_Client();
-	init_KeyEventHandler();
-	init_Renderer();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_StatusState();
-	init_Camera();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_PacketVerManager();
-	init_CharSelectV3$2();
-	init_CharSelectV3$1();
-	CharSelectV3 = new GUIComponent("CharSelectV3", CharSelectV3_default$1);
-	CharSelectV3.render = () => CharSelectV3_default$2;
-	_preferences$2 = Preferences.get("CharSelectV3", { index: 0 }, 1);
-	_maxSlots$1 = 27;
-	_list$1 = [];
-	_slots$1 = [];
-	_entitySlots$1 = [];
-	_index$1 = 0;
-	_ctx$1 = [];
-	_sex$1 = 0;
-	_disable_UI$1 = false;
-	/**
-	* Initialize UI
-	*/
-	CharSelectV3.init = function init() {
-		const root = this.getRoot();
 		this.draggable();
-		root.querySelector(".ok").addEventListener("click", connect$1);
-		root.querySelector(".cancel").addEventListener("click", cancel$5);
-		root.querySelector(".make").addEventListener("click", create$5);
-		root.querySelector(".delete").addEventListener("click", reserve$1);
-		root.querySelector(".canceldelete").addEventListener("click", removedelete$1);
-		root.querySelector(".finaldelete").addEventListener("click", suppress$1);
+		root.querySelector(".ok").addEventListener("click", connect);
+		root.querySelector(".cancel").addEventListener("click", cancel);
+		root.querySelector(".make").addEventListener("click", create);
+		root.querySelector(".delete").addEventListener("click", deleteReservation ? reserve : suppress);
+		if (deleteReservation) {
+			root.querySelector(".canceldelete").addEventListener("click", removedelete);
+			root.querySelector(".finaldelete").addEventListener("click", suppress);
+		}
 		root.querySelector(".arrow.left").addEventListener("mousedown", genericArrowDown(-1));
 		root.querySelector(".arrow.right").addEventListener("mousedown", genericArrowDown(1));
-		root.querySelector(".slot1").addEventListener("mousedown", genericCanvasDown$1(0));
-		root.querySelector(".slot2").addEventListener("mousedown", genericCanvasDown$1(1));
-		root.querySelector(".slot3").addEventListener("mousedown", genericCanvasDown$1(2));
-		root.querySelector(".make1").addEventListener("mousedown", (e) => {
-			genericCanvasDown$1(0)(e);
-			create$5();
-		});
-		root.querySelector(".make2").addEventListener("mousedown", (e) => {
-			genericCanvasDown$1(1)(e);
-			create$5();
-		});
-		root.querySelector(".make3").addEventListener("mousedown", (e) => {
-			genericCanvasDown$1(2)(e);
-			create$5();
-		});
-		root.querySelectorAll("canvas").forEach((canvas) => {
-			canvas.addEventListener("dblclick", () => {
-				if (_slots$1[_index$1]) connect$1();
-				else create$5();
+		root.querySelector(".slot1").addEventListener("mousedown", genericCanvasDown(0));
+		root.querySelector(".slot2").addEventListener("mousedown", genericCanvasDown(1));
+		root.querySelector(".slot3").addEventListener("mousedown", genericCanvasDown(2));
+		if (pageBalls) {
+			root.querySelector(".make1").addEventListener("mousedown", (e) => {
+				genericCanvasDown(0)(e);
+				create();
 			});
-			_ctx$1.push(canvas.getContext("2d"));
-		});
-	};
-	/**
-	* Once append to body
-	*/
-	CharSelectV3.onAppend = function onAppend() {
-		const root = this.getRoot();
-		this._host.style.top = `${(Renderer.height - 358) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
-		_index$1 = _preferences$2.index;
-		root.querySelector(".slotinfo .number").textContent = `${_list$1.length} / ${_maxSlots$1}`;
-		moveCursorTo$1(_index$1);
-		Renderer.render(render$7);
-	};
-	/**
-	* Stop rendering
-	*/
-	CharSelectV3.onRemove = function onRemove() {
-		const root = this.getRoot();
-		_preferences$2.index = _index$1;
-		_preferences$2.save();
-		root.querySelectorAll(".timedelete").forEach((el) => {
-			el.style.display = "none";
-			el.textContent = "";
-		});
-		Renderer.stop();
-	};
-	/**
-	* Bind Key events
-	*
-	* @param {object} event
-	*/
-	CharSelectV3.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display === "none") return true;
-		switch (event.which) {
-			case KEYS.ESCAPE:
-				cancel$5();
-				break;
-			case KEYS.LEFT:
-				moveCursorTo$1(_index$1 - 1);
-				break;
-			case KEYS.RIGHT:
-				moveCursorTo$1(_index$1 + 1);
-				break;
-			case KEYS.SUPR:
-				if (_slots$1[_index$1]) suppress$1();
-				break;
-			case KEYS.ENTER:
-				if (_slots$1[_index$1]) connect$1();
-				else create$5();
-				break;
-			default: return true;
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	/**
-	* Add players to window
-	*
-	* @param {object} pkt - packet structure
-	*/
-	CharSelectV3.setInfo = function setInfo(pkt) {
-		const root = this.getRoot();
-		_maxSlots$1 = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
-		_sex$1 = pkt.sex;
-		_slots$1.length = 0;
-		_entitySlots$1.length = 0;
-		_list$1.length = 0;
-		if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) {
-			CharSelectV3.addCharacter(pkt.charInfo[i]);
-			_maxSlots$1 = Math.max(_maxSlots$1, Math.floor(pkt.charInfo[i].CharNum / 3 + 1) * 3);
-		}
-		root.querySelector(".slotinfo .number").textContent = `${_list$1.length} / ${_maxSlots$1}`;
-		moveCursorTo$1(_index$1);
-	};
-	/**
-	* Answer from server to delete a character
-	*
-	* @param {number} error id
-	*/
-	CharSelectV3.deleteAnswer = function deleteAnswer(error) {
-		const root = this.getRoot();
-		this.on("keydown");
-		switch (error) {
-			case -1:
-			case -2: return;
-			case 1: {
-				delete _slots$1[_index$1];
-				delete _entitySlots$1[_index$1];
-				let i = 0;
-				let count = _list$1.length;
-				while (i < count) if (_list$1[i].CharNum === _index$1) {
-					_list$1.splice(i, 1);
-					--count;
-				} else i++;
-				moveCursorTo$1(_index$1);
-				root.querySelector(".slotinfo .number").textContent = `${_list$1.length} / ${_maxSlots$1}`;
-				return;
-			}
-			default:
-			case 0:
-			case 2:
-			case 6:
-				UIManager.showMessageBox(DB.getMessage(1821), "ok");
-				return;
-			case 3:
-				UIManager.showMessageBox(DB.getMessage(1817), "ok");
-				return;
-			case 4:
-				UIManager.showMessageBox(DB.getMessage(1820), "ok");
-				return;
-			case 5:
-				UIManager.showMessageBox(DB.getMessage(1822), "ok");
-				return;
-			case 7:
-				UIManager.showMessageBox(DB.getMessage(301), "ok");
-				return;
-		}
-	};
-	/**
-	* Adding a Character to the list
-	*
-	* @param {object} character data
-	*/
-	CharSelectV3.addCharacter = function addCharacter(character) {
-		const root = this.getRoot();
-		if (!("sex" in character) || character.sex === 99) character.sex = _sex$1;
-		if (character.DeleteDate) {
-			const now = Math.floor(Date.now() / 1e3);
-			character.DeleteDate = PacketVerManager_default.value > 2013e4 && PacketVerManager_default.value <= 20141022 || PacketVerManager_default.value >= 20150513 ? character.DeleteDate + now : character.DeleteDate;
-		}
-		_list$1.push(character);
-		_slots$1[character.CharNum] = character;
-		_entitySlots$1[character.CharNum] = new Entity();
-		_entitySlots$1[character.CharNum].set(character);
-		_entitySlots$1[character.CharNum].effectState = _entitySlots$1[character.CharNum]._effectState & ~StatusState_default.EffectState.INVISIBLE;
-		if (_slots$1[character.CharNum].DeleteDate && Math.floor(_index$1 / 3) === Math.floor(character.CharNum / 3)) {
-			const slotNum = (character.CharNum + _maxSlots$1) % _maxSlots$1 + 1;
-			const countdown = root.querySelector(`.timedelete.slot${slotNum}`);
-			const entity = _entitySlots$1[character.CharNum];
-			if (countdown) {
-				countdown.dataset.datetime = _slots$1[character.CharNum].DeleteDate;
-				countdown.textContent = formatDatetime(_slots$1[character.CharNum].DeleteDate);
-				countdown.style.display = "block";
-			}
-			entity.setAction({
-				action: entity.ACTION.SIT,
-				frame: 0,
-				play: true,
-				repeat: true
+			root.querySelector(".make2").addEventListener("mousedown", (e) => {
+				genericCanvasDown(1)(e);
+				create();
 			});
-		}
-	};
-	/**
-	* Disable or Enable the UI.
-	*
-	* @param {boolean}
-	*/
-	CharSelectV3.setUIEnabled = function setUIEnabled(value) {
-		_disable_UI$1 = !value;
-	};
-	/**
-	* Callback to use
-	*/
-	CharSelectV3.onExitRequest = function onExitRequest() {};
-	CharSelectV3.onDeleteReqDelay = function onDeleteReqDelay() {};
-	CharSelectV3.onCancelDeleteRequest = function onCancelDeleteRequest() {};
-	CharSelectV3.onDeleteRequest = function onDeleteRequest() {};
-	CharSelectV3.onCreateRequest = function onCreateRequest() {};
-	CharSelectV3.onConnectRequest = function onConnectRequest() {};
-	/**
-	* Result of Request in Deleting the Character
-	*
-	* @param {object} pkt - packet structure
-	*/
-	CharSelectV3.reqdeleteAnswer = function reqdeleteAnswer(pkt) {
-		this.on("keydown");
-		const now = Math.floor(Date.now() / 1e3);
-		const result = typeof pkt.Result === "undefined" ? -1 : pkt.Result;
-		const info = _slots$1[_index$1];
-		switch (result) {
-			case 0: return;
-			case 1: {
-				const timer = PacketVerManager_default.value > 2013e4 && PacketVerManager_default.value <= 20141022 || PacketVerManager_default.value >= 20150513 ? pkt.DeleteReservedDate + now : pkt.DeleteReservedDate;
-				info.DeleteDate = timer;
-				requestdelete$1(_index$1, timer);
-				break;
-			}
-			case 3: return;
-			case 4:
-				UIManager.showMessageBox(DB.getMessage(1818), "ok");
-				break;
-			case 5:
-				UIManager.showMessageBox(DB.getMessage(1819), "ok");
-				break;
-			default: return;
-		}
-	};
-	CharSelectV3_default = UIManager.addComponent(CharSelectV3);
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.html?raw
-var CharSelectV4_default$2;
-var init_CharSelectV4$2 = __esmMin((() => {
-	CharSelectV4_default$2 = "<div id=\"CharSelectV4\">\r\n	<div class=\"char_select_container\">\r\n		<!--Cancel Button-->\r\n		<ui-button\r\n			class=\"btn cancel\"\r\n			bg=\"select_character_ver3/bt_close2_normal.bmp\"\r\n			hover=\"select_character_ver3/bt_close2_over.bmp\"\r\n			down=\"select_character_ver3/bt_close2_press.bmp\"\r\n		></ui-button>\r\n		<!-- BOX -->\r\n		<div class=\"char_list\">\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot0\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot0 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot1\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot1 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot2\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot2 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot3\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot3 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot4\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot4 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot5\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot5 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot6\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot6 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot7\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot7 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot8\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot8 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot9\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot9 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot10\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot10 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot11\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot11 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot12\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot12 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot13\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot13 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot14\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot14 hidden\"></div>\r\n			</div>\r\n		</div>\r\n\r\n		<!-- Characters infos -->\r\n		<div class=\"charinfo\">\r\n			<div class=\"job\"></div>\r\n			<div class=\"lvl\"></div>\r\n			<div class=\"exp\"></div>\r\n			<div class=\"hp\"></div>\r\n			<div class=\"sp\"></div>\r\n			<div class=\"map\"></div>\r\n			<div class=\"str\"></div>\r\n			<div class=\"agi\"></div>\r\n			<div class=\"vit\"></div>\r\n			<div class=\"int\"></div>\r\n			<div class=\"dex\"></div>\r\n			<div class=\"luk\"></div>\r\n			<ui-button\r\n				class=\"btn delete\"\r\n				bg=\"select_character_ver3/bt_info_normal.bmp\"\r\n				hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				down=\"select_character_ver3/bt_info_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3339\"></ui-text>\r\n			</ui-button>\r\n			<ui-button\r\n				class=\"btn canceldelete\"\r\n				bg=\"select_character_ver3/bt_info_normal.bmp\"\r\n				hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				down=\"select_character_ver3/bt_info_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3340\"></ui-text>\r\n			</ui-button>\r\n			<ui-button\r\n				class=\"btn finaldelete\"\r\n				bg=\"select_character_ver3/bt_info_normal.bmp\"\r\n				hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				down=\"select_character_ver3/bt_info_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3342\"></ui-text>\r\n			</ui-button>\r\n			<ui-button\r\n				class=\"btn ok\"\r\n				bg=\"select_character_ver3/bt_gamestart_off.bmp\"\r\n				hover=\"select_character_ver3/bt_gamestart_over.bmp\"\r\n				down=\"select_character_ver3/bt_gamestart_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3341\"></ui-text>\r\n			</ui-button>\r\n			<!-- Pages infos -->\r\n			<div class=\"pageinfo\"><span class=\"current\">1</span> / <span class=\"count\">9</span></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.css?raw
-var CharSelectV4_default$1;
-var init_CharSelectV4$1 = __esmMin((() => {
-	CharSelectV4_default$1 = ":host {\r\n	min-width: 100%;\r\n	min-height: 100%;\r\n}\r\n\r\n#CharSelectV4 {\r\n	position: absolute;\r\n	min-width: 100%;\r\n	min-height: 100%;\r\n	top: 0;\r\n	left: 0;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	flex-direction: column;\r\n}\r\n\r\n#CharSelectV4 .char_select_container {\r\n	position: absolute;\r\n	display: flex;\r\n	flex-direction: row;\r\n	background-color: rgba(0, 0, 0, 0.1);\r\n	border-radius: 5px;\r\n	padding-top: 20px;\r\n	padding-left: 5px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV4 .char_list {\r\n	flex: 1;\r\n	max-width: 800px;\r\n	min-width: 157px;\r\n	height: 595px;\r\n	max-height: 80vh;\r\n	display: flex;\r\n	flex-direction: row;\r\n	flex-wrap: wrap;\r\n	overflow-y: auto;\r\n}\r\n\r\n#CharSelectV4 .box_select {\r\n	position: absolute;\r\n	width: 157px;\r\n	height: 159px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n}\r\n#CharSelectV4 .char_canvas {\r\n	width: 157px;\r\n	height: 195px;\r\n	position: relative;\r\n	z-index: 10;\r\n}\r\n#CharSelectV4 .char_canvas .name {\r\n	position: absolute;\r\n	bottom: 17px;\r\n	width: 100%;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #15154a;\r\n}\r\n\r\n#CharSelectV4 .char_canvas .job_icon {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 12px;\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV4 .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV4 .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#CharSelectV4 .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV4 .charinfo {\r\n	height: 585px;\r\n	max-height: 80vh;\r\n	width: 185px;\r\n	background-repeat: no-repeat;\r\n	margin-top: 10px;\r\n	margin-left: 10px;\r\n	position: relative;\r\n}\r\n#CharSelectV4 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV4 .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV4 .charinfo .job {\r\n	left: 60px;\r\n	top: 105px;\r\n}\r\n#CharSelectV4 .charinfo .lvl {\r\n	left: 60px;\r\n	top: 123px;\r\n}\r\n#CharSelectV4 .charinfo .exp {\r\n	left: 60px;\r\n	top: 140px;\r\n}\r\n#CharSelectV4 .charinfo .hp {\r\n	left: 60px;\r\n	top: 157px;\r\n}\r\n#CharSelectV4 .charinfo .sp {\r\n	left: 60px;\r\n	top: 174px;\r\n}\r\n#CharSelectV4 .charinfo .map {\r\n	left: 60px;\r\n	top: 89px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n#CharSelectV4 .charinfo .str {\r\n	left: 60px;\r\n	top: 191px;\r\n}\r\n#CharSelectV4 .charinfo .agi {\r\n	left: 60px;\r\n	top: 208px;\r\n}\r\n#CharSelectV4 .charinfo .vit {\r\n	left: 60px;\r\n	top: 225px;\r\n}\r\n#CharSelectV4 .charinfo .int {\r\n	left: 60px;\r\n	top: 242px;\r\n}\r\n#CharSelectV4 .charinfo .dex {\r\n	left: 60px;\r\n	top: 259px;\r\n}\r\n#CharSelectV4 .charinfo .luk {\r\n	left: 60px;\r\n	top: 276px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV4 .btn.delete {\r\n	position: absolute;\r\n	width: 131px;\r\n	height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.canceldelete {\r\n	position: absolute;\r\n	width: 131px;\r\n	height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.finaldelete {\r\n	position: absolute;\r\n	width: 131px;\r\n	height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.delete,\r\n#CharSelectV4 .btn.canceldelete,\r\n#CharSelectV4 .btn.finaldelete {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	text-align: center;\r\n	line-height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.ok {\r\n	position: absolute;\r\n	width: 165px;\r\n	height: 110px;\r\n	color: white;\r\n	padding-top: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	text-align: center;\r\n}\r\n\r\n#CharSelectV4 .btn.ok:hover {\r\n	text-shadow: #000 1px 1px;\r\n}\r\n\r\n#CharSelectV4 .ok,\r\n#CharSelectV4 .make {\r\n	right: 15px;\r\n	top: 380px;\r\n}\r\n#CharSelectV4 .cancel {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 5px;\r\n	width: 17px;\r\n	height: 18px;\r\n}\r\n#CharSelectV4 .delete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .canceldelete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .finaldelete {\r\n	right: 33px;\r\n	top: 330px;\r\n}\r\n\r\n#CharSelectV4 .timedelete {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 100px;\r\n	top: -150px;\r\n	left: 55px;\r\n}\r\n\r\n#CharSelectV4 .hidden {\r\n	display: none;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.js
-/**
-* Format delay duration
-*/
-function formatDuration(seconds) {
-	const hours = Math.floor(seconds / 3600);
-	const minutes = Math.floor(seconds % 3600 / 60);
-	const remainingSeconds = seconds % 60;
-	const replacer = DB.getMessage(3349).includes("%d") ? "%d" : "%02d";
-	return DB.getMessage(3349).replace(replacer, hours.toString().padStart(2, "0")).replace(replacer, minutes.toString().padStart(2, "0")).replace(replacer, remainingSeconds.toString().padStart(2, "0"));
-}
-/**
-* Countdown for delay in deletion
-*/
-function updateAllVisibleCountdowns() {
-	CharSelectV4.getRoot().querySelectorAll(".timedelete:not(.hidden)").forEach((countdownDiv) => {
-		const deleteReservedDuration = parseInt(countdownDiv.dataset.duration, 10);
-		const updatedDuration = Math.max(0, deleteReservedDuration - 1);
-		countdownDiv.textContent = formatDuration(updatedDuration);
-		if (updatedDuration > 0) countdownDiv.style.color = "red";
-		else countdownDiv.style.color = "blue";
-		countdownDiv.dataset.duration = updatedDuration.toString();
-	});
-}
-/**
-* Start the countdown update interval only when in CharSelectV4 UI
-*/
-function startCountdownInterval() {
-	if (!countdownInterval) countdownInterval = setInterval(updateAllVisibleCountdowns, 1e3);
-}
-/**
-* Stop the countdown update interval
-*/
-function stopCountdownInterval() {
-	if (countdownInterval) {
-		clearInterval(countdownInterval);
-		countdownInterval = null;
-	}
-}
-/**
-* When successfully requested for character deletion
-* Update UI and add timer
-*/
-function requestdelete(index, timer) {
-	const root = CharSelectV4.getRoot();
-	_entitySlots[index].action = 2;
-	const countdown = root.querySelector(`.timedelete.slot${index}`);
-	if (countdown) {
-		countdown.dataset.duration = timer;
-		countdown.classList.remove("hidden");
-		countdown.style.display = "block";
-	}
-	root.querySelector(".delete").style.display = "none";
-	root.querySelector(".canceldelete").style.display = "block";
-	root.querySelector(".finaldelete").style.display = "block";
-}
-/**
-* Cancel reservation of character for deletion
-* Update UI and remove timer
-*/
-function removedelete() {
-	if (_slots[_index]) {
-		const root = CharSelectV4.getRoot();
-		_slots[_index].DeleteDate = 0;
-		_entitySlots[_index].action = 0;
-		render$6();
-		const countdown = root.querySelector(`.timedelete.slot${_index}`);
-		if (countdown) {
-			countdown.dataset.duration = 0;
-			countdown.classList.add("hidden");
-			countdown.style.display = "none";
-		}
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".delete").style.display = "block";
-		CharSelectV4.onCancelDeleteRequest(_slots[_index].GID);
-	}
-}
-/**
-* Generic method to handle mousedown on canvas
-*
-* @param {number} value to move
-*/
-function genericCanvasDown(value) {
-	return (event) => {
-		moveCursorTo(value);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Press "cancel" or ESCAPE key
-*/
-function cancel$4() {
-	if (_disable_UI === false) {
-		UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
-			CharSelectV4.onExitRequest();
-			CharSelectV4.clearAllSlots();
-		}, null);
-		stopCountdownInterval();
-	}
-}
-/**
-* Jumping to Character creation window
-*/
-function create$4() {
-	if (_disable_UI === false) CharSelectV4.onCreateRequest(_index);
-}
-/**
-* Select Player, connect
-*/
-function connect() {
-	if (_disable_UI === false) {
-		if (_slots[_index] && !_slots[_index].DeleteDate) {
-			_preferences$1.index = _index;
-			_preferences$1.save();
-			CharSelectV4.onConnectRequest(_slots[_index]);
-			stopCountdownInterval();
-		}
-	}
-}
-/**
-* Request to delete a character
-*/
-function reserve() {
-	if (_disable_UI === false) {
-		if (_slots[_index]) {
-			CharSelectV4.off("keydown");
-			CharSelectV4.onDeleteReqDelay(_slots[_index].GID);
-		}
-	}
-}
-/**
-* Delete a character
-*/
-function suppress() {
-	if (_disable_UI === false) {
-		if (_slots[_index]) {
-			CharSelectV4.off("keydown");
-			CharSelectV4.onDeleteRequest(_slots[_index].GID);
-		}
-	}
-}
-/**
-* Move cursor, update window value
-*
-* @param {number} index
-*/
-function moveCursorTo(index) {
-	const root = CharSelectV4.getRoot();
-	const charinfo = root.querySelector(".charinfo");
-	const prevIndex = _index;
-	let entity = _slots[_index];
-	shouldRunBackgroundChange = false;
-	if (entity) Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot_normal.bmp`, (dataURI) => {
-		const prevSlot = root.querySelector(`#slot${prevIndex}`);
-		if (prevSlot) prevSlot.style.backgroundImage = `url(${dataURI})`;
-	});
-	const slotIndex = _index = index > _maxSlots ? _maxSlots : index < 0 ? 0 : index;
-	entity = _slots[_index];
-	if (!entity) {
-		charinfo.querySelectorAll("div").forEach((div) => {
-			div.textContent = "";
-		});
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".ok").style.display = "none";
-		const countdown = root.querySelector(`.timedelete.slot${_index}`);
-		if (countdown) {
-			countdown.dataset.duration = 0;
-			countdown.classList.add("hidden");
-			countdown.style.display = "none";
-		}
-		return;
-	} else {
-		_curindex = slotIndex;
-		shouldRunBackgroundChange = true;
-	}
-	if (shouldRunBackgroundChange === true) changeBackgroundEverySecond();
-	const info = _slots[_index];
-	if (info.DeleteDate) {
-		root.querySelector(".delete").style.display = "none";
-		root.querySelector(".canceldelete").style.display = "block";
-		root.querySelector(".finaldelete").style.display = "block";
-	} else {
-		root.querySelector(".canceldelete").style.display = "none";
-		root.querySelector(".finaldelete").style.display = "none";
-		root.querySelector(".delete").style.display = "block";
-	}
-	root.querySelector(".ok").style.display = "block";
-	charinfo.querySelector(".map").textContent = DB.getMapName(info.lastMap, "") || "";
-	charinfo.querySelector(".job").textContent = MonsterTable_default[info.job] || "";
-	charinfo.querySelector(".lvl").textContent = info.level;
-	charinfo.querySelector(".exp").textContent = info.exp;
-	charinfo.querySelector(".hp").textContent = info.hp;
-	charinfo.querySelector(".sp").textContent = info.sp;
-	charinfo.querySelector(".str").textContent = info.Str;
-	charinfo.querySelector(".agi").textContent = info.Agi;
-	charinfo.querySelector(".vit").textContent = info.Vit;
-	charinfo.querySelector(".int").textContent = info.Int;
-	charinfo.querySelector(".dex").textContent = info.Dex;
-	charinfo.querySelector(".luk").textContent = info.Luk;
-}
-function changeBackgroundEverySecond() {
-	const backgroundchange = CharSelectV4.getRoot().querySelector(`#slot${_curindex}`);
-	if (backgroundchange && shouldRunBackgroundChange === true) {
-		Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot_select${img}.bmp`, (dataURI) => {
-			backgroundchange.style.backgroundImage = `url(${dataURI})`;
-			backgroundchange.style.width = "157px";
-			backgroundchange.style.height = "197px";
-			backgroundchange.style.backgroundSize = "contain";
-			backgroundchange.style.backgroundRepeat = "no-repeat";
-		});
-		img = (img + 1) % 8;
-	}
-}
-/**
-* Render sprites to canvas
-*/
-function render$6() {
-	Camera.direction = 4;
-	const idx = Math.floor(_index / _maxSlots) * _maxSlots;
-	const count = _ctx.length;
-	for (let i = 0; i < count; ++i) {
-		_ctx[i].clearRect(0, 0, _ctx[i].canvas.width, _ctx[i].canvas.height);
-		if (_entitySlots[idx + i]) {
-			SpriteRenderer.bind2DContext(_ctx[i], 78, 157);
-			if (_slots[idx + i] && _slots[idx + i].DeleteDate) _entitySlots[idx + i].action = 2;
-			_entitySlots[idx + i].renderEntity();
-		}
-	}
-}
-var CharSelectV4, _preferences$1, _maxSlots, _list, _slots, _entitySlots, _index, _ctx, _sex, img, _curindex, shouldRunBackgroundChange, countdownInterval, _disable_UI, _bgInterval, CharSelectV4_default;
-var init_CharSelectV4 = __esmMin((() => {
-	init_DBManager();
-	init_MonsterTable();
-	init_Preferences$1();
-	init_KeyEventHandler();
-	init_Renderer();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_StatusState();
-	init_Camera();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CharSelectV4$2();
-	init_CharSelectV4$1();
-	init_Client();
-	CharSelectV4 = new GUIComponent("CharSelectV4", CharSelectV4_default$1);
-	CharSelectV4.render = () => CharSelectV4_default$2;
-	_preferences$1 = Preferences.get("CharSelectV4", { index: 0 }, 1);
-	_maxSlots = 15;
-	_list = [];
-	_slots = [];
-	_entitySlots = [];
-	_index = 0;
-	_ctx = [];
-	_sex = 0;
-	img = 0;
-	_curindex = 0;
-	shouldRunBackgroundChange = false;
-	_disable_UI = false;
-	/**
-	* Initialize UI
-	*/
-	CharSelectV4.init = function init() {
-		const root = this.getRoot();
-		root.querySelector(".ok").addEventListener("click", connect);
-		root.querySelector(".cancel").addEventListener("click", cancel$4);
-		root.querySelector(".delete").addEventListener("click", reserve);
-		root.querySelector(".canceldelete").addEventListener("click", removedelete);
-		root.querySelector(".finaldelete").addEventListener("click", suppress);
-		for (let i = 0; i < 15; i++) {
-			const slot = root.querySelector(`#slot${i}`);
-			if (slot) slot.addEventListener("mousedown", genericCanvasDown(i));
+			root.querySelector(".make3").addEventListener("mousedown", (e) => {
+				genericCanvasDown(2)(e);
+				create();
+			});
 		}
 		root.querySelectorAll("canvas").forEach((canvas) => {
 			canvas.addEventListener("dblclick", () => {
 				if (_slots[_index]) connect();
-				else create$4();
+				else create();
 			});
 			_ctx.push(canvas.getContext("2d"));
 		});
-		Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_info.bmp`, (dataURI) => {
-			root.querySelector(".charinfo").style.backgroundImage = `url(${dataURI})`;
-		});
-		for (let i = 0; i < 15; i++) {
-			const slotCanvas = root.querySelector(`#slot${i}`);
-			if (slotCanvas) Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot2_normal.bmp`, (dataURI) => {
-				slotCanvas.style.backgroundImage = `url(${dataURI})`;
-			});
-		}
 	};
-	_bgInterval = null;
 	/**
 	* Once append to body
 	*/
-	CharSelectV4.onAppend = function onAppend() {
-		CharSelectV4.updateCharSlot();
-		startCountdownInterval();
+	Component.onAppend = function onAppend() {
+		if (gridLayout) {
+			Component.updateCharSlot();
+			startCountdownInterval();
+			moveCursorTo(_index);
+			_bgInterval = setInterval(changeBackgroundEverySecond, 250);
+			Renderer.render(render);
+			return;
+		}
+		const root = this.getRoot();
+		this._host.style.top = `${(Renderer.height - hostHeight) / 2}px`;
+		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
+		_index = _preferences.index;
+		root.querySelector(".slotinfo .number").textContent = `${_list.length} / ${_maxSlots}`;
+		if (!pageBalls) root.querySelector(".pageinfo .count").textContent = _maxSlots / 3;
 		moveCursorTo(_index);
-		_bgInterval = setInterval(changeBackgroundEverySecond, 250);
-		Renderer.render(render$6);
+		Renderer.render(render);
 	};
 	/**
 	* Stop rendering
 	*/
-	CharSelectV4.onRemove = function onRemove() {
-		if (_bgInterval) {
-			clearInterval(_bgInterval);
-			_bgInterval = null;
+	Component.onRemove = function onRemove() {
+		if (gridLayout) {
+			if (_bgInterval) {
+				clearInterval(_bgInterval);
+				_bgInterval = null;
+			}
+			stopCountdownInterval();
+			_preferences.index = _index;
+			_preferences.save();
+			Renderer.stop();
+			return;
 		}
-		stopCountdownInterval();
-		_preferences$1.index = _index;
-		_preferences$1.save();
+		const root = this.getRoot();
+		_preferences.index = _index;
+		_preferences.save();
+		if (deleteReservation) root.querySelectorAll(".timedelete").forEach((el) => {
+			el.style.display = "none";
+			el.textContent = "";
+		});
 		Renderer.stop();
 	};
 	/**
@@ -335617,24 +334022,26 @@ var init_CharSelectV4 = __esmMin((() => {
 	*
 	* @param {object} event
 	*/
-	CharSelectV4.onKeyDown = function onKeyDown(event) {
+	Component.onKeyDown = function onKeyDown(event) {
 		if (this._host.style.display === "none") return true;
 		switch (event.which) {
 			case KEYS.ESCAPE:
-				cancel$4();
+				cancel();
 				break;
 			case KEYS.LEFT:
-				moveCursorTo(_index - 1 > _list.length - 1 ? _list.length - 1 : _index - 1 < 0 ? 0 : _index - 1);
+				if (gridLayout) moveCursorTo(_index - 1 > _list.length - 1 ? _list.length - 1 : _index - 1 < 0 ? 0 : _index - 1);
+				else moveCursorTo(_index - 1);
 				break;
 			case KEYS.RIGHT:
-				moveCursorTo(_index + 1 > _list.length - 1 ? _list.length - 1 : _index + 1 < 0 ? 0 : _index + 1);
+				if (gridLayout) moveCursorTo(_index + 1 > _list.length - 1 ? _list.length - 1 : _index + 1 < 0 ? 0 : _index + 1);
+				else moveCursorTo(_index + 1);
 				break;
 			case KEYS.SUPR:
 				if (_slots[_index]) suppress();
 				break;
 			case KEYS.ENTER:
 				if (_slots[_index]) connect();
-				else create$4();
+				else create();
 				break;
 			default: return true;
 		}
@@ -335646,60 +334053,50 @@ var init_CharSelectV4 = __esmMin((() => {
 	*
 	* @param {object} pkt - packet structure
 	*/
-	CharSelectV4.setInfo = function setInfo(pkt) {
-		CharSelectV4.clearAllSlots();
-		_maxSlots = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 15);
-		_sex = pkt.sex;
-		if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) CharSelectV4.addCharacter(pkt.charInfo[i]);
-		moveCursorTo(_index);
-	};
-	/**
-	* Result of Request in Deleting the Character
-	*
-	* @param {object} pkt - packet structure
-	*/
-	CharSelectV4.reqdeleteAnswer = function reqdeleteAnswer(pkt) {
-		this.on("keydown");
-		const deleteReservedDate = pkt.DeleteReservedDate;
-		const result = typeof pkt.Result === "undefined" ? -1 : pkt.Result;
-		const info = _slots[_index];
-		switch (result) {
-			case 0: return;
-			case 1:
-				info.DeleteDate = deleteReservedDate + Math.floor(Date.now() / 1e3);
-				requestdelete(_index, deleteReservedDate);
-				break;
-			case 3: return;
-			case 4:
-				UIManager.showMessageBox(DB.getMessage(1818), "ok");
-				break;
-			case 5:
-				UIManager.showMessageBox(DB.getMessage(1819), "ok");
-				break;
-			default: return;
+	Component.setInfo = function setInfo(pkt) {
+		if (gridLayout) {
+			Component.clearAllSlots();
+			_maxSlots = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 15);
+			_sex = pkt.sex;
+			if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) Component.addCharacter(pkt.charInfo[i]);
+			moveCursorTo(_index);
+			return;
 		}
+		const root = this.getRoot();
+		_maxSlots = Math.floor(pkt.TotalSlotNum + pkt.PremiumStartSlot || 9);
+		_sex = pkt.sex;
+		_slots.length = 0;
+		_entitySlots.length = 0;
+		_list.length = 0;
+		if (pkt.charInfo) for (let i = 0, count = pkt.charInfo.length; i < count; ++i) {
+			Component.addCharacter(pkt.charInfo[i]);
+			_maxSlots = Math.max(_maxSlots, Math.floor(pkt.charInfo[i].CharNum / 3 + 1) * 3);
+		}
+		root.querySelector(".slotinfo .number").textContent = `${_list.length} / ${_maxSlots}`;
+		if (!pageBalls) root.querySelector(".pageinfo .count").textContent = _maxSlots / 3;
+		moveCursorTo(_index);
 	};
 	/**
 	* Answer from server to delete a character
 	*
 	* @param {number} error id
 	*/
-	CharSelectV4.deleteAnswer = function deleteAnswer(error) {
+	Component.deleteAnswer = function deleteAnswer(error) {
 		this.on("keydown");
-		switch (error) {
+		if (gridLayout) switch (error) {
 			case -1:
 			case -2: return;
 			case 1: {
 				delete _slots[_index];
 				delete _entitySlots[_index];
-				if (_preferences$1.index === _index) _preferences$1.index = 0;
+				if (_preferences.index === _index) _preferences.index = 0;
 				let i = 0;
 				let count = _list.length;
 				while (i < count) if (_list[i].CharNum === _index) {
 					_list.splice(i, 1);
 					--count;
 				} else i++;
-				CharSelectV4.updateCharSlot(_index);
+				Component.updateCharSlot(_index);
 				moveCursorTo(_index);
 				return;
 			}
@@ -335722,40 +334119,639 @@ var init_CharSelectV4 = __esmMin((() => {
 				UIManager.showMessageBox(DB.getMessage(301), "ok");
 				return;
 		}
+		if (deleteReservation && (!packetverGatedDelete || PacketVerManager_default.value >= 20100803)) {
+			const root = this.getRoot();
+			switch (error) {
+				case -1:
+				case -2: return;
+				case 1: {
+					delete _slots[_index];
+					delete _entitySlots[_index];
+					let i = 0;
+					let count = _list.length;
+					while (i < count) if (_list[i].CharNum === _index) {
+						_list.splice(i, 1);
+						--count;
+					} else i++;
+					moveCursorTo(_index);
+					root.querySelector(".slotinfo .number").textContent = `${_list.length} / ${_maxSlots}`;
+					return;
+				}
+				default:
+				case 0:
+				case 2:
+				case 6:
+					UIManager.showMessageBox(DB.getMessage(1821), "ok");
+					return;
+				case 3:
+					UIManager.showMessageBox(DB.getMessage(1817), "ok");
+					return;
+				case 4:
+					UIManager.showMessageBox(DB.getMessage(1820), "ok");
+					return;
+				case 5:
+					UIManager.showMessageBox(DB.getMessage(1822), "ok");
+					return;
+				case 7:
+					UIManager.showMessageBox(DB.getMessage(301), "ok");
+					return;
+			}
+		} else switch (error) {
+			case -2: return;
+			case -1: {
+				const root = this.getRoot();
+				delete _slots[_index];
+				delete _entitySlots[_index];
+				let i = 0;
+				let count = _list.length;
+				while (i < count) if (_list[i].CharNum === _index) {
+					_list.splice(i, 1);
+					--count;
+				} else i++;
+				moveCursorTo(_index);
+				root.querySelector(".slotinfo .number").textContent = `${_list.length} / ${_maxSlots}`;
+				return;
+			}
+			default:
+			case 0:
+				UIManager.showMessageBox(DB.getMessage(301), "ok");
+				break;
+		}
 	};
 	/**
 	* Adding a Character to the list
 	*
 	* @param {object} character data
 	*/
-	CharSelectV4.addCharacter = function addCharacter(character) {
+	Component.addCharacter = function addCharacter(character) {
 		if (!("sex" in character) || character.sex === 99) character.sex = _sex;
+		if (gridLayout) {
+			_list.push(character);
+			_slots[character.CharNum] = character;
+			_entitySlots[character.CharNum] = new Entity();
+			_entitySlots[character.CharNum].set(character);
+			_entitySlots[character.CharNum].effectState = _entitySlots[character.CharNum]._effectState & ~StatusState_default.EffectState.INVISIBLE;
+			_entitySlots[character.CharNum].hideShadow = true;
+			Component.updateCharSlot(character.CharNum);
+			return;
+		}
+		if (deleteReservation && character.DeleteDate) {
+			const now = Math.floor(Date.now() / 1e3);
+			character.DeleteDate = PacketVerManager_default.value > 2013e4 && PacketVerManager_default.value <= 20141022 || PacketVerManager_default.value >= 20150513 ? character.DeleteDate + now : character.DeleteDate;
+		}
 		_list.push(character);
 		_slots[character.CharNum] = character;
 		_entitySlots[character.CharNum] = new Entity();
 		_entitySlots[character.CharNum].set(character);
 		_entitySlots[character.CharNum].effectState = _entitySlots[character.CharNum]._effectState & ~StatusState_default.EffectState.INVISIBLE;
-		_entitySlots[character.CharNum].hideShadow = true;
-		CharSelectV4.updateCharSlot(character.CharNum);
+		if (deleteReservation && (!packetverGatedDelete || PacketVerManager_default.value >= 20100803)) {
+			if (_slots[character.CharNum].DeleteDate && Math.floor(_index / 3) === Math.floor(character.CharNum / 3)) {
+				const root = Component.getRoot();
+				const slotNum = (character.CharNum + _maxSlots) % _maxSlots + 1;
+				const countdown = root.querySelector(`.timedelete.slot${slotNum}`);
+				const entity = _entitySlots[character.CharNum];
+				if (countdown) {
+					countdown.dataset.datetime = _slots[character.CharNum].DeleteDate;
+					countdown.textContent = formatDatetime(_slots[character.CharNum].DeleteDate);
+					countdown.style.display = "block";
+				}
+				entity.setAction({
+					action: entity.ACTION.SIT,
+					frame: 0,
+					play: true,
+					repeat: true
+				});
+			}
+		}
 	};
 	/**
 	* Disable or Enable the UI.
 	*
 	* @param {boolean}
 	*/
-	CharSelectV4.setUIEnabled = function setUIEnabled(value) {
+	Component.setUIEnabled = function setUIEnabled(value) {
 		_disable_UI = !value;
 	};
 	/**
 	* Callback to use
 	*/
-	CharSelectV4.onExitRequest = function onExitRequest() {};
-	CharSelectV4.onDeleteRequest = function onDeleteRequest() {};
-	CharSelectV4.onDeleteReqDelay = function onDeleteReqDelay() {};
-	CharSelectV4.onCreateRequest = function onCreateRequest() {};
-	CharSelectV4.onConnectRequest = function onConnectRequest() {};
-	CharSelectV4.onCancelDeleteRequest = function onCancelDeleteRequest() {};
-	CharSelectV4.updateCharSlot = function updateCharSlot(slotId) {
+	Component.onExitRequest = function onExitRequest() {};
+	Component.onDeleteRequest = function onDeleteRequest() {};
+	Component.onCreateRequest = function onCreateRequest() {};
+	Component.onConnectRequest = function onConnectRequest() {};
+	if (deleteReservation) {
+		Component.onDeleteReqDelay = function onDeleteReqDelay() {};
+		Component.onCancelDeleteRequest = function onCancelDeleteRequest() {};
+	}
+	/**
+	* Generic method to handle mousedown on arrow
+	*
+	* @param {number} value to move
+	*/
+	function genericArrowDown(value) {
+		return (event) => {
+			moveCursorTo((_index + _maxSlots + value) % _maxSlots);
+			event.stopImmediatePropagation();
+			return false;
+		};
+	}
+	/**
+	* Generic method to handle mousedown on canvas
+	*
+	* @param {number} value to move
+	*/
+	function genericCanvasDown(value) {
+		return (event) => {
+			if (gridLayout) moveCursorTo(value);
+			else moveCursorTo(Math.floor(_index / 3) * 3 + value);
+			event.stopImmediatePropagation();
+			return false;
+		};
+	}
+	/**
+	* Press "cancel" or ESCAPE key
+	*/
+	function cancel() {
+		if (_disable_UI === false) if (gridLayout) {
+			UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
+				Component.onExitRequest();
+				Component.clearAllSlots();
+			}, null);
+			stopCountdownInterval();
+		} else UIManager.showPromptBox(DB.getMessage(17), "ok", "cancel", () => {
+			Component.onExitRequest();
+		}, null);
+	}
+	/**
+	* Jumping to Character creation window
+	*/
+	function create() {
+		if (_disable_UI === false) Component.onCreateRequest(_index);
+	}
+	/**
+	* Select Player, connect
+	*/
+	function connect() {
+		if (_disable_UI === false) {
+			if (gridLayout) {
+				if (_slots[_index] && !_slots[_index].DeleteDate) {
+					_preferences.index = _index;
+					_preferences.save();
+					Component.onConnectRequest(_slots[_index]);
+					stopCountdownInterval();
+				}
+			} else if (_slots[_index]) {
+				_preferences.index = _index;
+				_preferences.save();
+				Component.onConnectRequest(_slots[_index]);
+			}
+		}
+	}
+	/**
+	* Request to delete a character
+	*/
+	function reserve() {
+		if (_disable_UI === false) {
+			if (_slots[_index]) {
+				Component.off("keydown");
+				Component.onDeleteReqDelay(_slots[_index].GID);
+			}
+		}
+	}
+	/**
+	* Delete a character
+	*/
+	function suppress() {
+		if (_disable_UI === false) {
+			if (_slots[_index]) {
+				Component.off("keydown");
+				Component.onDeleteRequest(_slots[_index].GID);
+			}
+		}
+	}
+	if (deleteReservation)
+ /**
+	* Result of Request in Deleting the Character
+	*
+	* @param {object} pkt - packet structure
+	*/
+	Component.reqdeleteAnswer = gridLayout ? function reqdeleteAnswer(pkt) {
+		this.on("keydown");
+		const deleteReservedDate = pkt.DeleteReservedDate;
+		const result = typeof pkt.Result === "undefined" ? -1 : pkt.Result;
+		const info = _slots[_index];
+		switch (result) {
+			case 0: return;
+			case 1:
+				info.DeleteDate = deleteReservedDate + Math.floor(Date.now() / 1e3);
+				requestdelete(_index, deleteReservedDate);
+				break;
+			case 3: return;
+			case 4:
+				UIManager.showMessageBox(DB.getMessage(1818), "ok");
+				break;
+			case 5:
+				UIManager.showMessageBox(DB.getMessage(1819), "ok");
+				break;
+			default: return;
+		}
+	} : function reqdeleteAnswer(pkt) {
+		this.on("keydown");
+		const now = Math.floor(Date.now() / 1e3);
+		const result = typeof pkt.Result === "undefined" ? -1 : pkt.Result;
+		const info = _slots[_index];
+		switch (result) {
+			case 0: return;
+			case 1: {
+				const timer = PacketVerManager_default.value > 2013e4 && PacketVerManager_default.value <= 20141022 || PacketVerManager_default.value >= 20150513 ? pkt.DeleteReservedDate + now : pkt.DeleteReservedDate;
+				info.DeleteDate = timer;
+				requestdelete(_index, timer);
+				break;
+			}
+			case 3: return;
+			case 4:
+				UIManager.showMessageBox(DB.getMessage(1818), "ok");
+				break;
+			case 5:
+				UIManager.showMessageBox(DB.getMessage(1819), "ok");
+				break;
+			default: return;
+		}
+	};
+	/**
+	* When successfully requested for character deletion
+	* Update UI and add timer
+	*/
+	function requestdelete(index, timer) {
+		const root = Component.getRoot();
+		if (gridLayout) {
+			_entitySlots[index].action = 2;
+			const countdown = root.querySelector(`.timedelete.slot${index}`);
+			if (countdown) {
+				countdown.dataset.duration = timer;
+				countdown.classList.remove("hidden");
+				countdown.style.display = "block";
+			}
+			root.querySelector(".delete").style.display = "none";
+			root.querySelector(".canceldelete").style.display = "block";
+			root.querySelector(".finaldelete").style.display = "block";
+			return;
+		}
+		const entity = _entitySlots[index];
+		let action;
+		const countdown = root.querySelector(`.timedelete.slot${index % 3 + 1}`);
+		if (countdown) {
+			countdown.dataset.datetime = timer;
+			countdown.textContent = formatDatetime(timer);
+			countdown.style.display = "block";
+			if (Math.floor(Date.now() / 1e3) > timer) {
+				countdown.classList.remove("waitdelete");
+				countdown.classList.add("candelete");
+				action = entity.ACTION.DIE;
+			} else {
+				countdown.classList.remove("candelete");
+				countdown.classList.add("waitdelete");
+				action = entity.ACTION.SIT;
+			}
+		}
+		entity.action = action;
+		root.querySelector(".delete").style.display = "none";
+		root.querySelector(".canceldelete").style.display = "block";
+		if (Math.floor(Date.now() / 1e3) > timer) root.querySelector(".finaldelete").style.display = "block";
+		else root.querySelector(".finaldelete").style.display = "none";
+	}
+	/**
+	* Cancel reservation of character for deletion
+	* Update UI and remove timer
+	*/
+	function removedelete() {
+		if (_slots[_index]) {
+			const root = Component.getRoot();
+			_slots[_index].DeleteDate = 0;
+			if (gridLayout) {
+				_entitySlots[_index].action = 0;
+				render();
+				const countdown = root.querySelector(`.timedelete.slot${_index}`);
+				if (countdown) {
+					countdown.dataset.duration = 0;
+					countdown.classList.add("hidden");
+					countdown.style.display = "none";
+				}
+				root.querySelector(".canceldelete").style.display = "none";
+				root.querySelector(".finaldelete").style.display = "none";
+				root.querySelector(".delete").style.display = "block";
+				Component.onCancelDeleteRequest(_slots[_index].GID);
+				return;
+			}
+			_entitySlots[_index].action = _entitySlots[_index].ACTION.READYFIGHT;
+			render();
+			const countdown = root.querySelector(`.timedelete.slot${_index % 3 + 1}`);
+			countdown.dataset.datetime = 0;
+			countdown.textContent = formatDatetime("");
+			countdown.style.display = "none";
+			root.querySelector(".canceldelete").style.display = "none";
+			root.querySelector(".finaldelete").style.display = "none";
+			root.querySelector(".delete").style.display = "block";
+			Component.onCancelDeleteRequest(_slots[_index].GID);
+		}
+	}
+	/**
+	* Draw a page selection ball (V3)
+	*/
+	function drawBall(btnContainer, index, sel) {
+		const btn = document.createElement("button");
+		btn.className = `btn_pageinfo btn_pageinfo${index}`;
+		btn.style.border = "0";
+		btn.style.width = "8px";
+		btn.style.height = "8px";
+		btn.style.backgroundColor = "transparent";
+		btn.style.backgroundRepeat = "no-repeat";
+		btn.style.cursor = "pointer";
+		const imgEl = document.createElement("img");
+		imgEl.width = 8;
+		const imagePath = sel ? "select_character/page_ball_fill.bmp" : "select_character/page_ball_empty.bmp";
+		Client.loadFile(DB.INTERFACE_PATH + imagePath, (data) => {
+			btn.style.backgroundImage = `url("${data}")`;
+		});
+		btn.addEventListener("click", () => {
+			moveCursorTo((index - 1) * 3);
+		});
+		btnContainer.appendChild(btn);
+		btnContainer.appendChild(imgEl);
+	}
+	/**
+	* Format delay date time (V2 / V3)
+	*/
+	function formatDatetime(epoch) {
+		const datetime = /* @__PURE__ */ new Date(0);
+		datetime.setSeconds(epoch);
+		const month = datetime.getMonth() + 1;
+		const day = datetime.getDate();
+		const hours = datetime.getHours();
+		const minutes = datetime.getMinutes();
+		const seconds = datetime.getSeconds();
+		return DB.getMessage(2097).replace("%d", `${month}`).replace("%d", `${day}`).replace("%d", `${hours}`).replace("%d", `${minutes}`).replace("%d", `${seconds}`);
+	}
+	/**
+	* Move cursor, update window value (V1 / V2 / V3)
+	*
+	* @param {number} index
+	*/
+	function moveCursorToPaginated(index) {
+		const root = Component.getRoot();
+		const charinfo = root.querySelector(".charinfo");
+		let entity = _entitySlots[_index];
+		let info = _slots[_index];
+		let action;
+		if (entity) {
+			if (deleteReservation && info.DeleteDate && (!packetverGatedDelete || PacketVerManager_default.value >= 20100803)) action = entity.ACTION.SIT;
+			else action = entity.ACTION.IDLE;
+			entity.setAction({
+				action,
+				frame: 0,
+				play: true,
+				repeat: true
+			});
+		}
+		_index = (index + _maxSlots) % _maxSlots;
+		const boxSelect = root.querySelector(".box_select");
+		boxSelect.classList.remove("slot1", "slot2", "slot3");
+		boxSelect.classList.add(`slot${_index % 3 + 1}`);
+		if (pageBalls) {
+			const pagebtn = root.querySelector(".pageinfo .pagebtn");
+			pagebtn.textContent = "";
+			for (let i = 1; i <= _maxSlots / 3; i++) drawBall(pagebtn, i, Math.floor(_index / 3) + 1 === i);
+			root.querySelector(".pageinfo").style.left = `${576 / 2 - _maxSlots / 3 * 8}px`;
+			let mix = (index + 1) % 3 === 0 ? index + 1 - 3 : index + 1 - (index + 1) % 3;
+			mix = mix >= _maxSlots ? 0 : mix;
+			for (let i = 1; i <= 3; i++) {
+				root.querySelector(`.make${i}`).style.display = "none";
+				if (!_entitySlots[mix + (i - 1)]) root.querySelector(`.make${i}`).style.display = "block";
+			}
+		} else root.querySelector(".pageinfo .current").textContent = Math.floor(_index / 3) + 1;
+		if (deleteReservation) for (let i = 0; i < 3; i++) {
+			const tmpIndex = _index - _index % 3 + i;
+			info = _slots[tmpIndex];
+			entity = _entitySlots[tmpIndex];
+			const countdown = root.querySelector(`.timedelete.slot${tmpIndex % 3 + 1}`);
+			if (info && entity) if (info.DeleteDate && (!packetverGatedDelete || PacketVerManager_default.value >= 20100803)) {
+				countdown.dataset.datetime = info.DeleteDate;
+				countdown.textContent = formatDatetime(info.DeleteDate);
+				countdown.style.display = "block";
+				if (Math.floor(Date.now() / 1e3) > info.DeleteDate) {
+					countdown.classList.remove("waitdelete");
+					countdown.classList.add("candelete");
+				} else {
+					countdown.classList.remove("candelete");
+					countdown.classList.add("waitdelete");
+				}
+				entity.action = entity.ACTION.SIT;
+			} else {
+				countdown.dataset.datetime = 0;
+				countdown.textContent = formatDatetime("");
+				countdown.style.display = "none";
+				entity.action = entity.ACTION.IDLE;
+			}
+			else {
+				countdown.dataset.datetime = 0;
+				countdown.textContent = formatDatetime("");
+				countdown.style.display = "none";
+			}
+		}
+		entity = _entitySlots[_index];
+		if (!entity) {
+			charinfo.querySelectorAll("div").forEach((div) => {
+				div.textContent = "";
+			});
+			root.querySelector(".make").style.display = "block";
+			root.querySelector(".delete").style.display = "none";
+			if (deleteReservation) {
+				root.querySelector(".canceldelete").style.display = "none";
+				root.querySelector(".finaldelete").style.display = "none";
+			}
+			root.querySelector(".ok").style.display = "none";
+			return;
+		}
+		info = _slots[_index];
+		if (deleteReservation && info.DeleteDate && (!packetverGatedDelete || PacketVerManager_default.value >= 20100803)) {
+			root.querySelector(".delete").style.display = "none";
+			root.querySelector(".canceldelete").style.display = "block";
+			if (Math.floor(Date.now() / 1e3) > info.DeleteDate) {
+				root.querySelector(".finaldelete").style.display = "block";
+				action = entity.ACTION.DIE;
+			} else {
+				root.querySelector(".finaldelete").style.display = "none";
+				action = entity.ACTION.SIT;
+			}
+			root.querySelector(".make").style.display = "none";
+			root.querySelector(".ok").style.display = "block";
+		} else {
+			if (deleteReservation) {
+				if (!packetverGatedDelete || PacketVerManager_default.value >= 20100803) {
+					root.querySelector(".delete").style.display = "block";
+					root.querySelector(".canceldelete").style.display = "none";
+					root.querySelector(".finaldelete").style.display = "none";
+				} else {
+					root.querySelector(".delete").style.display = "none";
+					root.querySelector(".canceldelete").style.display = "none";
+					root.querySelector(".finaldelete").style.display = "block";
+				}
+				root.querySelector(".make").style.display = "none";
+			} else {
+				root.querySelector(".make").style.display = "none";
+				root.querySelector(".delete").style.display = "block";
+			}
+			root.querySelector(".ok").style.display = "block";
+			action = entity.ACTION.READYFIGHT;
+		}
+		entity.setAction({
+			action,
+			frame: 0,
+			play: true,
+			repeat: true
+		});
+		charinfo.querySelector(".name").textContent = info.name;
+		charinfo.querySelector(".job").textContent = MonsterTable_default[info.job] || "";
+		charinfo.querySelector(".lvl").textContent = info.level;
+		charinfo.querySelector(".exp").textContent = info.exp;
+		charinfo.querySelector(".hp").textContent = info.hp;
+		charinfo.querySelector(".sp").textContent = info.sp;
+		charinfo.querySelector(".map").textContent = DB.getMapName(info.lastMap, "") || "";
+		charinfo.querySelector(".str").textContent = info.Str;
+		charinfo.querySelector(".agi").textContent = info.Agi;
+		charinfo.querySelector(".vit").textContent = info.Vit;
+		charinfo.querySelector(".int").textContent = info.Int;
+		charinfo.querySelector(".dex").textContent = info.Dex;
+		charinfo.querySelector(".luk").textContent = info.Luk;
+	}
+	/**
+	* Render sprites to canvas (V1 / V2 / V3)
+	*/
+	function renderPaginated() {
+		Camera.direction = 4;
+		const idx = Math.floor(_index / 3) * 3;
+		const count = _ctx.length;
+		for (let i = 0; i < count; ++i) {
+			_ctx[i].clearRect(0, 0, _ctx[i].canvas.width, _ctx[i].canvas.height);
+			if (_entitySlots[idx + i]) {
+				SpriteRenderer.bind2DContext(_ctx[i], 63, 130);
+				_entitySlots[idx + i].renderEntity();
+			}
+		}
+	}
+	/**
+	* Format delay duration (V4)
+	*/
+	function formatDuration(seconds) {
+		const hours = Math.floor(seconds / 3600);
+		const minutes = Math.floor(seconds % 3600 / 60);
+		const remainingSeconds = seconds % 60;
+		const replacer = DB.getMessage(3349).includes("%d") ? "%d" : "%02d";
+		return DB.getMessage(3349).replace(replacer, hours.toString().padStart(2, "0")).replace(replacer, minutes.toString().padStart(2, "0")).replace(replacer, remainingSeconds.toString().padStart(2, "0"));
+	}
+	/**
+	* Countdown for delay in deletion (V4)
+	*/
+	function updateAllVisibleCountdowns() {
+		Component.getRoot().querySelectorAll(".timedelete:not(.hidden)").forEach((countdownDiv) => {
+			const deleteReservedDuration = parseInt(countdownDiv.dataset.duration, 10);
+			const updatedDuration = Math.max(0, deleteReservedDuration - 1);
+			countdownDiv.textContent = formatDuration(updatedDuration);
+			if (updatedDuration > 0) countdownDiv.style.color = "red";
+			else countdownDiv.style.color = "blue";
+			countdownDiv.dataset.duration = updatedDuration.toString();
+		});
+	}
+	/**
+	* Start the countdown update interval only when in grid UI
+	*/
+	function startCountdownInterval() {
+		if (!countdownInterval) countdownInterval = setInterval(updateAllVisibleCountdowns, 1e3);
+	}
+	/**
+	* Stop the countdown update interval
+	*/
+	function stopCountdownInterval() {
+		if (countdownInterval) {
+			clearInterval(countdownInterval);
+			countdownInterval = null;
+		}
+	}
+	/**
+	* Move cursor, update window value (V4)
+	*
+	* @param {number} index
+	*/
+	function moveCursorToGrid(index) {
+		const root = Component.getRoot();
+		const charinfo = root.querySelector(".charinfo");
+		const prevIndex = _index;
+		let entity = _slots[_index];
+		shouldRunBackgroundChange = false;
+		if (entity) Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot_normal.bmp`, (dataURI) => {
+			const prevSlot = root.querySelector(`#slot${prevIndex}`);
+			if (prevSlot) prevSlot.style.backgroundImage = `url(${dataURI})`;
+		});
+		const slotIndex = _index = index > _maxSlots ? _maxSlots : index < 0 ? 0 : index;
+		entity = _slots[_index];
+		if (!entity) {
+			charinfo.querySelectorAll("div").forEach((div) => {
+				div.textContent = "";
+			});
+			root.querySelector(".delete").style.display = "none";
+			root.querySelector(".canceldelete").style.display = "none";
+			root.querySelector(".finaldelete").style.display = "none";
+			root.querySelector(".ok").style.display = "none";
+			const countdown = root.querySelector(`.timedelete.slot${_index}`);
+			if (countdown) {
+				countdown.dataset.duration = 0;
+				countdown.classList.add("hidden");
+				countdown.style.display = "none";
+			}
+			return;
+		} else {
+			_curindex = slotIndex;
+			shouldRunBackgroundChange = true;
+		}
+		if (shouldRunBackgroundChange === true) changeBackgroundEverySecond();
+		const info = _slots[_index];
+		if (info.DeleteDate) {
+			root.querySelector(".delete").style.display = "none";
+			root.querySelector(".canceldelete").style.display = "block";
+			root.querySelector(".finaldelete").style.display = "block";
+		} else {
+			root.querySelector(".canceldelete").style.display = "none";
+			root.querySelector(".finaldelete").style.display = "none";
+			root.querySelector(".delete").style.display = "block";
+		}
+		root.querySelector(".ok").style.display = "block";
+		charinfo.querySelector(".map").textContent = DB.getMapName(info.lastMap, "") || "";
+		charinfo.querySelector(".job").textContent = MonsterTable_default[info.job] || "";
+		charinfo.querySelector(".lvl").textContent = info.level;
+		charinfo.querySelector(".exp").textContent = info.exp;
+		charinfo.querySelector(".hp").textContent = info.hp;
+		charinfo.querySelector(".sp").textContent = info.sp;
+		charinfo.querySelector(".str").textContent = info.Str;
+		charinfo.querySelector(".agi").textContent = info.Agi;
+		charinfo.querySelector(".vit").textContent = info.Vit;
+		charinfo.querySelector(".int").textContent = info.Int;
+		charinfo.querySelector(".dex").textContent = info.Dex;
+		charinfo.querySelector(".luk").textContent = info.Luk;
+	}
+	function changeBackgroundEverySecond() {
+		const backgroundchange = Component.getRoot().querySelector(`#slot${_curindex}`);
+		if (backgroundchange && shouldRunBackgroundChange === true) {
+			Client.loadFile(`${DB.INTERFACE_PATH}select_character_ver3/img_slot_select${img}.bmp`, (dataURI) => {
+				backgroundchange.style.backgroundImage = `url(${dataURI})`;
+				backgroundchange.style.width = "157px";
+				backgroundchange.style.height = "197px";
+				backgroundchange.style.backgroundSize = "contain";
+				backgroundchange.style.backgroundRepeat = "no-repeat";
+			});
+			img = (img + 1) % 8;
+		}
+	}
+	Component.updateCharSlot = function updateCharSlot(slotId) {
 		const root = this.getRoot();
 		let start = 0;
 		let loopMax = Math.max(_maxSlots, _slots.length);
@@ -335801,13 +334797,146 @@ var init_CharSelectV4 = __esmMin((() => {
 			}
 		}
 	};
-	CharSelectV4.clearAllSlots = function clearAllSlots() {
+	Component.clearAllSlots = function clearAllSlots() {
 		_slots.length = 0;
 		_entitySlots.length = 0;
 		_list.length = 0;
-		CharSelectV4.updateCharSlot();
+		Component.updateCharSlot();
 	};
-	CharSelectV4_default = UIManager.addComponent(CharSelectV4);
+	/**
+	* Render sprites to canvas (V4)
+	*/
+	function renderGrid() {
+		Camera.direction = 4;
+		const idx = Math.floor(_index / _maxSlots) * _maxSlots;
+		const count = _ctx.length;
+		for (let i = 0; i < count; ++i) {
+			_ctx[i].clearRect(0, 0, _ctx[i].canvas.width, _ctx[i].canvas.height);
+			if (_entitySlots[idx + i]) {
+				SpriteRenderer.bind2DContext(_ctx[i], 78, 157);
+				if (_slots[idx + i] && _slots[idx + i].DeleteDate) _entitySlots[idx + i].action = 2;
+				_entitySlots[idx + i].renderEntity();
+			}
+		}
+	}
+	/**
+	* Create component and export it
+	*/
+	return UIManager.addComponent(Component);
+}
+var init_CharSelectCommon = __esmMin((() => {
+	init_DBManager();
+	init_MonsterTable();
+	init_Preferences$1();
+	init_Client();
+	init_KeyEventHandler();
+	init_Renderer();
+	init_Entity$1();
+	init_SpriteRenderer();
+	init_StatusState();
+	init_Camera();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_PacketVerManager();
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelect/CharSelect.js
+var CharSelect_default;
+var init_CharSelect$1 = __esmMin((() => {
+	init_CharSelect$3();
+	init_CharSelect$2();
+	init_CharSelectCommon();
+	CharSelect_default = createCharSelect({
+		name: "CharSelect",
+		htmlText: CharSelect_default$2,
+		cssText: CharSelect_default$1,
+		hostHeight: 342
+	});
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.html?raw
+var CharSelectV2_default$2;
+var init_CharSelectV2$2 = __esmMin((() => {
+	CharSelectV2_default$2 = "<div id=\"CharSelectV2\">\r\n	<ui-image src=\"login_interface/win_select2.bmp\"></ui-image>\r\n	<!-- BOX -->\r\n	<div class=\"box_select\"><ui-image src=\"login_interface/box_select.bmp\"></ui-image></div>\r\n	<canvas class=\"slot1\" width=\"126\" height=\"132\"></canvas>\r\n	<canvas class=\"slot2\" width=\"126\" height=\"132\"></canvas>\r\n	<canvas class=\"slot3\" width=\"126\" height=\"132\"></canvas>\r\n	<div class=\"timedelete slot1 hidden\"></div>\r\n	<div class=\"timedelete slot2 hidden\"></div>\r\n	<div class=\"timedelete slot3 hidden\"></div>\r\n\r\n	<!-- Arrows -->\r\n	<ui-button class=\"arrow left\" bg=\"scroll1left.bmp\"></ui-button>\r\n	<ui-button class=\"arrow right\" bg=\"scroll1right.bmp\"></ui-button>\r\n\r\n	<!-- Slots infos -->\r\n	<div class=\"slotinfo\">\r\n		<span class=\"number\">0 / 27</span>\r\n		<span class=\"content\"></span>\r\n	</div>\r\n\r\n	<!-- Pages infos -->\r\n	<div class=\"pageinfo\"><span class=\"current\">1</span> / <span class=\"count\">9</span></div>\r\n\r\n	<!-- Characters infos -->\r\n	<div class=\"charinfo\">\r\n		<div class=\"name\"></div>\r\n		<div class=\"job\"></div>\r\n		<div class=\"lvl\"></div>\r\n		<div class=\"exp\"></div>\r\n		<div class=\"hp\"></div>\r\n		<div class=\"sp\"></div>\r\n		<div class=\"map\"></div>\r\n		<div class=\"str\"></div>\r\n		<div class=\"agi\"></div>\r\n		<div class=\"vit\"></div>\r\n		<div class=\"int\"></div>\r\n		<div class=\"dex\"></div>\r\n		<div class=\"luk\"></div>\r\n	</div>\r\n\r\n	<!-- Buttons -->\r\n	<div class=\"btns\">\r\n		<ui-button\r\n			class=\"btn delete\"\r\n			bg=\"btn_del_res.bmp\"\r\n			hover=\"btn_del_res_a.bmp\"\r\n			down=\"btn_del_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"btn canceldelete\"\r\n			bg=\"btn_cancel_res.bmp\"\r\n			hover=\"btn_cancel_res_a.bmp\"\r\n			down=\"btn_cancel_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn finaldelete\" bg=\"btn_del.bmp\" hover=\"btn_del_a.bmp\" down=\"btn_del_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn make\" bg=\"btn_make.bmp\" hover=\"btn_make_a.bmp\" down=\"btn_make_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.css?raw
+var CharSelectV2_default$1;
+var init_CharSelectV2$1 = __esmMin((() => {
+	CharSelectV2_default$1 = ":host {\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#CharSelectV2 {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV2 .box_select {\r\n	position: absolute;\r\n	width: 139px;\r\n	height: 144px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#CharSelectV2 canvas {\r\n	position: absolute;\r\n	top: 44px;\r\n}\r\n#CharSelectV2 .slot1 {\r\n	left: 60px;\r\n}\r\n#CharSelectV2 .slot2 {\r\n	left: 224px;\r\n}\r\n#CharSelectV2 .slot3 {\r\n	left: 386px;\r\n}\r\n\r\n/** Arrow **/\r\n#CharSelectV2 .arrow {\r\n	position: absolute;\r\n	top: 105px;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n#CharSelectV2 .arrow.left {\r\n	left: 40px;\r\n}\r\n#CharSelectV2 .arrow.right {\r\n	right: 40px;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV2 .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV2 .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV2 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV2 .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#CharSelectV2 .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV2 .charinfo {\r\n	position: absolute;\r\n	width: 285px;\r\n	top: 204px;\r\n	left: 16px;\r\n}\r\n#CharSelectV2 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV2 .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV2 .charinfo .job {\r\n	left: 52px;\r\n	top: 18px;\r\n}\r\n#CharSelectV2 .charinfo .lvl {\r\n	left: 52px;\r\n	top: 34px;\r\n}\r\n#CharSelectV2 .charinfo .exp {\r\n	left: 52px;\r\n	top: 50px;\r\n}\r\n#CharSelectV2 .charinfo .hp {\r\n	left: 52px;\r\n	top: 66px;\r\n}\r\n#CharSelectV2 .charinfo .sp {\r\n	left: 52px;\r\n	top: 82px;\r\n}\r\n#CharSelectV2 .charinfo .map {\r\n	left: 52px;\r\n	top: 98px;\r\n	width: 238px;\r\n}\r\n#CharSelectV2 .charinfo .str {\r\n	left: 200px;\r\n	top: 2px;\r\n}\r\n#CharSelectV2 .charinfo .agi {\r\n	left: 200px;\r\n	top: 18px;\r\n}\r\n#CharSelectV2 .charinfo .vit {\r\n	left: 200px;\r\n	top: 34px;\r\n}\r\n#CharSelectV2 .charinfo .int {\r\n	left: 200px;\r\n	top: 50px;\r\n}\r\n#CharSelectV2 .charinfo .dex {\r\n	left: 200px;\r\n	top: 66px;\r\n}\r\n#CharSelectV2 .charinfo .luk {\r\n	left: 200px;\r\n	top: 82px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV2 .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#CharSelectV2 .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n\r\n#CharSelectV2 .ok,\r\n#CharSelectV2 .make {\r\n	right: 50px;\r\n}\r\n#CharSelectV2 .cancel {\r\n	right: 4px;\r\n}\r\n#CharSelectV2 .delete {\r\n	left: 4px;\r\n	width: 67px;\r\n}\r\n#CharSelectV2 .canceldelete {\r\n	left: 50px;\r\n	width: 67px;\r\n}\r\n#CharSelectV2 .finaldelete {\r\n	left: 4px;\r\n}\r\n#CharSelectV2 .timedelete {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 120px;\r\n	top: 75px;\r\n}\r\n#CharSelectV2 .timedelete.waitdelete {\r\n	color: blue;\r\n}\r\n#CharSelectV2 .timedelete.candelete {\r\n	color: red;\r\n}\r\n#CharSelectV2 .timedelete.slot1 {\r\n	left: 63px;\r\n}\r\n#CharSelectV2 .timedelete.slot2 {\r\n	left: 227px;\r\n}\r\n#CharSelectV2 .timedelete.slot3 {\r\n	left: 389px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV2/CharSelectV2.js
+var CharSelectV2_default;
+var init_CharSelectV2 = __esmMin((() => {
+	init_CharSelectV2$2();
+	init_CharSelectV2$1();
+	init_CharSelectCommon();
+	CharSelectV2_default = createCharSelect({
+		name: "CharSelectV2",
+		htmlText: CharSelectV2_default$2,
+		cssText: CharSelectV2_default$1,
+		hostHeight: 358,
+		deleteReservation: true,
+		packetverGatedDelete: true
+	});
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.html?raw
+var CharSelectV3_default$2;
+var init_CharSelectV3$2 = __esmMin((() => {
+	CharSelectV3_default$2 = "<div id=\"CharSelectV3\">\r\n	<ui-image src=\"select_character/bg_select_character.bmp\"></ui-image>\r\n	<!-- BOX -->\r\n	<div class=\"box_select\"><ui-image src=\"select_character/select_mark.bmp\"></ui-image></div>\r\n	<canvas class=\"slot1\" width=\"133\" height=\"132\"></canvas>\r\n	<canvas class=\"slot2\" width=\"133\" height=\"132\"></canvas>\r\n	<canvas class=\"slot3\" width=\"133\" height=\"132\"></canvas>\r\n	<div class=\"timedelete slot1 hidden\"></div>\r\n	<div class=\"timedelete slot2 hidden\"></div>\r\n	<div class=\"timedelete slot3 hidden\"></div>\r\n	<ui-button\r\n		class=\"make1\"\r\n		bg=\"select_character/btn_add_out.bmp\"\r\n		hover=\"select_character/btn_add_over.bmp\"\r\n		down=\"select_character/btn_add_press.bmp\"\r\n	></ui-button>\r\n	<ui-button\r\n		class=\"make2\"\r\n		bg=\"select_character/btn_add_out.bmp\"\r\n		hover=\"select_character/btn_add_over.bmp\"\r\n		down=\"select_character/btn_add_press.bmp\"\r\n	></ui-button>\r\n	<ui-button\r\n		class=\"make3\"\r\n		bg=\"select_character/btn_add_out.bmp\"\r\n		hover=\"select_character/btn_add_over.bmp\"\r\n		down=\"select_character/btn_add_press.bmp\"\r\n	></ui-button>\r\n\r\n	<!-- Arrows -->\r\n	<ui-button\r\n		class=\"arrow left\"\r\n		bg=\"select_character/chr_arrow_l_out.bmp\"\r\n		hover=\"select_character/chr_arrow_l_over.bmp\"\r\n		down=\"select_character/chr_arrow_l_press.bmp\"\r\n	></ui-button>\r\n	<ui-button\r\n		class=\"arrow right\"\r\n		bg=\"select_character/chr_arrow_r_out.bmp\"\r\n		hover=\"select_character/chr_arrow_r_over.bmp\"\r\n		down=\"select_character/chr_arrow_r_press.bmp\"\r\n	></ui-button>\r\n\r\n	<!-- Slots infos -->\r\n	<div class=\"slotinfo\">\r\n		<span class=\"number\">0 / 27</span>\r\n		<span class=\"content\"></span>\r\n	</div>\r\n	<!-- Pages infos -->\r\n	<div class=\"pageinfo\">\r\n		<div class=\"pagebtn\"></div>\r\n	</div>\r\n	<!-- Characters infos -->\r\n	<div class=\"charinfo\">\r\n		<div class=\"name\"></div>\r\n		<div class=\"job\"></div>\r\n		<div class=\"lvl\"></div>\r\n		<div class=\"exp\"></div>\r\n		<div class=\"hp\"></div>\r\n		<div class=\"sp\"></div>\r\n		<div class=\"map\"></div>\r\n		<div class=\"str\"></div>\r\n		<div class=\"agi\"></div>\r\n		<div class=\"vit\"></div>\r\n		<div class=\"int\"></div>\r\n		<div class=\"dex\"></div>\r\n		<div class=\"luk\"></div>\r\n	</div>\r\n	<!-- Buttons -->\r\n	<div class=\"btns\">\r\n		<ui-button\r\n			class=\"btn delete\"\r\n			bg=\"btn_del_res.bmp\"\r\n			hover=\"btn_del_res_a.bmp\"\r\n			down=\"btn_del_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"btn canceldelete\"\r\n			bg=\"btn_cancel_res.bmp\"\r\n			hover=\"btn_cancel_res_a.bmp\"\r\n			down=\"btn_cancel_res_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn finaldelete\" bg=\"btn_del.bmp\" hover=\"btn_del_a.bmp\" down=\"btn_del_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn make\" bg=\"btn_make.bmp\" hover=\"btn_make_a.bmp\" down=\"btn_make_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.css?raw
+var CharSelectV3_default$1;
+var init_CharSelectV3$1 = __esmMin((() => {
+	CharSelectV3_default$1 = ":host {\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#CharSelectV3 {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV3 .box_select {\r\n	position: absolute;\r\n	width: 134px;\r\n	height: 144px;\r\n	top: 30px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#CharSelectV3 canvas {\r\n	position: absolute;\r\n	top: 35px;\r\n}\r\n#CharSelectV3 .slot1 {\r\n	left: 57px;\r\n}\r\n#CharSelectV3 .slot2 {\r\n	left: 220px;\r\n}\r\n#CharSelectV3 .slot3 {\r\n	left: 386px;\r\n}\r\n\r\n#CharSelectV3 .make1 {\r\n	position: absolute;\r\n	top: 84px;\r\n	left: 107px;\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n#CharSelectV3 .make2 {\r\n	position: absolute;\r\n	top: 84px;\r\n	left: 270px;\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n#CharSelectV3 .make3 {\r\n	position: absolute;\r\n	top: 84px;\r\n	left: 436px;\r\n	width: 32px;\r\n	height: 32px;\r\n}\r\n\r\n/** Arrow **/\r\n#CharSelectV3 .arrow {\r\n	position: absolute;\r\n	top: 95px;\r\n	width: 14px;\r\n	height: 20px;\r\n}\r\n#CharSelectV3 .arrow.left {\r\n	left: 40px;\r\n}\r\n#CharSelectV3 .arrow.right {\r\n	right: 40px;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV3 .slotinfo {\r\n	position: absolute;\r\n	top: 180px;\r\n	right: 40px;\r\n	height: 20px;\r\n	display: block;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV3 .slotinfo .number {\r\n	/*color: #58709e;\r\n    font-weight: bold;*/\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV3 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV3 .pageinfo {\r\n	position: absolute;\r\n	top: 180px;\r\n}\r\n\r\n#CharSelectV3 .pageinfo .pagebtn .btn_pageinfo {\r\n	border: 0;\r\n	width: 8px;\r\n	height: 8px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV3 .charinfo {\r\n	position: absolute;\r\n	width: 285px;\r\n	top: 204px;\r\n	left: 16px;\r\n}\r\n#CharSelectV3 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV3 .charinfo .name {\r\n	left: 95px;\r\n	top: -4px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV3 .charinfo .job {\r\n	left: 95px;\r\n	top: 12px;\r\n}\r\n#CharSelectV3 .charinfo .lvl {\r\n	left: 95px;\r\n	top: 30px;\r\n}\r\n#CharSelectV3 .charinfo .exp {\r\n	left: 95px;\r\n	top: 47px;\r\n}\r\n#CharSelectV3 .charinfo .hp {\r\n	left: 95px;\r\n	top: 64px;\r\n}\r\n#CharSelectV3 .charinfo .sp {\r\n	left: 95px;\r\n	top: 81px;\r\n}\r\n#CharSelectV3 .charinfo .map {\r\n	left: 95px;\r\n	top: 104px;\r\n	width: 238px;\r\n}\r\n#CharSelectV3 .charinfo .str {\r\n	left: 250px;\r\n	top: -4px;\r\n}\r\n#CharSelectV3 .charinfo .agi {\r\n	left: 250px;\r\n	top: 12px;\r\n}\r\n#CharSelectV3 .charinfo .vit {\r\n	left: 250px;\r\n	top: 30px;\r\n}\r\n#CharSelectV3 .charinfo .int {\r\n	left: 250px;\r\n	top: 47px;\r\n}\r\n#CharSelectV3 .charinfo .dex {\r\n	left: 250px;\r\n	top: 64px;\r\n}\r\n#CharSelectV3 .charinfo .luk {\r\n	left: 250px;\r\n	top: 81px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV3 .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#CharSelectV3 .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n\r\n#CharSelectV3 .ok,\r\n#CharSelectV3 .make {\r\n	right: 50px;\r\n}\r\n#CharSelectV3 .cancel {\r\n	right: 4px;\r\n}\r\n#CharSelectV3 .delete {\r\n	left: 4px;\r\n	width: 67px;\r\n}\r\n#CharSelectV3 .canceldelete {\r\n	left: 50px;\r\n	width: 67px;\r\n}\r\n#CharSelectV3 .finaldelete {\r\n	left: 4px;\r\n}\r\n#CharSelectV3 .timedelete {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 120px;\r\n	top: 75px;\r\n}\r\n#CharSelectV3 .timedelete.waitdelete {\r\n	color: blue;\r\n}\r\n#CharSelectV3 .timedelete.candelete {\r\n	color: red;\r\n}\r\n#CharSelectV3 .timedelete.slot1 {\r\n	left: 63px;\r\n}\r\n#CharSelectV3 .timedelete.slot2 {\r\n	left: 227px;\r\n}\r\n#CharSelectV3 .timedelete.slot3 {\r\n	left: 389px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV3/CharSelectV3.js
+var CharSelectV3_default;
+var init_CharSelectV3 = __esmMin((() => {
+	init_CharSelectV3$2();
+	init_CharSelectV3$1();
+	init_CharSelectCommon();
+	CharSelectV3_default = createCharSelect({
+		name: "CharSelectV3",
+		htmlText: CharSelectV3_default$2,
+		cssText: CharSelectV3_default$1,
+		hostHeight: 358,
+		deleteReservation: true,
+		pageBalls: true
+	});
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.html?raw
+var CharSelectV4_default$2;
+var init_CharSelectV4$2 = __esmMin((() => {
+	CharSelectV4_default$2 = "<div id=\"CharSelectV4\">\r\n	<div class=\"char_select_container\">\r\n		<!--Cancel Button-->\r\n		<ui-button\r\n			class=\"btn cancel\"\r\n			bg=\"select_character_ver3/bt_close2_normal.bmp\"\r\n			hover=\"select_character_ver3/bt_close2_over.bmp\"\r\n			down=\"select_character_ver3/bt_close2_press.bmp\"\r\n		></ui-button>\r\n		<!-- BOX -->\r\n		<div class=\"char_list\">\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot0\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot0 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot1\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot1 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot2\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot2 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot3\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot3 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot4\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot4 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot5\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot5 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot6\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot6 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot7\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot7 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot8\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot8 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot9\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot9 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot10\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot10 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot11\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot11 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot12\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot12 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot13\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot13 hidden\"></div>\r\n			</div>\r\n\r\n			<div class=\"char_canvas\">\r\n				<canvas id=\"slot14\" width=\"157\" height=\"195\"></canvas>\r\n				<div class=\"name\"></div>\r\n				<div class=\"job_icon\"></div>\r\n				<div class=\"timedelete slot14 hidden\"></div>\r\n			</div>\r\n		</div>\r\n\r\n		<!-- Characters infos -->\r\n		<div class=\"charinfo\">\r\n			<div class=\"job\"></div>\r\n			<div class=\"lvl\"></div>\r\n			<div class=\"exp\"></div>\r\n			<div class=\"hp\"></div>\r\n			<div class=\"sp\"></div>\r\n			<div class=\"map\"></div>\r\n			<div class=\"str\"></div>\r\n			<div class=\"agi\"></div>\r\n			<div class=\"vit\"></div>\r\n			<div class=\"int\"></div>\r\n			<div class=\"dex\"></div>\r\n			<div class=\"luk\"></div>\r\n			<ui-button\r\n				class=\"btn delete\"\r\n				bg=\"select_character_ver3/bt_info_normal.bmp\"\r\n				hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				down=\"select_character_ver3/bt_info_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3339\"></ui-text>\r\n			</ui-button>\r\n			<ui-button\r\n				class=\"btn canceldelete\"\r\n				bg=\"select_character_ver3/bt_info_normal.bmp\"\r\n				hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				down=\"select_character_ver3/bt_info_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3340\"></ui-text>\r\n			</ui-button>\r\n			<ui-button\r\n				class=\"btn finaldelete\"\r\n				bg=\"select_character_ver3/bt_info_normal.bmp\"\r\n				hover=\"select_character_ver3/bt_info_over.bmp\"\r\n				down=\"select_character_ver3/bt_info_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3342\"></ui-text>\r\n			</ui-button>\r\n			<ui-button\r\n				class=\"btn ok\"\r\n				bg=\"select_character_ver3/bt_gamestart_off.bmp\"\r\n				hover=\"select_character_ver3/bt_gamestart_over.bmp\"\r\n				down=\"select_character_ver3/bt_gamestart_press.bmp\"\r\n			>\r\n				<ui-text msg=\"3341\"></ui-text>\r\n			</ui-button>\r\n			<!-- Pages infos -->\r\n			<div class=\"pageinfo\"><span class=\"current\">1</span> / <span class=\"count\">9</span></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.css?raw
+var CharSelectV4_default$1;
+var init_CharSelectV4$1 = __esmMin((() => {
+	CharSelectV4_default$1 = ":host {\r\n	min-width: 100%;\r\n	min-height: 100%;\r\n}\r\n\r\n#CharSelectV4 {\r\n	position: absolute;\r\n	min-width: 100%;\r\n	min-height: 100%;\r\n	top: 0;\r\n	left: 0;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n	flex-direction: column;\r\n}\r\n\r\n#CharSelectV4 .char_select_container {\r\n	position: absolute;\r\n	display: flex;\r\n	flex-direction: row;\r\n	background-color: rgba(0, 0, 0, 0.1);\r\n	border-radius: 5px;\r\n	padding-top: 20px;\r\n	padding-left: 5px;\r\n}\r\n\r\n/** Box **/\r\n#CharSelectV4 .char_list {\r\n	flex: 1;\r\n	max-width: 800px;\r\n	min-width: 157px;\r\n	height: 595px;\r\n	max-height: 80vh;\r\n	display: flex;\r\n	flex-direction: row;\r\n	flex-wrap: wrap;\r\n	overflow-y: auto;\r\n}\r\n\r\n#CharSelectV4 .box_select {\r\n	position: absolute;\r\n	width: 157px;\r\n	height: 159px;\r\n	top: 40px;\r\n	margin-left: -5px;\r\n}\r\n#CharSelectV4 .char_canvas {\r\n	width: 157px;\r\n	height: 195px;\r\n	position: relative;\r\n	z-index: 10;\r\n}\r\n#CharSelectV4 .char_canvas .name {\r\n	position: absolute;\r\n	bottom: 17px;\r\n	width: 100%;\r\n	text-align: center;\r\n	font-weight: bold;\r\n	color: #15154a;\r\n}\r\n\r\n#CharSelectV4 .char_canvas .job_icon {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 12px;\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/** Slot info **/\r\n#CharSelectV4 .slotinfo {\r\n	position: absolute;\r\n	top: 195px;\r\n	right: 10px;\r\n	height: 20px;\r\n	display: block;\r\n	border: 1px solid #c6cee7;\r\n	border-radius: 4px;\r\n	padding-left: 10px;\r\n	padding-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .number {\r\n	color: #58709e;\r\n	font-weight: bold;\r\n	margin-right: 10px;\r\n}\r\n#CharSelectV4 .slotinfo .content {\r\n	color: #555;\r\n	top: 6px;\r\n	right: 8px;\r\n}\r\n\r\n/** Page info **/\r\n#CharSelectV4 .pageinfo {\r\n	position: absolute;\r\n	left: 275px;\r\n	top: 185px;\r\n	font-weight: bold;\r\n	color: #646464;\r\n}\r\n#CharSelectV4 .pageinfo .current {\r\n	color: #fe3b7d;\r\n}\r\n\r\n/** Characters infos **/\r\n#CharSelectV4 .charinfo {\r\n	height: 585px;\r\n	max-height: 80vh;\r\n	width: 185px;\r\n	background-repeat: no-repeat;\r\n	margin-top: 10px;\r\n	margin-left: 10px;\r\n	position: relative;\r\n}\r\n#CharSelectV4 .charinfo div {\r\n	position: absolute;\r\n	width: 90px;\r\n	height: 13px;\r\n}\r\n#CharSelectV4 .charinfo .name {\r\n	left: 52px;\r\n	top: 2px;\r\n	white-space: nowrap;\r\n}\r\n#CharSelectV4 .charinfo .job {\r\n	left: 60px;\r\n	top: 105px;\r\n}\r\n#CharSelectV4 .charinfo .lvl {\r\n	left: 60px;\r\n	top: 123px;\r\n}\r\n#CharSelectV4 .charinfo .exp {\r\n	left: 60px;\r\n	top: 140px;\r\n}\r\n#CharSelectV4 .charinfo .hp {\r\n	left: 60px;\r\n	top: 157px;\r\n}\r\n#CharSelectV4 .charinfo .sp {\r\n	left: 60px;\r\n	top: 174px;\r\n}\r\n#CharSelectV4 .charinfo .map {\r\n	left: 60px;\r\n	top: 89px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n}\r\n#CharSelectV4 .charinfo .str {\r\n	left: 60px;\r\n	top: 191px;\r\n}\r\n#CharSelectV4 .charinfo .agi {\r\n	left: 60px;\r\n	top: 208px;\r\n}\r\n#CharSelectV4 .charinfo .vit {\r\n	left: 60px;\r\n	top: 225px;\r\n}\r\n#CharSelectV4 .charinfo .int {\r\n	left: 60px;\r\n	top: 242px;\r\n}\r\n#CharSelectV4 .charinfo .dex {\r\n	left: 60px;\r\n	top: 259px;\r\n}\r\n#CharSelectV4 .charinfo .luk {\r\n	left: 60px;\r\n	top: 276px;\r\n}\r\n\r\n/** Buttons **/\r\n#CharSelectV4 .btn.delete {\r\n	position: absolute;\r\n	width: 131px;\r\n	height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.canceldelete {\r\n	position: absolute;\r\n	width: 131px;\r\n	height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.finaldelete {\r\n	position: absolute;\r\n	width: 131px;\r\n	height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.delete,\r\n#CharSelectV4 .btn.canceldelete,\r\n#CharSelectV4 .btn.finaldelete {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	text-align: center;\r\n	line-height: 24px;\r\n}\r\n\r\n#CharSelectV4 .btn.ok {\r\n	position: absolute;\r\n	width: 165px;\r\n	height: 110px;\r\n	color: white;\r\n	padding-top: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	text-align: center;\r\n}\r\n\r\n#CharSelectV4 .btn.ok:hover {\r\n	text-shadow: #000 1px 1px;\r\n}\r\n\r\n#CharSelectV4 .ok,\r\n#CharSelectV4 .make {\r\n	right: 15px;\r\n	top: 380px;\r\n}\r\n#CharSelectV4 .cancel {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 5px;\r\n	width: 17px;\r\n	height: 18px;\r\n}\r\n#CharSelectV4 .delete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .canceldelete {\r\n	right: 33px;\r\n	top: 300px;\r\n}\r\n\r\n#CharSelectV4 .finaldelete {\r\n	right: 33px;\r\n	top: 330px;\r\n}\r\n\r\n#CharSelectV4 .timedelete {\r\n	position: relative;\r\n	height: 20px;\r\n	width: 100px;\r\n	top: -150px;\r\n	left: 55px;\r\n}\r\n\r\n#CharSelectV4 .hidden {\r\n	display: none;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharSelect/CharSelectV4/CharSelectV4.js
+var CharSelectV4_default;
+var init_CharSelectV4 = __esmMin((() => {
+	init_CharSelectV4$2();
+	init_CharSelectV4$1();
+	init_CharSelectCommon();
+	CharSelectV4_default = createCharSelect({
+		name: "CharSelectV4",
+		htmlText: CharSelectV4_default$2,
+		cssText: CharSelectV4_default$1,
+		gridLayout: true,
+		deleteReservation: true,
+		defaultMaxSlots: 15
+	});
 }));
 //#endregion
 //#region src/UI/Components/CharSelect/CharSelect.js
@@ -335846,540 +334975,704 @@ var init_CharCreate$2 = __esmMin((() => {
 	CharCreate_default$1 = ":host {\r\n	width: 576px;\r\n	height: 342px;\r\n}\r\n\r\n#charcreate {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 342px;\r\n}\r\n\r\n/** Name **/\r\n#charcreate input {\r\n	position: absolute;\r\n	top: 244px;\r\n	left: 62px;\r\n	width: 97px;\r\n	height: 14px;\r\n	padding-top: 2px;\r\n	padding-left: 3px;\r\n	background-color: transparent;\r\n	border: 0;\r\n}\r\n\r\n/** Chargen **/\r\n#charcreate .chargen ui-button {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n#charcreate .chargen .left {\r\n	top: 135px;\r\n	left: 47px;\r\n}\r\n#charcreate .chargen .up {\r\n	top: 105px;\r\n	left: 87px;\r\n}\r\n#charcreate .chargen .right {\r\n	top: 135px;\r\n	left: 127px;\r\n}\r\n#charcreate .chargen canvas {\r\n	position: absolute;\r\n	top: 120px;\r\n	left: 62px;\r\n}\r\n\r\n/** Graph buttons **/\r\n#charcreate .graph ui-button {\r\n	position: absolute;\r\n	width: 36px;\r\n	height: 36px;\r\n}\r\n#charcreate .graph .str {\r\n	top: 50px;\r\n	left: 270px;\r\n}\r\n#charcreate .graph .int {\r\n	top: 243px;\r\n	left: 270px;\r\n}\r\n#charcreate .graph .vit {\r\n	top: 104px;\r\n	left: 348px;\r\n}\r\n#charcreate .graph .dex {\r\n	top: 190px;\r\n	left: 191px;\r\n}\r\n#charcreate .graph .agi {\r\n	top: 103px;\r\n	left: 191px;\r\n}\r\n#charcreate .graph .luk {\r\n	top: 190px;\r\n	left: 348px;\r\n}\r\n#charcreate .graph canvas {\r\n	position: absolute;\r\n	left: 209px;\r\n	top: 86px;\r\n}\r\n\r\n/** Stats infos **/\r\n#charcreate .info {\r\n	position: absolute;\r\n	top: 40px;\r\n	left: 480px;\r\n}\r\n#charcreate .info div {\r\n	position: absolute;\r\n	left: 0px;\r\n}\r\n#charcreate .info .str {\r\n	top: 0px;\r\n}\r\n#charcreate .info .agi {\r\n	top: 16px;\r\n}\r\n#charcreate .info .vit {\r\n	top: 32px;\r\n}\r\n#charcreate .info .int {\r\n	top: 48px;\r\n}\r\n#charcreate .info .dex {\r\n	top: 64px;\r\n}\r\n#charcreate .info .luk {\r\n	top: 80px;\r\n}\r\n\r\n/** Buttons **/\r\n#charcreate .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#charcreate .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n#charcreate .make {\r\n	right: 50px;\r\n}\r\n#charcreate .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#charcreate .btns ui-button {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/CharCreate/CharCreate/CharCreate.js
-/**
-* Generic function to get a direct proxy to updateCharacter
-*
-* @param {string} type
-* @param {number} value
-*/
-function updateCharacterGeneric$2(type, value) {
-	return (event) => {
-		updateCharacter$3(type, value);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Send back informations to send the packet
-*/
-function create$3() {
-	const root = CharCreate.getRoot();
-	CharCreate.onCharCreationRequest(root.querySelector("input").value, parseInt(root.querySelector(".info .str").textContent, 10), parseInt(root.querySelector(".info .agi").textContent, 10), parseInt(root.querySelector(".info .vit").textContent, 10), parseInt(root.querySelector(".info .int").textContent, 10), parseInt(root.querySelector(".info .dex").textContent, 10), parseInt(root.querySelector(".info .luk").textContent, 10), _chargen$2.entity.head, _chargen$2.entity.headpalette);
-}
-/**
-* Exit the window
-*/
-function cancel$3() {
-	CharCreate.onExitRequest();
-}
-/**
-* Update character hairstyle and haircolor
-*
-* @param {string} type (head or headpalette)
-* @param {number} increment (-1 or +1)
-*/
-function updateCharacter$3(type, increment) {
-	switch (type) {
-		case "head": {
-			let head = _chargen$2.entity.head + increment;
-			if (head < 2) head = 26;
-			if (head > 26) head = 2;
-			_chargen$2.entity.head = head;
-			break;
-		}
-		case "headpalette":
-			_chargen$2.entity.headpalette += increment;
-			_chargen$2.entity.headpalette %= 10;
-			break;
-	}
-	render$5();
-}
-/**
-* Update the stats and polygon
-*/
-function updateStats() {
-	const root = CharCreate.getRoot();
-	if (root.querySelector(`.info .${this.className}`).textContent === "9") return;
-	const group = {
-		str: "int",
-		int: "str",
-		vit: "dex",
-		dex: "vit",
-		luk: "agi",
-		agi: "luk"
-	};
-	root.querySelector(`.info .${this.className}`).textContent++;
-	root.querySelector(`.info .${group[this.className]}`).textContent--;
-	updateGraphic();
-}
-/**
-* Update the polygon
-*/
-function updateGraphic() {
-	const root = CharCreate.getRoot();
-	const ctx = _graph;
-	const width = ctx.canvas.width;
-	const height = ctx.canvas.height;
-	let i;
-	const x = width / 2;
-	const y = height / 2;
-	const list = [
-		"dex",
-		"agi",
-		"str",
-		"vit",
-		"luk",
-		"int"
-	];
-	ctx.clearRect(0, 0, width, height);
-	ctx.save();
-	ctx.fillStyle = "#7b94ce";
-	ctx.translate(x, y);
-	ctx.beginPath();
-	ctx.moveTo(0, Math.floor(y / 10 * (parseInt(root.querySelector(`.info .${list[5]}`).textContent) + 1)));
-	for (i = 0; i < 6; i++) {
-		ctx.rotate(60 * Math.PI / 180);
-		ctx.lineTo(0, Math.floor(y / 10 * (parseInt(root.querySelector(`.info .${list[i]}`).textContent) + 1)));
-	}
-	ctx.closePath();
-	ctx.fill();
-	ctx.restore();
-}
-/**
-* Rendering the Character
-*/
-function render$5(tick) {
-	if (_chargen$2.tick + 500 < tick) {
-		Camera.direction++;
-		Camera.direction %= 8;
-		_chargen$2.tick = tick;
-	}
-	SpriteRenderer.bind2DContext(_chargen$2.ctx, 32, 115);
-	_chargen$2.ctx.clearRect(0, 0, _chargen$2.ctx.canvas.width, _chargen$2.ctx.canvas.height);
-	_chargen$2.entity.renderEntity();
-}
-var CharCreate, _accountSex$3, _graph, _chargen$2, CharCreate_default;
-var init_CharCreate$1 = __esmMin((() => {
-	init_Renderer();
-	init_KeyEventHandler();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_Camera();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CharCreate$3();
-	init_CharCreate$2();
-	CharCreate = new GUIComponent("CharCreate", CharCreate_default$1);
-	CharCreate.render = () => CharCreate_default$2;
-	_accountSex$3 = 0;
-	_chargen$2 = {
+//#region src/UI/Components/CharCreate/CharCreateCommon.js
+function createCharCreate(config) {
+	const { name, htmlText, cssText, hostHeight = 342, hostWidth = 576, hasStats = false, hasRace = false, gridHairstyle = false, chargenCanvasSelector = ".content canvas", graphCanvasSelector = ".graph canvas", statButtonsSelector = ".graph ui-button", hairArrows = [], humanCanvasSelector = "#canvas_human", doramCanvasSelector = "#canvas_doram", modelCanvasSelector = "#canvas_model", nameInputSelector = "input", nameInputEvent = "mousedown", cancelSelectors = [".cancel"], makeSelector = ".make" } = config;
+	const Component = new GUIComponent(name, cssText);
+	Component.render = () => htmlText;
+	/**
+	* @var {number} account sex
+	*/
+	let _accountSex = 0;
+	/**
+	* Legacy (V0/V2) state
+	*/
+	let _graph;
+	const _chargen = {
 		entity: new Entity(),
 		ctx: null,
 		render: false,
 		tick: 0
 	};
 	/**
+	* Race (V3/V4) state
+	*/
+	const _human = {
+		entity: new Entity(),
+		ctx: null,
+		render: false,
+		tick: 0
+	};
+	const _doram = {
+		entity: new Entity(),
+		ctx: null,
+		render: false,
+		tick: 0
+	};
+	const _model = {
+		entity: new Entity(),
+		ctx: null,
+		render: false,
+		tick: 0
+	};
+	/**
+	* Grid stylist (V4) state
+	*/
+	let _race = "human";
+	let _gender = "male";
+	let _prevhead = 1;
+	let _curhead = 1;
+	let _prevcolor = 0;
+	let _curcolor = 0;
+	const render = hasRace ? renderRace : renderLegacy;
+	/**
 	* Initialize UI
 	*/
-	CharCreate.init = function init() {
+	Component.init = function init() {
 		const root = this.getRoot();
-		_graph = root.querySelector(".graph canvas").getContext("2d");
-		_chargen$2.ctx = root.querySelector(".chargen canvas").getContext("2d");
+		if (hasRace) {
+			_human.ctx = root.querySelector(humanCanvasSelector).getContext("2d");
+			_doram.ctx = root.querySelector(doramCanvasSelector).getContext("2d");
+			_model.ctx = root.querySelector(modelCanvasSelector).getContext("2d");
+		} else {
+			_chargen.ctx = root.querySelector(chargenCanvasSelector).getContext("2d");
+			if (hasStats) _graph = root.querySelector(graphCanvasSelector).getContext("2d");
+		}
 		this.draggable();
-		root.querySelector(".chargen .left").addEventListener("mousedown", updateCharacterGeneric$2("head", -1));
-		root.querySelector(".chargen .right").addEventListener("mousedown", updateCharacterGeneric$2("head", 1));
-		root.querySelector(".chargen .up").addEventListener("mousedown", updateCharacterGeneric$2("headpalette", 1));
-		root.querySelectorAll(".graph ui-button").forEach((btn) => {
-			btn.addEventListener("mousedown", function(event) {
-				updateStats.call(this, event);
+		if (hasRace) {
+			root.querySelectorAll("input[type=\"radio\"]").forEach((input) => {
+				input.classList.add("event_add_cursor");
 			});
-		});
-		const input = root.querySelector("input");
-		input.addEventListener("mousedown", (event) => {
+			root.querySelectorAll("label").forEach((label) => {
+				label.classList.add("event_add_cursor");
+			});
+			if (gridHairstyle) initRaceGrid(root);
+			else initRaceCap(root);
+		} else {
+			hairArrows.forEach(({ selector, type, value }) => {
+				root.querySelector(selector).addEventListener("mousedown", updateCharacterGeneric(type, value));
+			});
+			if (hasStats) root.querySelectorAll(statButtonsSelector).forEach((btn) => {
+				btn.addEventListener("mousedown", function(event) {
+					updateStats.call(this, event);
+				});
+			});
+		}
+		const input = root.querySelector(nameInputSelector);
+		input.addEventListener(nameInputEvent, (event) => {
 			input.focus();
 			event.stopImmediatePropagation();
 		});
-		root.querySelector(".cancel").addEventListener("click", cancel$3);
-		root.querySelector(".make").addEventListener("click", create$3);
+		cancelSelectors.forEach((selector) => {
+			root.querySelector(selector).addEventListener("click", cancel);
+		});
+		root.querySelector(makeSelector).addEventListener("click", create);
+		if (hasRace) applyRaceMessages(root);
 	};
 	/**
 	* Setter for AccountSex
 	*
 	* @param {number} sex
 	*/
-	CharCreate.setAccountSex = function setAccountSex(sex) {
-		_accountSex$3 = sex;
+	Component.setAccountSex = function setAccountSex(sex) {
+		_accountSex = sex;
 	};
 	/**
 	* Once add to HTML, start rendering
 	*/
-	CharCreate.onAppend = function onAppend() {
-		this._host.style.top = `${(Renderer.height - 342) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
-		_chargen$2.render = true;
-		_chargen$2.entity.set({
-			sex: _accountSex$3,
-			job: 0,
-			head: 2,
-			action: 0
-		});
-		const input = this.getRoot().querySelector("input");
-		input.value = "";
-		input.focus();
-		Renderer.render(render$5);
-		updateGraphic();
-	};
-	/**
-	* Remove component from HTML
-	* Stop rendering
-	*/
-	CharCreate.onRemove = function onRemove() {
-		Renderer.stop(render$5);
-	};
-	/**
-	* Key Handler
-	*
-	* @param {object} event
-	* @return {boolean}
-	*/
-	CharCreate.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			event.stopImmediatePropagation();
-			cancel$3();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Callback to define
-	*/
-	CharCreate.onExitRequest = function OnExitRequest() {};
-	/**
-	* Abstract callback to define
-	*/
-	CharCreate.onCharCreationRequest = function OnCharCreationRequest() {};
-	CharCreate_default = UIManager.addComponent(CharCreate);
-}));
-//#endregion
-//#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.html?raw
-var CharCreatev2_default$2;
-var init_CharCreatev2$2 = __esmMin((() => {
-	CharCreatev2_default$2 = "<div id=\"charcreate_v2\">\r\n	<div class=\"header\">\r\n		<div class=\"corner left\"><ui-image src=\"basic_interface/titlebar_left.bmp\"></ui-image></div>\r\n		<div class=\"center\"><ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image></div>\r\n		<div class=\"corner right\"><ui-image src=\"basic_interface/titlebar_right.bmp\"></ui-image></div>\r\n\r\n		<div class=\"title\"><ui-text msg=\"2368\"></ui-text></div>\r\n	</div>\r\n\r\n	<div class=\"content\">\r\n		<ui-image src=\"login_interface/win_make2.bmp\"></ui-image>\r\n		<canvas width=\"65\" height=\"110\"></canvas>\r\n\r\n		<input type=\"text\" data-background=\"login_interface/name-edit.bmp\" value=\"\" />\r\n\r\n		<ui-button class=\"styleleft\" bg=\"scroll1left.bmp\"></ui-button>\r\n		<ui-button class=\"styleright\" bg=\"scroll1right.bmp\"></ui-button>\r\n\r\n		<ui-button class=\"colorleft\" bg=\"scroll1left.bmp\"></ui-button>\r\n		<ui-button class=\"colorright\" bg=\"scroll1right.bmp\"></ui-button>\r\n	</div>\r\n\r\n	<div class=\"footer\">\r\n		<div class=\"corner left\"><ui-image src=\"basic_interface/btnbar_left2.bmp\"></ui-image></div>\r\n		<div class=\"center\"><ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image></div>\r\n		<div class=\"corner right\"><ui-image src=\"basic_interface/btnbar_right2.bmp\"></ui-image></div>\r\n\r\n		<div class=\"btns\">\r\n			<ui-button\r\n				class=\"btn cancel\"\r\n				bg=\"btn_cancel.bmp\"\r\n				hover=\"btn_cancel_a.bmp\"\r\n				down=\"btn_cancel_b.bmp\"\r\n			></ui-button>\r\n			<ui-button class=\"btn make\" bg=\"btn_make.bmp\" hover=\"btn_make_a.bmp\" down=\"btn_make_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.css?raw
-var CharCreatev2_default$1;
-var init_CharCreatev2$1 = __esmMin((() => {
-	CharCreatev2_default$1 = ":host {\r\n	width: 150px;\r\n	height: 286px;\r\n}\r\n\r\n#charcreate_v2 {\r\n	position: absolute;\r\n	width: 150px;\r\n	height: 286px;\r\n}\r\n\r\n#charcreate_v2 .header {\r\n	width: 150px;\r\n	height: 17px;\r\n}\r\n#charcreate_v2 .header .corner {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 17px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#charcreate_v2 .header .corner.left {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#charcreate_v2 .header .corner.right {\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n#charcreate_v2 .header .center {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 12px;\r\n	width: 128px;\r\n	height: 17px;\r\n}\r\n#charcreate_v2 .header .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 12px;\r\n	font-size: 13px;\r\n}\r\n\r\n#charcreate_v2 .content {\r\n	width: 150px;\r\n	height: 240px;\r\n}\r\n\r\n#charcreate_v2 .footer {\r\n	width: 150px;\r\n	height: 29px;\r\n}\r\n#charcreate_v2 .footer .corner {\r\n	position: absolute;\r\n	width: 21px;\r\n	height: 29px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#charcreate_v2 .footer .corner.left {\r\n	bottom: 0px;\r\n	left: 0px;\r\n}\r\n#charcreate_v2 .footer .corner.right {\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n#charcreate_v2 .footer .center {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	left: 21px;\r\n	width: 118px;\r\n	height: 29px;\r\n}\r\n\r\n/** Name **/\r\n#charcreate_v2 .content input {\r\n	position: absolute;\r\n	top: 142px;\r\n	left: 40px;\r\n	width: 96px;\r\n	height: 18px;\r\n	padding-top: 2px;\r\n	padding-left: 3px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: 0;\r\n}\r\n\r\n/** Chargen **/\r\n#charcreate_v2 .content ui-button {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n\r\n#charcreate_v2 .content .styleleft {\r\n	top: 190px;\r\n	left: 15px;\r\n}\r\n#charcreate_v2 .content .styleright {\r\n	top: 190px;\r\n	left: 125px;\r\n}\r\n#charcreate_v2 .content .colorleft {\r\n	top: 230px;\r\n	left: 15px;\r\n}\r\n#charcreate_v2 .content .colorright {\r\n	top: 230px;\r\n	left: 125px;\r\n}\r\n\r\n#charcreate_v2 .content canvas {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 40px;\r\n}\r\n\r\n/** Buttons **/\r\n#charcreate_v2 .footer .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#charcreate_v2 .footer .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n#charcreate_v2 .footer .make {\r\n	right: 50px;\r\n}\r\n#charcreate_v2 .footer .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#charcreate_v2 .btns ui-button {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.js
-/**
-* Generic function to get a direct proxy to updateCharacter
-*
-* @param {string} type
-* @param {number} value
-*/
-function updateCharacterGeneric$1(type, value) {
-	return (event) => {
-		updateCharacter$2(type, value);
-		event.stopImmediatePropagation();
-		return false;
-	};
-}
-/**
-* Send back informations to send the packet
-*/
-function create$2() {
-	const root = CharCreatev2.getRoot();
-	CharCreatev2.onCharCreationRequest(root.querySelector("input").value, 1, 1, 1, 1, 1, 1, _chargen$1.entity.head, _chargen$1.entity.headpalette);
-}
-/**
-* Exit the window
-*/
-function cancel$2() {
-	CharCreatev2.onExitRequest();
-}
-/**
-* Update character hairstyle and haircolor
-*
-* @param {string} type (head or headpalette)
-* @param {number} increment (-1 or +1)
-*/
-function updateCharacter$2(type, increment) {
-	switch (type) {
-		case "head": {
-			let head = _chargen$1.entity.head + increment;
-			if (head < 2) head = 26;
-			if (head > 26) head = 2;
-			_chargen$1.entity.head = head;
-			break;
-		}
-		case "headpalette":
-			_chargen$1.entity.headpalette += increment;
-			_chargen$1.entity.headpalette %= 10;
-			break;
-	}
-	render$4();
-}
-/**
-* Rendering the Character
-*/
-function render$4(tick) {
-	if (_chargen$1.tick + 500 < tick) {
-		Camera.direction++;
-		Camera.direction %= 8;
-		_chargen$1.tick = tick;
-	}
-	SpriteRenderer.bind2DContext(_chargen$1.ctx, 32, 115);
-	_chargen$1.ctx.clearRect(0, 0, _chargen$1.ctx.canvas.width, _chargen$1.ctx.canvas.height);
-	_chargen$1.entity.renderEntity();
-}
-var CharCreatev2, _accountSex$2, _chargen$1, CharCreatev2_default;
-var init_CharCreatev2 = __esmMin((() => {
-	init_Renderer();
-	init_KeyEventHandler();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_Camera();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CharCreatev2$2();
-	init_CharCreatev2$1();
-	CharCreatev2 = new GUIComponent("CharCreatev2", CharCreatev2_default$1);
-	CharCreatev2.render = () => CharCreatev2_default$2;
-	_accountSex$2 = 0;
-	_chargen$1 = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	/**
-	* Initialize UI
-	*/
-	CharCreatev2.init = function init() {
-		const root = this.getRoot();
-		_chargen$1.ctx = root.querySelector(".content canvas").getContext("2d");
-		this.draggable();
-		root.querySelector(".content .styleleft").addEventListener("mousedown", updateCharacterGeneric$1("head", -1));
-		root.querySelector(".content .styleright").addEventListener("mousedown", updateCharacterGeneric$1("head", 1));
-		root.querySelector(".content .colorleft").addEventListener("mousedown", updateCharacterGeneric$1("headpalette", -1));
-		root.querySelector(".content .colorright").addEventListener("mousedown", updateCharacterGeneric$1("headpalette", 1));
-		const input = root.querySelector("input");
-		input.addEventListener("mousedown", (event) => {
-			input.focus();
-			event.stopImmediatePropagation();
-		});
-		root.querySelector(".cancel").addEventListener("click", cancel$2);
-		root.querySelector(".make").addEventListener("click", create$2);
-	};
-	/**
-	* Setter for AccountSex
-	*
-	* @param {number} sex
-	*/
-	CharCreatev2.setAccountSex = function setAccountSex(sex) {
-		_accountSex$2 = sex;
-	};
-	/**
-	* Once add to HTML, start rendering
-	*/
-	CharCreatev2.onAppend = function onAppend() {
-		this._host.style.top = `${(Renderer.height - 286) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 150) / 2}px`;
-		_chargen$1.render = true;
-		_chargen$1.entity.set({
-			sex: _accountSex$2,
-			job: 0,
-			head: 2,
-			action: 0
-		});
-		const input = this.getRoot().querySelector("input");
-		input.value = "";
-		input.focus();
-		Renderer.render(render$4);
-	};
-	/**
-	* Remove component from HTML
-	* Stop rendering
-	*/
-	CharCreatev2.onRemove = function onRemove() {
-		Renderer.stop(render$4);
-	};
-	/**
-	* Key Handler
-	*
-	* @param {object} event
-	* @return {boolean}
-	*/
-	CharCreatev2.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			event.stopImmediatePropagation();
-			cancel$2();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Callback to define
-	*/
-	CharCreatev2.onExitRequest = function OnExitRequest() {};
-	/**
-	* Abstract callback to define
-	*/
-	CharCreatev2.onCharCreationRequest = function OnCharCreationRequest() {};
-	CharCreatev2_default = UIManager.addComponent(CharCreatev2);
-}));
-//#endregion
-//#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.html?raw
-var CharCreatev3_default$2;
-var init_CharCreatev3$2 = __esmMin((() => {
-	CharCreatev3_default$2 = "<div id=\"charcreate_v3\">\r\n	<ui-image src=\"make_character/bg_create_character.bmp\"></ui-image>\r\n	<ui-button\r\n		class=\"button close\"\r\n		bg=\"basic_interface/sys_close_off.bmp\"\r\n		hover=\"basic_interface/sys_close_on.bmp\"\r\n	></ui-button>\r\n\r\n	<div class=\"race_select\">\r\n		<div class=\"race human\">\r\n			<input type=\"radio\" name=\"race\" id=\"human\" checked class=\"radio\" />\r\n			<label\r\n				for=\"human\"\r\n				class=\"label\"\r\n				data-background=\"make_character/img_human_off.bmp\"\r\n				data-hover=\"make_character/img_human_on.bmp\"\r\n				data-down=\"make_character/img_human_on.bmp\"\r\n			>\r\n				<div class=\"title\"></div>\r\n				<div class=\"desc\"></div>\r\n				<div class=\"jobs\"></div>\r\n				<div class=\"chargen\">\r\n					<canvas id=\"canvas_human\" width=\"65\" height=\"110\" style=\"pointer-events: none\"></canvas>\r\n				</div>\r\n			</label>\r\n		</div>\r\n\r\n		<div class=\"race doram\">\r\n			<input type=\"radio\" name=\"race\" id=\"doram\" class=\"radio\" />\r\n			<label\r\n				for=\"doram\"\r\n				class=\"label\"\r\n				data-background=\"make_character/img_doram_off.bmp\"\r\n				data-hover=\"make_character/img_doram_on.bmp\"\r\n				data-down=\"make_character/img_doram_on.bmp\"\r\n			>\r\n				<div class=\"title\"></div>\r\n				<div class=\"desc\"></div>\r\n				<div class=\"jobs\"></div>\r\n				<div class=\"chargen\">\r\n					<canvas id=\"canvas_doram\" width=\"65\" height=\"110\" style=\"pointer-events: none\"></canvas>\r\n				</div>\r\n			</label>\r\n		</div>\r\n	</div>\r\n	<div id=\"style\">\r\n		<div class=\"model\">\r\n			<canvas id=\"canvas_model\" width=\"65\" height=\"110\" style=\"pointer-events: none\"></canvas>\r\n		</div>\r\n\r\n		<ui-button\r\n			class=\"rot_left\"\r\n			bg=\"make_character/chr_arrow_rotate_l_out.bmp\"\r\n			hover=\"make_character/chr_arrow_rotate_l_over.bmp\"\r\n			down=\"make_character/chr_arrow_rotate_l_press.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"rot_right\"\r\n			bg=\"make_character/chr_arrow_rotate_r_out.bmp\"\r\n			hover=\"make_character/chr_arrow_rotate_r_over.bmp\"\r\n			down=\"make_character/chr_arrow_rotate_r_press.bmp\"\r\n		></ui-button>\r\n\r\n		<input type=\"text\" id=\"char_name\" maxlength=\"24\" />\r\n\r\n		<div class=\"category gender\">\r\n			<div\r\n				id=\"male_container\"\r\n				class=\"button container left\"\r\n				data-background=\"make_character/btn_gender_m_press.bmp\"\r\n			>\r\n				<input type=\"radio\" name=\"gender\" id=\"male\" checked class=\"gender_button radio\" />\r\n				<label\r\n					for=\"male\"\r\n					class=\"button male\"\r\n					data-hover=\"make_character/btn_gender_m_over.bmp\"\r\n					data-down=\"make_character/btn_gender_m_press.bmp\"\r\n				>\r\n				</label>\r\n			</div>\r\n			<div\r\n				id=\"female_container\"\r\n				class=\"button container right\"\r\n				data-background=\"make_character/btn_gender_f_out.bmp\"\r\n			>\r\n				<input type=\"radio\" name=\"gender\" id=\"female\" class=\"gender_button radio\" />\r\n				<label\r\n					for=\"female\"\r\n					class=\"button female\"\r\n					data-hover=\"make_character/btn_gender_f_over.bmp\"\r\n					data-down=\"make_character/btn_gender_f_press.bmp\"\r\n				>\r\n				</label>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"category hairstyle\">\r\n			<ui-button\r\n				class=\"button left\"\r\n				bg=\"make_character/arrow_box_l_out.bmp\"\r\n				hover=\"make_character/arrow_box_l_over.bmp\"\r\n				down=\"make_character/arrow_box_l_press.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"button right\"\r\n				bg=\"make_character/arrow_box_r_out.bmp\"\r\n				hover=\"make_character/arrow_box_r_over.bmp\"\r\n				down=\"make_character/arrow_box_r_press.bmp\"\r\n			></ui-button>\r\n		</div>\r\n\r\n		<div class=\"category haircolor\">\r\n			<ui-button\r\n				class=\"button left\"\r\n				bg=\"make_character/arrow_box_l_out.bmp\"\r\n				hover=\"make_character/arrow_box_l_over.bmp\"\r\n				down=\"make_character/arrow_box_l_press.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"button right\"\r\n				bg=\"make_character/arrow_box_r_out.bmp\"\r\n				hover=\"make_character/arrow_box_r_over.bmp\"\r\n				down=\"make_character/arrow_box_r_press.bmp\"\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button\r\n		class=\"button make\"\r\n		bg=\"make_character/btn_create_out.bmp\"\r\n		hover=\"make_character/btn_create_over.bmp\"\r\n		down=\"make_character/btn_create_press.bmp\"\r\n	></ui-button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.css?raw
-var CharCreatev3_default$1;
-var init_CharCreatev3$1 = __esmMin((() => {
-	CharCreatev3_default$1 = ":host {\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#charcreate_v3 {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#charcreate_v3 .radio {\r\n	display: none;\r\n}\r\n\r\n#charcreate_v3 .title {\r\n	position: absolute;\r\n	left: 45px;\r\n	top: 15px;\r\n	height: 20px;\r\n	width: 200px;\r\n}\r\n\r\n/** Race **/\r\n#charcreate_v3 .race_select .label {\r\n	position: absolute;\r\n	width: 358px;\r\n	height: 138px;\r\n	outline: none;\r\n	background-repeat: no-repeat;\r\n}\r\n#charcreate_v3 .race_select .title {\r\n	position: absolute;\r\n	color: white;\r\n	top: 14px;\r\n	left: 34px;\r\n	height: 20px;\r\n	width: 45px;\r\n}\r\n#charcreate_v3 .race_select .desc {\r\n	position: absolute;\r\n	top: 22px;\r\n	left: 90px;\r\n	height: 60px;\r\n	width: 248px;\r\n	font-size: 14px;\r\n	line-height: 20px;\r\n}\r\n#charcreate_v3 .race_select .jobs {\r\n	position: absolute;\r\n	top: 102px;\r\n	left: 120px;\r\n	height: 26px;\r\n	width: 226px;\r\n}\r\n#charcreate_v3 .race_select .chargen canvas {\r\n	position: absolute;\r\n	top: 16px;\r\n	left: 16px;\r\n}\r\n\r\n#charcreate_v3 .race_select .human .label {\r\n	top: 32px;\r\n	left: 20px;\r\n}\r\n#charcreate_v3 .race_select .doram .label {\r\n	top: 177px;\r\n	left: 20px;\r\n}\r\n\r\n/* Style */\r\n#charcreate_v3 #style {\r\n	position: relative;\r\n	left: 395px;\r\n	top: 30px;\r\n	width: 200px;\r\n	height: 270px;\r\n}\r\n#charcreate_v3 #style .button {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 38px;\r\n}\r\n\r\n/** Style Model **/\r\n#charcreate_v3 #style .model {\r\n	position: absolute;\r\n	top: 15px;\r\n	left: 30px;\r\n	width: 100px;\r\n}\r\n#charcreate_v3 #style .model canvas {\r\n	position: relative;\r\n	top: -5px;\r\n	left: 17px;\r\n}\r\n\r\n/** Char Name **/\r\n#charcreate_v3 #char_name {\r\n	position: absolute;\r\n	height: 16px;\r\n	width: 110px;\r\n	top: 134px;\r\n	left: 43px;\r\n	border: 0px;\r\n	background-color: transparent;\r\n}\r\n\r\n/** Buttons **/\r\n#charcreate_v3 #style .rot_left {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 30px;\r\n	height: 20px;\r\n	width: 20px;\r\n}\r\n#charcreate_v3 #style .rot_right {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 110px;\r\n	height: 20px;\r\n	width: 20px;\r\n}\r\n\r\n#charcreate_v3 #style .category {\r\n	position: absolute;\r\n	left: 80px;\r\n	height: 20px;\r\n	width: 78px;\r\n}\r\n#charcreate_v3 #style .category .button {\r\n	position: absolute;\r\n	top: 0px;\r\n	height: 20px;\r\n	width: 38px;\r\n	white-space: nowrap;\r\n	border: 0;\r\n}\r\n#charcreate_v3 #style .category .button.left {\r\n	left: 0px;\r\n}\r\n#charcreate_v3 #style .category .button.right {\r\n	left: 40px;\r\n}\r\n\r\n#charcreate_v3 #style .gender {\r\n	top: 164px;\r\n}\r\n#charcreate_v3 #style .gender .container .gender_button {\r\n	display: none;\r\n}\r\n#charcreate_v3 #style .hairstyle {\r\n	top: 186px;\r\n}\r\n#charcreate_v3 #style .haircolor {\r\n	top: 208px;\r\n}\r\n\r\n#charcreate_v3 .button.make {\r\n	position: absolute;\r\n	top: 280px;\r\n	left: 445px;\r\n	width: 68px;\r\n	height: 20px;\r\n}\r\n#charcreate_v3 .button.close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#charcreate_v3 ui-button {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.js
-/**
-* Send back informations to send the packet
-*/
-function create$1() {
-	const charname = CharCreatev3.getRoot().querySelector("#char_name").value;
-	CharCreatev3.onCharCreationRequest(charname, 1, 1, 1, 1, 1, 1, _model$1.entity.head, _model$1.entity.headpalette, _model$1.entity.job, _model$1.entity.sex);
-}
-function setDefault() {
-	updateCharacter$1(TYPE.DEFAULT, 0);
-}
-/**
-* Exit the window
-*/
-function cancel$1() {
-	setDefault();
-	CharCreatev3.onExitRequest();
-}
-/**
-* Update character hairstyle and haircolor
-*
-* @param {string} type (head or headpalette)
-* @param {number} value
-*/
-function updateCharacter$1(type, value) {
-	const root = CharCreatev3.getRoot();
-	switch (type) {
-		case TYPE.GENDER:
-			_model$1.entity.sex = value;
-			if (_model$1.entity.sex == GENDER.MALE) {
-				Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_m_press.bmp`, (dataURI) => {
-					root.querySelector("#male_container").style.backgroundImage = `url(${dataURI})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_f_out.bmp`, (dataURI) => {
-					root.querySelector("#female_container").style.backgroundImage = `url(${dataURI})`;
-				});
-			} else {
-				Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_m_out.bmp`, (dataURI) => {
-					root.querySelector("#male_container").style.backgroundImage = `url(${dataURI})`;
-				});
-				Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_f_press.bmp`, (dataURI) => {
-					root.querySelector("#female_container").style.backgroundImage = `url(${dataURI})`;
-				});
-			}
-			break;
-		case TYPE.RACE:
-			_model$1.entity.job = value;
-			_model$1.entity.head = 1;
-			if (_model$1.entity.job === RACE.HUMAN) {
-				Client.loadFile(RACE_MARK, (dataURI) => {
-					root.querySelector(".race_select .human label").style.backgroundImage = `url(${dataURI})`;
-				});
-				root.querySelector(".race_select .doram label").style.backgroundImage = "none";
-			} else {
-				root.querySelector(".race_select .human label").style.backgroundImage = "none";
-				Client.loadFile(RACE_MARK, (dataURI) => {
-					root.querySelector(".race_select .doram label").style.backgroundImage = `url(${dataURI})`;
-				});
-			}
-			break;
-		case TYPE.DIRECTION:
-			_model$1.entity.direction += value;
-			break;
-		case TYPE.HEAD: {
-			let headval = _model$1.entity.head + value;
-			if (headval > CAP[_model$1.entity.job].HEAD.MAX) headval = CAP[_model$1.entity.job].HEAD.MIN;
-			if (headval < CAP[_model$1.entity.job].HEAD.MIN) headval = CAP[_model$1.entity.job].HEAD.MAX;
-			_model$1.entity.head = headval;
-			break;
-		}
-		case TYPE.HEADPALETTE: {
-			let headpaletteval = _model$1.entity.headpalette + value;
-			if (headpaletteval > CAP[_model$1.entity.job].HEADPALETTE.MAX) headpaletteval = CAP[_model$1.entity.job].HEADPALETTE.MIN;
-			if (headpaletteval < CAP[_model$1.entity.job].HEADPALETTE.MIN) headpaletteval = CAP[_model$1.entity.job].HEADPALETTE.MAX;
-			_model$1.entity.headpalette = headpaletteval;
-			break;
-		}
-		case TYPE.DEFAULT:
-			updateCharacter$1(TYPE.RACE, RACE.HUMAN);
-			updateCharacter$1(TYPE.GENDER, GENDER.MALE);
-			_model$1.entity.headpalette = 0;
-			break;
-	}
-}
-/**
-* Rendering the Character
-*/
-function render$3(tick) {
-	if (_model$1.entity.job === RACE.HUMAN) {
-		if (_human.tick + 500 < tick) {
+	Component.onAppend = function onAppend() {
+		this._host.style.top = `${(Renderer.height - hostHeight) / 2}px`;
+		this._host.style.left = `${(Renderer.width - hostWidth) / 2}px`;
+		if (hasRace) {
+			_human.render = true;
 			_human.entity.set({
-				action: 1,
+				sex: _accountSex,
+				job: RACE.HUMAN,
+				head: 1,
+				action: 0,
 				direction: 5
 			});
-			_human.tick = tick;
-		}
-	}
-	SpriteRenderer.bind2DContext(_human.ctx, 32, 115);
-	_human.ctx.clearRect(0, 0, _human.ctx.canvas.width, _human.ctx.canvas.height);
-	_human.entity.renderEntity();
-	if (_model$1.entity.job === RACE.DORAM) {
-		if (_doram$1.tick + 500 < tick) {
-			_doram$1.entity.set({
-				action: 1,
+			_doram.render = true;
+			_doram.entity.set({
+				sex: _accountSex,
+				job: RACE.DORAM,
+				head: 1,
+				action: 0,
 				direction: 5
 			});
-			_doram$1.tick = tick;
+			_model.render = true;
+			_model.entity.set({
+				sex: GENDER.MALE,
+				job: RACE.HUMAN,
+				head: 1,
+				headpalette: 0,
+				action: 0,
+				direction: 4
+			});
+		} else {
+			_chargen.render = true;
+			_chargen.entity.set({
+				sex: _accountSex,
+				job: 0,
+				head: 2,
+				action: 0
+			});
+		}
+		const input = this.getRoot().querySelector(nameInputSelector);
+		input.value = "";
+		input.focus();
+		if (hasRace) if (gridHairstyle) {
+			_race = "human";
+			_gender = "male";
+			updateRace();
+			cleanup();
+		} else setDefault();
+		Renderer.render(render);
+		if (hasStats) updateGraphic();
+	};
+	/**
+	* Remove component from HTML
+	* Stop rendering
+	*/
+	Component.onRemove = function onRemove() {
+		Renderer.stop(render);
+	};
+	/**
+	* Key Handler
+	*
+	* @param {object} event
+	* @return {boolean}
+	*/
+	Component.onKeyDown = function onKeyDown(event) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			event.stopImmediatePropagation();
+			cancel();
+			return false;
+		}
+		return true;
+	};
+	/**
+	* Generic function to get a direct proxy to updateCharacterLegacy
+	*
+	* @param {string} type
+	* @param {number} value
+	*/
+	function updateCharacterGeneric(type, value) {
+		return (event) => {
+			updateCharacterLegacy(type, value);
+			event.stopImmediatePropagation();
+			return false;
+		};
+	}
+	/**
+	* Send back informations to send the packet
+	*/
+	function create() {
+		const root = Component.getRoot();
+		const charname = root.querySelector(nameInputSelector).value;
+		let str = 1;
+		let agi = 1;
+		let vit = 1;
+		let int = 1;
+		let dex = 1;
+		let luk = 1;
+		if (hasStats) {
+			str = parseInt(root.querySelector(".info .str").textContent, 10);
+			agi = parseInt(root.querySelector(".info .agi").textContent, 10);
+			vit = parseInt(root.querySelector(".info .vit").textContent, 10);
+			int = parseInt(root.querySelector(".info .int").textContent, 10);
+			dex = parseInt(root.querySelector(".info .dex").textContent, 10);
+			luk = parseInt(root.querySelector(".info .luk").textContent, 10);
+		}
+		if (hasRace) Component.onCharCreationRequest(charname, str, agi, vit, int, dex, luk, _model.entity.head, _model.entity.headpalette, _model.entity.job, _model.entity.sex);
+		else Component.onCharCreationRequest(charname, str, agi, vit, int, dex, luk, _chargen.entity.head, _chargen.entity.headpalette);
+	}
+	/**
+	* Exit the window
+	*/
+	function cancel() {
+		if (hasRace) if (gridHairstyle) cleanup();
+		else setDefault();
+		Component.onExitRequest();
+	}
+	/**
+	* Update character hairstyle and haircolor
+	*
+	* @param {string} type (head or headpalette)
+	* @param {number} increment (-1 or +1)
+	*/
+	function updateCharacterLegacy(type, increment) {
+		switch (type) {
+			case "head": {
+				let head = _chargen.entity.head + increment;
+				if (head < 2) head = 26;
+				if (head > 26) head = 2;
+				_chargen.entity.head = head;
+				break;
+			}
+			case "headpalette":
+				_chargen.entity.headpalette += increment;
+				_chargen.entity.headpalette %= 10;
+				break;
+		}
+		render();
+	}
+	/**
+	* Update the stats and polygon
+	*/
+	function updateStats() {
+		const root = Component.getRoot();
+		if (root.querySelector(`.info .${this.className}`).textContent === "9") return;
+		const group = {
+			str: "int",
+			int: "str",
+			vit: "dex",
+			dex: "vit",
+			luk: "agi",
+			agi: "luk"
+		};
+		root.querySelector(`.info .${this.className}`).textContent++;
+		root.querySelector(`.info .${group[this.className]}`).textContent--;
+		updateGraphic();
+	}
+	/**
+	* Update the polygon
+	*/
+	function updateGraphic() {
+		const root = Component.getRoot();
+		const ctx = _graph;
+		const width = ctx.canvas.width;
+		const height = ctx.canvas.height;
+		let i;
+		const x = width / 2;
+		const y = height / 2;
+		const list = [
+			"dex",
+			"agi",
+			"str",
+			"vit",
+			"luk",
+			"int"
+		];
+		ctx.clearRect(0, 0, width, height);
+		ctx.save();
+		ctx.fillStyle = "#7b94ce";
+		ctx.translate(x, y);
+		ctx.beginPath();
+		ctx.moveTo(0, Math.floor(y / 10 * (parseInt(root.querySelector(`.info .${list[5]}`).textContent) + 1)));
+		for (i = 0; i < 6; i++) {
+			ctx.rotate(60 * Math.PI / 180);
+			ctx.lineTo(0, Math.floor(y / 10 * (parseInt(root.querySelector(`.info .${list[i]}`).textContent) + 1)));
+		}
+		ctx.closePath();
+		ctx.fill();
+		ctx.restore();
+	}
+	/**
+	* Rendering the Character (single canvas, camera rotation)
+	*/
+	function renderLegacy(tick) {
+		if (_chargen.tick + 500 < tick) {
+			Camera.direction++;
+			Camera.direction %= 8;
+			_chargen.tick = tick;
+		}
+		SpriteRenderer.bind2DContext(_chargen.ctx, 32, 115);
+		_chargen.ctx.clearRect(0, 0, _chargen.ctx.canvas.width, _chargen.ctx.canvas.height);
+		_chargen.entity.renderEntity();
+	}
+	/**
+	* Msgstring Texts
+	*/
+	function applyRaceMessages(root) {
+		if (gridHairstyle) {
+			root.querySelector(".title").textContent = DB.getMessage(3355);
+			root.querySelector(".human_title").textContent = DB.getMessage(3016);
+			root.querySelector(".human_desc").textContent = DB.getMessage(3020);
+			root.querySelector(".doram_title").textContent = DB.getMessage(3018);
+			root.querySelector(".doram_desc").textContent = DB.getMessage(3021);
+			root.querySelector(".hair_style_title").textContent = DB.getMessage(3346);
+			root.querySelector(".hair_color_title").textContent = DB.getMessage(3347);
+			root.querySelector(".return").textContent = DB.getMessage(3351);
+			root.querySelector(".make").textContent = DB.getMessage(3345);
+		} else {
+			root.querySelector(".race_select .human .title").textContent = DB.getMessage(3016);
+			root.querySelector(".race_select .human .desc").textContent = DB.getMessage(3020);
+			root.querySelector(".race_select .human .jobs").textContent = DB.getMessage(3017);
+			root.querySelector(".race_select .doram .title").textContent = DB.getMessage(3018);
+			root.querySelector(".race_select .doram .desc").textContent = DB.getMessage(3021);
+			root.querySelector(".race_select .doram .jobs").textContent = DB.getMessage(3019);
 		}
 	}
-	SpriteRenderer.bind2DContext(_doram$1.ctx, 32, 115);
-	_doram$1.ctx.clearRect(0, 0, _doram$1.ctx.canvas.width, _doram$1.ctx.canvas.height);
-	_doram$1.entity.renderEntity();
-	SpriteRenderer.bind2DContext(_model$1.ctx, 32, 115);
-	_model$1.ctx.clearRect(0, 0, _model$1.ctx.canvas.width, _model$1.ctx.canvas.height);
-	_model$1.entity.renderEntity();
-	CharCreatev3.getRoot().querySelector("#char_name").focus();
+	/**
+	* Rendering the Characters (three canvases, action animation)
+	*/
+	function renderRace(tick) {
+		const root = Component.getRoot();
+		const humanSelected = gridHairstyle ? _race === "human" : _model.entity.job === RACE.HUMAN;
+		const doramSelected = gridHairstyle ? _race === "doram" : _model.entity.job === RACE.DORAM;
+		if (humanSelected) {
+			if (_human.tick + 500 < tick) {
+				_human.entity.set({
+					action: 1,
+					direction: 5
+				});
+				_human.tick = tick;
+			}
+		}
+		SpriteRenderer.bind2DContext(_human.ctx, 32, 115);
+		_human.ctx.clearRect(0, 0, _human.ctx.canvas.width, _human.ctx.canvas.height);
+		_human.entity.renderEntity();
+		if (doramSelected) {
+			if (_doram.tick + 500 < tick) {
+				_doram.entity.set({
+					action: 1,
+					direction: 5
+				});
+				_doram.tick = tick;
+			}
+		}
+		SpriteRenderer.bind2DContext(_doram.ctx, 32, 115);
+		_doram.ctx.clearRect(0, 0, _doram.ctx.canvas.width, _doram.ctx.canvas.height);
+		_doram.entity.renderEntity();
+		SpriteRenderer.bind2DContext(_model.ctx, 32, 115);
+		_model.ctx.clearRect(0, 0, _model.ctx.canvas.width, _model.ctx.canvas.height);
+		_model.entity.renderEntity();
+		root.querySelector(nameInputSelector).focus();
+		if (gridHairstyle) {
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_${_race}_on.bmp`, (dataURI) => {
+				root.querySelector(`.${_race}_label`).style.backgroundImage = `url(${dataURI})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_${_gender}_on.bmp`, (dataURI) => {
+				root.querySelector(`#${_gender}_container`).style.backgroundImage = `url(${dataURI})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/color0${parseInt(_curcolor) + 1}_on.bmp`, (dataURI) => {
+				const el = root.querySelector(`.cstyle0${_curcolor}`);
+				if (el) el.style.backgroundImage = `url(${dataURI})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_normal.bmp`, (dataURI) => {
+				const el = root.querySelector(`.style${_prevhead}`);
+				if (el) el.style.backgroundImage = `url(${dataURI})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_select.bmp`, (dataURI) => {
+				const el = root.querySelector(`.style${_curhead}`);
+				if (el) el.style.backgroundImage = `url(${dataURI})`;
+			});
+		}
+	}
+	function initRaceCap(root) {
+		root.querySelector(".race_select #human").addEventListener("click", () => {
+			updateCharacterCap(TYPE.RACE, RACE.HUMAN);
+		});
+		root.querySelector(".race_select #doram").addEventListener("click", () => {
+			updateCharacterCap(TYPE.RACE, RACE.DORAM);
+		});
+		root.querySelector("#style .rot_left").addEventListener("click", () => {
+			updateCharacterCap(TYPE.DIRECTION, DIRECTION.LEFT);
+		});
+		root.querySelector("#style .rot_right").addEventListener("click", () => {
+			updateCharacterCap(TYPE.DIRECTION, DIRECTION.RIGHT);
+		});
+		root.querySelector("#style .gender .button.male").addEventListener("click", () => {
+			updateCharacterCap(TYPE.GENDER, GENDER.MALE);
+		});
+		root.querySelector("#style .gender .button.female").addEventListener("click", () => {
+			updateCharacterCap(TYPE.GENDER, GENDER.FEMALE);
+		});
+		root.querySelector("#style .hairstyle .left").addEventListener("click", () => {
+			updateCharacterCap(TYPE.HEAD, VALUE.DECREASE);
+		});
+		root.querySelector("#style .hairstyle .right").addEventListener("click", () => {
+			updateCharacterCap(TYPE.HEAD, VALUE.INCREASE);
+		});
+		root.querySelector("#style .haircolor .left").addEventListener("click", () => {
+			updateCharacterCap(TYPE.HEADPALETTE, VALUE.DECREASE);
+		});
+		root.querySelector("#style .haircolor .right").addEventListener("click", () => {
+			updateCharacterCap(TYPE.HEADPALETTE, VALUE.INCREASE);
+		});
+	}
+	function setDefault() {
+		updateCharacterCap(TYPE.DEFAULT, 0);
+	}
+	/**
+	* Update character hairstyle and haircolor
+	*
+	* @param {number} type
+	* @param {number} value
+	*/
+	function updateCharacterCap(type, value) {
+		const root = Component.getRoot();
+		switch (type) {
+			case TYPE.GENDER:
+				_model.entity.sex = value;
+				if (_model.entity.sex == GENDER.MALE) {
+					Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_m_press.bmp`, (dataURI) => {
+						root.querySelector("#male_container").style.backgroundImage = `url(${dataURI})`;
+					});
+					Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_f_out.bmp`, (dataURI) => {
+						root.querySelector("#female_container").style.backgroundImage = `url(${dataURI})`;
+					});
+				} else {
+					Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_m_out.bmp`, (dataURI) => {
+						root.querySelector("#male_container").style.backgroundImage = `url(${dataURI})`;
+					});
+					Client.loadFile(`${DB.INTERFACE_PATH}make_character/btn_gender_f_press.bmp`, (dataURI) => {
+						root.querySelector("#female_container").style.backgroundImage = `url(${dataURI})`;
+					});
+				}
+				break;
+			case TYPE.RACE:
+				_model.entity.job = value;
+				_model.entity.head = 1;
+				if (_model.entity.job === RACE.HUMAN) {
+					Client.loadFile(RACE_MARK, (dataURI) => {
+						root.querySelector(".race_select .human label").style.backgroundImage = `url(${dataURI})`;
+					});
+					root.querySelector(".race_select .doram label").style.backgroundImage = "none";
+				} else {
+					root.querySelector(".race_select .human label").style.backgroundImage = "none";
+					Client.loadFile(RACE_MARK, (dataURI) => {
+						root.querySelector(".race_select .doram label").style.backgroundImage = `url(${dataURI})`;
+					});
+				}
+				break;
+			case TYPE.DIRECTION:
+				_model.entity.direction += value;
+				break;
+			case TYPE.HEAD: {
+				let headval = _model.entity.head + value;
+				if (headval > CAP[_model.entity.job].HEAD.MAX) headval = CAP[_model.entity.job].HEAD.MIN;
+				if (headval < CAP[_model.entity.job].HEAD.MIN) headval = CAP[_model.entity.job].HEAD.MAX;
+				_model.entity.head = headval;
+				break;
+			}
+			case TYPE.HEADPALETTE: {
+				let headpaletteval = _model.entity.headpalette + value;
+				if (headpaletteval > CAP[_model.entity.job].HEADPALETTE.MAX) headpaletteval = CAP[_model.entity.job].HEADPALETTE.MIN;
+				if (headpaletteval < CAP[_model.entity.job].HEADPALETTE.MIN) headpaletteval = CAP[_model.entity.job].HEADPALETTE.MAX;
+				_model.entity.headpalette = headpaletteval;
+				break;
+			}
+			case TYPE.DEFAULT:
+				updateCharacterCap(TYPE.RACE, RACE.HUMAN);
+				updateCharacterCap(TYPE.GENDER, GENDER.MALE);
+				_model.entity.headpalette = 0;
+				break;
+		}
+	}
+	function initRaceGrid(root) {
+		_race = "human";
+		_gender = "male";
+		_prevhead = 1;
+		_curhead = 1;
+		_prevcolor = 0;
+		_curcolor = 0;
+		root.querySelector(".gender .male_button").addEventListener("mousedown", updateCharacterGenericGrid("gender", 1));
+		root.querySelector(".gender .female_button").addEventListener("mousedown", updateCharacterGenericGrid("gender", 0));
+		root.querySelector("#style .rot_left").addEventListener("mousedown", updateCharacterGenericGrid("direction", 0));
+		root.querySelector("#style .rot_right").addEventListener("mousedown", updateCharacterGenericGrid("direction", 1));
+		root.querySelectorAll(".race").forEach((el) => {
+			el.addEventListener("click", updateRace);
+		});
+		root.addEventListener("click", (event) => {
+			const hstyleBtn = event.target.closest(".hstyle_button");
+			if (hstyleBtn) {
+				updateHStyle(hstyleBtn);
+				return;
+			}
+			const hcolorBtn = event.target.closest(".hcolor_button");
+			if (hcolorBtn) updateHColor(hcolorBtn);
+		});
+	}
+	/**
+	* Update model hairstyle
+	*/
+	function updateHStyle(target) {
+		const root = Component.getRoot();
+		const type = "head";
+		const value = parseInt(target.getAttribute("for"));
+		_prevhead = _model.entity.head;
+		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_normal.bmp`, (dataURI) => {
+			const el = root.querySelector(`.style${_prevhead}`);
+			if (el) el.style.backgroundImage = `url(${dataURI})`;
+		});
+		_curhead = value;
+		updateCharacterGrid(type, value);
+	}
+	/**
+	* Update model haircolor
+	*/
+	function updateHColor(target) {
+		const root = Component.getRoot();
+		const type = "headpalette";
+		const value = parseInt(target.getAttribute("for"));
+		_prevcolor = _model.entity.headpalette;
+		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/color0${parseInt(_prevcolor) + 1}_off.bmp`, (dataURI) => {
+			const el = root.querySelector(`.cstyle0${_prevcolor}`);
+			if (el) el.style.backgroundImage = `url(${dataURI})`;
+		});
+		_curcolor = value;
+		updateCharacterGrid(type, value);
+	}
+	/**
+	* Update model race
+	*/
+	function updateRace() {
+		const root = Component.getRoot();
+		const select = root.querySelector(".race:checked");
+		const type = "race";
+		let value = 0;
+		if (select && select.id === "human_race") {
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_human_on.bmp`, (dataURI) => {
+				root.querySelector(".human_label").style.backgroundImage = `url(${dataURI})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_doram_off.bmp`, (dataURI) => {
+				root.querySelector(".doram_label").style.backgroundImage = `url(${dataURI})`;
+			});
+			value = 0;
+		}
+		if (select && select.id === "doram_race") {
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_human_off.bmp`, (dataURI) => {
+				root.querySelector(".human_label").style.backgroundImage = `url(${dataURI})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_doram_on.bmp`, (dataURI) => {
+				root.querySelector(".doram_label").style.backgroundImage = `url(${dataURI})`;
+			});
+			value = 4218;
+		}
+		for (let i = 1; i <= 24; i++) Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_normal.bmp`, (dataURI) => {
+			const el = root.querySelector(`.style${i}`);
+			if (el) el.style.backgroundImage = `url(${dataURI})`;
+		});
+		_prevhead = 1;
+		_curhead = 1;
+		updateHstyleList(type, value);
+		updateCharacterGrid(type, value);
+	}
+	/**
+	* Generic function to get a direct proxy to updateCharacterGrid
+	*
+	* @param {string} type
+	* @param {number} value
+	*/
+	function updateCharacterGenericGrid(type, value) {
+		return () => {
+			if (type === "gender") updateHstyleList(type, value);
+			updateCharacterGrid(type, value);
+		};
+	}
+	function updateHstyleList(type, value) {
+		const root = Component.getRoot();
+		switch (type) {
+			case "gender":
+				if (value === 1) _gender = "male";
+				else _gender = "female";
+				break;
+			case "race":
+				if (value === 0) _race = "human";
+				else _race = "doram";
+				break;
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_male_off.bmp`, (dataURI) => {
+			root.querySelector("#male_container").style.backgroundImage = `url(${dataURI})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_female_off.bmp`, (dataURI) => {
+			root.querySelector("#female_container").style.backgroundImage = `url(${dataURI})`;
+		});
+		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_${_gender}_on.bmp`, (dataURI) => {
+			root.querySelector(`#${_gender}_container`).style.backgroundImage = `url(${dataURI})`;
+		});
+		root.querySelectorAll(".hair-style").forEach((el) => {
+			el.style.display = "none";
+		});
+		const hairStyleEl = root.querySelector(`#${_race}_${_gender}`);
+		if (hairStyleEl) hairStyleEl.style.display = "block";
+	}
+	function cleanup() {
+		const root = Component.getRoot();
+		_race = "human";
+		_gender = "male";
+		_prevhead = 1;
+		_curhead = 1;
+		_prevcolor = 0;
+		_curcolor = 0;
+		const humanRace = root.querySelector("#human_race");
+		if (humanRace) humanRace.checked = true;
+		const maleInput = root.querySelector("#male");
+		if (maleInput) maleInput.checked = true;
+		root.querySelectorAll(".hstyle").forEach((el) => {
+			el.checked = false;
+		});
+		const defaultHstyle = root.querySelector("[id=\"1_human_male\"]");
+		if (defaultHstyle) defaultHstyle.checked = true;
+		const defaultColor = root.querySelector("[id=\"0_color\"]");
+		if (defaultColor) defaultColor.checked = true;
+		for (let i = 0; i <= 8; i++) Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/color0${i + 1}_off.bmp`, (dataURI) => {
+			const el = root.querySelector(`.cstyle0${i}`);
+			if (el) el.style.backgroundImage = `url(${dataURI})`;
+		});
+		updateCharacterGrid("default", 0);
+	}
+	/**
+	* Update character hairstyle and haircolor
+	*
+	* @param {string} type
+	* @param {number} increment
+	*/
+	function updateCharacterGrid(type, increment) {
+		switch (type) {
+			case "gender":
+				_model.entity.sex = increment;
+				break;
+			case "race":
+				_model.entity.job = increment;
+				_model.entity.head = 1;
+				break;
+			case "direction":
+				if (increment === 0) _model.entity.direction = _model.entity.direction + 1;
+				else _model.entity.direction = _model.entity.direction - 1;
+				break;
+			case "head":
+				_prevhead = _model.entity.head;
+				_model.entity.head = increment;
+				break;
+			case "headpalette":
+				_model.entity.headpalette = increment;
+				break;
+			case "default":
+				_model.entity.sex = 1;
+				_model.entity.job = 0;
+				_model.entity.head = 1;
+				_model.entity.headpalette = 0;
+				break;
+		}
+	}
+	/**
+	* Callback to define
+	*/
+	Component.onExitRequest = function OnExitRequest() {};
+	/**
+	* Abstract callback to define
+	*/
+	Component.onCharCreationRequest = function OnCharCreationRequest() {};
+	/**
+	* Create component and export it
+	*/
+	return UIManager.addComponent(Component);
 }
-var CharCreatev3, _accountSex$1, TYPE, GENDER, RACE, DIRECTION, VALUE, CAP, RACE_MARK, _human, _doram$1, _model$1, CharCreatev3_default;
-var init_CharCreatev3 = __esmMin((() => {
+var TYPE, GENDER, RACE, DIRECTION, VALUE, CAP, RACE_MARK;
+var init_CharCreateCommon = __esmMin((() => {
 	init_DBManager();
 	init_Renderer();
 	init_KeyEventHandler();
 	init_Entity$1();
 	init_SpriteRenderer();
+	init_Camera();
+	init_Client();
 	init_UIManager();
 	init_GUIComponent();
 	init_Elements();
-	init_CharCreatev3$2();
-	init_CharCreatev3$1();
-	init_Client();
-	CharCreatev3 = new GUIComponent("CharCreatev3", CharCreatev3_default$1);
-	CharCreatev3.render = () => CharCreatev3_default$2;
-	_accountSex$1 = 0;
 	TYPE = {
 		RACE: 1,
 		GENDER: 2,
@@ -336427,160 +335720,133 @@ var init_CharCreatev3 = __esmMin((() => {
 		}
 	};
 	RACE_MARK = `${DB.INTERFACE_PATH}make_character/select_mark_cha_create.bmp`;
-	_human = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	_doram$1 = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	_model$1 = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	/**
-	* Initialize UI
-	*/
-	CharCreatev3.init = function init() {
-		const root = this.getRoot();
-		_human.ctx = root.querySelector("#canvas_human").getContext("2d");
-		_doram$1.ctx = root.querySelector("#canvas_doram").getContext("2d");
-		_model$1.ctx = root.querySelector("#canvas_model").getContext("2d");
-		this.draggable();
-		const radioInputs = root.querySelectorAll("input[type=\"radio\"]");
-		const labels = root.querySelectorAll("label");
-		radioInputs.forEach((input) => {
-			input.classList.add("event_add_cursor");
-		});
-		labels.forEach((label) => {
-			label.classList.add("event_add_cursor");
-		});
-		root.querySelector(".race_select #human").addEventListener("click", () => {
-			updateCharacter$1(TYPE.RACE, RACE.HUMAN);
-		});
-		root.querySelector(".race_select #doram").addEventListener("click", () => {
-			updateCharacter$1(TYPE.RACE, RACE.DORAM);
-		});
-		root.querySelector("#style .rot_left").addEventListener("click", () => {
-			updateCharacter$1(TYPE.DIRECTION, DIRECTION.LEFT);
-		});
-		root.querySelector("#style .rot_right").addEventListener("click", () => {
-			updateCharacter$1(TYPE.DIRECTION, DIRECTION.RIGHT);
-		});
-		root.querySelector("#style .gender .button.male").addEventListener("click", () => {
-			updateCharacter$1(TYPE.GENDER, GENDER.MALE);
-		});
-		root.querySelector("#style .gender .button.female").addEventListener("click", () => {
-			updateCharacter$1(TYPE.GENDER, GENDER.FEMALE);
-		});
-		root.querySelector("#style .hairstyle .left").addEventListener("click", () => {
-			updateCharacter$1(TYPE.HEAD, VALUE.DECREASE);
-		});
-		root.querySelector("#style .hairstyle .right").addEventListener("click", () => {
-			updateCharacter$1(TYPE.HEAD, VALUE.INCREASE);
-		});
-		root.querySelector("#style .haircolor .left").addEventListener("click", () => {
-			updateCharacter$1(TYPE.HEADPALETTE, VALUE.DECREASE);
-		});
-		root.querySelector("#style .haircolor .right").addEventListener("click", () => {
-			updateCharacter$1(TYPE.HEADPALETTE, VALUE.INCREASE);
-		});
-		const charNameInput = root.querySelector("#char_name");
-		charNameInput.addEventListener("click", (event) => {
-			charNameInput.focus();
-			event.stopImmediatePropagation();
-		});
-		root.querySelector(".button.close").addEventListener("click", cancel$1);
-		root.querySelector(".button.make").addEventListener("click", create$1);
-		root.querySelector(".race_select .human .title").textContent = DB.getMessage(3016);
-		root.querySelector(".race_select .human .desc").textContent = DB.getMessage(3020);
-		root.querySelector(".race_select .human .jobs").textContent = DB.getMessage(3017);
-		root.querySelector(".race_select .doram .title").textContent = DB.getMessage(3018);
-		root.querySelector(".race_select .doram .desc").textContent = DB.getMessage(3021);
-		root.querySelector(".race_select .doram .jobs").textContent = DB.getMessage(3019);
-	};
-	/**
-	* Setter for AccountSex
-	*
-	* @param {number} sex
-	*/
-	CharCreatev3.setAccountSex = function setAccountSex(sex) {
-		_accountSex$1 = sex;
-	};
-	/**
-	* Once add to HTML, start rendering
-	*/
-	CharCreatev3.onAppend = function onAppend() {
-		this._host.style.top = `${(Renderer.height - 342) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
-		_human.entity.set({
-			sex: _accountSex$1,
-			job: RACE.HUMAN,
-			head: 1,
-			action: 0,
-			direction: 5
-		});
-		_human.render = true;
-		_doram$1.entity.set({
-			sex: _accountSex$1,
-			job: RACE.DORAM,
-			head: 1,
-			action: 0,
-			direction: 5
-		});
-		_doram$1.render = true;
-		_model$1.entity.set({
-			sex: GENDER.MALE,
-			job: RACE.HUMAN,
-			head: 1,
-			headpalette: 0,
-			action: 0,
-			direction: 4
-		});
-		_model$1.render = true;
-		const charNameInput = this.getRoot().querySelector("#char_name");
-		charNameInput.value = "";
-		charNameInput.focus();
-		setDefault();
-		Renderer.render(render$3);
-	};
-	/**
-	* Remove component from HTML
-	* Stop rendering
-	*/
-	CharCreatev3.onRemove = function onRemove() {
-		Renderer.stop(render$3);
-	};
-	/**
-	* Key Handler
-	*
-	* @param {object} event
-	* @return {boolean}
-	*/
-	CharCreatev3.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			event.stopImmediatePropagation();
-			cancel$1();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Callback to define
-	*/
-	CharCreatev3.onExitRequest = function OnExitRequest() {};
-	/**
-	* Abstract callback to define
-	*/
-	CharCreatev3.onCharCreationRequest = function OnCharCreationRequest() {};
-	CharCreatev3_default = UIManager.addComponent(CharCreatev3);
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreate/CharCreate.js
+var CharCreate_default;
+var init_CharCreate$1 = __esmMin((() => {
+	init_CharCreate$3();
+	init_CharCreate$2();
+	init_CharCreateCommon();
+	CharCreate_default = createCharCreate({
+		name: "CharCreate",
+		htmlText: CharCreate_default$2,
+		cssText: CharCreate_default$1,
+		hostHeight: 342,
+		hostWidth: 576,
+		hasStats: true,
+		chargenCanvasSelector: ".chargen canvas",
+		graphCanvasSelector: ".graph canvas",
+		statButtonsSelector: ".graph ui-button",
+		hairArrows: [
+			{
+				selector: ".chargen .left",
+				type: "head",
+				value: -1
+			},
+			{
+				selector: ".chargen .right",
+				type: "head",
+				value: 1
+			},
+			{
+				selector: ".chargen .up",
+				type: "headpalette",
+				value: 1
+			}
+		],
+		nameInputSelector: "input",
+		cancelSelectors: [".cancel"],
+		makeSelector: ".make"
+	});
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.html?raw
+var CharCreatev2_default$2;
+var init_CharCreatev2$2 = __esmMin((() => {
+	CharCreatev2_default$2 = "<div id=\"charcreate_v2\">\r\n	<div class=\"header\">\r\n		<div class=\"corner left\"><ui-image src=\"basic_interface/titlebar_left.bmp\"></ui-image></div>\r\n		<div class=\"center\"><ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image></div>\r\n		<div class=\"corner right\"><ui-image src=\"basic_interface/titlebar_right.bmp\"></ui-image></div>\r\n\r\n		<div class=\"title\"><ui-text msg=\"2368\"></ui-text></div>\r\n	</div>\r\n\r\n	<div class=\"content\">\r\n		<ui-image src=\"login_interface/win_make2.bmp\"></ui-image>\r\n		<canvas width=\"65\" height=\"110\"></canvas>\r\n\r\n		<input type=\"text\" data-background=\"login_interface/name-edit.bmp\" value=\"\" />\r\n\r\n		<ui-button class=\"styleleft\" bg=\"scroll1left.bmp\"></ui-button>\r\n		<ui-button class=\"styleright\" bg=\"scroll1right.bmp\"></ui-button>\r\n\r\n		<ui-button class=\"colorleft\" bg=\"scroll1left.bmp\"></ui-button>\r\n		<ui-button class=\"colorright\" bg=\"scroll1right.bmp\"></ui-button>\r\n	</div>\r\n\r\n	<div class=\"footer\">\r\n		<div class=\"corner left\"><ui-image src=\"basic_interface/btnbar_left2.bmp\"></ui-image></div>\r\n		<div class=\"center\"><ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image></div>\r\n		<div class=\"corner right\"><ui-image src=\"basic_interface/btnbar_right2.bmp\"></ui-image></div>\r\n\r\n		<div class=\"btns\">\r\n			<ui-button\r\n				class=\"btn cancel\"\r\n				bg=\"btn_cancel.bmp\"\r\n				hover=\"btn_cancel_a.bmp\"\r\n				down=\"btn_cancel_b.bmp\"\r\n			></ui-button>\r\n			<ui-button class=\"btn make\" bg=\"btn_make.bmp\" hover=\"btn_make_a.bmp\" down=\"btn_make_b.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.css?raw
+var CharCreatev2_default$1;
+var init_CharCreatev2$1 = __esmMin((() => {
+	CharCreatev2_default$1 = ":host {\r\n	width: 150px;\r\n	height: 286px;\r\n}\r\n\r\n#charcreate_v2 {\r\n	position: absolute;\r\n	width: 150px;\r\n	height: 286px;\r\n}\r\n\r\n#charcreate_v2 .header {\r\n	width: 150px;\r\n	height: 17px;\r\n}\r\n#charcreate_v2 .header .corner {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 17px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#charcreate_v2 .header .corner.left {\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n#charcreate_v2 .header .corner.right {\r\n	top: 0px;\r\n	right: 0px;\r\n}\r\n#charcreate_v2 .header .center {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 12px;\r\n	width: 128px;\r\n	height: 17px;\r\n}\r\n#charcreate_v2 .header .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 12px;\r\n	font-size: 13px;\r\n}\r\n\r\n#charcreate_v2 .content {\r\n	width: 150px;\r\n	height: 240px;\r\n}\r\n\r\n#charcreate_v2 .footer {\r\n	width: 150px;\r\n	height: 29px;\r\n}\r\n#charcreate_v2 .footer .corner {\r\n	position: absolute;\r\n	width: 21px;\r\n	height: 29px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#charcreate_v2 .footer .corner.left {\r\n	bottom: 0px;\r\n	left: 0px;\r\n}\r\n#charcreate_v2 .footer .corner.right {\r\n	bottom: 0px;\r\n	right: 0px;\r\n}\r\n#charcreate_v2 .footer .center {\r\n	position: absolute;\r\n	bottom: 0px;\r\n	left: 21px;\r\n	width: 118px;\r\n	height: 29px;\r\n}\r\n\r\n/** Name **/\r\n#charcreate_v2 .content input {\r\n	position: absolute;\r\n	top: 142px;\r\n	left: 40px;\r\n	width: 96px;\r\n	height: 18px;\r\n	padding-top: 2px;\r\n	padding-left: 3px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: 0;\r\n}\r\n\r\n/** Chargen **/\r\n#charcreate_v2 .content ui-button {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 13px;\r\n}\r\n\r\n#charcreate_v2 .content .styleleft {\r\n	top: 190px;\r\n	left: 15px;\r\n}\r\n#charcreate_v2 .content .styleright {\r\n	top: 190px;\r\n	left: 125px;\r\n}\r\n#charcreate_v2 .content .colorleft {\r\n	top: 230px;\r\n	left: 15px;\r\n}\r\n#charcreate_v2 .content .colorright {\r\n	top: 230px;\r\n	left: 125px;\r\n}\r\n\r\n#charcreate_v2 .content canvas {\r\n	position: absolute;\r\n	top: 25px;\r\n	left: 40px;\r\n}\r\n\r\n/** Buttons **/\r\n#charcreate_v2 .footer .btns {\r\n	position: absolute;\r\n	bottom: 4px;\r\n	width: 100%;\r\n	height: 20px;\r\n}\r\n#charcreate_v2 .footer .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n}\r\n#charcreate_v2 .footer .make {\r\n	right: 50px;\r\n}\r\n#charcreate_v2 .footer .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#charcreate_v2 .btns ui-button {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreatev2/CharCreatev2.js
+var CharCreatev2_default;
+var init_CharCreatev2 = __esmMin((() => {
+	init_CharCreatev2$2();
+	init_CharCreatev2$1();
+	init_CharCreateCommon();
+	CharCreatev2_default = createCharCreate({
+		name: "CharCreatev2",
+		htmlText: CharCreatev2_default$2,
+		cssText: CharCreatev2_default$1,
+		hostHeight: 286,
+		hostWidth: 150,
+		chargenCanvasSelector: ".content canvas",
+		hairArrows: [
+			{
+				selector: ".content .styleleft",
+				type: "head",
+				value: -1
+			},
+			{
+				selector: ".content .styleright",
+				type: "head",
+				value: 1
+			},
+			{
+				selector: ".content .colorleft",
+				type: "headpalette",
+				value: -1
+			},
+			{
+				selector: ".content .colorright",
+				type: "headpalette",
+				value: 1
+			}
+		],
+		nameInputSelector: "input",
+		cancelSelectors: [".cancel"],
+		makeSelector: ".make"
+	});
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.html?raw
+var CharCreatev3_default$2;
+var init_CharCreatev3$2 = __esmMin((() => {
+	CharCreatev3_default$2 = "<div id=\"charcreate_v3\">\r\n	<ui-image src=\"make_character/bg_create_character.bmp\"></ui-image>\r\n	<ui-button\r\n		class=\"button close\"\r\n		bg=\"basic_interface/sys_close_off.bmp\"\r\n		hover=\"basic_interface/sys_close_on.bmp\"\r\n	></ui-button>\r\n\r\n	<div class=\"race_select\">\r\n		<div class=\"race human\">\r\n			<input type=\"radio\" name=\"race\" id=\"human\" checked class=\"radio\" />\r\n			<label\r\n				for=\"human\"\r\n				class=\"label\"\r\n				data-background=\"make_character/img_human_off.bmp\"\r\n				data-hover=\"make_character/img_human_on.bmp\"\r\n				data-down=\"make_character/img_human_on.bmp\"\r\n			>\r\n				<div class=\"title\"></div>\r\n				<div class=\"desc\"></div>\r\n				<div class=\"jobs\"></div>\r\n				<div class=\"chargen\">\r\n					<canvas id=\"canvas_human\" width=\"65\" height=\"110\" style=\"pointer-events: none\"></canvas>\r\n				</div>\r\n			</label>\r\n		</div>\r\n\r\n		<div class=\"race doram\">\r\n			<input type=\"radio\" name=\"race\" id=\"doram\" class=\"radio\" />\r\n			<label\r\n				for=\"doram\"\r\n				class=\"label\"\r\n				data-background=\"make_character/img_doram_off.bmp\"\r\n				data-hover=\"make_character/img_doram_on.bmp\"\r\n				data-down=\"make_character/img_doram_on.bmp\"\r\n			>\r\n				<div class=\"title\"></div>\r\n				<div class=\"desc\"></div>\r\n				<div class=\"jobs\"></div>\r\n				<div class=\"chargen\">\r\n					<canvas id=\"canvas_doram\" width=\"65\" height=\"110\" style=\"pointer-events: none\"></canvas>\r\n				</div>\r\n			</label>\r\n		</div>\r\n	</div>\r\n	<div id=\"style\">\r\n		<div class=\"model\">\r\n			<canvas id=\"canvas_model\" width=\"65\" height=\"110\" style=\"pointer-events: none\"></canvas>\r\n		</div>\r\n\r\n		<ui-button\r\n			class=\"rot_left\"\r\n			bg=\"make_character/chr_arrow_rotate_l_out.bmp\"\r\n			hover=\"make_character/chr_arrow_rotate_l_over.bmp\"\r\n			down=\"make_character/chr_arrow_rotate_l_press.bmp\"\r\n		></ui-button>\r\n		<ui-button\r\n			class=\"rot_right\"\r\n			bg=\"make_character/chr_arrow_rotate_r_out.bmp\"\r\n			hover=\"make_character/chr_arrow_rotate_r_over.bmp\"\r\n			down=\"make_character/chr_arrow_rotate_r_press.bmp\"\r\n		></ui-button>\r\n\r\n		<input type=\"text\" id=\"char_name\" maxlength=\"24\" />\r\n\r\n		<div class=\"category gender\">\r\n			<div\r\n				id=\"male_container\"\r\n				class=\"button container left\"\r\n				data-background=\"make_character/btn_gender_m_press.bmp\"\r\n			>\r\n				<input type=\"radio\" name=\"gender\" id=\"male\" checked class=\"gender_button radio\" />\r\n				<label\r\n					for=\"male\"\r\n					class=\"button male\"\r\n					data-hover=\"make_character/btn_gender_m_over.bmp\"\r\n					data-down=\"make_character/btn_gender_m_press.bmp\"\r\n				>\r\n				</label>\r\n			</div>\r\n			<div\r\n				id=\"female_container\"\r\n				class=\"button container right\"\r\n				data-background=\"make_character/btn_gender_f_out.bmp\"\r\n			>\r\n				<input type=\"radio\" name=\"gender\" id=\"female\" class=\"gender_button radio\" />\r\n				<label\r\n					for=\"female\"\r\n					class=\"button female\"\r\n					data-hover=\"make_character/btn_gender_f_over.bmp\"\r\n					data-down=\"make_character/btn_gender_f_press.bmp\"\r\n				>\r\n				</label>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"category hairstyle\">\r\n			<ui-button\r\n				class=\"button left\"\r\n				bg=\"make_character/arrow_box_l_out.bmp\"\r\n				hover=\"make_character/arrow_box_l_over.bmp\"\r\n				down=\"make_character/arrow_box_l_press.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"button right\"\r\n				bg=\"make_character/arrow_box_r_out.bmp\"\r\n				hover=\"make_character/arrow_box_r_over.bmp\"\r\n				down=\"make_character/arrow_box_r_press.bmp\"\r\n			></ui-button>\r\n		</div>\r\n\r\n		<div class=\"category haircolor\">\r\n			<ui-button\r\n				class=\"button left\"\r\n				bg=\"make_character/arrow_box_l_out.bmp\"\r\n				hover=\"make_character/arrow_box_l_over.bmp\"\r\n				down=\"make_character/arrow_box_l_press.bmp\"\r\n			></ui-button>\r\n			<ui-button\r\n				class=\"button right\"\r\n				bg=\"make_character/arrow_box_r_out.bmp\"\r\n				hover=\"make_character/arrow_box_r_over.bmp\"\r\n				down=\"make_character/arrow_box_r_press.bmp\"\r\n			></ui-button>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button\r\n		class=\"button make\"\r\n		bg=\"make_character/btn_create_out.bmp\"\r\n		hover=\"make_character/btn_create_over.bmp\"\r\n		down=\"make_character/btn_create_press.bmp\"\r\n	></ui-button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.css?raw
+var CharCreatev3_default$1;
+var init_CharCreatev3$1 = __esmMin((() => {
+	CharCreatev3_default$1 = ":host {\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#charcreate_v3 {\r\n	position: absolute;\r\n	width: 576px;\r\n	height: 358px;\r\n}\r\n\r\n#charcreate_v3 .radio {\r\n	display: none;\r\n}\r\n\r\n#charcreate_v3 .title {\r\n	position: absolute;\r\n	left: 45px;\r\n	top: 15px;\r\n	height: 20px;\r\n	width: 200px;\r\n}\r\n\r\n/** Race **/\r\n#charcreate_v3 .race_select .label {\r\n	position: absolute;\r\n	width: 358px;\r\n	height: 138px;\r\n	outline: none;\r\n	background-repeat: no-repeat;\r\n}\r\n#charcreate_v3 .race_select .title {\r\n	position: absolute;\r\n	color: white;\r\n	top: 14px;\r\n	left: 34px;\r\n	height: 20px;\r\n	width: 45px;\r\n}\r\n#charcreate_v3 .race_select .desc {\r\n	position: absolute;\r\n	top: 22px;\r\n	left: 90px;\r\n	height: 60px;\r\n	width: 248px;\r\n	font-size: 14px;\r\n	line-height: 20px;\r\n}\r\n#charcreate_v3 .race_select .jobs {\r\n	position: absolute;\r\n	top: 102px;\r\n	left: 120px;\r\n	height: 26px;\r\n	width: 226px;\r\n}\r\n#charcreate_v3 .race_select .chargen canvas {\r\n	position: absolute;\r\n	top: 16px;\r\n	left: 16px;\r\n}\r\n\r\n#charcreate_v3 .race_select .human .label {\r\n	top: 32px;\r\n	left: 20px;\r\n}\r\n#charcreate_v3 .race_select .doram .label {\r\n	top: 177px;\r\n	left: 20px;\r\n}\r\n\r\n/* Style */\r\n#charcreate_v3 #style {\r\n	position: relative;\r\n	left: 395px;\r\n	top: 30px;\r\n	width: 200px;\r\n	height: 270px;\r\n}\r\n#charcreate_v3 #style .button {\r\n	position: absolute;\r\n	height: 20px;\r\n	width: 38px;\r\n}\r\n\r\n/** Style Model **/\r\n#charcreate_v3 #style .model {\r\n	position: absolute;\r\n	top: 15px;\r\n	left: 30px;\r\n	width: 100px;\r\n}\r\n#charcreate_v3 #style .model canvas {\r\n	position: relative;\r\n	top: -5px;\r\n	left: 17px;\r\n}\r\n\r\n/** Char Name **/\r\n#charcreate_v3 #char_name {\r\n	position: absolute;\r\n	height: 16px;\r\n	width: 110px;\r\n	top: 134px;\r\n	left: 43px;\r\n	border: 0px;\r\n	background-color: transparent;\r\n}\r\n\r\n/** Buttons **/\r\n#charcreate_v3 #style .rot_left {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 30px;\r\n	height: 20px;\r\n	width: 20px;\r\n}\r\n#charcreate_v3 #style .rot_right {\r\n	position: absolute;\r\n	top: 70px;\r\n	left: 110px;\r\n	height: 20px;\r\n	width: 20px;\r\n}\r\n\r\n#charcreate_v3 #style .category {\r\n	position: absolute;\r\n	left: 80px;\r\n	height: 20px;\r\n	width: 78px;\r\n}\r\n#charcreate_v3 #style .category .button {\r\n	position: absolute;\r\n	top: 0px;\r\n	height: 20px;\r\n	width: 38px;\r\n	white-space: nowrap;\r\n	border: 0;\r\n}\r\n#charcreate_v3 #style .category .button.left {\r\n	left: 0px;\r\n}\r\n#charcreate_v3 #style .category .button.right {\r\n	left: 40px;\r\n}\r\n\r\n#charcreate_v3 #style .gender {\r\n	top: 164px;\r\n}\r\n#charcreate_v3 #style .gender .container .gender_button {\r\n	display: none;\r\n}\r\n#charcreate_v3 #style .hairstyle {\r\n	top: 186px;\r\n}\r\n#charcreate_v3 #style .haircolor {\r\n	top: 208px;\r\n}\r\n\r\n#charcreate_v3 .button.make {\r\n	position: absolute;\r\n	top: 280px;\r\n	left: 445px;\r\n	width: 68px;\r\n	height: 20px;\r\n}\r\n#charcreate_v3 .button.close {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 3px;\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#charcreate_v3 ui-button {\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: 0;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/CharCreate/CharCreatev3/CharCreatev3.js
+var CharCreatev3_default;
+var init_CharCreatev3 = __esmMin((() => {
+	init_CharCreatev3$2();
+	init_CharCreatev3$1();
+	init_CharCreateCommon();
+	CharCreatev3_default = createCharCreate({
+		name: "CharCreatev3",
+		htmlText: CharCreatev3_default$2,
+		cssText: CharCreatev3_default$1,
+		hostHeight: 342,
+		hostWidth: 576,
+		hasRace: true,
+		humanCanvasSelector: "#canvas_human",
+		doramCanvasSelector: "#canvas_doram",
+		modelCanvasSelector: "#canvas_model",
+		nameInputSelector: "#char_name",
+		nameInputEvent: "click",
+		cancelSelectors: [".button.close"],
+		makeSelector: ".button.make"
+	});
 }));
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreatev4/CharCreatev4.html?raw
@@ -336596,410 +335862,27 @@ var init_CharCreatev4$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreatev4/CharCreatev4.js
-/**
-* Update model hairstyle
-*/
-function updateHStyle(target) {
-	const root = CharCreatev4.getRoot();
-	const type = "head";
-	const value = parseInt(target.getAttribute("for"));
-	_prevhead = _model.entity.head;
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_normal.bmp`, (dataURI) => {
-		const el = root.querySelector(`.style${_prevhead}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-	_curhead = value;
-	updateCharacter(type, value);
-}
-/**
-* Update model haircolor
-*/
-function updateHColor(target) {
-	const root = CharCreatev4.getRoot();
-	const type = "headpalette";
-	const value = parseInt(target.getAttribute("for"));
-	_prevcolor = _model.entity.headpalette;
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/color0${parseInt(_prevcolor) + 1}_off.bmp`, (dataURI) => {
-		const el = root.querySelector(`.cstyle0${_prevcolor}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-	_curcolor = value;
-	updateCharacter(type, value);
-}
-/**
-* Update model race
-*/
-function updateRace() {
-	const root = CharCreatev4.getRoot();
-	const select = root.querySelector(".race:checked");
-	const type = "race";
-	let value = 0;
-	if (select && select.id === "human_race") {
-		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_human_on.bmp`, (dataURI) => {
-			root.querySelector(".human_label").style.backgroundImage = `url(${dataURI})`;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_doram_off.bmp`, (dataURI) => {
-			root.querySelector(".doram_label").style.backgroundImage = `url(${dataURI})`;
-		});
-		value = 0;
-	}
-	if (select && select.id === "doram_race") {
-		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_human_off.bmp`, (dataURI) => {
-			root.querySelector(".human_label").style.backgroundImage = `url(${dataURI})`;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_doram_on.bmp`, (dataURI) => {
-			root.querySelector(".doram_label").style.backgroundImage = `url(${dataURI})`;
-		});
-		value = 4218;
-	}
-	for (let i = 1; i <= 24; i++) Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_normal.bmp`, (dataURI) => {
-		const el = root.querySelector(`.style${i}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-	_prevhead = 1;
-	_curhead = 1;
-	updateHstyleList(type, value);
-	updateCharacter(type, value);
-}
-/**
-* Generic function to get a direct proxy to updateCharacter
-*
-* @param {string} type
-* @param {number} value
-*/
-function updateCharacterGeneric(type, value) {
-	return () => {
-		if (type === "gender") updateHstyleList(type, value);
-		updateCharacter(type, value);
-	};
-}
-function updateHstyleList(type, value) {
-	const root = CharCreatev4.getRoot();
-	switch (type) {
-		case "gender":
-			if (value === 1) _gender = "male";
-			else _gender = "female";
-			break;
-		case "race":
-			if (value === 0) _race = "human";
-			else _race = "doram";
-			break;
-	}
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_male_off.bmp`, (dataURI) => {
-		root.querySelector("#male_container").style.backgroundImage = `url(${dataURI})`;
-	});
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_female_off.bmp`, (dataURI) => {
-		root.querySelector("#female_container").style.backgroundImage = `url(${dataURI})`;
-	});
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_${_gender}_on.bmp`, (dataURI) => {
-		root.querySelector(`#${_gender}_container`).style.backgroundImage = `url(${dataURI})`;
-	});
-	root.querySelectorAll(".hair-style").forEach((el) => {
-		el.style.display = "none";
-	});
-	const hairStyleEl = root.querySelector(`#${_race}_${_gender}`);
-	if (hairStyleEl) hairStyleEl.style.display = "block";
-}
-/**
-* Send back informations to send the packet
-*/
-function create() {
-	const root = CharCreatev4.getRoot();
-	CharCreatev4.onCharCreationRequest(root.querySelector("#char_name").value, 1, 1, 1, 1, 1, 1, _model.entity.head, _model.entity.headpalette, _model.entity.job, _model.entity.sex);
-}
-function cleanup() {
-	const root = CharCreatev4.getRoot();
-	_race = "human";
-	_gender = "male";
-	_prevhead = 1;
-	_curhead = 1;
-	_prevcolor = 0;
-	_curcolor = 0;
-	const humanRace = root.querySelector("#human_race");
-	if (humanRace) humanRace.checked = true;
-	const maleInput = root.querySelector("#male");
-	if (maleInput) maleInput.checked = true;
-	root.querySelectorAll(".hstyle").forEach((el) => {
-		el.checked = false;
-	});
-	const defaultHstyle = root.querySelector("[id=\"1_human_male\"]");
-	if (defaultHstyle) defaultHstyle.checked = true;
-	const defaultColor = root.querySelector("[id=\"0_color\"]");
-	if (defaultColor) defaultColor.checked = true;
-	for (let i = 0; i <= 8; i++) Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/color0${i + 1}_off.bmp`, (dataURI) => {
-		const el = root.querySelector(`.cstyle0${i}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-	updateCharacter("default", 0);
-}
-/**
-* Exit the window
-*/
-function cancel() {
-	cleanup();
-	CharCreatev4.onExitRequest();
-}
-/**
-* Update character hairstyle and haircolor
-*
-* @param {string} type (head or headpalette)
-* @param {number} increment (-1 or +1)
-*/
-function updateCharacter(type, increment) {
-	switch (type) {
-		case "gender":
-			_model.entity.sex = increment;
-			break;
-		case "race":
-			_model.entity.job = increment;
-			_model.entity.head = 1;
-			break;
-		case "direction":
-			if (increment === 0) _model.entity.direction = _model.entity.direction + 1;
-			else _model.entity.direction = _model.entity.direction - 1;
-			break;
-		case "head":
-			_prevhead = _model.entity.head;
-			_model.entity.head = increment;
-			break;
-		case "headpalette":
-			_model.entity.headpalette = increment;
-			break;
-		case "default":
-			_model.entity.sex = 1;
-			_model.entity.job = 0;
-			_model.entity.head = 1;
-			_model.entity.headpalette = 0;
-			break;
-	}
-}
-/**
-* Rendering the Character
-*/
-function render$2(tick) {
-	const root = CharCreatev4.getRoot();
-	if (_race === "human") {
-		if (_chargen.tick + 500 < tick) {
-			_chargen.entity.set({
-				action: 1,
-				direction: 5
-			});
-			_chargen.tick = tick;
-		}
-	}
-	SpriteRenderer.bind2DContext(_chargen.ctx, 32, 115);
-	_chargen.ctx.clearRect(0, 0, _chargen.ctx.canvas.width, _chargen.ctx.canvas.height);
-	_chargen.entity.renderEntity();
-	if (_race === "doram") {
-		if (_doram.tick + 500 < tick) {
-			_doram.entity.set({
-				action: 1,
-				direction: 5
-			});
-			_doram.tick = tick;
-		}
-	}
-	SpriteRenderer.bind2DContext(_doram.ctx, 32, 115);
-	_doram.ctx.clearRect(0, 0, _doram.ctx.canvas.width, _doram.ctx.canvas.height);
-	_doram.entity.renderEntity();
-	SpriteRenderer.bind2DContext(_model.ctx, 32, 115);
-	_model.ctx.clearRect(0, 0, _model.ctx.canvas.width, _model.ctx.canvas.height);
-	_model.entity.renderEntity();
-	root.querySelector("#char_name").focus();
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/img_${_race}_on.bmp`, (dataURI) => {
-		root.querySelector(`.${_race}_label`).style.backgroundImage = `url(${dataURI})`;
-	});
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_${_gender}_on.bmp`, (dataURI) => {
-		root.querySelector(`#${_gender}_container`).style.backgroundImage = `url(${dataURI})`;
-	});
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/color0${parseInt(_curcolor) + 1}_on.bmp`, (dataURI) => {
-		const el = root.querySelector(`.cstyle0${_curcolor}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_normal.bmp`, (dataURI) => {
-		const el = root.querySelector(`.style${_prevhead}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-	Client.loadFile(`${DB.INTERFACE_PATH}make_character_ver2/bt_hairstyle_select.bmp`, (dataURI) => {
-		const el = root.querySelector(`.style${_curhead}`);
-		if (el) el.style.backgroundImage = `url(${dataURI})`;
-	});
-}
-var CharCreatev4, _accountSex, _race, _gender, _prevhead, _curhead, _prevcolor, _curcolor, _chargen, _doram, _model, CharCreatev4_default;
+var CharCreatev4_default;
 var init_CharCreatev4 = __esmMin((() => {
-	init_DBManager();
-	init_Renderer();
-	init_KeyEventHandler();
-	init_Entity$1();
-	init_SpriteRenderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
 	init_CharCreatev4$2();
 	init_CharCreatev4$1();
-	init_Client();
-	CharCreatev4 = new GUIComponent("CharCreatev4", CharCreatev4_default$1);
-	CharCreatev4.render = () => CharCreatev4_default$2;
-	_accountSex = 0;
-	_race = "human";
-	_gender = "male";
-	_prevhead = 1;
-	_curhead = 1;
-	_prevcolor = 0;
-	_curcolor = 0;
-	_chargen = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	_doram = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	_model = {
-		entity: new Entity(),
-		ctx: null,
-		render: false,
-		tick: 0
-	};
-	/**
-	* Initialize UI
-	*/
-	CharCreatev4.init = function init() {
-		const root = CharCreatev4.getRoot();
-		_chargen.ctx = root.querySelector("#human").getContext("2d");
-		_doram.ctx = root.querySelector("#doram").getContext("2d");
-		_model.ctx = root.querySelector("#style_model").getContext("2d");
-		this.draggable();
-		_race = "human";
-		_gender = "male";
-		_prevhead = 1;
-		_curhead = 1;
-		_prevcolor = 0;
-		_curcolor = 0;
-		const radioInputs = root.querySelectorAll("input[type=\"radio\"]");
-		const labels = root.querySelectorAll("label");
-		radioInputs.forEach((input) => {
-			input.classList.add("event_add_cursor");
-		});
-		labels.forEach((label) => {
-			label.classList.add("event_add_cursor");
-		});
-		root.querySelector(".gender .male_button").addEventListener("mousedown", updateCharacterGeneric("gender", 1));
-		root.querySelector(".gender .female_button").addEventListener("mousedown", updateCharacterGeneric("gender", 0));
-		root.querySelector("#style .rot_left").addEventListener("mousedown", updateCharacterGeneric("direction", 0));
-		root.querySelector("#style .rot_right").addEventListener("mousedown", updateCharacterGeneric("direction", 1));
-		root.querySelectorAll(".race").forEach((el) => {
-			el.addEventListener("click", updateRace);
-		});
-		root.addEventListener("click", (event) => {
-			const hstyleBtn = event.target.closest(".hstyle_button");
-			if (hstyleBtn) {
-				updateHStyle(hstyleBtn);
-				return;
-			}
-			const hcolorBtn = event.target.closest(".hcolor_button");
-			if (hcolorBtn) updateHColor(hcolorBtn);
-		});
-		const charNameInput = root.querySelector("#char_name");
-		charNameInput.addEventListener("mousedown", (event) => {
-			charNameInput.focus();
-			event.stopImmediatePropagation();
-		});
-		root.querySelector(".cancel").addEventListener("click", cancel);
-		root.querySelector(".return").addEventListener("click", cancel);
-		root.querySelector(".make").addEventListener("click", create);
-		root.querySelector(".title").textContent = DB.getMessage(3355);
-		root.querySelector(".human_title").textContent = DB.getMessage(3016);
-		root.querySelector(".human_desc").textContent = DB.getMessage(3020);
-		root.querySelector(".doram_title").textContent = DB.getMessage(3018);
-		root.querySelector(".doram_desc").textContent = DB.getMessage(3021);
-		root.querySelector(".hair_style_title").textContent = DB.getMessage(3346);
-		root.querySelector(".hair_color_title").textContent = DB.getMessage(3347);
-		root.querySelector(".return").textContent = DB.getMessage(3351);
-		root.querySelector(".make").textContent = DB.getMessage(3345);
-	};
-	/**
-	* Setter for AccountSex
-	*
-	* @param {number} sex
-	*/
-	CharCreatev4.setAccountSex = function setAccountSex(sex) {
-		_accountSex = sex;
-	};
-	/**
-	* Once add to HTML, start rendering
-	*/
-	CharCreatev4.onAppend = function onAppend() {
-		this._host.style.top = `${(Renderer.height - 342) / 2}px`;
-		this._host.style.left = `${(Renderer.width - 576) / 2}px`;
-		_chargen.render = true;
-		_chargen.entity.set({
-			sex: _accountSex,
-			job: 0,
-			head: 1,
-			action: 0,
-			direction: 5
-		});
-		_doram.render = true;
-		_doram.entity.set({
-			sex: _accountSex,
-			job: 4218,
-			head: 1,
-			action: 0,
-			direction: 5
-		});
-		_model.render = true;
-		_model.entity.set({
-			sex: 1,
-			job: 0,
-			head: 1,
-			headpalette: 0,
-			action: 0,
-			direction: 4
-		});
-		const charNameInput = CharCreatev4.getRoot().querySelector("#char_name");
-		charNameInput.value = "";
-		charNameInput.focus();
-		_race = "human";
-		_gender = "male";
-		updateRace();
-		cleanup();
-		Renderer.render(render$2);
-	};
-	/**
-	* Remove component from HTML
-	* Stop rendering
-	*/
-	CharCreatev4.onRemove = function onRemove() {
-		Renderer.stop(render$2);
-	};
-	/**
-	* Key Handler
-	*
-	* @param {object} event
-	* @return {boolean}
-	*/
-	CharCreatev4.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			event.stopImmediatePropagation();
-			cancel();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Callback to define
-	*/
-	CharCreatev4.onExitRequest = function OnExitRequest() {};
-	/**
-	* Abstract callback to define
-	*/
-	CharCreatev4.onCharCreationRequest = function OnCharCreationRequest() {};
-	CharCreatev4_default = UIManager.addComponent(CharCreatev4);
+	init_CharCreateCommon();
+	CharCreatev4_default = createCharCreate({
+		name: "CharCreatev4",
+		htmlText: CharCreatev4_default$2,
+		cssText: CharCreatev4_default$1,
+		hostHeight: 342,
+		hostWidth: 576,
+		hasRace: true,
+		gridHairstyle: true,
+		humanCanvasSelector: "#human",
+		doramCanvasSelector: "#doram",
+		modelCanvasSelector: "#style_model",
+		nameInputSelector: "#char_name",
+		nameInputEvent: "mousedown",
+		cancelSelectors: [".cancel", ".return"],
+		makeSelector: ".make"
+	});
 }));
 //#endregion
 //#region src/UI/Components/CharCreate/CharCreate.js
