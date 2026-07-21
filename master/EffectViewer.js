@@ -205391,7 +205391,7 @@ function Packets(name, Struct, size) {
 function connect(host, port, callback, isZone) {
 	const socket = _socketFactory ? _socketFactory(host, port) : defaultSocketFactory(host, port);
 	socket.isZone = !!isZone;
-	socket.onClose = onClose$15;
+	socket.onClose = onClose$9;
 	socket.onComplete = function onComplete(success) {
 		let msg = "Fail";
 		let color = "red";
@@ -205528,7 +205528,7 @@ function receive(buf) {
 * Communication end
 * Server ask to close the socket
 */
-function onClose$15() {
+function onClose$9() {
 	const idx = _sockets.indexOf(this);
 	if (this === _socket) {
 		console.warn("[Network] Disconnect from server");
@@ -205797,8 +205797,8 @@ var init_HtmlHelper = __esmMin((() => {
 /**
 * Render background (or a black background if no image is loaded yet)
 */
-function render$17() {
-	_ctx$8.clearRect(0, 0, _canvas.width, _canvas.height);
+function render$15() {
+	_ctx$6.clearRect(0, 0, _canvas.width, _canvas.height);
 	if (_progress > -1) Background.setPercent(_progress);
 }
 /**
@@ -205818,7 +205818,7 @@ function transition(callback) {
 		});
 	});
 }
-var _overlay, _container, _canvas, _ctx$8, _progress, _overlayAnim, _loading, Background;
+var _overlay, _container, _canvas, _ctx$6, _progress, _overlayAnim, _loading, Background;
 var init_Background = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -205851,7 +205851,7 @@ var init_Background = __esmMin((() => {
 		left: "0",
 		zIndex: "2"
 	});
-	_ctx$8 = _canvas.getContext("2d");
+	_ctx$6 = _canvas.getContext("2d");
 	_progress = -1;
 	_overlayAnim = null;
 	_loading = [];
@@ -205865,7 +205865,7 @@ var init_Background = __esmMin((() => {
 			let i;
 			_progress = 0;
 			_canvas.style.zIndex = "1";
-			render$17();
+			render$15();
 			if (loading) {
 				_loading = loading;
 				return;
@@ -205887,8 +205887,8 @@ var init_Background = __esmMin((() => {
 				width: width + "px",
 				height: height + "px"
 			});
-			_ctx$8.clearRect(0, 0, width, height);
-			render$17();
+			_ctx$6.clearRect(0, 0, width, height);
+			render$15();
 		}
 		/**
 		* Set an image as background
@@ -205901,7 +205901,7 @@ var init_Background = __esmMin((() => {
 			_progress = -1;
 			_container.innerHTML = "";
 			_container.style.backgroundImage = "none";
-			render$17();
+			render$15();
 			if (Array.isArray(filename)) {
 				let loadedCount = 0;
 				const total = filename.length;
@@ -206023,14 +206023,14 @@ var init_Background = __esmMin((() => {
 			const height = 15;
 			const x = Math.floor((_canvas.width - width) * .5);
 			const y = Math.floor(_canvas.height * .75);
-			_ctx$8.fillStyle = "rgb(0,255,255)";
-			_ctx$8.fillRect(x, y, width, height);
-			_ctx$8.fillStyle = "rgb(140,140,140)";
-			_ctx$8.fillRect(x + 1, y + 1, width - 2, height - 2);
-			_ctx$8.fillStyle = "rgb(66,99,165)";
-			_ctx$8.fillRect(x + 2, y + 2, Math.floor(percent * (width - 4) * .01), height - 4);
-			_ctx$8.fillStyle = "rgb(255,255,0)";
-			_ctx$8.fillText(percent + "%", Math.floor((_canvas.width - _ctx$8.measureText(percent + "%").width) * .5), y + 11);
+			_ctx$6.fillStyle = "rgb(0,255,255)";
+			_ctx$6.fillRect(x, y, width, height);
+			_ctx$6.fillStyle = "rgb(140,140,140)";
+			_ctx$6.fillRect(x + 1, y + 1, width - 2, height - 2);
+			_ctx$6.fillStyle = "rgb(66,99,165)";
+			_ctx$6.fillRect(x + 2, y + 2, Math.floor(percent * (width - 4) * .01), height - 4);
+			_ctx$6.fillStyle = "rgb(255,255,0)";
+			_ctx$6.fillText(percent + "%", Math.floor((_canvas.width - _ctx$6.measureText(percent + "%").width) * .5), y + 11);
 		}
 	};
 }));
@@ -206663,7 +206663,7 @@ function init$13(gl) {
 * @param {number} x
 * @param {number} y
 */
-function render$16(gl, modelView, projection, fog, x, y) {
+function render$14(gl, modelView, projection, fog, x, y) {
 	if (!_texture$5) return;
 	const uniform = _program$26.uniform;
 	const attribute = _program$26.attribute;
@@ -206757,7 +206757,7 @@ var init_GridSelector = __esmMin((() => {
 	GridSelector_default = {
 		init: init$13,
 		free: free$8,
-		render: render$16
+		render: render$14
 	};
 }));
 //#endregion
@@ -206840,7 +206840,7 @@ var init_Ground$1 = __esmMin((() => {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$15(gl, modelView, projection, normalMat, fog, light) {
+function render$13(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program$25.uniform;
 	const attribute = _program$25.attribute;
 	gl.useProgram(_program$25);
@@ -207085,7 +207085,7 @@ var init_Ground = __esmMin((() => {
 	Ground_default = {
 		init: init$12,
 		free: free$7,
-		render: render$15,
+		render: render$13,
 		getShadowFactor
 	};
 }));
@@ -207149,7 +207149,7 @@ function RenderCanvas3D(isBlendModeOne) {
 	}
 	gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 }
-var mat4$20, RenderCanvas2D, _program$24, _buffer$18, _ctx$7, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
+var mat4$20, RenderCanvas2D, _program$24, _buffer$18, _ctx$5, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$6, _size$7, _offset, SpriteRenderer;
 var init_SpriteRenderer = __esmMin((() => {
 	init_WebGL();
 	init_gl_matrix();
@@ -207247,17 +207247,17 @@ var init_SpriteRenderer = __esmMin((() => {
 				}
 			}
 			ctx.putImageData(imageData, 0, 0, 0, 0, width, height);
-			_ctx$7.save();
-			_ctx$7.translate(_x | 0, _y | 0);
-			_ctx$7.rotate(this.angle / 180 * Math.PI);
-			_ctx$7.scale(scale_x, scale_y);
-			_ctx$7.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
-			_ctx$7.restore();
+			_ctx$5.save();
+			_ctx$5.translate(_x | 0, _y | 0);
+			_ctx$5.rotate(this.angle / 180 * Math.PI);
+			_ctx$5.scale(scale_x, scale_y);
+			_ctx$5.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
+			_ctx$5.restore();
 		};
 	})();
 	_program$24 = null;
 	_buffer$18 = null;
-	_ctx$7 = null;
+	_ctx$5 = null;
 	_gl$2 = null;
 	_groupId = 0;
 	_lastGroupId = 0;
@@ -207422,7 +207422,7 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {number} y position
 		*/
 		static bind2DContext(ctx, x, y) {
-			_ctx$7 = ctx;
+			_ctx$5 = ctx;
 			_pos$8[0] = x;
 			_pos$8[1] = y;
 			this.render = RenderCanvas2D;
@@ -207523,7 +207523,7 @@ function init$11(gl, water) {
 * @param {object} light structure
 * @param {number} tick (game tick)
 */
-function render$14(gl, modelView, projection, fog, light, tick) {
+function render$12(gl, modelView, projection, fog, light, tick) {
 	if (!_vertCount) return;
 	const uniform = _program$23.uniform;
 	const attribute = _program$23.attribute;
@@ -207592,7 +207592,7 @@ var init_Water = __esmMin((() => {
 	Water_default = {
 		init: init$11,
 		free: free$6,
-		render: render$14
+		render: render$12
 	};
 }));
 //#endregion
@@ -207670,7 +207670,7 @@ function init$10(gl, data) {
 * @param {object} fog structure
 * @param {object} light structure
 */
-function render$13(gl, modelView, projection, normalMat, fog, light) {
+function render$11(gl, modelView, projection, normalMat, fog, light) {
 	const uniform = _program$22.uniform;
 	const attribute = _program$22.attribute;
 	let i, count;
@@ -207753,7 +207753,7 @@ var init_Models = __esmMin((() => {
 	_pendingTextures = 0;
 	Models_default = {
 		init: init$10,
-		render: render$13,
+		render: render$11,
 		free: free$5
 	};
 }));
@@ -208172,7 +208172,7 @@ function updateModelBuffer(gl, model, frame, force) {
 /**
 * Render animated models
 */
-function render$12(gl, modelView, projection, normalMat, fog, light, tick) {
+function render$10(gl, modelView, projection, normalMat, fog, light, tick) {
 	if (_animatedModels.length === 0) return;
 	if (!_program$21) init$9(gl);
 	const uniform = _program$21.uniform;
@@ -208238,7 +208238,7 @@ var init_AnimatedModels = __esmMin((() => {
 		init: init$9,
 		free: free$4,
 		add: add$2,
-		render: render$12,
+		render: render$10,
 		hasAnimatedModels
 	};
 }));
@@ -212231,7 +212231,7 @@ function normalize3(v) {
 * sits next to): (gl, modelView, projection, normalMat, fog, light, tick). modelView is
 * Camera.modelView (the view matrix); the per-instance world is composed on top.
 */
-function render$11(gl, modelView, projection, normalMat, fog, light, tick) {
+function render$9(gl, modelView, projection, normalMat, fog, light, tick) {
 	_gl$1 = gl;
 	if (_instances.length === 0 || !light) return;
 	if (!_program$20) init$8(gl);
@@ -212723,7 +212723,7 @@ var init_GR2ModelRenderer = __esmMin((() => {
 	GR2ModelRenderer_default = {
 		init: init$8,
 		free: free$3,
-		render: render$11,
+		render: render$9,
 		attach: attach$1,
 		detach,
 		isMissing: function(path) {
@@ -212763,7 +212763,7 @@ function free$2() {
 *
 * @param {vec2} position
 */
-function render$10(position, tick) {
+function render$8(position, tick) {
 	_list$9.forEach((sound) => {
 		const dist = Math.floor(vec2$3.dist(sound.pos, position));
 		if (sound.tick < tick && dist <= sound.range) {
@@ -212781,7 +212781,7 @@ var init_Sounds = __esmMin((() => {
 	Sounds_default = {
 		add: add$1,
 		free: free$2,
-		render: render$10
+		render: render$8
 	};
 }));
 //#endregion
@@ -218269,7 +218269,7 @@ function onClickOption(btn) {
 /**
 * Resize ChatBoxSettings
 */
-function onResize$18() {
+function onResize$12() {
 	const top = ChatBoxSettings._host.getBoundingClientRect().top;
 	let lastHeight = 0;
 	function resizeProcess() {
@@ -218300,10 +218300,10 @@ function resize$7(height) {
 	if (list) list.style.height = height * 32 - 31 + "px";
 	const inner = root.querySelector("#ChatBoxSettings");
 	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$58.height = height;
-	_preferences$58.save();
+	_preferences$46.height = height;
+	_preferences$46.save();
 }
-var ChatBoxSettings, _preferences$58, ChatBoxSettings_default;
+var ChatBoxSettings, _preferences$46, ChatBoxSettings_default;
 var init_ChatBoxSettings = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -218325,7 +218325,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.isOpen = false;
 	ChatBoxSettings.tabOption = [];
 	ChatBoxSettings.activeTab = 0;
-	_preferences$58 = Preferences.get("ChatBoxSettings", {
+	_preferences$46 = Preferences.get("ChatBoxSettings", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -218337,7 +218337,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.init = function init() {
 		const root = this.getRoot();
 		const extendBtn = root.querySelector(".extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$18);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$12);
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			this._host.style.display = "none";
@@ -218353,10 +218353,10 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Once in HTML
 	*/
 	ChatBoxSettings.onAppend = function onAppend() {
-		resize$7(_preferences$58.height);
+		resize$7(_preferences$46.height);
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$58.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$58.x), Renderer.width - rect.width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$46.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$46.x), Renderer.width - rect.width) + "px";
 		this._host.style.display = "none";
 	};
 	/**
@@ -218390,9 +218390,9 @@ var init_ChatBoxSettings = __esmMin((() => {
 		});
 	};
 	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$58.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$58.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$58.save();
+		_preferences$46.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$46.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$46.save();
 	};
 	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
 	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
@@ -218402,7 +218402,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$20() {
+function _root$18() {
 	return ChatBox._shadow || ChatBox._host;
 }
 /**
@@ -218424,7 +218424,7 @@ function extractChatMessage$1(inputEl) {
 */
 function flushMessageBuffer() {
 	if (_messageBuffer.length === 0) return;
-	const root = _root$20();
+	const root = _root$18();
 	const messages = _messageBuffer.slice();
 	_messageBuffer = [];
 	const messagesByTab = {};
@@ -218553,7 +218553,7 @@ function stopPropagation$12(event) {
 */
 function onPrivateMessageUserSelection(name) {
 	return function onPrivateMessageUserSelectionClosure() {
-		const nickBox = _root$20().querySelector(".input .username");
+		const nickBox = _root$18().querySelector(".input .username");
 		if (nickBox) nickBox.value = name;
 	};
 }
@@ -218562,7 +218562,7 @@ function onPrivateMessageUserSelection(name) {
 */
 function onChangeTargetMessage(type) {
 	return function onChangeTargetMessageClosure() {
-		const $input = _root$20().querySelector(".input-chatbox");
+		const $input = _root$18().querySelector(".input-chatbox");
 		if ($input) {
 			$input.classList.remove("guild", "party", "clan");
 			if (type & ChatBox.TYPE.PARTY) $input.classList.add("party");
@@ -218574,8 +218574,8 @@ function onChangeTargetMessage(type) {
 }
 function setChatFontScale(scale) {
 	return function setChatFontScaleClosure() {
-		_preferences$57.fontScale = clampChatFontScale(scale);
-		_preferences$57.save();
+		_preferences$45.fontScale = clampChatFontScale(scale);
+		_preferences$45.save();
 		ChatBox.applyFontScale();
 	};
 }
@@ -218608,7 +218608,7 @@ function getScrollLineHeightPx(element) {
 	return 14;
 }
 function makeResizableDiv() {
-	const root = _root$20();
+	const root = _root$18();
 	const resizer = root.querySelector(".event_add_cursor");
 	if (!resizer) return;
 	let originalHeight = 0;
@@ -218639,7 +218639,7 @@ function makeResizableDiv() {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$57, ChatBox, ChatBox_default;
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$45, ChatBox, ChatBox_default;
 var init_ChatBox = __esmMin((() => {
 	init_DBManager();
 	init_Renderer();
@@ -218669,7 +218669,7 @@ var init_ChatBox = __esmMin((() => {
 	_heightIndex = 2;
 	_messageBuffer = [];
 	_rafScheduled = false;
-	_preferences$57 = Preferences.get("ChatBox", {
+	_preferences$45 = Preferences.get("ChatBox", {
 		x: 0,
 		y: Infinity,
 		height: 2,
@@ -218751,17 +218751,17 @@ var init_ChatBox = __esmMin((() => {
 	* Initialize UI
 	*/
 	ChatBox.init = function init() {
-		const root = _root$20();
+		const root = _root$18();
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$57.height - 1;
+		_heightIndex = _preferences$45.height - 1;
 		ChatBox.updateHeight();
 		ChatBox.applyFontScale();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$57.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$57.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		this.magnet.TOP = _preferences$57.magnet_top;
-		this.magnet.BOTTOM = _preferences$57.magnet_bottom;
-		this.magnet.LEFT = _preferences$57.magnet_left;
-		this.magnet.RIGHT = _preferences$57.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$45.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		this.magnet.TOP = _preferences$45.magnet_top;
+		this.magnet.BOTTOM = _preferences$45.magnet_bottom;
+		this.magnet.LEFT = _preferences$45.magnet_left;
+		this.magnet.RIGHT = _preferences$45.magnet_right;
 		this.draggable(".input");
 		this.draggable(".battlemode");
 		root.querySelectorAll(".input, .chat-function, .battlemode, .event_add_cursor").forEach((el) => {
@@ -219047,13 +219047,13 @@ var init_ChatBox = __esmMin((() => {
 			ChatBox.toggleChatBattleOption();
 		});
 		ChatBoxSettings_default.append();
-		if (_preferences$57.tabs.length > 0 && _preferences$57.tabs.length == _preferences$57.tabOption.length) {
-			for (let i = 0; i < _preferences$57.tabs.length; i++) if (_preferences$57.tabs[i]) {
-				const tabName = _preferences$57.tabs[i].name;
-				const tabSettings = _preferences$57.tabOption[i];
+		if (_preferences$45.tabs.length > 0 && _preferences$45.tabs.length == _preferences$45.tabOption.length) {
+			for (let i = 0; i < _preferences$45.tabs.length; i++) if (_preferences$45.tabs[i]) {
+				const tabName = _preferences$45.tabs[i].name;
+				const tabSettings = _preferences$45.tabOption[i];
 				ChatBox.addNewTab(tabName, tabSettings);
 			}
-			if (_preferences$57.activeTab !== void 0 && ChatBox.tabs[_preferences$57.activeTab]) ChatBox.switchTab(_preferences$57.activeTab);
+			if (_preferences$45.activeTab !== void 0 && ChatBox.tabs[_preferences$45.activeTab]) ChatBox.switchTab(_preferences$45.activeTab);
 		} else {
 			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
 				ChatBox.FILTER.PUBLIC_LOG,
@@ -219088,7 +219088,7 @@ var init_ChatBox = __esmMin((() => {
 	* Clean up the box
 	*/
 	ChatBox.clean = function Clean() {
-		const root = _root$20();
+		const root = _root$18();
 		root.querySelectorAll(".content").forEach((content) => {
 			const matches = content.innerHTML.match(/(blob:[^"]+)/g);
 			if (matches) for (let i = 0, count = matches.length; i < count; ++i) window.URL.revokeObjectURL(matches[i]);
@@ -219102,13 +219102,13 @@ var init_ChatBox = __esmMin((() => {
 		_historyNickName.clear();
 	};
 	ChatBox.toggleChatBattleOption = function toggleChatBattleOption() {
-		const onInput = _root$20().querySelector(".header tr td div.on input");
+		const onInput = _root$18().querySelector(".header tr td div.on input");
 		const tabName = onInput ? onInput.value : "";
 		ChatBoxSettings_default.toggle();
 		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
 	};
 	ChatBox.removeTab = function removeTab() {
-		const root = _root$20();
+		const root = _root$18();
 		const tabEl = root.querySelector(`table.header tr td.tab[data-tab="${this.activeTab}"]`);
 		if (tabEl) tabEl.remove();
 		const contentEl = root.querySelector(`.body .content[data-content="${this.activeTab}"]`);
@@ -219124,7 +219124,7 @@ var init_ChatBox = __esmMin((() => {
 		ChatBoxSettings_default.updateTab(this.activeTab, tabName);
 	};
 	ChatBox.addNewTab = function addNewTab(name, settings) {
-		const root = _root$20();
+		const root = _root$18();
 		if (!name) name = "New Tab";
 		if (!settings) settings = [
 			ChatBox.FILTER.PUBLIC_LOG,
@@ -219181,7 +219181,7 @@ var init_ChatBox = __esmMin((() => {
 		return tabID;
 	};
 	ChatBox.switchTab = function switchTab(tabID) {
-		const root = _root$20();
+		const root = _root$18();
 		root.querySelectorAll("table.header tr td.tab div").forEach((el) => el.classList.remove("on"));
 		root.querySelectorAll(".body .content").forEach((el) => el.classList.remove("active"));
 		this.activeTab = tabID;
@@ -219200,7 +219200,7 @@ var init_ChatBox = __esmMin((() => {
 	* Once append to HTML
 	*/
 	ChatBox.onAppend = function OnAppend() {
-		const root = _root$20();
+		const root = _root$18();
 		const inputEl = root.querySelector(".input");
 		if (inputEl) inputEl.style.display = "none";
 		const bmEl = root.querySelector(".battlemode");
@@ -219212,17 +219212,17 @@ var init_ChatBox = __esmMin((() => {
 	* Stop custom scroll
 	*/
 	ChatBox.onRemove = function OnRemove() {
-		_preferences$57.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
-		_preferences$57.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$57.height = _heightIndex;
-		_preferences$57.magnet_top = this.magnet.TOP;
-		_preferences$57.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$57.magnet_left = this.magnet.LEFT;
-		_preferences$57.magnet_right = this.magnet.RIGHT;
-		_preferences$57.tabs = this.tabs;
-		_preferences$57.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$57.activeTab = this.activeTab;
-		_preferences$57.save();
+		_preferences$45.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
+		_preferences$45.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$45.height = _heightIndex;
+		_preferences$45.magnet_top = this.magnet.TOP;
+		_preferences$45.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$45.magnet_left = this.magnet.LEFT;
+		_preferences$45.magnet_right = this.magnet.RIGHT;
+		_preferences$45.tabs = this.tabs;
+		_preferences$45.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$45.activeTab = this.activeTab;
+		_preferences$45.save();
 		this.lastTabID = -1;
 		this.activeTab = 0;
 	};
@@ -219231,7 +219231,7 @@ var init_ChatBox = __esmMin((() => {
 	* @return {boolean} found a shortcut ?
 	*/
 	ChatBox.processBattleMode = function processBattleMode(keyId) {
-		const bmEl = _root$20().querySelector(".battlemode");
+		const bmEl = _root$18().querySelector(".battlemode");
 		if (bmEl && bmEl.style.display !== "none" || KEYS.ALT || KEYS.SHIFT || KEYS.CTRL || keyId >= KEYS.F1 && keyId <= KEYS.F24 || KEYS.INSERT) return BattleMode.process(keyId);
 		return false;
 	};
@@ -219239,7 +219239,7 @@ var init_ChatBox = __esmMin((() => {
 	* Key Event Handler
 	*/
 	ChatBox.onKeyDown = function OnKeyDown(event) {
-		const root = _root$20();
+		const root = _root$18();
 		const messageBox = root.querySelector(".input-chatbox");
 		const nickBox = root.querySelector(".input .username");
 		const onInput = root.querySelector(".header tr td div.on input");
@@ -219377,7 +219377,7 @@ var init_ChatBox = __esmMin((() => {
 		return false;
 	};
 	ChatBox.toggleChat = function toggleChat() {
-		const messageBox = _root$20().querySelector(".input-chatbox");
+		const messageBox = _root$18().querySelector(".input-chatbox");
 		const activeElement = KEYS.getDeepActiveElement();
 		if (activeElement.tagName === "INPUT" && activeElement !== messageBox) return true;
 		if (document.querySelector("#NpcMenu, #NpcBox")) return true;
@@ -219388,7 +219388,7 @@ var init_ChatBox = __esmMin((() => {
 	* Process ChatBox message
 	*/
 	ChatBox.submit = function Submit() {
-		const root = _root$20();
+		const root = _root$18();
 		const inputEl = root.querySelector(".input");
 		const $user = root.querySelector(".input .username");
 		const $text = root.querySelector(".input-chatbox");
@@ -219454,7 +219454,7 @@ var init_ChatBox = __esmMin((() => {
 	* Change chatbox's height
 	*/
 	ChatBox.updateHeight = function changeHeight(AlwaysVisible) {
-		const root = _root$20();
+		const root = _root$18();
 		const HeightList = [
 			0,
 			0,
@@ -219511,7 +219511,7 @@ var init_ChatBox = __esmMin((() => {
 	* Save chat from current tab into a file.
 	*/
 	ChatBox.saveCurrentTabChat = function saveCurrentTabChat() {
-		const root = _root$20();
+		const root = _root$18();
 		let data;
 		const tzoffset = (/* @__PURE__ */ new Date()).getTimezoneOffset() * 6e4;
 		let localISOTime = new Date(Date.now() - tzoffset).toISOString().slice(0, -1);
@@ -219526,15 +219526,15 @@ var init_ChatBox = __esmMin((() => {
 		ChatBox.addText(`Chat History [${ChatBox.tabs[ChatBox.activeTab].name}] ${date} can be saved by <a style="color:#F88" download="ChatHistory [${ChatBox.tabs[ChatBox.activeTab].name}] (${date.replace("/", "-")}).html" href="${url}" target="_blank">clicking here</a>.`, ChatBox.TYPE.PUBLIC, ChatBox.FILTER.PUBLIC_LOG, null, true);
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
-		const root = _root$20();
-		const scale = clampChatFontScale(_preferences$57.fontScale || 1);
+		const root = _root$18();
+		const scale = clampChatFontScale(_preferences$45.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
 		const baseInputLineHeight = 18;
 		const fontSize = Math.max(10, Math.round(baseFont * scale));
 		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
 		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$57.fontScale = scale;
+		_preferences$45.fontScale = scale;
 		root.querySelectorAll(".content").forEach((el) => {
 			el.style.fontSize = `${fontSize}px`;
 			el.style.lineHeight = `${lineHeight}px`;
@@ -219547,7 +219547,7 @@ var init_ChatBox = __esmMin((() => {
 		if (message) message.style.lineHeight = `${inputLineHeight}px`;
 	};
 	ChatBox._setupItemLinkHandler = function _setupItemLinkHandler() {
-		const root = _root$20();
+		const root = _root$18();
 		if (!root) return;
 		root.addEventListener("click", (event) => {
 			const link = event.target.closest(".item-link");
@@ -219578,7 +219578,7 @@ var init_ChatBox = __esmMin((() => {
 		ItemInfo.setItem(item);
 	});
 	ChatBox.insertText = function(text) {
-		const input = _root$20().querySelector(".input-chatbox");
+		const input = _root$18().querySelector(".input-chatbox");
 		if (!input) return;
 		input.appendChild(document.createTextNode(text));
 		input.focus();
@@ -219629,13 +219629,13 @@ function cleanTextColor(text) {
 /**
 * Exit window
 */
-function onClose$14(e) {
+function onClose$8(e) {
 	try {
 		if (e) e.stopImmediatePropagation();
 	} catch (_error) {}
 	_BOOK_INFORMATION["book_open"] = false;
 	_BOOK_INFORMATION.save();
-	if (_preferences$56.show) MakeReadBook.onRemove();
+	if (_preferences$44.show) MakeReadBook.onRemove();
 }
 function page() {
 	const root = MakeReadBook.getRoot();
@@ -219655,7 +219655,7 @@ function adjustButtons$1() {
 	const prevBtn = root.querySelector(".previous_btn");
 	if (prevBtn) prevBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] == 0;
 }
-var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$56, MakeReadBook_default;
+var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$44, MakeReadBook_default;
 var init_MakeReadBook = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -219687,7 +219687,7 @@ var init_MakeReadBook = __esmMin((() => {
 	* Store MakeReadBook items
 	*/
 	MakeReadBook.list = [];
-	_preferences$56 = Preferences.get("MakeReadBook", {
+	_preferences$44 = Preferences.get("MakeReadBook", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -219755,7 +219755,7 @@ var init_MakeReadBook = __esmMin((() => {
 			const footerEl = innerRoot.querySelector(".footer");
 			footerEl.querySelectorAll("canvas").forEach((c) => c.remove());
 			footerEl.appendChild(canvas);
-			canvas.addEventListener("click", onClose$14);
+			canvas.addEventListener("click", onClose$8);
 			const canvas2 = new SPR(spr_highlighter).getCanvasFromFrame(0);
 			canvas2.className = "highlighter event_add_cursor";
 			const highlighterEl = innerRoot.querySelector("#highlighter");
@@ -219828,7 +219828,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$56.show) onClose$14();
+		if (_preferences$44.show) onClose$8();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -219839,12 +219839,12 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onAppend = function OnAppend() {
 		this._host.style.display = "";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$56.y), Renderer.height - 455)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$56.x), Renderer.width - 555)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - 455)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - 555)}px`;
 		_BOOK_INFORMATION["book_open"] = true;
 		_BOOK_INFORMATION.save();
-		_preferences$56.show = true;
-		_preferences$56.save();
+		_preferences$44.show = true;
+		_preferences$44.save();
 		const root = MakeReadBook.getRoot();
 		this.draggable(root.querySelector(".titlebar"));
 	};
@@ -219853,19 +219853,19 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onRemove = function OnRemove() {
 		try {
-			if (_preferences$56.show) this._host.style.display = "none";
-			_preferences$56.show = this._host.style.display !== "none";
-			_preferences$56.reduce = false;
-			_preferences$56.y = parseInt(this._host.style.top, 10) || 0;
-			_preferences$56.x = parseInt(this._host.style.left, 10) || 0;
-			_preferences$56.magnet_top = this.magnet.TOP;
-			_preferences$56.magnet_bottom = this.magnet.BOTTOM;
-			_preferences$56.magnet_left = this.magnet.LEFT;
-			_preferences$56.magnet_right = this.magnet.RIGHT;
-			_preferences$56.save();
+			if (_preferences$44.show) this._host.style.display = "none";
+			_preferences$44.show = this._host.style.display !== "none";
+			_preferences$44.reduce = false;
+			_preferences$44.y = parseInt(this._host.style.top, 10) || 0;
+			_preferences$44.x = parseInt(this._host.style.left, 10) || 0;
+			_preferences$44.magnet_top = this.magnet.TOP;
+			_preferences$44.magnet_bottom = this.magnet.BOTTOM;
+			_preferences$44.magnet_left = this.magnet.LEFT;
+			_preferences$44.magnet_right = this.magnet.RIGHT;
+			_preferences$44.save();
 		} catch (_error) {
-			_preferences$56.show = false;
-			_preferences$56.save();
+			_preferences$44.show = false;
+			_preferences$44.save();
 		}
 	};
 	/**
@@ -219899,7 +219899,7 @@ var init_ItemCompare$1 = __esmMin((() => {
 /**
 * Helper: escape HTML
 */
-function _escapeHTML$9(text) {
+function _escapeHTML$7(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -219917,7 +219917,7 @@ function addCard$1(cardList, itemId, index, slotCount) {
 	const card = DB.getItemInfo(itemId);
 	if (itemId && card) {
 		file = "item/" + card.identifiedResourceName + ".bmp";
-		name = `<div class="name">${_escapeHTML$9(card.identifiedDisplayName)}</div>`;
+		name = `<div class="name">${_escapeHTML$7(card.identifiedDisplayName)}</div>`;
 	} else if (index < slotCount) file = "empty_card_slot.bmp";
 	else file = "basic_interface/coparison_disable_card_slot.bmp";
 	if (!cardList) return;
@@ -219941,7 +219941,7 @@ function addCard$1(cardList, itemId, index, slotCount) {
 /**
 * Extend ItemCompare window size
 */
-function onResize$17() {
+function onResize$11() {
 	const top = ItemCompare._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
@@ -220047,7 +220047,7 @@ function eventsBooks$1() {
 		readCanvas.height = 15;
 		readCanvas.className = "book_read event_add_cursor";
 		event.appendChild(readCanvas);
-		_ctx$6 = readCanvas.getContext("2d");
+		_ctx$4 = readCanvas.getContext("2d");
 		const bookRead = root.querySelector(".book_read");
 		if (bookRead) {
 			bookRead.addEventListener("mouseover", (e) => {
@@ -220080,7 +220080,7 @@ function validateFieldsExist$1(event) {
 	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
 	return true;
 }
-var _sprite$4, _action$4, _ctx$6, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
+var _sprite$4, _action$4, _ctx$4, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
 var init_ItemCompare = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -220134,7 +220134,7 @@ var init_ItemCompare = __esmMin((() => {
 		this._host.style.top = "200px";
 		this._host.style.left = "200px";
 		const extendBtn = root.querySelector(".extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$17);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$11);
 		const viewBtn = root.querySelector(".view");
 		if (viewBtn) viewBtn.addEventListener("click", () => {
 			CardIllustration_default.append();
@@ -220226,8 +220226,8 @@ var init_ItemCompare = __esmMin((() => {
 			const animation = action.animations[anim % action.animations.length];
 			let i, count;
 			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$6, 10, 25);
-			_ctx$6.clearRect(0, 0, _ctx$6.canvas.width, _ctx$6.canvas.height);
+			SpriteRenderer.bind2DContext(_ctx$4, 10, 25);
+			_ctx$4.clearRect(0, 0, _ctx$4.canvas.width, _ctx$4.canvas.height);
 			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$4, _sprite$4, 1, position, false);
 		};
 	})();
@@ -220301,7 +220301,7 @@ function applyPreviewItem(entity) {
 	if (_previewLocation & EquipmentLocation_default.COSTUME_HEAD_TOP) entity.accessory2 = _previewSpriteId;
 	if (_previewLocation & EquipmentLocation_default.COSTUME_ROBE) entity.robe = _previewSpriteId;
 }
-var ItemPreview, _ctx$5, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
+var ItemPreview, _ctx$3, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
 var init_ItemPreview = __esmMin((() => {
 	init_DBManager();
 	init_EquipmentLocation();
@@ -220335,7 +220335,7 @@ var init_ItemPreview = __esmMin((() => {
 	*/
 	ItemPreview.init = function init() {
 		const root = this.getRoot();
-		_ctx$5 = root.querySelector("canvas").getContext("2d");
+		_ctx$3 = root.querySelector("canvas").getContext("2d");
 		root.querySelector(".close").addEventListener("click", () => {
 			ItemPreview.remove();
 		});
@@ -220419,8 +220419,8 @@ var init_ItemPreview = __esmMin((() => {
 			save: false
 		};
 		return function render() {
-			if (!_ctx$5) return;
-			_ctx$5.clearRect(0, 0, _ctx$5.canvas.width, _ctx$5.canvas.height);
+			if (!_ctx$3) return;
+			_ctx$3.clearRect(0, 0, _ctx$3.canvas.width, _ctx$3.canvas.height);
 			if (!_previewSpriteId || !_previewLocation || !SessionStorage_default.Entity) return;
 			const previewCharacter = new Entity();
 			previewCharacter.set({
@@ -220446,8 +220446,8 @@ var init_ItemPreview = __esmMin((() => {
 			previewCharacter.headDir = 0;
 			previewCharacter.action = previewCharacter.ACTION.IDLE;
 			previewCharacter.animation = _animation;
-			SpriteRenderer.bind2DContext(_ctx$5, Math.floor(_ctx$5.canvas.width / 2), _ctx$5.canvas.height);
-			previewCharacter.renderEntity(_ctx$5);
+			SpriteRenderer.bind2DContext(_ctx$3, Math.floor(_ctx$3.canvas.width / 2), _ctx$3.canvas.height);
+			previewCharacter.renderEntity(_ctx$3);
 			previewCharacter.effectColor.set(_savedColor);
 		};
 	})();
@@ -220757,6 +220757,466 @@ var init_InventoryV0$1 = __esmMin((() => {
 	InventoryV0_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#InventoryV0 {\r\n	position: relative;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n#InventoryV0 table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#InventoryV0 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#InventoryV0 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#InventoryV0 .tabs {\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 3px;\r\n}\r\n\r\n#InventoryV0 .tab-sprite {\r\n	width: 20px;\r\n	height: 82px;\r\n	background-repeat: no-repeat;\r\n	background-position: top left;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex-shrink: 0;\r\n	align-self: flex-end;\r\n	border-left: 1px solid white;\r\n}\r\n\r\n#InventoryV0 .tab-sprite button {\r\n	flex: 1;\r\n	width: 20px;\r\n	border: none;\r\n	background: transparent;\r\n	cursor: pointer;\r\n	padding: 0;\r\n}\r\n\r\n#InventoryV0 .container {\r\n	flex: 1;\r\n	padding-left: 17px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV0 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV0 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV0 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 90%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n	margin-top: 8px;\r\n}\r\n\r\n#InventoryV0 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV0 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#InventoryV0 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV0 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n#InventoryV0 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#InventoryV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n	border-right: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n}\r\n\r\n#InventoryV0 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV0 .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV0 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n";
 }));
 //#endregion
+//#region src/UI/Components/SwitchEquip/SwitchEquip.html?raw
+var SwitchEquip_default$2;
+var init_SwitchEquip$2 = __esmMin((() => {
+	SwitchEquip_default$2 = "<div id=\"SwitchEquip\">\r\n	<div class=\"switchoverlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"titlebar\" data-text=\"2986\"></div>\r\n		<table class=\"swapcontent\" id=\"swapgeneral\" data-background=\"swap_equipment/equipwin_bg2_change.bmp\">\r\n			<tr>\r\n				<td class=\"swap_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"swap_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_head_bottom col1\"></td>\r\n				<td class=\"swap_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_weapon col1\"></td>\r\n				<td class=\"swap_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_garment col1\"></td>\r\n				<td class=\"swap_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_accessory1 col1\"></td>\r\n				<td class=\"swap_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"swapcontent hide\" id=\"swapcostume\" data-background=\"swap_equipment/equipwin_special_change.bmp\">\r\n			<tr>\r\n				<td class=\"swap_costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"swap_costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_costume_head_bottom col1\"></td>\r\n				<td class=\"swap_shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_shadow_weapon col1\"></td>\r\n				<td class=\"swap_shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_shadow_garment col1\"></td>\r\n				<td class=\"swap_shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_shadow_accessory1 col1\"></td>\r\n				<td class=\"swap_shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"footer\" id=\"equipment_footer\">\r\n		<button\r\n			id=\"swap-button\"\r\n			class=\"onswap\"\r\n			data-text=\"3111\"\r\n			data-background=\"swap_equipment/btn_change2_normal.bmp\"\r\n			data-hover=\"swap_equipment/btn_change2_over.bmp\"\r\n			data-press=\"swap_equipment/btn_change2_press.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"closeswap\"\r\n			data-background=\"btn_cancel.bmp\"\r\n			data-hover=\"btn_cancel_a.bmp\"\r\n			data-press=\"btn_cancel_b.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SwitchEquip/SwitchEquip.css?raw
+var SwitchEquip_default$1;
+var init_SwitchEquip$1 = __esmMin((() => {
+	SwitchEquip_default$1 = ":host {\r\n	width: 280px;\r\n	height: 179px;\r\n}\r\n\r\n#SwitchEquip {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 179px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#SwitchEquip .clear {\r\n	clear: both;\r\n}\r\n\r\n#SwitchEquip .titlebar {\r\n	position: absolute;\r\n	top: 2px;\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: transparent;\r\n	border-radius: 3px 3px 0px 0px;\r\n	text-align: center;\r\n	z-index: 99;\r\n}\r\n\r\n#SwitchEquip .panel {\r\n	background-color: white;\r\n	height: 179px;\r\n}\r\n#SwitchEquip table.swapcontent {\r\n	position: absolute;\r\n	top: 0px;\r\n	width: 280px;\r\n	height: 179px;\r\n	border-spacing: 0;\r\n}\r\n#SwitchEquip table.swapcontent.hide {\r\n	display: none;\r\n}\r\n#SwitchEquip table tbody {\r\n	position: absolute;\r\n	top: 20px;\r\n}\r\n#SwitchEquip .swapcontent {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 179px;\r\n	border-spacing: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SwitchEquip .col1,\r\n#SwitchEquip .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#SwitchEquip .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#SwitchEquip .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#SwitchEquip .switchoverlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#SwitchEquip .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#SwitchEquip .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#SwitchEquip .col3 .item button,\r\n#SwitchEquip .col3 .item span {\r\n	float: right;\r\n}\r\n#SwitchEquip .col1 .item button,\r\n#SwitchEquip .col1 .item span {\r\n	float: left;\r\n}\r\n#SwitchEquip .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#SwitchEquip .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#SwitchEquip .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#SwitchEquip .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#SwitchEquip .ammo_container {\r\n	position: relative;\r\n}\r\n#SwitchEquip .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#SwitchEquip .ammo .item {\r\n	text-align: center;\r\n}\r\n#SwitchEquip .ammo .item span {\r\n	width: 45px;\r\n}\r\n#SwitchEquip .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#SwitchEquip .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#SwitchEquip .footer {\r\n	position: relative;\r\n	top: -30px;\r\n	height: 30px;\r\n}\r\n\r\n#SwitchEquip .footer button.closeswap {\r\n	position: absolute;\r\n	width: 43px;\r\n	height: 20px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	right: 5px;\r\n	top: 5px;\r\n}\r\n\r\n#SwitchEquip .footer button.onswap {\r\n	position: absolute;\r\n	width: 120px;\r\n	height: 20px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	left: 80px;\r\n	top: 5px;\r\n	text-align: center;\r\n}\r\n\r\n#SwitchEquip .disabled {\r\n	pointer-events: none; /* Prevents clicking */\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SwitchEquip/SwitchEquip.js
+/**
+* Escape HTML entities
+*/
+function _escapeHtml(str) {
+	const div = document.createElement("div");
+	div.appendChild(document.createTextNode(str));
+	return div.innerHTML;
+}
+/**
+* Find elements in html base on item location
+*
+* @param {number} location
+* @returns {string} selector
+*/
+function getSelectorFromLocation$2(location) {
+	const selector = [];
+	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".swap_head_top");
+	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".swap_head_mid");
+	if (location & EquipmentLocation_default.HEAD_BOTTOM) selector.push(".swap_head_bottom");
+	if (location & EquipmentLocation_default.ARMOR) selector.push(".swap_armor");
+	if (location & EquipmentLocation_default.WEAPON) selector.push(".swap_weapon");
+	if (location & EquipmentLocation_default.SHIELD) selector.push(".swap_shield");
+	if (location & EquipmentLocation_default.GARMENT) selector.push(".swap_garment");
+	if (location & EquipmentLocation_default.SHOES) selector.push(".swap_shoes");
+	if (location & EquipmentLocation_default.ACCESSORY1) selector.push(".swap_accessory1");
+	if (location & EquipmentLocation_default.ACCESSORY2) selector.push(".swap_accessory2");
+	if (location & EquipmentLocation_default.AMMO) selector.push(".swap_ammo");
+	if (location & EquipmentLocation_default.COSTUME_HEAD_TOP) selector.push(".swap_costume_head_top");
+	if (location & EquipmentLocation_default.COSTUME_HEAD_MID) selector.push(".swap_costume_head_mid");
+	if (location & EquipmentLocation_default.COSTUME_HEAD_BOTTOM) selector.push(".swap_costume_head_bottom");
+	if (location & EquipmentLocation_default.SHADOW_ARMOR) selector.push(".swap_shadow_armor");
+	if (location & EquipmentLocation_default.SHADOW_WEAPON) selector.push(".swap_shadow_weapon");
+	if (location & EquipmentLocation_default.SHADOW_SHIELD) selector.push(".swap_shadow_shield");
+	if (location & EquipmentLocation_default.COSTUME_ROBE) selector.push(".swap_shadow_garment");
+	if (location & EquipmentLocation_default.SHADOW_SHOES) selector.push(".swap_shadow_shoes");
+	if (location & EquipmentLocation_default.SHADOW_R_ACCESSORY_SHADOW) selector.push(".swap_shadow_accessory1");
+	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".swap_shadow_accessory2");
+	return selector.join(", ");
+}
+/**
+* Drag an item over the equipment, show where to place the item
+*/
+function onDragOver$1(event) {
+	if (window._OBJ_DRAG_) {
+		const data = window._OBJ_DRAG_;
+		if (data.type === "item") {
+			const item = data.data;
+			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.IsIdentified && !item.IsDamaged) {
+				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
+				const el = SwitchEquip.getRoot().querySelector(selector);
+				if (el) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
+					el.style.backgroundImage = `url(${_data})`;
+				});
+			}
+		}
+	}
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	return false;
+}
+/**
+* Drag out the window
+*/
+function onDragLeave(event) {
+	SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
+		td.style.backgroundImage = "none";
+	});
+	event.stopImmediatePropagation();
+	return false;
+}
+/**
+* Drop an item in the equipment, equip it if possible
+*/
+function onDrop$14(event) {
+	let data;
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {}
+	if (data && data.type === "item") {
+		const item = data.data;
+		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO) && item.IsIdentified && !item.IsDamaged) {
+			SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
+				td.style.backgroundImage = "none";
+			});
+			SwitchEquip.onAddSwitchEquip(item.index, "location" in item ? item.location : item.WearState);
+		}
+	}
+	event.stopImmediatePropagation();
+	return false;
+}
+/**
+* Right click on an item
+*/
+function onSwitchEquipInfo(event) {
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	const item = SwitchEquip._list[index];
+	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
+	else {
+		ItemInfo_default.append();
+		ItemInfo_default.uid = item.ITID;
+		ItemInfo_default.setItem(item);
+	}
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	return false;
+}
+/**
+* Double click on an equipment to remove it
+*/
+function onSwitchEquipUnEquip() {
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	SwitchEquip.onRemoveSwitchEquip(index);
+	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
+	if (overlay) overlay.style.display = "none";
+}
+/**
+* When mouse is over an equipment, display the item name
+*/
+function onSwitchEquipOver() {
+	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
+	const item = SwitchEquip._list[idx];
+	if (!item) return;
+	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
+	if (!overlay) return;
+	const posTop = this.offsetTop;
+	const posLeft = this.offsetLeft;
+	if (!posTop && !posLeft) return;
+	overlay.style.display = "";
+	overlay.style.top = `${posTop - 22}px`;
+	overlay.style.left = `${posLeft - 22}px`;
+	overlay.textContent = DB.getItemName(item);
+}
+/**
+* Remove the item name
+*/
+function onSwitchEquipOut() {
+	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
+	if (overlay) overlay.style.display = "none";
+}
+/**
+* Send an equipment switch request to the server.
+*/
+function sendEquipSwitchRequest() {
+	const pkt = new PACKET.CZ.REQ_FULLSWITCH();
+	Network.sendPacket(pkt);
+}
+var SwitchEquip, _swapctx, swaprender, SwitchEquip_default;
+var init_SwitchEquip = __esmMin((() => {
+	init_DBManager();
+	init_EquipmentLocation();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_ItemType();
+	init_Client();
+	init_SessionStorage();
+	init_Renderer();
+	init_Camera();
+	init_SpriteRenderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_ItemInfo();
+	init_SwitchEquip$2();
+	init_SwitchEquip$1();
+	init_Entity$1();
+	init_Equipment();
+	init_Inventory();
+	SwitchEquip = new GUIComponent("SwitchEquip", SwitchEquip_default$1);
+	SwitchEquip.render = () => SwitchEquip_default$2;
+	/**
+	* @var {Array} switchequipment list
+	*/
+	SwitchEquip._list = {};
+	_swapctx = [];
+	/**
+	* Initialize UI
+	*/
+	SwitchEquip.init = function init() {
+		const root = SwitchEquip.getRoot();
+		const canvases = root.querySelectorAll("canvas");
+		_swapctx.push(canvases[0].getContext("2d"));
+		_swapctx.push(canvases[1].getContext("2d"));
+		const panel = root.querySelector(".panel");
+		if (panel) {
+			panel.addEventListener("dragover", onDragOver$1);
+			panel.addEventListener("dragleave", onDragLeave);
+			panel.addEventListener("drop", onDrop$14);
+		}
+		const closeBtn = root.querySelector(".closeswap");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			SwitchEquip.toggle();
+		});
+		const swapBtn = root.querySelector(".onswap");
+		if (swapBtn) swapBtn.addEventListener("click", () => {
+			SwitchEquip.RequestSwitch();
+		});
+		const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
+		SwitchEquip.showSwapTab(currentEquipTabId);
+		const swapcontents = root.querySelectorAll(".swapcontent");
+		for (const content of swapcontents) {
+			content.addEventListener("contextmenu", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onSwitchEquipInfo.call(item, e);
+			});
+			content.addEventListener("dblclick", (e) => {
+				const item = e.target.closest(".item");
+				if (item) onSwitchEquipUnEquip.call(item, e);
+			});
+			content.addEventListener("mouseover", (e) => {
+				const btn = e.target.closest("button");
+				if (btn) onSwitchEquipOver.call(btn, e);
+			});
+			content.addEventListener("mouseout", (e) => {
+				if (e.target.closest("button")) onSwitchEquipOut();
+			});
+		}
+	};
+	/**
+	* Show the swap tab with the given tabId, hiding other tabs.
+	*
+	* @param {string} tabId - The ID of the tab to show.
+	*/
+	SwitchEquip.showSwapTab = function showSwapTab(tabId) {
+		const root = SwitchEquip.getRoot();
+		if (!root) return;
+		const swapTabId = "swap" + tabId;
+		const swapContentDivs = {
+			swapgeneral: root.querySelector("#swapgeneral"),
+			swapcostume: root.querySelector("#swapcostume")
+		};
+		for (const id in swapContentDivs) if (swapContentDivs[id]) if (id === swapTabId) swapContentDivs[id].classList.remove("hide");
+		else swapContentDivs[id].classList.add("hide");
+	};
+	/**
+	* Append to body
+	*/
+	SwitchEquip.onAppend = function onAppend() {
+		const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
+		SwitchEquip.showSwapTab(currentEquipTabId);
+		const root = SwitchEquip.getRoot();
+		if ((root ? root.querySelector("canvas") : null) && this._host.style.display !== "none") Renderer.render(swaprender);
+	};
+	/**
+	* Remove Inventory from window (and so clean up items)
+	*/
+	SwitchEquip.onRemove = function onRemove() {
+		Renderer.stop(swaprender);
+		SwitchEquip._list = {};
+		const root = SwitchEquip.getRoot();
+		if (root) root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
+			el.innerHTML = "";
+		});
+	};
+	/**
+	* Process shortcut
+	*
+	* @param {object} key
+	*/
+	SwitchEquip.onShortCut = function onShurtCut(key) {
+		switch (key.cmd) {
+			case "TOGGLE":
+				this.toggle();
+				break;
+		}
+	};
+	/**
+	* Toggle the visibility of the UI,
+	* rendering or stopping the renderer based on visibility.
+	*/
+	SwitchEquip.toggle = function toggle() {
+		if (this._host.style.display === "none") {
+			this._host.style.display = "";
+			Renderer.render(swaprender);
+			this.focus();
+		} else {
+			this._host.style.display = "none";
+			Renderer.stop(swaprender);
+		}
+	};
+	/**
+	* Add an equipment to the window
+	*
+	* @param {Item} item
+	* @param {item.Location} location
+	* @param {boolean} inSwitchList
+	*/
+	SwitchEquip.equip = function equip(item, location, inSwitchList) {
+		const it = DB.getItemInfo(item.ITID);
+		item.equipped = location;
+		SwitchEquip._list[item.index] = item;
+		const add3Dots = (string, limit) => {
+			if (string.length > limit) return string.substring(0, limit) + "...";
+			return string;
+		};
+		const root = SwitchEquip.getRoot();
+		const selector = getSelectorFromLocation$2(location);
+		const el = root.querySelector(selector);
+		if (el) el.innerHTML = `<div class="item" data-index="${item.index}"><button></button><span class="itemName">${add3Dots(_escapeHtml(DB.getItemName(item)), 19)}</span></div>`;
+		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
+			const button = root.querySelector(`.item[data-index="${item.index}"] button`);
+			if (button) {
+				button.style.backgroundImage = `url(${data})`;
+				if (!inSwitchList) button.style.filter = "grayscale(100%)";
+			}
+		});
+	};
+	/**
+	* Remove equipment from window
+	*
+	* @param {number} item index
+	* @param {number} item location
+	*/
+	SwitchEquip.unEquip = function unEquip(index, location) {
+		const root = SwitchEquip.getRoot();
+		const selector = getSelectorFromLocation$2(location);
+		const item = SwitchEquip._list[index];
+		item.equipped = 0;
+		const el = root.querySelector(selector);
+		if (el) el.innerHTML = "";
+		delete SwitchEquip._list[index];
+	};
+	swaprender = (function swaprenderClosure() {
+		const _cleanColor = new Float32Array([
+			1,
+			1,
+			1,
+			1
+		]);
+		const _savedColor = /* @__PURE__ */ new Float32Array(4);
+		const _animation = {
+			tick: 0,
+			frame: 0,
+			repeat: true,
+			play: true,
+			next: false,
+			delay: 0,
+			save: false
+		};
+		return function _renderFrame() {
+			const swap_character = new Entity();
+			swap_character.set({
+				GID: SessionStorage_default.Entity.GID + "_SWAPEQUIP",
+				objecttype: swap_character.constructor.TYPE_PC,
+				job: SessionStorage_default.Entity.job,
+				sex: SessionStorage_default.Entity.sex,
+				name: "",
+				hideShadow: true,
+				head: SessionStorage_default.Entity.head,
+				headpalette: SessionStorage_default.Entity.headpalette,
+				bodypalette: SessionStorage_default.Entity.bodypalette
+			});
+			const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
+			if (currentEquipTabId === "general") {
+				swap_character.accessory = SwitchEquip.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
+				swap_character.accessory2 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
+				swap_character.accessory3 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
+				swap_character.robe = SwitchEquip.checkEquipLoc(EquipmentLocation_default.GARMENT);
+			} else if (currentEquipTabId === "costume") {
+				swap_character.accessory = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
+				swap_character.accessory2 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
+				swap_character.accessory3 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
+				swap_character.robe = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
+			}
+			_savedColor.set(swap_character.effectColor);
+			swap_character.effectColor.set(_cleanColor);
+			Camera.direction = 0;
+			swap_character.direction = 0;
+			swap_character.headDir = 0;
+			swap_character.action = swap_character.ACTION.IDLE;
+			swap_character.animation = _animation;
+			for (let i = 0; i < _swapctx.length; i++) {
+				const ctx = _swapctx[i];
+				SpriteRenderer.bind2DContext(ctx, 30, 130);
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+				swap_character.renderEntity(ctx);
+			}
+		};
+	})();
+	/**
+	* Update the owner name for the equipment items
+	*/
+	SwitchEquip.onUpdateOwnerName = function() {
+		const root = SwitchEquip.getRoot();
+		for (const index in SwitchEquip._list) {
+			const item = SwitchEquip._list[index];
+			if (item.slot && [
+				255,
+				254,
+				65280
+			].includes(item.slot.card1)) {
+				const nameEl = root.querySelector(`.item[data-index="${index}"] .itemName`);
+				if (nameEl) nameEl.textContent = _escapeHtml(DB.getItemName(item));
+			}
+		}
+	};
+	/**
+	* Get the number of equipment items excluding AMMO location
+	*
+	* @returns {number} The number of equipment items
+	*/
+	SwitchEquip.getNumber = function() {
+		let num = 0;
+		for (const key in SwitchEquip._list) if (SwitchEquip._list[key].location && SwitchEquip._list[key].location !== EquipmentLocation_default.AMMO) num++;
+		return num;
+	};
+	/**
+	* Check if a specific location
+	*
+	* @param {number} location The location to check
+	* @returns {number} The sprite number of the item in the specified location, or 0 if not equipped
+	*/
+	SwitchEquip.checkEquipLoc = function checkEquipLoc(location) {
+		const switchList = InventoryController.getUI().equipswitchlist;
+		for (let i = 0; i < switchList.length; i++) {
+			const item = switchList[i];
+			if (item.location & location) return item.wItemSpriteNumber;
+		}
+		return 0;
+	};
+	/**
+	* Request an equipment switch button
+	* Disabling the button temporarily and updating its background image.
+	*/
+	SwitchEquip.RequestSwitch = function() {
+		sendEquipSwitchRequest();
+		const button = SwitchEquip.getRoot().querySelector("#swap-button");
+		if (!button) return;
+		button.disabled = true;
+		button.classList.add("disabled");
+		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/btn_change2_disable.bmp", (data) => {
+			button.style.backgroundImage = `url(${data})`;
+		});
+		setTimeout(() => {
+			button.disabled = false;
+			button.classList.remove("disabled");
+			Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/btn_change2_normal.bmp", (data) => {
+				button.style.backgroundImage = `url(${data})`;
+			});
+		}, 1e4);
+	};
+	/**
+	* Method to define
+	*/
+	SwitchEquip.onRemoveSwitchEquip = function onRemoveSwitchEquip() {};
+	SwitchEquip.onAddSwitchEquip = function onAddSwitchEquip() {};
+	SwitchEquip_default = UIManager.addComponent(SwitchEquip);
+}));
+//#endregion
 //#region src/UI/Components/BasicInfo/BasicInfoV1/BasicInfoV1.html?raw
 var BasicInfoV1_default$2;
 var init_BasicInfoV1$2 = __esmMin((() => {
@@ -220767,2752 +221227,6 @@ var init_BasicInfoV1$2 = __esmMin((() => {
 var BasicInfoV1_default$1;
 var init_BasicInfoV1$1 = __esmMin((() => {
 	BasicInfoV1_default$1 = ":host {\r\n	width: 220px;\r\n	height: 135px;\r\n	top: 0px;\r\n	left: 0px;\r\n}\r\n\r\n#BasicInfoV1 {\r\n	position: absolute;\r\n	width: 220px;\r\n	height: 135px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n#BasicInfoV1.small .large {\r\n	display: none;\r\n}\r\n#BasicInfoV1.large .small {\r\n	display: none;\r\n	border-radius: 5px;\r\n}\r\n#BasicInfoV1.small {\r\n	height: 53px;\r\n}\r\n#BasicInfoV1.large .buttons {\r\n	top: 135px;\r\n}\r\n#BasicInfoV1.small .buttons {\r\n	top: 53px;\r\n}\r\n\r\n#BasicInfoV1 .topbar .left {\r\n	position: absolute;\r\n	top: 3px;\r\n	left: 4px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n#BasicInfoV1 .topbar .right {\r\n	position: absolute;\r\n	top: 3px;\r\n	right: 2px;\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background: none;\r\n}\r\n\r\n/* LARGE */\r\n#BasicInfoV1 .large .title {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n}\r\n#BasicInfoV1 .large .name {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 20px;\r\n}\r\n#BasicInfoV1 .large .job {\r\n	position: absolute;\r\n	left: 10px;\r\n	top: 33px;\r\n}\r\n#BasicInfoV1 .large .hp_title {\r\n	position: absolute;\r\n	top: 50px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .sp_title {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .hp_bar,\r\n#BasicInfoV1 .large .sp_bar {\r\n	position: absolute;\r\n	top: 53px;\r\n	left: 35px;\r\n	width: 135px;\r\n	height: 8px;\r\n	font-weight: normal;\r\n}\r\n#BasicInfoV1 .large .sp_bar {\r\n	top: 68px;\r\n}\r\n#BasicInfoV1 .large .hp_bar div,\r\n#BasicInfoV1 .large .sp_bar div {\r\n	width: 4px;\r\n	height: 8px;\r\n	float: left;\r\n}\r\n#BasicInfoV1 .large div.hp_bar_perc,\r\n#BasicInfoV1 .large div.sp_bar_perc {\r\n	text-align: center;\r\n	width: 127px;\r\n	position: absolute;\r\n	top: -2px;\r\n}\r\n#BasicInfoV1 .large .hp_perc {\r\n	position: absolute;\r\n	top: 50px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV1 .large .sp_perc {\r\n	position: absolute;\r\n	top: 65px;\r\n	right: 20px;\r\n}\r\n#BasicInfoV1 .large .blvl {\r\n	position: absolute;\r\n	top: 86px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .jlvl {\r\n	position: absolute;\r\n	top: 97px;\r\n	left: 15px;\r\n}\r\n#BasicInfoV1 .large .bexp,\r\n#BasicInfoV1 .large .jexp {\r\n	position: absolute;\r\n	top: 89px;\r\n	left: 84px;\r\n	width: 110px;\r\n	height: 4px;\r\n	border: 1px solid #afafaf;\r\n	background-color: white;\r\n}\r\n#BasicInfoV1 .large .bexp div,\r\n#BasicInfoV1 .large .jexp div {\r\n	position: absolute;\r\n	top: 0px;\r\n	left: 0px;\r\n	width: 0%;\r\n	height: 4px;\r\n	background-color: #4262a5;\r\n}\r\n#BasicInfoV1 .large .jexp {\r\n	top: 101px;\r\n}\r\n#BasicInfoV1 .large .extra {\r\n	position: absolute;\r\n	top: 119px;\r\n	right: 5px;\r\n	padding-right: 5px;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	text-align: right;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .buttons {\r\n	position: absolute;\r\n	left: 0px;\r\n	width: 220px;\r\n	opacity: 0.5;\r\n}\r\n#BasicInfoV1 .buttons:hover {\r\n	opacity: 1;\r\n}\r\n#BasicInfoV1 .buttons button {\r\n	float: left;\r\n	width: 54px;\r\n	height: 18px;\r\n	border: none;\r\n	margin: 0;\r\n	background-color: transparent;\r\n}\r\n#BasicInfoV1 .buttons .clear {\r\n	clear: both;\r\n}\r\n\r\n/* REDUCED */\r\n#BasicInfoV1 .small .line1 {\r\n	position: absolute;\r\n	top: 2px;\r\n	left: 18px;\r\n	text-shadow: 1px 1px white;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .small .line2 {\r\n	position: absolute;\r\n	top: 20px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .small .line3 {\r\n	position: absolute;\r\n	top: 36px;\r\n	left: 10px;\r\n	white-space: nowrap;\r\n}\r\n#BasicInfoV1 .small .toggle_btns {\r\n	width: 9px;\r\n	height: 14px;\r\n	border: none;\r\n	background: none;\r\n	background-repeat: no-repeat;\r\n	position: absolute;\r\n	right: 2px;\r\n	bottom: 2px;\r\n	background-color: rgba(0, 0, 0, 0);\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.html?raw
-var PartyHelper_default$2;
-var init_PartyHelper$2 = __esmMin((() => {
-	PartyHelper_default$2 = "<div id=\"PartyHelper\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text setup\"><ui-text msg=\"291\">Party Setup</ui-text></span>\r\n			<span class=\"text friend-setup\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			<span class=\"text create\"><ui-text msg=\"2054\">Create Party</ui-text></span>\r\n			<span class=\"text invite\"><ui-text msg=\"2056\">Create Party</ui-text></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content party-content\">\r\n		<div class=\"create invite\">\r\n			<p>\r\n				<span class=\"create\"><ui-text msg=\"2057\">Party Name:</ui-text></span>\r\n				<span class=\"invite\"><ui-text msg=\"2058\">Player Name:</ui-text></span>\r\n			</p>\r\n			<input type=\"text\" class=\"name\" value=\"\" />\r\n		</div>\r\n		<div class=\"exp_share setup\">\r\n			<p><ui-text msg=\"292\">How to share EXP</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"287\">Each Take</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"288\">Even Share</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"item_share setup create\">\r\n			<p><ui-text msg=\"293\">How to share Items</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"289\">Each Take</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"290\">Party Share</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"item_sharing_type setup create\">\r\n			<p><ui-text msg=\"738\">Item Sharing type</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"739\">Individual</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"740\">Shared</ui-text>\r\n			</button>\r\n		</div>\r\n	</div>\r\n	<div class=\"content friend-content\">\r\n		<div class=\"friend-setup\">\r\n			<div class=\"open1to1Stranger setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"361\">Open 1:1 Chat between Strangers</ui-text></span>\r\n			</div>\r\n			<div class=\"open1to1Friend setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"359\">Open 1:1 Chat between Friends</ui-text></span>\r\n			</div>\r\n			<div class=\"alarm1to1 setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"362\">Alarm when receive a 1:1 Chat</ui-text></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n		<ui-button\r\n			class=\"btn ok\"\r\n			bg=\"basic_interface/btn_ok.bmp\"\r\n			hover=\"basic_interface/btn_ok_a.bmp\"\r\n			down=\"basic_interface/btn_ok_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.css?raw
-var PartyHelper_default$1;
-var init_PartyHelper$1 = __esmMin((() => {
-	PartyHelper_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyHelper {\r\n	width: 130px;\r\n}\r\n\r\n#PartyHelper .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyHelper .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyHelper .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyHelper .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyHelper .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyHelper .content {\r\n	background-color: white;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#PartyHelper .party-content {\r\n	min-height: 100px;\r\n}\r\n\r\n#PartyHelper .friend-content {\r\n	padding: 5px;\r\n}\r\n\r\n#PartyHelper .disabled,\r\n#PartyHelper .disabled button {\r\n	color: #888;\r\n}\r\n\r\n#PartyHelper .on,\r\n#PartyHelper .off {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 3px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .content p {\r\n	padding: 0;\r\n	margin: 0;\r\n	padding-top: 10px;\r\n}\r\n\r\n#PartyHelper .content div {\r\n	margin-left: 10px;\r\n}\r\n\r\n#PartyHelper .content button {\r\n	margin-left: 10px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .name {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 95px;\r\n	height: 20px;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#PartyHelper .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyHelper .btn {\r\n	position: absolute;\r\n	bottom: 3px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyHelper .ok {\r\n	right: 46px;\r\n}\r\n\r\n#PartyHelper .cancel {\r\n	right: 2px;\r\n}\r\n\r\n#PartyHelper .friend-setup .setting-row {\r\n	margin-left: 0px;\r\n	margin-bottom: 3px;\r\n	cursor: pointer;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyHelper .friend-setup .off {\r\n	display: none;\r\n}\r\n\r\n#PartyHelper .friend-setup .on {\r\n	display: inline-block;\r\n}\r\n\r\n#PartyHelper .friend-setup span {\r\n	margin-left: 5px;\r\n	font-size: 11px;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .friend-setup button {\r\n	display: inline-block;\r\n	width: 15px;\r\n	height: 18px;\r\n	background-position: 0px 3px;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	vertical-align: middle;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WhisperBox/WhisperBox.html?raw
-var WhisperBox_default$1;
-var init_WhisperBox$2 = __esmMin((() => {
-	WhisperBox_default$1 = "<div id=\"WhisperBox\" class=\"whisper-container\">\r\n	<div class=\"whisper-header\">\r\n		<span class=\"title\">With weeeee (Friend) *^.^* [813-338]</span>\r\n		<ui-button\r\n			class=\"close\"\r\n			bg=\"basic_interface/sys_close_off.bmp\"\r\n			hover=\"basic_interface/sys_close_on.bmp\"\r\n		></ui-button>\r\n	</div>\r\n	<div class=\"whisper-body\">\r\n		<div class=\"content\"></div>\r\n	</div>\r\n	<div class=\"whisper-footer\">\r\n		<div class=\"input-wrapper\">\r\n			<div contenteditable=\"true\" class=\"message input-whisper\"></div>\r\n		</div>\r\n		<div class=\"resizer event_add_cursor\" data-background=\"btn_resize.bmp\"></div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/WhisperBox/WhisperBox.css?raw
-var WhisperBox_default;
-var init_WhisperBox$1 = __esmMin((() => {
-	WhisperBox_default = ":host {\r\n	width: 280px;\r\n	height: 156px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.whisper-container {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 156px;\r\n	border: 1px solid white;\r\n	border-radius: 5px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	display: flex;\r\n	flex-direction: column;\r\n	overflow: hidden;\r\n	color: #ffffff;\r\n	min-width: 150px;\r\n	min-height: 100px;\r\n}\r\n\r\n.whisper-header {\r\n	background: rgba(255, 255, 255, 0.2);\r\n	height: 18px;\r\n	padding: 0 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: space-between;\r\n	color: #ffffff;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n	cursor: move;\r\n}\r\n\r\n.whisper-header .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.whisper-body {\r\n	flex: 1;\r\n	padding: 0 2px 2px 5px;\r\n	overflow: hidden;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n.whisper-body .contentwrapper {\r\n	height: 100%;\r\n}\r\n\r\n.whisper-body .content {\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	font-size: 12px;\r\n	text-shadow: 1px 1px 0px #000;\r\n	word-break: break-all;\r\n	line-height: 14px;\r\n}\r\n\r\n.whisper-footer {\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.whisper-footer .input-wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	height: 23px;\r\n	width: calc(100% - 25px);\r\n	overflow: hidden;\r\n}\r\n\r\n.whisper-footer .message {\r\n	width: 100%;\r\n	padding-left: 2px;\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	color: #ffffff;\r\n	font-size: 12px;\r\n	display: inline-block;\r\n}\r\n\r\n.whisper-container img {\r\n	max-height: 1.25em;\r\n	width: auto;\r\n	vertical-align: middle;\r\n	background: transparent !important;\r\n}\r\n\r\n.whisper-footer .resizer {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcMenu/NpcMenu.html?raw
-var NpcMenu_default$2;
-var init_NpcMenu$2 = __esmMin((() => {
-	NpcMenu_default$2 = "<div id=\"NpcMenu\">\r\n	<div class=\"container\">\r\n		<div class=\"middle\">\r\n			<span class=\"title\"></span>\r\n			<div class=\"content\"></div>\r\n		</div>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcMenu/NpcMenu.css?raw
-var NpcMenu_default$1;
-var init_NpcMenu$1 = __esmMin((() => {
-	NpcMenu_default$1 = ":host {\r\n	width: 276px;\r\n	height: 116px;\r\n	top: 285px;\r\n	left: 100px;\r\n}\r\n\r\n#NpcMenu {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	width: 276px;\r\n	height: 116px;\r\n	background-color: white;\r\n	padding: 2px;\r\n}\r\n\r\n#NpcMenu .title {\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	display: block;\r\n	width: 260px;\r\n	padding-left: 3px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#NpcMenu .container {\r\n	border-radius: 5px;\r\n	border: 1px solid #c1c6c2;\r\n	width: 269px;\r\n	height: 109px;\r\n	padding-left: 5px;\r\n	padding-top: 5px;\r\n}\r\n\r\n#NpcMenu .middle {\r\n	overflow-x: hidden;\r\n	overflow-y: scroll;\r\n}\r\n\r\n#NpcMenu .content {\r\n	white-space: pre-wrap;\r\n	background-color: #f9f9f9;\r\n	width: 260px;\r\n	height: 80px;\r\n	padding-left: 3px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#NpcMenu .content div {\r\n	width: auto;\r\n	height: 17px;\r\n	display: block;\r\n	padding-top: 3px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#NpcMenu .content div.selected {\r\n	background-color: #cde0ff;\r\n}\r\n\r\n#NpcMenu .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 5px;\r\n}\r\n\r\n#NpcMenu .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#NpcMenu .ok {\r\n	right: 50px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/NpcMenu/NpcMenu.js
-/**
-* Helper: escape HTML
-*/
-function _escapeHTML$8(text) {
-	const div = document.createElement("div");
-	div.textContent = text;
-	return div.innerHTML;
-}
-/**
-* Submit an index
-*/
-function validate() {
-	NpcMenu.onSelectMenu(_ownerID, _index$3 + 1);
-}
-/**
-* Pressed cancel, client send "255" as value
-*/
-function cancel$1() {
-	NpcMenu.onSelectMenu(_ownerID, 255);
-}
-/**
-* Select an index, change background color
-*/
-function selectIndex(div) {
-	NpcMenu.getRoot().querySelector(".content").querySelectorAll("div").forEach((d) => d.classList.remove("selected"));
-	div.classList.add("selected");
-	_index$3 = parseInt(div.dataset.index, 10);
-}
-var NpcMenu, _index$3, _ownerID, NpcMenu_default;
-var init_NpcMenu = __esmMin((() => {
-	init_KeyEventHandler();
-	init_DBManager();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_NpcMenu$2();
-	init_NpcMenu$1();
-	init_InputBox();
-	NpcMenu = new GUIComponent("NpcMenu", NpcMenu_default$1);
-	NpcMenu.render = () => NpcMenu_default$2;
-	/**
-	* Freeze mouse — NPC menu blocks interaction
-	*/
-	NpcMenu.mouseMode = GUIComponent.MouseMode.FREEZE;
-	_index$3 = 0;
-	_ownerID = 0;
-	/**
-	* Initialize component
-	*/
-	NpcMenu.init = function init() {
-		const root = NpcMenu.getRoot();
-		const okBtn = root.querySelector(".ok");
-		if (okBtn) okBtn.addEventListener("click", () => validate());
-		const cancelBtn = root.querySelector(".cancel");
-		if (cancelBtn) cancelBtn.addEventListener("click", () => cancel$1());
-		this._host.style.top = `${Math.max(376, Renderer.height / 2 + 76)}px`;
-		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
-		this.draggable();
-		const content = root.querySelector(".content");
-		if (content) {
-			content.addEventListener("mousedown", (e) => {
-				const div = e.target.closest("div");
-				if (div && content.contains(div)) selectIndex(div);
-				e.stopImmediatePropagation();
-			});
-			content.addEventListener("dblclick", (e) => {
-				const div = e.target.closest("div");
-				if (div && content.contains(div)) validate();
-			});
-		}
-	};
-	/**
-	* Clean up events
-	*/
-	NpcMenu.onRemove = function onRemove() {
-		const content = NpcMenu.getRoot().querySelector(".content");
-		if (content) content.innerHTML = "";
-	};
-	/**
-	* Bind KeyDown event
-	*/
-	NpcMenu.onKeyDown = function onKeyDown(event) {
-		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
-		if (this._host.style.display === "none") return true;
-		const content = NpcMenu.getRoot().querySelector(".content");
-		switch (event.which) {
-			case KEYS.SPACE:
-			case KEYS.ENTER:
-				validate();
-				break;
-			case KEYS.ESCAPE:
-				cancel$1();
-				break;
-			case KEYS.UP: {
-				const divs = content.querySelectorAll("div");
-				_index$3 = Math.max(_index$3 - 1, 0);
-				divs.forEach((d) => d.classList.remove("selected"));
-				if (divs[_index$3]) divs[_index$3].classList.add("selected");
-				const top = _index$3 * 20;
-				if (top < content.scrollTop) content.scrollTop = top;
-				break;
-			}
-			case KEYS.DOWN: {
-				const divs = content.querySelectorAll("div");
-				const count = divs.length;
-				_index$3 = Math.min(_index$3 + 1, count - 1);
-				divs.forEach((d) => d.classList.remove("selected"));
-				if (divs[_index$3]) divs[_index$3].classList.add("selected");
-				const top = _index$3 * 20;
-				if (top >= content.scrollTop + 80) content.scrollTop = top - 60;
-				break;
-			}
-			default: return true;
-		}
-		event.stopImmediatePropagation();
-		return false;
-	};
-	/**
-	* Initialize menu
-	*
-	* @param {string} menu
-	* @param {number} gid - npc id
-	*/
-	NpcMenu.setMenu = function setMenu(menu, gid) {
-		const content = NpcMenu.getRoot().querySelector(".content");
-		const list = menu.split(":");
-		_ownerID = gid;
-		_index$3 = 0;
-		content.innerHTML = "";
-		let j = 0;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].length) {
-			const div = document.createElement("div");
-			div.innerHTML = DB.formatMsgToHtml(_escapeHTML$8(list[i]));
-			div.dataset.index = j++;
-			content.appendChild(div);
-		}
-		const first = content.querySelector("div");
-		if (first) first.classList.add("selected");
-	};
-	/**
-	* Abstract callback to define
-	*/
-	NpcMenu.onSelectMenu = function onSelectMenu() {};
-	NpcMenu_default = UIManager.addComponent(NpcMenu);
-}));
-//#endregion
-//#region src/Engine/MapEngine/Friends.js
-var Friends_exports = /* @__PURE__ */ __exportAll({ default: () => FriendEngine });
-/**
-* Get friend list from server
-*
-* @param {object} pkt - PACKET.ZC.FRIENDS_LIST
-*/
-function onFriendList(pkt) {
-	_friends$2 = pkt.friendList;
-	controller.getUI().setFriends(_friends$2);
-}
-/**
-* Update friend information
-*
-* @param {object} pkt - PACKET.ZC.FRIENDS_STATE
-*/
-function onFriendUpdate(pkt) {
-	const idx = getFriendIndex(pkt.AID, pkt.GID);
-	if (idx > -1) {
-		_friends$2[idx].State = pkt.State;
-		controller.getUI().updateFriendState(idx, pkt.State);
-	}
-}
-/**
-* Get a friend request from someone
-*
-* @param {object} pkt - PACKET.ZC.REQ_ADD_FRIENDS
-*/
-function onFriendRequest(pkt) {
-	function answer(result) {
-		return () => {
-			FriendEngine.answerFriendRequest(pkt.ReqAID, pkt.ReqGID, result);
-		};
-	}
-	UIManager.showPromptBox(DB.getMessage(818).replace("%s", pkt.Name), "ok", "cancel", answer(1), answer(0));
-}
-/**
-* Server added a friend to our list
-*
-* @param {object} pkt - PACKET.ZC.ADD_FRIENDS_LIST
-*/
-function onFriendAdded(pkt) {
-	let idx;
-	switch (pkt.Result) {
-		case 0:
-			ChatBox_default.addText(DB.getMessage(821).replace("%s", pkt.Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
-			idx = getFriendIndex(pkt.AID, pkt.GID);
-			if (idx < 0) {
-				idx = _friends$2.length;
-				_friends$2[idx] = {};
-			}
-			_friends$2[idx].AID = pkt.AID;
-			_friends$2[idx].GID = pkt.GID;
-			_friends$2[idx].Name = pkt.Name;
-			_friends$2[idx].State = 0;
-			controller.getUI().updateFriend(idx, _friends$2[idx]);
-			break;
-		case 1:
-			ChatBox_default.addText(DB.getMessage(822).replace("%s", pkt.Name), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 2:
-			ChatBox_default.addText(DB.getMessage(819), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 3:
-			ChatBox_default.addText(DB.getMessage(820).replace("%s", pkt.Name), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-	}
-}
-/**
-* Remove friend from list
-*
-* @param {object} pkt - PACKET.ZC.DELETE_FRIENDS
-*/
-function onFriendRemoved(pkt) {
-	const idx = getFriendIndex(pkt.AID, pkt.GID);
-	if (idx > -1) {
-		_friends$2.splice(idx, 1);
-		controller.getUI().removeFriend(idx);
-	}
-}
-/**
-* Search a friend in our list, get back it's index in array
-*
-* @param {number} account id
-* @param {number} character id
-* @returns {number} index in array
-*/
-function getFriendIndex(AID, GID) {
-	let i, count;
-	for (i = 0, count = _friends$2.length; i < count; ++i) if (_friends$2[i].AID === AID && _friends$2[i].GID === GID) return i;
-	return -1;
-}
-var _friends$2, FriendEngine;
-var init_Friends = __esmMin((() => {
-	init_DBManager();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_UIManager();
-	init_ChatBox();
-	init_PartyFriends();
-	_friends$2 = [];
-	FriendEngine = class FriendEngine {
-		/**
-		* Initialzing engine
-		* (Hook Packets)
-		*/
-		static init() {
-			Network.hookPacket(PACKET.ZC.FRIENDS_LIST, onFriendList);
-			Network.hookPacket(PACKET.ZC.FRIENDS_STATE, onFriendUpdate);
-			Network.hookPacket(PACKET.ZC.REQ_ADD_FRIENDS, onFriendRequest);
-			Network.hookPacket(PACKET.ZC.ADD_FRIENDS_LIST, onFriendAdded);
-			Network.hookPacket(PACKET.ZC.DELETE_FRIENDS, onFriendRemoved);
-			const FriendUI = controller.getUI();
-			FriendUI.onRequestNewFriend = FriendEngine.addFriend;
-			FriendUI.onRemoveFriend = FriendEngine.removeFriend;
-		}
-		/**
-		* Clean up from memory
-		*
-		*/
-		static free() {
-			_friends$2.length = 0;
-		}
-		/**
-		* Add a friend to the list
-		*
-		* @param {string} name
-		*/
-		static addFriend(name) {
-			const pkt = new PACKET.CZ.ADD_FRIENDS();
-			pkt.name = name;
-			Network.sendPacket(pkt);
-		}
-		/**
-		* Remove a friend from the list
-		*
-		* @param {number} index
-		*/
-		static removeFriend(index) {
-			const pkt = new PACKET.CZ.DELETE_FRIENDS();
-			pkt.AID = _friends$2[index].AID;
-			pkt.GID = _friends$2[index].GID;
-			Network.sendPacket(pkt);
-		}
-		/**
-		* Answer to a friend request
-		*
-		* @param {number} account id
-		* @param {number} character id
-		* @param {number} answer
-		*/
-		static answerFriendRequest(AID, GID, result) {
-			const pkt = new PACKET.CZ.ACK_REQ_ADD_FRIENDS();
-			pkt.ReqAID = AID;
-			pkt.ReqGID = GID;
-			pkt.Result = result;
-			Network.sendPacket(pkt);
-		}
-		/**
-		* Check if a player is already a friend
-		*
-		* @param {string} player name
-		* @return {boolean} is friend
-		*/
-		static isFriend(name) {
-			const count = _friends$2.length;
-			for (let i = 0; i < count; ++i) if (name === _friends$2[i].Name) return true;
-			return false;
-		}
-		/**
-		* Say hi to all your friends
-		*/
-		static sayHi() {
-			const count = _friends$2.length;
-			const pkt = new PACKET.CZ.WHISPER();
-			pkt.msg = "(Hi) *^_^*";
-			for (let i = 0; i < count; ++i) if (_friends$2[i].State === 0) {
-				pkt.receiver = _friends$2[i].Name;
-				Network.sendPacket(pkt);
-			}
-			ChatBox_default.addText("[ To Friends ] : " + pkt.msg, ChatBox_default.TYPE.PRIVATE, ChatBox_default.FILTER.WHISPER);
-		}
-	};
-}));
-//#endregion
-//#region src/UI/Components/WhisperBox/WhisperBox.js
-/**
-* Move caret to the end of a contenteditable element
-* @param {HTMLElement} el
-*/
-function setCaretToEnd(el) {
-	const range = document.createRange();
-	const sel = window.getSelection();
-	range.selectNodeContents(el);
-	range.collapse(false);
-	sel.removeAllRanges();
-	sel.addRange(range);
-}
-/**
-* Extract plain chat text from input while preserving item links
-* @param {HTMLElement} inputEl
-* @returns {string}
-*/
-function extractChatMessage(inputEl) {
-	const clone = inputEl.cloneNode(true);
-	clone.querySelectorAll("span.item-link").forEach((link) => {
-		const data = link.getAttribute("data-item") || "";
-		link.replaceWith(document.createTextNode(data));
-	});
-	return clone.textContent.replace(/\u00A0/g, " ");
-}
-/**
-* Set up item link click handler inside an instance's shadow DOM
-* @param {GUIComponent} instance
-*/
-function setupItemLinkHandler(instance) {
-	instance.getRoot().addEventListener("click", (event) => {
-		const link = event.target.closest(".item-link");
-		if (!link) return;
-		const match = link.getAttribute("data-item");
-		const item = DB.parseItemLink(match);
-		if (item) __vitePreload(() => Promise.resolve().then(() => (init_ItemInfo(), ItemInfo_exports)).then((m) => {
-			const ItemInfo = m.default;
-			ItemInfo.append();
-			ItemInfo.uid = item.ITID;
-			ItemInfo.setItem(item);
-		}), void 0, import.meta.url);
-	});
-}
-/**
-* Set up nickname link click handler inside an instance's shadow DOM
-* @param {GUIComponent} instance
-*/
-function setupNicknameLinkHandler(instance) {
-	const root = instance.getRoot();
-	root.addEventListener("mousedown", (event) => {
-		if (event.target.closest(".nickname-link")) event.stopPropagation();
-	});
-	root.addEventListener("click", (event) => {
-		const link = event.target.closest(".nickname-link");
-		if (!link) return;
-		const nickname = link.getAttribute("data-nickname");
-		if (nickname) WhisperBox.show(nickname);
-		event.stopImmediatePropagation();
-	});
-}
-/**
-* Initialize resizable logic for an instance
-* @param {GUIComponent} instance
-*/
-function initResizable(instance) {
-	const root = instance.getRoot();
-	const resizer = root.querySelector(".resizer");
-	if (!resizer) return;
-	const resize = (e) => {
-		const rect = instance._host.getBoundingClientRect();
-		const width = Math.max(150, e.pageX - rect.left);
-		const height = Math.max(100, e.pageY - rect.top);
-		instance._host.style.width = `${width}px`;
-		instance._host.style.height = `${height}px`;
-		const container = root.querySelector(".whisper-container");
-		if (container) {
-			container.style.width = `${width}px`;
-			container.style.height = `${height}px`;
-		}
-		instance._contentEl.scrollTop = instance._contentEl.scrollHeight;
-	};
-	const stopResize = () => {
-		window.removeEventListener("mousemove", resize);
-		window.removeEventListener("mouseup", stopResize);
-	};
-	resizer.addEventListener("mousedown", (e) => {
-		e.preventDefault();
-		e.stopPropagation();
-		window.addEventListener("mousemove", resize);
-		window.addEventListener("mouseup", stopResize);
-	});
-}
-var WhisperBox, _preferences$55;
-var init_WhisperBox = __esmMin((() => {
-	init_DBManager();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_Preferences$1();
-	init_KeyEventHandler();
-	init_Renderer();
-	init_ChatBox();
-	init_History();
-	init_SoundManager();
-	init_WhisperBox$2();
-	init_WhisperBox$1();
-	init_NpcBox();
-	init_NpcMenu();
-	init_InputBox();
-	init_preload_helper();
-	WhisperBox = new GUIComponent("WhisperBox", WhisperBox_default);
-	WhisperBox.render = () => WhisperBox_default$1;
-	/**
-	* @var {Object} active whisper windows indexed by nickname
-	*/
-	WhisperBox.instances = {};
-	/**
-	* @var {number} Offset counter for spawning
-	*/
-	WhisperBox._spawnCounter = 0;
-	/** @var {Preferences} window structure */
-	WhisperBox.preferences = Preferences.get("WhisperBox", {
-		x: 100,
-		y: 100,
-		show: false,
-		open1to1Stranger: true,
-		open1to1Friend: true,
-		alarm1to1: true
-	}, 1);
-	_preferences$55 = WhisperBox.preferences;
-	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
-	WhisperBox.captureKeyEvents = true;
-	/**
-	* Initialize component
-	*/
-	WhisperBox._chatBoxNickHandlerAttached = false;
-	WhisperBox.init = function init() {
-		this.clearAll();
-		if (!this._chatBoxNickHandlerAttached) {
-			setupNicknameLinkHandler(ChatBox_default);
-			this._chatBoxNickHandlerAttached = true;
-		}
-	};
-	/**
-	* Clear all history and windows
-	*/
-	WhisperBox.clearAll = function clearAll() {
-		const keys = Object.keys(this.instances);
-		for (let i = 0; i < keys.length; i++) this.instances[keys[i]].remove();
-		this.instances = {};
-	};
-	/**
-	* Show or create a whisper window for a specific user
-	* @param {string} nickname
-	* @param {boolean} [bHasMessage]
-	*/
-	WhisperBox.show = function show(nickname, bHasMessage) {
-		if (this.instances[nickname]) {
-			this.instances[nickname]._host.style.display = "";
-			this.instances[nickname].focus();
-			return this.instances[nickname];
-		}
-		if (_preferences$55.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
-		const instance = this.clone(nickname);
-		instance.nickname = nickname;
-		instance.name = `WhisperBox:${nickname}`;
-		instance.needFocus = true;
-		instance.captureKeyEvents = true;
-		instance.onKeyDown = function onKeyDown(event) {
-			if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
-			if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
-			if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
-			if (this.isEditableFocused()) {
-				const focused = this.getRoot().activeElement;
-				const isInput = !!(focused && focused.tagName && focused.tagName.match(/input|select|textarea/i));
-				const isContentEditable = !!(focused && focused.getAttribute && focused.getAttribute("contenteditable") === "true");
-				if (isInput || isContentEditable) switch (event.which) {
-					case KEYS.ESCAPE:
-						this.remove();
-						event.stopImmediatePropagation();
-						return false;
-					case KEYS.ENTER: {
-						const msg = extractChatMessage(this._inputEl).replace(/\u00A0/g, " ").trim();
-						if (msg.length) {
-							this.history.push(msg);
-							WhisperBox.onRequestTalk(this.nickname, msg);
-							this._inputEl.innerHTML = "";
-						}
-						event.stopImmediatePropagation();
-						return false;
-					}
-					case KEYS.UP:
-					case KEYS.DOWN: {
-						const historyMsg = event.which === KEYS.UP ? this.history.previous() : this.history.next();
-						this._inputEl.innerHTML = historyMsg;
-						setCaretToEnd(this._inputEl);
-						event.stopImmediatePropagation();
-						return false;
-					}
-					default: {
-						const currentText = extractChatMessage(this._inputEl);
-						if (event.which >= 32 && currentText.length >= 100 && !event.ctrlKey && !event.altKey) {
-							event.stopImmediatePropagation();
-							return false;
-						}
-						event.stopImmediatePropagation();
-						return true;
-					}
-				}
-			}
-			return true;
-		};
-		UIManager.addComponent(instance);
-		instance.prepare();
-		instance.append();
-		const root = instance.getRoot();
-		instance._contentEl = root.querySelector(".content");
-		instance._inputEl = root.querySelector(".input-whisper");
-		__vitePreload(() => Promise.resolve().then(() => (init_Friends(), Friends_exports)).then((Friends) => {
-			const isFriend = Friends && Friends.default.isFriend ? Friends.default.isFriend(nickname) : false;
-			const titleEl = root.querySelector(".title");
-			if (titleEl) titleEl.textContent = `With ${nickname}${isFriend ? " (Friend)" : ""}`;
-		}), void 0, import.meta.url);
-		instance.draggable(".whisper-header, .whisper-footer");
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => {
-				instance.remove();
-			});
-		}
-		const self = this;
-		instance.onRemove = function onRemove() {
-			delete self.instances[nickname];
-			delete UIManager.components[this.name];
-		};
-		instance.history = new History();
-		instance._inputEl.addEventListener("paste", (event) => {
-			event.preventDefault();
-			const clipboard = (event.originalEvent || event).clipboardData;
-			let paste = clipboard ? clipboard.getData("text/plain") : "";
-			if (!paste) return false;
-			paste = paste.replace(/\u00A0/g, " ");
-			const remaining = 100 - extractChatMessage(instance._inputEl).length;
-			if (remaining <= 0) return false;
-			const toInsert = paste.substr(0, remaining);
-			const selection = window.getSelection();
-			if (selection.rangeCount) {
-				selection.deleteFromDocument();
-				selection.getRangeAt(0).insertNode(document.createTextNode(toInsert));
-				selection.collapseToEnd();
-			}
-		});
-		instance._host.addEventListener("mousedown", () => {
-			instance.focus();
-		});
-		setupItemLinkHandler(instance);
-		initResizable(instance);
-		const offset = this._spawnCounter % 10 * 20;
-		this._spawnCounter++;
-		instance._host.style.top = `${Math.min(Math.max(0, _preferences$55.y + offset), Renderer.height - 156)}px`;
-		instance._host.style.left = `${Math.min(Math.max(0, _preferences$55.x + offset), Renderer.width - 280)}px`;
-		this.instances[nickname] = instance;
-		return instance;
-	};
-	/**
-	* Add text to whisper box
-	* @param {string} nickname
-	* @param {string} text
-	* @param {string} color
-	*/
-	WhisperBox.addText = function addText(nickname, text, color) {
-		const instance = this.instances[nickname] || this.show(nickname, true);
-		let override = false;
-		text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, (match) => {
-			const item = DB.parseItemLink(match);
-			if (!item) return match;
-			override = true;
-			return `<span data-item="${match}" class="item-link" style="color:#FFFF63; cursor:pointer;">&lt;${item.name}&gt;</span>`;
-		});
-		const contentEl = instance._contentEl;
-		const isAtBottom = contentEl.scrollHeight - contentEl.scrollTop <= contentEl.offsetHeight + 10;
-		const div = document.createElement("div");
-		div.style.color = color || "#ffffff";
-		if (override) div.innerHTML = text;
-		else div.textContent = text;
-		contentEl.appendChild(div);
-		while (contentEl.childElementCount > 100) contentEl.firstElementChild.remove();
-		if (isAtBottom) contentEl.scrollTop = contentEl.scrollHeight;
-	};
-	/**
-	* Interface to be overriden by Engine
-	*/
-	WhisperBox.onRequestTalk = function onRequestTalk(_nickname, _text) {};
-	UIManager.addComponent(WhisperBox);
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.js
-/**
-* Helper: query inside shadow root
-*/
-function _root$19() {
-	return PartyHelper._shadow || PartyHelper._host;
-}
-/**
-* Validate and process form data
-*/
-function onValidate$1() {
-	const root = _root$19();
-	const PartyFriends = UIManager.getComponent("PartyFriends");
-	switch (_type$6) {
-		case PartyHelper.Type.CREATE: {
-			const nameInput = root.querySelector(".content .name");
-			const name = nameInput ? nameInput.value : "";
-			if (name.length) {
-				const itemShareOn = root.querySelector(".item_share .on");
-				const itemSharingOn = root.querySelector(".item_sharing_type .on");
-				PartyFriends.onRequestPartyCreation(name, itemShareOn ? parseInt(itemShareOn.dataset.value, 10) : 0, itemSharingOn ? parseInt(itemSharingOn.dataset.value, 10) : 0);
-				PartyHelper.remove();
-			}
-			break;
-		}
-		case PartyHelper.Type.INVITE: {
-			const nameInput = root.querySelector(".content .name");
-			const name = nameInput ? nameInput.value : "";
-			if (name.length) PartyFriends.onRequestAddingMember(0, name);
-			break;
-		}
-		case PartyHelper.Type.SETUP: {
-			const expShareOn = root.querySelector(".exp_share .on");
-			const itemShareOn = root.querySelector(".item_share .on");
-			const itemSharingOn = root.querySelector(".item_sharing_type .on");
-			PartyFriends.onRequestSettingUpdate(expShareOn ? parseInt(expShareOn.dataset.value, 10) : 0, itemShareOn ? parseInt(itemShareOn.dataset.value, 10) : 0, itemSharingOn ? parseInt(itemSharingOn.dataset.value, 10) : 0);
-			PartyHelper.remove();
-			break;
-		}
-	}
-}
-var PartyHelper, _type$6, PartyHelper_default;
-var init_PartyHelper = __esmMin((() => {
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_KeyEventHandler();
-	init_PacketVerManager();
-	init_PartyHelper$2();
-	init_PartyHelper$1();
-	init_WhisperBox();
-	PartyHelper = new GUIComponent("PartyHelper", PartyHelper_default$1);
-	/**
-	* Window type constants
-	*/
-	PartyHelper.Type = {
-		CREATE: 0,
-		SETUP: 1,
-		INVITE: 2,
-		FRIEND_SETUP: 3
-	};
-	_type$6 = PartyHelper.Type.CREATE;
-	/**
-	* Render HTML
-	*/
-	PartyHelper.render = () => PartyHelper_default$2;
-	/**
-	* Has input fields — protect keyboard events
-	*/
-	PartyHelper.captureKeyEvents = true;
-	/**
-	* Initialize component event listeners
-	*/
-	PartyHelper.init = function init() {
-		const root = _root$19();
-		const baseBtn = root.querySelector(".base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		});
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			PartyHelper.remove();
-		});
-		const cancelBtn = root.querySelector(".cancel");
-		if (cancelBtn) cancelBtn.addEventListener("click", () => {
-			PartyHelper.remove();
-		});
-		const okBtn = root.querySelector(".ok");
-		if (okBtn) okBtn.addEventListener("click", () => {
-			onValidate$1();
-		});
-		const nameInput = root.querySelector(".name");
-		if (nameInput) nameInput.addEventListener("keydown", (event) => {
-			if (event.which === 13 || event.key === "Enter") {
-				onValidate$1();
-				event.preventDefault();
-				event.stopImmediatePropagation();
-			}
-		});
-		root.querySelectorAll(".setting-row").forEach((row) => {
-			row.addEventListener("mousedown", (event) => {
-				const on = row.querySelector(".on");
-				const off = row.querySelector(".off");
-				if (!on || !off) return;
-				on.classList.remove("on");
-				on.classList.add("off");
-				off.classList.remove("off");
-				off.classList.add("on");
-				const prefs = WhisperBox.preferences;
-				const rootEl = _root$19();
-				const strangerOn = rootEl.querySelector(".open1to1Stranger .on");
-				const friendOn = rootEl.querySelector(".open1to1Friend .on");
-				const alarmOn = rootEl.querySelector(".alarm1to1 .on");
-				prefs.open1to1Stranger = strangerOn ? parseInt(strangerOn.dataset.value, 10) === 1 : prefs.open1to1Stranger;
-				prefs.open1to1Friend = friendOn ? parseInt(friendOn.dataset.value, 10) === 1 : prefs.open1to1Friend;
-				prefs.alarm1to1 = alarmOn ? parseInt(alarmOn.dataset.value, 10) === 1 : prefs.alarm1to1;
-				prefs.save();
-				event.stopImmediatePropagation();
-				event.preventDefault();
-			});
-		});
-		root.addEventListener("mousedown", (event) => {
-			const off = event.target.closest(".off");
-			if (!off) return;
-			if (off.parentNode.classList.contains("setting-row")) return;
-			const contentEl = root.querySelector(".content");
-			if (contentEl && contentEl.classList.contains("disabled")) return;
-			const on = off.parentNode.querySelector(".on");
-			if (!on) return;
-			on.className = "off";
-			off.className = "on";
-			const tmp = on.style.backgroundImage;
-			on.style.backgroundImage = off.style.backgroundImage;
-			off.style.backgroundImage = tmp;
-		});
-		root.addEventListener("mousedown", (event) => {
-			const on = event.target.closest(".on");
-			if (!on) return;
-			if (on.parentNode.classList.contains("setting-row")) return;
-			event.stopImmediatePropagation();
-			event.preventDefault();
-		}, true);
-		this.draggable(".titlebar");
-	};
-	/**
-	* Key handler — block shortcuts when input is focused
-	*/
-	PartyHelper.onKeyDown = function onKeyDown(event) {
-		const shadow = this._shadow || this._host;
-		const focused = shadow ? shadow.activeElement : null;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
-			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-				PartyHelper.remove();
-				event.stopImmediatePropagation();
-				return false;
-			}
-			if (event.which === KEYS.ENTER || event.key === "Enter") return true;
-			event.stopImmediatePropagation();
-			return true;
-		}
-		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-			PartyHelper.remove();
-			event.stopImmediatePropagation();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Position UI relative to PartyFriends window
-	*/
-	PartyHelper.onAppend = function onAppend() {
-		const base = UIManager.getComponent("PartyFriends");
-		const root = _root$19();
-		const partyContent = root.querySelector(".party-content");
-		const friendContent = root.querySelector(".friend-content");
-		if (partyContent) partyContent.style.display = "none";
-		if (friendContent) friendContent.style.display = "none";
-		const nameInput = root.querySelector(".name");
-		if (nameInput) nameInput.value = "";
-		if (base && base._host) {
-			this._host.style.top = base._host.style.top;
-			this._host.style.left = `${parseInt(base._host.style.left, 10) + (base._host.offsetWidth || 0) + 10}px`;
-		}
-		window.addEventListener("keydown", this._onKeyDown, true);
-	};
-	/**
-	* Cleanup on window removal
-	*/
-	PartyHelper.onRemove = function onRemove() {
-		const root = _root$19();
-		const partyContent = root.querySelector(".party-content");
-		const friendContent = root.querySelector(".friend-content");
-		if (partyContent) partyContent.style.display = "none";
-		if (friendContent) friendContent.style.display = "none";
-		const nameInput = root.querySelector(".name");
-		if (nameInput) nameInput.value = "";
-		window.removeEventListener("keydown", this._onKeyDown, true);
-	};
-	/**
-	* Set window display mode
-	* @param {number} type
-	*/
-	PartyHelper.setType = function setType(type) {
-		const root = _root$19();
-		root.querySelectorAll(".content").forEach((el) => el.classList.remove("disabled"));
-		const footer = root.querySelector(".footer");
-		if (footer) footer.style.display = "block";
-		if (type === PartyHelper.Type.FRIEND_SETUP && PacketVerManager_default.value < 20090617) type = PartyHelper.Type.SETUP;
-		const innerRoot = root.querySelector("#PartyHelper");
-		const friendContent = root.querySelector(".friend-content");
-		const partyContent = root.querySelector(".party-content");
-		const footerBtns = root.querySelectorAll(".footer .btn");
-		const show = (sel) => root.querySelectorAll(sel).forEach((el) => {
-			el.style.display = "";
-		});
-		const hide = (sel) => root.querySelectorAll(sel).forEach((el) => {
-			el.style.display = "none";
-		});
-		switch (type) {
-			case PartyHelper.Type.CREATE:
-				if (innerRoot) innerRoot.style.width = "130px";
-				if (friendContent) friendContent.style.display = "none";
-				if (partyContent) partyContent.style.display = "block";
-				hide(".setup");
-				hide(".invite");
-				show(".create");
-				hide(".titlebar .setup");
-				hide(".titlebar .invite");
-				hide(".titlebar .friend-setup");
-				show(".titlebar .create");
-				if (footer) footer.style.height = "27px";
-				footerBtns.forEach((el) => {
-					el.style.display = "";
-				});
-				break;
-			case PartyHelper.Type.INVITE:
-				if (innerRoot) innerRoot.style.width = "130px";
-				if (friendContent) friendContent.style.display = "none";
-				if (partyContent) partyContent.style.display = "block";
-				hide(".setup");
-				hide(".create");
-				show(".invite");
-				hide(".titlebar .setup");
-				hide(".titlebar .create");
-				hide(".titlebar .friend-setup");
-				show(".titlebar .invite");
-				if (footer) footer.style.height = "27px";
-				footerBtns.forEach((el) => {
-					el.style.display = "";
-				});
-				break;
-			case PartyHelper.Type.SETUP:
-				if (innerRoot) innerRoot.style.width = "130px";
-				if (friendContent) friendContent.style.display = "none";
-				if (partyContent) partyContent.style.display = "block";
-				hide(".create");
-				hide(".invite");
-				show(".setup");
-				hide(".titlebar .create");
-				hide(".titlebar .invite");
-				hide(".titlebar .friend-setup");
-				show(".titlebar .setup");
-				if (footer) footer.style.height = "27px";
-				footerBtns.forEach((el) => {
-					el.style.display = "";
-				});
-				break;
-			case PartyHelper.Type.FRIEND_SETUP:
-				if (innerRoot) innerRoot.style.width = "230px";
-				if (partyContent) partyContent.style.display = "none";
-				if (friendContent) friendContent.style.display = "block";
-				hide(".titlebar .create");
-				hide(".titlebar .invite");
-				hide(".titlebar .setup");
-				show(".titlebar .friend-setup");
-				if (footer) footer.style.height = "20px";
-				footerBtns.forEach((el) => {
-					el.style.display = "none";
-				});
-				break;
-		}
-		_type$6 = type;
-	};
-	/**
-	* Update party settings UI
-	* @param {object} options
-	* @param {boolean} editable
-	*/
-	PartyHelper.setOptions = function setOptions(options, editable) {
-		const root = _root$19();
-		function swap(off) {
-			const on = off.parentNode.querySelector(".on");
-			const tmp = on.style.backgroundImage;
-			on.className = "off";
-			off.className = "on";
-			on.style.backgroundImage = off.style.backgroundImage;
-			off.style.backgroundImage = tmp;
-		}
-		const list = [
-			"exp_share",
-			"item_share",
-			"item_sharing_type"
-		];
-		const count = list.length;
-		for (let i = 0; i < count; ++i) {
-			if (options[list[i]] === void 0) continue;
-			const container = root.querySelector(`.${list[i]}`);
-			if (!container) continue;
-			const element = container.querySelector(".off");
-			if (element && options[list[i]] == element.dataset.value) swap(element);
-		}
-		const contentEls = root.querySelectorAll(".content");
-		if (!editable) contentEls.forEach((el) => el.classList.add("disabled"));
-		else contentEls.forEach((el) => el.classList.remove("disabled"));
-	};
-	/**
-	* Update friend/whisper settings UI
-	* @param {object} options
-	*/
-	PartyHelper.setFriendOptions = function setFriendOptions(options) {
-		const root = _root$19();
-		function swap(off) {
-			const on = off.parentNode.querySelector(".on");
-			on.className = "off";
-			off.className = "on";
-		}
-		const list = [
-			"open1to1Stranger",
-			"open1to1Friend",
-			"alarm1to1"
-		];
-		const count = list.length;
-		for (let i = 0; i < count; ++i) {
-			const value = options[list[i]] === true || options[list[i]] == 1;
-			const row = root.querySelector(`.${list[i]}`);
-			if (!row) continue;
-			const on = row.querySelector(".on");
-			const off = row.querySelector(".off");
-			if (on && off && value !== (on.dataset.value == 1)) swap(off);
-		}
-	};
-	/**
-	* Get current window type
-	* @returns {number}
-	*/
-	PartyHelper.getType = function getType() {
-		return _type$6;
-	};
-	/**
-	* Hooks
-	*/
-	PartyHelper.onCreate = function onCreate() {};
-	PartyHelper.onInvite = function onInvite() {};
-	PartyHelper.onSetupUpdate = function onSetUpUpdate() {};
-	PartyHelper.mouseMode = GUIComponent.MouseMode.STOP;
-	PartyHelper_default = UIManager.addComponent(PartyHelper);
-}));
-//#endregion
-//#region src/UI/Components/Mail/Mail.html?raw
-var Mail_default$2;
-var init_Mail$3 = __esmMin((() => {
-	Mail_default$2 = "<div id=\"Mail\">\r\n	<div class=\"body\">\r\n		<ui-image src=\"basic_interface/maillist1_bg.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<span class=\"text\" id=\"title\"><ui-text msg=\"1025\">Mail List</ui-text></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/close2.bmp\"\r\n					hover=\"basic_interface/close2_a.bmp\"\r\n				></ui-button>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"clear\">\r\n			<section class=\"container flex_block\">\r\n				<div class=\"flex container\">\r\n					<div style=\"flex: 1\">\r\n						<div class=\"flex_block btn_iw\">\r\n							<div class=\"inbox\" id=\"inbox\" style=\"flex: 1\"></div>\r\n							<div class=\"write\" id=\"write\" style=\"flex: 1\"></div>\r\n						</div>\r\n					</div>\r\n\r\n					<div class=\"list_mail flex_block\">\r\n						<!-- list mail -->\r\n						<div class=\"block_mail\">\r\n							<div class=\"list_item_mail\"></div>\r\n							<div class=\"flex prev_next\">\r\n								<div class=\"prev\">\r\n									<div class=\"overlay_prev\"></div>\r\n									<span class=\"text_pagination\"><ui-text msg=\"1053\">Prev</ui-text></span>\r\n								</div>\r\n								<div class=\"pagination\">\r\n									<span class=\"text\" id=\"infor_page\">1/1</span>\r\n								</div>\r\n								<div class=\"next\">\r\n									<div class=\"overlay_next margin_next\"></div>\r\n									<span class=\"text_pagination margin_next\"><ui-text msg=\"1054\">Next</ui-text></span>\r\n								</div>\r\n							</div>\r\n						</div>\r\n						<!-- create mail -->\r\n						<div class=\"block_create_mail\">\r\n							<div class=\"to_create_mail\">\r\n								<span class=\"text text_to_title\">\r\n									<span><ui-text msg=\"1099\">To</ui-text></span> :</span\r\n								>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"text_to\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"title_create_mail\">\r\n								<span class=\"text text_title_create_mail\">\r\n									<span><ui-text msg=\"1100\">Title</ui-text></span> :</span\r\n								>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"input_title\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"email_body\">\r\n								<textarea class=\"textarea_mail\" maxlength=\"198\"></textarea>\r\n							</div>\r\n							<div class=\"block_zeny_item\">\r\n								<ui-button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_amt\"\r\n									bg=\"basic_interface/inputzeny.bmp\"\r\n									hover=\"basic_interface/inputzeny_a.bmp\"\r\n								></ui-button>\r\n								<ui-button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_ok\"\r\n									bg=\"basic_interface/setzeny.bmp\"\r\n									hover=\"basic_interface/setzeny_a.bmp\"\r\n								></ui-button>\r\n								<div class=\"block_zeny\">\r\n									<input class=\"input_zeny_amt\" type=\"text\" value=\"0\" maxlength=\"9\" disabled />\r\n								</div>\r\n\r\n								<div class=\"block_item\">\r\n									<div class=\"container_item\">\r\n										<div class=\"overlay\"></div>\r\n									</div>\r\n								</div>\r\n							</div>\r\n\r\n							<div class=\"block_send_cancel\">\r\n								<ui-button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_send\"\r\n									bg=\"basic_interface/send.bmp\"\r\n									hover=\"basic_interface/send_a.bmp\"\r\n								></ui-button>\r\n								<ui-button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_cancel\"\r\n									bg=\"basic_interface/cancel2.bmp\"\r\n									hover=\"basic_interface/cancel2_a.bmp\"\r\n								></ui-button>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</section>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Mail/Mail.css?raw
-var Mail_default$1;
-var init_Mail$2 = __esmMin((() => {
-	Mail_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#Mail {\r\n	width: 250px;\r\n	height: 330px;\r\n}\r\n\r\n#Mail .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: relative;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 6px;\r\n}\r\n#Mail .body .base {\r\n	width: 9px;\r\n	height: 7px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Mail .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Mail .container {\r\n	width: 298px;\r\n	height: 385px;\r\n}\r\n\r\n#Mail .flex {\r\n	display: flex;\r\n}\r\n\r\n#Mail .list_item_mail {\r\n	width: 279px;\r\n	height: 358px;\r\n}\r\n\r\n#Mail .flex_block {\r\n	display: block;\r\n}\r\n\r\n#Mail .list_mail {\r\n	flex: 14;\r\n}\r\n\r\n#Mail .prev_next {\r\n	color: #e4baa8;\r\n}\r\n\r\n#Mail .prev {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-end;\r\n	display: flex;\r\n}\r\n\r\n#Mail .next {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-start;\r\n	display: flex;\r\n}\r\n\r\n#Mail .pagination {\r\n	text-align: end;\r\n}\r\n\r\n#Mail .btn_iw {\r\n	height: 371px;\r\n	margin-left: 4px;\r\n}\r\n\r\n#Mail .inbox {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .write {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .block_mail {\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n\r\n#Mail .item_mail {\r\n	width: 268px;\r\n	height: 51px;\r\n	display: flex;\r\n}\r\n\r\n#Mail .btn_envelop {\r\n	width: 16px;\r\n	height: 11px;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n	background-color: transparent;\r\n	margin-top: 24%;\r\n	margin-left: 18%;\r\n}\r\n\r\n#Mail .to_title {\r\n	width: 100%;\r\n	height: 52px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n}\r\n#Mail .to_title button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n	flex: 1;\r\n}\r\n\r\n#Mail .block_create_mail {\r\n	display: block;\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n#Mail .add_zeny {\r\n	width: 51px;\r\n	height: 21px;\r\n	border: none;\r\n	margin-left: 16%;\r\n	margin-top: 3%;\r\n}\r\n#zeny_ok {\r\n	display: none;\r\n	width: 43px !important;\r\n	margin-left: 19% !important;\r\n}\r\n#Mail .create_mail_btn {\r\n	width: 43px;\r\n	height: 21px;\r\n	border: none;\r\n}\r\n#Mail .to_create_mail {\r\n	flex: 1;\r\n	margin-top: 8%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .title_create_mail {\r\n	flex: 1;\r\n	margin-top: 6%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .text_to_title {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .text_to {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 105px;\r\n}\r\n#Mail .text_title_create_mail {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .input_title {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 164px;\r\n}\r\n#Mail .email_body {\r\n	flex: 1;\r\n	margin-top: 5%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .textarea_mail {\r\n	resize: none;\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 226px;\r\n	padding: initial;\r\n	width: 243px;\r\n	overflow: hidden;\r\n}\r\n\r\n#Mail .block_zeny_item {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .block_zeny {\r\n	margin-top: 4%;\r\n	margin-left: 1%;\r\n}\r\n#Mail .block_item {\r\n	margin-left: 18%;\r\n}\r\n#Mail .input_zeny_amt {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 13px;\r\n	width: 64px;\r\n}\r\n#Mail .input_add_item {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 24px;\r\n	width: 24px;\r\n}\r\n\r\n#Mail .container_item {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 2px;\r\n	margin-left: 2px;\r\n	margin-bottom: 6px;\r\n}\r\n\r\n#Mail .block_send_cancel {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-right: 8%;\r\n	text-align: right;\r\n}\r\n\r\n#Mail .to_title button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .to_title button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#Mail .tooltip {\r\n	position: relative;\r\n	display: inline-block;\r\n	color: #a37162;\r\n}\r\n\r\n#Mail .name_data {\r\n	color: #cd9b77;\r\n	margin-top: 15%;\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n\r\n#Mail .tooltip .tooltiptext {\r\n	visibility: hidden;\r\n	position: absolute;\r\n	bottom: 100%;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	position: absolute;\r\n	float: left;\r\n	left: 0px;\r\n	pointer-events: none;\r\n}\r\n\r\n#Mail .tooltip .to {\r\n}\r\n\r\n#Mail .tooltip .title {\r\n}\r\n\r\n#Mail .tooltip:hover .tooltiptext {\r\n	visibility: visible;\r\n}\r\n\r\n#Mail .date_mail {\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n	align-items: center;\r\n}\r\n\r\n#Mail .container_item .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#Mail .container_item .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Mail .container_item .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Mail .container_item .overlay {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .container_item .overlay.grey {\r\n	pointer-events: none;\r\n	color: #aaa;\r\n}\r\n\r\n#Mail .overlay_prev {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n	margin-right: -3%;\r\n}\r\n\r\n#Mail .overlay_next {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n}\r\n#Mail .margin_next {\r\n	margin-left: 5%;\r\n}\r\n\r\n#Mail .prev_next .text_pagination {\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	position: absolute;\r\n}\r\n\r\n#Mail .body .text {\r\n	/* text-shadow: 1px 1px white; */\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#Mail .body .left {\r\n	margin-left: 25px;\r\n	float: left;\r\n}\r\n#Mail .body .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Mail .body .clear {\r\n	clear: both;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Mail/Mail.js
-/**
-* Helper: query inside shadow root
-*/
-function _root$18() {
-	return Mail._shadow || Mail._host;
-}
-function updatePageMailItems() {
-	const root = _root$18();
-	const nextBtn = root.querySelector(".next");
-	if (nextBtn) nextBtn.addEventListener("click", (e) => {
-		e.stopImmediatePropagation();
-		if (Mail.page < Mail.list.mailList.length / Mail.pageSize - 1) {
-			Mail.page++;
-			createMailList();
-			adjustButtons();
-		}
-	});
-	const prevBtn = root.querySelector(".prev");
-	if (prevBtn) prevBtn.addEventListener("click", (e) => {
-		e.stopImmediatePropagation();
-		if (Mail.page > 0) {
-			Mail.page--;
-			createMailList();
-			adjustButtons();
-		}
-	});
-	createMailList();
-}
-/**
-* Create messages window size
-*/
-function onWindowMailbox() {
-	const root = _root$18();
-	Mail.parseMailrefreshinbox();
-	const sendBtn = root.querySelector("#create_mail_send");
-	if (sendBtn) sendBtn.disabled = false;
-	const createMail = root.querySelector(".block_create_mail");
-	if (createMail) createMail.style.display = "none";
-	const textTo = root.querySelector(".text_to");
-	if (textTo) textTo.value = "";
-	const inputTitle = root.querySelector(".input_title");
-	if (inputTitle) inputTitle.value = "";
-	const textareaMail = root.querySelector(".textarea_mail");
-	if (textareaMail) textareaMail.value = "";
-	const zenyInput = root.querySelector(".input_zeny_amt");
-	if (zenyInput) zenyInput.value = "0";
-	const addItemInput = root.querySelector(".input_add_item");
-	if (addItemInput) addItemInput.value = "";
-	const prevNext = root.querySelector(".prev_next");
-	if (prevNext) prevNext.style.display = "flex";
-	const blockMail = root.querySelector(".block_mail");
-	if (blockMail) blockMail.style.display = "block";
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist1_bg.bmp", (url) => {
-		const body = root.querySelector(".body");
-		if (body) body.style.backgroundImage = `url(${url})`;
-	});
-	const title = root.querySelector("#title");
-	if (title) title.textContent = DB.getMessage(1025);
-}
-function createMailList() {
-	const root = _root$18();
-	const content = root.querySelector(".list_item_mail");
-	root.querySelectorAll(".item_mail").forEach((el) => el.remove());
-	if (Mail.list.length == 0) return;
-	for (let i = Mail.page * Mail.pageSize; i < Mail.list.mailList.length && i < (Mail.page + 1) * Mail.pageSize; i++) {
-		const from_name = Mail.list.mailList[i].FromName.length > 15 ? Mail.list.mailList[i].FromName.substring(0, 15) + "..." : Mail.list.mailList[i].FromName;
-		const header = Mail.list.mailList[i].HEADER.length > 23 ? Mail.list.mailList[i].HEADER.substring(0, 23) + "..." : Mail.list.mailList[i].HEADER;
-		const mailId = Mail.list.mailList[i].MailID;
-		const isOpen = Mail.list.mailList[i].isOpen;
-		if (content) content.insertAdjacentHTML("beforeend", `<div class="item_mail">
-					<div class="envelop" style="flex: 1;">
-						<div class="btn_envelop" id="envelop_${mailId}"></div>
-					</div>
-					<div class="to_title" style="flex: 3;">
-						<div class="flex">
-							<div style="flex: 3;">
-								<span id="from_name_${mailId}" class="event_add_cursor tooltip name_data"> ${from_name}
-									<span class="tooltiptext to">${Mail.list.mailList[i].FromName}</span>
-								</span>
-							</div>
-							<div style="flex: 3;">
-								<span class="name_data">${formateDeleteTime(Mail.list.mailList[i].DeleteTime)}</span>
-							</div>
-						</div>
-						<div>
-							<span id="from_header_${mailId}" data-id="${mailId}" class="event_add_cursor tooltip"> ${header}
-								<span class="tooltiptext title">${Mail.list.mailList[i].HEADER}</span>
-							</span>
-						</div>
-					</div>
-				</div>`);
-		if (!isOpen) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/envelop.bmp", (data) => {
-			const envelop = root.querySelector(`#envelop_${mailId}`);
-			if (envelop) envelop.style.backgroundImage = `url(${data})`;
-		});
-		const fromNameEl = root.querySelector(`#from_name_${mailId}`);
-		if (fromNameEl) fromNameEl.addEventListener("click", () => {
-			const toEl = root.querySelector(`#from_name_${mailId} .to`);
-			if (toEl) Mail.replyNewMail(toEl.textContent);
-		});
-		const fromHeaderEl = root.querySelector(`#from_header_${mailId}`);
-		if (fromHeaderEl) fromHeaderEl.addEventListener("click", (event) => {
-			Mail.openMail(parseInt(event.currentTarget.dataset.id, 10));
-		});
-	}
-	if (Mail.list.mailList.length === 0) {
-		const prevNext = root.querySelector(".prev_next");
-		if (prevNext) prevNext.style.display = "none";
-	} else {
-		const inforPage = root.querySelector("#infor_page");
-		if (inforPage) inforPage.textContent = `${Mail.page + 1}/${Math.ceil(Mail.list.mailList.length / Mail.pageSize)}`;
-	}
-	adjustButtons();
-}
-function adjustButtons() {
-	const root = _root$18();
-	if (Mail.list.length == 0) return;
-	const mailLength = Mail.list.mailList.length;
-	if (!(Mail.page > mailLength / Mail.pageSize - 1)) addEventNextAndPrevAdd("next");
-	else addEventNextAndPrevRemove("next");
-	if (!(Mail.page == 0)) addEventNextAndPrevAdd("prev");
-	else addEventNextAndPrevRemove("prev");
-	const nextSpan = root.querySelector(".next span");
-	if (nextSpan) nextSpan.disabled = mailLength <= Mail.pageSize || Mail.page > mailLength / Mail.pageSize - 1;
-	const prevSpan = root.querySelector(".prev span");
-	if (prevSpan) prevSpan.disabled = mailLength <= Mail.pageSize || Mail.page == 0;
-}
-function addEventNextAndPrevAdd(eventName) {
-	const root = _root$18();
-	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
-	const text = root.querySelector(`.prev_next .${eventName} span`);
-	if (text) text.classList.add("event_add_cursor");
-	if (overlay && text) overlay.textContent = text.textContent;
-	const cursor = root.querySelector(`.${eventName} .event_add_cursor`);
-	if (cursor) {
-		cursor.addEventListener("mouseover", () => {
-			if (text && text.classList.contains("event_add_cursor") && overlay) overlay.style.display = "block";
-		});
-		cursor.addEventListener("mouseout", () => {
-			if (overlay) overlay.style.display = "none";
-		});
-	}
-}
-function addEventNextAndPrevRemove(eventName) {
-	const root = _root$18();
-	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
-	const text = root.querySelector(`.prev_next .${eventName} span`);
-	if (overlay) overlay.style.display = "none";
-	if (text) text.classList.remove("event_add_cursor");
-}
-function offCreateMessagesOnWindowMailbox(event) {
-	event.stopImmediatePropagation();
-	onWindowMailbox();
-	removeCreateAllItem();
-}
-function sendCreateMessagesMail(event) {
-	const root = _root$18();
-	event.stopImmediatePropagation();
-	const zenyOk = root.querySelector("#zeny_ok");
-	if (zenyOk && window.getComputedStyle(zenyOk).display !== "none") {
-		ChatBox_default.addText(DB.getMessage(1110), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return;
-	}
-	let to = root.querySelector(".text_to")?.value || "";
-	to = to.length > 50 ? to.substring(0, 50) : to;
-	let title = root.querySelector(".input_title")?.value || "";
-	title = title.length > 50 ? title.substring(0, 50) : title;
-	let message = root.querySelector(".textarea_mail")?.value || "";
-	message = message.length > 198 ? message.substring(0, 198) : message;
-	if (title === "") {
-		ChatBox_default.addText(DB.getMessage(1106), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return;
-	}
-	const send_message = {
-		ReceiveName: to,
-		Header: title,
-		msg_len: message.length,
-		msg: message
-	};
-	const sendBtn = root.querySelector("#create_mail_send");
-	if (sendBtn) sendBtn.disabled = true;
-	Mail.parseMailSend(send_message);
-}
-function openWindowCreateMessages(event) {
-	event.stopImmediatePropagation();
-	onWindowCreateMessages();
-}
-/**
-* Open Create messages window size
-*/
-function onWindowCreateMessages() {
-	const root = _root$18();
-	removeCreateAllItem();
-	offWindowListMail();
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist2_bg.bmp", (url) => {
-		const body = root.querySelector(".body");
-		if (body) body.style.backgroundImage = `url(${url})`;
-	});
-	const title = root.querySelector("#title");
-	if (title) title.textContent = DB.getMessage(1026);
-}
-function offWindowListMail() {
-	const root = _root$18();
-	const prevNext = root.querySelector(".prev_next");
-	if (prevNext) prevNext.style.display = "none";
-	const blockMail = root.querySelector(".block_mail");
-	if (blockMail) blockMail.style.display = "none";
-	const createMail = root.querySelector(".block_create_mail");
-	if (createMail) createMail.style.display = "block";
-	const textarea = root.querySelector(".textarea_mail");
-	if (textarea) textarea.focus();
-}
-function onAddZenyInput(event) {
-	const root = _root$18();
-	event.stopImmediatePropagation();
-	const zenyAmt = root.querySelector("#zeny_amt");
-	if (zenyAmt) zenyAmt.style.display = "none";
-	const zenyOk = root.querySelector("#zeny_ok");
-	if (zenyOk) zenyOk.style.display = "inline-block";
-	const input = root.querySelector(".input_zeny_amt");
-	if (input) {
-		input.disabled = false;
-		input.focus();
-		input.select();
-	}
-	Mail.parseMailWinopen(2);
-}
-function onValidZenyInput(event) {
-	const root = _root$18();
-	event.stopImmediatePropagation();
-	const zenyAmt = root.querySelector("#zeny_amt");
-	if (zenyAmt) zenyAmt.style.display = "inline-block";
-	const zenyOk = root.querySelector("#zeny_ok");
-	if (zenyOk) zenyOk.style.display = "none";
-	const input = root.querySelector(".input_zeny_amt");
-	let val_Zeny = input ? input.value.split(",").join("") : "0";
-	val_Zeny = Math.min(Math.max(0, val_Zeny), SessionStorage_default.zeny);
-	val_Zeny = isNaN(val_Zeny) ? 0 : val_Zeny;
-	if (input) {
-		input.value = prettifyZeny$4(val_Zeny);
-		input.disabled = true;
-	}
-	Mail.parseMailSetattach(0, val_Zeny);
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$11(event) {
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-/**
-* Drop an item in the equipment, equip it if possible
-*/
-function onDrop$18(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return;
-	}
-	if (data.type !== "item" || data.from == "Storage" || data.from == "Mail") return;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			Mail.parseMailWinopen(1);
-			if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, parseInt(count, 10));
-			Mail.parseMailSetattach(item.index, parseInt(count, 10));
-			_preferences$54.item_add_email = item;
-			_preferences$54.item_add_email.count = parseInt(count, 10);
-			_preferences$54.save();
-		};
-		return;
-	}
-	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
-	Mail.parseMailWinopen(1);
-	Mail.parseMailSetattach(item.index, 1);
-	_preferences$54.item_add_email = item;
-	_preferences$54.item_add_email.count = 1;
-	_preferences$54.save();
-}
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$19() {
-	const root = _root$18();
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = Mail.getItemByIndex(idx);
-	if (!item) return;
-	const overlay = root.querySelector(".container_item .overlay");
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-/**
-* Hide the item name
-*/
-function onItemOut$20() {
-	const overlay = _root$18().querySelector(".container_item .overlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* Start dragging an item
-*/
-function onItemDragStart$15(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = Mail.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const url = this.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	img.decoding = "async";
-	img.src = url.replace(/^"/, "").replace(/"$/, "");
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Mail",
-		data: item
-	}));
-	onItemOut$20();
-}
-/**
-* Stop dragging an item
-*/
-function onItemDragEnd$16() {
-	delete window._OBJ_DRAG_;
-}
-/**
-* Get item info (open description window)
-*/
-function onItemInfo$23(event) {
-	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = Mail.getItemByIndex(index);
-	if (!item) return;
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		return;
-	}
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-}
-/**
-* Prettify number (15000 -> 15,000)
-*/
-function prettifyZeny$4(value) {
-	const num = String(value);
-	let i = 0;
-	const len = num.length;
-	let out = "";
-	while (i < len) {
-		out = num[len - i - 1] + out;
-		if ((i + 1) % 3 === 0 && i + 1 !== len) out = `,${out}`;
-		++i;
-	}
-	return out;
-}
-/**
-* Converte DeleteTime
-*/
-function formateDeleteTime(value) {
-	const ts_ms = value * 1e3;
-	const date_ob = new Date(ts_ms);
-	const year = date_ob.getFullYear();
-	return `${`0${date_ob.getMonth() + 1}`.slice(-2)} ${`0${date_ob.getDate()}`.slice(-2)} ${String(year).substring(2, 4)}`;
-}
-function removeCreateAllItem() {
-	Mail.parseMailWinopen(0);
-	Mail.clearFieldsItemZeny();
-}
-/**
-* Validate the type of information being dropped into the text field
-*/
-function onDropText$1(event) {
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	let data;
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {
-		return;
-	}
-	if (data.type == "item") return;
-	event.currentTarget.value = data;
-}
-function sleep(time) {
-	return new Promise((resolve) => setTimeout(resolve, time));
-}
-var Mail, _preferences$54, Mail_default;
-var init_Mail$1 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Preferences$1();
-	init_Client();
-	init_SessionStorage();
-	init_Renderer();
-	init_KeyEventHandler();
-	init_InputBox();
-	init_ItemInfo();
-	init_Inventory();
-	init_ChatBox();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_Mail$3();
-	init_Mail$2();
-	Mail = new GUIComponent("Mail", Mail_default$1);
-	/**
-	* Store Mail items
-	*/
-	Mail.list = [];
-	/**
-	* Determine data page size
-	*/
-	Mail.pageSize = 7;
-	/**
-	* know which page is current
-	*/
-	Mail.page = 0;
-	_preferences$54 = Preferences.get("Mail", {
-		x: 0,
-		y: 172,
-		width: 7,
-		height: 4,
-		show: false,
-		reduce: false,
-		magnet_top: false,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false,
-		item_add_email: {}
-	}, 2);
-	/**
-	* Render HTML
-	*/
-	Mail.render = () => Mail_default$2;
-	/**
-	* Has input fields, protect key events
-	*/
-	Mail.captureKeyEvents = true;
-	/**
-	* Apply preferences once append to body
-	*/
-	Mail.onAppend = function OnAppend() {
-		const root = _root$18();
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", this.onClosePressed.bind(this));
-		const inboxBtn = root.querySelector("#inbox");
-		if (inboxBtn) inboxBtn.addEventListener("click", offCreateMessagesOnWindowMailbox);
-		const writeBtn = root.querySelector("#write");
-		if (writeBtn) writeBtn.addEventListener("click", openWindowCreateMessages);
-		const cancelBtn = root.querySelector("#create_mail_cancel");
-		if (cancelBtn) cancelBtn.addEventListener("click", offCreateMessagesOnWindowMailbox);
-		const sendBtn = root.querySelector("#create_mail_send");
-		if (sendBtn) sendBtn.addEventListener("click", sendCreateMessagesMail);
-		updatePageMailItems();
-		const containerItem = root.querySelector(".container_item");
-		if (containerItem) {
-			containerItem.addEventListener("drop", onDrop$18);
-			containerItem.addEventListener("dragover", stopPropagation$11);
-			containerItem.addEventListener("mouseover", (event) => {
-				const item = event.target.closest(".item");
-				if (item) onItemOver$19.call(item, event);
-			});
-			containerItem.addEventListener("mouseout", (event) => {
-				const item = event.target.closest(".item");
-				if (item) onItemOut$20.call(item, event);
-			});
-			containerItem.addEventListener("dragstart", (event) => {
-				const item = event.target.closest(".item");
-				if (item) onItemDragStart$15.call(item, event);
-			});
-			containerItem.addEventListener("dragend", (event) => {
-				const item = event.target.closest(".item");
-				if (item) onItemDragEnd$16.call(item, event);
-			});
-			containerItem.addEventListener("contextmenu", (event) => {
-				const item = event.target.closest(".item");
-				if (item) onItemInfo$23.call(item, event);
-			});
-		}
-		root.querySelectorAll("input[type=text]").forEach((input) => {
-			input.addEventListener("drop", onDropText$1);
-			input.addEventListener("dragover", stopPropagation$11);
-		});
-		const textarea = root.querySelector("textarea");
-		if (textarea) {
-			textarea.addEventListener("drop", onDropText$1);
-			textarea.addEventListener("dragover", stopPropagation$11);
-		}
-		const zenyAmtBtn = root.querySelector("#zeny_amt");
-		if (zenyAmtBtn) zenyAmtBtn.addEventListener("click", onAddZenyInput);
-		const zenyOkBtn = root.querySelector("#zeny_ok");
-		if (zenyOkBtn) zenyOkBtn.addEventListener("click", onValidZenyInput);
-		onWindowMailbox();
-		const hostHeight = this._host.offsetHeight || 0;
-		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$54.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$54.x), Renderer.width - hostWidth)}px`;
-		this.draggable(".titlebar");
-	};
-	/**
-	* Add item to inventory
-	*/
-	Mail.addItemSub = function AddItemSub(Index) {
-		const root = _root$18();
-		const item = _preferences$54.item_add_email;
-		if (item.index !== Index) return false;
-		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
-		const it = DB.getItemInfo(item.ITID);
-		const content = root.querySelector(".container_item");
-		const oldItem = root.querySelector(".item");
-		if (oldItem) oldItem.remove();
-		if (content) content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
-		const hideEl = root.querySelector(".hide");
-		if (hideEl) hideEl.style.display = "block";
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
-			const icon = content ? content.querySelector(`.item[data-index="${item.index}"] .icon`) : null;
-			if (icon) icon.style.backgroundImage = `url(${data})`;
-		});
-		return true;
-	};
-	/**
-	* Send from mail to inventory - Remove item
-	*/
-	Mail.removeItem = function removeItem() {
-		const item = _root$18().querySelector(".item");
-		if (item) item.remove();
-	};
-	/**
-	* Send from mail to inventory - Remove zenys
-	*/
-	Mail.removeZeny = function removeZeny() {
-		const input = _root$18().querySelector(".input_zeny_amt");
-		if (input) input.value = "0";
-	};
-	/**
-	* Remove Mail from window (and so clean up items)
-	*/
-	Mail.onRemove = function OnRemove() {
-		this.list.length = 0;
-		_preferences$54.show = this._host.style.display !== "none";
-		_preferences$54.reduce = false;
-		_preferences$54.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$54.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$54.magnet_top = this.magnet.TOP;
-		_preferences$54.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$54.magnet_left = this.magnet.LEFT;
-		_preferences$54.magnet_right = this.magnet.RIGHT;
-		_preferences$54.save();
-	};
-	/**
-	* Extend Mail window size
-	*/
-	Mail.resize = function Resize(width, height) {
-		const root = _root$18();
-		width = Math.min(Math.max(width, 6), 9);
-		height = Math.min(Math.max(height, 2), 6);
-		const mailEl = root.querySelector("#Mail");
-		if (mailEl) {
-			mailEl.style.width = `${55 + width * 32}px`;
-			mailEl.style.height = `${50 + height * 32}px`;
-		}
-	};
-	/**
-	* Extend Mail window size
-	*/
-	Mail.mailList = function mailList(read) {
-		Mail.list = read;
-		updatePageMailItems();
-	};
-	/**
-	* Mail receive
-	*/
-	Mail.mailReceiveUpdate = function mailReceiveUpdate(newMail) {
-		if (Mail.list.mailList === void 0) return;
-		Mail.list.MailNumber = Mail.MailNumber + 1;
-		let validIsOpen = 0;
-		Mail.list.mailList = Mail.list.mailList.map((el) => {
-			let newElement = {};
-			if (el.MailID == newMail.MailID) {
-				newElement = {
-					DeleteTime: el.DeleteTime,
-					FromName: el.FromName,
-					HEADER: el.HEADER,
-					MailID: el.MailID,
-					isOpen: 1
-				};
-				validIsOpen = 1;
-			} else newElement = el;
-			return newElement;
-		});
-		if (!validIsOpen) Mail.list.mailList.push(newMail);
-		Mail.parseMailrefreshinbox();
-	};
-	/**
-	* Search in a list for an item by its index
-	*/
-	Mail.getItemByIndex = function getItemByIndex(index) {
-		const list = _preferences$54.item_add_email;
-		if (list.index == index) return list;
-		return null;
-	};
-	/**
-	* Responder to a mail.
-	*/
-	Mail.replyNewMail = function replyNewMail(fromName) {
-		const root = _root$18();
-		onWindowCreateMessages();
-		const textTo = root.querySelector(".text_to");
-		if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
-	};
-	/**
-	* Responder to a mail from friends.
-	*/
-	Mail.replyNewMailFriends = async function replyNewMailFriends(fromName) {
-		const root = _root$18();
-		Mail.append();
-		sleep(1).then(() => {
-			onWindowCreateMessages();
-			offWindowListMail();
-			const textTo = root.querySelector(".text_to");
-			if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
-			const inboxBtn = root.querySelector("#inbox");
-			if (inboxBtn) {
-				inboxBtn.replaceWith(inboxBtn.cloneNode(true));
-				const newInbox = root.querySelector("#inbox");
-				if (newInbox) {
-					newInbox.disabled = false;
-					newInbox.addEventListener("click", () => {});
-				}
-			}
-			const cancelBtn = root.querySelector("#create_mail_cancel");
-			if (cancelBtn) {
-				cancelBtn.replaceWith(cancelBtn.cloneNode(true));
-				const newCancel = root.querySelector("#create_mail_cancel");
-				if (newCancel) newCancel.addEventListener("click", this.onClosePressed.bind(this));
-			}
-		});
-	};
-	Mail.clearFieldsItemZeny = function clearFieldsItemZeny() {
-		const root = _root$18();
-		const item = root.querySelector(".item");
-		if (item) item.remove();
-		const zenyInput = root.querySelector(".input_zeny_amt");
-		if (zenyInput) zenyInput.value = "0";
-		const sendBtn = root.querySelector("#create_mail_send");
-		if (sendBtn) sendBtn.disabled = false;
-	};
-	Mail.onKeyDown = function onKeyDown(event) {
-		const shadow = this._shadow || this._host;
-		const focused = shadow ? shadow.activeElement : null;
-		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
-			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-				this.remove();
-				event.stopImmediatePropagation();
-				return false;
-			}
-			event.stopImmediatePropagation();
-			return true;
-		}
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			this.remove();
-			event.stopImmediatePropagation();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Callbacks
-	*/
-	Mail.onClosePressed = function onClosePressed() {};
-	Mail.parseMailWinopen = function parseMailWinopen() {};
-	Mail.parseMailrefreshinbox = function parseMailrefreshinbox() {};
-	Mail.parseMailSetattach = function parseMailSetattach() {};
-	Mail.reqRemoveItem = function reqRemoveItem() {};
-	Mail.parseMailSend = function parseMailSend() {};
-	Mail.openMail = function openMail() {};
-	Mail.replyMail = function replyMail() {};
-	Mail_default = UIManager.addComponent(Mail);
-}));
-//#endregion
-//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.html?raw
-var SkillTargetSelection_default$2;
-var init_SkillTargetSelection$2 = __esmMin((() => {
-	SkillTargetSelection_default$2 = "<div id=\"SkillTargetSelection\">\r\n	<canvas class=\"skill-name\"></canvas>\r\n	<canvas class=\"skill-description\"></canvas>\r\n	<canvas class=\"skill-level\"></canvas>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.css?raw
-var SkillTargetSelection_default$1;
-var init_SkillTargetSelection$1 = __esmMin((() => {
-	SkillTargetSelection_default$1 = ":host {\r\n	top: 0;\r\n	left: 0;\r\n	overflow: visible;\r\n	pointer-events: none;\r\n}\r\n\r\n#SkillTargetSelection {\r\n	display: block;\r\n}\r\n\r\n.skill-name {\r\n	position: fixed;\r\n	top: 45px;\r\n	z-index: 100;\r\n	border-radius: 3px;\r\n	border: 1px solid #555;\r\n	pointer-events: auto;\r\n}\r\n\r\n.skill-description {\r\n	position: fixed;\r\n	bottom: 60px;\r\n	z-index: 100;\r\n	border-radius: 3px;\r\n	border: 1px solid #555;\r\n	pointer-events: auto;\r\n}\r\n\r\n.skill-level {\r\n	position: fixed;\r\n	left: 0;\r\n	top: 0;\r\n	z-index: 100;\r\n	pointer-events: auto;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.js
-/**
-* Render text into the canvas
-*
-* @param {string} text to render
-* @param {CanvasElement} canvas node
-*/
-function renderText(text, canvas) {
-	const fontSize = 12;
-	const ctx = canvas.getContext("2d");
-	ctx.font = `${fontSize}px Arial`;
-	canvas.width = ctx.measureText(text).width + 14;
-	canvas.height = 23;
-	ctx.font = `${fontSize}px Arial`;
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = "rgba(0,0,0,0.5)";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.fillStyle = "black";
-	ctx.fillText(text, 8, 17);
-	ctx.fillStyle = "#00FF00";
-	ctx.fillText(text, 7, 16);
-	canvas.style.left = `${Renderer.width - canvas.width >> 1}px`;
-}
-/**
-* Render level text into the canvas
-*
-* @param {string} text to render
-* @param {CanvasElement} canvas node
-*/
-function renderLevel(text, canvas) {
-	const fontSize = 24;
-	const ctx = canvas.getContext("2d");
-	canvas.width = 35;
-	canvas.height = 35;
-	ctx.font = `${fontSize}px Arial`;
-	ctx.strokeStyle = "#333333";
-	ctx.lineWidth = 3;
-	ctx.strokeText(text, 0, 30);
-	ctx.fillStyle = "white";
-	ctx.fillText(text, 0, 30);
-}
-/**
-* Intersect entity when clicking
-*/
-function intersectEntities(event) {
-	if (_mousedownHandler) {
-		window.removeEventListener("mousedown", _mousedownHandler, true);
-		_mousedownHandler = null;
-	}
-	SkillTargetSelection.remove();
-	if (!Mouse.intersect) return false;
-	if (event.which !== 1) return true;
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	if (_flag & SkillTargetSelection.TYPE.PLACE) {
-		SkillTargetSelection.onUseSkillToPos(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, Mouse.world.x, Mouse.world.y);
-		return false;
-	}
-	const entity = EntityManager.getOverEntity();
-	if (!entity) return false;
-	if (entity.objecttype === Entity.TYPE_TRAP && !(_flag & SkillTargetSelection.TYPE.TRAP)) return false;
-	intersectEntity(entity);
-	return false;
-}
-/**
-* Intersect with an entity
-*
-* @param {object} entity
-*/
-function intersectEntity(entity) {
-	let target = 0;
-	switch (entity.objecttype) {
-		case Entity.TYPE_MOB:
-		case Entity.TYPE_UNIT:
-			target = SkillTargetSelection.TYPE.ENEMY | SkillTargetSelection.TYPE.PET;
-			break;
-		case Entity.TYPE_TRAP:
-			target = SkillTargetSelection.TYPE.TRAP;
-			break;
-		case Entity.TYPE_HOM:
-		case Entity.TYPE_MERC:
-			target = SkillTargetSelection.TYPE.HOMUN | SkillTargetSelection.TYPE.FRIEND;
-			break;
-		case Entity.TYPE_PC:
-		case Entity.TYPE_ELEM:
-			target = SkillTargetSelection.TYPE.FRIEND;
-			break;
-		default: return;
-	}
-	if (!(target & _flag) && !KEYS.SHIFT && !Controls_default.noshift && !SkillTargetSelection.checkMapState(entity)) return;
-	if (_flag === SkillTargetSelection.TYPE.PET) {
-		SkillTargetSelection.onPetSelected(entity.GID);
-		return;
-	}
-	if (_flag & SkillTargetSelection.TYPE.ENEMY && entity === SessionStorage_default.Entity) return;
-	SkillTargetSelection.onUseSkillToId(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entity.GID);
-}
-var SkillTargetSelection, _flag, _skill, _skillName, _description, _skillLevel, _mousedownHandler, SkillTargetSelection_default;
-var init_SkillTargetSelection = __esmMin((() => {
-	init_DBManager();
-	init_SkillInfo();
-	init_KeyEventHandler();
-	init_MouseEventHandler();
-	init_Renderer();
-	init_Entity$1();
-	init_EntityManager();
-	init_SessionStorage();
-	init_Controls();
-	init_UIManager();
-	init_GUIComponent();
-	init_CursorManager();
-	init_PartyFriends();
-	init_SkillTargetSelection$2();
-	init_SkillTargetSelection$1();
-	SkillTargetSelection = new GUIComponent("SkillTargetSelection", SkillTargetSelection_default$1);
-	SkillTargetSelection.render = () => SkillTargetSelection_default$2;
-	/**
-	* Mouse can cross this UI
-	*/
-	SkillTargetSelection.mouseMode = GUIComponent.MouseMode.CROSS;
-	/**
-	* Do not focus this UI
-	*/
-	SkillTargetSelection.needFocus = false;
-	/**
-	* Handle ESCAPE before other handlers
-	*/
-	SkillTargetSelection.captureKeyEvents = true;
-	/**
-	* @var {constant}
-	*/
-	SkillTargetSelection.TYPE = {
-		ENEMY: 1,
-		PLACE: 2,
-		SELF: 4,
-		FRIEND: 16,
-		TRAP: 32,
-		TARGET: 51,
-		PET: 64,
-		HOMUN: 128
-	};
-	_flag = 0;
-	_mousedownHandler = null;
-	/**
-	* Initialize component
-	*/
-	SkillTargetSelection.init = function init() {
-		const root = this.getRoot();
-		_skillName = root.querySelector(".skill-name");
-		_description = root.querySelector(".skill-description");
-		_skillLevel = root.querySelector(".skill-level");
-		_skillName.style.display = "none";
-		_description.style.display = "none";
-		_skillLevel.style.display = "none";
-		window.addEventListener("mousemove", (event) => {
-			_skillLevel.style.left = `${event.pageX + 20}px`;
-			_skillLevel.style.top = `${event.pageY - 18}px`;
-		});
-		renderText(DB.getMessage(234), _description);
-	};
-	/**
-	* Append to body
-	*/
-	SkillTargetSelection.onAppend = function onAppend() {
-		_skillName.style.display = "block";
-		_description.style.display = "block";
-		_skillLevel.style.display = "block";
-		_mousedownHandler = (event) => {
-			intersectEntities(event);
-		};
-		window.addEventListener("mousedown", _mousedownHandler, true);
-	};
-	/**
-	* Possible to exit using ESCAPE
-	*/
-	SkillTargetSelection.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			this.remove();
-			event.stopImmediatePropagation();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Remove from body
-	*/
-	SkillTargetSelection.onRemove = function onRemove() {
-		if (_mousedownHandler) {
-			window.removeEventListener("mousedown", _mousedownHandler, true);
-			_mousedownHandler = null;
-		}
-		Cursor.blockMagnetism = false;
-		Cursor.freeze = false;
-		Cursor.setType(Cursor.ACTION.DEFAULT);
-		EntityManager.setSupportPicking(false);
-		_skillName.style.display = "none";
-		_description.style.display = "none";
-		_skillLevel.style.display = "none";
-		Mouse.state = Mouse.MOUSE_STATE.NORMAL;
-	};
-	/**
-	* Set informations for the target
-	*
-	* @param {object} skill
-	* @param {number} skill type
-	* @param {string} description name (optional)
-	*/
-	SkillTargetSelection.set = function set(skill, target, description) {
-		_flag = target;
-		_skill = skill;
-		if (!_flag) return;
-		if (SessionStorage_default.TouchTargeting) {
-			const entityFocus = EntityManager.getFocusEntity();
-			if (entityFocus) {
-				if (_flag & SkillTargetSelection.TYPE.PLACE) SkillTargetSelection.onUseSkillToPos(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entityFocus.position[0], entityFocus.position[1]);
-				else SkillTargetSelection.onUseSkillToId(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entityFocus.GID);
-				SkillTargetSelection.remove();
-				return;
-			}
-		}
-		if (_flag & SkillTargetSelection.TYPE.PLACE) Cursor.blockMagnetism = true;
-		Mouse.state = Mouse.MOUSE_STATE.USESKILL;
-		EntityManager.setSupportPicking((_flag & SkillTargetSelection.TYPE.FRIEND) > 0);
-		const sk = SkillInfo[skill.SKID];
-		renderText(description || sk.SkillName, _skillName);
-		renderLevel(_skill.useLevel ? _skill.useLevel : _skill.level, _skillLevel);
-		Cursor.setType(Cursor.ACTION.TARGET);
-		Cursor.freeze = true;
-	};
-	SkillTargetSelection.setSkillLevelDelta = function setSkillLevelDelta(delta) {
-		if (!SkillInfo[_skill.SKID].bSeperateLv) return;
-		if (!_skill.useLevel) _skill.useLevel = _skill.level;
-		_skill.useLevel += delta;
-		if (_skill.useLevel < 1) _skill.useLevel = 1;
-		if (_skill.useLevel > _skill.level) _skill.useLevel = _skill.level;
-		renderLevel(_skill.useLevel, _skillLevel);
-	};
-	/**
-	* Intersect with an entity ID
-	* (used in party UI)
-	*/
-	SkillTargetSelection.intersectEntityId = function intersectEntityId(id) {
-		const entity = EntityManager.get(id);
-		if (entity) intersectEntity(entity);
-	};
-	/**
-	* Check if can use Skill on target based on MapState
-	*/
-	SkillTargetSelection.checkMapState = function checkMapState(entity) {
-		if (SessionStorage_default.mapState.isPVP) {
-			if (SessionStorage_default.hasParty && controller.isGroupMember(entity.display.name)) return false;
-			return true;
-		} else if (SessionStorage_default.mapState.isGVG) {
-			if (SessionStorage_default.Entity.GUID > 0 && entity.GUID !== SessionStorage_default.Entity.GUID || entity.GUID == 0 && entity !== SessionStorage_default.Entity) return true;
-		}
-		return false;
-	};
-	/**
-	* Functions to define
-	*/
-	SkillTargetSelection.onUseSkillToId = function onUseSkillToId() {};
-	SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos() {};
-	SkillTargetSelection_default = UIManager.addComponent(SkillTargetSelection);
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.html?raw
-var PartyFriendsV0_default$2;
-var init_PartyFriendsV0$2 = __esmMin((() => {
-	PartyFriendsV0_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"party\"> <ui-text msg=\"103\">Party</ui-text> <span class=\"partyname\"></span> </span>\r\n			<span class=\"friend\">\r\n				<ui-text msg=\"102\">Friends</ui-text> (<span class=\"friendcount\">0</span>/<span class=\"friendmax\"\r\n					>40</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\">\r\n		<ui-image src=\"basic_interface/mesbtn_mid.bmp\"></ui-image>\r\n		<ui-button\r\n			class=\"mail\"\r\n			bg=\"basic_interface/mesbtn_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"98\">Send Message</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"privatemessage\"\r\n			bg=\"basic_interface/mesbtn_02.bmp\"\r\n			hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"99\">1:1 Chat</ui-text></div>\r\n		</ui-button>\r\n		<button class=\"unknown\"><ui-image src=\"basic_interface/mesbtn_03.bmp\"></ui-image></button>\r\n		<ui-button\r\n			class=\"info\"\r\n			bg=\"basic_interface/mesbtn_04.bmp\"\r\n			hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"101\">Party Setup</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"remove\"\r\n			bg=\"basic_interface/mesbtn_05.bmp\"\r\n			hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"97\">Expel from party</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"351\">Delete</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock on\"\r\n			bg=\"basic_interface/mesbtn_06.bmp\"\r\n			hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1626\">Activate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock off\"\r\n			bg=\"basic_interface/mesbtn_07.bmp\"\r\n			hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1627\">Deactivate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party create\"\r\n			bg=\"basic_interface/mesbtn_08.bmp\"\r\n			hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2054\">Create Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party add\"\r\n			bg=\"basic_interface/mesbtn_010.bmp\"\r\n			hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2056\">Party Invitation</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party leave\"\r\n			bg=\"basic_interface/mesbtn_09.bmp\"\r\n			hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"96\">Leave Party</ui-text></div>\r\n		</ui-button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid.bmp\"></ui-image>\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<button class=\"resize\"><ui-image src=\"btn_resize.bmp\"></ui-image></button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.css?raw
-var PartyFriendsV0_default$1;
-var init_PartyFriendsV0$1 = __esmMin((() => {
-	PartyFriendsV0_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n#PartyFriends .navigation button,\r\n#PartyFriends .navigation ui-button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n#PartyFriends .navigation button .overlay,\r\n#PartyFriends .navigation ui-button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#PartyFriends .navigation button:hover .overlay,\r\n#PartyFriends .navigation ui-button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.js
-/**
-* Helper: query inside shadow root
-*/
-function _root$17() {
-	return PartyFriendsV0._shadow || PartyFriendsV0._host;
-}
-/**
-* Helper: escape HTML
-*/
-function _escapeHTML$7(text) {
-	const div = document.createElement("div");
-	div.textContent = text;
-	return div.innerHTML;
-}
-/**
-* Resizing UI
-*/
-function onResize$16() {
-	const host = PartyFriendsV0._host;
-	const top = host.offsetTop;
-	const left = host.offsetLeft;
-	let lastWidth = 0;
-	let lastHeight = 0;
-	function resizing() {
-		const extraX = -20;
-		const extraY = 46;
-		let w = Math.floor((Mouse.screen.x - left - extraX) / 20);
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 20);
-		w = Math.min(Math.max(w, 12), 13);
-		h = Math.min(Math.max(h, 6), 12);
-		if (w === lastWidth && h === lastHeight) return;
-		PartyFriendsV0.resize(w, h);
-		lastWidth = w;
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-/**
-* Close the window
-*/
-function onClose$13() {
-	PartyFriendsV0.ui.hide();
-	PartyHelper_default.remove();
-}
-/**
-* Enable or disable the lock features
-*/
-function onToggleLock$1() {
-	_preferences$53.lock = !_preferences$53.lock;
-	_preferences$53.save();
-	const root = _root$17();
-	const lockOn = root.querySelector(".lock.on");
-	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$53.lock) {
-		if (lockOn) lockOn.style.display = "inline-block";
-		if (lockOff) lockOff.style.display = "none";
-	} else {
-		if (lockOn) lockOn.style.display = "none";
-		if (lockOff) lockOff.style.display = "inline-block";
-	}
-}
-/**
-* Move to the other tab (Friend -> Party or Party -> Friend)
-*/
-function onChangeTab$2() {
-	const root = _root$17();
-	_preferences$53.friend = !_preferences$53.friend;
-	_preferences$53.save();
-	const friendEls = root.querySelectorAll(".friend");
-	const partyEls = root.querySelectorAll(".party");
-	if (_preferences$53.friend) {
-		friendEls.forEach((el) => {
-			el.style.display = "";
-		});
-		partyEls.forEach((el) => {
-			el.style.display = "none";
-		});
-	} else {
-		friendEls.forEach((el) => {
-			el.style.display = "none";
-		});
-		partyEls.forEach((el) => {
-			el.style.display = "";
-		});
-		if (SessionStorage_default.hasParty) {
-			const createBtn = root.querySelector(".party.create");
-			if (createBtn) createBtn.style.display = "none";
-			if (!SessionStorage_default.isPartyLeader) {
-				const addBtn = root.querySelector(".party.add");
-				if (addBtn) addBtn.style.display = "none";
-			}
-		} else {
-			const addBtn = root.querySelector(".party.add");
-			const leaveBtn = root.querySelector(".party.leave");
-			if (addBtn) addBtn.style.display = "none";
-			if (leaveBtn) leaveBtn.style.display = "none";
-		}
-	}
-	root.querySelectorAll(".node").forEach((n) => n.classList.remove("selection"));
-	_index$2 = -1;
-}
-/**
-* Ask confirmation to remove a character from the list
-*/
-function onRequestRemoveSelection$1() {
-	if (_index$2 < 0 || _preferences$53.lock || _preferences$53.friend && !_friends$1[_index$2] || !_preferences$53.friend && !_party$3[_index$2]) return;
-	const text = _preferences$53.friend ? DB.getMessage(356) : DB.getMessage(363);
-	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$53.friend) PartyFriendsV0.onRemoveFriend(_index$2);
-		else PartyFriendsV0.onExpelMember(_party$3[_index$2].AID, _party$3[_index$2].characterName);
-	});
-}
-/**
-* Add nick name to chatbox
-* Or open a new conversation window (todo)
-*/
-function onRequestPrivateMessage$1() {
-	if (_index$2 < 0 || _preferences$53.lock) return;
-	const name = _preferences$53.friend ? _friends$1[_index$2].Name : _party$3[_index$2].characterName;
-	if (PacketVerManager_default.value >= 20090617) {
-		WhisperBox.show(name);
-		return;
-	}
-	const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
-	if (chatRoot) {
-		const usernameInput = chatRoot.querySelector(".username");
-		if (usernameInput) usernameInput.value = name;
-		const messageInput = chatRoot.querySelector(".message");
-		if (messageInput) messageInput.focus();
-	}
-}
-/**
-* Right click on a character
-*/
-function onRightClickInfo$1() {
-	if (_preferences$53.lock) return;
-	ContextMenu_default.remove();
-	ContextMenu_default.append();
-	if (_preferences$53.friend) {
-		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
-		if (_friends$1[_index$2].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection$1);
-	} else {
-		ContextMenu_default.addElement(DB.getMessage(129), onRequestInformation);
-		if (_party$3[_index$2].GID === SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty$1);
-		else {
-			ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage$1);
-			if (SessionStorage_default.isPartyLeader) {
-				ContextMenu_default.addElement(DB.getMessage(97), onRequestRemoveSelection$1);
-				ContextMenu_default.addElement(DB.getMessage(1532), onRequestPartyDelegation$1);
-			}
-		}
-	}
-}
-/**
-* Request player information
-*/
-function onRequestInformation() {
-	if (_preferences$53.lock) return;
-	UIManager.showMessageBox(DB.getMessage(191), "ok");
-}
-/**
-* Request to leave a party
-*/
-function onRequestLeaveParty$1() {
-	if (_preferences$53.lock) return;
-	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
-		PartyFriendsV0.onRequestLeave();
-	});
-}
-/**
-* Request to change party leader
-*/
-function onRequestPartyDelegation$1() {
-	if (_preferences$53.lock) return;
-	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
-		PartyFriendsV0.onRequestChangeLeader(_party$3[_index$2].AID);
-	});
-}
-/**
-* Change selection (click on a friend/party)
-*/
-function onSelectionChange$1(nodeEl) {
-	_root$17().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
-	const nameEl = nodeEl.querySelector(".name");
-	if (nameEl) nameEl.classList.add("selection");
-	const siblings = nodeEl.parentNode.querySelectorAll(".node");
-	_index$2 = Array.prototype.indexOf.call(siblings, nodeEl);
-	if (SkillTargetSelection_default.intersectEntityId) {
-		const entityId = _preferences$53.friend ? _friends$1[_index$2].AID : _party$3[_index$2].AID;
-		SkillTargetSelection_default.intersectEntityId(entityId);
-	}
-}
-/**
-* Open the party info window
-*/
-function onOpenPartyOptionWindow$1() {
-	if (_preferences$53.lock) return;
-	const type = _preferences$53.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
-	if (PartyHelper_default.__active && PartyHelper_default.getType() === type) {
-		PartyHelper_default.remove();
-		return;
-	}
-	PartyHelper_default.append();
-	if (type === PartyHelper_default.Type.FRIEND_SETUP) {
-		const whisperPrefs = WhisperBox.preferences;
-		PartyHelper_default.setType(PartyHelper_default.Type.FRIEND_SETUP);
-		PartyHelper_default.setFriendOptions(whisperPrefs);
-	} else {
-		PartyHelper_default.setType(PartyHelper_default.Type.SETUP);
-		PartyHelper_default.setOptions(_options$1, SessionStorage_default.isPartyLeader);
-	}
-}
-/**
-* Open the window to invite people
-*/
-function onOpenPartyInviteWindow$1() {
-	if (_preferences$53.lock) return;
-	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.INVITE) {
-		PartyHelper_default.remove();
-		return;
-	}
-	PartyHelper_default.append();
-	PartyHelper_default.setType(PartyHelper_default.Type.INVITE);
-}
-/**
-* Open the window to create a party
-*/
-function onOpenPartyCreationWindow$1() {
-	if (_preferences$53.lock) return;
-	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.CREATE) {
-		PartyHelper_default.remove();
-		return;
-	}
-	PartyHelper_default.append();
-	PartyHelper_default.setType(PartyHelper_default.Type.CREATE);
-}
-/**
-* Open the window to manage mails
-*/
-function onOpenMailCreationWindow$1() {
-	if (_preferences$53.lock) return;
-	let recipient = "";
-	if (_preferences$53.friend && _friends$1[_index$2]) recipient = _friends$1[_index$2].Name;
-	else if (!_preferences$53.friend && _party$3[_index$2]) recipient = _party$3[_index$2].characterName;
-	if (recipient) Mail_default.replyNewMailFriends(recipient);
-	else Mail_default.append();
-}
-var PartyFriendsV0, _index$2, _friends$1, _party$3, _options$1, _preferences$53, PartyFriendsV0_default;
-var init_PartyFriendsV0 = __esmMin((() => {
-	init_DBManager();
-	init_Preferences$1();
-	init_Client();
-	init_Renderer();
-	init_SessionStorage();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_Elements();
-	init_GUIComponent();
-	init_PacketVerManager();
-	init_PartyHelper();
-	init_ContextMenu();
-	init_Mail$1();
-	init_ChatBox();
-	init_WhisperBox();
-	init_SkillTargetSelection();
-	init_PartyFriendsV0$2();
-	init_PartyFriendsV0$1();
-	PartyFriendsV0 = new GUIComponent("PartyFriendsV0", PartyFriendsV0_default$1);
-	_index$2 = -1;
-	_friends$1 = [];
-	_party$3 = [];
-	_options$1 = {
-		exp_share: 0,
-		item_share: 0,
-		item_sharing_type: 0
-	};
-	_preferences$53 = Preferences.get("PartyFriendsV0", {
-		x: 200,
-		y: 200,
-		width: 12,
-		height: 6,
-		show: false,
-		friend: true,
-		lock: false
-	}, 1);
-	/**
-	* Render HTML
-	*/
-	PartyFriendsV0.render = () => PartyFriendsV0_default$2;
-	/**
-	* Initialize the component (event listener, etc.)
-	*/
-	PartyFriendsV0.init = function init() {
-		const root = _root$17();
-		PartyHelper_default.prepare();
-		const baseBtn = root.querySelector(".base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		});
-		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$13);
-		const lockOn = root.querySelector(".lock.on");
-		const lockOff = root.querySelector(".lock.off");
-		if (lockOn) lockOn.addEventListener("mousedown", onToggleLock$1);
-		if (lockOff) lockOff.addEventListener("mousedown", onToggleLock$1);
-		root.querySelectorAll(".switchtab.off").forEach((el) => {
-			el.addEventListener("mousedown", onChangeTab$2);
-		});
-		const removeBtn = root.querySelector(".remove");
-		if (removeBtn) removeBtn.addEventListener("mousedown", onRequestRemoveSelection$1);
-		const pmBtn = root.querySelector(".privatemessage");
-		if (pmBtn) pmBtn.addEventListener("mousedown", onRequestPrivateMessage$1);
-		const leaveBtn = root.querySelector(".party.leave");
-		if (leaveBtn) leaveBtn.addEventListener("mousedown", onRequestLeaveParty$1);
-		const resizeBtn = root.querySelector(".resize");
-		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$16);
-		const mailBtn = root.querySelector(".mail");
-		if (mailBtn) mailBtn.addEventListener("mousedown", onOpenMailCreationWindow$1);
-		const createBtn = root.querySelector(".party.create");
-		if (createBtn) createBtn.addEventListener("mousedown", onOpenPartyCreationWindow$1);
-		const addBtn = root.querySelector(".party.add");
-		if (addBtn) addBtn.addEventListener("mousedown", onOpenPartyInviteWindow$1);
-		const infoBtn = root.querySelector(".info");
-		if (infoBtn) infoBtn.addEventListener("mousedown", onOpenPartyOptionWindow$1);
-		const contentEl = root.querySelector(".content");
-		if (contentEl) {
-			contentEl.addEventListener("contextmenu", (e) => {
-				if (e.target.closest(".node")) {
-					e.preventDefault();
-					e.stopImmediatePropagation();
-					onRightClickInfo$1();
-				}
-			});
-			contentEl.addEventListener("mousedown", (e) => {
-				const node = e.target.closest(".node");
-				if (node) onSelectionChange$1(node);
-			});
-		}
-		this.draggable(".titlebar");
-	};
-	/**
-	* Once append to the DOM, start to position the UI
-	*/
-	PartyFriendsV0.onAppend = function onAppend() {
-		_preferences$53.friend = !_preferences$53.friend;
-		onChangeTab$2();
-		const root = _root$17();
-		const lockOn = root.querySelector(".lock.on");
-		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$53.lock) {
-			if (lockOn) lockOn.style.display = "inline-block";
-			if (lockOff) lockOff.style.display = "none";
-		} else {
-			if (lockOn) lockOn.style.display = "none";
-			if (lockOff) lockOff.style.display = "inline-block";
-		}
-		this.resize(_preferences$53.width, _preferences$53.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$53.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$53.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		if (!_preferences$53.show) this.ui.hide();
-	};
-	/**
-	* Clean up UI
-	*/
-	PartyFriendsV0.clean = function clean() {
-		_party$3.length = 0;
-		_friends$1.length = 0;
-		_index$2 = -1;
-		_options$1.exp_share = 0;
-		_options$1.item_share = 0;
-		_options$1.item_sharing_type = 0;
-		const root = _root$17();
-		const partyName = root.querySelector(".partyname");
-		if (partyName) partyName.textContent = "";
-		const friendCount = root.querySelector(".friendcount");
-		if (friendCount) friendCount.textContent = "0";
-		const partyContent = root.querySelector(".content .party");
-		if (partyContent) partyContent.innerHTML = "";
-		const friendContent = root.querySelector(".content .friend");
-		if (friendContent) friendContent.innerHTML = "";
-		_preferences$53.friend = !_preferences$53.friend;
-		onChangeTab$2();
-	};
-	/**
-	* Removing the UI from window, save preferences
-	*/
-	PartyFriendsV0.onRemove = function onRemove() {
-		_preferences$53.show = this.ui.is(":visible");
-		_preferences$53.y = parseInt(this._host.style.top, 10);
-		_preferences$53.x = parseInt(this._host.style.left, 10);
-		_preferences$53.save();
-	};
-	/**
-	* Window Shortcuts
-	*/
-	PartyFriendsV0.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "FRIEND":
-				if (_preferences$53.friend) this.ui.toggle();
-				else {
-					_preferences$53.friend = false;
-					onChangeTab$2();
-					this.ui.show();
-				}
-				if (this.ui.is(":visible")) this.focus();
-				break;
-			case "PARTY":
-				if (!_preferences$53.friend) this.ui.toggle();
-				else {
-					_preferences$53.friend = true;
-					onChangeTab$2();
-					this.ui.show();
-				}
-				if (this.ui.is(":visible")) this.focus();
-				break;
-		}
-	};
-	/**
-	* Show/Hide UI
-	*/
-	PartyFriendsV0.toggle = function toggle() {
-		this.ui.toggle();
-		PartyHelper_default.remove();
-		if (this.ui.is(":visible")) this.focus();
-	};
-	PartyFriendsV0.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.toggle();
-	};
-	/**
-	* Set friends to UI
-	*
-	* @param {Array} friends list
-	*/
-	PartyFriendsV0.setFriends = function setFriends(friends) {
-		const count = friends.length;
-		const root = _root$17();
-		const friendContainer = root.querySelector(".content .friend");
-		_friends$1.length = friends.length;
-		if (friendContainer) friendContainer.innerHTML = "";
-		for (let i = 0; i < count; i++) {
-			_friends$1[i] = friends[i];
-			const div = document.createElement("div");
-			div.className = `node${friends[i].State === 0 ? " online" : ""}`;
-			div.innerHTML = `<span class="name">${_escapeHTML$7(friends[i].Name)}</span>`;
-			if (friendContainer) friendContainer.appendChild(div);
-		}
-		const friendCount = root.querySelector(".friendcount");
-		if (friendCount) friendCount.textContent = String(count);
-		_index$2 = -1;
-	};
-	/**
-	* Update friend (online/offline) state
-	*
-	* @param {number} index
-	* @param {boolean} state
-	*/
-	PartyFriendsV0.updateFriendState = function updateFriendState(index, state) {
-		const node = _root$17().querySelectorAll(".content .friend .node")[index];
-		_friends$1[index].State = state;
-		if (state) {
-			if (node) node.style.backgroundImage = "";
-			ChatBox_default.addText(DB.getMessage(1042).replace("%s", _friends$1[index].Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
-			return;
-		}
-		ChatBox_default.addText(DB.getMessage(1041).replace("%s", _friends$1[index].Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", function(url) {
-			if (node) node.style.backgroundImage = `url(${url})`;
-		});
-	};
-	/**
-	* Update/Add a friend to the list
-	*
-	* @param {number} index
-	* @param {object} friend data
-	*/
-	PartyFriendsV0.updateFriend = function updateFriend(idx, friend) {
-		const root = _root$17();
-		if (!_friends$1[idx]) {
-			_friends$1[idx] = {};
-			const friendContainer = root.querySelector(".content .friend");
-			if (friendContainer) {
-				const div = document.createElement("div");
-				div.className = "node";
-				div.innerHTML = "<span class=\"name\"></span>";
-				friendContainer.appendChild(div);
-			}
-			const friendCount = root.querySelector(".friendcount");
-			if (friendCount) friendCount.textContent = String(_friends$1.length);
-		}
-		_friends$1[idx].Name = friend.Name;
-		_friends$1[idx].GID = friend.GID;
-		_friends$1[idx].AID = friend.AID;
-		_friends$1[idx].State = friend.State || 0;
-		const node = root.querySelectorAll(".content .friend .node")[idx];
-		if (node) {
-			const nameEl = node.querySelector(".name");
-			if (nameEl) nameEl.textContent = friend.Name;
-		}
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/grp_online.bmp", function(url) {
-			if (node) node.style.backgroundImage = `url(${url})`;
-		});
-	};
-	/**
-	* Remove friend from list
-	*
-	* @param {number} index
-	*/
-	PartyFriendsV0.removeFriend = function removeFriend(index) {
-		_friends$1.splice(index, 1);
-		const root = _root$17();
-		const nodes = root.querySelectorAll(".content .friend .node");
-		if (nodes[index]) nodes[index].remove();
-		const friendCount = root.querySelector(".friendcount");
-		if (friendCount) friendCount.textContent = String(_friends$1.length);
-		if (_index$2 === index) _index$2 = -1;
-	};
-	/**
-	* Add members to party
-	*
-	* @param {string} party name
-	* @param {Array} member list
-	*/
-	PartyFriendsV0.setParty = function setParty(name, members) {
-		const root = _root$17();
-		const partyName = root.querySelector(".partyname");
-		if (partyName) partyName.textContent = `(${name})`;
-		const partyContent = root.querySelector(".content .party");
-		if (partyContent) partyContent.innerHTML = "";
-		SessionStorage_default.isPartyLeader = false;
-		const createBtn = root.querySelector(".party.create");
-		const leaveBtn = root.querySelector(".party.leave");
-		if (createBtn) createBtn.style.display = "none";
-		if (leaveBtn) leaveBtn.style.display = "inline-block";
-		const count = members.length;
-		_party$3.length = 0;
-		for (let i = 0; i < count; i++) PartyFriendsV0.addPartyMember(members[i]);
-		_index$2 = -1;
-	};
-	/**
-	* Add a new party member to the list
-	*
-	* @param {object} player information
-	*/
-	PartyFriendsV0.addPartyMember = function addPartyMember(player) {
-		const role = player.role || player.Role || 0;
-		const count = _party$3.length;
-		const root = _root$17();
-		let node;
-		if (player.AID === SessionStorage_default.AID) {
-			SessionStorage_default.isPartyLeader = role === 0;
-			const addBtn = root.querySelector(".party.add");
-			if (addBtn) addBtn.style.display = SessionStorage_default.isPartyLeader ? "inline-block" : "none";
-		}
-		const nodes = root.querySelectorAll(".content .party .node");
-		for (let i = 0; i < count; ++i) if (_party$3[i].AID === player.AID && _party$3[i].characterName === player.characterName) {
-			node = nodes[i];
-			break;
-		}
-		if (node) {
-			node.classList.remove("leader", "online");
-			if (role === 0) node.classList.add("leader");
-			if (player.state === 0) node.classList.add("online");
-			node.style.backgroundImage = "";
-			const nameEl = node.querySelector(".name");
-			if (nameEl) nameEl.textContent = player.characterName;
-			const mapEl = node.querySelector(".map");
-			if (mapEl) mapEl.textContent = `(${DB.getMapName(player.mapName)})`;
-		} else {
-			player = Object.assign({}, player);
-			_party$3.push(player);
-			const partyContent = root.querySelector(".content .party");
-			if (partyContent) {
-				const div = document.createElement("div");
-				div.className = `node${role === 0 ? " leader" : ""}${player.state === 0 ? " online" : ""}`;
-				div.innerHTML = `<span class="name">${_escapeHTML$7(player.characterName)}</span><span class="map">(${_escapeHTML$7(DB.getMapName(player.mapName))})</span><canvas class="life" width="60" height="5"></canvas> <span class="hp"></span>`;
-				partyContent.appendChild(div);
-				node = div;
-			}
-		}
-		if (!node) return;
-		const hpEl = node.querySelector(".hp");
-		if (hpEl) hpEl.textContent = "";
-		const canvas = node.querySelector("canvas");
-		if (canvas) {
-			const ctx = canvas.getContext("2d");
-			ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-			if (player.life && player.life.display) {
-				ctx.drawImage(player.life.canvas, 0, 0, 60, 5, 0, 0, 60, 5);
-				if (hpEl) hpEl.textContent = `${player.life.hp}/${player.life.hp_max}`;
-			}
-		}
-		const texture = role === 0 && player.state === 0 ? "grp_leader.bmp" : player.state === 0 ? "grp_online.bmp" : "";
-		if (texture) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/" + texture, function(url) {
-			if (node) node.style.backgroundImage = `url(${url})`;
-		});
-	};
-	/**
-	* Remove a character from list
-	*
-	* @param {number} account id
-	* @param {string} character name
-	*/
-	PartyFriendsV0.removePartyMember = function removePartyMember(AID, characterName) {
-		const root = _root$17();
-		if (AID === SessionStorage_default.AID) {
-			_party$3.length = 0;
-			const partyContent = root.querySelector(".content .party");
-			if (partyContent) partyContent.innerHTML = "";
-			const partyName = root.querySelector(".partyname");
-			if (partyName) partyName.textContent = "";
-			const createBtn = root.querySelector(".party.create");
-			if (createBtn) createBtn.style.display = "inline-block";
-			const leaveBtn = root.querySelector(".party.leave");
-			const addBtn = root.querySelector(".party.add");
-			if (leaveBtn) leaveBtn.style.display = "none";
-			if (addBtn) addBtn.style.display = "none";
-			ChatBox_default.addText(DB.getMessage(84), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PARTY_SETUP);
-			return;
-		}
-		const count = _party$3.length;
-		const nodes = root.querySelectorAll(".content .party .node");
-		for (let i = 0; i < count; ++i) if (_party$3[i].AID === AID && _party$3[i].characterName === characterName) {
-			_party$3.splice(i, 1);
-			if (nodes[i]) nodes[i].remove();
-			break;
-		}
-	};
-	/**
-	* Extend inventory window size
-	*
-	* @param {number} width
-	* @param {number} height
-	*/
-	PartyFriendsV0.resize = function resize(width, height) {
-		width = Math.min(Math.max(width, 12), 13);
-		height = Math.min(Math.max(height, 6), 12);
-		_preferences$53.width = width;
-		_preferences$53.height = height;
-		_preferences$53.save();
-		const content = _root$17().querySelector(".content");
-		if (content) {
-			content.style.width = `${width * 20}px`;
-			content.style.height = `${height * 20}px`;
-		}
-	};
-	/**
-	* Update player life in interface
-	*
-	* @param {number} account id
-	* @param {canvas} canvas life element
-	* @param {number} hp
-	* @param {number} maxhp
-	*/
-	PartyFriendsV0.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
-		const count = _party$3.length;
-		const nodes = _root$17().querySelectorAll(".content .party .node");
-		for (let i = 0; i < count; ++i) if (_party$3[i].AID === AID && _party$3[i].state === 0) {
-			const node = nodes[i];
-			if (!node) break;
-			const cvs = node.querySelector("canvas");
-			if (cvs) cvs.getContext("2d").drawImage(canvas, 0, 0, 60, 5, 0, 0, 60, 5);
-			const hpEl = node.querySelector(".hp");
-			if (hpEl) hpEl.textContent = `${hp}/${maxhp}`;
-			break;
-		}
-	};
-	/**
-	* Update party options
-	*
-	* @param {boolean} exp share option
-	* @param {boolean} item share option
-	* @param {boolean} item sharing option
-	*/
-	PartyFriendsV0.setOptions = function setOptions(exp_share, item_share, item_sharing_type) {
-		if (exp_share !== void 0) _options$1.exp_share = exp_share;
-		if (item_share !== void 0) _options$1.item_share = item_share;
-		if (item_sharing_type !== void 0) _options$1.item_sharing_type = item_sharing_type;
-	};
-	/**
-	* Check if character is a group member
-	*
-	* @param {string} character name
-	*/
-	PartyFriendsV0.isGroupMember = function isGroupMember(characterName) {
-		const count = _party$3.length;
-		for (let i = 0; i < count; ++i) if (_party$3[i].characterName === characterName) return true;
-		return false;
-	};
-	/**
-	* Add nick name to chatbox while clicking on player character sprite
-	*/
-	PartyFriendsV0.onOpenChat1to1 = function onOpenChat1to1(name) {
-		if (PacketVerManager_default.value >= 20090617) {
-			WhisperBox.show(name);
-			return;
-		}
-		const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
-		if (chatRoot) {
-			const usernameInput = chatRoot.querySelector(".username");
-			if (usernameInput) usernameInput.value = name;
-			const messageInput = chatRoot.querySelector(".message");
-			if (messageInput) messageInput.focus();
-		}
-	};
-	/**
-	* Functions to be hooked
-	*/
-	PartyFriendsV0.onRequestPartyCreation = function onRequestPartyCreation() {};
-	PartyFriendsV0.onRequestAddingMember = function onRequestAddingMember() {};
-	PartyFriendsV0.onRequestLeave = function onRequestLeave() {};
-	PartyFriendsV0.onRequestChangeLeader = function onRequestChangeLeader() {};
-	PartyFriendsV0.onExpelMember = function onExpelMember() {};
-	PartyFriendsV0.onRemoveFriend = function onRemoveFriend() {};
-	PartyFriendsV0.onRequestSettingUpdate = function onRequestSettingUpdate() {};
-	PartyFriendsV0.mouseMode = GUIComponent.MouseMode.STOP;
-	PartyFriendsV0_default = UIManager.addComponent(PartyFriendsV0);
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap/MiniMap.html?raw
@@ -223527,30 +221241,24 @@ var init_MiniMap$2 = __esmMin((() => {
 	MiniMap_default$1 = ":host {\r\n	top: 2px;\r\n	right: 2px;\r\n}\r\n\r\n#minimap ui-button.plus {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n\r\n#minimap ui-button.minus {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 18px;\r\n	width: 12px;\r\n	height: 12px;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/MiniMap/MiniMap/MiniMap.js
+//#region src/UI/Components/MiniMap/MiniMapCommon.js
 /**
-* Async image create helper
+* Create MiniMap component
+*
+* @param {object} config
+* @param {string} config.name component name (also used as preference key)
+* @param {string} config.htmlText
+* @param {string} config.cssText
+* @param {object} [config.worldMap] WorldMap module, enables the ".viewon" button
+* @param {boolean} [config.townInfoToggle] enables the ".object" button and townInfoShow preference
+* @param {boolean} [config.coordinates] display current coordinates
+* @param {boolean} [config.arrowShadow] render the player arrow with a shadow
 */
-function createAsyncImage$2() {
-	const img = new Image();
-	img.decoding = "async";
-	return img;
-}
-var MiniMap, _preferences$52, _memberColors$1, _party$2, _guild$1, _markers$2, _towninfo$2, _arrow$2, _toolDealer$2, _weaponDealer$2, _armorDealer$2, _blacksmith$2, _guide$2, _inn$2, _kafra$2, _map$2, _ctx$4, _zoomFactor$1, render$9, MiniMap_default;
-var init_MiniMap$1 = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Altitude();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_MiniMap$3();
-	init_MiniMap$2();
-	MiniMap = new GUIComponent("MiniMap", MiniMap_default$1);
+function createMiniMap({ name, htmlText, cssText, worldMap = null, townInfoToggle = false, coordinates = false, arrowShadow = false }) {
+	/**
+	* Create MiniMap component
+	*/
+	const MiniMap = new GUIComponent(name, cssText);
 	/**
 	* Mouse cant cross this UI
 	*/
@@ -223559,26 +221267,70 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @var {boolean} do not focus this UI
 	*/
 	MiniMap.needFocus = false;
-	MiniMap.render = () => MiniMap_default$2;
-	_preferences$52 = Preferences.get("MiniMap", {
+	MiniMap.render = () => htmlText;
+	/**
+	* @var {Preferences}
+	*/
+	const _preferencesDefault = {
 		zoom: 0,
 		opacity: 2
-	}, 1);
-	_memberColors$1 = {};
-	_party$2 = [];
-	_guild$1 = [];
-	_markers$2 = [];
-	_towninfo$2 = [];
-	_arrow$2 = createAsyncImage$2();
-	_toolDealer$2 = createAsyncImage$2();
-	_weaponDealer$2 = createAsyncImage$2();
-	_armorDealer$2 = createAsyncImage$2();
-	_blacksmith$2 = createAsyncImage$2();
-	_guide$2 = createAsyncImage$2();
-	_inn$2 = createAsyncImage$2();
-	_kafra$2 = createAsyncImage$2();
-	_map$2 = createAsyncImage$2();
-	_zoomFactor$1 = [
+	};
+	if (townInfoToggle) _preferencesDefault.townInfoShow = true;
+	const _preferences = Preferences.get(name, _preferencesDefault, 1);
+	/**
+	* @var {Object} member colors cache
+	*/
+	const _memberColors = {};
+	/**
+	* @var {Array} party members marker
+	*/
+	const _party = [];
+	/**
+	* @var {Array} guild members marker
+	*/
+	const _guild = [];
+	/**
+	* @var {Array} others markers
+	*/
+	const _markers = [];
+	/**
+	* @var {Array} others towninfo
+	*/
+	let _towninfo = [];
+	/**
+	* Async image create helper
+	*/
+	function createAsyncImage() {
+		const img = new Image();
+		img.decoding = "async";
+		return img;
+	}
+	/**
+	* @var {Image} arrow image
+	*/
+	const _arrow = createAsyncImage();
+	/**
+	* @var {Image} map information images
+	*/
+	const _toolDealer = createAsyncImage();
+	const _weaponDealer = createAsyncImage();
+	const _armorDealer = createAsyncImage();
+	const _blacksmith = createAsyncImage();
+	const _guide = createAsyncImage();
+	const _inn = createAsyncImage();
+	const _kafra = createAsyncImage();
+	/**
+	* @var {Image} minimap image
+	*/
+	const _map = createAsyncImage();
+	/**
+	* @var {CanvasRenderingContext2D} canvas context
+	*/
+	let _ctx;
+	/**
+	* @var {List} Zoom values
+	*/
+	const _zoomFactor = [
 		1,
 		10,
 		6,
@@ -223590,31 +221342,31 @@ var init_MiniMap$1 = __esmMin((() => {
 	*/
 	MiniMap.init = function init() {
 		const root = this.getRoot();
-		_ctx$4 = root.querySelector("canvas").getContext("2d");
+		_ctx = root.querySelector("canvas").getContext("2d");
 		this.opacity = 2;
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
-			_arrow$2.src = dataURI;
+			_arrow.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/store.bmp`, (dataURI) => {
-			_toolDealer$2.src = dataURI;
+			_toolDealer.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/weaponshop.bmp`, (dataURI) => {
-			_weaponDealer$2.src = dataURI;
+			_weaponDealer.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/armorshops.bmp`, (dataURI) => {
-			_armorDealer$2.src = dataURI;
+			_armorDealer.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/smithy.bmp`, (dataURI) => {
-			_blacksmith$2.src = dataURI;
+			_blacksmith.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/guide.bmp`, (dataURI) => {
-			_guide$2.src = dataURI;
+			_guide.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/inn.bmp`, (dataURI) => {
-			_inn$2.src = dataURI;
+			_inn.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/kafra.bmp`, (dataURI) => {
-			_kafra$2.src = dataURI;
+			_kafra.src = dataURI;
 		});
 		root.querySelector(".plus").addEventListener("mousedown", (event) => {
 			MiniMap.updateZoom(1);
@@ -223626,14 +221378,27 @@ var init_MiniMap$1 = __esmMin((() => {
 			event.stopImmediatePropagation();
 			event.preventDefault();
 		});
+		if (townInfoToggle) {
+			const objectBtn = root.querySelector(".object");
+			if (objectBtn) objectBtn.addEventListener("mousedown", () => {
+				_preferences.townInfoShow = !_preferences.townInfoShow;
+				_preferences.save();
+			});
+		}
+		if (worldMap) {
+			const viewonBtn = root.querySelector(".viewon");
+			if (viewonBtn) viewonBtn.addEventListener("mousedown", () => {
+				worldMap.toggle();
+			});
+		}
 	};
 	/**
 	* Once append to HTML
 	*/
 	MiniMap.onAppend = function onAppend() {
-		this.updateZoom(_preferences$52.zoom);
-		this.toggleOpacity(_preferences$52.opacity + 1);
-		Renderer.render(render$9);
+		this.updateZoom(_preferences.zoom);
+		this.toggleOpacity(_preferences.opacity + 1);
+		Renderer.render(render);
 	};
 	/**
 	* Set map
@@ -223641,13 +221406,13 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {string} mapname
 	*/
 	MiniMap.setMap = function setMap(mapname) {
-		_map$2.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-		_towninfo$2 = DB.getTownInfo(mapname.replace(/\..*/, ""));
+		_map.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+		_towninfo = DB.getTownInfo(mapname.replace(/\..*/, ""));
 		let path = DB.INTERFACE_PATH.replace("data/texture/", "") + "map/" + mapname.replace(/\..*/, ".bmp");
 		path = path.replace(/\//g, "\\");
 		path = DB.mapalias[path] || path;
 		Client.loadFile(`data/texture/${path}`, (dataURI) => {
-			_map$2.src = dataURI;
+			_map.src = dataURI;
 		});
 	};
 	/**
@@ -223668,9 +221433,9 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Once removed from HTML
 	*/
 	MiniMap.onRemove = function onRemove() {
-		_party$2.length = 0;
-		_guild$1.length = 0;
-		_markers$2.length = 0;
+		_party.length = 0;
+		_guild.length = 0;
+		_markers.length = 0;
 	};
 	/**
 	* Add a party mark to minimap
@@ -223680,13 +221445,13 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} y position
 	*/
 	MiniMap.addPartyMemberMark = function addPartyMemberMark(key, x, y) {
-		for (let i = 0; i < _party$2.length; ++i) if (_party$2[i].key === key) {
-			_party$2[i].x = x;
-			_party$2[i].y = y;
-			_party$2[i].color = this.getMemberColor(key);
+		for (let i = 0; i < _party.length; ++i) if (_party[i].key === key) {
+			_party[i].x = x;
+			_party[i].y = y;
+			_party[i].color = this.getMemberColor(key);
 			return;
 		}
-		_party$2.push({
+		_party.push({
 			key,
 			x,
 			y,
@@ -223697,10 +221462,10 @@ var init_MiniMap$1 = __esmMin((() => {
 	* Get or generate a random color for a party member
 	*/
 	MiniMap.getMemberColor = function getMemberColor(key) {
-		if (_memberColors$1[key]) return _memberColors$1[key];
+		if (_memberColors[key]) return _memberColors[key];
 		const r = Math.random;
 		const color = `rgb(${r() * 255 | 0},${r() * 255 | 0},${r() * 255 | 0})`;
-		_memberColors$1[key] = color;
+		_memberColors[key] = color;
 		return color;
 	};
 	/**
@@ -223709,8 +221474,8 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} key account id
 	*/
 	MiniMap.removePartyMemberMark = function removePartyMemberMark(key) {
-		for (let i = 0; i < _party$2.length; ++i) if (_party$2[i].key === key) {
-			_party$2.splice(i, 1);
+		for (let i = 0; i < _party.length; ++i) if (_party[i].key === key) {
+			_party.splice(i, 1);
 			break;
 		}
 	};
@@ -223722,12 +221487,12 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} y position
 	*/
 	MiniMap.addGuildMemberMark = function addGuildMemberMark(key, x, y) {
-		for (let i = 0; i < _guild$1.length; ++i) if (_guild$1[i].key === key) {
-			_guild$1[i].x = x;
-			_guild$1[i].y = y;
+		for (let i = 0; i < _guild.length; ++i) if (_guild[i].key === key) {
+			_guild[i].x = x;
+			_guild[i].y = y;
 			return;
 		}
-		_guild$1.push({
+		_guild.push({
 			key,
 			x,
 			y
@@ -223739,8 +221504,8 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} key account id
 	*/
 	MiniMap.removeGuildMemberMark = function removeGuildMemberMark(key) {
-		for (let i = 0; i < _guild$1.length; ++i) if (_guild$1[i].key === key) {
-			_guild$1.splice(i, 1);
+		for (let i = 0; i < _guild.length; ++i) if (_guild[i].key === key) {
+			_guild.splice(i, 1);
 			break;
 		}
 	};
@@ -223758,14 +221523,14 @@ var init_MiniMap$1 = __esmMin((() => {
 			(lcolor & 65280) >> 8,
 			lcolor & 255
 		];
-		for (let i = 0; i < _markers$2.length; ++i) if (_markers$2[i].key === key) {
-			_markers$2[i].x = x;
-			_markers$2[i].y = y;
-			_markers$2[i].color = `rgb(${color[0]},${color[1]},${color[2]})`;
-			_markers$2[i].tick = Renderer.tick + time;
+		for (let i = 0; i < _markers.length; ++i) if (_markers[i].key === key) {
+			_markers[i].x = x;
+			_markers[i].y = y;
+			_markers[i].color = `rgb(${color[0]},${color[1]},${color[2]})`;
+			_markers[i].tick = Renderer.tick + time;
 			return;
 		}
-		_markers$2.push({
+		_markers.push({
 			key,
 			x,
 			y,
@@ -223779,10 +221544,24 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} key id
 	*/
 	MiniMap.removeNpcMark = function removeNPCMark(key) {
-		for (let i = 0; i < _markers$2.length; ++i) if (_markers$2[i].key === key) {
-			_markers$2.splice(i, 1);
+		for (let i = 0; i < _markers.length; ++i) if (_markers[i].key === key) {
+			_markers.splice(i, 1);
 			break;
 		}
+	};
+	if (coordinates)
+ /**
+	* Update Coords Values
+	*
+	* @param {number} x increment
+	* @param {number} y increment
+	*/
+	MiniMap.updateCoordinates = function updateCoordinates(x, y) {
+		const root = this.getRoot();
+		const coordX = root.querySelector(".coordinates .coord.x");
+		const coordY = root.querySelector(".coordinates .coord.y");
+		if (coordX) coordX.textContent = Math.floor(x);
+		if (coordY) coordY.textContent = Math.floor(y);
 	};
 	/**
 	* Change zoom
@@ -223790,31 +221569,34 @@ var init_MiniMap$1 = __esmMin((() => {
 	* @param {number} value increment
 	*/
 	MiniMap.updateZoom = function updateZoom(value) {
-		_preferences$52.zoom = Math.max(0, Math.min(_zoomFactor$1.length - 1, _preferences$52.zoom + value));
-		_preferences$52.save();
+		_preferences.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences.zoom + value));
+		_preferences.save();
 	};
 	/**
 	* Change window opacity
 	*/
 	MiniMap.toggleOpacity = function toggleOpacity(opacity) {
 		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$52.opacity = this.opacity;
-		_preferences$52.save();
+		_preferences.opacity = this.opacity;
+		_preferences.save();
 		switch (this.opacity) {
 			case 0:
 				this.ui.hide();
 				break;
 			case 1:
-				_ctx$4.globalAlpha = .5;
+				_ctx.globalAlpha = .5;
 				this.ui.show();
 				break;
 			case 2:
-				_ctx$4.globalAlpha = 1;
+				_ctx.globalAlpha = 1;
 				this.ui.show();
 				break;
 		}
 	};
-	render$9 = (function renderClosure() {
+	/**
+	* Render GUI
+	*/
+	const render = (function renderClosure() {
 		const ZOOM_SIZE = 20;
 		let max, start_x, start_y, zoom, f;
 		let pos;
@@ -223831,102 +221613,143 @@ var init_MiniMap$1 = __esmMin((() => {
 			const height = Altitude.height;
 			let i, count;
 			let dot;
-			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$4) return;
-			zoom = _zoomFactor$1[_preferences$52.zoom];
+			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx) return;
+			zoom = _zoomFactor[_preferences.zoom];
 			pos = SessionStorage_default.Entity.position;
 			max = Math.max(width, height);
 			f = 1 / max * 128;
 			start_x = (max - width) / 2 * f;
 			start_y = (height - max) / 2 * f;
-			_ctx$4.clearRect(0, 0, 128, 128);
-			if (_map$2.complete && _map$2.width) if (zoom === 1) _ctx$4.drawImage(_map$2, 0, 0, 128, 128);
-			else _ctx$4.drawImage(_map$2, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
-			if (_towninfo$2 && _towninfo$2.length) {
-				count = _towninfo$2.length;
+			if (coordinates) MiniMap.updateCoordinates(pos[0], pos[1]);
+			_ctx.clearRect(0, 0, 128, 128);
+			if (_map.complete && _map.width) if (zoom === 1) _ctx.drawImage(_map, 0, 0, 128, 128);
+			else _ctx.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
+			if (_towninfo && (townInfoToggle ? _preferences.townInfoShow : _towninfo.length)) {
+				count = _towninfo.length;
 				for (i = 0; i < count; ++i) {
-					dot = _towninfo$2[i];
+					dot = _towninfo[i];
 					let img;
 					switch (dot.Type) {
 						case 0:
-							img = _toolDealer$2;
+							img = _toolDealer;
 							break;
 						case 1:
-							img = _weaponDealer$2;
+							img = _weaponDealer;
 							break;
 						case 2:
-							img = _armorDealer$2;
+							img = _armorDealer;
 							break;
 						case 3:
-							img = _blacksmith$2;
+							img = _blacksmith;
 							break;
 						case 4:
-							img = _guide$2;
+							img = _guide;
 							break;
 						case 5:
-							img = _inn$2;
+							img = _inn;
 							break;
 						case 6:
-							img = _kafra$2;
+							img = _kafra;
 							break;
 					}
 					if (img.complete && img.width) {
-						_ctx$4.save();
-						_ctx$4.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
-						_ctx$4.drawImage(img, -img.width, -img.height);
-						_ctx$4.restore();
+						_ctx.save();
+						_ctx.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
+						_ctx.drawImage(img, -img.width, -img.height);
+						_ctx.restore();
 					}
 				}
 			}
-			if (_arrow$2.complete && _arrow$2.width) {
-				_ctx$4.save();
-				_ctx$4.translate(projectX(pos[0]), projectY(pos[1]));
-				_ctx$4.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-				_ctx$4.drawImage(_arrow$2, -_arrow$2.width * .5, -_arrow$2.height * .5);
-				_ctx$4.restore();
+			if (_arrow.complete && _arrow.width) {
+				_ctx.save();
+				_ctx.translate(projectX(pos[0]), projectY(pos[1]));
+				_ctx.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
+				if (arrowShadow) {
+					_ctx.shadowColor = "rgba(0, 0, 0, 1)";
+					_ctx.shadowBlur = 5;
+					_ctx.shadowOffsetX = 0;
+					_ctx.shadowOffsetY = 0;
+				}
+				_ctx.drawImage(_arrow, -_arrow.width * .5, -_arrow.height * .5);
+				if (arrowShadow) {
+					_ctx.shadowColor = "rgba(0, 0, 0, 0)";
+					_ctx.shadowBlur = 0;
+					_ctx.shadowOffsetX = 0;
+					_ctx.shadowOffsetY = 0;
+				}
+				_ctx.restore();
 			}
 			if (tick % 1e3 > 500) {
-				count = _markers$2.length;
+				count = _markers.length;
 				for (i = 0; i < count; ++i) {
-					dot = _markers$2[i];
+					dot = _markers[i];
 					if (dot.tick < Renderer.tick) {
-						_markers$2.splice(i, 1);
+						_markers.splice(i, 1);
 						i--;
 						count--;
 						continue;
 					}
-					_ctx$4.fillStyle = dot.color;
-					_ctx$4.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
-					_ctx$4.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
+					_ctx.fillStyle = dot.color;
+					_ctx.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
+					_ctx.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
 				}
 			}
-			count = _party$2.length;
+			count = _party.length;
 			for (i = 0; i < count; ++i) {
-				dot = _party$2[i];
-				_ctx$4.fillStyle = "white";
-				_ctx$4.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
+				dot = _party[i];
+				_ctx.fillStyle = "white";
+				_ctx.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
 				dot.color = MiniMap.getMemberColor(dot.key);
-				_ctx$4.fillStyle = dot.color;
-				_ctx$4.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
+				_ctx.fillStyle = dot.color;
+				_ctx.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
 			}
-			count = _guild$1.length;
+			count = _guild.length;
 			if (count) {
-				_ctx$4.fillStyle = "rgb(245,175,200)";
-				_ctx$4.strokeStyle = "white";
-				_ctx$4.lineWidth = 2;
+				_ctx.fillStyle = "rgb(245,175,200)";
+				_ctx.strokeStyle = "white";
+				_ctx.lineWidth = 2;
 				for (i = 0; i < count; ++i) {
-					dot = _guild$1[i];
-					_ctx$4.beginPath();
-					_ctx$4.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-					_ctx$4.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
-					_ctx$4.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
-					_ctx$4.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					dot = _guild[i];
+					_ctx.beginPath();
+					_ctx.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
+					_ctx.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
+					_ctx.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
+					_ctx.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
 				}
-				_ctx$4.stroke();
-				_ctx$4.fill();
+				_ctx.stroke();
+				_ctx.fill();
 			}
 		};
 	})();
-	MiniMap_default = UIManager.addComponent(MiniMap);
+	/**
+	* Create component and return it
+	*/
+	return UIManager.addComponent(MiniMap);
+}
+var init_MiniMapCommon = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Preferences$1();
+	init_SessionStorage();
+	init_Renderer();
+	init_Altitude();
+	init_KeyEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+}));
+//#endregion
+//#region src/UI/Components/MiniMap/MiniMap/MiniMap.js
+var MiniMap_default;
+var init_MiniMap$1 = __esmMin((() => {
+	init_MiniMap$3();
+	init_MiniMap$2();
+	init_MiniMapCommon();
+	MiniMap_default = createMiniMap({
+		name: "MiniMap",
+		htmlText: MiniMap_default$2,
+		cssText: MiniMap_default$1
+	});
 }));
 //#endregion
 //#region src/UI/Components/WorldMap/WorldMap.html?raw
@@ -224123,7 +221946,7 @@ var init_MapPathFinder = __esmMin((() => {
 /**
 * Async image create helper
 */
-function createAsyncImage$1() {
+function createAsyncImage() {
 	const img = new Image();
 	img.decoding = "async";
 	return img;
@@ -224248,7 +222071,7 @@ function resetPathFindingWorker() {
 	terminatePathFindingWorker();
 	initializePathFindingWorker();
 }
-var Navigation, _arrow$1, _toolDealer$1, _weaponDealer$1, _armorDealer$1, _blacksmith$1, _guide$1, _inn$1, _kafra$1, _map$1, _ctx$3, _towninfo$1, _markers$1, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
+var Navigation, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$2, _towninfo, _markers, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
 var init_Navigation = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Renderer();
@@ -224265,18 +222088,18 @@ var init_Navigation = __esmMin((() => {
 	init_MapPathFinder();
 	Navigation = new GUIComponent("Navigation", Navigation_default$1);
 	Navigation.render = () => Navigation_default$2;
-	_arrow$1 = createAsyncImage$1();
-	_toolDealer$1 = createAsyncImage$1();
-	_weaponDealer$1 = createAsyncImage$1();
-	_armorDealer$1 = createAsyncImage$1();
-	_blacksmith$1 = createAsyncImage$1();
-	_guide$1 = createAsyncImage$1();
-	_inn$1 = createAsyncImage$1();
-	_kafra$1 = createAsyncImage$1();
-	_map$1 = createAsyncImage$1();
-	_ctx$3 = null;
-	_towninfo$1 = [];
-	_markers$1 = [];
+	_arrow = createAsyncImage();
+	_toolDealer = createAsyncImage();
+	_weaponDealer = createAsyncImage();
+	_armorDealer = createAsyncImage();
+	_blacksmith = createAsyncImage();
+	_guide = createAsyncImage();
+	_inn = createAsyncImage();
+	_kafra = createAsyncImage();
+	_map = createAsyncImage();
+	_ctx$2 = null;
+	_towninfo = [];
+	_markers = [];
 	_path = [];
 	_lastPathUpdate = 0;
 	_pathUpdateThrottle = 500;
@@ -224323,32 +222146,32 @@ var init_Navigation = __esmMin((() => {
 		const canvas = document.createElement("canvas");
 		canvas.width = 280;
 		canvas.height = 230;
-		_ctx$3 = canvas.getContext("2d");
+		_ctx$2 = canvas.getContext("2d");
 		const mapDisplay = root.querySelector(".map-display");
 		if (mapDisplay) mapDisplay.appendChild(canvas);
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
-			_arrow$1.src = dataURI;
+			_arrow.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/store.bmp`, (dataURI) => {
-			_toolDealer$1.src = dataURI;
+			_toolDealer.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/weaponshop.bmp`, (dataURI) => {
-			_weaponDealer$1.src = dataURI;
+			_weaponDealer.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/armorshops.bmp`, (dataURI) => {
-			_armorDealer$1.src = dataURI;
+			_armorDealer.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/smithy.bmp`, (dataURI) => {
-			_blacksmith$1.src = dataURI;
+			_blacksmith.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/guide.bmp`, (dataURI) => {
-			_guide$1.src = dataURI;
+			_guide.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/inn.bmp`, (dataURI) => {
-			_inn$1.src = dataURI;
+			_inn.src = dataURI;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}information/kafra.bmp`, (dataURI) => {
-			_kafra$1.src = dataURI;
+			_kafra.src = dataURI;
 		});
 		root.querySelector(".close").addEventListener("click", () => this.hide());
 		root.querySelector(".search-button").addEventListener("click", () => this.onSearch());
@@ -224536,13 +222359,13 @@ var init_Navigation = __esmMin((() => {
 			_isMapClickTarget = false;
 		}
 		const mapBaseName = mapName.replace(/\..*/, "");
-		_towninfo$1 = DB.getTownInfo(mapBaseName) || [];
+		_towninfo = DB.getTownInfo(mapBaseName) || [];
 		let bmpPath = DB.INTERFACE_PATH.replace("data/texture/", "") + "map/" + mapBaseName + ".bmp";
 		bmpPath = bmpPath.replace(/\//g, "\\");
 		bmpPath = DB.mapalias[bmpPath] || bmpPath;
 		Client.loadFile("data/texture/" + bmpPath, (dataURI) => {
-			if (dataURI) _map$1.src = dataURI;
-			else _map$1.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
+			if (dataURI) _map.src = dataURI;
+			else _map.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
 		});
 		let gatPath = mapBaseName + ".gat";
 		gatPath = gatPath.replace(/\//g, "\\");
@@ -224588,7 +222411,7 @@ var init_Navigation = __esmMin((() => {
 	* Add a marker to the map
 	*/
 	Navigation.addMarker = function addMarker(x, y, color, label) {
-		_markers$1.push({
+		_markers.push({
 			x,
 			y,
 			color: color || "rgb(255,0,0)",
@@ -224602,7 +222425,7 @@ var init_Navigation = __esmMin((() => {
 		if ((this._host ? getComputedStyle(this._host).display : "none") === "none") return;
 		const width = 280;
 		const height = 230;
-		const ctx = _ctx$3;
+		const ctx = _ctx$2;
 		if (!ctx) return;
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
@@ -224621,7 +222444,7 @@ var init_Navigation = __esmMin((() => {
 		ctx.clearRect(0, 0, width, height);
 		ctx.fillStyle = "#000";
 		ctx.fillRect(0, 0, width, height);
-		if (_map$1.complete && _map$1.width) {
+		if (_map.complete && _map.width) {
 			const scaleX = width / _mapData.width;
 			const scaleY = height / _mapData.height;
 			const scale = Math.min(scaleX, scaleY);
@@ -224629,37 +222452,37 @@ var init_Navigation = __esmMin((() => {
 			ctx.translate(width / 2, height / 2);
 			ctx.scale(scale, scale);
 			ctx.translate(-_mapData.width / 2, -_mapData.height / 2);
-			ctx.drawImage(_map$1, 0, 0, _mapData.width, _mapData.height);
+			ctx.drawImage(_map, 0, 0, _mapData.width, _mapData.height);
 			ctx.restore();
 		}
 		const mapToScreenBound = (x, y) => {
 			return mapToScreen(x, y, width, height);
 		};
-		if (_towninfo$1 && _towninfo$1.length) for (let i = 0; i < _towninfo$1.length; i++) {
-			const info = _towninfo$1[i];
+		if (_towninfo && _towninfo.length) for (let i = 0; i < _towninfo.length; i++) {
+			const info = _towninfo[i];
 			const pos = mapToScreenBound(info.X, info.Y);
 			let img;
 			switch (info.Type) {
 				case 0:
-					img = _toolDealer$1;
+					img = _toolDealer;
 					break;
 				case 1:
-					img = _weaponDealer$1;
+					img = _weaponDealer;
 					break;
 				case 2:
-					img = _armorDealer$1;
+					img = _armorDealer;
 					break;
 				case 3:
-					img = _blacksmith$1;
+					img = _blacksmith;
 					break;
 				case 4:
-					img = _guide$1;
+					img = _guide;
 					break;
 				case 5:
-					img = _inn$1;
+					img = _inn;
 					break;
 				case 6:
-					img = _kafra$1;
+					img = _kafra;
 					break;
 				default: continue;
 			}
@@ -224708,15 +222531,15 @@ var init_Navigation = __esmMin((() => {
 			ctx.fill();
 		}
 		const startPos = mapToScreenBound(currentPos.x, currentPos.y);
-		if (_arrow$1.complete && _arrow$1.width) {
+		if (_arrow.complete && _arrow.width) {
 			ctx.save();
 			ctx.translate(startPos.x, startPos.y);
 			ctx.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-			ctx.drawImage(_arrow$1, -_arrow$1.width / 2, -_arrow$1.height / 2);
+			ctx.drawImage(_arrow, -_arrow.width / 2, -_arrow.height / 2);
 			ctx.restore();
 		}
-		for (let i = 0; i < _markers$1.length; i++) {
-			const marker = _markers$1[i];
+		for (let i = 0; i < _markers.length; i++) {
+			const marker = _markers[i];
 			const pos = mapToScreenBound(marker.x, marker.y);
 			ctx.fillStyle = marker.color;
 			ctx.beginPath();
@@ -225294,17 +223117,17 @@ function onShowLVL() {
 * Stop event propagation
 * @param {object} event
 */
-function stopPropagation$10(event) {
+function stopPropagation$11(event) {
 	event.stopImmediatePropagation();
 	return false;
 }
 /**
 * Closing window
 */
-function onClose$12() {
+function onClose$7() {
 	WorldMap._host.style.display = "none";
 }
-var WorldMap, _preferences$51, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
+var WorldMap, _preferences$43, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
 var init_WorldMap = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -225322,7 +223145,7 @@ var init_WorldMap = __esmMin((() => {
 	init_Navigation();
 	WorldMap = new GUIComponent("WorldMap", WorldMap_default$1);
 	WorldMap.render = () => WorldMap_default$2;
-	_preferences$51 = Preferences.get("WorldMap", {
+	_preferences$43 = Preferences.get("WorldMap", {
 		x: 0,
 		y: 0,
 		width: window.innerWidth,
@@ -225341,7 +223164,7 @@ var init_WorldMap = __esmMin((() => {
 	*/
 	WorldMap.init = function init() {
 		const root = this.getRoot();
-		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$10));
+		root.querySelectorAll(".titlebar .base").forEach((el) => el.addEventListener("mousedown", stopPropagation$11));
 		const selectEl = root.querySelector(".titlebar select");
 		if (selectEl) selectEl.addEventListener("change", onSelect);
 		const toggleBtn = root.querySelector(".titlebar .togglemaps");
@@ -225349,7 +223172,7 @@ var init_WorldMap = __esmMin((() => {
 		const showLvlBtn = root.querySelector(".titlebar .showlvl");
 		if (showLvlBtn) showLvlBtn.addEventListener("click", onShowLVL);
 		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$12);
+		if (closeBtn) closeBtn.addEventListener("click", onClose$7);
 		const content = root.querySelector(".map .content");
 		if (content) {
 			content.addEventListener("click", onWorldMapSectionClick);
@@ -225362,7 +223185,7 @@ var init_WorldMap = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	WorldMap.onAppend = function onAppend() {
-		if (!_preferences$51.show) this._host.style.display = "none";
+		if (!_preferences$43.show) this._host.style.display = "none";
 		this.settings = {
 			episode: 98,
 			add: [],
@@ -225385,12 +223208,12 @@ var init_WorldMap = __esmMin((() => {
 		this._host.style.left = "0px";
 	};
 	WorldMap.onRemove = function onRemove() {
-		_preferences$51.show = this._host.style.display !== "none";
-		_preferences$51.y = 0;
-		_preferences$51.x = 0;
-		_preferences$51.width = 0;
-		_preferences$51.height = 0;
-		_preferences$51.save();
+		_preferences$43.show = this._host.style.display !== "none";
+		_preferences$43.y = 0;
+		_preferences$43.x = 0;
+		_preferences$43.width = 0;
+		_preferences$43.height = 0;
+		_preferences$43.save();
 	};
 	/**
 	* Show/Hide UI
@@ -225477,431 +223300,21 @@ var init_MiniMapV2$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMapV2/MiniMapV2.js
-/**
-* Async image create helper
-*/
-function createAsyncImage() {
-	const img = new Image();
-	img.decoding = "async";
-	return img;
-}
-var MiniMapV2, _preferences$50, _memberColors, _party$1, _guild, _markers, _towninfo, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$2, _zoomFactor, render$8, MiniMapV2_default;
+var MiniMapV2_default;
 var init_MiniMapV2 = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Preferences$1();
-	init_SessionStorage();
-	init_Renderer();
-	init_Altitude();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
 	init_WorldMap();
 	init_MiniMapV2$2();
 	init_MiniMapV2$1();
-	MiniMapV2 = new GUIComponent("MiniMapV2", MiniMapV2_default$1);
-	/**
-	* Mouse cant cross this UI
-	*/
-	MiniMapV2.mouseMode = GUIComponent.MouseMode.STOP;
-	/**
-	* @var {boolean} do not focus this UI
-	*/
-	MiniMapV2.needFocus = false;
-	MiniMapV2.render = () => MiniMapV2_default$2;
-	_preferences$50 = Preferences.get("MiniMapV2", {
-		zoom: 0,
-		opacity: 2,
-		townInfoShow: true
-	}, 1);
-	_memberColors = {};
-	_party$1 = [];
-	_guild = [];
-	_markers = [];
-	_towninfo = [];
-	_arrow = createAsyncImage();
-	_toolDealer = createAsyncImage();
-	_weaponDealer = createAsyncImage();
-	_armorDealer = createAsyncImage();
-	_blacksmith = createAsyncImage();
-	_guide = createAsyncImage();
-	_inn = createAsyncImage();
-	_kafra = createAsyncImage();
-	_map = createAsyncImage();
-	_zoomFactor = [
-		1,
-		10,
-		6,
-		3,
-		2
-	];
-	/**
-	* Initialize minimap
-	*/
-	MiniMapV2.init = function init() {
-		const root = this.getRoot();
-		_ctx$2 = root.querySelector("canvas").getContext("2d");
-		this.opacity = 2;
-		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
-			_arrow.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/store.bmp`, (dataURI) => {
-			_toolDealer.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/weaponshop.bmp`, (dataURI) => {
-			_weaponDealer.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/armorshops.bmp`, (dataURI) => {
-			_armorDealer.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/smithy.bmp`, (dataURI) => {
-			_blacksmith.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/guide.bmp`, (dataURI) => {
-			_guide.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/inn.bmp`, (dataURI) => {
-			_inn.src = dataURI;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}information/kafra.bmp`, (dataURI) => {
-			_kafra.src = dataURI;
-		});
-		root.querySelector(".plus").addEventListener("mousedown", (event) => {
-			MiniMapV2.updateZoom(1);
-			event.stopImmediatePropagation();
-			event.preventDefault();
-		});
-		root.querySelector(".minus").addEventListener("mousedown", (event) => {
-			MiniMapV2.updateZoom(-1);
-			event.stopImmediatePropagation();
-			event.preventDefault();
-		});
-		const objectBtn = root.querySelector(".object");
-		if (objectBtn) objectBtn.addEventListener("mousedown", () => {
-			_preferences$50.townInfoShow = !_preferences$50.townInfoShow;
-			_preferences$50.save();
-		});
-		const viewonBtn = root.querySelector(".viewon");
-		if (viewonBtn) viewonBtn.addEventListener("mousedown", () => {
-			WorldMap_default.toggle();
-		});
-	};
-	/**
-	* Once append to HTML
-	*/
-	MiniMapV2.onAppend = function onAppend() {
-		this.updateZoom(_preferences$50.zoom);
-		this.toggleOpacity(_preferences$50.opacity + 1);
-		Renderer.render(render$8);
-	};
-	/**
-	* Set map
-	*
-	* @param {string} mapname
-	*/
-	MiniMapV2.setMap = function setMap(mapname) {
-		_map.src = "data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==";
-		_towninfo = DB.getTownInfo(mapname.replace(/\..*/, ""));
-		let path = DB.INTERFACE_PATH.replace("data/texture/", "") + "map/" + mapname.replace(/\..*/, ".bmp");
-		path = path.replace(/\//g, "\\");
-		path = DB.mapalias[path] || path;
-		Client.loadFile(`data/texture/${path}`, (dataURI) => {
-			_map.src = dataURI;
-		});
-	};
-	/**
-	* KeyDown Handler
-	*
-	* @param {object} event
-	* @return {boolean}
-	*/
-	MiniMapV2.onKeyDown = function onKeyDown(event) {
-		if (event.which === KEYS.TAB && KEYS.CTRL) {
-			this.toggleOpacity();
-			event.stopImmediatePropagation();
-			return false;
-		}
-		return true;
-	};
-	/**
-	* Once removed from HTML
-	*/
-	MiniMapV2.onRemove = function onRemove() {
-		_party$1.length = 0;
-		_guild.length = 0;
-		_markers.length = 0;
-	};
-	MiniMapV2.addPartyMemberMark = function addPartyMemberMark(key, x, y) {
-		for (let i = 0; i < _party$1.length; ++i) if (_party$1[i].key === key) {
-			_party$1[i].x = x;
-			_party$1[i].y = y;
-			_party$1[i].color = this.getMemberColor(key);
-			return;
-		}
-		_party$1.push({
-			key,
-			x,
-			y,
-			color: this.getMemberColor(key)
-		});
-	};
-	/**
-	* Get or generate a random color for a party member
-	*/
-	MiniMapV2.getMemberColor = function getMemberColor(key) {
-		if (_memberColors[key]) return _memberColors[key];
-		const r = Math.random;
-		const color = `rgb(${r() * 255 | 0},${r() * 255 | 0},${r() * 255 | 0})`;
-		_memberColors[key] = color;
-		return color;
-	};
-	/**
-	* Remove a party mark from minimap
-	*
-	* @param {number} key account id
-	*/
-	MiniMapV2.removePartyMemberMark = function removePartyMemberMark(key) {
-		for (let i = 0; i < _party$1.length; ++i) if (_party$1[i].key === key) {
-			_party$1.splice(i, 1);
-			break;
-		}
-	};
-	/**
-	* Add a guild mark to minimap
-	*
-	* @param {number} key account id
-	* @param {number} x position
-	* @param {number} y position
-	*/
-	MiniMapV2.addGuildMemberMark = function addGuildMemberMark(key, x, y) {
-		for (let i = 0; i < _guild.length; ++i) if (_guild[i].key === key) {
-			_guild[i].x = x;
-			_guild[i].y = y;
-			return;
-		}
-		_guild.push({
-			key,
-			x,
-			y
-		});
-	};
-	/**
-	* Remove a guild mark from minimap
-	*
-	* @param {number} key account id
-	*/
-	MiniMapV2.removeGuildMemberMark = function removeGuildMemberMark(key) {
-		for (let i = 0; i < _guild.length; ++i) if (_guild[i].key === key) {
-			_guild.splice(i, 1);
-			break;
-		}
-	};
-	/**
-	* Add a npc mark to minimap
-	*
-	* @param {number} key id
-	* @param {number} x position
-	* @param {number} y position
-	* @param {Array} color
-	*/
-	MiniMapV2.addNpcMark = function addNPCMark(key, x, y, lcolor, time) {
-		const color = [
-			(lcolor & 16711680) >> 16,
-			(lcolor & 65280) >> 8,
-			lcolor & 255
-		];
-		for (let i = 0; i < _markers.length; ++i) if (_markers[i].key === key) {
-			_markers[i].x = x;
-			_markers[i].y = y;
-			_markers[i].color = `rgb(${color[0]},${color[1]},${color[2]})`;
-			_markers[i].tick = Renderer.tick + time;
-			return;
-		}
-		_markers.push({
-			key,
-			x,
-			y,
-			color: `rgb(${color[0]},${color[1]},${color[2]})`,
-			tick: Renderer.tick + time
-		});
-	};
-	/**
-	* Remove a NPC mark from minimap
-	*
-	* @param {number} key id
-	*/
-	MiniMapV2.removeNpcMark = function removeNPCMark(key) {
-		for (let i = 0; i < _markers.length; ++i) if (_markers[i].key === key) {
-			_markers.splice(i, 1);
-			break;
-		}
-	};
-	/**
-	* Update Coords Values
-	*
-	* @param {number} x increment
-	* @param {number} y increment
-	*/
-	MiniMapV2.updateCoordinates = function updateCoordinates(x, y) {
-		const root = this.getRoot();
-		const coordX = root.querySelector(".coordinates .coord.x");
-		const coordY = root.querySelector(".coordinates .coord.y");
-		if (coordX) coordX.textContent = Math.floor(x);
-		if (coordY) coordY.textContent = Math.floor(y);
-	};
-	/**
-	* Change zoom
-	*
-	* @param {number} value increment
-	*/
-	MiniMapV2.updateZoom = function updateZoom(value) {
-		_preferences$50.zoom = Math.max(0, Math.min(_zoomFactor.length - 1, _preferences$50.zoom + value));
-		_preferences$50.save();
-	};
-	/**
-	* Change window opacity
-	*/
-	MiniMapV2.toggleOpacity = function toggleOpacity(opacity) {
-		this.opacity = ((arguments.length ? opacity : this.opacity) + 2) % 3;
-		_preferences$50.opacity = this.opacity;
-		_preferences$50.save();
-		switch (this.opacity) {
-			case 0:
-				this.ui.hide();
-				break;
-			case 1:
-				_ctx$2.globalAlpha = .5;
-				this.ui.show();
-				break;
-			case 2:
-				_ctx$2.globalAlpha = 1;
-				this.ui.show();
-				break;
-		}
-	};
-	render$8 = (function renderClosure() {
-		const ZOOM_SIZE = 20;
-		let max, start_x, start_y, zoom, f;
-		let pos;
-		function projectX(x) {
-			if (zoom === 1) return start_x + x * f | 0;
-			return 64 + (x - pos[0]) * f * 256 / (zoom * ZOOM_SIZE) | 0;
-		}
-		function projectY(y) {
-			if (zoom === 1) return start_y + 128 - y * f | 0;
-			return 64 - (y - pos[1]) * f * 256 / (zoom * ZOOM_SIZE) | 0;
-		}
-		return function _render(tick) {
-			const width = Altitude.width;
-			const height = Altitude.height;
-			let i, count;
-			let dot;
-			if (!SessionStorage_default.Entity || !SessionStorage_default.Entity.position || !_ctx$2) return;
-			zoom = _zoomFactor[_preferences$50.zoom];
-			pos = SessionStorage_default.Entity.position;
-			max = Math.max(width, height);
-			f = 1 / max * 128;
-			start_x = (max - width) / 2 * f;
-			start_y = (height - max) / 2 * f;
-			MiniMapV2.updateCoordinates(pos[0], pos[1]);
-			_ctx$2.clearRect(0, 0, 128, 128);
-			if (_map.complete && _map.width) if (zoom === 1) _ctx$2.drawImage(_map, 0, 0, 128, 128);
-			else _ctx$2.drawImage(_map, (start_x + pos[0] * f) * 4 - ZOOM_SIZE * zoom | 0, (start_y + 128 - pos[1] * f) * 4 - ZOOM_SIZE * zoom | 0, ZOOM_SIZE * zoom * 2, ZOOM_SIZE * zoom * 2, 0, 0, 128, 128);
-			if (_towninfo && _preferences$50.townInfoShow) {
-				count = _towninfo.length;
-				for (i = 0; i < count; ++i) {
-					dot = _towninfo[i];
-					let img;
-					switch (dot.Type) {
-						case 0:
-							img = _toolDealer;
-							break;
-						case 1:
-							img = _weaponDealer;
-							break;
-						case 2:
-							img = _armorDealer;
-							break;
-						case 3:
-							img = _blacksmith;
-							break;
-						case 4:
-							img = _guide;
-							break;
-						case 5:
-							img = _inn;
-							break;
-						case 6:
-							img = _kafra;
-							break;
-					}
-					if (img.complete && img.width) {
-						_ctx$2.save();
-						_ctx$2.translate(projectX(dot.X) + img.width / 2, projectY(dot.Y) + img.height / 2);
-						_ctx$2.drawImage(img, -img.width, -img.height);
-						_ctx$2.restore();
-					}
-				}
-			}
-			if (_arrow.complete && _arrow.width) {
-				_ctx$2.save();
-				_ctx$2.translate(projectX(pos[0]), projectY(pos[1]));
-				_ctx$2.rotate((SessionStorage_default.Entity.direction + 4) * 45 * Math.PI / 180);
-				_ctx$2.shadowColor = "rgba(0, 0, 0, 1)";
-				_ctx$2.shadowBlur = 5;
-				_ctx$2.shadowOffsetX = 0;
-				_ctx$2.shadowOffsetY = 0;
-				_ctx$2.drawImage(_arrow, -_arrow.width * .5, -_arrow.height * .5);
-				_ctx$2.shadowColor = "rgba(0, 0, 0, 0)";
-				_ctx$2.shadowBlur = 0;
-				_ctx$2.shadowOffsetX = 0;
-				_ctx$2.shadowOffsetY = 0;
-				_ctx$2.restore();
-			}
-			if (tick % 1e3 > 500) {
-				count = _markers.length;
-				for (i = 0; i < count; ++i) {
-					dot = _markers[i];
-					if (dot.tick < Renderer.tick) {
-						_markers.splice(i, 1);
-						i--;
-						count--;
-						continue;
-					}
-					_ctx$2.fillStyle = dot.color;
-					_ctx$2.fillRect(projectX(dot.x) - 1, projectY(dot.y) - 4, 2, 8);
-					_ctx$2.fillRect(projectX(dot.x) - 4, projectY(dot.y) - 1, 8, 2);
-				}
-			}
-			count = _party$1.length;
-			for (i = 0; i < count; ++i) {
-				dot = _party$1[i];
-				_ctx$2.fillStyle = "white";
-				_ctx$2.fillRect(projectX(dot.x) - 3, projectY(dot.y) - 3, 6, 6);
-				dot.color = MiniMapV2.getMemberColor(dot.key);
-				_ctx$2.fillStyle = dot.color;
-				_ctx$2.fillRect(projectX(dot.x) - 2, projectY(dot.y) - 2, 4, 4);
-			}
-			count = _guild.length;
-			if (count) {
-				_ctx$2.fillStyle = "rgb(245,175,200)";
-				_ctx$2.strokeStyle = "white";
-				_ctx$2.lineWidth = 2;
-				for (i = 0; i < count; ++i) {
-					dot = _guild[i];
-					_ctx$2.beginPath();
-					_ctx$2.moveTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-					_ctx$2.lineTo(projectX(dot.x) + 4, projectY(dot.y) + 4);
-					_ctx$2.lineTo(projectX(dot.x) - 4, projectY(dot.y) + 4);
-					_ctx$2.lineTo(projectX(dot.x) + 0, projectY(dot.y) - 4);
-				}
-				_ctx$2.stroke();
-				_ctx$2.fill();
-			}
-		};
-	})();
-	MiniMapV2_default = UIManager.addComponent(MiniMapV2);
+	init_MiniMapCommon();
+	MiniMapV2_default = createMiniMap({
+		name: "MiniMapV2",
+		htmlText: MiniMapV2_default$2,
+		cssText: MiniMapV2_default$1,
+		worldMap: WorldMap_default,
+		townInfoToggle: true,
+		coordinates: true,
+		arrowShadow: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/MiniMap/MiniMap.js
@@ -225927,6 +223340,1347 @@ var init_MiniMap = __esmMin((() => {
 	};
 }));
 //#endregion
+//#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.html?raw
+var PartyHelper_default$2;
+var init_PartyHelper$2 = __esmMin((() => {
+	PartyHelper_default$2 = "<div id=\"PartyHelper\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text setup\"><ui-text msg=\"291\">Party Setup</ui-text></span>\r\n			<span class=\"text friend-setup\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			<span class=\"text create\"><ui-text msg=\"2054\">Create Party</ui-text></span>\r\n			<span class=\"text invite\"><ui-text msg=\"2056\">Create Party</ui-text></span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content party-content\">\r\n		<div class=\"create invite\">\r\n			<p>\r\n				<span class=\"create\"><ui-text msg=\"2057\">Party Name:</ui-text></span>\r\n				<span class=\"invite\"><ui-text msg=\"2058\">Player Name:</ui-text></span>\r\n			</p>\r\n			<input type=\"text\" class=\"name\" value=\"\" />\r\n		</div>\r\n		<div class=\"exp_share setup\">\r\n			<p><ui-text msg=\"292\">How to share EXP</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"287\">Each Take</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"288\">Even Share</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"item_share setup create\">\r\n			<p><ui-text msg=\"293\">How to share Items</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"289\">Each Take</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"290\">Party Share</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"item_sharing_type setup create\">\r\n			<p><ui-text msg=\"738\">Item Sharing type</ui-text></p>\r\n			<button class=\"on\" data-value=\"0\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"739\">Individual</ui-text>\r\n			</button>\r\n			<button class=\"off\" data-value=\"1\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"740\">Shared</ui-text>\r\n			</button>\r\n		</div>\r\n	</div>\r\n	<div class=\"content friend-content\">\r\n		<div class=\"friend-setup\">\r\n			<div class=\"open1to1Stranger setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"361\">Open 1:1 Chat between Strangers</ui-text></span>\r\n			</div>\r\n			<div class=\"open1to1Friend setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"359\">Open 1:1 Chat between Friends</ui-text></span>\r\n			</div>\r\n			<div class=\"alarm1to1 setting-row\">\r\n				<button class=\"on\" data-value=\"1\"><ui-image src=\"checkbox_1.bmp\"></ui-image></button>\r\n				<button class=\"off\" data-value=\"0\"><ui-image src=\"checkbox_0.bmp\"></ui-image></button>\r\n				<span><ui-text msg=\"362\">Alarm when receive a 1:1 Chat</ui-text></span>\r\n			</div>\r\n		</div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n		<ui-button\r\n			class=\"btn ok\"\r\n			bg=\"basic_interface/btn_ok.bmp\"\r\n			hover=\"basic_interface/btn_ok_a.bmp\"\r\n			down=\"basic_interface/btn_ok_b.bmp\"\r\n		></ui-button>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.css?raw
+var PartyHelper_default$1;
+var init_PartyHelper$1 = __esmMin((() => {
+	PartyHelper_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyHelper {\r\n	width: 130px;\r\n}\r\n\r\n#PartyHelper .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyHelper .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyHelper .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyHelper .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyHelper .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyHelper .content {\r\n	background-color: white;\r\n	padding-bottom: 5px;\r\n}\r\n\r\n#PartyHelper .party-content {\r\n	min-height: 100px;\r\n}\r\n\r\n#PartyHelper .friend-content {\r\n	padding: 5px;\r\n}\r\n\r\n#PartyHelper .disabled,\r\n#PartyHelper .disabled button {\r\n	color: #888;\r\n}\r\n\r\n#PartyHelper .on,\r\n#PartyHelper .off {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 3px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .content p {\r\n	padding: 0;\r\n	margin: 0;\r\n	padding-top: 10px;\r\n}\r\n\r\n#PartyHelper .content div {\r\n	margin-left: 10px;\r\n}\r\n\r\n#PartyHelper .content button {\r\n	margin-left: 10px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyHelper .name {\r\n	border: none;\r\n	background-color: #e7e7e7;\r\n	width: 95px;\r\n	height: 20px;\r\n	margin-left: 10px;\r\n	margin-top: 5px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#PartyHelper .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyHelper .btn {\r\n	position: absolute;\r\n	bottom: 3px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyHelper .ok {\r\n	right: 46px;\r\n}\r\n\r\n#PartyHelper .cancel {\r\n	right: 2px;\r\n}\r\n\r\n#PartyHelper .friend-setup .setting-row {\r\n	margin-left: 0px;\r\n	margin-bottom: 3px;\r\n	cursor: pointer;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyHelper .friend-setup .off {\r\n	display: none;\r\n}\r\n\r\n#PartyHelper .friend-setup .on {\r\n	display: inline-block;\r\n}\r\n\r\n#PartyHelper .friend-setup span {\r\n	margin-left: 5px;\r\n	font-size: 11px;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyHelper .friend-setup button {\r\n	display: inline-block;\r\n	width: 15px;\r\n	height: 18px;\r\n	background-position: 0px 3px;\r\n	padding: 0;\r\n	cursor: pointer;\r\n	vertical-align: middle;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/WhisperBox/WhisperBox.html?raw
+var WhisperBox_default$1;
+var init_WhisperBox$2 = __esmMin((() => {
+	WhisperBox_default$1 = "<div id=\"WhisperBox\" class=\"whisper-container\">\r\n	<div class=\"whisper-header\">\r\n		<span class=\"title\">With weeeee (Friend) *^.^* [813-338]</span>\r\n		<ui-button\r\n			class=\"close\"\r\n			bg=\"basic_interface/sys_close_off.bmp\"\r\n			hover=\"basic_interface/sys_close_on.bmp\"\r\n		></ui-button>\r\n	</div>\r\n	<div class=\"whisper-body\">\r\n		<div class=\"content\"></div>\r\n	</div>\r\n	<div class=\"whisper-footer\">\r\n		<div class=\"input-wrapper\">\r\n			<div contenteditable=\"true\" class=\"message input-whisper\"></div>\r\n		</div>\r\n		<div class=\"resizer event_add_cursor\" data-background=\"btn_resize.bmp\"></div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/WhisperBox/WhisperBox.css?raw
+var WhisperBox_default;
+var init_WhisperBox$1 = __esmMin((() => {
+	WhisperBox_default = ":host {\r\n	width: 280px;\r\n	height: 156px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.whisper-container {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 156px;\r\n	border: 1px solid white;\r\n	border-radius: 5px;\r\n	background: rgba(0, 0, 0, 0.5);\r\n	display: flex;\r\n	flex-direction: column;\r\n	overflow: hidden;\r\n	color: #ffffff;\r\n	min-width: 150px;\r\n	min-height: 100px;\r\n}\r\n\r\n.whisper-header {\r\n	background: rgba(255, 255, 255, 0.2);\r\n	height: 18px;\r\n	padding: 0 5px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: space-between;\r\n	color: #ffffff;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n	cursor: move;\r\n}\r\n\r\n.whisper-header .close {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.whisper-body {\r\n	flex: 1;\r\n	padding: 0 2px 2px 5px;\r\n	overflow: hidden;\r\n	border-bottom: 1px solid white;\r\n}\r\n\r\n.whisper-body .contentwrapper {\r\n	height: 100%;\r\n}\r\n\r\n.whisper-body .content {\r\n	height: 100%;\r\n	overflow-y: auto;\r\n	font-size: 12px;\r\n	text-shadow: 1px 1px 0px #000;\r\n	word-break: break-all;\r\n	line-height: 14px;\r\n}\r\n\r\n.whisper-footer {\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n.whisper-footer .input-wrapper {\r\n	display: flex;\r\n	align-items: center;\r\n	height: 23px;\r\n	width: calc(100% - 25px);\r\n	overflow: hidden;\r\n}\r\n\r\n.whisper-footer .message {\r\n	width: 100%;\r\n	padding-left: 2px;\r\n	line-height: 18px;\r\n	outline: none;\r\n	white-space: nowrap;\r\n	overflow-x: hidden;\r\n	overflow-y: hidden;\r\n	color: #ffffff;\r\n	font-size: 12px;\r\n	display: inline-block;\r\n}\r\n\r\n.whisper-container img {\r\n	max-height: 1.25em;\r\n	width: auto;\r\n	vertical-align: middle;\r\n	background: transparent !important;\r\n}\r\n\r\n.whisper-footer .resizer {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcMenu/NpcMenu.html?raw
+var NpcMenu_default$2;
+var init_NpcMenu$2 = __esmMin((() => {
+	NpcMenu_default$2 = "<div id=\"NpcMenu\">\r\n	<div class=\"container\">\r\n		<div class=\"middle\">\r\n			<span class=\"title\"></span>\r\n			<div class=\"content\"></div>\r\n		</div>\r\n		<ui-button class=\"btn cancel\" bg=\"btn_cancel.bmp\" hover=\"btn_cancel_a.bmp\" down=\"btn_cancel_b.bmp\"></ui-button>\r\n		<ui-button class=\"btn ok\" bg=\"btn_ok.bmp\" hover=\"btn_ok_a.bmp\" down=\"btn_ok_b.bmp\"></ui-button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcMenu/NpcMenu.css?raw
+var NpcMenu_default$1;
+var init_NpcMenu$1 = __esmMin((() => {
+	NpcMenu_default$1 = ":host {\r\n	width: 276px;\r\n	height: 116px;\r\n	top: 285px;\r\n	left: 100px;\r\n}\r\n\r\n#NpcMenu {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	width: 276px;\r\n	height: 116px;\r\n	background-color: white;\r\n	padding: 2px;\r\n}\r\n\r\n#NpcMenu .title {\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	display: block;\r\n	width: 260px;\r\n	padding-left: 3px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#NpcMenu .container {\r\n	border-radius: 5px;\r\n	border: 1px solid #c1c6c2;\r\n	width: 269px;\r\n	height: 109px;\r\n	padding-left: 5px;\r\n	padding-top: 5px;\r\n}\r\n\r\n#NpcMenu .middle {\r\n	overflow-x: hidden;\r\n	overflow-y: scroll;\r\n}\r\n\r\n#NpcMenu .content {\r\n	white-space: pre-wrap;\r\n	background-color: #f9f9f9;\r\n	width: 260px;\r\n	height: 80px;\r\n	padding-left: 3px;\r\n	margin-top: 5px;\r\n}\r\n\r\n#NpcMenu .content div {\r\n	width: auto;\r\n	height: 17px;\r\n	display: block;\r\n	padding-top: 3px;\r\n	padding-left: 5px;\r\n}\r\n\r\n#NpcMenu .content div.selected {\r\n	background-color: #cde0ff;\r\n}\r\n\r\n#NpcMenu .btn {\r\n	position: absolute;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 5px;\r\n}\r\n\r\n#NpcMenu .cancel {\r\n	right: 4px;\r\n}\r\n\r\n#NpcMenu .ok {\r\n	right: 50px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/NpcMenu/NpcMenu.js
+/**
+* Helper: escape HTML
+*/
+function _escapeHTML$6(text) {
+	const div = document.createElement("div");
+	div.textContent = text;
+	return div.innerHTML;
+}
+/**
+* Submit an index
+*/
+function validate() {
+	NpcMenu.onSelectMenu(_ownerID, _index + 1);
+}
+/**
+* Pressed cancel, client send "255" as value
+*/
+function cancel$1() {
+	NpcMenu.onSelectMenu(_ownerID, 255);
+}
+/**
+* Select an index, change background color
+*/
+function selectIndex(div) {
+	NpcMenu.getRoot().querySelector(".content").querySelectorAll("div").forEach((d) => d.classList.remove("selected"));
+	div.classList.add("selected");
+	_index = parseInt(div.dataset.index, 10);
+}
+var NpcMenu, _index, _ownerID, NpcMenu_default;
+var init_NpcMenu = __esmMin((() => {
+	init_KeyEventHandler();
+	init_DBManager();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_NpcMenu$2();
+	init_NpcMenu$1();
+	init_InputBox();
+	NpcMenu = new GUIComponent("NpcMenu", NpcMenu_default$1);
+	NpcMenu.render = () => NpcMenu_default$2;
+	/**
+	* Freeze mouse — NPC menu blocks interaction
+	*/
+	NpcMenu.mouseMode = GUIComponent.MouseMode.FREEZE;
+	_index = 0;
+	_ownerID = 0;
+	/**
+	* Initialize component
+	*/
+	NpcMenu.init = function init() {
+		const root = NpcMenu.getRoot();
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => validate());
+		const cancelBtn = root.querySelector(".cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", () => cancel$1());
+		this._host.style.top = `${Math.max(376, Renderer.height / 2 + 76)}px`;
+		this._host.style.left = `${Math.max(Renderer.width / 3, 20)}px`;
+		this.draggable();
+		const content = root.querySelector(".content");
+		if (content) {
+			content.addEventListener("mousedown", (e) => {
+				const div = e.target.closest("div");
+				if (div && content.contains(div)) selectIndex(div);
+				e.stopImmediatePropagation();
+			});
+			content.addEventListener("dblclick", (e) => {
+				const div = e.target.closest("div");
+				if (div && content.contains(div)) validate();
+			});
+		}
+	};
+	/**
+	* Clean up events
+	*/
+	NpcMenu.onRemove = function onRemove() {
+		const content = NpcMenu.getRoot().querySelector(".content");
+		if (content) content.innerHTML = "";
+	};
+	/**
+	* Bind KeyDown event
+	*/
+	NpcMenu.onKeyDown = function onKeyDown(event) {
+		if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+		if (this._host.style.display === "none") return true;
+		const content = NpcMenu.getRoot().querySelector(".content");
+		switch (event.which) {
+			case KEYS.SPACE:
+			case KEYS.ENTER:
+				validate();
+				break;
+			case KEYS.ESCAPE:
+				cancel$1();
+				break;
+			case KEYS.UP: {
+				const divs = content.querySelectorAll("div");
+				_index = Math.max(_index - 1, 0);
+				divs.forEach((d) => d.classList.remove("selected"));
+				if (divs[_index]) divs[_index].classList.add("selected");
+				const top = _index * 20;
+				if (top < content.scrollTop) content.scrollTop = top;
+				break;
+			}
+			case KEYS.DOWN: {
+				const divs = content.querySelectorAll("div");
+				const count = divs.length;
+				_index = Math.min(_index + 1, count - 1);
+				divs.forEach((d) => d.classList.remove("selected"));
+				if (divs[_index]) divs[_index].classList.add("selected");
+				const top = _index * 20;
+				if (top >= content.scrollTop + 80) content.scrollTop = top - 60;
+				break;
+			}
+			default: return true;
+		}
+		event.stopImmediatePropagation();
+		return false;
+	};
+	/**
+	* Initialize menu
+	*
+	* @param {string} menu
+	* @param {number} gid - npc id
+	*/
+	NpcMenu.setMenu = function setMenu(menu, gid) {
+		const content = NpcMenu.getRoot().querySelector(".content");
+		const list = menu.split(":");
+		_ownerID = gid;
+		_index = 0;
+		content.innerHTML = "";
+		let j = 0;
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].length) {
+			const div = document.createElement("div");
+			div.innerHTML = DB.formatMsgToHtml(_escapeHTML$6(list[i]));
+			div.dataset.index = j++;
+			content.appendChild(div);
+		}
+		const first = content.querySelector("div");
+		if (first) first.classList.add("selected");
+	};
+	/**
+	* Abstract callback to define
+	*/
+	NpcMenu.onSelectMenu = function onSelectMenu() {};
+	NpcMenu_default = UIManager.addComponent(NpcMenu);
+}));
+//#endregion
+//#region src/Engine/MapEngine/Friends.js
+var Friends_exports = /* @__PURE__ */ __exportAll({ default: () => FriendEngine });
+/**
+* Get friend list from server
+*
+* @param {object} pkt - PACKET.ZC.FRIENDS_LIST
+*/
+function onFriendList(pkt) {
+	_friends = pkt.friendList;
+	controller.getUI().setFriends(_friends);
+}
+/**
+* Update friend information
+*
+* @param {object} pkt - PACKET.ZC.FRIENDS_STATE
+*/
+function onFriendUpdate(pkt) {
+	const idx = getFriendIndex(pkt.AID, pkt.GID);
+	if (idx > -1) {
+		_friends[idx].State = pkt.State;
+		controller.getUI().updateFriendState(idx, pkt.State);
+	}
+}
+/**
+* Get a friend request from someone
+*
+* @param {object} pkt - PACKET.ZC.REQ_ADD_FRIENDS
+*/
+function onFriendRequest(pkt) {
+	function answer(result) {
+		return () => {
+			FriendEngine.answerFriendRequest(pkt.ReqAID, pkt.ReqGID, result);
+		};
+	}
+	UIManager.showPromptBox(DB.getMessage(818).replace("%s", pkt.Name), "ok", "cancel", answer(1), answer(0));
+}
+/**
+* Server added a friend to our list
+*
+* @param {object} pkt - PACKET.ZC.ADD_FRIENDS_LIST
+*/
+function onFriendAdded(pkt) {
+	let idx;
+	switch (pkt.Result) {
+		case 0:
+			ChatBox_default.addText(DB.getMessage(821).replace("%s", pkt.Name), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
+			idx = getFriendIndex(pkt.AID, pkt.GID);
+			if (idx < 0) {
+				idx = _friends.length;
+				_friends[idx] = {};
+			}
+			_friends[idx].AID = pkt.AID;
+			_friends[idx].GID = pkt.GID;
+			_friends[idx].Name = pkt.Name;
+			_friends[idx].State = 0;
+			controller.getUI().updateFriend(idx, _friends[idx]);
+			break;
+		case 1:
+			ChatBox_default.addText(DB.getMessage(822).replace("%s", pkt.Name), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+			break;
+		case 2:
+			ChatBox_default.addText(DB.getMessage(819), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+			break;
+		case 3:
+			ChatBox_default.addText(DB.getMessage(820).replace("%s", pkt.Name), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+			break;
+	}
+}
+/**
+* Remove friend from list
+*
+* @param {object} pkt - PACKET.ZC.DELETE_FRIENDS
+*/
+function onFriendRemoved(pkt) {
+	const idx = getFriendIndex(pkt.AID, pkt.GID);
+	if (idx > -1) {
+		_friends.splice(idx, 1);
+		controller.getUI().removeFriend(idx);
+	}
+}
+/**
+* Search a friend in our list, get back it's index in array
+*
+* @param {number} account id
+* @param {number} character id
+* @returns {number} index in array
+*/
+function getFriendIndex(AID, GID) {
+	let i, count;
+	for (i = 0, count = _friends.length; i < count; ++i) if (_friends[i].AID === AID && _friends[i].GID === GID) return i;
+	return -1;
+}
+var _friends, FriendEngine;
+var init_Friends = __esmMin((() => {
+	init_DBManager();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_UIManager();
+	init_ChatBox();
+	init_PartyFriends();
+	_friends = [];
+	FriendEngine = class FriendEngine {
+		/**
+		* Initialzing engine
+		* (Hook Packets)
+		*/
+		static init() {
+			Network.hookPacket(PACKET.ZC.FRIENDS_LIST, onFriendList);
+			Network.hookPacket(PACKET.ZC.FRIENDS_STATE, onFriendUpdate);
+			Network.hookPacket(PACKET.ZC.REQ_ADD_FRIENDS, onFriendRequest);
+			Network.hookPacket(PACKET.ZC.ADD_FRIENDS_LIST, onFriendAdded);
+			Network.hookPacket(PACKET.ZC.DELETE_FRIENDS, onFriendRemoved);
+			const FriendUI = controller.getUI();
+			FriendUI.onRequestNewFriend = FriendEngine.addFriend;
+			FriendUI.onRemoveFriend = FriendEngine.removeFriend;
+		}
+		/**
+		* Clean up from memory
+		*
+		*/
+		static free() {
+			_friends.length = 0;
+		}
+		/**
+		* Add a friend to the list
+		*
+		* @param {string} name
+		*/
+		static addFriend(name) {
+			const pkt = new PACKET.CZ.ADD_FRIENDS();
+			pkt.name = name;
+			Network.sendPacket(pkt);
+		}
+		/**
+		* Remove a friend from the list
+		*
+		* @param {number} index
+		*/
+		static removeFriend(index) {
+			const pkt = new PACKET.CZ.DELETE_FRIENDS();
+			pkt.AID = _friends[index].AID;
+			pkt.GID = _friends[index].GID;
+			Network.sendPacket(pkt);
+		}
+		/**
+		* Answer to a friend request
+		*
+		* @param {number} account id
+		* @param {number} character id
+		* @param {number} answer
+		*/
+		static answerFriendRequest(AID, GID, result) {
+			const pkt = new PACKET.CZ.ACK_REQ_ADD_FRIENDS();
+			pkt.ReqAID = AID;
+			pkt.ReqGID = GID;
+			pkt.Result = result;
+			Network.sendPacket(pkt);
+		}
+		/**
+		* Check if a player is already a friend
+		*
+		* @param {string} player name
+		* @return {boolean} is friend
+		*/
+		static isFriend(name) {
+			const count = _friends.length;
+			for (let i = 0; i < count; ++i) if (name === _friends[i].Name) return true;
+			return false;
+		}
+		/**
+		* Say hi to all your friends
+		*/
+		static sayHi() {
+			const count = _friends.length;
+			const pkt = new PACKET.CZ.WHISPER();
+			pkt.msg = "(Hi) *^_^*";
+			for (let i = 0; i < count; ++i) if (_friends[i].State === 0) {
+				pkt.receiver = _friends[i].Name;
+				Network.sendPacket(pkt);
+			}
+			ChatBox_default.addText("[ To Friends ] : " + pkt.msg, ChatBox_default.TYPE.PRIVATE, ChatBox_default.FILTER.WHISPER);
+		}
+	};
+}));
+//#endregion
+//#region src/UI/Components/WhisperBox/WhisperBox.js
+/**
+* Move caret to the end of a contenteditable element
+* @param {HTMLElement} el
+*/
+function setCaretToEnd(el) {
+	const range = document.createRange();
+	const sel = window.getSelection();
+	range.selectNodeContents(el);
+	range.collapse(false);
+	sel.removeAllRanges();
+	sel.addRange(range);
+}
+/**
+* Extract plain chat text from input while preserving item links
+* @param {HTMLElement} inputEl
+* @returns {string}
+*/
+function extractChatMessage(inputEl) {
+	const clone = inputEl.cloneNode(true);
+	clone.querySelectorAll("span.item-link").forEach((link) => {
+		const data = link.getAttribute("data-item") || "";
+		link.replaceWith(document.createTextNode(data));
+	});
+	return clone.textContent.replace(/\u00A0/g, " ");
+}
+/**
+* Set up item link click handler inside an instance's shadow DOM
+* @param {GUIComponent} instance
+*/
+function setupItemLinkHandler(instance) {
+	instance.getRoot().addEventListener("click", (event) => {
+		const link = event.target.closest(".item-link");
+		if (!link) return;
+		const match = link.getAttribute("data-item");
+		const item = DB.parseItemLink(match);
+		if (item) __vitePreload(() => Promise.resolve().then(() => (init_ItemInfo(), ItemInfo_exports)).then((m) => {
+			const ItemInfo = m.default;
+			ItemInfo.append();
+			ItemInfo.uid = item.ITID;
+			ItemInfo.setItem(item);
+		}), void 0, import.meta.url);
+	});
+}
+/**
+* Set up nickname link click handler inside an instance's shadow DOM
+* @param {GUIComponent} instance
+*/
+function setupNicknameLinkHandler(instance) {
+	const root = instance.getRoot();
+	root.addEventListener("mousedown", (event) => {
+		if (event.target.closest(".nickname-link")) event.stopPropagation();
+	});
+	root.addEventListener("click", (event) => {
+		const link = event.target.closest(".nickname-link");
+		if (!link) return;
+		const nickname = link.getAttribute("data-nickname");
+		if (nickname) WhisperBox.show(nickname);
+		event.stopImmediatePropagation();
+	});
+}
+/**
+* Initialize resizable logic for an instance
+* @param {GUIComponent} instance
+*/
+function initResizable(instance) {
+	const root = instance.getRoot();
+	const resizer = root.querySelector(".resizer");
+	if (!resizer) return;
+	const resize = (e) => {
+		const rect = instance._host.getBoundingClientRect();
+		const width = Math.max(150, e.pageX - rect.left);
+		const height = Math.max(100, e.pageY - rect.top);
+		instance._host.style.width = `${width}px`;
+		instance._host.style.height = `${height}px`;
+		const container = root.querySelector(".whisper-container");
+		if (container) {
+			container.style.width = `${width}px`;
+			container.style.height = `${height}px`;
+		}
+		instance._contentEl.scrollTop = instance._contentEl.scrollHeight;
+	};
+	const stopResize = () => {
+		window.removeEventListener("mousemove", resize);
+		window.removeEventListener("mouseup", stopResize);
+	};
+	resizer.addEventListener("mousedown", (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		window.addEventListener("mousemove", resize);
+		window.addEventListener("mouseup", stopResize);
+	});
+}
+var WhisperBox, _preferences$42;
+var init_WhisperBox = __esmMin((() => {
+	init_DBManager();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_Preferences$1();
+	init_KeyEventHandler();
+	init_Renderer();
+	init_ChatBox();
+	init_History();
+	init_SoundManager();
+	init_WhisperBox$2();
+	init_WhisperBox$1();
+	init_NpcBox();
+	init_NpcMenu();
+	init_InputBox();
+	init_preload_helper();
+	WhisperBox = new GUIComponent("WhisperBox", WhisperBox_default);
+	WhisperBox.render = () => WhisperBox_default$1;
+	/**
+	* @var {Object} active whisper windows indexed by nickname
+	*/
+	WhisperBox.instances = {};
+	/**
+	* @var {number} Offset counter for spawning
+	*/
+	WhisperBox._spawnCounter = 0;
+	/** @var {Preferences} window structure */
+	WhisperBox.preferences = Preferences.get("WhisperBox", {
+		x: 100,
+		y: 100,
+		show: false,
+		open1to1Stranger: true,
+		open1to1Friend: true,
+		alarm1to1: true
+	}, 1);
+	_preferences$42 = WhisperBox.preferences;
+	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
+	WhisperBox.captureKeyEvents = true;
+	/**
+	* Initialize component
+	*/
+	WhisperBox._chatBoxNickHandlerAttached = false;
+	WhisperBox.init = function init() {
+		this.clearAll();
+		if (!this._chatBoxNickHandlerAttached) {
+			setupNicknameLinkHandler(ChatBox_default);
+			this._chatBoxNickHandlerAttached = true;
+		}
+	};
+	/**
+	* Clear all history and windows
+	*/
+	WhisperBox.clearAll = function clearAll() {
+		const keys = Object.keys(this.instances);
+		for (let i = 0; i < keys.length; i++) this.instances[keys[i]].remove();
+		this.instances = {};
+	};
+	/**
+	* Show or create a whisper window for a specific user
+	* @param {string} nickname
+	* @param {boolean} [bHasMessage]
+	*/
+	WhisperBox.show = function show(nickname, bHasMessage) {
+		if (this.instances[nickname]) {
+			this.instances[nickname]._host.style.display = "";
+			this.instances[nickname].focus();
+			return this.instances[nickname];
+		}
+		if (_preferences$42.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
+		const instance = this.clone(nickname);
+		instance.nickname = nickname;
+		instance.name = `WhisperBox:${nickname}`;
+		instance.needFocus = true;
+		instance.captureKeyEvents = true;
+		instance.onKeyDown = function onKeyDown(event) {
+			if (InputBox_default._host && InputBox_default._host.style.display !== "none" && InputBox_default.__active) return true;
+			if (NpcMenu_default._host && NpcMenu_default._host.style.display !== "none" && NpcMenu_default.__active) return true;
+			if (NpcBox_default._host && NpcBox_default._host.style.display !== "none" && NpcBox_default.__active) return true;
+			if (this.isEditableFocused()) {
+				const focused = this.getRoot().activeElement;
+				const isInput = !!(focused && focused.tagName && focused.tagName.match(/input|select|textarea/i));
+				const isContentEditable = !!(focused && focused.getAttribute && focused.getAttribute("contenteditable") === "true");
+				if (isInput || isContentEditable) switch (event.which) {
+					case KEYS.ESCAPE:
+						this.remove();
+						event.stopImmediatePropagation();
+						return false;
+					case KEYS.ENTER: {
+						const msg = extractChatMessage(this._inputEl).replace(/\u00A0/g, " ").trim();
+						if (msg.length) {
+							this.history.push(msg);
+							WhisperBox.onRequestTalk(this.nickname, msg);
+							this._inputEl.innerHTML = "";
+						}
+						event.stopImmediatePropagation();
+						return false;
+					}
+					case KEYS.UP:
+					case KEYS.DOWN: {
+						const historyMsg = event.which === KEYS.UP ? this.history.previous() : this.history.next();
+						this._inputEl.innerHTML = historyMsg;
+						setCaretToEnd(this._inputEl);
+						event.stopImmediatePropagation();
+						return false;
+					}
+					default: {
+						const currentText = extractChatMessage(this._inputEl);
+						if (event.which >= 32 && currentText.length >= 100 && !event.ctrlKey && !event.altKey) {
+							event.stopImmediatePropagation();
+							return false;
+						}
+						event.stopImmediatePropagation();
+						return true;
+					}
+				}
+			}
+			return true;
+		};
+		UIManager.addComponent(instance);
+		instance.prepare();
+		instance.append();
+		const root = instance.getRoot();
+		instance._contentEl = root.querySelector(".content");
+		instance._inputEl = root.querySelector(".input-whisper");
+		__vitePreload(() => Promise.resolve().then(() => (init_Friends(), Friends_exports)).then((Friends) => {
+			const isFriend = Friends && Friends.default.isFriend ? Friends.default.isFriend(nickname) : false;
+			const titleEl = root.querySelector(".title");
+			if (titleEl) titleEl.textContent = `With ${nickname}${isFriend ? " (Friend)" : ""}`;
+		}), void 0, import.meta.url);
+		instance.draggable(".whisper-header, .whisper-footer");
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) {
+			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			closeBtn.addEventListener("click", () => {
+				instance.remove();
+			});
+		}
+		const self = this;
+		instance.onRemove = function onRemove() {
+			delete self.instances[nickname];
+			delete UIManager.components[this.name];
+		};
+		instance.history = new History();
+		instance._inputEl.addEventListener("paste", (event) => {
+			event.preventDefault();
+			const clipboard = (event.originalEvent || event).clipboardData;
+			let paste = clipboard ? clipboard.getData("text/plain") : "";
+			if (!paste) return false;
+			paste = paste.replace(/\u00A0/g, " ");
+			const remaining = 100 - extractChatMessage(instance._inputEl).length;
+			if (remaining <= 0) return false;
+			const toInsert = paste.substr(0, remaining);
+			const selection = window.getSelection();
+			if (selection.rangeCount) {
+				selection.deleteFromDocument();
+				selection.getRangeAt(0).insertNode(document.createTextNode(toInsert));
+				selection.collapseToEnd();
+			}
+		});
+		instance._host.addEventListener("mousedown", () => {
+			instance.focus();
+		});
+		setupItemLinkHandler(instance);
+		initResizable(instance);
+		const offset = this._spawnCounter % 10 * 20;
+		this._spawnCounter++;
+		instance._host.style.top = `${Math.min(Math.max(0, _preferences$42.y + offset), Renderer.height - 156)}px`;
+		instance._host.style.left = `${Math.min(Math.max(0, _preferences$42.x + offset), Renderer.width - 280)}px`;
+		this.instances[nickname] = instance;
+		return instance;
+	};
+	/**
+	* Add text to whisper box
+	* @param {string} nickname
+	* @param {string} text
+	* @param {string} color
+	*/
+	WhisperBox.addText = function addText(nickname, text, color) {
+		const instance = this.instances[nickname] || this.show(nickname, true);
+		let override = false;
+		text = text.replace(/<ITEMLINK>.*?<\/ITEMLINK>|<ITEML>.*?<\/ITEML>|<ITEM>.*?<\/ITEM>/gi, (match) => {
+			const item = DB.parseItemLink(match);
+			if (!item) return match;
+			override = true;
+			return `<span data-item="${match}" class="item-link" style="color:#FFFF63; cursor:pointer;">&lt;${item.name}&gt;</span>`;
+		});
+		const contentEl = instance._contentEl;
+		const isAtBottom = contentEl.scrollHeight - contentEl.scrollTop <= contentEl.offsetHeight + 10;
+		const div = document.createElement("div");
+		div.style.color = color || "#ffffff";
+		if (override) div.innerHTML = text;
+		else div.textContent = text;
+		contentEl.appendChild(div);
+		while (contentEl.childElementCount > 100) contentEl.firstElementChild.remove();
+		if (isAtBottom) contentEl.scrollTop = contentEl.scrollHeight;
+	};
+	/**
+	* Interface to be overriden by Engine
+	*/
+	WhisperBox.onRequestTalk = function onRequestTalk(_nickname, _text) {};
+	UIManager.addComponent(WhisperBox);
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyHelper/PartyHelper.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$17() {
+	return PartyHelper._shadow || PartyHelper._host;
+}
+/**
+* Validate and process form data
+*/
+function onValidate$1() {
+	const root = _root$17();
+	const PartyFriends = UIManager.getComponent("PartyFriends");
+	switch (_type$6) {
+		case PartyHelper.Type.CREATE: {
+			const nameInput = root.querySelector(".content .name");
+			const name = nameInput ? nameInput.value : "";
+			if (name.length) {
+				const itemShareOn = root.querySelector(".item_share .on");
+				const itemSharingOn = root.querySelector(".item_sharing_type .on");
+				PartyFriends.onRequestPartyCreation(name, itemShareOn ? parseInt(itemShareOn.dataset.value, 10) : 0, itemSharingOn ? parseInt(itemSharingOn.dataset.value, 10) : 0);
+				PartyHelper.remove();
+			}
+			break;
+		}
+		case PartyHelper.Type.INVITE: {
+			const nameInput = root.querySelector(".content .name");
+			const name = nameInput ? nameInput.value : "";
+			if (name.length) PartyFriends.onRequestAddingMember(0, name);
+			break;
+		}
+		case PartyHelper.Type.SETUP: {
+			const expShareOn = root.querySelector(".exp_share .on");
+			const itemShareOn = root.querySelector(".item_share .on");
+			const itemSharingOn = root.querySelector(".item_sharing_type .on");
+			PartyFriends.onRequestSettingUpdate(expShareOn ? parseInt(expShareOn.dataset.value, 10) : 0, itemShareOn ? parseInt(itemShareOn.dataset.value, 10) : 0, itemSharingOn ? parseInt(itemSharingOn.dataset.value, 10) : 0);
+			PartyHelper.remove();
+			break;
+		}
+	}
+}
+var PartyHelper, _type$6, PartyHelper_default;
+var init_PartyHelper = __esmMin((() => {
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_KeyEventHandler();
+	init_PacketVerManager();
+	init_PartyHelper$2();
+	init_PartyHelper$1();
+	init_WhisperBox();
+	PartyHelper = new GUIComponent("PartyHelper", PartyHelper_default$1);
+	/**
+	* Window type constants
+	*/
+	PartyHelper.Type = {
+		CREATE: 0,
+		SETUP: 1,
+		INVITE: 2,
+		FRIEND_SETUP: 3
+	};
+	_type$6 = PartyHelper.Type.CREATE;
+	/**
+	* Render HTML
+	*/
+	PartyHelper.render = () => PartyHelper_default$2;
+	/**
+	* Has input fields — protect keyboard events
+	*/
+	PartyHelper.captureKeyEvents = true;
+	/**
+	* Initialize component event listeners
+	*/
+	PartyHelper.init = function init() {
+		const root = _root$17();
+		const baseBtn = root.querySelector(".base");
+		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
+			e.stopImmediatePropagation();
+			e.preventDefault();
+		});
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", () => {
+			PartyHelper.remove();
+		});
+		const cancelBtn = root.querySelector(".cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", () => {
+			PartyHelper.remove();
+		});
+		const okBtn = root.querySelector(".ok");
+		if (okBtn) okBtn.addEventListener("click", () => {
+			onValidate$1();
+		});
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.addEventListener("keydown", (event) => {
+			if (event.which === 13 || event.key === "Enter") {
+				onValidate$1();
+				event.preventDefault();
+				event.stopImmediatePropagation();
+			}
+		});
+		root.querySelectorAll(".setting-row").forEach((row) => {
+			row.addEventListener("mousedown", (event) => {
+				const on = row.querySelector(".on");
+				const off = row.querySelector(".off");
+				if (!on || !off) return;
+				on.classList.remove("on");
+				on.classList.add("off");
+				off.classList.remove("off");
+				off.classList.add("on");
+				const prefs = WhisperBox.preferences;
+				const rootEl = _root$17();
+				const strangerOn = rootEl.querySelector(".open1to1Stranger .on");
+				const friendOn = rootEl.querySelector(".open1to1Friend .on");
+				const alarmOn = rootEl.querySelector(".alarm1to1 .on");
+				prefs.open1to1Stranger = strangerOn ? parseInt(strangerOn.dataset.value, 10) === 1 : prefs.open1to1Stranger;
+				prefs.open1to1Friend = friendOn ? parseInt(friendOn.dataset.value, 10) === 1 : prefs.open1to1Friend;
+				prefs.alarm1to1 = alarmOn ? parseInt(alarmOn.dataset.value, 10) === 1 : prefs.alarm1to1;
+				prefs.save();
+				event.stopImmediatePropagation();
+				event.preventDefault();
+			});
+		});
+		root.addEventListener("mousedown", (event) => {
+			const off = event.target.closest(".off");
+			if (!off) return;
+			if (off.parentNode.classList.contains("setting-row")) return;
+			const contentEl = root.querySelector(".content");
+			if (contentEl && contentEl.classList.contains("disabled")) return;
+			const on = off.parentNode.querySelector(".on");
+			if (!on) return;
+			on.className = "off";
+			off.className = "on";
+			const tmp = on.style.backgroundImage;
+			on.style.backgroundImage = off.style.backgroundImage;
+			off.style.backgroundImage = tmp;
+		});
+		root.addEventListener("mousedown", (event) => {
+			const on = event.target.closest(".on");
+			if (!on) return;
+			if (on.parentNode.classList.contains("setting-row")) return;
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		}, true);
+		this.draggable(".titlebar");
+	};
+	/**
+	* Key handler — block shortcuts when input is focused
+	*/
+	PartyHelper.onKeyDown = function onKeyDown(event) {
+		const shadow = this._shadow || this._host;
+		const focused = shadow ? shadow.activeElement : null;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				PartyHelper.remove();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			if (event.which === KEYS.ENTER || event.key === "Enter") return true;
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+			PartyHelper.remove();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
+	};
+	/**
+	* Position UI relative to PartyFriends window
+	*/
+	PartyHelper.onAppend = function onAppend() {
+		const base = UIManager.getComponent("PartyFriends");
+		const root = _root$17();
+		const partyContent = root.querySelector(".party-content");
+		const friendContent = root.querySelector(".friend-content");
+		if (partyContent) partyContent.style.display = "none";
+		if (friendContent) friendContent.style.display = "none";
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.value = "";
+		if (base && base._host) {
+			this._host.style.top = base._host.style.top;
+			this._host.style.left = `${parseInt(base._host.style.left, 10) + (base._host.offsetWidth || 0) + 10}px`;
+		}
+		window.addEventListener("keydown", this._onKeyDown, true);
+	};
+	/**
+	* Cleanup on window removal
+	*/
+	PartyHelper.onRemove = function onRemove() {
+		const root = _root$17();
+		const partyContent = root.querySelector(".party-content");
+		const friendContent = root.querySelector(".friend-content");
+		if (partyContent) partyContent.style.display = "none";
+		if (friendContent) friendContent.style.display = "none";
+		const nameInput = root.querySelector(".name");
+		if (nameInput) nameInput.value = "";
+		window.removeEventListener("keydown", this._onKeyDown, true);
+	};
+	/**
+	* Set window display mode
+	* @param {number} type
+	*/
+	PartyHelper.setType = function setType(type) {
+		const root = _root$17();
+		root.querySelectorAll(".content").forEach((el) => el.classList.remove("disabled"));
+		const footer = root.querySelector(".footer");
+		if (footer) footer.style.display = "block";
+		if (type === PartyHelper.Type.FRIEND_SETUP && PacketVerManager_default.value < 20090617) type = PartyHelper.Type.SETUP;
+		const innerRoot = root.querySelector("#PartyHelper");
+		const friendContent = root.querySelector(".friend-content");
+		const partyContent = root.querySelector(".party-content");
+		const footerBtns = root.querySelectorAll(".footer .btn");
+		const show = (sel) => root.querySelectorAll(sel).forEach((el) => {
+			el.style.display = "";
+		});
+		const hide = (sel) => root.querySelectorAll(sel).forEach((el) => {
+			el.style.display = "none";
+		});
+		switch (type) {
+			case PartyHelper.Type.CREATE:
+				if (innerRoot) innerRoot.style.width = "130px";
+				if (friendContent) friendContent.style.display = "none";
+				if (partyContent) partyContent.style.display = "block";
+				hide(".setup");
+				hide(".invite");
+				show(".create");
+				hide(".titlebar .setup");
+				hide(".titlebar .invite");
+				hide(".titlebar .friend-setup");
+				show(".titlebar .create");
+				if (footer) footer.style.height = "27px";
+				footerBtns.forEach((el) => {
+					el.style.display = "";
+				});
+				break;
+			case PartyHelper.Type.INVITE:
+				if (innerRoot) innerRoot.style.width = "130px";
+				if (friendContent) friendContent.style.display = "none";
+				if (partyContent) partyContent.style.display = "block";
+				hide(".setup");
+				hide(".create");
+				show(".invite");
+				hide(".titlebar .setup");
+				hide(".titlebar .create");
+				hide(".titlebar .friend-setup");
+				show(".titlebar .invite");
+				if (footer) footer.style.height = "27px";
+				footerBtns.forEach((el) => {
+					el.style.display = "";
+				});
+				break;
+			case PartyHelper.Type.SETUP:
+				if (innerRoot) innerRoot.style.width = "130px";
+				if (friendContent) friendContent.style.display = "none";
+				if (partyContent) partyContent.style.display = "block";
+				hide(".create");
+				hide(".invite");
+				show(".setup");
+				hide(".titlebar .create");
+				hide(".titlebar .invite");
+				hide(".titlebar .friend-setup");
+				show(".titlebar .setup");
+				if (footer) footer.style.height = "27px";
+				footerBtns.forEach((el) => {
+					el.style.display = "";
+				});
+				break;
+			case PartyHelper.Type.FRIEND_SETUP:
+				if (innerRoot) innerRoot.style.width = "230px";
+				if (partyContent) partyContent.style.display = "none";
+				if (friendContent) friendContent.style.display = "block";
+				hide(".titlebar .create");
+				hide(".titlebar .invite");
+				hide(".titlebar .setup");
+				show(".titlebar .friend-setup");
+				if (footer) footer.style.height = "20px";
+				footerBtns.forEach((el) => {
+					el.style.display = "none";
+				});
+				break;
+		}
+		_type$6 = type;
+	};
+	/**
+	* Update party settings UI
+	* @param {object} options
+	* @param {boolean} editable
+	*/
+	PartyHelper.setOptions = function setOptions(options, editable) {
+		const root = _root$17();
+		function swap(off) {
+			const on = off.parentNode.querySelector(".on");
+			const tmp = on.style.backgroundImage;
+			on.className = "off";
+			off.className = "on";
+			on.style.backgroundImage = off.style.backgroundImage;
+			off.style.backgroundImage = tmp;
+		}
+		const list = [
+			"exp_share",
+			"item_share",
+			"item_sharing_type"
+		];
+		const count = list.length;
+		for (let i = 0; i < count; ++i) {
+			if (options[list[i]] === void 0) continue;
+			const container = root.querySelector(`.${list[i]}`);
+			if (!container) continue;
+			const element = container.querySelector(".off");
+			if (element && options[list[i]] == element.dataset.value) swap(element);
+		}
+		const contentEls = root.querySelectorAll(".content");
+		if (!editable) contentEls.forEach((el) => el.classList.add("disabled"));
+		else contentEls.forEach((el) => el.classList.remove("disabled"));
+	};
+	/**
+	* Update friend/whisper settings UI
+	* @param {object} options
+	*/
+	PartyHelper.setFriendOptions = function setFriendOptions(options) {
+		const root = _root$17();
+		function swap(off) {
+			const on = off.parentNode.querySelector(".on");
+			on.className = "off";
+			off.className = "on";
+		}
+		const list = [
+			"open1to1Stranger",
+			"open1to1Friend",
+			"alarm1to1"
+		];
+		const count = list.length;
+		for (let i = 0; i < count; ++i) {
+			const value = options[list[i]] === true || options[list[i]] == 1;
+			const row = root.querySelector(`.${list[i]}`);
+			if (!row) continue;
+			const on = row.querySelector(".on");
+			const off = row.querySelector(".off");
+			if (on && off && value !== (on.dataset.value == 1)) swap(off);
+		}
+	};
+	/**
+	* Get current window type
+	* @returns {number}
+	*/
+	PartyHelper.getType = function getType() {
+		return _type$6;
+	};
+	/**
+	* Hooks
+	*/
+	PartyHelper.onCreate = function onCreate() {};
+	PartyHelper.onInvite = function onInvite() {};
+	PartyHelper.onSetupUpdate = function onSetUpUpdate() {};
+	PartyHelper.mouseMode = GUIComponent.MouseMode.STOP;
+	PartyHelper_default = UIManager.addComponent(PartyHelper);
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.html?raw
+var PartyMemberExternal_default$2;
+var init_PartyMemberExternal$2 = __esmMin((() => {
+	PartyMemberExternal_default$2 = "<div id=\"PartyMemberExternal\">\r\n	<ui-image src=\"renewalparty/img_partymini_bg.tga\"></ui-image>\r\n	<ui-button\r\n		class=\"close\"\r\n		bg=\"renewalparty/btn_titlebar_maximum_out.bmp\"\r\n		hover=\"renewalparty/btn_titlebar_maximum_over.bmp\"\r\n		down=\"renewalparty/btn_titlebar_maximum_press.bmp\"\r\n	></ui-button>\r\n	<div class=\"job-icon-container\">\r\n		<div class=\"job-icon\"></div>\r\n		<div class=\"crown\"></div>\r\n	</div>\r\n	<div class=\"info-container\">\r\n		<div class=\"row1\">\r\n			<span class=\"level\"></span>\r\n			<span class=\"name\"></span>\r\n			<span class=\"map\"></span>\r\n		</div>\r\n		<div class=\"row2\">\r\n			<div class=\"hp-bar-container\">\r\n				<canvas class=\"life\" width=\"75\" height=\"5\"></canvas>\r\n			</div>\r\n			<span class=\"hp-text\"></span>\r\n			<div class=\"status-icon\"></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.css?raw
+var PartyMemberExternal_default$1;
+var init_PartyMemberExternal$1 = __esmMin((() => {
+	PartyMemberExternal_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyMemberExternal {\r\n	width: 150px;\r\n	height: 38px;\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 3px 5px;\r\n	box-sizing: border-box;\r\n	z-index: 100;\r\n	cursor: move;\r\n}\r\n\r\n#PartyMemberExternal .close {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .job-icon-container {\r\n	position: relative;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyMemberExternal .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyMemberExternal:not(.online) .job-icon,\r\n#PartyMemberExternal:not(.online) .crown {\r\n	filter: grayscale(100%);\r\n}\r\n\r\n#PartyMemberExternal .crown {\r\n	position: absolute;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .info-container {\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyMemberExternal .row1,\r\n#PartyMemberExternal .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyMemberExternal .row2 {\r\n	margin-top: 2px;\r\n	height: 12px;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyMemberExternal .level {\r\n	font-size: 11px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyMemberExternal .name {\r\n	font-weight: normal;\r\n	color: #fff;\r\n	font-size: 11px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	flex: 1;\r\n}\r\n\r\n#PartyMemberExternal .map {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	position: relative;\r\n}\r\n\r\n#PartyMemberExternal .life {\r\n	display: block;\r\n	height: 5px;\r\n	width: 75px;\r\n}\r\n\r\n#PartyMemberExternal .hp-text {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .status-icon {\r\n	display: none;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.html?raw
+var SkillTargetSelection_default$2;
+var init_SkillTargetSelection$2 = __esmMin((() => {
+	SkillTargetSelection_default$2 = "<div id=\"SkillTargetSelection\">\r\n	<canvas class=\"skill-name\"></canvas>\r\n	<canvas class=\"skill-description\"></canvas>\r\n	<canvas class=\"skill-level\"></canvas>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.css?raw
+var SkillTargetSelection_default$1;
+var init_SkillTargetSelection$1 = __esmMin((() => {
+	SkillTargetSelection_default$1 = ":host {\r\n	top: 0;\r\n	left: 0;\r\n	overflow: visible;\r\n	pointer-events: none;\r\n}\r\n\r\n#SkillTargetSelection {\r\n	display: block;\r\n}\r\n\r\n.skill-name {\r\n	position: fixed;\r\n	top: 45px;\r\n	z-index: 100;\r\n	border-radius: 3px;\r\n	border: 1px solid #555;\r\n	pointer-events: auto;\r\n}\r\n\r\n.skill-description {\r\n	position: fixed;\r\n	bottom: 60px;\r\n	z-index: 100;\r\n	border-radius: 3px;\r\n	border: 1px solid #555;\r\n	pointer-events: auto;\r\n}\r\n\r\n.skill-level {\r\n	position: fixed;\r\n	left: 0;\r\n	top: 0;\r\n	z-index: 100;\r\n	pointer-events: auto;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillTargetSelection/SkillTargetSelection.js
+/**
+* Render text into the canvas
+*
+* @param {string} text to render
+* @param {CanvasElement} canvas node
+*/
+function renderText(text, canvas) {
+	const fontSize = 12;
+	const ctx = canvas.getContext("2d");
+	ctx.font = `${fontSize}px Arial`;
+	canvas.width = ctx.measureText(text).width + 14;
+	canvas.height = 23;
+	ctx.font = `${fontSize}px Arial`;
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "rgba(0,0,0,0.5)";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillStyle = "black";
+	ctx.fillText(text, 8, 17);
+	ctx.fillStyle = "#00FF00";
+	ctx.fillText(text, 7, 16);
+	canvas.style.left = `${Renderer.width - canvas.width >> 1}px`;
+}
+/**
+* Render level text into the canvas
+*
+* @param {string} text to render
+* @param {CanvasElement} canvas node
+*/
+function renderLevel(text, canvas) {
+	const fontSize = 24;
+	const ctx = canvas.getContext("2d");
+	canvas.width = 35;
+	canvas.height = 35;
+	ctx.font = `${fontSize}px Arial`;
+	ctx.strokeStyle = "#333333";
+	ctx.lineWidth = 3;
+	ctx.strokeText(text, 0, 30);
+	ctx.fillStyle = "white";
+	ctx.fillText(text, 0, 30);
+}
+/**
+* Intersect entity when clicking
+*/
+function intersectEntities(event) {
+	if (_mousedownHandler) {
+		window.removeEventListener("mousedown", _mousedownHandler, true);
+		_mousedownHandler = null;
+	}
+	SkillTargetSelection.remove();
+	if (!Mouse.intersect) return false;
+	if (event.which !== 1) return true;
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	if (_flag & SkillTargetSelection.TYPE.PLACE) {
+		SkillTargetSelection.onUseSkillToPos(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, Mouse.world.x, Mouse.world.y);
+		return false;
+	}
+	const entity = EntityManager.getOverEntity();
+	if (!entity) return false;
+	if (entity.objecttype === Entity.TYPE_TRAP && !(_flag & SkillTargetSelection.TYPE.TRAP)) return false;
+	intersectEntity(entity);
+	return false;
+}
+/**
+* Intersect with an entity
+*
+* @param {object} entity
+*/
+function intersectEntity(entity) {
+	let target = 0;
+	switch (entity.objecttype) {
+		case Entity.TYPE_MOB:
+		case Entity.TYPE_UNIT:
+			target = SkillTargetSelection.TYPE.ENEMY | SkillTargetSelection.TYPE.PET;
+			break;
+		case Entity.TYPE_TRAP:
+			target = SkillTargetSelection.TYPE.TRAP;
+			break;
+		case Entity.TYPE_HOM:
+		case Entity.TYPE_MERC:
+			target = SkillTargetSelection.TYPE.HOMUN | SkillTargetSelection.TYPE.FRIEND;
+			break;
+		case Entity.TYPE_PC:
+		case Entity.TYPE_ELEM:
+			target = SkillTargetSelection.TYPE.FRIEND;
+			break;
+		default: return;
+	}
+	if (!(target & _flag) && !KEYS.SHIFT && !Controls_default.noshift && !SkillTargetSelection.checkMapState(entity)) return;
+	if (_flag === SkillTargetSelection.TYPE.PET) {
+		SkillTargetSelection.onPetSelected(entity.GID);
+		return;
+	}
+	if (_flag & SkillTargetSelection.TYPE.ENEMY && entity === SessionStorage_default.Entity) return;
+	SkillTargetSelection.onUseSkillToId(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entity.GID);
+}
+var SkillTargetSelection, _flag, _skill, _skillName, _description, _skillLevel, _mousedownHandler, SkillTargetSelection_default;
+var init_SkillTargetSelection = __esmMin((() => {
+	init_DBManager();
+	init_SkillInfo();
+	init_KeyEventHandler();
+	init_MouseEventHandler();
+	init_Renderer();
+	init_Entity$1();
+	init_EntityManager();
+	init_SessionStorage();
+	init_Controls();
+	init_UIManager();
+	init_GUIComponent();
+	init_CursorManager();
+	init_PartyFriends();
+	init_SkillTargetSelection$2();
+	init_SkillTargetSelection$1();
+	SkillTargetSelection = new GUIComponent("SkillTargetSelection", SkillTargetSelection_default$1);
+	SkillTargetSelection.render = () => SkillTargetSelection_default$2;
+	/**
+	* Mouse can cross this UI
+	*/
+	SkillTargetSelection.mouseMode = GUIComponent.MouseMode.CROSS;
+	/**
+	* Do not focus this UI
+	*/
+	SkillTargetSelection.needFocus = false;
+	/**
+	* Handle ESCAPE before other handlers
+	*/
+	SkillTargetSelection.captureKeyEvents = true;
+	/**
+	* @var {constant}
+	*/
+	SkillTargetSelection.TYPE = {
+		ENEMY: 1,
+		PLACE: 2,
+		SELF: 4,
+		FRIEND: 16,
+		TRAP: 32,
+		TARGET: 51,
+		PET: 64,
+		HOMUN: 128
+	};
+	_flag = 0;
+	_mousedownHandler = null;
+	/**
+	* Initialize component
+	*/
+	SkillTargetSelection.init = function init() {
+		const root = this.getRoot();
+		_skillName = root.querySelector(".skill-name");
+		_description = root.querySelector(".skill-description");
+		_skillLevel = root.querySelector(".skill-level");
+		_skillName.style.display = "none";
+		_description.style.display = "none";
+		_skillLevel.style.display = "none";
+		window.addEventListener("mousemove", (event) => {
+			_skillLevel.style.left = `${event.pageX + 20}px`;
+			_skillLevel.style.top = `${event.pageY - 18}px`;
+		});
+		renderText(DB.getMessage(234), _description);
+	};
+	/**
+	* Append to body
+	*/
+	SkillTargetSelection.onAppend = function onAppend() {
+		_skillName.style.display = "block";
+		_description.style.display = "block";
+		_skillLevel.style.display = "block";
+		_mousedownHandler = (event) => {
+			intersectEntities(event);
+		};
+		window.addEventListener("mousedown", _mousedownHandler, true);
+	};
+	/**
+	* Possible to exit using ESCAPE
+	*/
+	SkillTargetSelection.onKeyDown = function onKeyDown(event) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			this.remove();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
+	};
+	/**
+	* Remove from body
+	*/
+	SkillTargetSelection.onRemove = function onRemove() {
+		if (_mousedownHandler) {
+			window.removeEventListener("mousedown", _mousedownHandler, true);
+			_mousedownHandler = null;
+		}
+		Cursor.blockMagnetism = false;
+		Cursor.freeze = false;
+		Cursor.setType(Cursor.ACTION.DEFAULT);
+		EntityManager.setSupportPicking(false);
+		_skillName.style.display = "none";
+		_description.style.display = "none";
+		_skillLevel.style.display = "none";
+		Mouse.state = Mouse.MOUSE_STATE.NORMAL;
+	};
+	/**
+	* Set informations for the target
+	*
+	* @param {object} skill
+	* @param {number} skill type
+	* @param {string} description name (optional)
+	*/
+	SkillTargetSelection.set = function set(skill, target, description) {
+		_flag = target;
+		_skill = skill;
+		if (!_flag) return;
+		if (SessionStorage_default.TouchTargeting) {
+			const entityFocus = EntityManager.getFocusEntity();
+			if (entityFocus) {
+				if (_flag & SkillTargetSelection.TYPE.PLACE) SkillTargetSelection.onUseSkillToPos(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entityFocus.position[0], entityFocus.position[1]);
+				else SkillTargetSelection.onUseSkillToId(_skill.SKID, _skill.useLevel ? _skill.useLevel : _skill.level, entityFocus.GID);
+				SkillTargetSelection.remove();
+				return;
+			}
+		}
+		if (_flag & SkillTargetSelection.TYPE.PLACE) Cursor.blockMagnetism = true;
+		Mouse.state = Mouse.MOUSE_STATE.USESKILL;
+		EntityManager.setSupportPicking((_flag & SkillTargetSelection.TYPE.FRIEND) > 0);
+		const sk = SkillInfo[skill.SKID];
+		renderText(description || sk.SkillName, _skillName);
+		renderLevel(_skill.useLevel ? _skill.useLevel : _skill.level, _skillLevel);
+		Cursor.setType(Cursor.ACTION.TARGET);
+		Cursor.freeze = true;
+	};
+	SkillTargetSelection.setSkillLevelDelta = function setSkillLevelDelta(delta) {
+		if (!SkillInfo[_skill.SKID].bSeperateLv) return;
+		if (!_skill.useLevel) _skill.useLevel = _skill.level;
+		_skill.useLevel += delta;
+		if (_skill.useLevel < 1) _skill.useLevel = 1;
+		if (_skill.useLevel > _skill.level) _skill.useLevel = _skill.level;
+		renderLevel(_skill.useLevel, _skillLevel);
+	};
+	/**
+	* Intersect with an entity ID
+	* (used in party UI)
+	*/
+	SkillTargetSelection.intersectEntityId = function intersectEntityId(id) {
+		const entity = EntityManager.get(id);
+		if (entity) intersectEntity(entity);
+	};
+	/**
+	* Check if can use Skill on target based on MapState
+	*/
+	SkillTargetSelection.checkMapState = function checkMapState(entity) {
+		if (SessionStorage_default.mapState.isPVP) {
+			if (SessionStorage_default.hasParty && controller.isGroupMember(entity.display.name)) return false;
+			return true;
+		} else if (SessionStorage_default.mapState.isGVG) {
+			if (SessionStorage_default.Entity.GUID > 0 && entity.GUID !== SessionStorage_default.Entity.GUID || entity.GUID == 0 && entity !== SessionStorage_default.Entity) return true;
+		}
+		return false;
+	};
+	/**
+	* Functions to define
+	*/
+	SkillTargetSelection.onUseSkillToId = function onUseSkillToId() {};
+	SkillTargetSelection.onUseSkillToPos = function onUseSkillToPos() {};
+	SkillTargetSelection_default = UIManager.addComponent(SkillTargetSelection);
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.html?raw
+var PartyFriendsV1_default$2;
+var init_PartyFriendsV1$2 = __esmMin((() => {
+	PartyFriendsV1_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"party\">\r\n				<span class=\"text\"><ui-text msg=\"103\">Party</ui-text></span> <span class=\"partyname\"></span>\r\n			</span>\r\n			<span class=\"friend\">\r\n				<span class=\"text\"><ui-text msg=\"102\">Friends</ui-text></span> (<span class=\"friendcount\">0</span>/<span\r\n					class=\"friendmax\"\r\n					>127</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party info-v2\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\">\r\n		<ui-image src=\"basic_interface/mesbtn_mid.bmp\"></ui-image>\r\n		<!-- Friend specific buttons -->\r\n		<ui-button\r\n			class=\"friend mail\"\r\n			bg=\"basic_interface/mesbtn_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"98\">Send Message</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"friend privatemessage\"\r\n			bg=\"basic_interface/mesbtn_02.bmp\"\r\n			hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"99\">1:1 Chat</ui-text></div>\r\n		</ui-button>\r\n\r\n		<!-- Party specific buttons -->\r\n		<ui-button\r\n			class=\"party agency\"\r\n			bg=\"basic_interface/mesbtn_partymaster_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_partymaster_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_partymaster_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"3504\">Adventurer's Agency</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"info\"\r\n			bg=\"basic_interface/mesbtn_04.bmp\"\r\n			hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"101\">Party Setup</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"friend remove\"\r\n			bg=\"basic_interface/mesbtn_05.bmp\"\r\n			hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"351\">Delete</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock on\"\r\n			bg=\"basic_interface/mesbtn_06.bmp\"\r\n			hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1626\">Activate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock off\"\r\n			bg=\"basic_interface/mesbtn_07.bmp\"\r\n			hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1627\">Deactivate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party create\"\r\n			bg=\"basic_interface/mesbtn_08.bmp\"\r\n			hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2054\">Create Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party add\"\r\n			bg=\"basic_interface/mesbtn_010.bmp\"\r\n			hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2056\">Party Invitation</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party leave\"\r\n			bg=\"basic_interface/mesbtn_09.bmp\"\r\n			hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"96\">Leave Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party sort\"\r\n			bg=\"basic_interface/mesbtn_011.bmp\"\r\n			hover=\"basic_interface/mesbtn_011_a.bmp\"\r\n			down=\"basic_interface/mesbtn_011_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"3983\">Sort Mini Party Window</ui-text></div>\r\n		</ui-button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid.bmp\"></ui-image>\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n			<div class=\"member-count-container\">\r\n				<div class=\"footer-label\"><ui-text msg=\"3231\">Cap</ui-text></div>\r\n				<span class=\"count-box\"><span class=\"inner-count\">0/12</span></span>\r\n			</div>\r\n		</div>\r\n		<button class=\"resize\"><ui-image src=\"btn_resize.bmp\"></ui-image></button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.css?raw
+var PartyFriendsV1_default$1;
+var init_PartyFriendsV1$1 = __esmMin((() => {
+	PartyFriendsV1_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 {\r\n	padding: 0;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node {\r\n	height: 38px;\r\n	padding: 3px 5px;\r\n	position: relative;\r\n	background: #ffffff;\r\n	display: flex;\r\n	align-items: center;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.detached {\r\n	background: #deefff;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1,\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	margin-top: 2px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 span,\r\n#PartyFriends .content .party.info-v2 .node .row2 * {\r\n	position: static !important;\r\n	display: inline-block !important;\r\n	float: none !important;\r\n	font-weight: bold;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container {\r\n	position: relative !important;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	background: #f8f8f8;\r\n	border: 1px solid #ccc;\r\n	display: flex;\r\n	/* Centering children */\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute !important;\r\n	top: 0;\r\n	left: 0;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon-frame {\r\n	position: absolute !important;\r\n	top: -2px;\r\n	left: -2px;\r\n	width: 28px;\r\n	height: 28px;\r\n	background-repeat: no-repeat;\r\n	z-index: 10;\r\n	pointer-events: none;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .crown {\r\n	position: absolute !important;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	display: none;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n}\r\n\r\n.drag-ghost {\r\n	pointer-events: none;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node:hover {\r\n	background: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .info-container {\r\n	flex: 1;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 {\r\n	height: 18px;\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	height: 12px;\r\n	width: 100%;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.leader .crown {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .level {\r\n	font-size: 11px;\r\n	color: #e37522;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .name {\r\n	font-weight: normal;\r\n	color: #333;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 100px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .map {\r\n	font-size: 10px;\r\n	color: #777;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 80px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	/* Thinner */\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	margin-right: 5px;\r\n	position: relative !important;\r\n	display: inline-block !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .life {\r\n	display: block !important;\r\n	height: 5px !important;\r\n	width: 75px !important;\r\n	position: static !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp {\r\n	font-size: 10px;\r\n	color: #666;\r\n	display: inline-block !important;\r\n	vertical-align: middle;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .status-icon {\r\n	width: 26px;\r\n	min-width: 26px;\r\n	height: 12px;\r\n	background-repeat: no-repeat;\r\n	display: block !important;\r\n	position: absolute !important;\r\n	right: 20px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container {\r\n	position: absolute;\r\n	right: 13px;\r\n	bottom: 1px;\r\n	height: 19px;\r\n	width: 156px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	pointer-events: none;\r\n	z-index: 100;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .footer-label {\r\n	color: #333;\r\n	font-size: 10px;\r\n	white-space: nowrap;\r\n	margin-right: 10px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box {\r\n	position: relative;\r\n	width: 48px;\r\n	height: 19px;\r\n	display: block !important;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box .inner-count {\r\n	position: absolute !important;\r\n	left: 0 !important;\r\n	top: 0 !important;\r\n	width: 44px !important;\r\n	/* Centered in the gold box part */\r\n	height: 19px !important;\r\n	line-height: 20px !important;\r\n	text-align: center !important;\r\n	color: #ffffff !important;\r\n	/* Pure White */\r\n	font-weight: bold !important;\r\n	font-size: 10px !important;\r\n	margin: 0 !important;\r\n	padding: 0 !important;\r\n	display: block !important;\r\n}\r\n\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyFriends .navigation button,\r\n#PartyFriends .navigation ui-button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .navigation button .overlay,\r\n#PartyFriends .navigation ui-button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#PartyFriends .navigation button:hover .overlay,\r\n#PartyFriends .navigation ui-button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.js
+var PartyFriendsV1_default;
+var init_PartyFriendsV1 = __esmMin((() => {
+	init_PartyFriendsCommon();
+	init_PartyFriendsV1$2();
+	init_PartyFriendsV1$1();
+	PartyFriendsV1_default = createPartyFriends({
+		name: "PartyFriendsV1",
+		htmlText: PartyFriendsV1_default$2,
+		cssText: PartyFriendsV1_default$1,
+		renewalParty: true
+	});
+}));
+//#endregion
 //#region src/UI/Components/Rodex/Rodex.html?raw
 var Rodex_default$2;
 var init_Rodex$3 = __esmMin((() => {
@@ -225946,13 +224700,13 @@ var init_Rodex$2 = __esmMin((() => {
 function _root$16() {
 	return Rodex._shadow || Rodex._host;
 }
-function onClickClose$4(e) {
+function onClickClose$2(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
-	_preferences$49.y = parseInt(Rodex._host.style.top, 10);
-	_preferences$49.x = parseInt(Rodex._host.style.left, 10);
-	_preferences$49.save();
+	_preferences$41.y = parseInt(Rodex._host.style.top, 10);
+	_preferences$41.x = parseInt(Rodex._host.style.left, 10);
+	_preferences$41.save();
 	Rodex._host.style.display = "none";
 }
 function onClickRefresh(e) {
@@ -226048,7 +224802,7 @@ function onClickReplyMail(e) {
 	const sender = e.currentTarget.getAttribute("sender");
 	Rodex.requestOpenWriteRodex(sender);
 }
-var Rodex, _preferences$49, Rodex_default;
+var Rodex, _preferences$41, Rodex_default;
 var init_Rodex$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -226092,7 +224846,7 @@ var init_Rodex$1 = __esmMin((() => {
 		6: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp",
 		12: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp"
 	};
-	_preferences$49 = Preferences.get("Rodex", {
+	_preferences$41 = Preferences.get("Rodex", {
 		x: 350,
 		y: 350,
 		show: false
@@ -226106,10 +224860,10 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onAppend = function OnAppend() {
 		const root = _root$16();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$49.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$49.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - this._host.offsetWidth)}px`;
 		this.draggable(root.querySelector(".titlebar"));
-		root.querySelector(".close").addEventListener("click", onClickClose$4);
+		root.querySelector(".close").addEventListener("click", onClickClose$2);
 		root.querySelector(".refresh").addEventListener("click", onClickRefresh);
 		root.querySelector(".write").addEventListener("click", onClickWriteMail);
 		root.querySelector(".delete-all").addEventListener("click", onClickDeleteAll);
@@ -226132,10 +224886,10 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$49.show = this._host.style.display !== "none";
-		_preferences$49.y = parseInt(this._host.style.top, 10);
-		_preferences$49.x = parseInt(this._host.style.left, 10);
-		_preferences$49.save();
+		_preferences$41.show = this._host.style.display !== "none";
+		_preferences$41.y = parseInt(this._host.style.top, 10);
+		_preferences$41.x = parseInt(this._host.style.left, 10);
+		_preferences$41.save();
 		Rodex.openType = 0;
 	};
 	/**
@@ -226251,30 +225005,6 @@ var init_Rodex$1 = __esmMin((() => {
 	Rodex_default = UIManager.addComponent(Rodex);
 }));
 //#endregion
-//#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.html?raw
-var PartyFriendsV1_default$2;
-var init_PartyFriendsV1$2 = __esmMin((() => {
-	PartyFriendsV1_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"party\">\r\n				<span class=\"text\"><ui-text msg=\"103\">Party</ui-text></span> <span class=\"partyname\"></span>\r\n			</span>\r\n			<span class=\"friend\">\r\n				<span class=\"text\"><ui-text msg=\"102\">Friends</ui-text></span> (<span class=\"friendcount\">0</span>/<span\r\n					class=\"friendmax\"\r\n					>127</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party info-v2\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\">\r\n		<ui-image src=\"basic_interface/mesbtn_mid.bmp\"></ui-image>\r\n		<!-- Friend specific buttons -->\r\n		<ui-button\r\n			class=\"friend mail\"\r\n			bg=\"basic_interface/mesbtn_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"98\">Send Message</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"friend privatemessage\"\r\n			bg=\"basic_interface/mesbtn_02.bmp\"\r\n			hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"99\">1:1 Chat</ui-text></div>\r\n		</ui-button>\r\n\r\n		<!-- Party specific buttons -->\r\n		<ui-button\r\n			class=\"party agency\"\r\n			bg=\"basic_interface/mesbtn_partymaster_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_partymaster_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_partymaster_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"3504\">Adventurer's Agency</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"info\"\r\n			bg=\"basic_interface/mesbtn_04.bmp\"\r\n			hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"101\">Party Setup</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"friend remove\"\r\n			bg=\"basic_interface/mesbtn_05.bmp\"\r\n			hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"351\">Delete</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock on\"\r\n			bg=\"basic_interface/mesbtn_06.bmp\"\r\n			hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1626\">Activate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock off\"\r\n			bg=\"basic_interface/mesbtn_07.bmp\"\r\n			hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1627\">Deactivate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party create\"\r\n			bg=\"basic_interface/mesbtn_08.bmp\"\r\n			hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2054\">Create Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party add\"\r\n			bg=\"basic_interface/mesbtn_010.bmp\"\r\n			hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2056\">Party Invitation</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party leave\"\r\n			bg=\"basic_interface/mesbtn_09.bmp\"\r\n			hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"96\">Leave Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party sort\"\r\n			bg=\"basic_interface/mesbtn_011.bmp\"\r\n			hover=\"basic_interface/mesbtn_011_a.bmp\"\r\n			down=\"basic_interface/mesbtn_011_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"3983\">Sort Mini Party Window</ui-text></div>\r\n		</ui-button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid.bmp\"></ui-image>\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n			<div class=\"member-count-container\">\r\n				<div class=\"footer-label\"><ui-text msg=\"3231\">Cap</ui-text></div>\r\n				<span class=\"count-box\"><span class=\"inner-count\">0/12</span></span>\r\n			</div>\r\n		</div>\r\n		<button class=\"resize\"><ui-image src=\"btn_resize.bmp\"></ui-image></button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.css?raw
-var PartyFriendsV1_default$1;
-var init_PartyFriendsV1$1 = __esmMin((() => {
-	PartyFriendsV1_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 {\r\n	padding: 0;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node {\r\n	height: 38px;\r\n	padding: 3px 5px;\r\n	position: relative;\r\n	background: #ffffff;\r\n	display: flex;\r\n	align-items: center;\r\n	box-sizing: border-box;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.detached {\r\n	background: #deefff;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1,\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	margin-top: 2px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 span,\r\n#PartyFriends .content .party.info-v2 .node .row2 * {\r\n	position: static !important;\r\n	display: inline-block !important;\r\n	float: none !important;\r\n	font-weight: bold;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container {\r\n	position: relative !important;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	background: #f8f8f8;\r\n	border: 1px solid #ccc;\r\n	display: flex;\r\n	/* Centering children */\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute !important;\r\n	top: 0;\r\n	left: 0;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .job-icon-frame {\r\n	position: absolute !important;\r\n	top: -2px;\r\n	left: -2px;\r\n	width: 28px;\r\n	height: 28px;\r\n	background-repeat: no-repeat;\r\n	z-index: 10;\r\n	pointer-events: none;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .job-icon-container .crown {\r\n	position: absolute !important;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	display: none;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n}\r\n\r\n.drag-ghost {\r\n	pointer-events: none;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node:hover {\r\n	background: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .info-container {\r\n	flex: 1;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row1 {\r\n	height: 18px;\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .row2 {\r\n	height: 12px;\r\n	width: 100%;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node.leader .crown {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .level {\r\n	font-size: 11px;\r\n	color: #e37522;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .name {\r\n	font-weight: normal;\r\n	color: #333;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 100px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .map {\r\n	font-size: 10px;\r\n	color: #777;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	max-width: 80px;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	/* Thinner */\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	margin-right: 5px;\r\n	position: relative !important;\r\n	display: inline-block !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .life {\r\n	display: block !important;\r\n	height: 5px !important;\r\n	width: 75px !important;\r\n	position: static !important;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .hp {\r\n	font-size: 10px;\r\n	color: #666;\r\n	display: inline-block !important;\r\n	vertical-align: middle;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyFriends .content .party.info-v2 .node .status-icon {\r\n	width: 26px;\r\n	min-width: 26px;\r\n	height: 12px;\r\n	background-repeat: no-repeat;\r\n	display: block !important;\r\n	position: absolute !important;\r\n	right: 20px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container {\r\n	position: absolute;\r\n	right: 13px;\r\n	bottom: 1px;\r\n	height: 19px;\r\n	width: 156px;\r\n	display: flex;\r\n	align-items: center;\r\n	justify-content: flex-end;\r\n	pointer-events: none;\r\n	z-index: 100;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .footer-label {\r\n	color: #333;\r\n	font-size: 10px;\r\n	white-space: nowrap;\r\n	margin-right: 10px;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box {\r\n	position: relative;\r\n	width: 48px;\r\n	height: 19px;\r\n	display: block !important;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n}\r\n\r\n#PartyFriends .footer .member-count-container .count-box .inner-count {\r\n	position: absolute !important;\r\n	left: 0 !important;\r\n	top: 0 !important;\r\n	width: 44px !important;\r\n	/* Centered in the gold box part */\r\n	height: 19px !important;\r\n	line-height: 20px !important;\r\n	text-align: center !important;\r\n	color: #ffffff !important;\r\n	/* Pure White */\r\n	font-weight: bold !important;\r\n	font-size: 10px !important;\r\n	margin: 0 !important;\r\n	padding: 0 !important;\r\n	display: block !important;\r\n}\r\n\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n\r\n#PartyFriends .navigation button,\r\n#PartyFriends .navigation ui-button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .navigation button .overlay,\r\n#PartyFriends .navigation ui-button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#PartyFriends .navigation button:hover .overlay,\r\n#PartyFriends .navigation ui-button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.html?raw
-var PartyMemberExternal_default$2;
-var init_PartyMemberExternal$2 = __esmMin((() => {
-	PartyMemberExternal_default$2 = "<div id=\"PartyMemberExternal\">\r\n	<ui-image src=\"renewalparty/img_partymini_bg.tga\"></ui-image>\r\n	<ui-button\r\n		class=\"close\"\r\n		bg=\"renewalparty/btn_titlebar_maximum_out.bmp\"\r\n		hover=\"renewalparty/btn_titlebar_maximum_over.bmp\"\r\n		down=\"renewalparty/btn_titlebar_maximum_press.bmp\"\r\n	></ui-button>\r\n	<div class=\"job-icon-container\">\r\n		<div class=\"job-icon\"></div>\r\n		<div class=\"crown\"></div>\r\n	</div>\r\n	<div class=\"info-container\">\r\n		<div class=\"row1\">\r\n			<span class=\"level\"></span>\r\n			<span class=\"name\"></span>\r\n			<span class=\"map\"></span>\r\n		</div>\r\n		<div class=\"row2\">\r\n			<div class=\"hp-bar-container\">\r\n				<canvas class=\"life\" width=\"75\" height=\"5\"></canvas>\r\n			</div>\r\n			<span class=\"hp-text\"></span>\r\n			<div class=\"status-icon\"></div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.css?raw
-var PartyMemberExternal_default$1;
-var init_PartyMemberExternal$1 = __esmMin((() => {
-	PartyMemberExternal_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyMemberExternal {\r\n	width: 150px;\r\n	height: 38px;\r\n	display: flex;\r\n	align-items: center;\r\n	padding: 3px 5px;\r\n	box-sizing: border-box;\r\n	z-index: 100;\r\n	cursor: move;\r\n}\r\n\r\n#PartyMemberExternal .close {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .job-icon-container {\r\n	position: relative;\r\n	width: 24px;\r\n	height: 24px;\r\n	min-width: 24px;\r\n	margin-right: 8px;\r\n	display: flex;\r\n	justify-content: center;\r\n	align-items: center;\r\n}\r\n\r\n#PartyMemberExternal .job-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	position: absolute;\r\n	z-index: 5;\r\n}\r\n\r\n#PartyMemberExternal:not(.online) .job-icon,\r\n#PartyMemberExternal:not(.online) .crown {\r\n	filter: grayscale(100%);\r\n}\r\n\r\n#PartyMemberExternal .crown {\r\n	position: absolute;\r\n	top: -14px;\r\n	left: 50%;\r\n	transform: translateX(-50%);\r\n	width: 25px;\r\n	height: 25px;\r\n	background-repeat: no-repeat;\r\n	background-position: center;\r\n	z-index: 20;\r\n	pointer-events: none;\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .info-container {\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n#PartyMemberExternal .row1,\r\n#PartyMemberExternal .row2 {\r\n	display: flex;\r\n	align-items: center;\r\n	width: 100%;\r\n}\r\n\r\n#PartyMemberExternal .row2 {\r\n	margin-top: 2px;\r\n	height: 12px;\r\n	gap: 5px;\r\n}\r\n\r\n#PartyMemberExternal .level {\r\n	font-size: 11px;\r\n	color: #fff;\r\n	font-weight: bold;\r\n	margin-right: 5px;\r\n	white-space: nowrap;\r\n}\r\n\r\n#PartyMemberExternal .name {\r\n	font-weight: normal;\r\n	color: #fff;\r\n	font-size: 11px;\r\n	white-space: nowrap;\r\n	overflow: hidden;\r\n	text-overflow: ellipsis;\r\n	flex: 1;\r\n}\r\n\r\n#PartyMemberExternal .map {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .hp-bar-container {\r\n	min-width: 75px;\r\n	width: 75px;\r\n	height: 5px;\r\n	background: #333;\r\n	border: 1px solid #111;\r\n	overflow: hidden;\r\n	position: relative;\r\n}\r\n\r\n#PartyMemberExternal .life {\r\n	display: block;\r\n	height: 5px;\r\n	width: 75px;\r\n}\r\n\r\n#PartyMemberExternal .hp-text {\r\n	display: none;\r\n}\r\n\r\n#PartyMemberExternal .status-icon {\r\n	display: none;\r\n}\r\n";
-}));
-//#endregion
 //#region src/UI/Components/PartyFriends/PartyMemberExternal/PartyMemberExternal.js
 /**
 * Helper: query inside shadow root
@@ -226285,7 +225015,7 @@ function _root$15(comp) {
 /**
 * Custom RO-style tooltips (global, outside shadow DOM)
 */
-function onTooltipShow$1(event) {
+function onTooltipShow(event) {
 	const text = event.currentTarget.dataset.tooltip;
 	if (text) {
 		let tooltip = document.getElementById("ro-tooltip-party");
@@ -226300,14 +225030,14 @@ function onTooltipShow$1(event) {
 		tooltip.style.display = "block";
 	}
 }
-function onTooltipMove$1(event) {
+function onTooltipMove(event) {
 	const tooltip = document.getElementById("ro-tooltip-party");
 	if (tooltip && tooltip.style.display === "block") {
 		tooltip.style.top = `${event.clientY + 15}px`;
 		tooltip.style.left = `${event.clientX + 10}px`;
 	}
 }
-function onTooltipHide$1() {
+function onTooltipHide() {
 	const tooltip = document.getElementById("ro-tooltip-party");
 	if (tooltip) tooltip.style.display = "none";
 }
@@ -226317,7 +225047,7 @@ function onTooltipHide$1() {
 * @param {number} hp
 * @param {number} maxhp
 */
-function updateCanvasLife$1(root, hp, maxhp) {
+function updateCanvasLife(root, hp, maxhp) {
 	const hasLife = hp !== void 0 && maxhp !== void 0 && maxhp > 0;
 	const lifeRatio = hasLife ? hp / maxhp : 0;
 	const hpBarContainer = root.querySelector(".hp-bar-container");
@@ -226438,9 +225168,9 @@ var init_PartyMemberExternal = __esmMin((() => {
 			if (PartyMemberExternal.onDragEnd) PartyMemberExternal.onDragEnd(this);
 		};
 		const hostEl = this._host;
-		hostEl.addEventListener("mouseenter", onTooltipShow$1);
-		hostEl.addEventListener("mousemove", onTooltipMove$1);
-		hostEl.addEventListener("mouseleave", onTooltipHide$1);
+		hostEl.addEventListener("mouseenter", onTooltipShow);
+		hostEl.addEventListener("mousemove", onTooltipMove);
+		hostEl.addEventListener("mouseleave", onTooltipHide);
 	};
 	/**
 	* Once append to the DOM, start to position the UI
@@ -226475,7 +225205,7 @@ var init_PartyMemberExternal = __esmMin((() => {
 		if (nameEl) nameEl.textContent = player.characterName;
 		const levelEl = root.querySelector(".level");
 		if (levelEl) levelEl.textContent = `Lv. ${level}`;
-		updateCanvasLife$1(root, player.life && player.life.display ? player.life.hp : void 0, player.life && player.life.display ? player.life.hp_max : void 0);
+		updateCanvasLife(root, player.life && player.life.display ? player.life.hp : void 0, player.life && player.life.display ? player.life.hp_max : void 0);
 		const jobIcon = root.querySelector(".job-icon");
 		const asset = !!player.isDead ? `icon_jobs_${jobID}_die.bmp` : `icon_jobs_${jobID}.bmp`;
 		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/" + asset, function(url) {
@@ -226514,581 +225244,798 @@ var init_PartyMemberExternal = __esmMin((() => {
 	*/
 	PartyMemberExternal.updateMemberLife = function updateMemberLife(hp, maxhp) {
 		const root = _root$15(this);
-		if (root) updateCanvasLife$1(root, hp, maxhp);
+		if (root) updateCanvasLife(root, hp, maxhp);
 	};
 	PartyMemberExternal_default = UIManager.addComponent(PartyMemberExternal);
 }));
 //#endregion
-//#region src/UI/Components/PartyFriends/PartyFriendsV1/PartyFriendsV1.js
+//#region src/UI/Components/Mail/Mail.html?raw
+var Mail_default$2;
+var init_Mail$3 = __esmMin((() => {
+	Mail_default$2 = "<div id=\"Mail\">\r\n	<div class=\"body\">\r\n		<ui-image src=\"basic_interface/maillist1_bg.bmp\"></ui-image>\r\n		<div class=\"titlebar\">\r\n			<div class=\"left\">\r\n				<span class=\"text\" id=\"title\"><ui-text msg=\"1025\">Mail List</ui-text></span>\r\n			</div>\r\n			<div class=\"right\">\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/close2.bmp\"\r\n					hover=\"basic_interface/close2_a.bmp\"\r\n				></ui-button>\r\n			</div>\r\n		</div>\r\n\r\n		<div class=\"clear\">\r\n			<section class=\"container flex_block\">\r\n				<div class=\"flex container\">\r\n					<div style=\"flex: 1\">\r\n						<div class=\"flex_block btn_iw\">\r\n							<div class=\"inbox\" id=\"inbox\" style=\"flex: 1\"></div>\r\n							<div class=\"write\" id=\"write\" style=\"flex: 1\"></div>\r\n						</div>\r\n					</div>\r\n\r\n					<div class=\"list_mail flex_block\">\r\n						<!-- list mail -->\r\n						<div class=\"block_mail\">\r\n							<div class=\"list_item_mail\"></div>\r\n							<div class=\"flex prev_next\">\r\n								<div class=\"prev\">\r\n									<div class=\"overlay_prev\"></div>\r\n									<span class=\"text_pagination\"><ui-text msg=\"1053\">Prev</ui-text></span>\r\n								</div>\r\n								<div class=\"pagination\">\r\n									<span class=\"text\" id=\"infor_page\">1/1</span>\r\n								</div>\r\n								<div class=\"next\">\r\n									<div class=\"overlay_next margin_next\"></div>\r\n									<span class=\"text_pagination margin_next\"><ui-text msg=\"1054\">Next</ui-text></span>\r\n								</div>\r\n							</div>\r\n						</div>\r\n						<!-- create mail -->\r\n						<div class=\"block_create_mail\">\r\n							<div class=\"to_create_mail\">\r\n								<span class=\"text text_to_title\">\r\n									<span><ui-text msg=\"1099\">To</ui-text></span> :</span\r\n								>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"text_to\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"title_create_mail\">\r\n								<span class=\"text text_title_create_mail\">\r\n									<span><ui-text msg=\"1100\">Title</ui-text></span> :</span\r\n								>\r\n								<div style=\"flex: 4\">\r\n									<input class=\"input_title\" type=\"text\" value=\"\" maxlength=\"50\" />\r\n								</div>\r\n							</div>\r\n							<div class=\"email_body\">\r\n								<textarea class=\"textarea_mail\" maxlength=\"198\"></textarea>\r\n							</div>\r\n							<div class=\"block_zeny_item\">\r\n								<ui-button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_amt\"\r\n									bg=\"basic_interface/inputzeny.bmp\"\r\n									hover=\"basic_interface/inputzeny_a.bmp\"\r\n								></ui-button>\r\n								<ui-button\r\n									class=\"add_zeny\"\r\n									id=\"zeny_ok\"\r\n									bg=\"basic_interface/setzeny.bmp\"\r\n									hover=\"basic_interface/setzeny_a.bmp\"\r\n								></ui-button>\r\n								<div class=\"block_zeny\">\r\n									<input class=\"input_zeny_amt\" type=\"text\" value=\"0\" maxlength=\"9\" disabled />\r\n								</div>\r\n\r\n								<div class=\"block_item\">\r\n									<div class=\"container_item\">\r\n										<div class=\"overlay\"></div>\r\n									</div>\r\n								</div>\r\n							</div>\r\n\r\n							<div class=\"block_send_cancel\">\r\n								<ui-button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_send\"\r\n									bg=\"basic_interface/send.bmp\"\r\n									hover=\"basic_interface/send_a.bmp\"\r\n								></ui-button>\r\n								<ui-button\r\n									class=\"create_mail_btn\"\r\n									id=\"create_mail_cancel\"\r\n									bg=\"basic_interface/cancel2.bmp\"\r\n									hover=\"basic_interface/cancel2_a.bmp\"\r\n								></ui-button>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</section>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Mail/Mail.css?raw
+var Mail_default$1;
+var init_Mail$2 = __esmMin((() => {
+	Mail_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#Mail {\r\n	width: 250px;\r\n	height: 330px;\r\n}\r\n\r\n#Mail .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: relative;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	border-radius: 6px;\r\n}\r\n#Mail .body .base {\r\n	width: 9px;\r\n	height: 7px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#Mail .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Mail .container {\r\n	width: 298px;\r\n	height: 385px;\r\n}\r\n\r\n#Mail .flex {\r\n	display: flex;\r\n}\r\n\r\n#Mail .list_item_mail {\r\n	width: 279px;\r\n	height: 358px;\r\n}\r\n\r\n#Mail .flex_block {\r\n	display: block;\r\n}\r\n\r\n#Mail .list_mail {\r\n	flex: 14;\r\n}\r\n\r\n#Mail .prev_next {\r\n	color: #e4baa8;\r\n}\r\n\r\n#Mail .prev {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-end;\r\n	display: flex;\r\n}\r\n\r\n#Mail .next {\r\n	flex: 1;\r\n	align-items: flex-end;\r\n	justify-content: flex-start;\r\n	display: flex;\r\n}\r\n\r\n#Mail .pagination {\r\n	text-align: end;\r\n}\r\n\r\n#Mail .btn_iw {\r\n	height: 371px;\r\n	margin-left: 4px;\r\n}\r\n\r\n#Mail .inbox {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .write {\r\n	height: 16%;\r\n}\r\n\r\n#Mail .block_mail {\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n\r\n#Mail .item_mail {\r\n	width: 268px;\r\n	height: 51px;\r\n	display: flex;\r\n}\r\n\r\n#Mail .btn_envelop {\r\n	width: 16px;\r\n	height: 11px;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n	background-color: transparent;\r\n	margin-top: 24%;\r\n	margin-left: 18%;\r\n}\r\n\r\n#Mail .to_title {\r\n	width: 100%;\r\n	height: 52px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n}\r\n#Mail .to_title button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n	flex: 1;\r\n}\r\n\r\n#Mail .block_create_mail {\r\n	display: block;\r\n	margin: 2% 1% 0% 2%;\r\n}\r\n#Mail .add_zeny {\r\n	width: 51px;\r\n	height: 21px;\r\n	border: none;\r\n	margin-left: 16%;\r\n	margin-top: 3%;\r\n}\r\n#zeny_ok {\r\n	display: none;\r\n	width: 43px !important;\r\n	margin-left: 19% !important;\r\n}\r\n#Mail .create_mail_btn {\r\n	width: 43px;\r\n	height: 21px;\r\n	border: none;\r\n}\r\n#Mail .to_create_mail {\r\n	flex: 1;\r\n	margin-top: 8%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .title_create_mail {\r\n	flex: 1;\r\n	margin-top: 6%;\r\n	margin-left: 7%;\r\n	display: flex;\r\n}\r\n#Mail .text_to_title {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .text_to {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 105px;\r\n}\r\n#Mail .text_title_create_mail {\r\n	flex: 1;\r\n	color: #cd9b77;\r\n	text-align: center;\r\n}\r\n#Mail .input_title {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 14px;\r\n	padding: initial;\r\n	width: 164px;\r\n}\r\n#Mail .email_body {\r\n	flex: 1;\r\n	margin-top: 5%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .textarea_mail {\r\n	resize: none;\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 226px;\r\n	padding: initial;\r\n	width: 243px;\r\n	overflow: hidden;\r\n}\r\n\r\n#Mail .block_zeny_item {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-left: 5%;\r\n	display: flex;\r\n}\r\n#Mail .block_zeny {\r\n	margin-top: 4%;\r\n	margin-left: 1%;\r\n}\r\n#Mail .block_item {\r\n	margin-left: 18%;\r\n}\r\n#Mail .input_zeny_amt {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 13px;\r\n	width: 64px;\r\n}\r\n#Mail .input_add_item {\r\n	background-color: #00800000;\r\n	border: none;\r\n	height: 24px;\r\n	width: 24px;\r\n}\r\n\r\n#Mail .container_item {\r\n	float: left;\r\n	width: 24px;\r\n	height: 23px;\r\n	margin-top: 2px;\r\n	margin-left: 2px;\r\n	margin-bottom: 6px;\r\n}\r\n\r\n#Mail .block_send_cancel {\r\n	flex: 1;\r\n	margin-top: 4%;\r\n	margin-right: 8%;\r\n	text-align: right;\r\n}\r\n\r\n#Mail .to_title button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .to_title button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#Mail .tooltip {\r\n	position: relative;\r\n	display: inline-block;\r\n	color: #a37162;\r\n}\r\n\r\n#Mail .name_data {\r\n	color: #cd9b77;\r\n	margin-top: 15%;\r\n	position: relative;\r\n	display: inline-block;\r\n}\r\n\r\n#Mail .tooltip .tooltiptext {\r\n	visibility: hidden;\r\n	position: absolute;\r\n	bottom: 100%;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	position: absolute;\r\n	float: left;\r\n	left: 0px;\r\n	pointer-events: none;\r\n}\r\n\r\n#Mail .tooltip .to {\r\n}\r\n\r\n#Mail .tooltip .title {\r\n}\r\n\r\n#Mail .tooltip:hover .tooltiptext {\r\n	visibility: visible;\r\n}\r\n\r\n#Mail .date_mail {\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	display: grid;\r\n	align-items: center;\r\n}\r\n\r\n#Mail .container_item .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#Mail .container_item .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Mail .container_item .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Mail .container_item .overlay {\r\n	pointer-events: none;\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Mail .container_item .overlay.grey {\r\n	pointer-events: none;\r\n	color: #aaa;\r\n}\r\n\r\n#Mail .overlay_prev {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n	margin-right: -3%;\r\n}\r\n\r\n#Mail .overlay_next {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n	margin-bottom: 4%;\r\n}\r\n#Mail .margin_next {\r\n	margin-left: 5%;\r\n}\r\n\r\n#Mail .prev_next .text_pagination {\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	position: absolute;\r\n}\r\n\r\n#Mail .body .text {\r\n	/* text-shadow: 1px 1px white; */\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#Mail .body .left {\r\n	margin-left: 25px;\r\n	float: left;\r\n}\r\n#Mail .body .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#Mail .body .clear {\r\n	clear: both;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Mail/Mail.js
 /**
 * Helper: query inside shadow root
 */
 function _root$14() {
-	return PartyFriendsV1._shadow || PartyFriendsV1._host;
+	return Mail._shadow || Mail._host;
+}
+function updatePageMailItems() {
+	const root = _root$14();
+	const nextBtn = root.querySelector(".next");
+	if (nextBtn) nextBtn.addEventListener("click", (e) => {
+		e.stopImmediatePropagation();
+		if (Mail.page < Mail.list.mailList.length / Mail.pageSize - 1) {
+			Mail.page++;
+			createMailList();
+			adjustButtons();
+		}
+	});
+	const prevBtn = root.querySelector(".prev");
+	if (prevBtn) prevBtn.addEventListener("click", (e) => {
+		e.stopImmediatePropagation();
+		if (Mail.page > 0) {
+			Mail.page--;
+			createMailList();
+			adjustButtons();
+		}
+	});
+	createMailList();
 }
 /**
-* Helper: escape HTML entities
+* Create messages window size
 */
-function _escapeHTML$6(str) {
-	const div = document.createElement("div");
-	div.appendChild(document.createTextNode(str));
-	return div.innerHTML;
+function onWindowMailbox() {
+	const root = _root$14();
+	Mail.parseMailrefreshinbox();
+	const sendBtn = root.querySelector("#create_mail_send");
+	if (sendBtn) sendBtn.disabled = false;
+	const createMail = root.querySelector(".block_create_mail");
+	if (createMail) createMail.style.display = "none";
+	const textTo = root.querySelector(".text_to");
+	if (textTo) textTo.value = "";
+	const inputTitle = root.querySelector(".input_title");
+	if (inputTitle) inputTitle.value = "";
+	const textareaMail = root.querySelector(".textarea_mail");
+	if (textareaMail) textareaMail.value = "";
+	const zenyInput = root.querySelector(".input_zeny_amt");
+	if (zenyInput) zenyInput.value = "0";
+	const addItemInput = root.querySelector(".input_add_item");
+	if (addItemInput) addItemInput.value = "";
+	const prevNext = root.querySelector(".prev_next");
+	if (prevNext) prevNext.style.display = "flex";
+	const blockMail = root.querySelector(".block_mail");
+	if (blockMail) blockMail.style.display = "block";
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist1_bg.bmp", (url) => {
+		const body = root.querySelector(".body");
+		if (body) body.style.backgroundImage = `url(${url})`;
+	});
+	const title = root.querySelector("#title");
+	if (title) title.textContent = DB.getMessage(1025);
+}
+function createMailList() {
+	const root = _root$14();
+	const content = root.querySelector(".list_item_mail");
+	root.querySelectorAll(".item_mail").forEach((el) => el.remove());
+	if (Mail.list.length == 0) return;
+	for (let i = Mail.page * Mail.pageSize; i < Mail.list.mailList.length && i < (Mail.page + 1) * Mail.pageSize; i++) {
+		const from_name = Mail.list.mailList[i].FromName.length > 15 ? Mail.list.mailList[i].FromName.substring(0, 15) + "..." : Mail.list.mailList[i].FromName;
+		const header = Mail.list.mailList[i].HEADER.length > 23 ? Mail.list.mailList[i].HEADER.substring(0, 23) + "..." : Mail.list.mailList[i].HEADER;
+		const mailId = Mail.list.mailList[i].MailID;
+		const isOpen = Mail.list.mailList[i].isOpen;
+		if (content) content.insertAdjacentHTML("beforeend", `<div class="item_mail">
+					<div class="envelop" style="flex: 1;">
+						<div class="btn_envelop" id="envelop_${mailId}"></div>
+					</div>
+					<div class="to_title" style="flex: 3;">
+						<div class="flex">
+							<div style="flex: 3;">
+								<span id="from_name_${mailId}" class="event_add_cursor tooltip name_data"> ${from_name}
+									<span class="tooltiptext to">${Mail.list.mailList[i].FromName}</span>
+								</span>
+							</div>
+							<div style="flex: 3;">
+								<span class="name_data">${formateDeleteTime(Mail.list.mailList[i].DeleteTime)}</span>
+							</div>
+						</div>
+						<div>
+							<span id="from_header_${mailId}" data-id="${mailId}" class="event_add_cursor tooltip"> ${header}
+								<span class="tooltiptext title">${Mail.list.mailList[i].HEADER}</span>
+							</span>
+						</div>
+					</div>
+				</div>`);
+		if (!isOpen) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/envelop.bmp", (data) => {
+			const envelop = root.querySelector(`#envelop_${mailId}`);
+			if (envelop) envelop.style.backgroundImage = `url(${data})`;
+		});
+		const fromNameEl = root.querySelector(`#from_name_${mailId}`);
+		if (fromNameEl) fromNameEl.addEventListener("click", () => {
+			const toEl = root.querySelector(`#from_name_${mailId} .to`);
+			if (toEl) Mail.replyNewMail(toEl.textContent);
+		});
+		const fromHeaderEl = root.querySelector(`#from_header_${mailId}`);
+		if (fromHeaderEl) fromHeaderEl.addEventListener("click", (event) => {
+			Mail.openMail(parseInt(event.currentTarget.dataset.id, 10));
+		});
+	}
+	if (Mail.list.mailList.length === 0) {
+		const prevNext = root.querySelector(".prev_next");
+		if (prevNext) prevNext.style.display = "none";
+	} else {
+		const inforPage = root.querySelector("#infor_page");
+		if (inforPage) inforPage.textContent = `${Mail.page + 1}/${Math.ceil(Mail.list.mailList.length / Mail.pageSize)}`;
+	}
+	adjustButtons();
+}
+function adjustButtons() {
+	const root = _root$14();
+	if (Mail.list.length == 0) return;
+	const mailLength = Mail.list.mailList.length;
+	if (!(Mail.page > mailLength / Mail.pageSize - 1)) addEventNextAndPrevAdd("next");
+	else addEventNextAndPrevRemove("next");
+	if (!(Mail.page == 0)) addEventNextAndPrevAdd("prev");
+	else addEventNextAndPrevRemove("prev");
+	const nextSpan = root.querySelector(".next span");
+	if (nextSpan) nextSpan.disabled = mailLength <= Mail.pageSize || Mail.page > mailLength / Mail.pageSize - 1;
+	const prevSpan = root.querySelector(".prev span");
+	if (prevSpan) prevSpan.disabled = mailLength <= Mail.pageSize || Mail.page == 0;
+}
+function addEventNextAndPrevAdd(eventName) {
+	const root = _root$14();
+	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
+	const text = root.querySelector(`.prev_next .${eventName} span`);
+	if (text) text.classList.add("event_add_cursor");
+	if (overlay && text) overlay.textContent = text.textContent;
+	const cursor = root.querySelector(`.${eventName} .event_add_cursor`);
+	if (cursor) {
+		cursor.addEventListener("mouseover", () => {
+			if (text && text.classList.contains("event_add_cursor") && overlay) overlay.style.display = "block";
+		});
+		cursor.addEventListener("mouseout", () => {
+			if (overlay) overlay.style.display = "none";
+		});
+	}
+}
+function addEventNextAndPrevRemove(eventName) {
+	const root = _root$14();
+	const overlay = root.querySelector(`.prev_next .overlay_${eventName}`);
+	const text = root.querySelector(`.prev_next .${eventName} span`);
+	if (overlay) overlay.style.display = "none";
+	if (text) text.classList.remove("event_add_cursor");
+}
+function offCreateMessagesOnWindowMailbox(event) {
+	event.stopImmediatePropagation();
+	onWindowMailbox();
+	removeCreateAllItem();
+}
+function sendCreateMessagesMail(event) {
+	const root = _root$14();
+	event.stopImmediatePropagation();
+	const zenyOk = root.querySelector("#zeny_ok");
+	if (zenyOk && window.getComputedStyle(zenyOk).display !== "none") {
+		ChatBox_default.addText(DB.getMessage(1110), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		return;
+	}
+	let to = root.querySelector(".text_to")?.value || "";
+	to = to.length > 50 ? to.substring(0, 50) : to;
+	let title = root.querySelector(".input_title")?.value || "";
+	title = title.length > 50 ? title.substring(0, 50) : title;
+	let message = root.querySelector(".textarea_mail")?.value || "";
+	message = message.length > 198 ? message.substring(0, 198) : message;
+	if (title === "") {
+		ChatBox_default.addText(DB.getMessage(1106), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+		return;
+	}
+	const send_message = {
+		ReceiveName: to,
+		Header: title,
+		msg_len: message.length,
+		msg: message
+	};
+	const sendBtn = root.querySelector("#create_mail_send");
+	if (sendBtn) sendBtn.disabled = true;
+	Mail.parseMailSend(send_message);
+}
+function openWindowCreateMessages(event) {
+	event.stopImmediatePropagation();
+	onWindowCreateMessages();
 }
 /**
-* Logic when clicking a member node to handle possible drag out
+* Open Create messages window size
 */
-function onMemberMouseDown(event) {
-	if (event.which === 1) event.stopPropagation();
-	else return;
-	const node = this;
-	const AID = parseInt(node.dataset.aid, 10);
+function onWindowCreateMessages() {
+	const root = _root$14();
+	removeCreateAllItem();
+	offWindowListMail();
+	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/maillist2_bg.bmp", (url) => {
+		const body = root.querySelector(".body");
+		if (body) body.style.backgroundImage = `url(${url})`;
+	});
+	const title = root.querySelector("#title");
+	if (title) title.textContent = DB.getMessage(1026);
+}
+function offWindowListMail() {
+	const root = _root$14();
+	const prevNext = root.querySelector(".prev_next");
+	if (prevNext) prevNext.style.display = "none";
+	const blockMail = root.querySelector(".block_mail");
+	if (blockMail) blockMail.style.display = "none";
+	const createMail = root.querySelector(".block_create_mail");
+	if (createMail) createMail.style.display = "block";
+	const textarea = root.querySelector(".textarea_mail");
+	if (textarea) textarea.focus();
+}
+function onAddZenyInput(event) {
+	const root = _root$14();
+	event.stopImmediatePropagation();
+	const zenyAmt = root.querySelector("#zeny_amt");
+	if (zenyAmt) zenyAmt.style.display = "none";
+	const zenyOk = root.querySelector("#zeny_ok");
+	if (zenyOk) zenyOk.style.display = "inline-block";
+	const input = root.querySelector(".input_zeny_amt");
+	if (input) {
+		input.disabled = false;
+		input.focus();
+		input.select();
+	}
+	Mail.parseMailWinopen(2);
+}
+function onValidZenyInput(event) {
+	const root = _root$14();
+	event.stopImmediatePropagation();
+	const zenyAmt = root.querySelector("#zeny_amt");
+	if (zenyAmt) zenyAmt.style.display = "inline-block";
+	const zenyOk = root.querySelector("#zeny_ok");
+	if (zenyOk) zenyOk.style.display = "none";
+	const input = root.querySelector(".input_zeny_amt");
+	let val_Zeny = input ? input.value.split(",").join("") : "0";
+	val_Zeny = Math.min(Math.max(0, val_Zeny), SessionStorage_default.zeny);
+	val_Zeny = isNaN(val_Zeny) ? 0 : val_Zeny;
+	if (input) {
+		input.value = prettifyZeny$4(val_Zeny);
+		input.disabled = true;
+	}
+	Mail.parseMailSetattach(0, val_Zeny);
+}
+/**
+* Stop event propagation
+*/
+function stopPropagation$10(event) {
+	event.stopImmediatePropagation();
 	event.preventDefault();
-	onSelectionChange.call(node, event);
-	const player = _party.find((member) => member.AID == AID);
-	if (!player) return;
-	if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences$48.friend) {
-		if (player.state === 0) SkillTargetSelection_default.intersectEntityId(player.AID);
-		SkillTargetSelection_default.remove();
-		event.preventDefault();
-		event.stopImmediatePropagation();
+}
+/**
+* Drop an item in the equipment, equip it if possible
+*/
+function onDrop$13(event) {
+	let item, data;
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+		item = data.data;
+	} catch (_e) {
 		return;
 	}
-	if (_detachedMembers[AID]) return;
-	if (player.state !== 0) return;
-	if (_preferences$48.lock) return;
-	const startX = event.pageX;
-	const startY = event.pageY;
-	let isDragging = false;
-	const threshold = 5;
-	let ghostWrapper = null;
-	let ghostInner = null;
-	const nodeRect = node.getBoundingClientRect();
-	function onMouseMove(moveEvent) {
-		if (!isDragging) {
-			if (Math.abs(moveEvent.pageX - startX) > threshold || Math.abs(moveEvent.pageY - startY) > threshold) {
-				isDragging = true;
-				if (ContextMenu_default) ContextMenu_default.remove();
-				ghostWrapper = document.createElement("div");
-				ghostWrapper.className = "drag-shield";
-				ghostWrapper.style.cssText = "position:fixed; top:0; left:0; right:0; bottom:0; z-index:10000; background:transparent; cursor:grabbing;";
-				ghostInner = document.createElement("div");
-				ghostInner.id = "PartyFriends";
-				ghostInner.className = "drag-ghost-wrapper";
-				ghostInner.style.cssText = "position:absolute; pointer-events:none; opacity:0.6; background:none !important; border:none !important; height:auto !important; width:auto !important;";
-				const ghostContent = document.createElement("div");
-				ghostContent.className = "content";
-				ghostContent.style.cssText = "background:none !important; height:auto !important; width:auto !important;";
-				const ghostParty = document.createElement("div");
-				ghostParty.className = "party info-v2";
-				const clonedNode = node.cloneNode(true);
-				ghostParty.appendChild(clonedNode);
-				ghostContent.appendChild(ghostParty);
-				ghostInner.appendChild(ghostContent);
-				ghostWrapper.appendChild(ghostInner);
-				document.body.appendChild(ghostWrapper);
-				const srcCanvas = node.querySelector("canvas");
-				const dstCanvas = clonedNode.querySelector("canvas");
-				if (srcCanvas && dstCanvas) {
-					dstCanvas.width = srcCanvas.width;
-					dstCanvas.height = srcCanvas.height;
-					dstCanvas.getContext("2d").drawImage(srcCanvas, 0, 0);
-				}
-				ghostInner.style.width = `${node.offsetWidth}px`;
-				ghostInner.style.height = `${node.offsetHeight}px`;
-			}
-		}
-		if (isDragging && ghostInner) {
-			ghostInner.style.left = `${moveEvent.clientX - (startX - nodeRect.left)}px`;
-			ghostInner.style.top = `${moveEvent.clientY - (startY - nodeRect.top)}px`;
-			moveEvent.preventDefault();
-		}
+	if (data.type !== "item" || data.from == "Storage" || data.from == "Mail") return;
+	if (item.count > 1) {
+		InputBox_default.append();
+		InputBox_default.setType("number", false, item.count);
+		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+			InputBox_default.remove();
+			Mail.parseMailWinopen(1);
+			if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, parseInt(count, 10));
+			Mail.parseMailSetattach(item.index, parseInt(count, 10));
+			_preferences$40.item_add_email = item;
+			_preferences$40.item_add_email.count = parseInt(count, 10);
+			_preferences$40.save();
+		};
+		return;
 	}
-	function onMouseUp(upEvent) {
-		window.removeEventListener("mousemove", onMouseMove);
-		window.removeEventListener("mouseup", onMouseUp);
-		if (ghostWrapper) {
-			ghostWrapper.remove();
-			ghostWrapper = null;
-			ghostInner = null;
-		}
-		if (isDragging) {
-			upEvent.stopImmediatePropagation();
-			const rect = PartyFriendsV1._host.getBoundingClientRect();
-			const x = upEvent.pageX;
-			const y = upEvent.pageY;
-			if (x < rect.left - 10 || x > rect.left + rect.width + 10 || y < rect.top - 10 || y > rect.top + rect.height + 10) {
-				detachMember(AID, player, x, y);
-				PartyFriendsV1.saveDetachedMembers();
-			}
-		}
-	}
-	window.addEventListener("mousemove", onMouseMove);
-	window.addEventListener("mouseup", onMouseUp);
+	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
+	Mail.parseMailWinopen(1);
+	Mail.parseMailSetattach(item.index, 1);
+	_preferences$40.item_add_email = item;
+	_preferences$40.item_add_email.count = 1;
+	_preferences$40.save();
 }
 /**
-* Find the next available slot for a detached member window.
+* Show item name when mouse is over
 */
-function getNextAvailableSlot() {
-	const startX = 0;
-	const startY = 100;
-	const stepY = 48;
-	let currentY = startY;
-	let found = true;
-	while (found) {
-		found = false;
-		for (const aid in _detachedMembers) {
-			const ext = _detachedMembers[aid];
-			if (ext && ext._host) {
-				const posLeft = ext._host.offsetLeft;
-				const posTop = ext._host.offsetTop;
-				if (Math.abs(posLeft - startX) < 5 && Math.abs(posTop - currentY) < 5) {
-					currentY += stepY;
-					found = true;
-					break;
-				}
-			}
-		}
-	}
-	return {
-		x: startX,
-		y: currentY
-	};
-}
-/**
-* Position all detached members into a neat vertical stack
-*/
-function sortDetachedMembers() {
-	const startX = 0;
-	const startY = 100;
-	const stepY = 48;
-	let currentY = startY;
-	for (let i = 0, count = _party.length; i < count; i++) {
-		const player = _party[i];
-		const external = _detachedMembers[player.AID];
-		if (external && external._host) {
-			external._host.style.left = `${startX}px`;
-			external._host.style.top = `${currentY}px`;
-			currentY += stepY;
-		}
-	}
-	PartyFriendsV1.saveDetachedMembers();
-}
-/**
-* Create an external mini-window for a member
-*/
-function detachMember(AID, player, x, y, restorePos) {
-	if (_detachedMembers[AID]) return;
-	const external = PartyMemberExternal_default.clone(`PartyMemberExternal_${AID}`, true);
-	external.name = `PartyMemberExternal_${AID}`;
-	UIManager.addComponent(external);
-	external.onRemove = function() {
-		delete _detachedMembers[AID];
-		delete UIManager.components[external.name];
-		const tooltip = document.getElementById("ro-tooltip-party");
-		if (tooltip) tooltip.style.display = "none";
-		PartyFriendsV1.refreshPartyList();
-		if (external._closedByUser) PartyFriendsV1.saveDetachedMembers();
-	};
-	external.setMember(AID, player);
-	external.append();
-	let initX = x - 75;
-	let initY = y - 19;
-	if (restorePos) {
-		initX = restorePos.x;
-		initY = restorePos.y;
-	} else {
-		const slot = getNextAvailableSlot();
-		initX = slot.x;
-		initY = slot.y;
-	}
-	external._host.style.left = `${initX}px`;
-	external._host.style.top = `${initY}px`;
-	_detachedMembers[AID] = external;
-	PartyFriendsV1.refreshPartyList();
-}
-/**
-* Helper to restore a detached member from saved layout.
-*/
-function restoreDetachedMember(player) {
-	if (_detachedMembers[player.AID]) return;
-	if (!SessionStorage_default.Character || !SessionStorage_default.Character.name) return;
-	if (_savedPositions === null) {
-		const key = `PartyFriends_${SessionStorage_default.Character.name}_Detached`;
-		const savedStr = localStorage.getItem(key);
-		_savedPositions = {};
-		try {
-			if (savedStr) _savedPositions = JSON.parse(savedStr);
-		} catch (e) {
-			console.error("[PartyFriendsV1] Failed to parse saved detached members:", e);
-		}
-	}
-	const entry = _savedPositions[player.AID] || _savedPositions[String(player.AID)];
-	if (entry) detachMember(player.AID, player, null, null, entry);
-}
-/**
-* Helper to update the HP bar on a canvas
-* @param {Element} node
-* @param {number} hp
-* @param {number} maxhp
-*/
-function updateCanvasLife(node, hp, maxhp) {
-	const hasLife = hp !== void 0 && maxhp !== void 0 && maxhp > 0;
-	const lifeRatio = hasLife ? hp / maxhp : 0;
-	const barVisibility = hasLife ? "visible" : "hidden";
-	const hpBarContainer = node.querySelector(".hp-bar-container");
-	if (hpBarContainer) hpBarContainer.style.visibility = barVisibility;
-	const hpEl = node.querySelector(".hp");
-	if (hpEl) hpEl.style.visibility = barVisibility;
-	if (hasLife) {
-		const canvas = node.querySelector("canvas");
-		if (canvas) {
-			const ctx = canvas.getContext("2d");
-			const width = Math.floor(lifeRatio * 75);
-			canvas.width = 75;
-			canvas.height = 5;
-			ctx.clearRect(0, 0, 75, 5);
-			ctx.fillStyle = lifeRatio <= .25 ? "#ef1010" : "#32cd32";
-			ctx.fillRect(0, 0, width, 5);
-		}
-		if (hpEl) hpEl.textContent = `${hp}/${maxhp}`;
-	} else if (hpEl) hpEl.textContent = "";
-}
-/**
-* Resizing UI
-*/
-function onResize$15() {
-	const hostEl = PartyFriendsV1._host;
-	const top = hostEl.offsetTop;
-	const left = hostEl.offsetLeft;
-	let lastWidth = 0;
-	let lastHeight = 0;
-	function resizing() {
-		const extraX = -20;
-		const extraY = 46;
-		let w = Math.floor((Mouse.screen.x - left - extraX) / 20);
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 20);
-		w = Math.min(Math.max(w, 12), 13);
-		h = Math.min(Math.max(h, 6), 12);
-		if (w === lastWidth && h === lastHeight) return;
-		PartyFriendsV1.resize(w, h);
-		lastWidth = w;
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	function onMouseUp(event) {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	}
-	window.addEventListener("mouseup", onMouseUp);
-}
-/**
-* Close the window
-*/
-function onClose$11() {
-	PartyFriendsV1._host.style.display = "none";
-	PartyHelper_default.remove();
-}
-/**
-* Enable or disable the lock features
-*/
-function onToggleLock() {
+function onItemOver$15() {
 	const root = _root$14();
-	_preferences$48.lock = !_preferences$48.lock;
-	_preferences$48.save();
-	const lockOn = root.querySelector(".lock.on");
-	const lockOff = root.querySelector(".lock.off");
-	if (_preferences$48.lock) {
-		if (lockOn) lockOn.style.display = "inline-block";
-		if (lockOff) lockOff.style.display = "none";
-	} else {
-		if (lockOn) lockOn.style.display = "none";
-		if (lockOff) lockOff.style.display = "inline-block";
+	const idx = parseInt(this.getAttribute("data-index"), 10);
+	const item = Mail.getItemByIndex(idx);
+	if (!item) return;
+	const overlay = root.querySelector(".container_item .overlay");
+	if (overlay) {
+		overlay.style.display = "block";
+		overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
+		if (item.IsIdentified) overlay.classList.remove("grey");
+		else overlay.classList.add("grey");
 	}
 }
 /**
-* Move to the other tab (Friend -> Party or Party -> Friend)
+* Hide the item name
 */
-function onChangeTab$1() {
-	const root = _root$14();
-	_preferences$48.friend = !_preferences$48.friend;
-	_preferences$48.save();
-	const showClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
-		el.style.display = "";
-	});
-	const hideClass = (sel) => root.querySelectorAll(sel).forEach((el) => {
-		el.style.display = "none";
-	});
-	if (_preferences$48.friend) {
-		showClass(".friend");
-		hideClass(".party");
-	} else {
-		hideClass(".friend");
-		showClass(".party");
-		if (SessionStorage_default.hasParty) {
-			const createBtn = root.querySelector(".party.create");
-			if (createBtn) createBtn.style.display = "none";
-			const sortBtn = root.querySelector(".party.sort");
-			if (sortBtn) sortBtn.style.display = "";
-			if (!SessionStorage_default.isPartyLeader) {
-				const addBtn = root.querySelector(".party.add");
-				if (addBtn) addBtn.style.display = "none";
-			}
-		} else {
-			hideClass(".party.add");
-			hideClass(".party.leave");
-			hideClass(".party.sort");
-		}
-	}
-	root.querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
-	_index$1 = -1;
+function onItemOut$16() {
+	const overlay = _root$14().querySelector(".container_item .overlay");
+	if (overlay) overlay.style.display = "none";
 }
 /**
-* Ask confirmation to remove a character from the list
+* Start dragging an item
 */
-function onRequestRemoveSelection() {
-	if (_index$1 < 0 || _preferences$48.lock || _preferences$48.friend && !_friends[_index$1] || !_preferences$48.friend && !_party[_index$1]) return;
-	const text = _preferences$48.friend ? DB.getMessage(356) : DB.getMessage(363);
-	UIManager.showPromptBox(text, "ok", "cancel", () => {
-		if (_preferences$48.friend) PartyFriendsV1.onRemoveFriend(_index$1);
-		else PartyFriendsV1.onExpelMember(_party[_index$1].AID, _party[_index$1].characterName);
-	});
+function onItemDragStart$11(event) {
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	const item = Mail.getItemByIndex(index);
+	if (!item) return;
+	const img = new Image();
+	const url = this.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+	img.decoding = "async";
+	img.src = url.replace(/^"/, "").replace(/"$/, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+		type: "item",
+		from: "Mail",
+		data: item
+	}));
+	onItemOut$16();
 }
 /**
-* Add nick name to chatbox
+* Stop dragging an item
 */
-function onRequestPrivateMessage() {
-	if (_index$1 < 0 || _preferences$48.lock) return;
-	const name = _preferences$48.friend ? _friends[_index$1].Name : _party[_index$1].characterName;
-	WhisperBox.show(name);
+function onItemDragEnd$12() {
+	delete window._OBJ_DRAG_;
 }
 /**
-* Right click on a character
+* Get item info (open description window)
 */
-function onRightClickInfo(event) {
-	if (event) {
-		event.stopImmediatePropagation();
-		event.preventDefault();
-	}
-	if (Camera && Camera.rotate) Camera.rotate(false);
-	if (_preferences$48.lock) return;
-	onSelectionChange.call(this, event);
-	if (_index$1 < 0) return;
-	ContextMenu_default.remove();
-	ContextMenu_default.append();
-	if (_preferences$48.friend) {
-		const friend = _friends[_index$1];
-		if (!friend) return;
-		ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
-		if (friend.GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection);
-	} else {
-		const player = _party[_index$1];
-		if (!player) return;
-		const isMe = player.AID === SessionStorage_default.AID;
-		const isLeader = SessionStorage_default.isPartyLeader;
-		const isOnline = player.state === 0;
-		ContextMenu_default.addElement(DB.getMessage(98), onOpenMailCreationWindow);
-		if (isMe) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty);
-		else {
-			ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
-			if (isLeader) {
-				ContextMenu_default.addElement(DB.getMessage(97), onRequestRemoveSelection);
-				ContextMenu_default.addElement(DB.getMessage(1532), onRequestPartyDelegation);
-			}
-		}
-		if (isOnline) {
-			ContextMenu_default.addElement(DB.getMessage(3101), () => {
-				detachMember(player.AID, player, Mouse.screen.x, Mouse.screen.y);
-				PartyFriendsV1.saveDetachedMembers();
-			});
-			ContextMenu_default.addElement(DB.getMessage(3102), () => {
-				if (_detachedMembers[player.AID]) {
-					_detachedMembers[player.AID].remove();
-					PartyFriendsV1.saveDetachedMembers();
-				}
-			});
-		}
-	}
-}
-/**
-* Request to leave a party
-*/
-function onRequestLeaveParty() {
-	if (_preferences$48.lock) return;
-	UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
-		PartyFriendsV1.onRequestLeave();
-	});
-}
-/**
-* Request to change party leader
-*/
-function onRequestPartyDelegation() {
-	if (_preferences$48.lock) return;
-	UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
-		PartyFriendsV1.onRequestChangeLeader(_party[_index$1].AID);
-	});
-}
-/**
-* Change selection (click on a friend/party)
-*/
-function onSelectionChange(event) {
-	_root$14().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
-	const node = this;
-	node.classList.add("selection");
-	const AID = parseInt(node.dataset.aid, 10);
-	_index$1 = -1;
-	if (_preferences$48.friend) _index$1 = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
-	else {
-		const player = _party.find((member) => member.AID == AID);
-		_index$1 = _party.indexOf(player);
-	}
-}
-/**
-* Request to create a team (open the window)
-*/
-function onOpenMailCreationWindow() {
-	if (_preferences$48.lock) return;
-	let recipient = "";
-	if (_preferences$48.friend && _friends[_index$1]) recipient = _friends[_index$1].Name;
-	else if (!_preferences$48.friend && _party[_index$1]) recipient = _party[_index$1].characterName;
-	if (recipient) Rodex_default.requestOpenWriteRodex(recipient);
-}
-/**
-* Request to create a team (open the window)
-*/
-function onOpenPartyCreationWindow() {
-	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.CREATE) {
-		PartyHelper_default.remove();
+function onItemInfo$19(event) {
+	event.stopImmediatePropagation();
+	const index = parseInt(this.getAttribute("data-index"), 10);
+	const item = Mail.getItemByIndex(index);
+	if (!item) return;
+	if (ItemInfo_default.uid === item.ITID) {
+		ItemInfo_default.remove();
 		return;
 	}
-	PartyHelper_default.append();
-	PartyHelper_default.setType(PartyHelper_default.Type.CREATE);
+	ItemInfo_default.append();
+	ItemInfo_default.uid = item.ITID;
+	ItemInfo_default.setItem(item);
 }
 /**
-* Request to open invitation window
+* Prettify number (15000 -> 15,000)
 */
-function onOpenPartyInviteWindow() {
-	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.INVITE) {
-		PartyHelper_default.remove();
-		return;
+function prettifyZeny$4(value) {
+	const num = String(value);
+	let i = 0;
+	const len = num.length;
+	let out = "";
+	while (i < len) {
+		out = num[len - i - 1] + out;
+		if ((i + 1) % 3 === 0 && i + 1 !== len) out = `,${out}`;
+		++i;
 	}
-	PartyHelper_default.append();
-	PartyHelper_default.setType(PartyHelper_default.Type.INVITE);
+	return out;
 }
 /**
-* Request to open invitation window
+* Converte DeleteTime
 */
-function onOpenPartyOptionWindow() {
-	if (_preferences$48.friend) {
-		if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.FRIEND_SETUP) {
-			PartyHelper_default.remove();
-			return;
-		}
-		const whisperPrefs = WhisperBox.preferences;
-		PartyHelper_default.append();
-		PartyHelper_default.setType(PartyHelper_default.Type.FRIEND_SETUP);
-		PartyHelper_default.setFriendOptions(whisperPrefs);
-		return;
-	}
-	if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.SETUP) {
-		PartyHelper_default.remove();
-		return;
-	}
-	PartyHelper_default.append();
-	PartyHelper_default.setType(PartyHelper_default.Type.SETUP);
-	PartyHelper_default.setOptions(_options, SessionStorage_default.isPartyLeader);
+function formateDeleteTime(value) {
+	const ts_ms = value * 1e3;
+	const date_ob = new Date(ts_ms);
+	const year = date_ob.getFullYear();
+	return `${`0${date_ob.getMonth() + 1}`.slice(-2)} ${`0${date_ob.getDate()}`.slice(-2)} ${String(year).substring(2, 4)}`;
+}
+function removeCreateAllItem() {
+	Mail.parseMailWinopen(0);
+	Mail.clearFieldsItemZeny();
 }
 /**
-* Custom RO-style tooltips (global, outside shadow DOM)
+* Validate the type of information being dropped into the text field
 */
-function onTooltipShow(event) {
-	if (event.__tooltipHandled) return;
-	event.__tooltipHandled = true;
-	const text = this.getAttribute("data-tooltip");
-	if (text) {
-		let tooltip = document.getElementById("ro-tooltip-party");
-		if (!tooltip) {
-			tooltip = document.createElement("div");
-			tooltip.id = "ro-tooltip-party";
-			tooltip.className = "ro-tooltip";
-			tooltip.style.cssText = "display:none;position:fixed;background-color:rgba(0,0,0,0.8);text-shadow:1px 1px black;color:white;padding:2px 6px;white-space:nowrap;z-index:20000;border-radius:2px;pointer-events:none;line-height:1.2;font-size:11px;";
-			document.body.appendChild(tooltip);
-		}
-		tooltip.textContent = text;
-		tooltip.style.display = "block";
+function onDropText$1(event) {
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	let data;
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+	} catch (_e) {
+		return;
 	}
+	if (data.type == "item") return;
+	event.currentTarget.value = data;
 }
-function onTooltipMove(event) {
-	if (event.__tooltipMoved) return;
-	event.__tooltipMoved = true;
-	const tooltip = document.getElementById("ro-tooltip-party");
-	if (tooltip && tooltip.style.display === "block") {
-		tooltip.style.top = `${event.clientY + 15}px`;
-		tooltip.style.left = `${event.clientX + 10}px`;
-	}
+function sleep(time) {
+	return new Promise((resolve) => setTimeout(resolve, time));
 }
-function onTooltipHide(event) {
-	if (event.__tooltipHidden) return;
-	event.__tooltipHidden = true;
-	const tooltip = document.getElementById("ro-tooltip-party");
-	if (tooltip) tooltip.style.display = "none";
-}
-var PartyFriendsV1, _detachedMembers, _index$1, _friends, _party, _options, _savedPositions, _skipSaveOnRemove, _preferences$48, PartyFriendsV1_default;
-var init_PartyFriendsV1 = __esmMin((() => {
+var Mail, _preferences$40, Mail_default;
+var init_Mail$1 = __esmMin((() => {
 	init_DBManager();
-	init_Camera();
-	init_MiniMap();
+	init_ItemType();
 	init_Preferences$1();
-	init_MonsterTable();
 	init_Client();
-	init_Renderer();
 	init_SessionStorage();
-	init_MouseEventHandler();
+	init_Renderer();
 	init_KeyEventHandler();
+	init_InputBox();
+	init_ItemInfo();
+	init_Inventory();
+	init_ChatBox();
 	init_UIManager();
 	init_GUIComponent();
 	init_Elements();
-	init_PartyHelper();
-	init_ContextMenu();
-	init_Rodex$1();
-	init_ChatBox();
-	init_WhisperBox();
-	init_PartyFriendsV1$2();
-	init_PartyFriendsV1$1();
-	init_PartyMemberExternal();
-	init_SkillTargetSelection();
-	PartyFriendsV1 = new GUIComponent("PartyFriendsV1", PartyFriendsV1_default$1);
-	_detachedMembers = {};
-	_index$1 = -1;
-	_friends = [];
-	_party = [];
-	_options = {
+	init_Mail$3();
+	init_Mail$2();
+	Mail = new GUIComponent("Mail", Mail_default$1);
+	/**
+	* Store Mail items
+	*/
+	Mail.list = [];
+	/**
+	* Determine data page size
+	*/
+	Mail.pageSize = 7;
+	/**
+	* know which page is current
+	*/
+	Mail.page = 0;
+	_preferences$40 = Preferences.get("Mail", {
+		x: 0,
+		y: 172,
+		width: 7,
+		height: 4,
+		show: false,
+		reduce: false,
+		magnet_top: false,
+		magnet_bottom: false,
+		magnet_left: true,
+		magnet_right: false,
+		item_add_email: {}
+	}, 2);
+	/**
+	* Render HTML
+	*/
+	Mail.render = () => Mail_default$2;
+	/**
+	* Has input fields, protect key events
+	*/
+	Mail.captureKeyEvents = true;
+	/**
+	* Apply preferences once append to body
+	*/
+	Mail.onAppend = function OnAppend() {
+		const root = _root$14();
+		const closeBtn = root.querySelector(".close");
+		if (closeBtn) closeBtn.addEventListener("click", this.onClosePressed.bind(this));
+		const inboxBtn = root.querySelector("#inbox");
+		if (inboxBtn) inboxBtn.addEventListener("click", offCreateMessagesOnWindowMailbox);
+		const writeBtn = root.querySelector("#write");
+		if (writeBtn) writeBtn.addEventListener("click", openWindowCreateMessages);
+		const cancelBtn = root.querySelector("#create_mail_cancel");
+		if (cancelBtn) cancelBtn.addEventListener("click", offCreateMessagesOnWindowMailbox);
+		const sendBtn = root.querySelector("#create_mail_send");
+		if (sendBtn) sendBtn.addEventListener("click", sendCreateMessagesMail);
+		updatePageMailItems();
+		const containerItem = root.querySelector(".container_item");
+		if (containerItem) {
+			containerItem.addEventListener("drop", onDrop$13);
+			containerItem.addEventListener("dragover", stopPropagation$10);
+			containerItem.addEventListener("mouseover", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemOver$15.call(item, event);
+			});
+			containerItem.addEventListener("mouseout", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemOut$16.call(item, event);
+			});
+			containerItem.addEventListener("dragstart", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemDragStart$11.call(item, event);
+			});
+			containerItem.addEventListener("dragend", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemDragEnd$12.call(item, event);
+			});
+			containerItem.addEventListener("contextmenu", (event) => {
+				const item = event.target.closest(".item");
+				if (item) onItemInfo$19.call(item, event);
+			});
+		}
+		root.querySelectorAll("input[type=text]").forEach((input) => {
+			input.addEventListener("drop", onDropText$1);
+			input.addEventListener("dragover", stopPropagation$10);
+		});
+		const textarea = root.querySelector("textarea");
+		if (textarea) {
+			textarea.addEventListener("drop", onDropText$1);
+			textarea.addEventListener("dragover", stopPropagation$10);
+		}
+		const zenyAmtBtn = root.querySelector("#zeny_amt");
+		if (zenyAmtBtn) zenyAmtBtn.addEventListener("click", onAddZenyInput);
+		const zenyOkBtn = root.querySelector("#zeny_ok");
+		if (zenyOkBtn) zenyOkBtn.addEventListener("click", onValidZenyInput);
+		onWindowMailbox();
+		const hostHeight = this._host.offsetHeight || 0;
+		const hostWidth = this._host.offsetWidth || 0;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - hostWidth)}px`;
+		this.draggable(".titlebar");
+	};
+	/**
+	* Add item to inventory
+	*/
+	Mail.addItemSub = function AddItemSub(Index) {
+		const root = _root$14();
+		const item = _preferences$40.item_add_email;
+		if (item.index !== Index) return false;
+		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
+		const it = DB.getItemInfo(item.ITID);
+		const content = root.querySelector(".container_item");
+		const oldItem = root.querySelector(".item");
+		if (oldItem) oldItem.remove();
+		if (content) content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		const hideEl = root.querySelector(".hide");
+		if (hideEl) hideEl.style.display = "block";
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = content ? content.querySelector(`.item[data-index="${item.index}"] .icon`) : null;
+			if (icon) icon.style.backgroundImage = `url(${data})`;
+		});
+		return true;
+	};
+	/**
+	* Send from mail to inventory - Remove item
+	*/
+	Mail.removeItem = function removeItem() {
+		const item = _root$14().querySelector(".item");
+		if (item) item.remove();
+	};
+	/**
+	* Send from mail to inventory - Remove zenys
+	*/
+	Mail.removeZeny = function removeZeny() {
+		const input = _root$14().querySelector(".input_zeny_amt");
+		if (input) input.value = "0";
+	};
+	/**
+	* Remove Mail from window (and so clean up items)
+	*/
+	Mail.onRemove = function OnRemove() {
+		this.list.length = 0;
+		_preferences$40.show = this._host.style.display !== "none";
+		_preferences$40.reduce = false;
+		_preferences$40.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$40.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$40.magnet_top = this.magnet.TOP;
+		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$40.magnet_left = this.magnet.LEFT;
+		_preferences$40.magnet_right = this.magnet.RIGHT;
+		_preferences$40.save();
+	};
+	/**
+	* Extend Mail window size
+	*/
+	Mail.resize = function Resize(width, height) {
+		const root = _root$14();
+		width = Math.min(Math.max(width, 6), 9);
+		height = Math.min(Math.max(height, 2), 6);
+		const mailEl = root.querySelector("#Mail");
+		if (mailEl) {
+			mailEl.style.width = `${55 + width * 32}px`;
+			mailEl.style.height = `${50 + height * 32}px`;
+		}
+	};
+	/**
+	* Extend Mail window size
+	*/
+	Mail.mailList = function mailList(read) {
+		Mail.list = read;
+		updatePageMailItems();
+	};
+	/**
+	* Mail receive
+	*/
+	Mail.mailReceiveUpdate = function mailReceiveUpdate(newMail) {
+		if (Mail.list.mailList === void 0) return;
+		Mail.list.MailNumber = Mail.MailNumber + 1;
+		let validIsOpen = 0;
+		Mail.list.mailList = Mail.list.mailList.map((el) => {
+			let newElement = {};
+			if (el.MailID == newMail.MailID) {
+				newElement = {
+					DeleteTime: el.DeleteTime,
+					FromName: el.FromName,
+					HEADER: el.HEADER,
+					MailID: el.MailID,
+					isOpen: 1
+				};
+				validIsOpen = 1;
+			} else newElement = el;
+			return newElement;
+		});
+		if (!validIsOpen) Mail.list.mailList.push(newMail);
+		Mail.parseMailrefreshinbox();
+	};
+	/**
+	* Search in a list for an item by its index
+	*/
+	Mail.getItemByIndex = function getItemByIndex(index) {
+		const list = _preferences$40.item_add_email;
+		if (list.index == index) return list;
+		return null;
+	};
+	/**
+	* Responder to a mail.
+	*/
+	Mail.replyNewMail = function replyNewMail(fromName) {
+		const root = _root$14();
+		onWindowCreateMessages();
+		const textTo = root.querySelector(".text_to");
+		if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
+	};
+	/**
+	* Responder to a mail from friends.
+	*/
+	Mail.replyNewMailFriends = async function replyNewMailFriends(fromName) {
+		const root = _root$14();
+		Mail.append();
+		sleep(1).then(() => {
+			onWindowCreateMessages();
+			offWindowListMail();
+			const textTo = root.querySelector(".text_to");
+			if (textTo) textTo.value = fromName.replace(/^(\$|\%)/, "").replace(/\t/g, "");
+			const inboxBtn = root.querySelector("#inbox");
+			if (inboxBtn) {
+				inboxBtn.replaceWith(inboxBtn.cloneNode(true));
+				const newInbox = root.querySelector("#inbox");
+				if (newInbox) {
+					newInbox.disabled = false;
+					newInbox.addEventListener("click", () => {});
+				}
+			}
+			const cancelBtn = root.querySelector("#create_mail_cancel");
+			if (cancelBtn) {
+				cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+				const newCancel = root.querySelector("#create_mail_cancel");
+				if (newCancel) newCancel.addEventListener("click", this.onClosePressed.bind(this));
+			}
+		});
+	};
+	Mail.clearFieldsItemZeny = function clearFieldsItemZeny() {
+		const root = _root$14();
+		const item = root.querySelector(".item");
+		if (item) item.remove();
+		const zenyInput = root.querySelector(".input_zeny_amt");
+		if (zenyInput) zenyInput.value = "0";
+		const sendBtn = root.querySelector("#create_mail_send");
+		if (sendBtn) sendBtn.disabled = false;
+	};
+	Mail.onKeyDown = function onKeyDown(event) {
+		const shadow = this._shadow || this._host;
+		const focused = shadow ? shadow.activeElement : null;
+		if (focused && focused.tagName && focused.tagName.match(/input|select|textarea/i)) {
+			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+				this.remove();
+				event.stopImmediatePropagation();
+				return false;
+			}
+			event.stopImmediatePropagation();
+			return true;
+		}
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
+			this.remove();
+			event.stopImmediatePropagation();
+			return false;
+		}
+		return true;
+	};
+	/**
+	* Callbacks
+	*/
+	Mail.onClosePressed = function onClosePressed() {};
+	Mail.parseMailWinopen = function parseMailWinopen() {};
+	Mail.parseMailrefreshinbox = function parseMailrefreshinbox() {};
+	Mail.parseMailSetattach = function parseMailSetattach() {};
+	Mail.reqRemoveItem = function reqRemoveItem() {};
+	Mail.parseMailSend = function parseMailSend() {};
+	Mail.openMail = function openMail() {};
+	Mail.replyMail = function replyMail() {};
+	Mail_default = UIManager.addComponent(Mail);
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsCommon.js
+function createPartyFriends(config) {
+	const { name: componentName, htmlText, cssText, renewalParty = false } = config;
+	/**
+	* Create Component
+	*/
+	const Component = new GUIComponent(componentName, cssText);
+	/**
+	* @var {number} index of selection
+	*/
+	let _index = -1;
+	/**
+	* @var {Array} friends list
+	*/
+	const _friends = [];
+	/**
+	* @var {Array} party list
+	*/
+	const _party = [];
+	/**
+	* @var {Object} party setup
+	*/
+	const _options = {
 		exp_share: 0,
 		item_share: 0,
 		item_sharing_type: 0
 	};
-	_savedPositions = null;
-	_skipSaveOnRemove = false;
-	_preferences$48 = Preferences.get("PartyFriendsV1", {
+	/**
+	* Renewal-only detached member state (unused in classic layout).
+	*/
+	let _detachedMembers = {};
+	let _savedPositions = null;
+	let _skipSaveOnRemove = false;
+	/**
+	* @var {Preferences} structure
+	*/
+	const _prefsDefault = {
 		x: 200,
 		y: 200,
 		width: 12,
 		height: 6,
 		show: false,
 		friend: true,
-		lock: false,
-		detachedMembers: {}
-	}, 1);
+		lock: false
+	};
+	if (renewalParty) _prefsDefault.detachedMembers = {};
+	const _preferences = Preferences.get(componentName, _prefsDefault, 1);
+	/**
+	* Helper: query inside shadow root
+	*/
+	function _root() {
+		return Component.getRoot();
+	}
+	/**
+	* Helper: escape HTML
+	*/
+	function _escapeHTML(text) {
+		const div = document.createElement("div");
+		div.textContent = text;
+		return div.innerHTML;
+	}
+	/**
+	* Visibility helpers — V0 drives the jQuery-compat proxy, V1 the host node.
+	*/
+	function _isVisible() {
+		return renewalParty ? Component._host.style.display !== "none" : Component.ui.is(":visible");
+	}
+	function _showWindow() {
+		if (renewalParty) Component._host.style.display = "block";
+		else Component.ui.show();
+	}
+	function _toggleWindow() {
+		if (renewalParty) Component._host.style.display = _isVisible() ? "none" : "block";
+		else Component.ui.toggle();
+	}
 	/**
 	* Render HTML
 	*/
-	PartyFriendsV1.render = () => PartyFriendsV1_default$2;
+	Component.render = () => htmlText;
 	/**
 	* Initialize the component (event listener, etc.)
 	*/
-	PartyFriendsV1.init = function init() {
-		const root = _root$14();
+	Component.init = function init() {
+		const root = _root();
 		PartyHelper_default.prepare();
 		const baseBtn = root.querySelector(".base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (event) => {
@@ -227096,12 +226043,12 @@ var init_PartyFriendsV1 = __esmMin((() => {
 			event.preventDefault();
 		});
 		const closeBtn = root.querySelector(".close");
-		if (closeBtn) closeBtn.addEventListener("click", onClose$11);
+		if (closeBtn) closeBtn.addEventListener("click", onClose);
 		root.querySelectorAll(".lock").forEach((el) => {
 			el.addEventListener("mousedown", onToggleLock);
 		});
 		root.querySelectorAll(".switchtab.off").forEach((el) => {
-			el.addEventListener("mousedown", onChangeTab$1);
+			el.addEventListener("mousedown", onChangeTab);
 		});
 		const removeBtn = root.querySelector(".remove");
 		if (removeBtn) removeBtn.addEventListener("mousedown", onRequestRemoveSelection);
@@ -227110,7 +226057,7 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		const leaveBtn = root.querySelector(".leave");
 		if (leaveBtn) leaveBtn.addEventListener("mousedown", onRequestLeaveParty);
 		const resizeBtn = root.querySelector(".resize");
-		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize$15);
+		if (resizeBtn) resizeBtn.addEventListener("mousedown", onResize);
 		const mailBtn = root.querySelector(".mail");
 		if (mailBtn) mailBtn.addEventListener("mousedown", onOpenMailCreationWindow);
 		const createBtn = root.querySelector(".party.create");
@@ -227119,13 +226066,15 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (addBtn) addBtn.addEventListener("mousedown", onOpenPartyInviteWindow);
 		const infoBtn = root.querySelector(".info");
 		if (infoBtn) infoBtn.addEventListener("mousedown", onOpenPartyOptionWindow);
-		const sortBtn = root.querySelector(".party.sort");
-		if (sortBtn) sortBtn.addEventListener("mousedown", sortDetachedMembers);
+		if (renewalParty) {
+			const sortBtn = root.querySelector(".party.sort");
+			if (sortBtn) sortBtn.addEventListener("mousedown", sortDetachedMembers);
+		}
 		const content = root.querySelector(".content");
-		if (content) {
+		if (content) if (renewalParty) {
 			content.addEventListener("contextmenu", (event) => {
 				const node = event.target.closest(".node");
-				if (node) onRightClickInfo.call(node, event);
+				if (node) onRightClickInfoRenewal.call(node, event);
 			});
 			content.addEventListener("mousedown", (event) => {
 				const node = event.target.closest(".node");
@@ -227143,9 +226092,21 @@ var init_PartyFriendsV1 = __esmMin((() => {
 				const el = event.target.closest("[data-tooltip]");
 				if (el) onTooltipHide.call(el, event);
 			});
+		} else {
+			content.addEventListener("contextmenu", (e) => {
+				if (e.target.closest(".node")) {
+					e.preventDefault();
+					e.stopImmediatePropagation();
+					onRightClickInfoClassic();
+				}
+			});
+			content.addEventListener("mousedown", (e) => {
+				const node = e.target.closest(".node");
+				if (node) onSelectionChangeClassic(node);
+			});
 		}
 		this.draggable(".titlebar");
-		PartyMemberExternal_default.onDragEnd = function(movedComponent) {
+		if (renewalParty) PartyMemberExternal_default.onDragEnd = function(movedComponent) {
 			const pos = {
 				left: movedComponent._host.offsetLeft,
 				top: movedComponent._host.offsetTop
@@ -227161,64 +226122,53 @@ var init_PartyFriendsV1 = __esmMin((() => {
 					if (Math.abs(otherPos.left - pos.left) < 5 && Math.abs(otherPos.top - pos.top) < 5) {
 						other._host.style.left = `${oldPos.left}px`;
 						other._host.style.top = `${oldPos.top}px`;
-						PartyFriendsV1.saveDetachedMembers();
+						Component.saveDetachedMembers();
 						return;
 					}
 				}
 			}
-			PartyFriendsV1.saveDetachedMembers();
+			Component.saveDetachedMembers();
 		};
-	};
-	/**
-	* Refresh the party list rendering
-	*/
-	PartyFriendsV1.refreshPartyList = function refreshPartyList() {
-		const root = _root$14();
-		const partyContent = root.querySelector(".content .party");
-		if (partyContent) partyContent.innerHTML = "";
-		for (let i = 0; i < _party.length; i++) this.renderPartyMember(_party[i]);
-		const innerCount = root.querySelector(".count-box .inner-count");
-		if (innerCount) innerCount.textContent = `${_party.length}/12`;
 	};
 	/**
 	* Once append to the DOM, start to position the UI
 	*/
-	PartyFriendsV1.onAppend = function onAppend() {
-		const root = _root$14();
-		_preferences$48.friend = !_preferences$48.friend;
-		onChangeTab$1();
+	Component.onAppend = function onAppend() {
+		const root = _root();
+		_preferences.friend = !_preferences.friend;
+		onChangeTab();
 		const lockOn = root.querySelector(".lock.on");
 		const lockOff = root.querySelector(".lock.off");
-		if (_preferences$48.lock) {
+		if (_preferences.lock) {
 			if (lockOn) lockOn.style.display = "inline-block";
 			if (lockOff) lockOff.style.display = "none";
 		} else {
 			if (lockOn) lockOn.style.display = "none";
 			if (lockOff) lockOff.style.display = "inline-block";
 		}
-		this.resize(_preferences$48.width, _preferences$48.height);
-		const hostHeight = this._host.offsetHeight || 0;
-		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$48.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$48.x), Renderer.width - hostWidth)}px`;
-		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/bg_partymember.bmp", function(url) {
+		this.resize(_preferences.width, _preferences.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		if (renewalParty) Client.loadFile(DB.INTERFACE_PATH + "renewalparty/bg_partymember.bmp", function(url) {
 			const countBox = root.querySelector(".count-box");
 			if (countBox) countBox.style.backgroundImage = `url(${url})`;
 		});
-		if (!_preferences$48.show) this._host.style.display = "none";
-		for (let i = 0; i < _party.length; i++) restoreDetachedMember(_party[i]);
+		if (!_preferences.show) this._host.style.display = "none";
+		if (renewalParty) for (let i = 0; i < _party.length; i++) restoreDetachedMember(_party[i]);
 	};
 	/**
 	* Clean up UI
 	*/
-	PartyFriendsV1.clean = function clean() {
-		const root = _root$14();
+	Component.clean = function clean() {
+		const root = _root();
 		_party.length = 0;
 		_friends.length = 0;
-		_skipSaveOnRemove = true;
-		for (const aid in _detachedMembers) if (_detachedMembers[aid]) _detachedMembers[aid].remove();
-		_detachedMembers = {};
-		_savedPositions = null;
+		if (renewalParty) {
+			_skipSaveOnRemove = true;
+			for (const aid in _detachedMembers) if (_detachedMembers[aid]) _detachedMembers[aid].remove();
+			_detachedMembers = {};
+			_savedPositions = null;
+		}
 		_options.exp_share = 0;
 		_options.item_share = 0;
 		_options.item_sharing_type = 0;
@@ -227230,87 +226180,97 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		if (partyContent) partyContent.innerHTML = "";
 		const friendContent = root.querySelector(".content .friend");
 		if (friendContent) friendContent.innerHTML = "";
-		const innerCount = root.querySelector(".count-box .inner-count");
-		if (innerCount) innerCount.textContent = "0/12";
-		_preferences$48.friend = !_preferences$48.friend;
-		onChangeTab$1();
+		if (renewalParty) {
+			const innerCount = root.querySelector(".count-box .inner-count");
+			if (innerCount) innerCount.textContent = "0/12";
+		}
+		_preferences.friend = !_preferences.friend;
+		onChangeTab();
 	};
 	/**
 	* Removing the UI from window, save preferences
 	*/
-	PartyFriendsV1.onRemove = function onRemove() {
-		_preferences$48.show = this._host.style.display !== "none";
-		_preferences$48.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$48.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$48.save();
-		if (!_skipSaveOnRemove && Object.keys(_detachedMembers).length > 0) this.saveDetachedMembers();
-		_skipSaveOnRemove = false;
-		_savedPositions = null;
-		const tooltip = document.getElementById("ro-tooltip-party");
-		if (tooltip) tooltip.style.display = "none";
+	Component.onRemove = function onRemove() {
+		_preferences.show = _isVisible();
+		if (renewalParty) {
+			_preferences.y = parseInt(this._host.style.top, 10) || 0;
+			_preferences.x = parseInt(this._host.style.left, 10) || 0;
+		} else {
+			_preferences.y = parseInt(this._host.style.top, 10);
+			_preferences.x = parseInt(this._host.style.left, 10);
+		}
+		_preferences.save();
+		if (renewalParty) {
+			if (!_skipSaveOnRemove && Object.keys(_detachedMembers).length > 0) this.saveDetachedMembers();
+			_skipSaveOnRemove = false;
+			_savedPositions = null;
+			const tooltip = document.getElementById("ro-tooltip-party");
+			if (tooltip) tooltip.style.display = "none";
+		}
 	};
 	/**
 	* Window Shortcuts
 	*/
-	PartyFriendsV1.onShortCut = function onShortCut(key) {
-		const isVisible = this._host.style.display !== "none";
+	Component.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "FRIEND":
-				if (_preferences$48.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (_preferences.friend) _toggleWindow();
 				else {
-					_preferences$48.friend = false;
-					onChangeTab$1();
-					this._host.style.display = "block";
+					_preferences.friend = false;
+					onChangeTab();
+					_showWindow();
 				}
-				if (this._host.style.display !== "none") this.focus();
+				if (_isVisible()) this.focus();
 				break;
 			case "PARTY":
-				if (!_preferences$48.friend) this._host.style.display = isVisible ? "none" : "block";
+				if (!_preferences.friend) _toggleWindow();
 				else {
-					_preferences$48.friend = true;
-					onChangeTab$1();
-					this._host.style.display = "block";
+					_preferences.friend = true;
+					onChangeTab();
+					_showWindow();
 				}
-				if (this._host.style.display !== "none") this.focus();
+				if (_isVisible()) this.focus();
 				break;
 		}
 	};
 	/**
 	* Show/Hide UI
 	*/
-	PartyFriendsV1.toggle = function toggle() {
-		const isVisible = this._host.style.display !== "none";
-		this._host.style.display = isVisible ? "none" : "block";
+	Component.toggle = function toggle() {
+		_toggleWindow();
 		PartyHelper_default.remove();
-		if (this._host.style.display !== "none") this.focus();
+		if (_isVisible()) this.focus();
 	};
-	PartyFriendsV1.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") this.toggle();
+	Component.onKeyDown = function onKeyDown(event) {
+		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && _isVisible()) this.toggle();
 	};
 	/**
 	* Set friends to UI
 	*
 	* @param {Array} friends list
 	*/
-	PartyFriendsV1.setFriends = function setFriends(friends) {
-		const root = _root$14();
+	Component.setFriends = function setFriends(friends) {
+		const root = _root();
 		const count = friends.length;
-		const friendContent = root.querySelector(".content .friend");
+		const friendContainer = root.querySelector(".content .friend");
 		_friends.length = friends.length;
-		if (friendContent) friendContent.innerHTML = "";
+		if (friendContainer) friendContainer.innerHTML = "";
 		for (let i = 0; i < count; i++) {
 			_friends[i] = friends[i];
-			if (friendContent) friendContent.insertAdjacentHTML("beforeend", `<div class="node${friends[i].State === 0 ? " online" : ""}"><span class="name">${_escapeHTML$6(friends[i].Name)}</span></div>`);
+			if (friendContainer) friendContainer.insertAdjacentHTML("beforeend", `<div class="node${friends[i].State === 0 ? " online" : ""}"><span class="name">${_escapeHTML(friends[i].Name)}</span></div>`);
 		}
-		const friendCountEl = root.querySelector(".friendcount");
-		if (friendCountEl) friendCountEl.textContent = String(count);
-		_index$1 = -1;
+		const friendCount = root.querySelector(".friendcount");
+		if (friendCount) friendCount.textContent = String(count);
+		_index = -1;
 	};
 	/**
 	* Update friend (online/offline) state
+	*
+	* @param {number} index
+	* @param {boolean} state
 	*/
-	PartyFriendsV1.updateFriendState = function updateFriendState(index, state) {
-		const node = _root$14().querySelectorAll(".content .friend .node")[index];
+	Component.updateFriendState = function updateFriendState(index, state) {
+		const node = _root().querySelectorAll(".content .friend .node")[index];
 		_friends[index].State = state;
 		if (state) {
 			if (node) node.style.backgroundImage = "";
@@ -227324,15 +226284,18 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	/**
 	* Update/Add a friend to the list
+	*
+	* @param {number} index
+	* @param {object} friend data
 	*/
-	PartyFriendsV1.updateFriend = function updateFriend(idx, friend) {
-		const root = _root$14();
-		const friendContent = root.querySelector(".content .friend");
+	Component.updateFriend = function updateFriend(idx, friend) {
+		const root = _root();
 		if (!_friends[idx]) {
 			_friends[idx] = {};
-			if (friendContent) friendContent.insertAdjacentHTML("beforeend", "<div class=\"node\"><span class=\"name\"></span></div>");
-			const friendCountEl = root.querySelector(".friendcount");
-			if (friendCountEl) friendCountEl.textContent = String(_friends.length);
+			const friendContainer = root.querySelector(".content .friend");
+			if (friendContainer) friendContainer.insertAdjacentHTML("beforeend", "<div class=\"node\"><span class=\"name\"></span></div>");
+			const friendCount = root.querySelector(".friendcount");
+			if (friendCount) friendCount.textContent = String(_friends.length);
 		}
 		_friends[idx].Name = friend.Name;
 		_friends[idx].GID = friend.GID;
@@ -227349,190 +226312,406 @@ var init_PartyFriendsV1 = __esmMin((() => {
 	};
 	/**
 	* Remove friend from list
+	*
+	* @param {number} index
 	*/
-	PartyFriendsV1.removeFriend = function removeFriend(index) {
-		const root = _root$14();
+	Component.removeFriend = function removeFriend(index) {
+		const root = _root();
 		_friends.splice(index, 1);
 		const nodes = root.querySelectorAll(".content .friend .node");
 		if (nodes[index]) nodes[index].remove();
-		const friendCountEl = root.querySelector(".friendcount");
-		if (friendCountEl) friendCountEl.textContent = String(_friends.length);
-		if (_index$1 === index) _index$1 = -1;
+		const friendCount = root.querySelector(".friendcount");
+		if (friendCount) friendCount.textContent = String(_friends.length);
+		if (_index === index) _index = -1;
 	};
-	/**
-	* Add members to party
-	*/
-	PartyFriendsV1.setParty = function setParty(name, members) {
-		const root = _root$14();
-		const partyName = root.querySelector(".partyname");
-		if (partyName) partyName.textContent = `(${name})`;
-		SessionStorage_default.isPartyLeader = false;
-		const createBtn = root.querySelector(".party.create");
-		if (createBtn) createBtn.style.display = "none";
-		const leaveBtn = root.querySelector(".party.leave");
-		if (leaveBtn) leaveBtn.style.display = "";
-		const sortBtn = root.querySelector(".party.sort");
-		if (sortBtn) sortBtn.style.display = "";
-		const count = members.length;
-		const newAIDs = {};
-		for (let i = 0; i < count; i++) {
-			const member = members[i];
-			newAIDs[member.AID] = true;
-			PartyFriendsV1.addPartyMember(member);
-		}
-		if (_party.length > 0 && count > 0) {
-			for (let i = 0; i < _party.length; i++) if (!newAIDs[_party[i].AID]) {
-				const removed = _party.splice(i, 1)[0];
-				const nodeEl = root.querySelector(`.content .party .node[data-aid="${removed.AID}"]`);
-				if (nodeEl) nodeEl.remove();
-				i--;
-			}
-		}
-		const innerCount = root.querySelector(".count-box .inner-count");
-		if (innerCount) innerCount.textContent = `${_party.length}/12`;
-		let removedCount = 0;
-		for (const aid in _detachedMembers) {
-			let foundInPacket = false;
-			for (let i = 0; i < count; i++) if (members[i].AID == aid || String(members[i].AID) === aid) {
-				foundInPacket = true;
-				break;
-			}
-			if (!foundInPacket) {
-				if (_detachedMembers[aid]) {
-					console.log("[PartyFriendsV1] GC removing orphaned window for AID:", aid);
-					_detachedMembers[aid].remove();
-					removedCount++;
-				}
-			}
-		}
-		if (removedCount > 0) console.log(`[PartyFriendsV1] Cleaned up ${removedCount} orphaned detached windows`);
-	};
-	/**
-	* Add a new party member to the list
-	*/
-	PartyFriendsV1.addPartyMember = function addPartyMember(player) {
-		const root = _root$14();
-		const role = player.role || 0;
-		const count = _party.length;
-		let i;
-		if (player.AID === SessionStorage_default.AID) {
-			SessionStorage_default.isPartyLeader = role === 0;
-			const addBtn = root.querySelector(".party.add");
-			if (addBtn) addBtn.style.display = SessionStorage_default.isPartyLeader ? "" : "none";
-		}
-		for (i = 0; i < count; ++i) if (_party[i].AID === player.AID || _party[i].characterName === player.characterName) break;
-		let hasChanged = false;
-		if (i < count) {
-			const old = _party[i];
-			if (old.baseLevel !== (player.baseLevel !== void 0 ? player.baseLevel : old.baseLevel) || old.class_ !== (player.class_ !== void 0 ? player.class_ : old.class_) || old.mapName !== (player.mapName !== void 0 ? player.mapName : old.mapName) || old.role !== player.role || old.state !== (player.state !== void 0 ? player.state : old.state)) hasChanged = true;
-			Object.assign(_party[i], player);
-			player = _party[i];
-		} else {
-			player = Object.assign({}, player);
-			_party.push(player);
-			hasChanged = true;
-		}
-		if (!hasChanged) return;
-		const innerCount = root.querySelector(".count-box .inner-count");
-		if (innerCount) innerCount.textContent = `${_party.length}/12`;
-		if (_detachedMembers[player.AID]) _detachedMembers[player.AID].setMember(player.AID, player);
-		else restoreDetachedMember(player);
-		this.renderPartyMember(player);
-	};
-	/**
-	* Render a party member into the UI
-	*/
-	PartyFriendsV1.renderPartyMember = function renderPartyMember(player) {
-		const root = _root$14();
-		const role = player.role || player.Role || 0;
-		const job = player.class_ || player.job || player.Job || 0;
-		const level = player.baseLevel || player.level || player.Level || 0;
-		const isDead = !!player.isDead;
-		const isOnline = player.state === 0;
-		const isDetached = !!_detachedMembers[player.AID];
-		const jobName = MonsterTable_default[job] || "Unknown";
-		const mapDisplay = DB.getMapName(player.mapName);
-		player.color = Controller$5 && Controller$5.getMemberColor ? Controller$5.getMemberColor(player.AID) : "white";
-		const nameTooltip = `${player.characterName} (${mapDisplay})`;
-		const hasLife = !!(player.life && player.life.display);
-		const barVisibility = hasLife ? "visible" : "hidden";
-		const memberColor = isOnline ? player.color || "#333" : "#848ca5";
-		const html = `<div class="node${role === 0 ? " leader" : ""}${isOnline ? " online" : ""}${isDetached ? " detached" : ""}" style="background-color: ${isDetached ? "#deefff" : "white"};" data-aid="${player.AID}" data-tooltip="${isOnline ? _escapeHTML$6(nameTooltip) : ""}"><div class="job-icon-container" data-tooltip="${_escapeHTML$6(jobName)}"><div class="job-icon"></div><div class="crown"></div></div><div class="info-container"><div class="row1"><span class="level">Lv. ${level}</span><span class="name" style="color: ${memberColor};">${_escapeHTML$6(player.characterName)}</span><span class="map" style="color: ${memberColor};">(${_escapeHTML$6(mapDisplay)})</span></div><div class="row2"><div class="hp-bar-container" style="visibility:${barVisibility}"><canvas class="life" width="75" height="5"></canvas></div><span class="hp" style="visibility:${barVisibility}"></span><div class="status-icon"></div></div></div></div>`;
-		let node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
-		if (node) {
-			node.outerHTML = html;
-			node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
-		} else {
-			const partyContent = root.querySelector(".content .party");
-			if (partyContent) {
-				partyContent.insertAdjacentHTML("beforeend", html);
-				node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
-			}
-		}
-		if (!node) return;
-		Client.loadFile(`${DB.INTERFACE_PATH}renewalparty/icon_jobs_${job}${isDead ? "_die" : ""}.bmp`, function(url) {
-			const jobIcon = node.querySelector(".job-icon");
-			if (jobIcon) jobIcon.style.backgroundImage = `url(${url})`;
-		});
-		if (role === 0) Client.loadFile(DB.INTERFACE_PATH + "renewalparty/ico_partycrown.bmp", function(url) {
-			const crown = node.querySelector(".crown");
-			if (crown) crown.style.backgroundImage = `url(${url})`;
-		});
-		const statusFile = `icon_party_${player.AID == SessionStorage_default.AID ? "me.bmp" : isOnline ? "on.bmp" : "off.bmp"}`;
-		Client.loadFile(DB.INTERFACE_PATH + "renewalparty/" + statusFile, function(url) {
-			const statusIcon = node.querySelector(".status-icon");
-			if (statusIcon) statusIcon.style.backgroundImage = `url(${url})`;
-		});
-		updateCanvasLife(node, hasLife ? player.life.hp : void 0, hasLife ? player.life.hp_max : void 0);
-	};
-	/**
-	* Remove a character from list
-	*/
-	PartyFriendsV1.removePartyMember = function removePartyMember(AID, characterName) {
-		const root = _root$14();
-		if (AID === SessionStorage_default.AID) {
-			for (const aid in _detachedMembers) if (_detachedMembers[aid]) {
-				_detachedMembers[aid].onRemove = function() {
-					delete UIManager.components[this.name];
-				};
-				_detachedMembers[aid].remove();
-			}
-			_detachedMembers = {};
-			_party.length = 0;
+	if (renewalParty) {
+		/**
+		* Refresh the party list rendering
+		*/
+		Component.refreshPartyList = function refreshPartyList() {
+			const root = _root();
 			const partyContent = root.querySelector(".content .party");
 			if (partyContent) partyContent.innerHTML = "";
-			const partyNameEl = root.querySelector(".partyname");
-			if (partyNameEl) partyNameEl.textContent = "";
-			const createBtn = root.querySelector(".party.create");
-			if (createBtn) createBtn.style.display = "";
-			const leaveBtn = root.querySelector(".party.leave");
-			if (leaveBtn) leaveBtn.style.display = "none";
-			const addBtn = root.querySelector(".party.add");
-			if (addBtn) addBtn.style.display = "none";
-			ChatBox_default.addText(DB.getMessage(84), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PARTY_SETUP);
-			return;
-		}
-		const count = _party.length;
-		for (let i = 0; i < count; ++i) if (_party[i].AID === AID && _party[i].characterName === characterName) {
-			_party.splice(i, 1);
-			const nodes = root.querySelectorAll(".content .party .node");
-			if (nodes[i]) nodes[i].remove();
+			for (let i = 0; i < _party.length; i++) this.renderPartyMember(_party[i]);
 			const innerCount = root.querySelector(".count-box .inner-count");
 			if (innerCount) innerCount.textContent = `${_party.length}/12`;
-			if (_detachedMembers[AID]) _detachedMembers[AID].remove();
-			break;
-		}
-	};
+		};
+		/**
+		* Add members to party
+		*/
+		Component.setParty = function setParty(name, members) {
+			const root = _root();
+			const partyName = root.querySelector(".partyname");
+			if (partyName) partyName.textContent = `(${name})`;
+			SessionStorage_default.isPartyLeader = false;
+			const createBtn = root.querySelector(".party.create");
+			if (createBtn) createBtn.style.display = "none";
+			const leaveBtn = root.querySelector(".party.leave");
+			if (leaveBtn) leaveBtn.style.display = "";
+			const sortBtn = root.querySelector(".party.sort");
+			if (sortBtn) sortBtn.style.display = "";
+			const count = members.length;
+			const newAIDs = {};
+			for (let i = 0; i < count; i++) {
+				const member = members[i];
+				newAIDs[member.AID] = true;
+				Component.addPartyMember(member);
+			}
+			if (_party.length > 0 && count > 0) {
+				for (let i = 0; i < _party.length; i++) if (!newAIDs[_party[i].AID]) {
+					const removed = _party.splice(i, 1)[0];
+					const nodeEl = root.querySelector(`.content .party .node[data-aid="${removed.AID}"]`);
+					if (nodeEl) nodeEl.remove();
+					i--;
+				}
+			}
+			const innerCount = root.querySelector(".count-box .inner-count");
+			if (innerCount) innerCount.textContent = `${_party.length}/12`;
+			let removedCount = 0;
+			for (const aid in _detachedMembers) {
+				let foundInPacket = false;
+				for (let i = 0; i < count; i++) if (members[i].AID == aid || String(members[i].AID) === aid) {
+					foundInPacket = true;
+					break;
+				}
+				if (!foundInPacket) {
+					if (_detachedMembers[aid]) {
+						console.log("[PartyFriendsV1] GC removing orphaned window for AID:", aid);
+						_detachedMembers[aid].remove();
+						removedCount++;
+					}
+				}
+			}
+			if (removedCount > 0) console.log(`[PartyFriendsV1] Cleaned up ${removedCount} orphaned detached windows`);
+		};
+		/**
+		* Add a new party member to the list
+		*/
+		Component.addPartyMember = function addPartyMember(player) {
+			const root = _root();
+			const role = player.role || 0;
+			const count = _party.length;
+			let i;
+			if (player.AID === SessionStorage_default.AID) {
+				SessionStorage_default.isPartyLeader = role === 0;
+				const addBtn = root.querySelector(".party.add");
+				if (addBtn) addBtn.style.display = SessionStorage_default.isPartyLeader ? "" : "none";
+			}
+			for (i = 0; i < count; ++i) if (_party[i].AID === player.AID || _party[i].characterName === player.characterName) break;
+			let hasChanged = false;
+			if (i < count) {
+				const old = _party[i];
+				if (old.baseLevel !== (player.baseLevel !== void 0 ? player.baseLevel : old.baseLevel) || old.class_ !== (player.class_ !== void 0 ? player.class_ : old.class_) || old.mapName !== (player.mapName !== void 0 ? player.mapName : old.mapName) || old.role !== player.role || old.state !== (player.state !== void 0 ? player.state : old.state)) hasChanged = true;
+				Object.assign(_party[i], player);
+				player = _party[i];
+			} else {
+				player = Object.assign({}, player);
+				_party.push(player);
+				hasChanged = true;
+			}
+			if (!hasChanged) return;
+			const innerCount = root.querySelector(".count-box .inner-count");
+			if (innerCount) innerCount.textContent = `${_party.length}/12`;
+			if (_detachedMembers[player.AID]) _detachedMembers[player.AID].setMember(player.AID, player);
+			else restoreDetachedMember(player);
+			Component.renderPartyMember(player);
+		};
+		/**
+		* Render a party member into the UI
+		*/
+		Component.renderPartyMember = function renderPartyMember(player) {
+			const root = _root();
+			const role = player.role || player.Role || 0;
+			const job = player.class_ || player.job || player.Job || 0;
+			const level = player.baseLevel || player.level || player.Level || 0;
+			const isDead = !!player.isDead;
+			const isOnline = player.state === 0;
+			const isDetached = !!_detachedMembers[player.AID];
+			const jobName = MonsterTable_default[job] || "Unknown";
+			const mapDisplay = DB.getMapName(player.mapName);
+			player.color = Controller$5 && Controller$5.getMemberColor ? Controller$5.getMemberColor(player.AID) : "white";
+			const nameTooltip = `${player.characterName} (${mapDisplay})`;
+			const hasLife = !!(player.life && player.life.display);
+			const barVisibility = hasLife ? "visible" : "hidden";
+			const memberColor = isOnline ? player.color || "#333" : "#848ca5";
+			const html = `<div class="node${role === 0 ? " leader" : ""}${isOnline ? " online" : ""}${isDetached ? " detached" : ""}" style="background-color: ${isDetached ? "#deefff" : "white"};" data-aid="${player.AID}" data-tooltip="${isOnline ? _escapeHTML(nameTooltip) : ""}"><div class="job-icon-container" data-tooltip="${_escapeHTML(jobName)}"><div class="job-icon"></div><div class="crown"></div></div><div class="info-container"><div class="row1"><span class="level">Lv. ${level}</span><span class="name" style="color: ${memberColor};">${_escapeHTML(player.characterName)}</span><span class="map" style="color: ${memberColor};">(${_escapeHTML(mapDisplay)})</span></div><div class="row2"><div class="hp-bar-container" style="visibility:${barVisibility}"><canvas class="life" width="75" height="5"></canvas></div><span class="hp" style="visibility:${barVisibility}"></span><div class="status-icon"></div></div></div></div>`;
+			let node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
+			if (node) {
+				node.outerHTML = html;
+				node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
+			} else {
+				const partyContent = root.querySelector(".content .party");
+				if (partyContent) {
+					partyContent.insertAdjacentHTML("beforeend", html);
+					node = root.querySelector(`.content .party .node[data-aid="${player.AID}"]`);
+				}
+			}
+			if (!node) return;
+			Client.loadFile(`${DB.INTERFACE_PATH}renewalparty/icon_jobs_${job}${isDead ? "_die" : ""}.bmp`, function(url) {
+				const jobIcon = node.querySelector(".job-icon");
+				if (jobIcon) jobIcon.style.backgroundImage = `url(${url})`;
+			});
+			if (role === 0) Client.loadFile(DB.INTERFACE_PATH + "renewalparty/ico_partycrown.bmp", function(url) {
+				const crown = node.querySelector(".crown");
+				if (crown) crown.style.backgroundImage = `url(${url})`;
+			});
+			const statusFile = `icon_party_${player.AID == SessionStorage_default.AID ? "me.bmp" : isOnline ? "on.bmp" : "off.bmp"}`;
+			Client.loadFile(DB.INTERFACE_PATH + "renewalparty/" + statusFile, function(url) {
+				const statusIcon = node.querySelector(".status-icon");
+				if (statusIcon) statusIcon.style.backgroundImage = `url(${url})`;
+			});
+			updateCanvasLife(node, hasLife ? player.life.hp : void 0, hasLife ? player.life.hp_max : void 0);
+		};
+		/**
+		* Remove a character from list
+		*/
+		Component.removePartyMember = function removePartyMember(AID, characterName) {
+			const root = _root();
+			if (AID === SessionStorage_default.AID) {
+				for (const aid in _detachedMembers) if (_detachedMembers[aid]) {
+					_detachedMembers[aid].onRemove = function() {
+						delete UIManager.components[this.name];
+					};
+					_detachedMembers[aid].remove();
+				}
+				_detachedMembers = {};
+				_party.length = 0;
+				const partyContent = root.querySelector(".content .party");
+				if (partyContent) partyContent.innerHTML = "";
+				const partyNameEl = root.querySelector(".partyname");
+				if (partyNameEl) partyNameEl.textContent = "";
+				const createBtn = root.querySelector(".party.create");
+				if (createBtn) createBtn.style.display = "";
+				const leaveBtn = root.querySelector(".party.leave");
+				if (leaveBtn) leaveBtn.style.display = "none";
+				const addBtn = root.querySelector(".party.add");
+				if (addBtn) addBtn.style.display = "none";
+				ChatBox_default.addText(DB.getMessage(84), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PARTY_SETUP);
+				return;
+			}
+			const count = _party.length;
+			for (let i = 0; i < count; ++i) if (_party[i].AID === AID && _party[i].characterName === characterName) {
+				_party.splice(i, 1);
+				const nodes = root.querySelectorAll(".content .party .node");
+				if (nodes[i]) nodes[i].remove();
+				const innerCount = root.querySelector(".count-box .inner-count");
+				if (innerCount) innerCount.textContent = `${_party.length}/12`;
+				if (_detachedMembers[AID]) _detachedMembers[AID].remove();
+				break;
+			}
+		};
+		/**
+		* Update player dead/alive state
+		*/
+		Component.updateMemberDead = function updateMemberDead(AID, isDead) {
+			const count = _party.length;
+			let player = null;
+			for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
+				_party[i].isDead = isDead;
+				player = _party[i];
+				this.renderPartyMember(player);
+				break;
+			}
+			if (player && _detachedMembers[AID]) _detachedMembers[AID].setMember(AID, player);
+		};
+		/**
+		* Update player life in interface
+		*/
+		Component.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
+			const root = _root();
+			const count = _party.length;
+			for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
+				if (!_party[i].life) _party[i].life = {};
+				_party[i].life.hp = hp;
+				_party[i].life.hp_max = maxhp;
+				_party[i].life.display = true;
+				if (hp === 0 && !_party[i].isDead) {
+					_party[i].isDead = true;
+					this.renderPartyMember(_party[i]);
+				} else if (hp > 0 && _party[i].isDead) {
+					_party[i].isDead = false;
+					this.renderPartyMember(_party[i]);
+				}
+				break;
+			}
+			if (_detachedMembers[AID]) _detachedMembers[AID].updateMemberLife(hp, maxhp);
+			const node = root.querySelector(`.content .party .node[data-aid="${AID}"]`);
+			if (node) updateCanvasLife(node, hp, maxhp);
+		};
+		/**
+		* Check if UI is locked
+		*/
+		Component.isLocked = function isLocked() {
+			return !!_preferences.lock;
+		};
+		/**
+		* Save the current positions of all detached member windows to character-specific localStorage.
+		*/
+		Component.saveDetachedMembers = function() {
+			if (!SessionStorage_default.Character || !SessionStorage_default.Character.name) return;
+			const key = `PartyFriends_${SessionStorage_default.Character.name}_Detached`;
+			const saved = {};
+			let count = 0;
+			for (const aid in _detachedMembers) {
+				const ext = _detachedMembers[aid];
+				if (ext && ext._host) {
+					saved[aid] = {
+						x: ext._host.offsetLeft,
+						y: ext._host.offsetTop
+					};
+					count++;
+				}
+			}
+			localStorage.setItem(key, JSON.stringify(saved));
+			if (count > 0) console.log(`[PartyFriendsV1] Saved ${count} detached windows for ${SessionStorage_default.Character.name}`);
+		};
+	} else {
+		/**
+		* Add members to party
+		*
+		* @param {string} party name
+		* @param {Array} member list
+		*/
+		Component.setParty = function setParty(name, members) {
+			const root = _root();
+			const partyName = root.querySelector(".partyname");
+			if (partyName) partyName.textContent = `(${name})`;
+			const partyContent = root.querySelector(".content .party");
+			if (partyContent) partyContent.innerHTML = "";
+			SessionStorage_default.isPartyLeader = false;
+			const createBtn = root.querySelector(".party.create");
+			const leaveBtn = root.querySelector(".party.leave");
+			if (createBtn) createBtn.style.display = "none";
+			if (leaveBtn) leaveBtn.style.display = "inline-block";
+			const count = members.length;
+			_party.length = 0;
+			for (let i = 0; i < count; i++) Component.addPartyMember(members[i]);
+			_index = -1;
+		};
+		/**
+		* Add a new party member to the list
+		*
+		* @param {object} player information
+		*/
+		Component.addPartyMember = function addPartyMember(player) {
+			const role = player.role || player.Role || 0;
+			const count = _party.length;
+			const root = _root();
+			let node;
+			if (player.AID === SessionStorage_default.AID) {
+				SessionStorage_default.isPartyLeader = role === 0;
+				const addBtn = root.querySelector(".party.add");
+				if (addBtn) addBtn.style.display = SessionStorage_default.isPartyLeader ? "inline-block" : "none";
+			}
+			const nodes = root.querySelectorAll(".content .party .node");
+			for (let i = 0; i < count; ++i) if (_party[i].AID === player.AID && _party[i].characterName === player.characterName) {
+				node = nodes[i];
+				break;
+			}
+			if (node) {
+				node.classList.remove("leader", "online");
+				if (role === 0) node.classList.add("leader");
+				if (player.state === 0) node.classList.add("online");
+				node.style.backgroundImage = "";
+				const nameEl = node.querySelector(".name");
+				if (nameEl) nameEl.textContent = player.characterName;
+				const mapEl = node.querySelector(".map");
+				if (mapEl) mapEl.textContent = `(${DB.getMapName(player.mapName)})`;
+			} else {
+				player = Object.assign({}, player);
+				_party.push(player);
+				const partyContent = root.querySelector(".content .party");
+				if (partyContent) {
+					const div = document.createElement("div");
+					div.className = `node${role === 0 ? " leader" : ""}${player.state === 0 ? " online" : ""}`;
+					div.innerHTML = `<span class="name">${_escapeHTML(player.characterName)}</span><span class="map">(${_escapeHTML(DB.getMapName(player.mapName))})</span><canvas class="life" width="60" height="5"></canvas> <span class="hp"></span>`;
+					partyContent.appendChild(div);
+					node = div;
+				}
+			}
+			if (!node) return;
+			const hpEl = node.querySelector(".hp");
+			if (hpEl) hpEl.textContent = "";
+			const canvas = node.querySelector("canvas");
+			if (canvas) {
+				const ctx = canvas.getContext("2d");
+				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+				if (player.life && player.life.display) {
+					ctx.drawImage(player.life.canvas, 0, 0, 60, 5, 0, 0, 60, 5);
+					if (hpEl) hpEl.textContent = `${player.life.hp}/${player.life.hp_max}`;
+				}
+			}
+			const texture = role === 0 && player.state === 0 ? "grp_leader.bmp" : player.state === 0 ? "grp_online.bmp" : "";
+			if (texture) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/" + texture, function(url) {
+				if (node) node.style.backgroundImage = `url(${url})`;
+			});
+		};
+		/**
+		* Remove a character from list
+		*
+		* @param {number} account id
+		* @param {string} character name
+		*/
+		Component.removePartyMember = function removePartyMember(AID, characterName) {
+			const root = _root();
+			if (AID === SessionStorage_default.AID) {
+				_party.length = 0;
+				const partyContent = root.querySelector(".content .party");
+				if (partyContent) partyContent.innerHTML = "";
+				const partyName = root.querySelector(".partyname");
+				if (partyName) partyName.textContent = "";
+				const createBtn = root.querySelector(".party.create");
+				if (createBtn) createBtn.style.display = "inline-block";
+				const leaveBtn = root.querySelector(".party.leave");
+				const addBtn = root.querySelector(".party.add");
+				if (leaveBtn) leaveBtn.style.display = "none";
+				if (addBtn) addBtn.style.display = "none";
+				ChatBox_default.addText(DB.getMessage(84), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PARTY_SETUP);
+				return;
+			}
+			const count = _party.length;
+			const nodes = root.querySelectorAll(".content .party .node");
+			for (let i = 0; i < count; ++i) if (_party[i].AID === AID && _party[i].characterName === characterName) {
+				_party.splice(i, 1);
+				if (nodes[i]) nodes[i].remove();
+				break;
+			}
+		};
+		/**
+		* Update player life in interface
+		*
+		* @param {number} account id
+		* @param {canvas} canvas life element
+		* @param {number} hp
+		* @param {number} maxhp
+		*/
+		Component.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
+			const count = _party.length;
+			const nodes = _root().querySelectorAll(".content .party .node");
+			for (let i = 0; i < count; ++i) if (_party[i].AID === AID && _party[i].state === 0) {
+				const node = nodes[i];
+				if (!node) break;
+				const cvs = node.querySelector("canvas");
+				if (cvs) cvs.getContext("2d").drawImage(canvas, 0, 0, 60, 5, 0, 0, 60, 5);
+				const hpEl = node.querySelector(".hp");
+				if (hpEl) hpEl.textContent = `${hp}/${maxhp}`;
+				break;
+			}
+		};
+	}
 	/**
-	* Extend window size
+	* Extend inventory window size
+	*
+	* @param {number} width
+	* @param {number} height
 	*/
-	PartyFriendsV1.resize = function resize(width, height) {
-		const root = _root$14();
+	Component.resize = function resize(width, height) {
+		const root = _root();
 		width = Math.min(Math.max(width, 12), 13);
 		height = Math.min(Math.max(height, 6), 12);
-		_preferences$48.width = width;
-		_preferences$48.height = height;
-		_preferences$48.save();
+		_preferences.width = width;
+		_preferences.height = height;
+		_preferences.save();
 		const content = root.querySelector(".content");
 		if (content) {
 			content.style.width = `${width * 20}px`;
@@ -227540,103 +226719,703 @@ var init_PartyFriendsV1 = __esmMin((() => {
 		}
 	};
 	/**
-	* Update player dead/alive state
-	*/
-	PartyFriendsV1.updateMemberDead = function updateMemberDead(AID, isDead) {
-		const count = _party.length;
-		let player = null;
-		for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
-			_party[i].isDead = isDead;
-			player = _party[i];
-			this.renderPartyMember(player);
-			break;
-		}
-		if (player && _detachedMembers[AID]) _detachedMembers[AID].setMember(AID, player);
-	};
-	/**
-	* Update player life in interface
-	*/
-	PartyFriendsV1.updateMemberLife = function updateMemberLife(AID, canvas, hp, maxhp) {
-		const root = _root$14();
-		const count = _party.length;
-		for (let i = 0; i < count; ++i) if (_party[i].AID === AID) {
-			if (!_party[i].life) _party[i].life = {};
-			_party[i].life.hp = hp;
-			_party[i].life.hp_max = maxhp;
-			_party[i].life.display = true;
-			if (hp === 0 && !_party[i].isDead) {
-				_party[i].isDead = true;
-				this.renderPartyMember(_party[i]);
-			} else if (hp > 0 && _party[i].isDead) {
-				_party[i].isDead = false;
-				this.renderPartyMember(_party[i]);
-			}
-			break;
-		}
-		if (_detachedMembers[AID]) _detachedMembers[AID].updateMemberLife(hp, maxhp);
-		const node = root.querySelector(`.content .party .node[data-aid="${AID}"]`);
-		if (node) updateCanvasLife(node, hp, maxhp);
-	};
-	/**
 	* Update party options
+	*
+	* @param {boolean} exp share option
+	* @param {boolean} item share option
+	* @param {boolean} item sharing option
 	*/
-	PartyFriendsV1.setOptions = function setOptions(exp_share, item_share, item_sharing_type) {
+	Component.setOptions = function setOptions(exp_share, item_share, item_sharing_type) {
 		if (exp_share !== void 0) _options.exp_share = exp_share;
 		if (item_share !== void 0) _options.item_share = item_share;
 		if (item_sharing_type !== void 0) _options.item_sharing_type = item_sharing_type;
 	};
 	/**
 	* Check if character is a group member
+	*
+	* @param {string} character name
 	*/
-	PartyFriendsV1.isGroupMember = function isGroupMember(characterName) {
+	Component.isGroupMember = function isGroupMember(characterName) {
 		const count = _party.length;
 		for (let i = 0; i < count; ++i) if (_party[i].characterName === characterName) return true;
 		return false;
 	};
 	/**
-	* Add nick name to chatbox while clicking on player character sprite
+	* Logic when clicking a member node to handle possible drag out
 	*/
-	PartyFriendsV1.onOpenChat1to1 = function onOpenChat1to1(name) {
-		WhisperBox.show(name);
-	};
-	/**
-	* Callbacks to define
-	*/
-	PartyFriendsV1.onRemoveFriend = function() {};
-	PartyFriendsV1.onRequestLeave = function() {};
-	PartyFriendsV1.onExpelMember = function() {};
-	PartyFriendsV1.onRequestChangeLeader = function() {};
-	PartyFriendsV1.onRequestAddingMember = function() {};
-	PartyFriendsV1.onRequestPartyCreation = function() {};
-	PartyFriendsV1.onRequestSettingUpdate = function() {};
-	/**
-	* Check if UI is locked
-	*/
-	PartyFriendsV1.isLocked = function isLocked() {
-		return !!_preferences$48.lock;
-	};
-	/**
-	* Save the current positions of all detached member windows to character-specific localStorage.
-	*/
-	PartyFriendsV1.saveDetachedMembers = function() {
-		if (!SessionStorage_default.Character || !SessionStorage_default.Character.name) return;
-		const key = `PartyFriends_${SessionStorage_default.Character.name}_Detached`;
-		const saved = {};
-		let count = 0;
-		for (const aid in _detachedMembers) {
-			const ext = _detachedMembers[aid];
-			if (ext && ext._host) {
-				saved[aid] = {
-					x: ext._host.offsetLeft,
-					y: ext._host.offsetTop
-				};
-				count++;
+	function onMemberMouseDown(event) {
+		if (event.which === 1) event.stopPropagation();
+		else return;
+		const node = this;
+		const AID = parseInt(node.dataset.aid, 10);
+		event.preventDefault();
+		onSelectionChangeRenewal.call(node, event);
+		const player = _party.find((member) => member.AID == AID);
+		if (!player) return;
+		if (SkillTargetSelection_default && SkillTargetSelection_default.__active && !_preferences.friend) {
+			if (player.state === 0) SkillTargetSelection_default.intersectEntityId(player.AID);
+			SkillTargetSelection_default.remove();
+			event.preventDefault();
+			event.stopImmediatePropagation();
+			return;
+		}
+		if (_detachedMembers[AID]) return;
+		if (player.state !== 0) return;
+		if (_preferences.lock) return;
+		const startX = event.pageX;
+		const startY = event.pageY;
+		let isDragging = false;
+		const threshold = 5;
+		let ghostWrapper = null;
+		let ghostInner = null;
+		const nodeRect = node.getBoundingClientRect();
+		function onMouseMove(moveEvent) {
+			if (!isDragging) {
+				if (Math.abs(moveEvent.pageX - startX) > threshold || Math.abs(moveEvent.pageY - startY) > threshold) {
+					isDragging = true;
+					if (ContextMenu_default) ContextMenu_default.remove();
+					ghostWrapper = document.createElement("div");
+					ghostWrapper.className = "drag-shield";
+					ghostWrapper.style.cssText = "position:fixed; top:0; left:0; right:0; bottom:0; z-index:10000; background:transparent; cursor:grabbing;";
+					ghostInner = document.createElement("div");
+					ghostInner.id = "PartyFriends";
+					ghostInner.className = "drag-ghost-wrapper";
+					ghostInner.style.cssText = "position:absolute; pointer-events:none; opacity:0.6; background:none !important; border:none !important; height:auto !important; width:auto !important;";
+					const ghostContent = document.createElement("div");
+					ghostContent.className = "content";
+					ghostContent.style.cssText = "background:none !important; height:auto !important; width:auto !important;";
+					const ghostParty = document.createElement("div");
+					ghostParty.className = "party info-v2";
+					const clonedNode = node.cloneNode(true);
+					ghostParty.appendChild(clonedNode);
+					ghostContent.appendChild(ghostParty);
+					ghostInner.appendChild(ghostContent);
+					ghostWrapper.appendChild(ghostInner);
+					document.body.appendChild(ghostWrapper);
+					const srcCanvas = node.querySelector("canvas");
+					const dstCanvas = clonedNode.querySelector("canvas");
+					if (srcCanvas && dstCanvas) {
+						dstCanvas.width = srcCanvas.width;
+						dstCanvas.height = srcCanvas.height;
+						dstCanvas.getContext("2d").drawImage(srcCanvas, 0, 0);
+					}
+					ghostInner.style.width = `${node.offsetWidth}px`;
+					ghostInner.style.height = `${node.offsetHeight}px`;
+				}
+			}
+			if (isDragging && ghostInner) {
+				ghostInner.style.left = `${moveEvent.clientX - (startX - nodeRect.left)}px`;
+				ghostInner.style.top = `${moveEvent.clientY - (startY - nodeRect.top)}px`;
+				moveEvent.preventDefault();
 			}
 		}
-		localStorage.setItem(key, JSON.stringify(saved));
-		if (count > 0) console.log(`[PartyFriendsV1] Saved ${count} detached windows for ${SessionStorage_default.Character.name}`);
+		function onMouseUp(upEvent) {
+			window.removeEventListener("mousemove", onMouseMove);
+			window.removeEventListener("mouseup", onMouseUp);
+			if (ghostWrapper) {
+				ghostWrapper.remove();
+				ghostWrapper = null;
+				ghostInner = null;
+			}
+			if (isDragging) {
+				upEvent.stopImmediatePropagation();
+				const rect = Component._host.getBoundingClientRect();
+				const x = upEvent.pageX;
+				const y = upEvent.pageY;
+				if (x < rect.left - 10 || x > rect.left + rect.width + 10 || y < rect.top - 10 || y > rect.top + rect.height + 10) {
+					detachMember(AID, player, x, y);
+					Component.saveDetachedMembers();
+				}
+			}
+		}
+		window.addEventListener("mousemove", onMouseMove);
+		window.addEventListener("mouseup", onMouseUp);
+	}
+	/**
+	* Find the next available slot for a detached member window.
+	*/
+	function getNextAvailableSlot() {
+		const startX = 0;
+		const startY = 100;
+		const stepY = 48;
+		let currentY = startY;
+		let found = true;
+		while (found) {
+			found = false;
+			for (const aid in _detachedMembers) {
+				const ext = _detachedMembers[aid];
+				if (ext && ext._host) {
+					const posLeft = ext._host.offsetLeft;
+					const posTop = ext._host.offsetTop;
+					if (Math.abs(posLeft - startX) < 5 && Math.abs(posTop - currentY) < 5) {
+						currentY += stepY;
+						found = true;
+						break;
+					}
+				}
+			}
+		}
+		return {
+			x: startX,
+			y: currentY
+		};
+	}
+	/**
+	* Position all detached members into a neat vertical stack
+	*/
+	function sortDetachedMembers() {
+		const startX = 0;
+		const startY = 100;
+		const stepY = 48;
+		let currentY = startY;
+		for (let i = 0, count = _party.length; i < count; i++) {
+			const player = _party[i];
+			const external = _detachedMembers[player.AID];
+			if (external && external._host) {
+				external._host.style.left = `${startX}px`;
+				external._host.style.top = `${currentY}px`;
+				currentY += stepY;
+			}
+		}
+		Component.saveDetachedMembers();
+	}
+	/**
+	* Create an external mini-window for a member
+	*/
+	function detachMember(AID, player, x, y, restorePos) {
+		if (_detachedMembers[AID]) return;
+		const external = PartyMemberExternal_default.clone(`PartyMemberExternal_${AID}`, true);
+		external.name = `PartyMemberExternal_${AID}`;
+		UIManager.addComponent(external);
+		external.onRemove = function() {
+			delete _detachedMembers[AID];
+			delete UIManager.components[external.name];
+			const tooltip = document.getElementById("ro-tooltip-party");
+			if (tooltip) tooltip.style.display = "none";
+			Component.refreshPartyList();
+			if (external._closedByUser) Component.saveDetachedMembers();
+		};
+		external.setMember(AID, player);
+		external.append();
+		let initX = x - 75;
+		let initY = y - 19;
+		if (restorePos) {
+			initX = restorePos.x;
+			initY = restorePos.y;
+		} else {
+			const slot = getNextAvailableSlot();
+			initX = slot.x;
+			initY = slot.y;
+		}
+		external._host.style.left = `${initX}px`;
+		external._host.style.top = `${initY}px`;
+		_detachedMembers[AID] = external;
+		Component.refreshPartyList();
+	}
+	/**
+	* Helper to restore a detached member from saved layout.
+	*/
+	function restoreDetachedMember(player) {
+		if (_detachedMembers[player.AID]) return;
+		if (!SessionStorage_default.Character || !SessionStorage_default.Character.name) return;
+		if (_savedPositions === null) {
+			const key = `PartyFriends_${SessionStorage_default.Character.name}_Detached`;
+			const savedStr = localStorage.getItem(key);
+			_savedPositions = {};
+			try {
+				if (savedStr) _savedPositions = JSON.parse(savedStr);
+			} catch (e) {
+				console.error("[PartyFriendsV1] Failed to parse saved detached members:", e);
+			}
+		}
+		const entry = _savedPositions[player.AID] || _savedPositions[String(player.AID)];
+		if (entry) detachMember(player.AID, player, null, null, entry);
+	}
+	/**
+	* Helper to update the HP bar on a canvas (renewal layout)
+	* @param {Element} node
+	* @param {number} hp
+	* @param {number} maxhp
+	*/
+	function updateCanvasLife(node, hp, maxhp) {
+		const hasLife = hp !== void 0 && maxhp !== void 0 && maxhp > 0;
+		const lifeRatio = hasLife ? hp / maxhp : 0;
+		const barVisibility = hasLife ? "visible" : "hidden";
+		const hpBarContainer = node.querySelector(".hp-bar-container");
+		if (hpBarContainer) hpBarContainer.style.visibility = barVisibility;
+		const hpEl = node.querySelector(".hp");
+		if (hpEl) hpEl.style.visibility = barVisibility;
+		if (hasLife) {
+			const canvas = node.querySelector("canvas");
+			if (canvas) {
+				const ctx = canvas.getContext("2d");
+				const width = Math.floor(lifeRatio * 75);
+				canvas.width = 75;
+				canvas.height = 5;
+				ctx.clearRect(0, 0, 75, 5);
+				ctx.fillStyle = lifeRatio <= .25 ? "#ef1010" : "#32cd32";
+				ctx.fillRect(0, 0, width, 5);
+			}
+			if (hpEl) hpEl.textContent = `${hp}/${maxhp}`;
+		} else if (hpEl) hpEl.textContent = "";
+	}
+	/**
+	* Custom RO-style tooltips (global, outside shadow DOM)
+	*/
+	function onTooltipShow(event) {
+		if (event.__tooltipHandled) return;
+		event.__tooltipHandled = true;
+		const text = this.getAttribute("data-tooltip");
+		if (text) {
+			let tooltip = document.getElementById("ro-tooltip-party");
+			if (!tooltip) {
+				tooltip = document.createElement("div");
+				tooltip.id = "ro-tooltip-party";
+				tooltip.className = "ro-tooltip";
+				tooltip.style.cssText = "display:none;position:fixed;background-color:rgba(0,0,0,0.8);text-shadow:1px 1px black;color:white;padding:2px 6px;white-space:nowrap;z-index:20000;border-radius:2px;pointer-events:none;line-height:1.2;font-size:11px;";
+				document.body.appendChild(tooltip);
+			}
+			tooltip.textContent = text;
+			tooltip.style.display = "block";
+		}
+	}
+	function onTooltipMove(event) {
+		if (event.__tooltipMoved) return;
+		event.__tooltipMoved = true;
+		const tooltip = document.getElementById("ro-tooltip-party");
+		if (tooltip && tooltip.style.display === "block") {
+			tooltip.style.top = `${event.clientY + 15}px`;
+			tooltip.style.left = `${event.clientX + 10}px`;
+		}
+	}
+	function onTooltipHide(event) {
+		if (event.__tooltipHidden) return;
+		event.__tooltipHidden = true;
+		const tooltip = document.getElementById("ro-tooltip-party");
+		if (tooltip) tooltip.style.display = "none";
+	}
+	/**
+	* Resizing UI
+	*/
+	function onResize() {
+		const host = Component._host;
+		const top = host.offsetTop;
+		const left = host.offsetLeft;
+		let lastWidth = 0;
+		let lastHeight = 0;
+		function resizing() {
+			const extraX = -20;
+			const extraY = 46;
+			let w = Math.floor((Mouse.screen.x - left - extraX) / 20);
+			let h = Math.floor((Mouse.screen.y - top - extraY) / 20);
+			w = Math.min(Math.max(w, 12), 13);
+			h = Math.min(Math.max(h, 6), 12);
+			if (w === lastWidth && h === lastHeight) return;
+			Component.resize(w, h);
+			lastWidth = w;
+			lastHeight = h;
+		}
+		const _Interval = setInterval(resizing, 30);
+		const onMouseUp = (event) => {
+			if (event.which === 1) {
+				clearInterval(_Interval);
+				window.removeEventListener("mouseup", onMouseUp);
+			}
+		};
+		window.addEventListener("mouseup", onMouseUp);
+	}
+	/**
+	* Close the window
+	*/
+	function onClose() {
+		Component._host.style.display = "none";
+		PartyHelper_default.remove();
+	}
+	/**
+	* Enable or disable the lock features
+	*/
+	function onToggleLock() {
+		const root = _root();
+		_preferences.lock = !_preferences.lock;
+		_preferences.save();
+		const lockOn = root.querySelector(".lock.on");
+		const lockOff = root.querySelector(".lock.off");
+		if (_preferences.lock) {
+			if (lockOn) lockOn.style.display = "inline-block";
+			if (lockOff) lockOff.style.display = "none";
+		} else {
+			if (lockOn) lockOn.style.display = "none";
+			if (lockOff) lockOff.style.display = "inline-block";
+		}
+	}
+	/**
+	* Move to the other tab (Friend -> Party or Party -> Friend)
+	*/
+	function onChangeTab() {
+		const root = _root();
+		_preferences.friend = !_preferences.friend;
+		_preferences.save();
+		const friendEls = root.querySelectorAll(".friend");
+		const partyEls = root.querySelectorAll(".party");
+		if (_preferences.friend) {
+			friendEls.forEach((el) => {
+				el.style.display = "";
+			});
+			partyEls.forEach((el) => {
+				el.style.display = "none";
+			});
+		} else {
+			friendEls.forEach((el) => {
+				el.style.display = "none";
+			});
+			partyEls.forEach((el) => {
+				el.style.display = "";
+			});
+			if (SessionStorage_default.hasParty) {
+				const createBtn = root.querySelector(".party.create");
+				if (createBtn) createBtn.style.display = "none";
+				if (renewalParty) {
+					const sortBtn = root.querySelector(".party.sort");
+					if (sortBtn) sortBtn.style.display = "";
+				}
+				if (!SessionStorage_default.isPartyLeader) {
+					const addBtn = root.querySelector(".party.add");
+					if (addBtn) addBtn.style.display = "none";
+				}
+			} else {
+				const addBtn = root.querySelector(".party.add");
+				const leaveBtn = root.querySelector(".party.leave");
+				if (addBtn) addBtn.style.display = "none";
+				if (leaveBtn) leaveBtn.style.display = "none";
+				if (renewalParty) {
+					const sortBtn = root.querySelector(".party.sort");
+					if (sortBtn) sortBtn.style.display = "none";
+				}
+			}
+		}
+		root.querySelectorAll(".node").forEach((n) => n.classList.remove("selection"));
+		_index = -1;
+	}
+	/**
+	* Ask confirmation to remove a character from the list
+	*/
+	function onRequestRemoveSelection() {
+		if (_index < 0 || _preferences.lock || _preferences.friend && !_friends[_index] || !_preferences.friend && !_party[_index]) return;
+		const text = _preferences.friend ? DB.getMessage(356) : DB.getMessage(363);
+		UIManager.showPromptBox(text, "ok", "cancel", () => {
+			if (_preferences.friend) Component.onRemoveFriend(_index);
+			else Component.onExpelMember(_party[_index].AID, _party[_index].characterName);
+		});
+	}
+	/**
+	* Add nick name to chatbox
+	* Or open a new conversation window (todo)
+	*/
+	function onRequestPrivateMessage() {
+		if (_index < 0 || _preferences.lock) return;
+		const name = _preferences.friend ? _friends[_index].Name : _party[_index].characterName;
+		if (renewalParty) {
+			WhisperBox.show(name);
+			return;
+		}
+		if (PacketVerManager_default.value >= 20090617) {
+			WhisperBox.show(name);
+			return;
+		}
+		const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
+		if (chatRoot) {
+			const usernameInput = chatRoot.querySelector(".username");
+			if (usernameInput) usernameInput.value = name;
+			const messageInput = chatRoot.querySelector(".message");
+			if (messageInput) messageInput.focus();
+		}
+	}
+	/**
+	* Add nick name to chatbox while clicking on player character sprite
+	*/
+	Component.onOpenChat1to1 = function onOpenChat1to1(name) {
+		if (renewalParty) {
+			WhisperBox.show(name);
+			return;
+		}
+		if (PacketVerManager_default.value >= 20090617) {
+			WhisperBox.show(name);
+			return;
+		}
+		const chatRoot = ChatBox_default._shadow || ChatBox_default._host;
+		if (chatRoot) {
+			const usernameInput = chatRoot.querySelector(".username");
+			if (usernameInput) usernameInput.value = name;
+			const messageInput = chatRoot.querySelector(".message");
+			if (messageInput) messageInput.focus();
+		}
 	};
-	PartyFriendsV1_default = UIManager.addComponent(PartyFriendsV1);
+	/**
+	* Right click on a character (classic layout)
+	*/
+	function onRightClickInfoClassic() {
+		if (_preferences.lock) return;
+		ContextMenu_default.remove();
+		ContextMenu_default.append();
+		if (_preferences.friend) {
+			ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
+			if (_friends[_index].GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection);
+		} else {
+			ContextMenu_default.addElement(DB.getMessage(129), onRequestInformation);
+			if (_party[_index].GID === SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty);
+			else {
+				ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
+				if (SessionStorage_default.isPartyLeader) {
+					ContextMenu_default.addElement(DB.getMessage(97), onRequestRemoveSelection);
+					ContextMenu_default.addElement(DB.getMessage(1532), onRequestPartyDelegation);
+				}
+			}
+		}
+	}
+	/**
+	* Request player information
+	*/
+	function onRequestInformation() {
+		if (_preferences.lock) return;
+		UIManager.showMessageBox(DB.getMessage(191), "ok");
+	}
+	/**
+	* Right click on a character (renewal layout)
+	*/
+	function onRightClickInfoRenewal(event) {
+		if (event) {
+			event.stopImmediatePropagation();
+			event.preventDefault();
+		}
+		if (Camera && Camera.rotate) Camera.rotate(false);
+		if (_preferences.lock) return;
+		onSelectionChangeRenewal.call(this, event);
+		if (_index < 0) return;
+		ContextMenu_default.remove();
+		ContextMenu_default.append();
+		if (_preferences.friend) {
+			const friend = _friends[_index];
+			if (!friend) return;
+			ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
+			if (friend.GID !== SessionStorage_default.GID) ContextMenu_default.addElement(DB.getMessage(351), onRequestRemoveSelection);
+		} else {
+			const player = _party[_index];
+			if (!player) return;
+			const isMe = player.AID === SessionStorage_default.AID;
+			const isLeader = SessionStorage_default.isPartyLeader;
+			const isOnline = player.state === 0;
+			ContextMenu_default.addElement(DB.getMessage(98), onOpenMailCreationWindow);
+			if (isMe) ContextMenu_default.addElement(DB.getMessage(2055), onRequestLeaveParty);
+			else {
+				ContextMenu_default.addElement(DB.getMessage(360), onRequestPrivateMessage);
+				if (isLeader) {
+					ContextMenu_default.addElement(DB.getMessage(97), onRequestRemoveSelection);
+					ContextMenu_default.addElement(DB.getMessage(1532), onRequestPartyDelegation);
+				}
+			}
+			if (isOnline) {
+				ContextMenu_default.addElement(DB.getMessage(3101), () => {
+					detachMember(player.AID, player, Mouse.screen.x, Mouse.screen.y);
+					Component.saveDetachedMembers();
+				});
+				ContextMenu_default.addElement(DB.getMessage(3102), () => {
+					if (_detachedMembers[player.AID]) {
+						_detachedMembers[player.AID].remove();
+						Component.saveDetachedMembers();
+					}
+				});
+			}
+		}
+	}
+	/**
+	* Request to leave a party
+	*/
+	function onRequestLeaveParty() {
+		if (_preferences.lock) return;
+		UIManager.showPromptBox(DB.getMessage(357), "ok", "cancel", () => {
+			Component.onRequestLeave();
+		});
+	}
+	/**
+	* Request to change party leader
+	*/
+	function onRequestPartyDelegation() {
+		if (_preferences.lock) return;
+		UIManager.showPromptBox(DB.getMessage(1532), "ok", "cancel", () => {
+			Component.onRequestChangeLeader(_party[_index].AID);
+		});
+	}
+	/**
+	* Change selection (click on a friend/party) — classic layout
+	*/
+	function onSelectionChangeClassic(nodeEl) {
+		_root().querySelectorAll(".content .name").forEach((el) => el.classList.remove("selection"));
+		const nameEl = nodeEl.querySelector(".name");
+		if (nameEl) nameEl.classList.add("selection");
+		const siblings = nodeEl.parentNode.querySelectorAll(".node");
+		_index = Array.prototype.indexOf.call(siblings, nodeEl);
+		if (SkillTargetSelection_default.intersectEntityId) {
+			const entityId = _preferences.friend ? _friends[_index].AID : _party[_index].AID;
+			SkillTargetSelection_default.intersectEntityId(entityId);
+		}
+	}
+	/**
+	* Change selection (click on a friend/party) — renewal layout
+	*/
+	function onSelectionChangeRenewal() {
+		_root().querySelectorAll(".node").forEach((el) => el.classList.remove("selection"));
+		const node = this;
+		node.classList.add("selection");
+		const AID = parseInt(node.dataset.aid, 10);
+		_index = -1;
+		if (_preferences.friend) _index = Array.from(node.parentNode.querySelectorAll(".node")).indexOf(node);
+		else {
+			const player = _party.find((member) => member.AID == AID);
+			_index = _party.indexOf(player);
+		}
+	}
+	/**
+	* Functions to be hooked
+	*/
+	Component.onRequestPartyCreation = function onRequestPartyCreation() {};
+	Component.onRequestAddingMember = function onRequestAddingMember() {};
+	Component.onRequestLeave = function onRequestLeave() {};
+	Component.onRequestChangeLeader = function onRequestChangeLeader() {};
+	Component.onExpelMember = function onExpelMember() {};
+	Component.onRemoveFriend = function onRemoveFriend() {};
+	Component.onRequestSettingUpdate = function onRequestSettingUpdate() {};
+	/**
+	* Open the party info window
+	*/
+	function onOpenPartyOptionWindow() {
+		if (renewalParty) {
+			if (_preferences.friend) {
+				if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.FRIEND_SETUP) {
+					PartyHelper_default.remove();
+					return;
+				}
+				const whisperPrefs = WhisperBox.preferences;
+				PartyHelper_default.append();
+				PartyHelper_default.setType(PartyHelper_default.Type.FRIEND_SETUP);
+				PartyHelper_default.setFriendOptions(whisperPrefs);
+				return;
+			}
+			if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.SETUP) {
+				PartyHelper_default.remove();
+				return;
+			}
+			PartyHelper_default.append();
+			PartyHelper_default.setType(PartyHelper_default.Type.SETUP);
+			PartyHelper_default.setOptions(_options, SessionStorage_default.isPartyLeader);
+			return;
+		}
+		if (_preferences.lock) return;
+		const type = _preferences.friend && PacketVerManager_default.value >= 20090617 ? PartyHelper_default.Type.FRIEND_SETUP : PartyHelper_default.Type.SETUP;
+		if (PartyHelper_default.__active && PartyHelper_default.getType() === type) {
+			PartyHelper_default.remove();
+			return;
+		}
+		PartyHelper_default.append();
+		if (type === PartyHelper_default.Type.FRIEND_SETUP) {
+			const whisperPrefs = WhisperBox.preferences;
+			PartyHelper_default.setType(PartyHelper_default.Type.FRIEND_SETUP);
+			PartyHelper_default.setFriendOptions(whisperPrefs);
+		} else {
+			PartyHelper_default.setType(PartyHelper_default.Type.SETUP);
+			PartyHelper_default.setOptions(_options, SessionStorage_default.isPartyLeader);
+		}
+	}
+	/**
+	* Open the window to invite people
+	*/
+	function onOpenPartyInviteWindow() {
+		if (!renewalParty && _preferences.lock) return;
+		if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.INVITE) {
+			PartyHelper_default.remove();
+			return;
+		}
+		PartyHelper_default.append();
+		PartyHelper_default.setType(PartyHelper_default.Type.INVITE);
+	}
+	/**
+	* Open the window to create a party
+	*/
+	function onOpenPartyCreationWindow() {
+		if (!renewalParty && _preferences.lock) return;
+		if (PartyHelper_default.__active && PartyHelper_default.getType() === PartyHelper_default.Type.CREATE) {
+			PartyHelper_default.remove();
+			return;
+		}
+		PartyHelper_default.append();
+		PartyHelper_default.setType(PartyHelper_default.Type.CREATE);
+	}
+	/**
+	* Open the window to manage mails
+	*/
+	function onOpenMailCreationWindow() {
+		if (_preferences.lock) return;
+		let recipient = "";
+		if (_preferences.friend && _friends[_index]) recipient = _friends[_index].Name;
+		else if (!_preferences.friend && _party[_index]) recipient = _party[_index].characterName;
+		if (renewalParty) {
+			if (recipient) Rodex_default.requestOpenWriteRodex(recipient);
+		} else if (recipient) Mail_default.replyNewMailFriends(recipient);
+		else Mail_default.append();
+	}
+	Component.mouseMode = GUIComponent.MouseMode.STOP;
+	/**
+	* Storing Requirement
+	*/
+	return UIManager.addComponent(Component);
+}
+var init_PartyFriendsCommon = __esmMin((() => {
+	init_DBManager();
+	init_Camera();
+	init_MiniMap();
+	init_Preferences$1();
+	init_MonsterTable();
+	init_Client();
+	init_Renderer();
+	init_SessionStorage();
+	init_MouseEventHandler();
+	init_KeyEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_PacketVerManager();
+	init_PartyHelper();
+	init_PartyMemberExternal();
+	init_ContextMenu();
+	init_Mail$1();
+	init_Rodex$1();
+	init_ChatBox();
+	init_WhisperBox();
+	init_SkillTargetSelection();
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.html?raw
+var PartyFriendsV0_default$2;
+var init_PartyFriendsV0$2 = __esmMin((() => {
+	PartyFriendsV0_default$2 = "<div id=\"PartyFriends\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"party\"> <ui-text msg=\"103\">Party</ui-text> <span class=\"partyname\"></span> </span>\r\n			<span class=\"friend\">\r\n				<ui-text msg=\"102\">Friends</ui-text> (<span class=\"friendcount\">0</span>/<span class=\"friendmax\"\r\n					>40</span\r\n				>)\r\n			</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"content\">\r\n		<div class=\"party\"></div>\r\n		<div class=\"friend\"></div>\r\n	</div>\r\n	<div class=\"navigation\">\r\n		<ui-image src=\"basic_interface/mesbtn_mid.bmp\"></ui-image>\r\n		<ui-button\r\n			class=\"mail\"\r\n			bg=\"basic_interface/mesbtn_01.bmp\"\r\n			hover=\"basic_interface/mesbtn_01_a.bmp\"\r\n			down=\"basic_interface/mesbtn_01_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"98\">Send Message</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"privatemessage\"\r\n			bg=\"basic_interface/mesbtn_02.bmp\"\r\n			hover=\"basic_interface/mesbtn_02_a.bmp\"\r\n			down=\"basic_interface/mesbtn_02_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"99\">1:1 Chat</ui-text></div>\r\n		</ui-button>\r\n		<button class=\"unknown\"><ui-image src=\"basic_interface/mesbtn_03.bmp\"></ui-image></button>\r\n		<ui-button\r\n			class=\"info\"\r\n			bg=\"basic_interface/mesbtn_04.bmp\"\r\n			hover=\"basic_interface/mesbtn_04_a.bmp\"\r\n			down=\"basic_interface/mesbtn_04_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"101\">Party Setup</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"355\">Friend Setup</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"remove\"\r\n			bg=\"basic_interface/mesbtn_05.bmp\"\r\n			hover=\"basic_interface/mesbtn_05_a.bmp\"\r\n			down=\"basic_interface/mesbtn_05_b.bmp\"\r\n		>\r\n			<div class=\"overlay\">\r\n				<span class=\"party\"><ui-text msg=\"97\">Expel from party</ui-text></span>\r\n				<span class=\"friend\"><ui-text msg=\"351\">Delete</ui-text></span>\r\n			</div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock on\"\r\n			bg=\"basic_interface/mesbtn_06.bmp\"\r\n			hover=\"basic_interface/mesbtn_06_a.bmp\"\r\n			down=\"basic_interface/mesbtn_06_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1626\">Activate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"lock off\"\r\n			bg=\"basic_interface/mesbtn_07.bmp\"\r\n			hover=\"basic_interface/mesbtn_07_a.bmp\"\r\n			down=\"basic_interface/mesbtn_07_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"1627\">Deactivate lock function</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party create\"\r\n			bg=\"basic_interface/mesbtn_08.bmp\"\r\n			hover=\"basic_interface/mesbtn_08_a.bmp\"\r\n			down=\"basic_interface/mesbtn_08_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2054\">Create Party</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party add\"\r\n			bg=\"basic_interface/mesbtn_010.bmp\"\r\n			hover=\"basic_interface/mesbtn_010_a.bmp\"\r\n			down=\"basic_interface/mesbtn_010_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"2056\">Party Invitation</ui-text></div>\r\n		</ui-button>\r\n		<ui-button\r\n			class=\"party leave\"\r\n			bg=\"basic_interface/mesbtn_09.bmp\"\r\n			hover=\"basic_interface/mesbtn_09_a.bmp\"\r\n			down=\"basic_interface/mesbtn_09_b.bmp\"\r\n		>\r\n			<div class=\"overlay\"><ui-text msg=\"96\">Leave Party</ui-text></div>\r\n		</ui-button>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"footer\">\r\n		<ui-image src=\"basic_interface/btnbar_mid.bmp\"></ui-image>\r\n		<div class=\"friend\">\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<div class=\"party\">\r\n			<button class=\"switchtab off\">\r\n				<ui-image src=\"radiobtn_off.bmp\"></ui-image><ui-text msg=\"102\">Friends</ui-text>\r\n			</button>\r\n			<button class=\"switchtab on\">\r\n				<ui-image src=\"radiobtn_on.bmp\"></ui-image><ui-text msg=\"103\">Party</ui-text>\r\n			</button>\r\n		</div>\r\n		<button class=\"resize\"><ui-image src=\"btn_resize.bmp\"></ui-image></button>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.css?raw
+var PartyFriendsV0_default$1;
+var init_PartyFriendsV0$1 = __esmMin((() => {
+	PartyFriendsV0_default$1 = ":host {\r\n	position: absolute;\r\n}\r\n\r\n#PartyFriends .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#PartyFriends .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#PartyFriends .titlebar .party,\r\n#PartyFriends .titlebar .friend {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n}\r\n\r\n#PartyFriends .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#PartyFriends .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#PartyFriends .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#PartyFriends .content {\r\n	height: 120px;\r\n	width: 240px;\r\n	background-color: white;\r\n	overflow-x: hidden;\r\n	overflow-y: auto;\r\n}\r\n#PartyFriends .clear {\r\n	clear: both;\r\n}\r\n\r\n/* Friend list */\r\n#PartyFriends .node {\r\n	padding: 1px 1px 1px 18px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	cursor: pointer;\r\n}\r\n#PartyFriends .content .friend .node .name {\r\n	color: #102550;\r\n	white-space: nowrap;\r\n}\r\n#PartyFriends .content .friend .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .content .party,\r\n#PartyFriends .content .friend {\r\n	padding: 4px;\r\n}\r\n#PartyFriends .content .party .node {\r\n	white-space: nowrap;\r\n	color: #007b7b;\r\n	position: relative;\r\n	height: 30px;\r\n}\r\n#PartyFriends .content .party .node.leader {\r\n	font-weight: bold;\r\n	color: #08317b;\r\n}\r\n#PartyFriends .content .party .node.online .life,\r\n#PartyFriends .content .party .node.online .hp,\r\n#PartyFriends .content .party .node.online .map {\r\n	display: initial;\r\n}\r\n#PartyFriends .content .party .node .life,\r\n#PartyFriends .content .party .node .hp,\r\n#PartyFriends .content .party .node .map {\r\n	display: none;\r\n}\r\n#PartyFriends .content .party .life {\r\n	position: absolute;\r\n	left: 20px;\r\n	top: 22px;\r\n}\r\n#PartyFriends .content .party .hp {\r\n	position: absolute;\r\n	top: 19px;\r\n	left: 86px;\r\n	color: black;\r\n	font-weight: normal;\r\n	font-size: 10px;\r\n}\r\n#PartyFriends .content .node .selection {\r\n	background-color: #739cef;\r\n}\r\n\r\n#PartyFriends .navigation {\r\n	width: 100%;\r\n	height: 20px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n}\r\n#PartyFriends .navigation button,\r\n#PartyFriends .navigation ui-button {\r\n	float: left;\r\n	border: none;\r\n	background: none;\r\n	width: 26px;\r\n	height: 20px;\r\n	position: relative;\r\n}\r\n#PartyFriends .navigation button .overlay,\r\n#PartyFriends .navigation ui-button .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	top: -20px;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#PartyFriends .navigation button:hover .overlay,\r\n#PartyFriends .navigation ui-button:hover .overlay {\r\n	display: block;\r\n}\r\n\r\n#PartyFriends .footer {\r\n	border-radius: 0px 0px 3px 3px;\r\n	width: 100%;\r\n	height: 21px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#PartyFriends .footer .party,\r\n#PartyFriends .footer .friend {\r\n	padding-left: 5px;\r\n	padding-top: 3px;\r\n}\r\n#PartyFriends .footer .switchtab {\r\n	height: 15px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	background-position: 0px 0px;\r\n	padding-left: 15px;\r\n}\r\n#PartyFriends .footer .resize {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/PartyFriends/PartyFriendsV0/PartyFriendsV0.js
+var PartyFriendsV0_default;
+var init_PartyFriendsV0 = __esmMin((() => {
+	init_PartyFriendsCommon();
+	init_PartyFriendsV0$2();
+	init_PartyFriendsV0$1();
+	PartyFriendsV0_default = createPartyFriends({
+		name: "PartyFriendsV0",
+		htmlText: PartyFriendsV0_default$2,
+		cssText: PartyFriendsV0_default$1
+	});
 }));
 //#endregion
 //#region src/UI/Components/PartyFriends/PartyFriends.js
@@ -229142,7 +228921,7 @@ function reqCloseBank() {
 	pkt.AID = SessionStorage_default.AID;
 	Network.sendPacket(pkt);
 }
-var Bank, maxInt, _preferences$47, Bank_default;
+var Bank, maxInt, _preferences$39, Bank_default;
 var init_Bank$1 = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -229165,7 +228944,7 @@ var init_Bank$1 = __esmMin((() => {
 	*/
 	Bank.render = () => Bank_default$2;
 	maxInt = 2147483647;
-	_preferences$47 = Preferences.get("Bank", {
+	_preferences$39 = Preferences.get("Bank", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -229230,8 +229009,8 @@ var init_Bank$1 = __esmMin((() => {
 	*/
 	Bank.onAppend = function onAppend() {
 		const root = this.getRoot();
-		this._host.style.top = Math.min(Math.max(0, _preferences$47.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$47.x), Renderer.width - this._host.offsetWidth) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$39.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$39.x), Renderer.width - this._host.offsetWidth) + "px";
 		const input = root.querySelector(".depo");
 		input.value = "";
 		input.focus();
@@ -229284,9 +229063,9 @@ var init_Bank$1 = __esmMin((() => {
 	* Remove Bank from window
 	*/
 	Bank.onRemove = function onRemove() {
-		_preferences$47.y = parseInt(this._host.style.top, 10);
-		_preferences$47.x = parseInt(this._host.style.left, 10);
-		_preferences$47.save();
+		_preferences$39.y = parseInt(this._host.style.top, 10);
+		_preferences$39.x = parseInt(this._host.style.left, 10);
+		_preferences$39.save();
 		const error = this.getRoot().querySelector(".errorupdate");
 		if (error) error.textContent = "";
 	};
@@ -229367,7 +229146,7 @@ function onToggleBGM() {
 	if (Audio_default.BGM.play) BGM.play(BGM.filename);
 	else BGM.stop();
 }
-var SoundOption, _preferences$46, SoundOption_default;
+var SoundOption, _preferences$38, SoundOption_default;
 var init_SoundOption = __esmMin((() => {
 	init_Preferences$1();
 	init_Audio();
@@ -229380,7 +229159,7 @@ var init_SoundOption = __esmMin((() => {
 	init_SoundOption$1();
 	SoundOption = new GUIComponent("SoundOption", SoundOption_default$1);
 	SoundOption.render = () => SoundOption_default$2;
-	_preferences$46 = Preferences.get("SoundOption", {
+	_preferences$38 = Preferences.get("SoundOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -229405,8 +229184,8 @@ var init_SoundOption = __esmMin((() => {
 		this.draggable(".titlebar");
 	};
 	SoundOption.onAppend = function onAppend() {
-		this._host.style.top = _preferences$46.y + "px";
-		this._host.style.left = _preferences$46.x + "px";
+		this._host.style.top = _preferences$38.y + "px";
+		this._host.style.left = _preferences$38.x + "px";
 		const root = this.getRoot();
 		const soundSlider = root.querySelector(".sound");
 		if (soundSlider) soundSlider.value = Audio_default.Sound.volume * 100;
@@ -229418,9 +229197,9 @@ var init_SoundOption = __esmMin((() => {
 		if (bgmState) bgmState.checked = Audio_default.BGM.play;
 	};
 	SoundOption.onRemove = function onRemove() {
-		_preferences$46.x = parseInt(this._host.style.left, 10);
-		_preferences$46.y = parseInt(this._host.style.top, 10);
-		_preferences$46.save();
+		_preferences$38.x = parseInt(this._host.style.left, 10);
+		_preferences$38.y = parseInt(this._host.style.top, 10);
+		_preferences$38.save();
 	};
 	SoundOption_default = UIManager.addComponent(SoundOption);
 }));
@@ -229438,7 +229217,7 @@ var init_FPS$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.js
-var FPS, _maxFPSRegistered, _tickFn, _preferences$45, FPS_default;
+var FPS, _maxFPSRegistered, _tickFn, _preferences$37, FPS_default;
 var init_FPS = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -229451,7 +229230,7 @@ var init_FPS = __esmMin((() => {
 	FPS.render = () => FPS_default$2;
 	_maxFPSRegistered = 0;
 	_tickFn = null;
-	_preferences$45 = Preferences.get("FPS", {
+	_preferences$37 = Preferences.get("FPS", {
 		show: false,
 		x: 100,
 		y: 100
@@ -229475,9 +229254,9 @@ var init_FPS = __esmMin((() => {
 	* When appended to DOM
 	*/
 	FPS.onAppend = function onAppend() {
-		this._host.style.top = _preferences$45.y + "px";
-		this._host.style.left = _preferences$45.x + "px";
-		this._host.style.display = _preferences$45.show ? "" : "none";
+		this._host.style.top = _preferences$37.y + "px";
+		this._host.style.left = _preferences$37.x + "px";
+		this._host.style.display = _preferences$37.show ? "" : "none";
 		const root = this.getRoot();
 		const fpsEl = root.querySelector("#fpsCounter");
 		const fpsRoot = root.querySelector("#FPS");
@@ -229525,21 +229304,21 @@ var init_FPS = __esmMin((() => {
 			Renderer.stop(_tickFn);
 			_tickFn = null;
 		}
-		_preferences$45.x = parseInt(this._host.style.left, 10);
-		_preferences$45.y = parseInt(this._host.style.top, 10);
-		_preferences$45.show = this._host.style.display !== "none";
-		_preferences$45.save();
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$37.show = this._host.style.display !== "none";
+		_preferences$37.save();
 	};
 	/**
 	* Show/Hide UI
 	*/
 	FPS.toggle = function toggle(isVisible) {
-		_preferences$45.x = parseInt(this._host.style.left, 10);
-		_preferences$45.y = parseInt(this._host.style.top, 10);
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$37.y = parseInt(this._host.style.top, 10);
 		if (typeof isVisible === "boolean") this._host.style.display = isVisible ? "" : "none";
 		else this._host.style.display = this._host.style.display === "none" ? "" : "none";
-		_preferences$45.show = this._host.style.display !== "none";
-		_preferences$45.save();
+		_preferences$37.show = this._host.style.display !== "none";
+		_preferences$37.save();
 		if (this._host.style.display !== "none") this.focus();
 	};
 	FPS_default = UIManager.addComponent(FPS);
@@ -229793,7 +229572,7 @@ function onResetToDefaults() {
 	GraphicsSettings.save();
 	GraphicsOption.onAppend();
 }
-var GraphicsOption, _preferences$44, GraphicsOption_default;
+var GraphicsOption, _preferences$36, GraphicsOption_default;
 var init_GraphicsOption = __esmMin((() => {
 	init_FPS();
 	init_Configs();
@@ -229808,7 +229587,7 @@ var init_GraphicsOption = __esmMin((() => {
 	init_MemoryManager();
 	init_ChatBox();
 	GraphicsOption = new GUIComponent("GraphicsOption", GraphicsOption_default$1);
-	_preferences$44 = Preferences.get("GraphicsOption", {
+	_preferences$36 = Preferences.get("GraphicsOption", {
 		x: 300,
 		y: 300
 	}, 1.1);
@@ -229874,8 +229653,8 @@ var init_GraphicsOption = __esmMin((() => {
 	* When append the element to html
 	*/
 	GraphicsOption.onAppend = function onAppend() {
-		this._host.style.top = `${_preferences$44.y}px`;
-		this._host.style.left = `${_preferences$44.x}px`;
+		this._host.style.top = `${_preferences$36.y}px`;
+		this._host.style.left = `${_preferences$36.x}px`;
 		const root = this.getRoot();
 		root.querySelector(".details").value = GraphicsSettings.quality;
 		root.querySelector(".screensize").value = GraphicsSettings.screensize;
@@ -229906,9 +229685,9 @@ var init_GraphicsOption = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	GraphicsOption.onRemove = function onRemove() {
-		_preferences$44.x = parseInt(this._host.style.left, 10);
-		_preferences$44.y = parseInt(this._host.style.top, 10);
-		_preferences$44.save();
+		_preferences$36.x = parseInt(this._host.style.left, 10);
+		_preferences$36.y = parseInt(this._host.style.top, 10);
+		_preferences$36.save();
 	};
 	GraphicsOption.needFocus = true;
 	GraphicsOption.mouseMode = GUIComponent.MouseMode.STOP;
@@ -230091,7 +229870,7 @@ function onUpdateDisableVirtualMouse() {
 	Controls_default.joyDisableVirtualMouse = !!this.checked;
 	Controls_default.save();
 }
-var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$43, ShortCutOption_default;
+var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$35, ShortCutOption_default;
 var init_ShortCutOption = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Preferences$1();
@@ -230107,7 +229886,7 @@ var init_ShortCutOption = __esmMin((() => {
 	ShortCuts$1 = ShortCutControls_default.ShortCuts;
 	ShortCutsTemp = {};
 	ShortCutOption.isCapturing = false;
-	_preferences$43 = Preferences.get("ShortCutOption", {
+	_preferences$35 = Preferences.get("ShortCutOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -230193,17 +229972,17 @@ var init_ShortCutOption = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCutOption.onAppend = function() {
-		this._host.style.left = _preferences$43.x + "px";
-		this._host.style.top = _preferences$43.y + "px";
+		this._host.style.left = _preferences$35.x + "px";
+		this._host.style.top = _preferences$35.y + "px";
 		this._host.style.zIndex = 100;
 	};
 	/**
 	* Remove from window (and so clean up)
 	*/
 	ShortCutOption.onRemove = function() {
-		_preferences$43.x = parseInt(this._host.style.left, 10);
-		_preferences$43.y = parseInt(this._host.style.top, 10);
-		_preferences$43.save();
+		_preferences$35.x = parseInt(this._host.style.left, 10);
+		_preferences$35.y = parseInt(this._host.style.top, 10);
+		_preferences$35.save();
 	};
 	/**
 	* Process key
@@ -230477,7 +230256,7 @@ function onClickAttendance(e) {
 	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
 	Network.sendPacket(_pkt);
 }
-var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$42, CheckAttendance_default;
+var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$34, CheckAttendance_default;
 var init_CheckAttendance = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -230492,7 +230271,7 @@ var init_CheckAttendance = __esmMin((() => {
 	init_Elements();
 	CheckAttendance = new GUIComponent("CheckAttendance", CheckAttendance_default$1);
 	CheckAttendance.render = () => CheckAttendance_default$2;
-	_preferences$42 = Preferences.get("CheckAttendance", {
+	_preferences$34 = Preferences.get("CheckAttendance", {
 		x: 200,
 		y: 200
 	}, 1);
@@ -230517,10 +230296,10 @@ var init_CheckAttendance = __esmMin((() => {
 	*/
 	CheckAttendance.onAppend = function onAppend() {
 		Object.assign(this._host.style, {
-			top: `${Math.min(Math.max(0, _preferences$42.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
-			left: `${Math.min(Math.max(0, _preferences$42.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
+			top: `${Math.min(Math.max(0, _preferences$34.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
+			left: `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
 		});
-		if (!_preferences$42.show) this._host.style.display = "none";
+		if (!_preferences$34.show) this._host.style.display = "none";
 		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
 			CheckAttendance.updateUI();
 			this.focus();
@@ -230769,7 +230548,7 @@ function getSkillById$1(id) {
 	for (let i = 0; i < count; ++i) if (_list$8[i].SKID === id) return _list$8[i];
 	return null;
 }
-function onResize$14(e, comp) {
+function onResize$10(e, comp) {
 	e.stopImmediatePropagation();
 	const top = parseInt(comp._host.style.top, 10) || 0;
 	const left = parseInt(comp._host.style.left, 10) || 0;
@@ -230798,7 +230577,7 @@ function onResize$14(e, comp) {
 }
 function resize$5(comp, width, height) {
 	const root = comp.getRoot();
-	if (_preferences$41.mini) {
+	if (_preferences$33.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -230851,9 +230630,9 @@ function resize$5(comp, width, height) {
 	}
 }
 function onMini$1(comp) {
-	_preferences$41.mini = !_preferences$41.mini;
-	_preferences$41.save();
-	resize$5(comp, _preferences$41.width, _preferences$41.height);
+	_preferences$33.mini = !_preferences$33.mini;
+	_preferences$33.save();
+	resize$5(comp, _preferences$33.width, _preferences$33.height);
 }
 function onApplyChoice$1(comp) {
 	const applyArr = [];
@@ -230997,7 +230776,7 @@ function skillLevelSelectDown$1(skill, root) {
 		});
 	}
 }
-var SkillList, _preferences$41, _list$8, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$1, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
+var SkillList, _preferences$33, _list$8, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$1, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
 var init_SkillList$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -231016,7 +230795,7 @@ var init_SkillList$1 = __esmMin((() => {
 	init_SkillList$2();
 	SkillList = new GUIComponent("SkillList", SkillList_default$1);
 	SkillList.render = () => SkillList_default$2;
-	_preferences$41 = Preferences.get("SkillList", {
+	_preferences$33 = Preferences.get("SkillList", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -231039,7 +230818,7 @@ var init_SkillList$1 = __esmMin((() => {
 			e.stopImmediatePropagation();
 		});
 		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
-			onResize$14(e, this);
+			onResize$10(e, this);
 		});
 		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
 			this.ui.hide();
@@ -231048,8 +230827,8 @@ var init_SkillList$1 = __esmMin((() => {
 			onMini$1(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$41.skillInfo = !!this.checked;
-			_preferences$41.save();
+			_preferences$33.skillInfo = !!this.checked;
+			_preferences$33.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice$1(this);
@@ -231120,7 +230899,7 @@ var init_SkillList$1 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$41.skillInfo) {
+				if (_preferences$33.skillInfo) {
 					const skillID = _resolveSkillID$1(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -231132,7 +230911,7 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$41.skillInfo) SkillDescription_default.remove();
+				if (_preferences$33.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -231186,24 +230965,24 @@ var init_SkillList$1 = __esmMin((() => {
 		});
 	};
 	SkillList.onAppend = function onAppend() {
-		if (!_preferences$41.show) this.ui.hide();
-		resize$5(this, _preferences$41.width, _preferences$41.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - 100)}px`;
+		if (!_preferences$33.show) this.ui.hide();
+		resize$5(this, _preferences$33.width, _preferences$33.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - 100)}px`;
 		const cb = this.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$41.skillInfo;
+		if (cb) cb.checked = _preferences$33.skillInfo;
 	};
 	SkillList.onRemove = function onRemove() {
 		if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-		_preferences$41.show = this.ui.is(":visible");
-		_preferences$41.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$41.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$33.show = this.ui.is(":visible");
+		_preferences$33.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$33.x = parseInt(this._host.style.left, 10) || 0;
 		const content = this.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$41.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$41.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$33.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$33.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$41.save();
+		_preferences$33.save();
 	};
 	SkillList.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
@@ -231635,7 +231414,7 @@ function getSkillById(id) {
 	for (let i = 0; i < count; ++i) if (_list$7[i].SKID === id) return _list$7[i];
 	return null;
 }
-function onResize$13(e, comp) {
+function onResize$9(e, comp) {
 	e.stopImmediatePropagation();
 	const top = parseInt(comp._host.style.top, 10) || 0;
 	const left = parseInt(comp._host.style.left, 10) || 0;
@@ -231664,7 +231443,7 @@ function onResize$13(e, comp) {
 }
 function resize$4(comp, width, height) {
 	const root = comp.getRoot();
-	if (_preferences$40.mini) {
+	if (_preferences$32.mini) {
 		width = Math.min(Math.max(width, 8), 8);
 		height = Math.min(Math.max(height, 4), 10);
 		const extend = root.querySelector(".extend");
@@ -231699,9 +231478,9 @@ function resize$4(comp, width, height) {
 	}
 }
 function onMini(comp) {
-	_preferences$40.mini = !_preferences$40.mini;
-	_preferences$40.save();
-	resize$4(comp, _preferences$40.width, _preferences$40.height);
+	_preferences$32.mini = !_preferences$32.mini;
+	_preferences$32.save();
+	resize$4(comp, _preferences$32.width, _preferences$32.height);
 }
 function onApplyChoice(comp) {
 	const applyArr = [];
@@ -231772,7 +231551,7 @@ function skillLevelSelectDown(skill, root) {
 		});
 	}
 }
-var SkillListV0, _preferences$40, _list$7, _btnIncSkill, _points, totalCounter, _btnLevelUp, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
+var SkillListV0, _preferences$32, _list$7, _btnIncSkill, _points, totalCounter, _btnLevelUp, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
 var init_SkillListV0 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -231791,7 +231570,7 @@ var init_SkillListV0 = __esmMin((() => {
 	init_SkillListV0$1();
 	SkillListV0 = new GUIComponent("SkillListV0", SkillListV0_default$1);
 	SkillListV0.render = () => SkillListV0_default$2;
-	_preferences$40 = Preferences.get("SkillListV0", {
+	_preferences$32 = Preferences.get("SkillListV0", {
 		x: 100,
 		y: 200,
 		width: 8,
@@ -231814,7 +231593,7 @@ var init_SkillListV0 = __esmMin((() => {
 			e.stopImmediatePropagation();
 		});
 		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
-			onResize$13(e, this);
+			onResize$9(e, this);
 		});
 		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
 			this.ui.hide();
@@ -231823,8 +231602,8 @@ var init_SkillListV0 = __esmMin((() => {
 			onMini(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$40.skillInfo = !!this.checked;
-			_preferences$40.save();
+			_preferences$32.skillInfo = !!this.checked;
+			_preferences$32.save();
 		});
 		root.querySelector(".reset")?.addEventListener("click", () => {
 			onResetChoice(this);
@@ -231895,7 +231674,7 @@ var init_SkillListV0 = __esmMin((() => {
 		container.addEventListener("mouseover", (e) => {
 			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
 			if (target) {
-				if (_preferences$40.mini || _preferences$40.skillInfo) {
+				if (_preferences$32.mini || _preferences$32.skillInfo) {
 					const skillID = _resolveSkillID(target);
 					if (SkillDescription_default.uid !== skillID) {
 						SkillDescription_default.append();
@@ -231907,7 +231686,7 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 		container.addEventListener("mouseout", (e) => {
 			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$40.mini || _preferences$40.skillInfo) SkillDescription_default.remove();
+				if (_preferences$32.mini || _preferences$32.skillInfo) SkillDescription_default.remove();
 				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
 				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
 			}
@@ -231951,24 +231730,24 @@ var init_SkillListV0 = __esmMin((() => {
 		});
 	};
 	SkillListV0.onAppend = function onAppend() {
-		if (!_preferences$40.show) this.ui.hide();
-		resize$4(this, _preferences$40.width, _preferences$40.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - 100)}px`;
+		if (!_preferences$32.show) this.ui.hide();
+		resize$4(this, _preferences$32.width, _preferences$32.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - 100)}px`;
 		const cb = SkillListV0.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$40.skillInfo;
+		if (cb) cb.checked = _preferences$32.skillInfo;
 	};
 	SkillListV0.onRemove = function onRemove() {
 		if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
-		_preferences$40.show = this.ui.is(":visible");
-		_preferences$40.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$40.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$32.show = this.ui.is(":visible");
+		_preferences$32.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$32.x = parseInt(this._host.style.left, 10) || 0;
 		const content = SkillListV0.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$40.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$40.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences$32.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
+			_preferences$32.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
 		}
-		_preferences$40.save();
+		_preferences$32.save();
 	};
 	SkillListV0.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
@@ -232213,25 +231992,540 @@ var init_SkillList = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Components/Quest/Quest/QuestHelper.html?raw
-var QuestHelper_default$2;
-var init_QuestHelper$2 = __esmMin((() => {
-	QuestHelper_default$2 = "<div id=\"QuestInfo\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"quest-info-top-panel\">\r\n			<div class=\"quest-info-top-panel-title\">Quest Information</div>\r\n		</div>\r\n		<div class=\"quest-info-mid-panel\">\r\n			<div class=\"quest-info-title-panel\">\r\n				<div class=\"quest-info-title-panel-text\"></div>\r\n			</div>\r\n			<div class=\"quest-info-description-panel\">\r\n				<div class=\"quest-info-description-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Description</span>\r\n				</div>\r\n				<div class=\"quest-info-description-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-monster-panel\">\r\n				<div class=\"quest-info-monster-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Monster</span>\r\n				</div>\r\n				<div class=\"quest-info-monster-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-reward-panel\">\r\n				<div class=\"npc-sprite\"></div>\r\n				<div class=\"quest-info-reward-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Reward</span>\r\n				</div>\r\n				<div class=\"quest-info-reward-panel-text\">\r\n					<span class=\"quest-ui-text-span\">\r\n						<ul class=\"quest-info-reward-ul\">\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>EXP</span><span class=\"quest-info-reward-li-base\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>JEXP</span><span class=\"quest-info-reward-li-job\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>Item</span\r\n								><span class=\"quest-info-reward-li-item\"\r\n									><ul class=\"quest-info-reward-li-item-list\"></ul\r\n								></span>\r\n							</li>\r\n						</ul>\r\n					</span>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"quest-info-bottom-panel\">\r\n			<div class=\"quest-info-bottom-deadline-info\">\r\n				<span class=\"quest-info-bottom-deadline-info-text\"></span>\r\n			</div>\r\n			<div class=\"quest-info-bottom-text\">\r\n				<ui-button class=\"quest-info-bottom-btn\" bg=\"basic_interface/btn_close.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+//#region src/UI/Components/Quest/QuestCommon.js
+/**
+* Create a Quest component from a version-specific configuration.
+*
+* @param {object} config
+* @param {string} config.name - component name (kept per version)
+* @param {string} config.htmlText - raw HTML for this version
+* @param {string} config.cssText - raw CSS for this version
+* @param {object} config.questHelper - QuestHelper sibling component
+* @param {object} [config.questWindow] - QuestWindow companion (renewal only)
+* @param {boolean} [config.renewLayout] - renewal layout (tabs/assets/list items)
+*/
+function createQuest(config) {
+	const { name, htmlText, cssText, questHelper, questWindow = null, renewLayout = false } = config;
+	/**
+	* Create Component
+	*/
+	const Quest = new GUIComponent(name, cssText);
+	Quest.render = () => htmlText;
+	/**
+	* @var {number} index of selection (classic layout)
+	*/
+	let _index = -1;
+	/**
+	* @var {Array} quest list
+	*/
+	let _questList = [];
+	/**
+	* @var {Array} quests hidden from the show-window (renewal layout)
+	*/
+	const _questNotShowList = [];
+	/**
+	* @var {string} _active_menu active click menu
+	*/
+	let _active_menu = "active";
+	/**
+	* @var {Preferences} structure
+	*/
+	const _preferences = Preferences.get(name, {
+		x: 200,
+		y: 200,
+		show: false,
+		showwindow: true
+	}, 1);
+	/**
+	* Initialize the component (event listener, etc.)
+	*/
+	Quest.init = function init() {
+		const root = Quest.getRoot();
+		questHelper.prepare();
+		if (questWindow) questWindow.prepare();
+		if (renewLayout) {
+			this.draggable(".titlebar");
+			const closeBtn = root.querySelector(".close-quest-container-btn");
+			if (closeBtn) {
+				closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				closeBtn.addEventListener("click", () => onClose());
+			}
+			root.querySelectorAll(".quest-menu-item").forEach((item) => {
+				item.addEventListener("click", (e) => onClickMenu(e));
+			});
+			const activeList = root.querySelector("#active-quest-list");
+			if (activeList) activeList.style.display = "";
+			const toggleBtn = root.querySelector(".toggle-quest-list");
+			if (toggleBtn) toggleBtn.addEventListener("click", () => onClickQuestCheckbox());
+			this.ui.hide();
+		} else {
+			root.querySelector(".view").addEventListener("click", () => onClickView());
+			root.querySelector(".close").addEventListener("click", () => onClose());
+			root.querySelector(".btn-right").addEventListener("click", () => onClose());
+			root.querySelectorAll(".quest-menu-item").forEach((item) => {
+				item.addEventListener("click", (e) => onClickMenu(e));
+			});
+			const activeList = root.querySelector("#active-quest-list");
+			if (activeList) activeList.style.display = "";
+			this.draggable(".titlebar");
+		}
+	};
+	/**
+	* Once append to the DOM, start to position the UI
+	*/
+	Quest.onAppend = function onAppend() {
+		if (renewLayout) {
+			this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - 381)}px`;
+			this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 466)}px`;
+			const root = Quest.getRoot();
+			const checkbox_background = _preferences.showwindow ? "checkbox_on" : "checkbox_off";
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
+				const el = root.querySelector(".toggle-quest-image");
+				if (el) el.style.backgroundImage = `url(${data})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_quest1.bmp`, (data) => {
+				const el = root.querySelector(".titlebar");
+				if (el) el.style.backgroundImage = `url(${data})`;
+			});
+			if (!_preferences.show) this.ui.hide();
+			questWindow.append();
+		} else {
+			_index = -1;
+			this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - 350)}px`;
+			this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 250)}px`;
+			const root = Quest.getRoot();
+			Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_que_01.bmp`, (data) => {
+				const el = root.querySelector(".quest-menu");
+				if (el) el.style.backgroundImage = `url(${data})`;
+			});
+			root.querySelector("#active-quest-list").style.display = "";
+			root.querySelector("#inactive-quest-list").style.display = "none";
+			root.querySelector("#all-quest-list").style.display = "none";
+			if (!_preferences.show) this.ui.hide();
+		}
+	};
+	/**
+	* Clean up UI
+	*/
+	Quest.clean = function clean() {
+		_active_menu = "";
+		_questList = {};
+		const root = Quest.getRoot();
+		if (root) if (renewLayout) {
+			const activeList = root.querySelector("#active-quest-list");
+			if (activeList) activeList.style.display = "";
+			const inactiveList = root.querySelector("#inactive-quest-list");
+			if (inactiveList) inactiveList.style.display = "none";
+			const featureList = root.querySelector("#feature-quest-list");
+			if (featureList) featureList.style.display = "none";
+			const cooldownList = root.querySelector("#cooldown-quest-list");
+			if (cooldownList) cooldownList.style.display = "none";
+		} else {
+			const activeList = root.querySelector("#active-quest-list");
+			if (activeList) activeList.style.display = "none";
+			const inactiveList = root.querySelector("#inactive-quest-list");
+			if (inactiveList) inactiveList.style.display = "none";
+			const allList = root.querySelector("#all-quest-list");
+			if (allList) allList.style.display = "none";
+		}
+		Quest.ClearQuestList();
+		questHelper.clearQuestDesc();
+		if (questWindow) questWindow.ClearQuestList();
+		onClose();
+	};
+	/**
+	* Removing the UI from window, save preferences
+	*/
+	Quest.onRemove = function onRemove() {
+		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
+		_preferences.show = hostDisplay !== "none";
+		_preferences.y = parseInt(this._host.style.top, 10);
+		_preferences.x = parseInt(this._host.style.left, 10);
+		_preferences.save();
+	};
+	/**
+	* Window Shortcuts
+	*/
+	Quest.onShortCut = function onShurtCut(key) {
+		switch (key.cmd) {
+			case "TOGGLE":
+				if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
+				else {
+					this.ui.show();
+					this.focus();
+				}
+				break;
+		}
+	};
+	/**
+	* Show/Hide UI
+	*/
+	Quest.toggle = function toggle() {
+		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
+		else this.ui.show();
+	};
+	/**
+	* Set Quest list
+	*
+	* @param {Array} quests
+	*/
+	Quest.setQuestList = function setQuestList(quests) {
+		_questList = quests;
+		Quest.ClearQuestList();
+		for (const questID in quests) Quest.addQuestToUI(quests[questID]);
+		if (questWindow) {
+			questWindow.ClearQuestList();
+			questWindow.setQuestList(_questList, _questNotShowList);
+		}
+	};
+	/**
+	* Add new Quest
+	*
+	* @param {object} quest
+	* @param {number} questID
+	*/
+	Quest.addQuest = function addQuest(quest, questID) {
+		_questList[questID] = quest;
+		Quest.addQuestToUI(quest);
+		if (questWindow) {
+			questWindow.ClearQuestList();
+			questWindow.setQuestList(_questList, _questNotShowList);
+		}
+	};
+	/**
+	* Update Quest from list
+	*
+	* @param {object} hunt_info
+	* @param {number} questID
+	* @param {number} huntID
+	*/
+	Quest.updateMissionHunt = function updateMissionHunt(hunt_info, questID, huntID) {
+		if (hunt_info.huntIDCount) _questList[questID].hunt_list[huntID].huntIDCount = hunt_info.huntIDCount;
+		if (hunt_info.maxCount) _questList[questID].hunt_list[huntID].maxCount = hunt_info.maxCount;
+		if (hunt_info.huntCount) _questList[questID].hunt_list[huntID].huntCount = hunt_info.huntCount;
+		if (hunt_info.mobGID) _questList[questID].hunt_list[huntID].mobGID = hunt_info.mobGID;
+		const mob_name = _questList[questID].hunt_list[huntID].mobName;
+		const chat_quest_text = `Mission [${DB.getQuestInfo(questID).Title}], you killed [${mob_name}]. (${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount})`;
+		let self_msg;
+		if (_questList[questID].hunt_list[huntID].maxCount == _questList[questID].hunt_list[huntID].huntCount) self_msg = `${mob_name} [Completed]`;
+		else self_msg = `${mob_name} [${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount}]`;
+		ChatBox_default.addText(chat_quest_text, ChatBox_default.TYPE.ADMIN | ChatBox_default.TYPE.SELF, ChatBox_default.FILTER.QUEST);
+		if (SessionStorage_default.Entity) SessionStorage_default.Entity.dialog.set(self_msg, "yellow");
+		if (questWindow) {
+			questWindow.ClearQuestList();
+			questWindow.setQuestList(_questList, _questNotShowList);
+		}
+	};
+	/**
+	* Remove Quest from list
+	*
+	* @param {number} questID
+	*/
+	Quest.removeQuest = function removeQuest(questID) {
+		delete _questList[questID];
+		refreshQuestUI();
+	};
+	/**
+	* Toggle Quest Active/Inactive
+	*
+	* @param {number} questID
+	* @param {boolean} active
+	*/
+	Quest.toggleQuestActive = function toggleQuestActive(questID, active) {
+		_questList[questID].active = active;
+		refreshQuestUI();
+	};
+	/**
+	* return questID based on huntID/mobGID
+	*
+	* @param {number} ID
+	*/
+	Quest.getQuestIDByServerID = function getQuestIDByServerID(ID) {
+		for (const key in _questList) if (typeof _questList[key].hunt_list[ID] !== "undefined") return key;
+		return -1;
+	};
+	/**
+	* Check if quest exists
+	*
+	* @param {number} questID
+	*/
+	Quest.questExists = function questExists(questID) {
+		return typeof _questList[questID] !== "undefined" ? true : false;
+	};
+	Quest.addQuestToUI = function addQuestToUI(quest) {
+		const root = Quest.getRoot();
+		if (!root) return;
+		if (renewLayout) {
+			let ul_id = "";
+			const toggle_id = `qid${quest.questID}`;
+			const show_id = `sid${quest.questID}`;
+			const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
+			const summary = quest.summary.length > 30 ? `${quest.summary.substr(0, 30)}...` : quest.summary;
+			const bt_check = _questNotShowList.includes(parseInt(Number(quest.questID))) ? "bt_check_off" : "bt_check_on";
+			const epoch_seconds = /* @__PURE__ */ new Date() / 1e3;
+			let li_text;
+			if (quest.end_time > 0 && quest.end_time > epoch_seconds) {
+				ul_id = "#cooldown-quest-list";
+				li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><div class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></div></div></li>";
+			} else if (quest.active == 1) {
+				ul_id = "#active-quest-list";
+				li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <button id=\"" + show_id + "\" class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </button></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
+			} else {
+				ul_id = "#inactive-quest-list";
+				li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
+			}
+			const ul = root.querySelector(ul_id);
+			if (!ul) return;
+			const li = document.createElement("li");
+			li.className = "quest-item";
+			li.innerHTML = li_text;
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist.bmp`, (data) => {
+				li.style.backgroundImage = `url(${data})`;
+			});
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${quest.icon}`, (data) => {
+				const iconEl = li.querySelector(".quest-item-icon-image");
+				if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
+			});
+			li.addEventListener("click", (e) => {
+				if (e.target.tagName.toLowerCase() === "button") return;
+				questHelper.clearQuestDesc();
+				questHelper.setQuestInfo(quest);
+				questHelper.prepare();
+				questHelper.append();
+				questHelper.ui.show();
+			});
+			li.addEventListener("mouseenter", () => {
+				Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist_check.bmp`, (data) => {
+					li.style.backgroundImage = `url(${data})`;
+				});
+			});
+			li.addEventListener("mouseleave", () => {
+				Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist.bmp`, (data) => {
+					li.style.backgroundImage = `url(${data})`;
+				});
+			});
+			ul.appendChild(li);
+			const toggleBtn = root.querySelector(`#${toggle_id}`);
+			if (toggleBtn) {
+				toggleBtn.addEventListener("click", (e) => onClickQuestToggle(e));
+				if (quest.active == 1) Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bt_lock_open.bmp`, (data) => {
+					toggleBtn.style.backgroundImage = `url(${data})`;
+				});
+				else Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bt_lock.bmp`, (data) => {
+					toggleBtn.style.backgroundImage = `url(${data})`;
+				});
+			}
+			const showBtn = root.querySelector(`#${show_id}`);
+			if (showBtn) {
+				showBtn.addEventListener("click", (e) => onClickQuestDisplay(e));
+				Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${bt_check}.bmp`, (data) => {
+					showBtn.style.backgroundImage = `url(${data})`;
+				});
+			}
+			return;
+		}
+		const toggle_id = `qid${quest.questID}`;
+		const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
+		const quest_icon = /^ico_/.test(quest.icon) ? "SG_FEEL.bmp" : quest.icon;
+		const li_text = `<div class="quest-item-icon"> <div class="quest-item-icon-image"></div> </div> <div class="quest-item-title"> <span class="quest-item-title-text">${title}</span> </div>`;
+		const ul_id = quest.active == 1 ? "#active-quest-list" : "#inactive-quest-list";
+		const li = document.createElement("li");
+		li.id = toggle_id;
+		li.className = `quest-item ${toggle_id}`;
+		li.innerHTML = li_text;
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${quest_icon}`, (data) => {
+			const iconEl = li.querySelector(".quest-item-icon-image");
+			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
+		});
+		li.addEventListener("contextmenu", (e) => onClickQuestToggle(e));
+		li.addEventListener("click", (e) => onClickQuest(e));
+		const ul = root.querySelector(ul_id);
+		if (ul) ul.appendChild(li);
+		const liAll = document.createElement("li");
+		liAll.className = `quest-item ${toggle_id}`;
+		liAll.innerHTML = li_text;
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${quest_icon}`, (data) => {
+			const iconEl = liAll.querySelector(".quest-item-icon-image");
+			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
+		});
+		liAll.addEventListener("click", (e) => onClickQuest(e));
+		const allList = root.querySelector("#all-quest-list");
+		if (allList) allList.appendChild(liAll);
+	};
+	function onClickMenu(e) {
+		const root = Quest.getRoot();
+		const menuId = e.currentTarget.id;
+		if (_active_menu === menuId) return;
+		_active_menu = menuId;
+		if (renewLayout) {
+			let background_image = "";
+			root.querySelector("#active-quest-list").style.display = "none";
+			root.querySelector("#inactive-quest-list").style.display = "none";
+			root.querySelector("#feature-quest-list").style.display = "none";
+			root.querySelector("#cooldown-quest-list").style.display = "none";
+			switch (_active_menu) {
+				case "feature":
+					background_image = "bg_quest2";
+					root.querySelector("#feature-quest-list").style.display = "";
+					break;
+				case "inactive":
+					background_image = "bg_quest3";
+					root.querySelector("#inactive-quest-list").style.display = "";
+					break;
+				case "cooldown":
+					background_image = "bg_quest4";
+					root.querySelector("#cooldown-quest-list").style.display = "";
+					break;
+				default:
+					background_image = "bg_quest1";
+					root.querySelector("#active-quest-list").style.display = "";
+			}
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${background_image}.bmp`, (data) => {
+				const titlebar = root.querySelector(".titlebar");
+				if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
+			});
+		} else {
+			let background_image = "";
+			root.querySelector("#active-quest-list").style.display = "none";
+			root.querySelector("#inactive-quest-list").style.display = "none";
+			root.querySelector("#all-quest-list").style.display = "none";
+			switch (_active_menu) {
+				case "inactive":
+					background_image = "tab_que_02";
+					root.querySelector("#inactive-quest-list").style.display = "";
+					break;
+				case "all":
+					background_image = "tab_que_03";
+					root.querySelector("#all-quest-list").style.display = "";
+					break;
+				default:
+					background_image = "tab_que_01";
+					root.querySelector("#active-quest-list").style.display = "";
+			}
+			Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/${background_image}.bmp`, (data) => {
+				const el = root.querySelector(".quest-menu");
+				if (el) el.style.backgroundImage = `url(${data})`;
+			});
+		}
+		questHelper.clearQuestDesc();
+	}
+	function onClickQuest(e) {
+		const root = Quest.getRoot();
+		const toggleEl = e.currentTarget;
+		const tid = toggleEl.id || toggleEl.className.match(/qid(\d+)/)?.[0];
+		const id = tid ? tid.replace("qid", "") : null;
+		if (!id) return;
+		if (_index > -1) {
+			root.querySelectorAll(`.qid${_index}`).forEach((el) => {
+				el.style.backgroundColor = "white";
+			});
+			const prevById = root.querySelector(`#qid${_index}`);
+			if (prevById) prevById.style.backgroundColor = "white";
+		}
+		_index = id;
+		toggleEl.style.backgroundColor = "lightgray";
+	}
+	function onClickQuestToggle(e) {
+		const id = e.currentTarget.id.replace("qid", "");
+		const _pkt = new PACKET.CZ.ACTIVE_QUEST();
+		_pkt.questID = _questList[id].questID;
+		_pkt.active = _questList[id].active == 1 ? 0 : 1;
+		Network.sendPacket(_pkt);
+	}
+	function onClickView() {
+		if (_index > -1) {
+			questHelper.clearQuestDesc();
+			questHelper.setQuestInfo(_questList[_index]);
+			questHelper.prepare();
+			questHelper.append();
+			questHelper.ui.show();
+		}
+	}
+	function onClickQuestCheckbox() {
+		const root = Quest.getRoot();
+		let checkbox_background;
+		if (_preferences.showwindow) {
+			checkbox_background = "checkbox_off";
+			questWindow.ui.hide();
+		} else {
+			checkbox_background = "checkbox_on";
+			questWindow.ui.show();
+		}
+		_preferences.showwindow = !_preferences.showwindow;
+		_preferences.save();
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
+			const el = root.querySelector(".toggle-quest-image");
+			if (el) el.style.backgroundImage = `url(${data})`;
+		});
+	}
+	function onClickQuestDisplay(e) {
+		const root = Quest.getRoot();
+		const cid = e.currentTarget.id;
+		const id = cid.replace("sid", "");
+		const iid = parseInt(Number(id));
+		let checkbox_background = "";
+		if (_questNotShowList.includes(iid)) {
+			const index = _questNotShowList.indexOf(iid);
+			_questNotShowList.splice(index, 1);
+			checkbox_background = "bt_check_on";
+		} else {
+			_questNotShowList.push(iid);
+			checkbox_background = "bt_check_off";
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
+			const el = root.querySelector(`#${cid}`);
+			if (el) el.style.backgroundImage = `url(${data})`;
+		});
+		questWindow.ClearQuestList();
+		questWindow.setQuestList(_questList, _questNotShowList);
+	}
+	function refreshQuestUI() {
+		Quest.ClearQuestList();
+		Quest.setQuestList(_questList);
+		if (questWindow) {
+			questWindow.ClearQuestList();
+			questWindow.setQuestList(_questList, _questNotShowList);
+		}
+	}
+	Quest.ClearQuestList = function ClearQuestList() {
+		const root = Quest.getRoot();
+		if (!root) return;
+		root.querySelectorAll(".quest-list").forEach((el) => {
+			el.innerHTML = "";
+		});
+	};
+	/**
+	* Close the window
+	*/
+	function onClose() {
+		Quest.ui.hide();
+	}
+	/**
+	* Export
+	*/
+	return UIManager.addComponent(Quest);
+}
+var init_QuestCommon = __esmMin((() => {
+	init_DBManager();
+	init_Preferences$1();
+	init_Client();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_ChatBox();
+	init_SessionStorage();
 }));
 //#endregion
-//#region src/UI/Components/Quest/Quest/QuestHelper.css?raw
-var QuestHelper_default$1;
-var init_QuestHelper$1 = __esmMin((() => {
-	QuestHelper_default$1 = ":host {\r\n	top: 200px;\r\n	left: 582px;\r\n}\r\n\r\n#QuestInfo {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 16px;\r\n	display: flex;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel .quest-info-top-panel-title {\r\n	width: 342px;\r\n	margin-left: 15px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 370px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel {\r\n	display: flex;\r\n	text-align: center;\r\n	align-items: center;\r\n	width: 342px;\r\n	height: 45px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel .quest-info-title-panel-text {\r\n	width: 342px;\r\n	font-weight: bold;\r\n	color: rgb(0, 0, 145);\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel {\r\n	width: 342px;\r\n	height: 110px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-title {\r\n	display: table;\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-text {\r\n	width: 342px;\r\n	margin: 10px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 90px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 100px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .npc-sprite {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 200px;\r\n	height: 200px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 25px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text {\r\n	width: 52px;\r\n	height: 25px;\r\n	float: left;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text .quest-info-bottom-btn {\r\n	margin-top: 5px;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n}\r\n\r\n.quest-ui-img-poring {\r\n	width: 10px;\r\n	height: 9px;\r\n	float: left;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-ui-title-span {\r\n	float: left;\r\n	margin: 5px;\r\n	font-size: 0.65rem;\r\n}\r\n\r\n.quest-ui-text-span {\r\n	margin-top: 10px;\r\n}\r\n\r\n.quest-info-reward-ul {\r\n	list-style: none;\r\n}\r\n\r\n.quest-info-bottom-deadline-info-text {\r\n	color: red;\r\n	font-weight: bold;\r\n	display: table;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-info-bottom-deadline-info {\r\n	width: 290px;\r\n	height: 25px;\r\n	float: left;\r\n	display: flex;\r\n}\r\n\r\n.quest-info-reward-li-base {\r\n	margin-left: 30px;\r\n}\r\n\r\n.quest-info-reward-li-job {\r\n	margin-left: 26px;\r\n}\r\n\r\n.quest-reward-item {\r\n	width: 38px;\r\n	height: 38px;\r\n	float: left;\r\n}\r\n\r\n.quest-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 7px;\r\n}\r\n\r\n.quest-reward-item-li {\r\n	margin-bottom: 5px;\r\n	display: table;\r\n}\r\n\r\n.quest-reward-item-name {\r\n	color: rgb(0, 0, 150);\r\n}\r\n\r\n.quest-reward-item-info {\r\n	float: left;\r\n	margin-left: 5px;\r\n}\r\n\r\n.quest-ui-monster-list {\r\n	list-style: none;\r\n	padding-left: 20px;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Quest/Quest/QuestHelper.js
+//#region src/UI/Components/Quest/QuestHelperCommon.js
 /**
 * Process text with color codes (^RRGGBB)
 * @param {string} text - The text to process
 * @returns {string} HTML with color spans
 */
-function processColorCodes$2(text) {
+function processColorCodes$1(text) {
 	if (!text) return "";
 	text = String(text);
 	return text.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => `<span style="color:#${color}">`).replace(/\^000000/g, "</span>");
@@ -232241,7 +232535,7 @@ function processColorCodes$2(text) {
 * @param {string} text - The text to process
 * @returns {string} HTML with processed item tags
 */
-function processItemTags$2(text) {
+function processItemTags$1(text) {
 	if (!text) return "";
 	text = String(text);
 	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, (match, itemName, itemId) => {
@@ -232253,7 +232547,7 @@ function processItemTags$2(text) {
 * @param {string} text - The text to process
 * @returns {string} HTML with processed NAVI tags
 */
-function processNAVITags$2(text) {
+function processNAVITags$1(text) {
 	if (!text) return "";
 	text = String(text);
 	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
@@ -232265,38 +232559,34 @@ function processNAVITags$2(text) {
 * @param {string} text - The text to process
 * @returns {string} Fully processed HTML
 */
-function processText$2(text) {
+function processText$1(text) {
 	if (!text) return "";
-	text = processItemTags$2(text);
-	text = processNAVITags$2(text);
-	text = processColorCodes$2(text);
+	text = processItemTags$1(text);
+	text = processNAVITags$1(text);
+	text = processColorCodes$1(text);
 	return text;
 }
-function onClickClose$3() {
-	QuestHelper.ui.hide();
-}
 /**
-* Close the window
+* Create a QuestHelper component from a version-specific configuration.
+*
+* @param {object} config
+* @param {string} config.name - component name (kept per version)
+* @param {string} config.htmlText - raw HTML for this version
+* @param {string} config.cssText - raw CSS for this version
+* @param {string} config.preferencesKey - Preferences key (kept per version)
+* @param {boolean} [config.renewLayout] - renewal layout (poring, rewards, deadline)
 */
-function onClose$10() {
-	QuestHelper.ui.hide();
-}
-var QuestHelper, _preferences$39, QuestHelper_default;
-var init_QuestHelper = __esmMin((() => {
-	init_DBManager();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_Navigation();
-	init_QuestHelper$2();
-	init_QuestHelper$1();
-	QuestHelper = new GUIComponent("QuestHelper", QuestHelper_default$1);
-	QuestHelper.render = () => QuestHelper_default$2;
-	_preferences$39 = Preferences.get("Quest", {
+function createQuestHelper(config) {
+	const { name, htmlText, cssText, preferencesKey, renewLayout = false } = config;
+	/**
+	* Create Component
+	*/
+	const QuestHelper = new GUIComponent(name, cssText);
+	QuestHelper.render = () => htmlText;
+	/**
+	* @var {Preferences} structure
+	*/
+	const _preferences = Preferences.get(preferencesKey, {
 		x: 200,
 		y: 200,
 		show: false
@@ -232306,10 +232596,10 @@ var init_QuestHelper = __esmMin((() => {
 	*/
 	QuestHelper.init = function init() {
 		const root = QuestHelper.getRoot();
-		const closeBtn = root.querySelector(".quest-info-bottom-btn");
+		const closeBtn = root.querySelector(renewLayout ? ".quest-info-bottom-btn" : ".quest-info-close-btn");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => onClickClose$3());
+			closeBtn.addEventListener("click", () => onClickClose());
 		}
 		root.addEventListener("click", (event) => {
 			const itemLink = event.target.closest(".item-link");
@@ -232344,12 +232634,17 @@ var init_QuestHelper = __esmMin((() => {
 			}
 		});
 		this.draggable(".titlebar");
-		root.querySelectorAll(".quest-ui-img-poring").forEach((el) => {
-			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/img_poring.bmp`, (data) => {
-				el.style.backgroundImage = `url(${data})`;
+		if (renewLayout) {
+			root.querySelectorAll(".quest-ui-img-poring").forEach((el) => {
+				Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/img_poring.bmp`, (data) => {
+					el.style.backgroundImage = `url(${data})`;
+				});
 			});
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questsub.bmp`, (data) => {
+			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questsub.bmp`, (data) => {
+				const titlebar = root.querySelector(".titlebar");
+				if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
+			});
+		} else Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/quest_window.bmp`, (data) => {
 			const titlebar = root.querySelector(".titlebar");
 			if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
 		});
@@ -232358,18 +232653,23 @@ var init_QuestHelper = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestHelper.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$39.x + 382), Renderer.width - 342)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$39.y), Renderer.height - 412)}px`;
+		if (renewLayout) {
+			this._host.style.left = `${Math.min(Math.max(0, _preferences.x + 382), Renderer.width - 342)}px`;
+			this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 412)}px`;
+		} else {
+			this._host.style.left = `${Math.min(Math.max(0, _preferences.x + 382), Renderer.width - 350)}px`;
+			this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 375)}px`;
+		}
 	};
-	QuestHelper.setQuestInfo = function setQuestInfo(quest) {
+	QuestHelper.setQuestInfo = renewLayout ? function setQuestInfo(quest) {
 		const root = QuestHelper.getRoot();
 		if (!root) return;
 		const titleEl = root.querySelector(".quest-info-title-panel-text");
-		if (titleEl) titleEl.innerHTML = processText$2(quest.title);
+		if (titleEl) titleEl.innerHTML = processText$1(quest.title);
 		const descEl = root.querySelector(".quest-info-description-panel-text .quest-ui-text-span");
-		if (descEl) descEl.innerHTML = processText$2(quest.description);
+		if (descEl) descEl.innerHTML = processText$1(quest.description);
 		let list = "";
-		for (const huntID in quest.hunt_list) list += `<li>${processText$2(quest.hunt_list[huntID].mobName)} ( ${quest.hunt_list[huntID].huntCount} / ${quest.hunt_list[huntID].maxCount} )</li>`;
+		for (const huntID in quest.hunt_list) list += `<li>${processText$1(quest.hunt_list[huntID].mobName)} ( ${quest.hunt_list[huntID].huntCount} / ${quest.hunt_list[huntID].maxCount} )</li>`;
 		const monsterEl = root.querySelector(".quest-info-monster-panel-text .quest-ui-text-span");
 		if (monsterEl) monsterEl.innerHTML = `<ul class="quest-ui-monster-list">${list}<ul>`;
 		if (quest.reward_exp_base > 0) {
@@ -232382,7 +232682,7 @@ var init_QuestHelper = __esmMin((() => {
 		}
 		for (let i = 0; i < quest.reward_item_list.length; i++) {
 			const it = DB.getItemInfo(quest.reward_item_list[i].ItemID);
-			const item_li = `<li class="quest-reward-item-li"><div class="quest-reward-item" data-index="${quest.reward_item_list[i].ItemID}"><div class="quest-icon"></div></div><div class="quest-reward-item-info"><span class="quest-reward-item-name">${processText$2(it.identifiedDisplayName)}</span><br><span>${quest.reward_item_list[i].ItemNum}</span></div></li>`;
+			const item_li = `<li class="quest-reward-item-li"><div class="quest-reward-item" data-index="${quest.reward_item_list[i].ItemID}"><div class="quest-icon"></div></div><div class="quest-reward-item-info"><span class="quest-reward-item-name">${processText$1(it.identifiedDisplayName)}</span><br><span>${quest.reward_item_list[i].ItemNum}</span></div></li>`;
 			const itemListEl = root.querySelector(".quest-info-reward-li-item-list");
 			if (itemListEl) itemListEl.insertAdjacentHTML("beforeend", item_li);
 			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/img_questiocn.bmp`, (data) => {
@@ -232400,8 +232700,34 @@ var init_QuestHelper = __esmMin((() => {
 			const deadlineEl = root.querySelector(".quest-info-bottom-deadline-info-text");
 			if (deadlineEl) deadlineEl.textContent = `Deadline [${d.toLocaleString()}]`;
 		}
+	} : function setQuestInfo(quest) {
+		const root = QuestHelper.getRoot();
+		if (!root) return;
+		const titleEl = root.querySelector(".title");
+		if (titleEl) titleEl.innerHTML = processText$1(quest.title);
+		const summaryEl = root.querySelector(".summary");
+		if (summaryEl) summaryEl.innerHTML = processText$1(quest.summary);
+		const objectiveEl = root.querySelector(".objective");
+		if (objectiveEl) objectiveEl.innerHTML = processText$1(quest.description);
+		let list = "<select class=\"monster-select\">";
+		let first = true;
+		for (const huntID in quest.hunt_list) {
+			if (first) {
+				const killedEl = root.querySelector(".killed");
+				if (killedEl) killedEl.textContent = quest.hunt_list[huntID].huntCount;
+				const limitedEl = root.querySelector(".limited");
+				if (limitedEl) limitedEl.textContent = quest.hunt_list[huntID].maxCount;
+				first = false;
+			}
+			list += `<option current="${quest.hunt_list[huntID].huntCount}" max="${quest.hunt_list[huntID].maxCount}">${processText$1(quest.hunt_list[huntID].mobName)}</option>`;
+		}
+		list += "</select>";
+		const monsterEl = root.querySelector(".monster");
+		if (monsterEl) monsterEl.innerHTML = list;
+		const selectEl = root.querySelector(".monster-select");
+		if (selectEl) selectEl.addEventListener("change", (e) => onSelectMonster(e));
 	};
-	QuestHelper.clearQuestDesc = function clearQuestDesc() {
+	QuestHelper.clearQuestDesc = renewLayout ? function clearQuestDesc() {
 		const root = QuestHelper.getRoot();
 		if (!root) return;
 		const titleEl = root.querySelector(".quest-info-title-panel-text");
@@ -232418,13 +232744,28 @@ var init_QuestHelper = __esmMin((() => {
 		if (deadlineEl) deadlineEl.textContent = "";
 		const itemListEl = root.querySelector(".quest-info-reward-li-item-list");
 		if (itemListEl) itemListEl.innerHTML = "";
+	} : function clearQuestDesc() {
+		const root = QuestHelper.getRoot();
+		if (!root) return;
+		const titleEl = root.querySelector(".title");
+		if (titleEl) titleEl.innerHTML = "";
+		const summaryEl = root.querySelector(".summary");
+		if (summaryEl) summaryEl.innerHTML = "";
+		const objectiveEl = root.querySelector(".objective");
+		if (objectiveEl) objectiveEl.innerHTML = "";
+		const monsterEl = root.querySelector(".monster");
+		if (monsterEl) monsterEl.innerHTML = "";
+		const killedEl = root.querySelector(".killed");
+		if (killedEl) killedEl.textContent = "";
+		const limitedEl = root.querySelector(".limited");
+		if (limitedEl) limitedEl.textContent = "";
 	};
 	/**
 	* Clean up UI
 	*/
 	QuestHelper.clean = function clean() {
 		QuestHelper.ui.hide();
-		onClose$10();
+		onClose();
 	};
 	/**
 	* Removing the UI from window, save preferences
@@ -232437,7 +232778,65 @@ var init_QuestHelper = __esmMin((() => {
 		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
 		else this.ui.show();
 	};
-	QuestHelper_default = UIManager.addComponent(QuestHelper);
+	function onClickClose() {
+		QuestHelper.ui.hide();
+	}
+	/**
+	* Close the window
+	*/
+	function onClose() {
+		QuestHelper.ui.hide();
+	}
+	function onSelectMonster(e) {
+		const root = QuestHelper.getRoot();
+		const selectedOption = e.currentTarget.options[e.currentTarget.selectedIndex];
+		const killedEl = root.querySelector(".killed");
+		if (killedEl) killedEl.textContent = selectedOption.getAttribute("current");
+		const limitedEl = root.querySelector(".limited");
+		if (limitedEl) limitedEl.textContent = selectedOption.getAttribute("max");
+	}
+	/**
+	* Export
+	*/
+	return UIManager.addComponent(QuestHelper);
+}
+var init_QuestHelperCommon = __esmMin((() => {
+	init_DBManager();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_ItemInfo();
+	init_Navigation();
+}));
+//#endregion
+//#region src/UI/Components/Quest/Quest/QuestHelper.html?raw
+var QuestHelper_default$2;
+var init_QuestHelper$2 = __esmMin((() => {
+	QuestHelper_default$2 = "<div id=\"QuestInfo\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"quest-info-top-panel\">\r\n			<div class=\"quest-info-top-panel-title\">Quest Information</div>\r\n		</div>\r\n		<div class=\"quest-info-mid-panel\">\r\n			<div class=\"quest-info-title-panel\">\r\n				<div class=\"quest-info-title-panel-text\"></div>\r\n			</div>\r\n			<div class=\"quest-info-description-panel\">\r\n				<div class=\"quest-info-description-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Description</span>\r\n				</div>\r\n				<div class=\"quest-info-description-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-monster-panel\">\r\n				<div class=\"quest-info-monster-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Monster</span>\r\n				</div>\r\n				<div class=\"quest-info-monster-panel-text\">\r\n					<span class=\"quest-ui-text-span\"></span>\r\n				</div>\r\n			</div>\r\n			<div class=\"quest-info-reward-panel\">\r\n				<div class=\"npc-sprite\"></div>\r\n				<div class=\"quest-info-reward-panel-title\">\r\n					<div class=\"quest-ui-img-poring\"></div>\r\n					<span class=\"quest-ui-title-span\">Reward</span>\r\n				</div>\r\n				<div class=\"quest-info-reward-panel-text\">\r\n					<span class=\"quest-ui-text-span\">\r\n						<ul class=\"quest-info-reward-ul\">\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>EXP</span><span class=\"quest-info-reward-li-base\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>JEXP</span><span class=\"quest-info-reward-li-job\"></span>\r\n							</li>\r\n							<li class=\"quest-info-reward-li\">\r\n								<span>Item</span\r\n								><span class=\"quest-info-reward-li-item\"\r\n									><ul class=\"quest-info-reward-li-item-list\"></ul\r\n								></span>\r\n							</li>\r\n						</ul>\r\n					</span>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"quest-info-bottom-panel\">\r\n			<div class=\"quest-info-bottom-deadline-info\">\r\n				<span class=\"quest-info-bottom-deadline-info-text\"></span>\r\n			</div>\r\n			<div class=\"quest-info-bottom-text\">\r\n				<ui-button class=\"quest-info-bottom-btn\" bg=\"basic_interface/btn_close.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Quest/Quest/QuestHelper.css?raw
+var QuestHelper_default$1;
+var init_QuestHelper$1 = __esmMin((() => {
+	QuestHelper_default$1 = ":host {\r\n	top: 200px;\r\n	left: 582px;\r\n}\r\n\r\n#QuestInfo {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar {\r\n	width: 342px;\r\n	height: 412px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 16px;\r\n	display: flex;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-top-panel .quest-info-top-panel-title {\r\n	width: 342px;\r\n	margin-left: 15px;\r\n	margin-top: 2px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 370px;\r\n	display: block;\r\n	overflow: auto;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel {\r\n	display: flex;\r\n	text-align: center;\r\n	align-items: center;\r\n	width: 342px;\r\n	height: 45px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-title-panel .quest-info-title-panel-text {\r\n	width: 342px;\r\n	font-weight: bold;\r\n	color: rgb(0, 0, 145);\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel {\r\n	width: 342px;\r\n	height: 110px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-title {\r\n	display: table;\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-description-panel .quest-info-description-panel-text {\r\n	width: 342px;\r\n	margin: 10px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 90px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-monster-panel .quest-info-monster-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel {\r\n	border-top: lightblue dashed 1px;\r\n	width: 342px;\r\n	height: 100px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .npc-sprite {\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	width: 200px;\r\n	height: 200px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-title {\r\n	width: 342px;\r\n	display: table;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-mid-panel .quest-info-reward-panel .quest-info-reward-panel-text {\r\n	width: 342px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel {\r\n	float: left;\r\n	width: 342px;\r\n	height: 25px;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text {\r\n	width: 52px;\r\n	height: 25px;\r\n	float: left;\r\n}\r\n\r\n#QuestInfo .titlebar .quest-info-bottom-panel .quest-info-bottom-text .quest-info-bottom-btn {\r\n	margin-top: 5px;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n}\r\n\r\n.quest-ui-img-poring {\r\n	width: 10px;\r\n	height: 9px;\r\n	float: left;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-ui-title-span {\r\n	float: left;\r\n	margin: 5px;\r\n	font-size: 0.65rem;\r\n}\r\n\r\n.quest-ui-text-span {\r\n	margin-top: 10px;\r\n}\r\n\r\n.quest-info-reward-ul {\r\n	list-style: none;\r\n}\r\n\r\n.quest-info-bottom-deadline-info-text {\r\n	color: red;\r\n	font-weight: bold;\r\n	display: table;\r\n	margin: 5px;\r\n}\r\n\r\n.quest-info-bottom-deadline-info {\r\n	width: 290px;\r\n	height: 25px;\r\n	float: left;\r\n	display: flex;\r\n}\r\n\r\n.quest-info-reward-li-base {\r\n	margin-left: 30px;\r\n}\r\n\r\n.quest-info-reward-li-job {\r\n	margin-left: 26px;\r\n}\r\n\r\n.quest-reward-item {\r\n	width: 38px;\r\n	height: 38px;\r\n	float: left;\r\n}\r\n\r\n.quest-icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 7px;\r\n}\r\n\r\n.quest-reward-item-li {\r\n	margin-bottom: 5px;\r\n	display: table;\r\n}\r\n\r\n.quest-reward-item-name {\r\n	color: rgb(0, 0, 150);\r\n}\r\n\r\n.quest-reward-item-info {\r\n	float: left;\r\n	margin-left: 5px;\r\n}\r\n\r\n.quest-ui-monster-list {\r\n	list-style: none;\r\n	padding-left: 20px;\r\n}\r\n\r\n.item-link {\r\n	color: #0070c0;\r\n	cursor: pointer;\r\n}\r\n\r\n.item-link:hover {\r\n	color: #00a0ff;\r\n}\r\n\r\n.navi-link {\r\n	color: #c00000;\r\n	cursor: pointer;\r\n	text-decoration: underline;\r\n}\r\n\r\n.navi-link:hover {\r\n	color: #ff0000;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Quest/Quest/QuestHelper.js
+var QuestHelper_default;
+var init_QuestHelper = __esmMin((() => {
+	init_QuestHelperCommon();
+	init_QuestHelper$2();
+	init_QuestHelper$1();
+	QuestHelper_default = createQuestHelper({
+		name: "QuestHelper",
+		htmlText: QuestHelper_default$2,
+		cssText: QuestHelper_default$1,
+		preferencesKey: "Quest",
+		renewLayout: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/QuestWindow.html?raw
@@ -232459,14 +232858,14 @@ function isInCooldown(quest) {
 	if (quest.end_time > epoch_seconds) return true;
 	return false;
 }
-var _preferences$38, QuestWindow, QuestWindow_default;
+var _preferences$31, QuestWindow, QuestWindow_default;
 var init_QuestWindow = __esmMin((() => {
 	init_Preferences$1();
 	init_UIManager();
 	init_GUIComponent();
 	init_QuestWindow$2();
 	init_QuestWindow$1();
-	_preferences$38 = Preferences.get("Quest", {
+	_preferences$31 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -232486,7 +232885,7 @@ var init_QuestWindow = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestWindow.onAppend = function onAppend() {
-		if (!_preferences$38.showwindow) this.ui.hide();
+		if (!_preferences$31.showwindow) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -232542,378 +232941,21 @@ var init_Quest$3 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest/Quest.js
-function onClickMenu$2(e) {
-	const root = Quest.getRoot();
-	const menuId = e.currentTarget.id;
-	if (_active_menu$1 === menuId) return;
-	_active_menu$1 = menuId;
-	let background_image = "";
-	root.querySelector("#active-quest-list").style.display = "none";
-	root.querySelector("#inactive-quest-list").style.display = "none";
-	root.querySelector("#feature-quest-list").style.display = "none";
-	root.querySelector("#cooldown-quest-list").style.display = "none";
-	switch (_active_menu$1) {
-		case "feature":
-			background_image = "bg_quest2";
-			root.querySelector("#feature-quest-list").style.display = "";
-			break;
-		case "inactive":
-			background_image = "bg_quest3";
-			root.querySelector("#inactive-quest-list").style.display = "";
-			break;
-		case "cooldown":
-			background_image = "bg_quest4";
-			root.querySelector("#cooldown-quest-list").style.display = "";
-			break;
-		default:
-			background_image = "bg_quest1";
-			root.querySelector("#active-quest-list").style.display = "";
-	}
-	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${background_image}.bmp`, (data) => {
-		const titlebar = root.querySelector(".titlebar");
-		if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
-	});
-	QuestHelper_default.clearQuestDesc();
-}
-function onClickQuestCheckbox() {
-	const root = Quest.getRoot();
-	let checkbox_background;
-	if (_preferences$37.showwindow) {
-		checkbox_background = "checkbox_off";
-		QuestWindow_default.ui.hide();
-	} else {
-		checkbox_background = "checkbox_on";
-		QuestWindow_default.ui.show();
-	}
-	_preferences$37.showwindow = !_preferences$37.showwindow;
-	_preferences$37.save();
-	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
-		const el = root.querySelector(".toggle-quest-image");
-		if (el) el.style.backgroundImage = `url(${data})`;
-	});
-}
-function onClickQuestToggle$1(e) {
-	const id = e.currentTarget.id.replace("qid", "");
-	const _pkt = new PACKET.CZ.ACTIVE_QUEST();
-	_pkt.questID = _questList$1[id].questID;
-	_pkt.active = _questList$1[id].active == 1 ? 0 : 1;
-	Network.sendPacket(_pkt);
-}
-function onClickQuestDisplay(e) {
-	const root = Quest.getRoot();
-	const cid = e.currentTarget.id;
-	const id = cid.replace("sid", "");
-	const iid = parseInt(Number(id));
-	let checkbox_background = "";
-	if (_questNotShowList.includes(iid)) {
-		const index = _questNotShowList.indexOf(iid);
-		_questNotShowList.splice(index, 1);
-		checkbox_background = "bt_check_on";
-	} else {
-		_questNotShowList.push(iid);
-		checkbox_background = "bt_check_off";
-	}
-	Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
-		const el = root.querySelector(`#${cid}`);
-		if (el) el.style.backgroundImage = `url(${data})`;
-	});
-	QuestWindow_default.ClearQuestList();
-	QuestWindow_default.setQuestList(_questList$1, _questNotShowList);
-}
-function refreshQuestUI$1() {
-	Quest.ClearQuestList();
-	Quest.setQuestList(_questList$1);
-	QuestWindow_default.ClearQuestList();
-	QuestWindow_default.setQuestList(_questList$1, _questNotShowList);
-}
-/**
-* Close the window
-*/
-function onClose$9() {
-	Quest.ui.hide();
-}
-var Quest, _questList$1, _questNotShowList, _active_menu$1, _preferences$37, Quest_default;
+var Quest_default;
 var init_Quest$2 = __esmMin((() => {
-	init_DBManager();
-	init_Preferences$1();
-	init_Client();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
+	init_QuestCommon();
 	init_QuestHelper();
 	init_QuestWindow();
-	init_NetworkManager();
-	init_PacketStructure();
 	init_Quest$4();
 	init_Quest$3();
-	init_ChatBox();
-	init_SessionStorage();
-	Quest = new GUIComponent("Quest", Quest_default$1);
-	Quest.render = () => Quest_default$2;
-	_questList$1 = [];
-	_questNotShowList = [];
-	_active_menu$1 = "active";
-	_preferences$37 = Preferences.get("Quest", {
-		x: 200,
-		y: 200,
-		show: false,
-		showwindow: true
-	}, 1);
-	/**
-	* Initialize the component (event listener, etc.)
-	*/
-	Quest.init = function init() {
-		const root = Quest.getRoot();
-		QuestHelper_default.prepare();
-		QuestWindow_default.prepare();
-		this.draggable(".titlebar");
-		const closeBtn = root.querySelector(".close-quest-container-btn");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => onClose$9());
-		}
-		root.querySelectorAll(".quest-menu-item").forEach((item) => {
-			item.addEventListener("click", (e) => onClickMenu$2(e));
-		});
-		const activeList = root.querySelector("#active-quest-list");
-		if (activeList) activeList.style.display = "";
-		const toggleBtn = root.querySelector(".toggle-quest-list");
-		if (toggleBtn) toggleBtn.addEventListener("click", () => onClickQuestCheckbox());
-		this.ui.hide();
-	};
-	/**
-	* Once append to the DOM, start to position the UI
-	*/
-	Quest.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - 381)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - 466)}px`;
-		const root = Quest.getRoot();
-		const checkbox_background = _preferences$37.showwindow ? "checkbox_on" : "checkbox_off";
-		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${checkbox_background}.bmp`, (data) => {
-			const el = root.querySelector(".toggle-quest-image");
-			if (el) el.style.backgroundImage = `url(${data})`;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_quest1.bmp`, (data) => {
-			const el = root.querySelector(".titlebar");
-			if (el) el.style.backgroundImage = `url(${data})`;
-		});
-		if (!_preferences$37.show) this.ui.hide();
-		QuestWindow_default.append();
-	};
-	/**
-	* Clean up UI
-	*/
-	Quest.clean = function clean() {
-		_active_menu$1 = "";
-		_questList$1 = {};
-		const root = Quest.getRoot();
-		if (root) {
-			const activeList = root.querySelector("#active-quest-list");
-			if (activeList) activeList.style.display = "";
-			const inactiveList = root.querySelector("#inactive-quest-list");
-			if (inactiveList) inactiveList.style.display = "none";
-			const featureList = root.querySelector("#feature-quest-list");
-			if (featureList) featureList.style.display = "none";
-			const cooldownList = root.querySelector("#cooldown-quest-list");
-			if (cooldownList) cooldownList.style.display = "none";
-		}
-		Quest.ClearQuestList();
-		QuestHelper_default.clearQuestDesc();
-		QuestWindow_default.ClearQuestList();
-		onClose$9();
-	};
-	/**
-	* Removing the UI from window, save preferences
-	*/
-	Quest.onRemove = function onRemove() {
-		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
-		_preferences$37.show = hostDisplay !== "none";
-		_preferences$37.y = parseInt(this._host.style.top, 10);
-		_preferences$37.x = parseInt(this._host.style.left, 10);
-		_preferences$37.save();
-	};
-	/**
-	* Window Shortcuts
-	*/
-	Quest.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
-				else {
-					this.ui.show();
-					this.focus();
-				}
-				break;
-		}
-	};
-	/**
-	* Show/Hide UI
-	*/
-	Quest.toggle = function toggle() {
-		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
-		else this.ui.show();
-	};
-	/**
-	* Set Quest list
-	*
-	* @param {Array} quests
-	*/
-	Quest.setQuestList = function setQuestList(quests) {
-		_questList$1 = quests;
-		Quest.ClearQuestList();
-		for (const questID in quests) Quest.addQuestToUI(quests[questID]);
-		QuestWindow_default.ClearQuestList();
-		QuestWindow_default.setQuestList(_questList$1, _questNotShowList);
-	};
-	/**
-	* Add new Quest
-	*
-	* @param {object} quest
-	* @param {number} questID
-	*/
-	Quest.addQuest = function addQuest(quest, questID) {
-		_questList$1[questID] = quest;
-		Quest.addQuestToUI(quest);
-		QuestWindow_default.ClearQuestList();
-		QuestWindow_default.setQuestList(_questList$1, _questNotShowList);
-	};
-	/**
-	* Update Quest from list
-	*
-	* @param {object} hunt_info
-	* @param {number} questID
-	* @param {number} huntID
-	*/
-	Quest.updateMissionHunt = function updateMissionHunt(hunt_info, questID, huntID) {
-		if (hunt_info.huntIDCount) _questList$1[questID].hunt_list[huntID].huntIDCount = hunt_info.huntIDCount;
-		if (hunt_info.maxCount) _questList$1[questID].hunt_list[huntID].maxCount = hunt_info.maxCount;
-		if (hunt_info.huntCount) _questList$1[questID].hunt_list[huntID].huntCount = hunt_info.huntCount;
-		if (hunt_info.mobGID) _questList$1[questID].hunt_list[huntID].mobGID = hunt_info.mobGID;
-		const mob_name = _questList$1[questID].hunt_list[huntID].mobName;
-		const chat_quest_text = `Mission [${DB.getQuestInfo(questID).Title}], you killed [${mob_name}]. (${_questList$1[questID].hunt_list[huntID].huntCount}/${_questList$1[questID].hunt_list[huntID].maxCount})`;
-		let self_msg;
-		if (_questList$1[questID].hunt_list[huntID].maxCount == _questList$1[questID].hunt_list[huntID].huntCount) self_msg = `${mob_name} [Completed]`;
-		else self_msg = `${mob_name} [${_questList$1[questID].hunt_list[huntID].huntCount}/${_questList$1[questID].hunt_list[huntID].maxCount}]`;
-		ChatBox_default.addText(chat_quest_text, ChatBox_default.TYPE.ADMIN | ChatBox_default.TYPE.SELF, ChatBox_default.FILTER.QUEST);
-		if (SessionStorage_default.Entity) SessionStorage_default.Entity.dialog.set(self_msg, "yellow");
-		QuestWindow_default.ClearQuestList();
-		QuestWindow_default.setQuestList(_questList$1, _questNotShowList);
-	};
-	/**
-	* Remove Quest from list
-	*
-	* @param {number} questID
-	*/
-	Quest.removeQuest = function removeQuest(questID) {
-		delete _questList$1[questID];
-		refreshQuestUI$1();
-	};
-	/**
-	* Toggle Quest Active/Inactive
-	*
-	* @param {number} questID
-	* @param {boolean} active
-	*/
-	Quest.toggleQuestActive = function toggleQuestActive(questID, active) {
-		_questList$1[questID].active = active;
-		refreshQuestUI$1();
-	};
-	/**
-	* return questID based on huntID/mobGID
-	*
-	* @param {number} ID
-	*/
-	Quest.getQuestIDByServerID = function getQuestIDByServerID(ID) {
-		for (const key in _questList$1) if (typeof _questList$1[key].hunt_list[ID] !== "undefined") return key;
-		return -1;
-	};
-	/**
-	* Check if quest exists
-	*
-	* @param {number} questID
-	*/
-	Quest.questExists = function questExists(questID) {
-		return typeof _questList$1[questID] !== "undefined" ? true : false;
-	};
-	Quest.addQuestToUI = function addQuest(quest) {
-		const root = Quest.getRoot();
-		if (!root) return;
-		let ul_id = "";
-		const toggle_id = `qid${quest.questID}`;
-		const show_id = `sid${quest.questID}`;
-		const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
-		const summary = quest.summary.length > 30 ? `${quest.summary.substr(0, 30)}...` : quest.summary;
-		const bt_check = _questNotShowList.includes(parseInt(Number(quest.questID))) ? "bt_check_off" : "bt_check_on";
-		const epoch_seconds = /* @__PURE__ */ new Date() / 1e3;
-		let li_text;
-		if (quest.end_time > 0 && quest.end_time > epoch_seconds) {
-			ul_id = "#cooldown-quest-list";
-			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><div class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></div></div></li>";
-		} else if (quest.active == 1) {
-			ul_id = "#active-quest-list";
-			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <button id=\"" + show_id + "\" class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </button></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
-		} else {
-			ul_id = "#inactive-quest-list";
-			li_text = "<li> <div class=\"quest-item-icon\"> <div class=\"quest-item-icon-image\"> <span class=\"quest-item-icon-image-text\">Quest</span> </div> </div>  <div class=\"quest-item-title\"> <span class=\"quest-item-title-text\">" + title + "</span>  </div> <div class=\"quest-item-display\"> <div class=\"quest-item-display-image\"> <span class=\"quest-item-display-image-text\"></span> </div></div><div class=\"quest-item-summary\"><span class=\"quest-item-summary-text\">" + summary + "</span></div>				<div class=\"quest-item-toggle\"><button id=\"" + toggle_id + "\" class=\"quest-item-toggle-image\"><span class=\"quest-item-toggle-image-text\">Toggle</span></button></div></li>";
-		}
-		const ul = root.querySelector(ul_id);
-		if (!ul) return;
-		const li = document.createElement("li");
-		li.className = "quest-item";
-		li.innerHTML = li_text;
-		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist.bmp`, (data) => {
-			li.style.backgroundImage = `url(${data})`;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${quest.icon}`, (data) => {
-			const iconEl = li.querySelector(".quest-item-icon-image");
-			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
-		});
-		li.addEventListener("click", (e) => {
-			if (e.target.tagName.toLowerCase() === "button") return;
-			QuestHelper_default.clearQuestDesc();
-			QuestHelper_default.setQuestInfo(quest);
-			QuestHelper_default.prepare();
-			QuestHelper_default.append();
-			QuestHelper_default.ui.show();
-		});
-		li.addEventListener("mouseenter", () => {
-			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist_check.bmp`, (data) => {
-				li.style.backgroundImage = `url(${data})`;
-			});
-		});
-		li.addEventListener("mouseleave", () => {
-			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bg_questlist.bmp`, (data) => {
-				li.style.backgroundImage = `url(${data})`;
-			});
-		});
-		ul.appendChild(li);
-		const toggleBtn = root.querySelector(`#${toggle_id}`);
-		if (toggleBtn) {
-			toggleBtn.addEventListener("click", (e) => onClickQuestToggle$1(e));
-			if (quest.active == 1) Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bt_lock_open.bmp`, (data) => {
-				toggleBtn.style.backgroundImage = `url(${data})`;
-			});
-			else Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/bt_lock.bmp`, (data) => {
-				toggleBtn.style.backgroundImage = `url(${data})`;
-			});
-		}
-		const showBtn = root.querySelector(`#${show_id}`);
-		if (showBtn) {
-			showBtn.addEventListener("click", (e) => onClickQuestDisplay(e));
-			Client.loadFile(`${DB.INTERFACE_PATH}renew_questui/${bt_check}.bmp`, (data) => {
-				showBtn.style.backgroundImage = `url(${data})`;
-			});
-		}
-	};
-	Quest.ClearQuestList = function ClearQuestList() {
-		const root = Quest.getRoot();
-		if (!root) return;
-		root.querySelectorAll(".quest-list").forEach((el) => {
-			el.innerHTML = "";
-		});
-	};
-	Quest_default = UIManager.addComponent(Quest);
+	Quest_default = createQuest({
+		name: "Quest",
+		htmlText: Quest_default$2,
+		cssText: Quest_default$1,
+		questHelper: QuestHelper_default,
+		questWindow: QuestWindow_default,
+		renewLayout: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestHelperV1.html?raw
@@ -232929,206 +232971,18 @@ var init_QuestHelperV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestHelperV1.js
-/**
-* Process text with color codes (^RRGGBB)
-* @param {string} text - The text to process
-* @returns {string} HTML with color spans
-*/
-function processColorCodes$1(text) {
-	if (!text) return "";
-	text = String(text);
-	return text.replace(/\^([0-9A-Fa-f]{6})/g, (match, color) => `<span style="color:#${color}">`).replace(/\^000000/g, "</span>");
-}
-/**
-* Process item tags in text (<ITEM>Name<INFO>ID</INFO></ITEM>)
-* @param {string} text - The text to process
-* @returns {string} HTML with processed item tags
-*/
-function processItemTags$1(text) {
-	if (!text) return "";
-	text = String(text);
-	return text.replace(/<ITEM>([^<]+)<INFO>(\d+)<\/INFO><\/ITEM>/g, (match, itemName, itemId) => {
-		return `<span class="item-link" data-item-id="${itemId}">${itemName}</span>`;
-	});
-}
-/**
-* Process NAVI tags in text (<NAVI>Display Name<INFO>mapname,x,y,0,000,flag</INFO></NAVI>)
-* @param {string} text - The text to process
-* @returns {string} HTML with processed NAVI tags
-*/
-function processNAVITags$1(text) {
-	if (!text) return "";
-	text = String(text);
-	return text.replace(/<NAVI>([^<]+)<INFO>([^<]+)<\/INFO><\/NAVI>/g, (match, displayName, naviInfo) => {
-		return `<span class="navi-link" data-navi-info="${naviInfo}" data-navi-name="${displayName}">${displayName}</span>`;
-	});
-}
-/**
-* Process all text formatting (color codes and item tags)
-* @param {string} text - The text to process
-* @returns {string} Fully processed HTML
-*/
-function processText$1(text) {
-	if (!text) return "";
-	text = processItemTags$1(text);
-	text = processNAVITags$1(text);
-	text = processColorCodes$1(text);
-	return text;
-}
-function onClickClose$2() {
-	QuestHelperV1.ui.hide();
-}
-/**
-* Close the window
-*/
-function onClose$8() {
-	QuestHelperV1.ui.hide();
-}
-function onSelectMonster(e) {
-	const root = QuestHelperV1.getRoot();
-	const selectedOption = e.currentTarget.options[e.currentTarget.selectedIndex];
-	const killedEl = root.querySelector(".killed");
-	if (killedEl) killedEl.textContent = selectedOption.getAttribute("current");
-	const limitedEl = root.querySelector(".limited");
-	if (limitedEl) limitedEl.textContent = selectedOption.getAttribute("max");
-}
-var QuestHelperV1, _preferences$36, QuestHelperV1_default;
+var QuestHelperV1_default;
 var init_QuestHelperV1 = __esmMin((() => {
-	init_Preferences$1();
-	init_Client();
-	init_DBManager();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_ItemInfo();
-	init_Navigation();
+	init_QuestHelperCommon();
 	init_QuestHelperV1$2();
 	init_QuestHelperV1$1();
-	QuestHelperV1 = new GUIComponent("QuestHelperV1", QuestHelperV1_default$1);
-	QuestHelperV1.render = () => QuestHelperV1_default$2;
-	_preferences$36 = Preferences.get("QuestHelperV1", {
-		x: 200,
-		y: 200,
-		show: false
-	}, 1);
-	/**
-	* Initialize the component (event listener, etc.)
-	*/
-	QuestHelperV1.init = function init() {
-		const root = QuestHelperV1.getRoot();
-		const closeBtn = root.querySelector(".quest-info-close-btn");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => onClickClose$2());
-		}
-		root.addEventListener("click", (event) => {
-			const itemLink = event.target.closest(".item-link");
-			if (itemLink) {
-				const itemId = parseInt(itemLink.dataset.itemId, 10);
-				if (!itemId) return;
-				if (ItemInfo_default.uid === itemId) {
-					ItemInfo_default.remove();
-					return;
-				}
-				ItemInfo_default.append();
-				ItemInfo_default.uid = itemId;
-				ItemInfo_default.setItem({
-					ITID: itemId,
-					IsIdentified: true
-				});
-				return;
-			}
-			const naviLink = event.target.closest(".navi-link");
-			if (naviLink) {
-				const naviInfo = naviLink.dataset.naviInfo;
-				const displayName = naviLink.dataset.naviName;
-				if (!naviInfo) return;
-				const navHostDisplay = Navigation_default._host ? getComputedStyle(Navigation_default._host).display : "none";
-				if (Navigation_default.uid === naviInfo && navHostDisplay !== "none") {
-					Navigation_default.hide();
-					return;
-				}
-				Navigation_default.show();
-				Navigation_default.uid = naviInfo;
-				Navigation_default.setNaviInfo(naviInfo, displayName);
-			}
-		});
-		this.draggable(".titlebar");
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/quest_window.bmp`, (data) => {
-			const titlebar = root.querySelector(".titlebar");
-			if (titlebar) titlebar.style.backgroundImage = `url(${data})`;
-		});
-	};
-	/**
-	* Once append to the DOM, start to position the UI
-	*/
-	QuestHelperV1.onAppend = function onAppend() {
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x + 382), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - 375)}px`;
-	};
-	QuestHelperV1.setQuestInfo = function setQuestInfo(quest) {
-		const root = QuestHelperV1.getRoot();
-		if (!root) return;
-		const titleEl = root.querySelector(".title");
-		if (titleEl) titleEl.innerHTML = processText$1(quest.title);
-		const summaryEl = root.querySelector(".summary");
-		if (summaryEl) summaryEl.innerHTML = processText$1(quest.summary);
-		const objectiveEl = root.querySelector(".objective");
-		if (objectiveEl) objectiveEl.innerHTML = processText$1(quest.description);
-		let list = "<select class=\"monster-select\">";
-		let first = true;
-		for (const huntID in quest.hunt_list) {
-			if (first) {
-				const killedEl = root.querySelector(".killed");
-				if (killedEl) killedEl.textContent = quest.hunt_list[huntID].huntCount;
-				const limitedEl = root.querySelector(".limited");
-				if (limitedEl) limitedEl.textContent = quest.hunt_list[huntID].maxCount;
-				first = false;
-			}
-			list += `<option current="${quest.hunt_list[huntID].huntCount}" max="${quest.hunt_list[huntID].maxCount}">${processText$1(quest.hunt_list[huntID].mobName)}</option>`;
-		}
-		list += "</select>";
-		const monsterEl = root.querySelector(".monster");
-		if (monsterEl) monsterEl.innerHTML = list;
-		const selectEl = root.querySelector(".monster-select");
-		if (selectEl) selectEl.addEventListener("change", (e) => onSelectMonster(e));
-	};
-	QuestHelperV1.clearQuestDesc = function clearQuestDesc() {
-		const root = QuestHelperV1.getRoot();
-		if (!root) return;
-		const titleEl = root.querySelector(".title");
-		if (titleEl) titleEl.innerHTML = "";
-		const summaryEl = root.querySelector(".summary");
-		if (summaryEl) summaryEl.innerHTML = "";
-		const objectiveEl = root.querySelector(".objective");
-		if (objectiveEl) objectiveEl.innerHTML = "";
-		const monsterEl = root.querySelector(".monster");
-		if (monsterEl) monsterEl.innerHTML = "";
-		const killedEl = root.querySelector(".killed");
-		if (killedEl) killedEl.textContent = "";
-		const limitedEl = root.querySelector(".limited");
-		if (limitedEl) limitedEl.textContent = "";
-	};
-	/**
-	* Clean up UI
-	*/
-	QuestHelperV1.clean = function clean() {
-		QuestHelperV1.ui.hide();
-		onClose$8();
-	};
-	/**
-	* Removing the UI from window, save preferences
-	*/
-	QuestHelperV1.onRemove = function onRemove() {};
-	/**
-	* Show/Hide UI
-	*/
-	QuestHelperV1.toggle = function toggle() {
-		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
-		else this.ui.show();
-	};
-	QuestHelperV1_default = UIManager.addComponent(QuestHelperV1);
+	QuestHelperV1_default = createQuestHelper({
+		name: "QuestHelperV1",
+		htmlText: QuestHelperV1_default$2,
+		cssText: QuestHelperV1_default$1,
+		preferencesKey: "QuestHelperV1",
+		renewLayout: false
+	});
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestV1.html?raw
@@ -233144,301 +232998,19 @@ var init_QuestV1$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Quest/QuestV1/QuestV1.js
-function onClickMenu$1(e) {
-	const root = QuestV1.getRoot();
-	const menuId = e.currentTarget.id;
-	if (_active_menu === menuId) return;
-	_active_menu = menuId;
-	let background_image = "";
-	root.querySelector("#active-quest-list").style.display = "none";
-	root.querySelector("#inactive-quest-list").style.display = "none";
-	root.querySelector("#all-quest-list").style.display = "none";
-	switch (_active_menu) {
-		case "inactive":
-			background_image = "tab_que_02";
-			root.querySelector("#inactive-quest-list").style.display = "";
-			break;
-		case "all":
-			background_image = "tab_que_03";
-			root.querySelector("#all-quest-list").style.display = "";
-			break;
-		default:
-			background_image = "tab_que_01";
-			root.querySelector("#active-quest-list").style.display = "";
-	}
-	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/${background_image}.bmp`, (data) => {
-		const el = root.querySelector(".quest-menu");
-		if (el) el.style.backgroundImage = `url(${data})`;
-	});
-	QuestHelperV1_default.clearQuestDesc();
-}
-function onClickQuest(e) {
-	const root = QuestV1.getRoot();
-	const toggleEl = e.currentTarget;
-	const tid = toggleEl.id || toggleEl.className.match(/qid(\d+)/)?.[0];
-	const id = tid ? tid.replace("qid", "") : null;
-	if (!id) return;
-	if (_index > -1) {
-		root.querySelectorAll(`.qid${_index}`).forEach((el) => {
-			el.style.backgroundColor = "white";
-		});
-		const prevById = root.querySelector(`#qid${_index}`);
-		if (prevById) prevById.style.backgroundColor = "white";
-	}
-	_index = id;
-	toggleEl.style.backgroundColor = "lightgray";
-}
-function onClickQuestToggle(e) {
-	const id = e.currentTarget.id.replace("qid", "");
-	const _pkt = new PACKET.CZ.ACTIVE_QUEST();
-	_pkt.questID = _questList[id].questID;
-	_pkt.active = _questList[id].active == 1 ? 0 : 1;
-	Network.sendPacket(_pkt);
-}
-function onClickView() {
-	if (_index > -1) {
-		QuestHelperV1_default.clearQuestDesc();
-		QuestHelperV1_default.setQuestInfo(_questList[_index]);
-		QuestHelperV1_default.prepare();
-		QuestHelperV1_default.append();
-		QuestHelperV1_default.ui.show();
-	}
-}
-function refreshQuestUI() {
-	QuestV1.ClearQuestList();
-	QuestV1.setQuestList(_questList);
-}
-/**
-* Close the window
-*/
-function onClose$7() {
-	QuestV1.ui.hide();
-}
-var QuestV1, _index, _questList, _active_menu, _preferences$35, QuestV1_default;
+var QuestV1_default;
 var init_QuestV1 = __esmMin((() => {
-	init_DBManager();
-	init_Preferences$1();
-	init_Client();
-	init_Renderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_NetworkManager();
-	init_PacketStructure();
+	init_QuestCommon();
 	init_QuestHelperV1();
 	init_QuestV1$2();
 	init_QuestV1$1();
-	init_ChatBox();
-	init_SessionStorage();
-	QuestV1 = new GUIComponent("QuestV1", QuestV1_default$1);
-	QuestV1.render = () => QuestV1_default$2;
-	_index = -1;
-	_questList = [];
-	_active_menu = "active";
-	_preferences$35 = Preferences.get("QuestV1", {
-		x: 200,
-		y: 200,
-		show: false,
-		showwindow: true
-	}, 1);
-	/**
-	* Initialize the component (event listener, etc.)
-	*/
-	QuestV1.init = function init() {
-		const root = QuestV1.getRoot();
-		QuestHelperV1_default.prepare();
-		root.querySelector(".view").addEventListener("click", () => onClickView());
-		root.querySelector(".close").addEventListener("click", () => onClose$7());
-		root.querySelector(".btn-right").addEventListener("click", () => onClose$7());
-		root.querySelectorAll(".quest-menu-item").forEach((item) => {
-			item.addEventListener("click", (e) => onClickMenu$1(e));
-		});
-		const activeList = root.querySelector("#active-quest-list");
-		if (activeList) activeList.style.display = "";
-		this.draggable(".titlebar");
-	};
-	/**
-	* Once append to the DOM, start to position the UI
-	*/
-	QuestV1.onAppend = function onAppend() {
-		_index = -1;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$35.x), Renderer.width - 350)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$35.y), Renderer.height - 250)}px`;
-		const root = QuestV1.getRoot();
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_que_01.bmp`, (data) => {
-			const el = root.querySelector(".quest-menu");
-			if (el) el.style.backgroundImage = `url(${data})`;
-		});
-		root.querySelector("#active-quest-list").style.display = "";
-		root.querySelector("#inactive-quest-list").style.display = "none";
-		root.querySelector("#all-quest-list").style.display = "none";
-		if (!_preferences$35.show) this.ui.hide();
-	};
-	/**
-	* Clean up UI
-	*/
-	QuestV1.clean = function clean() {
-		_active_menu = "";
-		_questList = {};
-		const root = QuestV1.getRoot();
-		if (root) {
-			const activeList = root.querySelector("#active-quest-list");
-			if (activeList) activeList.style.display = "none";
-			const inactiveList = root.querySelector("#inactive-quest-list");
-			if (inactiveList) inactiveList.style.display = "none";
-			const allList = root.querySelector("#all-quest-list");
-			if (allList) allList.style.display = "none";
-		}
-		QuestV1.ClearQuestList();
-		QuestHelperV1_default.clearQuestDesc();
-		onClose$7();
-	};
-	/**
-	* Removing the UI from window, save preferences
-	*/
-	QuestV1.onRemove = function onRemove() {
-		const hostDisplay = this._host ? getComputedStyle(this._host).display : "none";
-		_preferences$35.show = hostDisplay !== "none";
-		_preferences$35.y = parseInt(this._host.style.top, 10);
-		_preferences$35.x = parseInt(this._host.style.left, 10);
-		_preferences$35.save();
-	};
-	/**
-	* Window Shortcuts
-	*/
-	QuestV1.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
-				else {
-					this.ui.show();
-					this.focus();
-				}
-				break;
-		}
-	};
-	/**
-	* Show/Hide UI
-	*/
-	QuestV1.toggle = function toggle() {
-		if ((this._host ? getComputedStyle(this._host).display : "none") !== "none") this.ui.hide();
-		else this.ui.show();
-	};
-	/**
-	* Set Quest list
-	*
-	* @param {Array} quests
-	*/
-	QuestV1.setQuestList = function setQuestList(quests) {
-		_questList = quests;
-		QuestV1.ClearQuestList();
-		for (const questID in quests) QuestV1.addQuestToUI(quests[questID]);
-	};
-	/**
-	* Add new Quest
-	*
-	* @param {object} quest
-	* @param {number} questID
-	*/
-	QuestV1.addQuest = function addQuest(quest, questID) {
-		_questList[questID] = quest;
-		QuestV1.addQuestToUI(quest);
-	};
-	/**
-	* Update Quest from list
-	*
-	* @param {object} hunt_info
-	* @param {number} questID
-	* @param {number} huntID
-	*/
-	QuestV1.updateMissionHunt = function updateMissionHunt(hunt_info, questID, huntID) {
-		if (hunt_info.huntIDCount) _questList[questID].hunt_list[huntID].huntIDCount = hunt_info.huntIDCount;
-		if (hunt_info.maxCount) _questList[questID].hunt_list[huntID].maxCount = hunt_info.maxCount;
-		if (hunt_info.huntCount) _questList[questID].hunt_list[huntID].huntCount = hunt_info.huntCount;
-		if (hunt_info.mobGID) _questList[questID].hunt_list[huntID].mobGID = hunt_info.mobGID;
-		const mob_name = _questList[questID].hunt_list[huntID].mobName;
-		const chat_quest_text = `Mission [${DB.getQuestInfo(questID).Title}], you killed [${mob_name}]. (${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount})`;
-		let self_msg;
-		if (_questList[questID].hunt_list[huntID].maxCount == _questList[questID].hunt_list[huntID].huntCount) self_msg = `${mob_name} [Completed]`;
-		else self_msg = `${mob_name} [${_questList[questID].hunt_list[huntID].huntCount}/${_questList[questID].hunt_list[huntID].maxCount}]`;
-		ChatBox_default.addText(chat_quest_text, ChatBox_default.TYPE.ADMIN | ChatBox_default.TYPE.SELF, ChatBox_default.FILTER.QUEST);
-		if (SessionStorage_default.Entity) SessionStorage_default.Entity.dialog.set(self_msg, "yellow");
-	};
-	/**
-	* Remove Quest from list
-	*
-	* @param {number} questID
-	*/
-	QuestV1.removeQuest = function removeQuest(questID) {
-		delete _questList[questID];
-		refreshQuestUI();
-	};
-	/**
-	* Toggle Quest Active/Inactive
-	*
-	* @param {number} questID
-	* @param {boolean} active
-	*/
-	QuestV1.toggleQuestActive = function toggleQuestActive(questID, active) {
-		_questList[questID].active = active;
-		refreshQuestUI();
-	};
-	/**
-	* return questID based on huntID/mobGID
-	*
-	* @param {number} ID
-	*/
-	QuestV1.getQuestIDByServerID = function getQuestIDByServerID(ID) {
-		for (const key in _questList) if (typeof _questList[key].hunt_list[ID] !== "undefined") return key;
-		return -1;
-	};
-	/**
-	* Check if quest exists
-	*
-	* @param {number} questID
-	*/
-	QuestV1.questExists = function questExists(questID) {
-		return typeof _questList[questID] !== "undefined" ? true : false;
-	};
-	QuestV1.addQuestToUI = function addQuest(quest) {
-		const root = QuestV1.getRoot();
-		if (!root) return;
-		const toggle_id = `qid${quest.questID}`;
-		const title = quest.title.length > 30 ? `${quest.title.substr(0, 30)}...` : quest.title;
-		const quest_icon = /^ico_/.test(quest.icon) ? "SG_FEEL.bmp" : quest.icon;
-		const li_text = `<div class="quest-item-icon"> <div class="quest-item-icon-image"></div> </div> <div class="quest-item-title"> <span class="quest-item-title-text">${title}</span> </div>`;
-		const ul_id = quest.active == 1 ? "#active-quest-list" : "#inactive-quest-list";
-		const li = document.createElement("li");
-		li.id = toggle_id;
-		li.className = `quest-item ${toggle_id}`;
-		li.innerHTML = li_text;
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${quest_icon}`, (data) => {
-			const iconEl = li.querySelector(".quest-item-icon-image");
-			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
-		});
-		li.addEventListener("contextmenu", (e) => onClickQuestToggle(e));
-		li.addEventListener("click", (e) => onClickQuest(e));
-		const ul = root.querySelector(ul_id);
-		if (ul) ul.appendChild(li);
-		const liAll = document.createElement("li");
-		liAll.className = `quest-item ${toggle_id}`;
-		liAll.innerHTML = li_text;
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${quest_icon}`, (data) => {
-			const iconEl = liAll.querySelector(".quest-item-icon-image");
-			if (iconEl) iconEl.style.backgroundImage = `url(${data})`;
-		});
-		liAll.addEventListener("click", (e) => onClickQuest(e));
-		const allList = root.querySelector("#all-quest-list");
-		if (allList) allList.appendChild(liAll);
-	};
-	QuestV1.ClearQuestList = function ClearQuestList() {
-		const root = QuestV1.getRoot();
-		if (!root) return;
-		root.querySelectorAll(".quest-list").forEach((el) => {
-			el.innerHTML = "";
-		});
-	};
-	QuestV1_default = UIManager.addComponent(QuestV1);
+	QuestV1_default = createQuest({
+		name: "QuestV1",
+		htmlText: QuestV1_default$2,
+		cssText: QuestV1_default$1,
+		questHelper: QuestHelperV1_default,
+		renewLayout: false
+	});
 }));
 //#endregion
 //#region src/UI/Components/Quest/Quest.js
@@ -233481,7 +233053,7 @@ var init_Achievement$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Achievement/Achievement.js
-var _preferences$34, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
+var _preferences$30, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
 var init_Achievement$1 = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -233495,7 +233067,7 @@ var init_Achievement$1 = __esmMin((() => {
 	init_ItemInfo();
 	init_Achievement$3();
 	init_Achievement$2();
-	_preferences$34 = Preferences.get("Achievement", {
+	_preferences$30 = Preferences.get("Achievement", {
 		x: 100,
 		y: 100
 	}, 1);
@@ -233638,15 +233210,15 @@ var init_Achievement$1 = __esmMin((() => {
 			this._host.style.display = "none";
 		}
 		onAppend() {
-			this._host.style.left = `${_preferences$34.x}px`;
-			this._host.style.top = `${_preferences$34.y}px`;
+			this._host.style.left = `${_preferences$30.x}px`;
+			this._host.style.top = `${_preferences$30.y}px`;
 			this._fixPositionOverflow();
 			this.updateHeaderAndView();
 		}
 		onRemove() {
-			_preferences$34.x = parseInt(this._host.style.left, 10);
-			_preferences$34.y = parseInt(this._host.style.top, 10);
-			_preferences$34.save();
+			_preferences$30.x = parseInt(this._host.style.left, 10);
+			_preferences$30.y = parseInt(this._host.style.top, 10);
+			_preferences$30.save();
 		}
 		toggle() {
 			if (this.__active && this._host.style.display !== "none") this._host.style.display = "none";
@@ -234398,7 +233970,7 @@ function clearHighlights() {
 		el.dataset.highlight = "false";
 	});
 }
-var Reputation, _preferences$33, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
+var Reputation, _preferences$29, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
 var init_Reputation = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -234411,7 +233983,7 @@ var init_Reputation = __esmMin((() => {
 	init_Reputation$2();
 	init_Reputation$1();
 	Reputation = new GUIComponent("Reputation", Reputation_default$1);
-	_preferences$33 = Preferences.get("Reputation", {
+	_preferences$29 = Preferences.get("Reputation", {
 		x: 400,
 		y: 200,
 		show: true
@@ -234494,8 +234066,8 @@ var init_Reputation = __esmMin((() => {
 	* binding group selector events and rendering the default view.
 	*/
 	Reputation.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$29.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$29.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
 		buildGroupSelector();
 		bindGroupSelector();
 		bindSearch();
@@ -234506,10 +234078,10 @@ var init_Reputation = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	Reputation.onRemove = function onRemove() {
-		_preferences$33.show = this._host.style.display !== "none";
-		_preferences$33.y = parseInt(this._host.style.top, 10);
-		_preferences$33.x = parseInt(this._host.style.left, 10);
-		_preferences$33.save();
+		_preferences$29.show = this._host.style.display !== "none";
+		_preferences$29.y = parseInt(this._host.style.top, 10);
+		_preferences$29.x = parseInt(this._host.style.left, 10);
+		_preferences$29.save();
 	};
 	/**
 	* Request to toggle open/close reputation
@@ -235152,3357 +234724,6 @@ var init_BasicInfo = __esmMin((() => {
 	BasicInfoController = UIVersionManager.getUIController(publicName$7, versionInfo$7);
 }));
 //#endregion
-//#region src/UI/Components/Rodex/WriteRodex.html?raw
-var WriteRodex_default$2;
-var init_WriteRodex$2 = __esmMin((() => {
-	WriteRodex_default$2 = "<div id=\"WriteRodex\">\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"body\" data-background=\"basic_interface/rodexsystem/renewal/bg_rodex_read.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n		<div class=\"sender\">\r\n			<input class=\"name\" />\r\n			<button\r\n				class=\"base validate-name\"\r\n				data-text=\"3545\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_press.bmp\"\r\n			></button>\r\n			<span class=\"baloon\" data-background=\"basic_interface/rodexsystem/renewal/bg_id_balloon.bmp\"></span>\r\n		</div>\r\n		<div class=\"title\">\r\n			<input class=\"title-text\" />\r\n		</div>\r\n		<div class=\"content\">\r\n			<textarea class=\"content-text\"></textarea>\r\n		</div>\r\n		<div class=\"items\">\r\n			<div class=\"item-list\"></div>\r\n			<span class=\"weigth\" data-background=\"basic_interface/rodexsystem/renewal/bg_weight.bmp\"></span>\r\n			<span class=\"weigth-text\">0 2000</span>\r\n		</div>\r\n		<div class=\"zeny\">\r\n			<span class=\"image\" data-background=\"basic_interface/rodexsystem/renewal/icon_zeny.bmp\"></span>\r\n			<input\r\n				type=\"number\"\r\n				class=\"value [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none\"\r\n			/>\r\n			<span class=\"character-zeny\"></span>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<span type=\"text\" class=\"base tax\" data-background=\"basic_interface/rodexsystem/renewal/bg_tax.bmp\"></span>\r\n			<span class=\"tax-text\">0</span>\r\n			<button\r\n				class=\"base send\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_reply_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_reply_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_reply_press.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Rodex/WriteRodex.css?raw
-var WriteRodex_default$1;
-var init_WriteRodex$1 = __esmMin((() => {
-	WriteRodex_default$1 = ":host {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n\r\n#WriteRodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#WriteRodex .body .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n#WriteRodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#WriteRodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#WriteRodex .body .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .sender .name {\r\n	margin-left: 10px;\r\n	font-weight: bold;\r\n	color: darkblue;\r\n	width: 135px;\r\n	border: 1px solid gray;\r\n	padding: 3px;\r\n	border-radius: 0px;\r\n}\r\n#WriteRodex .body .sender .validate-name {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 70px;\r\n	color: gray;\r\n	width: 70px;\r\n	height: 18px;\r\n}\r\n#WriteRodex .body .sender .baloon {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 15px;\r\n	color: red;\r\n	width: 130px;\r\n	height: 42px;\r\n	display: none;\r\n}\r\n\r\n#WriteRodex .body .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .title .title-text {\r\n	margin-left: 10px;\r\n	width: 135px;\r\n	border: none;\r\n}\r\n\r\n#WriteRodex .body .content {\r\n	float: left;\r\n	width: 100%;\r\n	height: 230px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .content .content-text {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 10px;\r\n	width: 280px;\r\n	height: 220px;\r\n	background: transparent;\r\n	border: none;\r\n	resize: none;\r\n}\r\n\r\n#WriteRodex .body .items {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .items .item-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	display: table;\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 27px;\r\n}\r\n#WriteRodex .body .items .item-list .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#WriteRodex .body .items .item-list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#WriteRodex .body .items .item-list .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#WriteRodex .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#WriteRodex .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#WriteRodex .body .items .weigth {\r\n	position: absolute;\r\n	width: 82px;\r\n	height: 32px;\r\n	top: 10px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n#WriteRodex .body .items .weigth-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 21px;\r\n	right: 19px;\r\n	border: none;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .zeny {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .zeny .image {\r\n	position: absolute;\r\n	width: 28px;\r\n	height: 25px;\r\n	top: 1px;\r\n	left: 15px;\r\n	z-index: 100;\r\n}\r\n#WriteRodex .body .zeny .value {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 35px;\r\n	width: 100px;\r\n	border: 1px solid gray;\r\n	text-align: end;\r\n}\r\n#WriteRodex .body .zeny .character-zeny {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 150px;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .footer .tax {\r\n	position: absolute;\r\n	width: 112px;\r\n	height: 18px;\r\n	top: 5px;\r\n	left: 10px;\r\n}\r\n#WriteRodex .body .footer .tax-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 8px;\r\n	right: 197px;\r\n}\r\n#WriteRodex .body .footer .send {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	right: 10px;\r\n}\r\n#WriteRodex .red {\r\n	font-weight: bold;\r\n	color: red;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Rodex/WriteRodex.js
-/**
-* Helper: query inside shadow root
-*/
-function _root$11() {
-	return WriteRodex._shadow || WriteRodex._host;
-}
-function onClickClose$1(e) {
-	e.stopImmediatePropagation();
-	const root = _root$11();
-	WriteRodex.receiver = null;
-	root.querySelector(".name").value = "";
-	root.querySelector(".title-text").value = "";
-	root.querySelector(".content-text").value = "";
-	root.querySelector(".value").value = "";
-	root.querySelector(".item-list").innerHTML = "";
-	root.querySelector(".weigth-text").textContent = "0  2000";
-	root.querySelector(".tax-text").textContent = "0";
-	WriteRodex.requestCancelWriteRodex();
-	WriteRodex.list = [];
-	WriteRodex.CharID = 0;
-	WriteRodex.tax = 0;
-	WriteRodex._host.style.display = "none";
-}
-function onClickSend(e) {
-	e.stopImmediatePropagation();
-	const root = _root$11();
-	if (WriteRodex.receiver == null || typeof WriteRodex.receiver === "string" && WriteRodex.receiver.trim().length === 0) {
-		ChatBox_default.addText(DB.getMessage(2611), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
-		return;
-	}
-	const receiver = WriteRodex.receiver;
-	const sender = SessionStorage_default.Character.name;
-	let zeny = parseInt(root.querySelector(".value").value, 10);
-	zeny = isNaN(zeny) ? 0 : zeny;
-	zeny = zeny < 0 ? 0 : zeny;
-	if (WriteRodex.tax + zeny > SessionStorage_default.zeny) {
-		ChatBox_default.addText(DB.getMessage(2643), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
-		return;
-	}
-	const title = root.querySelector(".title-text").value.replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 23) + String.fromCharCode(0);
-	const body = root.querySelector(".content-text").value.replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 499) + String.fromCharCode(0);
-	const Titlelength = title.length;
-	const Bodylength = body.length;
-	const CharID = WriteRodex.CharID;
-	WriteRodex.requestSendRodex(receiver, sender, zeny, Titlelength, Bodylength, CharID, title, body);
-	WriteRodex.requestCancelWriteRodex();
-}
-function prettifyZeny$3(value) {
-	const num = String(value);
-	let i = 0;
-	const len = num.length;
-	let out = "";
-	while (i < len) {
-		out = num[len - i - 1] + out;
-		if ((i + 1) % 3 === 0 && i + 1 !== len) out = "," + out;
-		++i;
-	}
-	return out;
-}
-function onClickValidateName(e) {
-	e.stopImmediatePropagation();
-	const name = _root$11().querySelector(".name").value;
-	WriteRodex.validateName(name.replace(/^(\$|\%)/, "").replace(/\t/g, ""));
-}
-/**
-* Drop an item from inventory to writerodex
-*
-* @param {event}
-*/
-function onDrop$17(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return;
-	}
-	if (data.type !== "item" || data.from !== "Inventory") return;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("item", false, item.count, item.ITID);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			switch (data.from) {
-				case "Inventory":
-					InventoryController.reqMoveItemToWriteRodex(item.index, parseInt(count, 10));
-					break;
-				default:
-			}
-		};
-		return;
-	}
-	switch (data.from) {
-		case "Inventory":
-			InventoryController.reqMoveItemToWriteRodex(item.index, 1);
-			break;
-		default:
-	}
-}
-/**
-* Stop event propagation
-*/
-function stopPropagation$9(event) {
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$18(event) {
-	const el = event.currentTarget;
-	const idx = parseInt(el.getAttribute("data-index"), 10);
-	const item = WriteRodex.getItemByIndex(idx);
-	if (!item) return;
-	const root = _root$11();
-	const pos = {
-		top: el.offsetTop,
-		left: el.offsetLeft
-	};
-	const overlay = root.querySelector(".overlay");
-	overlay.style.display = "";
-	overlay.style.top = `${pos.top}px`;
-	overlay.style.left = `${pos.left + 35}px`;
-	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
-	if (item.IsIdentified) overlay.classList.remove("grey");
-	else overlay.classList.add("grey");
-}
-/**
-* Hide the item name
-*/
-function onItemOut$19() {
-	const overlay = _root$11().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* Start dragging an item
-*/
-function onItemDragStart$14(event) {
-	const el = event.currentTarget;
-	const index = parseInt(el.getAttribute("data-index"), 10);
-	const item = WriteRodex.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const url = el.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	img.decoding = "async";
-	img.src = url.replace(/^"/, "").replace(/"$/, "");
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "WriteRodex",
-		data: item
-	}));
-	onItemOut$19();
-}
-/**
-* Stop dragging an item
-*
-*/
-function onItemDragEnd$15() {
-	delete window._OBJ_DRAG_;
-}
-/**
-* Get item info (open description window)
-*/
-function onItemInfo$22(event) {
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	const el = event.currentTarget;
-	const index = parseInt(el.getAttribute("data-index"), 10);
-	const item = WriteRodex.getItemByIndex(index);
-	if (!item) return;
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		return;
-	}
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-}
-var WriteRodex, WriteRodex_default;
-var init_WriteRodex = __esmMin((() => {
-	init_DBManager();
-	init_ChatBox();
-	init_SessionStorage();
-	init_MonsterTable();
-	init_Preferences$1();
-	init_Renderer();
-	init_ItemInfo();
-	init_Client();
-	init_UIManager();
-	init_GUIComponent();
-	init_WriteRodex$2();
-	init_WriteRodex$1();
-	init_InputBox();
-	init_Rodex$1();
-	init_Inventory();
-	WriteRodex = new GUIComponent("WriteRodex", WriteRodex_default$1);
-	WriteRodex.list = [];
-	WriteRodex.receiver = null;
-	WriteRodex.tax = 0;
-	Preferences.get("WriteRodex", { show: false }, 1);
-	/**
-	* Render HTML
-	*/
-	WriteRodex.render = () => WriteRodex_default$2;
-	/**
-	* Initialize Component
-	*/
-	WriteRodex.onAppend = function onAppend() {
-		const root = _root$11();
-		root.querySelector(".right .close").addEventListener("click", onClickClose$1);
-		root.querySelector(".send").addEventListener("click", onClickSend);
-		root.querySelector(".value").addEventListener("input", WriteRodex.updateTax);
-		const rodexTop = Rodex_default._host ? parseInt(Rodex_default._host.style.top, 10) || 0 : 0;
-		const rodexLeft = Rodex_default._host ? parseInt(Rodex_default._host.style.left, 10) || 0 : 0;
-		this._host.style.top = `${Math.min(Math.max(0, rodexTop) - 20, Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, rodexLeft) + 330, Renderer.width - this._host.offsetWidth)}px`;
-		this.draggable(root.querySelector(".titlebar"));
-	};
-	WriteRodex.initData = function initData(pkt) {
-		const root = _root$11();
-		WriteRodex.receiver = null;
-		WriteRodex.CharID = 0;
-		WriteRodex.list = [];
-		WriteRodex.tax = 0;
-		const nameInput = root.querySelector(".name");
-		nameInput.type = "text";
-		nameInput.value = pkt.receiveName;
-		const validateBtn = root.querySelector(".validate-name");
-		validateBtn.style.display = "";
-		const baloon = root.querySelector(".baloon");
-		baloon.style.display = "none";
-		root.querySelector(".title-text").value = DB.getMessage(3575);
-		root.querySelector(".content-text").value = "";
-		root.querySelector(".character-zeny").textContent = `${prettifyZeny$3(SessionStorage_default.zeny)} Zeny`;
-		validateBtn.addEventListener("click", onClickValidateName);
-		root.querySelector(".weigth-text").textContent = "0  2000";
-		root.querySelector(".tax-text").textContent = "0";
-		const valueInput = root.querySelector(".value");
-		valueInput.value = "";
-		valueInput.max = SessionStorage_default.zeny;
-		root.querySelector(".item-list").innerHTML = "";
-		const itemsEl = root.querySelector(".items");
-		itemsEl.addEventListener("drop", onDrop$17);
-		itemsEl.addEventListener("dragover", stopPropagation$9);
-		this._host.style.display = "";
-		this.focus();
-	};
-	WriteRodex.characterInfo = function characterInfo(pkt) {
-		const root = _root$11();
-		const text = `Lv${pkt.level}<br>${MonsterTable_default[pkt.Job]}<br>${pkt.CharID}`;
-		root.querySelector(".validate-name").style.display = "none";
-		const baloon = root.querySelector(".baloon");
-		baloon.innerHTML = text;
-		baloon.style.display = "";
-		const nameInput = root.querySelector(".name");
-		nameInput.type = "none";
-		WriteRodex.receiver = pkt.name !== void 0 ? pkt.name : nameInput.value;
-		WriteRodex.CharID = pkt.CharID;
-	};
-	/**
-	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {Item}
-	*/
-	WriteRodex.getItemByIndex = function getItemByIndex(index) {
-		const list = WriteRodex.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
-		return null;
-	};
-	WriteRodex.addItem = function addItem(item) {
-		const root = _root$11();
-		let object = WriteRodex.getItemByIndex(item.index);
-		if (object) {
-			object.count += item.count;
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = object.count;
-			return;
-		}
-		object = Object.assign({}, item);
-		WriteRodex.list.push(object);
-		const it = DB.getItemInfo(item.ITID);
-		root.querySelector(".items .item-list").insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
-			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-			if (icon) icon.style.backgroundImage = `url(${data})`;
-		});
-		const itemDiv = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (itemDiv) {
-			itemDiv.addEventListener("mouseover", onItemOver$18);
-			itemDiv.addEventListener("mouseout", onItemOut$19);
-			itemDiv.addEventListener("dragstart", onItemDragStart$14);
-			itemDiv.addEventListener("dragend", onItemDragEnd$15);
-			itemDiv.addEventListener("contextmenu", onItemInfo$22);
-		}
-		WriteRodex.updateWeight(item.weight);
-		WriteRodex.updateTax();
-	};
-	/**
-	* Remove item from WriteRodex
-	*
-	* @param {number} index in WriteRodex
-	* @param {number} count
-	*/
-	WriteRodex.removeItem = function RemoveItem(index, count, weight) {
-		const root = _root$11();
-		const item = WriteRodex.getItemByIndex(index);
-		if (!item || count <= 0) return null;
-		if (item.count) {
-			item.count -= count;
-			if (item.count > 0) {
-				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-				if (countEl) countEl.textContent = item.count;
-				return;
-			}
-		}
-		WriteRodex.list.splice(WriteRodex.list.indexOf(item), 1);
-		const itemEl = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (itemEl) itemEl.remove();
-		WriteRodex.updateWeight(weight);
-		WriteRodex.updateTax();
-	};
-	WriteRodex.updateWeight = function updateWeight(weight) {
-		const el = _root$11().querySelector(".weigth-text");
-		if (el) el.textContent = `${weight}  2000`;
-	};
-	WriteRodex.updateTax = function updateTax() {
-		const root = _root$11();
-		let tax = WriteRodex.list.length * 2500;
-		let zeny = parseInt(root.querySelector(".value").value, 10);
-		zeny = isNaN(zeny) ? 0 : zeny;
-		zeny = zeny < 0 ? 0 : zeny;
-		tax += parseInt(zeny * .02);
-		const taxEl = root.querySelector(".tax-text");
-		if (taxEl) taxEl.textContent = tax;
-		WriteRodex.tax = tax;
-		const valueEl = root.querySelector(".value");
-		if (tax + zeny > SessionStorage_default.zeny) {
-			taxEl.classList.add("red");
-			valueEl.classList.add("red");
-		} else {
-			taxEl.classList.remove("red");
-			valueEl.classList.remove("red");
-		}
-	};
-	WriteRodex.close = function close() {
-		WriteRodex._host.style.display = "none";
-	};
-	WriteRodex_default = UIManager.addComponent(WriteRodex);
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV0/InventoryV0.js
-function _sanitizeHtml$10(str) {
-	const whitelist = [
-		"font",
-		"i",
-		"b"
-	];
-	const div = document.createElement("div");
-	div.innerHTML = str;
-	div.querySelectorAll("*").forEach((el) => {
-		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
-	});
-	return div.innerHTML;
-}
-/**
-* Get the TAB constant for a given item based on its type.
-*
-* @param {object} item
-* @returns {number} TAB constant
-*/
-function getItemTab$3(item) {
-	switch (item.type) {
-		case ItemType_default.HEALING:
-		case ItemType_default.USABLE:
-		case ItemType_default.DELAYCONSUME:
-		case ItemType_default.CASH: return InventoryV0.TAB.USABLE;
-		case ItemType_default.WEAPON:
-		case ItemType_default.ARMOR:
-		case ItemType_default.PETEGG:
-		case ItemType_default.PETARMOR:
-		case ItemType_default.SHADOWGEAR: return InventoryV0.TAB.EQUIP;
-		default:
-		case ItemType_default.ETC:
-		case ItemType_default.CARD:
-		case ItemType_default.AMMO: return InventoryV0.TAB.ETC;
-	}
-}
-/**
-* Extend inventory window size
-*/
-function onResize$12() {
-	const top = InventoryV0._host.offsetTop;
-	const left = InventoryV0._host.offsetLeft;
-	let lastWidth = 0;
-	let lastHeight = 0;
-	function resizing() {
-		const extraX = 25;
-		const extraY = 20;
-		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-		w = Math.min(Math.max(w, 6), 8);
-		h = Math.min(Math.max(h, 2), 5);
-		if (w === lastWidth && h === lastHeight) return;
-		InventoryV0.resize(w, h);
-		lastWidth = w;
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-/**
-* Modify tab, filter display entries
-*/
-function onSwitchTab$5() {
-	const root = InventoryV0.getRoot();
-	const buttons = root.querySelectorAll(".tabs button");
-	const idx = Array.from(buttons).indexOf(this);
-	_preferences$32.tab = parseInt(idx, 10);
-	Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", (data) => {
-		const tabSprite = root.querySelector(".tab-sprite");
-		if (tabSprite) tabSprite.style.backgroundImage = `url(${data})`;
-		requestFilter$5();
-	});
-}
-/**
-* Hide/show inventory's content
-*/
-function onToggleReduction$4() {
-	const panel = InventoryV0.getRoot().querySelector(".panel");
-	if (_realSize$5) {
-		if (panel) panel.style.display = "flex";
-		InventoryV0._host.style.height = `${_realSize$5}px`;
-		_realSize$5 = 0;
-	} else {
-		_realSize$5 = InventoryV0._host.getBoundingClientRect().height;
-		InventoryV0._host.style.height = "17px";
-		if (panel) panel.style.display = "none";
-	}
-}
-/**
-* Update tab, reset inventory content
-*/
-function requestFilter$5() {
-	const root = InventoryV0.getRoot();
-	const host = root.querySelector(".scroll-host");
-	if (host) host.scrollTop = 0;
-	const content = root.querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	const list = InventoryV0.list;
-	for (let i = 0, count = list.length; i < count; ++i) InventoryV0.addItemSub(list[i]);
-	InventoryV0.updateScroll();
-}
-/**
-* Drop an item from storage to inventory
-*
-* @param {event}
-*/
-function onDrop$16(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			switch (data.from) {
-				case "Storage":
-					StorageController.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "CartItems":
-					CartItems_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "Mail":
-					Mail_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "WriteRodex":
-					WriteRodex_default.requestRemoveItemRodex(item.index, parseInt(count, 10));
-					break;
-			}
-		};
-		return false;
-	}
-	switch (data.from) {
-		case "Storage":
-			StorageController.reqRemoveItem(item.index, 1);
-			break;
-		case "CartItems":
-			CartItems_default.reqRemoveItem(item.index, 1);
-			break;
-		case "Mail":
-			Mail_default.reqRemoveItem(item.index, 1);
-			break;
-		case "WriteRodex":
-			WriteRodex_default.requestRemoveItemRodex(item.index, 1);
-			break;
-	}
-	return false;
-}
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$17(_e) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV0.getItemByIndex(idx);
-	if (!item) return;
-	let quantity = " ea";
-	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = InventoryV0.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#InventoryV0") || root;
-	const itemRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${itemRect.top - rootRect.top}px`;
-		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
-		overlay.innerHTML = _sanitizeHtml$10(`${DB.getItemName(item)}: ${item.count || 1}${quantity}`);
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-/**
-* Hide the item name
-*/
-function onItemOut$18() {
-	const overlay = InventoryV0.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* Start dragging an item
-*/
-function onItemDragStart$13(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV0.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const iconEl = this.querySelector(".icon");
-	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
-	img.decoding = "async";
-	img.src = url || "";
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Inventory",
-		data: item
-	}));
-	onItemOut$18();
-}
-/**
-* Stop dragging an item
-*/
-function onItemDragEnd$14() {
-	delete window._OBJ_DRAG_;
-}
-/**
-* Get item info (open description window)
-*/
-function onItemInfo$21(event) {
-	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV0.getItemByIndex(index);
-	if (!item) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$5(item);
-		return false;
-	}
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		return false;
-	}
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-	return false;
-}
-/**
-* Alt Right Click Request Transfer
-*/
-function transferItemToOtherUI$5(item) {
-	const storageUI = StorageController.getUI();
-	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
-	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
-	else if (isCartOpen) InventoryV0.reqMoveItemToCart(item.index, count);
-	return true;
-}
-/**
-* Ask to use an item
-*/
-function onItemUsed$5(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV0.getItemByIndex(index);
-	if (item) {
-		InventoryV0.useItem(item);
-		onItemOut$18();
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-/**
-* Handle click event on an item
-*/
-function onItemClick$3(event) {
-	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(this.getAttribute("data-index"), 10);
-		const item = InventoryV0.getItemByIndex(idx);
-		if (!item) return false;
-		item.name = DB.getItemName(item);
-		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
-		if (msgBox) {
-			msgBox.innerHTML += link + " ";
-			msgBox.focus();
-		}
-		event.stopImmediatePropagation();
-	}
-	return false;
-}
-var InventoryV0, _realSize$5, _preferences$32, InventoryV0_default;
-var init_InventoryV0 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CartItems();
-	init_InputBox();
-	init_ItemInfo();
-	init_Equipment();
-	init_Storage$1();
-	init_UIVersionManager();
-	init_InventoryV0$2();
-	init_InventoryV0$1();
-	init_BasicInfo();
-	init_Mail$1();
-	init_WriteRodex();
-	init_ChatBox();
-	InventoryV0 = new GUIComponent("InventoryV0", InventoryV0_default$1);
-	InventoryV0.render = () => InventoryV0_default$2;
-	/**
-	* Tab constant
-	*/
-	InventoryV0.TAB = {
-		USABLE: 0,
-		EQUIP: 1,
-		ETC: 2
-	};
-	/**
-	* Store inventory items
-	*/
-	InventoryV0.list = [];
-	/**
-	* Store new items
-	*/
-	InventoryV0.newItems = [];
-	InventoryV0.equippedItems = [];
-	_realSize$5 = 0;
-	_preferences$32 = Preferences.get("InventoryV0", {
-		x: 0,
-		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
-		width: 7,
-		height: 2,
-		show: false,
-		reduce: false,
-		tab: InventoryV0.TAB.USABLE,
-		magnet_top: false,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	/**
-	* Initialize UI
-	*/
-	InventoryV0.init = function Init() {
-		const root = InventoryV0.getRoot();
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$4);
-		root.querySelectorAll(".tabs button").forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$5);
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$12);
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			InventoryV0._host.style.display = "none";
-		});
-		this._host.addEventListener("drop", onDrop$16);
-		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("mouseover", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemOver$17.call(item, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$18();
-			});
-			content.addEventListener("dragstart", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemDragStart$13.call(item, e);
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$14();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onItemInfo$21.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemUsed$5.call(item, e);
-			});
-			content.addEventListener("click", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemClick$3.call(item, e);
-			});
-		}
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = "0";
-		const mcnt = root.querySelector(".mcnt");
-		if (mcnt) mcnt.textContent = "100";
-		this.draggable(".titlebar");
-	};
-	/**
-	* Apply preferences once append to body
-	*/
-	InventoryV0.onAppend = function OnAppend() {
-		const root = InventoryV0.getRoot();
-		if (!_preferences$32.show) this._host.style.display = "none";
-		Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences$32.tab + 1) + ".bmp", (data) => {
-			const tabSprite = root.querySelector(".tab-sprite");
-			if (tabSprite) tabSprite.style.backgroundImage = `url("${data}")`;
-		});
-		this.resize(_preferences$32.width, _preferences$32.height);
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$32.magnet_top;
-		this.magnet.BOTTOM = _preferences$32.magnet_bottom;
-		this.magnet.LEFT = _preferences$32.magnet_left;
-		this.magnet.RIGHT = _preferences$32.magnet_right;
-		_realSize$5 = _preferences$32.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = root.querySelector(".titlebar .mini");
-		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
-	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
-	InventoryV0.onRemove = function OnRemove() {
-		const content = InventoryV0.getRoot().querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		this.list.length = 0;
-		InventoryV0.newItems.length = 0;
-		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$32.show = this._host.style.display !== "none";
-		_preferences$32.reduce = !!_realSize$5;
-		_preferences$32.y = parseInt(this._host.style.top, 10);
-		_preferences$32.x = parseInt(this._host.style.left, 10);
-		const hostRect = this._host.getBoundingClientRect();
-		_preferences$32.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$32.height = Math.floor((hostRect.height - 20) / 32);
-		_preferences$32.magnet_top = this.magnet.TOP;
-		_preferences$32.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$32.magnet_left = this.magnet.LEFT;
-		_preferences$32.magnet_right = this.magnet.RIGHT;
-		_preferences$32.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	InventoryV0.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				if (this._host.style.display === "none") {
-					this._host.style.display = "";
-					this.focus();
-				} else {
-					this._host.dispatchEvent(new Event("mouseleave"));
-					this.clearNewItems();
-					InventoryV0.getRoot().querySelectorAll(".new_item").forEach((el) => {
-						el.style.backgroundImage = "";
-					});
-					this._host.style.display = "none";
-				}
-				break;
-		}
-		const basicInfoUI = BasicInfoController.getUI();
-		if (basicInfoUI._host) {
-			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-			if (changeUI) changeUI.style.display = "none";
-		}
-	};
-	/**
-	* Show/Hide UI
-	*/
-	InventoryV0.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			this.focus();
-		} else {
-			this._host.dispatchEvent(new Event("mouseleave"));
-			this.clearNewItems();
-			InventoryV0.getRoot().querySelectorAll(".new_item").forEach((el) => {
-				el.style.backgroundImage = "";
-			});
-			this._host.style.display = "none";
-		}
-		const basicInfoUI = BasicInfoController.getUI();
-		if (basicInfoUI._host) {
-			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-			if (changeUI) changeUI.style.display = "none";
-		}
-	};
-	/**
-	* Clear newItems array
-	*/
-	InventoryV0.clearNewItems = function clearNewItems() {
-		this.newItems = [];
-	};
-	/**
-	* Extend inventory window size
-	*
-	* @param {number} width
-	* @param {number} height
-	*/
-	InventoryV0.resize = function Resize(width, height) {
-		width = Math.min(Math.max(width, 6), 8);
-		height = Math.min(Math.max(height, 2), 5);
-		const content = InventoryV0.getRoot().querySelector(".container .content");
-		if (content) content.style.width = `${width * 32}px`;
-		this._host.style.width = `${59 + width * 32}px`;
-		this._host.style.height = `${62 + height * 32}px`;
-		this.updateScroll();
-	};
-	/**
-	* Force scroll clamping
-	*/
-	InventoryV0.updateScroll = function updateScroll() {
-		const root = InventoryV0.getRoot();
-		const hostEl = root.querySelector(".scroll-host");
-		if (!hostEl) return;
-		const contentEl = root.querySelector(".content");
-		let ticker = 0;
-		const clamp = () => {
-			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
-			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
-			if (lastItem) {
-				const itemRect = lastItem.getBoundingClientRect();
-				const hostRect = hostEl.getBoundingClientRect();
-				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
-			}
-			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
-			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
-			if (ticker++ < 20) requestAnimationFrame(clamp);
-		};
-		clamp();
-	};
-	/**
-	* Get item object
-	*
-	* @param {number} id
-	* @returns {Item}
-	*/
-	InventoryV0.getItemById = function GetItemById(id) {
-		const list = InventoryV0.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
-		return null;
-	};
-	/**
-	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {Item}
-	*/
-	InventoryV0.getItemByIndex = function getItemByIndex(index) {
-		const list = InventoryV0.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
-		return null;
-	};
-	/**
-	* Add items to the list
-	* if the item index is exist you should clear it;[skybook888]
-	*/
-	InventoryV0.setItems = function SetItems(items) {
-		const root = InventoryV0.getRoot();
-		for (let i = 0, count = items.length; i < count; ++i) {
-			const object = this.getItemByIndex(items[i].index);
-			if (object) this.removeItem(object.index, object.count);
-			if (this.addItemSub(items[i])) {
-				this.list.push(items[i]);
-				const ncnt = root.querySelector(".ncnt");
-				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
-				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
-			}
-		}
-	};
-	/**
-	* Insert Item to inventory
-	*
-	* @param {object} Item
-	*/
-	InventoryV0.addItem = function AddItem(item) {
-		let object = this.getItemByIndex(item.index);
-		const root = InventoryV0.getRoot();
-		const equippedIndex = InventoryV0.equippedItems.indexOf(item.index);
-		if (equippedIndex !== -1) InventoryV0.equippedItems.splice(equippedIndex, 1);
-		else {
-			InventoryV0.newItems.push(item.index);
-			const basicInfoUI = BasicInfoController.getUI();
-			if (basicInfoUI._host) {
-				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-				if (changeUI) changeUI.style.display = "block";
-			}
-		}
-		if (object) {
-			if (isNaN(object.count)) object.count = 1;
-			if (isNaN(item.count)) item.count = 1;
-			object.count += item.count;
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = object.count;
-			this.onUpdateItem(object.ITID, object.count);
-			if (InventoryV0.newItems.indexOf(item.index) === -1) InventoryV0.newItems.push(item.index);
-			if (getItemTab$3(item) === _preferences$32.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
-			});
-			return;
-		}
-		object = Object.assign({}, item);
-		if (this.addItemSub(object)) {
-			this.list.push(object);
-			const ncnt = root.querySelector(".ncnt");
-			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
-			this.onUpdateItem(object.ITID, object.count);
-		}
-	};
-	/**
-	* Check if item index is in newItems list
-	*/
-	InventoryV0.isNewItem = function isNewItem(index) {
-		return InventoryV0.newItems.includes(index);
-	};
-	/**
-	* Add item to inventory
-	*
-	* @param {object} Item
-	*/
-	InventoryV0.addItemSub = function AddItemSub(item) {
-		const tab = getItemTab$3(item);
-		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) {
-			EquipmentController.getUI().equip(item, item.WearState);
-			return false;
-		}
-		if (tab === _preferences$32.tab) {
-			const it = DB.getItemInfo(item.ITID);
-			const root = InventoryV0.getRoot();
-			const content = root.querySelector(".container .content");
-			if (!content) return true;
-			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
-				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-				if (icon) icon.style.backgroundImage = `url(${data})`;
-			});
-			if (InventoryV0.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
-			});
-			else {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = "";
-			}
-		}
-		return true;
-	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
-	InventoryV0.removeItem = function RemoveItem(index, count) {
-		const item = this.getItemByIndex(index);
-		const root = InventoryV0.getRoot();
-		if (!item || count <= 0) return null;
-		if (item.count) {
-			item.count -= count;
-			if (item.count > 0) {
-				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-				if (countEl) countEl.textContent = item.count;
-				this.onUpdateItem(item.ITID, item.count);
-				return item;
-			}
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
-		this.onUpdateItem(item.ITID, 0);
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-		return item;
-	};
-	/**
-	* Remove item from inventory
-	*
-	* @param {number} index in inventory
-	* @param {number} count
-	*/
-	InventoryV0.updateItem = function UpdateItem(index, count) {
-		const item = this.getItemByIndex(index);
-		if (!item) return;
-		item.count = count;
-		const root = InventoryV0.getRoot();
-		if (item.count > 0) {
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = item.count;
-			this.onUpdateItem(item.ITID, item.count);
-			return;
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber();
-		this.onUpdateItem(item.ITID, 0);
-		this.updateScroll();
-	};
-	/**
-	* Use an item
-	*
-	* @param {Item} item
-	*/
-	InventoryV0.useItem = function UseItem(item) {
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.CASH:
-				InventoryV0.onUseItem(item.index);
-				break;
-			case ItemType_default.CARD:
-				InventoryV0.onUseCard(item.index);
-				break;
-			case ItemType_default.DELAYCONSUME: break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETARMOR:
-			case ItemType_default.AMMO:
-				if (item.IsIdentified && !item.IsDamaged) InventoryV0.onEquipItem(item.index, item.location);
-				break;
-		}
-	};
-	/**
-	* functions to define
-	*/
-	InventoryV0.onUseItem = function OnUseItem() {};
-	InventoryV0.onUseCard = function onUseCard() {};
-	InventoryV0.onEquipItem = function OnEquipItem() {};
-	InventoryV0.onUpdateItem = function OnUpdateItem() {};
-	InventoryV0.reqMoveItemToCart = function reqMoveItemToCart() {};
-	InventoryV0_default = UIManager.addComponent(InventoryV0);
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV1/InventoryV1.html?raw
-var InventoryV1_default$2;
-var init_InventoryV1$2 = __esmMin((() => {
-	InventoryV1_default$2 = "<div id=\"InventoryV1\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"106\">Inventory</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"middle\">\r\n			<div class=\"tabs\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<button class=\"item tab\" data-tab=\"item\" data-text=\"1465\"></button>\r\n				<button class=\"equip tab\" data-tab=\"equip\" data-text=\"2050\"></button>\r\n				<button class=\"etc tab\" data-tab=\"etc\" data-text=\"1471\"></button>\r\n				<button class=\"fav tab\" data-tab=\"fav\" data-text=\"2051\"></button>\r\n			</div>\r\n			<div class=\"container\">\r\n				<div class=\"scroll-host\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</div>\r\n				<div class=\"lockoverlay hidden\"></div>\r\n				<div class=\"lockoverlaymsg hidden\" data-background=\"inventory/popup_itemdeal_lock.bmp\">\r\n					<span class=\"msg\" data-text=\"2951\"></span>\r\n					<div class=\"lockoverlayclose\" data-background=\"inventory/bt_close.bmp\"></div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"expand\">\r\n				<span class=\"name\" data-text=\"3560\"></span>\r\n				<span class=\"ncnt\"></span><span class=\"mcnt\"></span>\r\n			</div>\r\n			<div class=\"droplock\">\r\n				<button\r\n					class=\"item_drop_lock\"\r\n					data-background=\"inventory/item_drop_lock_off.bmp\"\r\n					data-text=\"Drop Lock\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2843\"></span>\r\n			</div>\r\n			<div class=\"compare\">\r\n				<button\r\n					class=\"item_compare\"\r\n					data-background=\"inventory/item_compare_off.bmp\"\r\n					data-text=\"Compare Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2842\"></span>\r\n			</div>\r\n			<div class=\"deallock_on hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_on\"\r\n					data-background=\"inventory/bt_itemdeal_lock_on.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_on_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_on_press.bmp\"\r\n					data-text=\"Deal Lock On\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"deallock_off hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_off\"\r\n					data-background=\"inventory/bt_itemdeal_lock_off.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_press.bmp\"\r\n					data-text=\"Deal Lock Off\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"sort hidden\">\r\n				<button\r\n					class=\"item_sort\"\r\n					data-background=\"inventory/bt_sort.bmp\"\r\n					data-hover=\"inventory/bt_sort_over.bmp\"\r\n					data-down=\"inventory/bt_sort_press.bmp\"\r\n					data-text=\"Sort Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3007\"></span>\r\n			</div>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\" data-text=\"Extend\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV1/InventoryV1.css?raw
-var InventoryV1_default$1;
-var init_InventoryV1$1 = __esmMin((() => {
-	InventoryV1_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV1 {\r\n	position: relative;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV1 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV1 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV1 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV1 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV1 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV1 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV1 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV1 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV1 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV1 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV1 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV1 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV1 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV1 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV1 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV1 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV1 .expand,\r\n#InventoryV1 .droplock,\r\n#InventoryV1 .compare,\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off,\r\n#InventoryV1 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV1 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV1 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV1 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV1 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV1 button.item_deal_lock_on,\r\n#InventoryV1 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV1 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV1 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV1 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV1 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV1 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV1 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV1 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV1/InventoryV1.js
-function _sanitizeHtml$9(str) {
-	const whitelist = [
-		"font",
-		"i",
-		"b"
-	];
-	const div = document.createElement("div");
-	div.innerHTML = str;
-	div.querySelectorAll("*").forEach((el) => {
-		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
-	});
-	return div.innerHTML;
-}
-/**
-* Get the TAB constant for a given item based on its type.
-*/
-function getItemTab$2(item) {
-	switch (item.type) {
-		case ItemType_default.HEALING:
-		case ItemType_default.USABLE:
-		case ItemType_default.DELAYCONSUME:
-		case ItemType_default.CASH: return InventoryV1.TAB.USABLE;
-		case ItemType_default.WEAPON:
-		case ItemType_default.ARMOR:
-		case ItemType_default.SHADOWGEAR:
-		case ItemType_default.PETEGG:
-		case ItemType_default.PETARMOR: return InventoryV1.TAB.EQUIP;
-		default:
-		case ItemType_default.ETC:
-		case ItemType_default.CARD:
-		case ItemType_default.AMMO: return InventoryV1.TAB.ETC;
-	}
-}
-/**
-* Extend inventory window size
-*/
-function onResize$11() {
-	const left = InventoryV1._host.offsetLeft;
-	let lastWidth = 0;
-	function resizing() {
-		let w = Math.floor((Mouse.screen.x - left - 25) / 32);
-		w = Math.min(Math.max(w, 6), 9);
-		if (w === lastWidth) return;
-		InventoryV1.resize(w);
-		lastWidth = w;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-/**
-* Modify tab, filter display entries
-*/
-function onSwitchTab$4() {
-	const root = InventoryV1.getRoot();
-	const buttons = root.querySelectorAll(".tabs button");
-	const idx = Array.from(buttons).indexOf(this);
-	_preferences$31.tab = parseInt(idx, 10);
-	requestFilter$4();
-	buttons.forEach((b) => b.classList.remove("selected"));
-	this.classList.add("selected");
-	if (_preferences$31.tab !== InventoryV1.TAB.FAV) {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "none";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "none";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "none";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "none";
-		const sort = root.querySelector(".sort");
-		if (sort) sort.style.display = "none";
-	} else {
-		if (_preferences$31.npcsalelock) {
-			const dealOn = root.querySelector(".deallock_on");
-			if (dealOn) dealOn.style.display = "";
-			const lockOverlay = root.querySelector(".lockoverlay");
-			if (lockOverlay) lockOverlay.style.display = "";
-			const dealOff = root.querySelector(".deallock_off");
-			if (dealOff) dealOff.style.display = "none";
-		} else {
-			const dealOn = root.querySelector(".deallock_on");
-			if (dealOn) dealOn.style.display = "none";
-			const lockOverlay = root.querySelector(".lockoverlay");
-			if (lockOverlay) lockOverlay.style.display = "none";
-			const lockMsg = root.querySelector(".lockoverlaymsg");
-			if (lockMsg) lockMsg.style.display = "none";
-			const dealOff = root.querySelector(".deallock_off");
-			if (dealOff) dealOff.style.display = "";
-		}
-		const sort = root.querySelector(".sort");
-		if (sort) sort.style.display = "";
-	}
-}
-/**
-* Hide/show inventory's content
-*/
-function onToggleReduction$3() {
-	const panel = InventoryV1.getRoot().querySelector(".panel");
-	if (_realSize$4) {
-		if (panel) panel.style.display = "flex";
-		InventoryV1._host.style.height = `${_realSize$4}px`;
-		_realSize$4 = 0;
-	} else {
-		_realSize$4 = InventoryV1._host.getBoundingClientRect().height;
-		InventoryV1._host.style.height = "17px";
-		if (panel) panel.style.display = "none";
-	}
-}
-/**
-* Update tab, reset inventory content
-*/
-function requestFilter$4() {
-	const root = InventoryV1.getRoot();
-	const host = root.querySelector(".scroll-host");
-	if (host) host.scrollTop = 0;
-	const content = root.querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	const list = InventoryV1.list;
-	for (let i = 0, count = list.length; i < count; ++i) InventoryV1.addItemSub(list[i]);
-	InventoryV1.updateScroll();
-}
-/**
-* Drop an item from storage to inventory
-*/
-function onDrop$15(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			switch (data.from) {
-				case "Storage":
-					StorageController.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "CartItems":
-					CartItems_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "Mail":
-					Mail_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "WriteRodex":
-					WriteRodex_default.requestRemoveItemRodex(item.index, parseInt(count, 10));
-					break;
-			}
-		};
-		return false;
-	}
-	switch (data.from) {
-		case "Storage":
-			StorageController.reqRemoveItem(item.index, 1);
-			break;
-		case "CartItems":
-			CartItems_default.reqRemoveItem(item.index, 1);
-			break;
-		case "Mail":
-			Mail_default.reqRemoveItem(item.index, 1);
-			break;
-		case "WriteRodex":
-			WriteRodex_default.requestRemoveItemRodex(item.index, 1);
-			break;
-	}
-	return false;
-}
-/**
-* Show item name when mouse is over
-*/
-function onItemOver$16(_e) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV1.getItemByIndex(idx);
-	if (!item) return;
-	let quantity = " ea";
-	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = InventoryV1.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#InventoryV1") || root;
-	const itemRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${itemRect.top - rootRect.top}px`;
-		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
-		overlay.innerHTML = _sanitizeHtml$9(`${DB.getItemName(item)}: ${item.count || 1}${quantity}`);
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-/**
-* Hide the item name
-*/
-function onItemOut$17() {
-	const overlay = InventoryV1.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* Start dragging an item
-*/
-function onItemDragStart$12(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV1.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const iconEl = this.querySelector(".icon");
-	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
-	img.decoding = "async";
-	img.src = url || "";
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Inventory",
-		data: item
-	}));
-	onItemOut$17();
-}
-/**
-* Stop dragging an item
-*/
-function onItemDragEnd$13() {
-	delete window._OBJ_DRAG_;
-}
-/**
-* Get item info (open description window)
-*/
-function onItemInfo$20(event) {
-	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV1.getItemByIndex(index);
-	if (!item) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$4(item);
-		return false;
-	}
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
-	}
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-	if (ItemCompare_default.ui) ItemCompare_default.remove();
-	const compareItem = EquipmentController.getUI().isInEquipList(item.location);
-	if (compareItem && InventoryV1.itemcomp) {
-		ItemCompare_default.prepare();
-		ItemCompare_default.append();
-		ItemCompare_default.uid = compareItem.ITID;
-		ItemCompare_default.setItem(compareItem);
-	}
-	return false;
-}
-/**
-* Alt Right Click Request Transfer
-*/
-function transferItemToOtherUI$4(item) {
-	const storageUI = StorageController.getUI();
-	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
-	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
-	else if (isCartOpen) InventoryV1.reqMoveItemToCart(item.index, count);
-	return true;
-}
-/**
-* Ask to use an item
-*/
-function onItemUsed$4(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV1.getItemByIndex(index);
-	if (item) {
-		InventoryV1.useItem(item);
-		onItemOut$17();
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-/**
-* Handle click event on an item
-*/
-function onItemClick$2(event) {
-	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(this.getAttribute("data-index"), 10);
-		const item = InventoryV1.getItemByIndex(idx);
-		if (!item) return false;
-		item.name = DB.getItemName(item);
-		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
-		if (msgBox) {
-			msgBox.innerHTML += link + " ";
-			msgBox.focus();
-		}
-		event.stopImmediatePropagation();
-	}
-	return false;
-}
-/**
-* Handle drop event on tabs
-*/
-function onTabDrop$2(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item") return false;
-	if (!item) return false;
-	const itemfav = event.target.getAttribute("data-tab") === "fav" ? 0 : 1;
-	const pkt = new PACKET.CZ.INVENTORY_TAB();
-	pkt.item_index = item.index;
-	pkt.favorite = itemfav;
-	Network.sendPacket(pkt);
-}
-/**
-* Toggle the item drop lock preference
-*/
-function onItemLock$2() {
-	_preferences$31.itemlock = !_preferences$31.itemlock;
-	InventoryV1.itemlock = _preferences$31.itemlock;
-	const lockImg = _preferences$31.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const lockBtn = InventoryV1.getRoot().querySelector(".item_drop_lock");
-		if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
-	});
-}
-/**
-* Toggles the value of Item Compare
-*/
-function onItemCompare$2() {
-	_preferences$31.itemcomp = !_preferences$31.itemcomp;
-	InventoryV1.itemcomp = _preferences$31.itemcomp;
-	const compImg = _preferences$31.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const compBtn = InventoryV1.getRoot().querySelector(".item_compare");
-		if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
-	});
-}
-/**
-* Toggles the value of Item Lock NPCSale
-*/
-function onNPCLock$2() {
-	_preferences$31.npcsalelock = !_preferences$31.npcsalelock;
-	InventoryV1.npcsalelock = _preferences$31.npcsalelock;
-	const root = InventoryV1.getRoot();
-	if (_preferences$31.npcsalelock) {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "none";
-		lockOverlayTimeout$2 = setTimeout(() => {
-			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.style.display = "none";
-		}, 3e3);
-	} else {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "none";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "none";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "none";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "";
-	}
-}
-var InventoryV1, _realSize$4, _preferences$31, lockOverlayTimeout$2, InventoryV1_default;
-var init_InventoryV1 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CartItems();
-	init_InputBox();
-	init_ItemCompare();
-	init_ItemInfo();
-	init_Equipment();
-	init_Storage$1();
-	init_UIVersionManager();
-	init_InventoryV1$2();
-	init_InventoryV1$1();
-	init_BasicInfo();
-	init_Mail$1();
-	init_WriteRodex();
-	init_ChatBox();
-	InventoryV1 = new GUIComponent("InventoryV1", InventoryV1_default$1);
-	InventoryV1.render = () => InventoryV1_default$2;
-	/**
-	* Tab constant
-	*/
-	InventoryV1.TAB = {
-		USABLE: 0,
-		EQUIP: 1,
-		ETC: 2,
-		FAV: 3
-	};
-	/**
-	* Store inventory items
-	*/
-	InventoryV1.list = [];
-	/**
-	* Store new items
-	*/
-	InventoryV1.newItems = [];
-	InventoryV1.equippedItems = [];
-	_realSize$4 = 0;
-	_preferences$31 = Preferences.get("InventoryV1", {
-		x: 0,
-		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
-		width: 7,
-		height: 193,
-		show: false,
-		reduce: false,
-		tab: InventoryV1.TAB.USABLE,
-		itemlock: false,
-		itemcomp: true,
-		npcsalelock: false,
-		magnet_top: false,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	/**
-	* Store variables from preferences
-	*/
-	InventoryV1.itemlock = _preferences$31.itemlock;
-	InventoryV1.itemcomp = _preferences$31.itemcomp;
-	InventoryV1.npcsalelock = _preferences$31.npcsalelock;
-	/**
-	* Initialize UI
-	*/
-	InventoryV1.init = function Init() {
-		const root = InventoryV1.getRoot();
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$3);
-		const tabButtons = root.querySelectorAll(".tabs button");
-		tabButtons.forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$4);
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$11);
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			InventoryV1._host.style.display = "none";
-		});
-		this._host.addEventListener("drop", onDrop$15);
-		this._host.addEventListener("dragover", (e) => e.stopImmediatePropagation());
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("mouseover", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemOver$16.call(item, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$17();
-			});
-			content.addEventListener("dragstart", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemDragStart$12.call(item, e);
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$13();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onItemInfo$20.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemUsed$4.call(item, e);
-			});
-			content.addEventListener("click", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemClick$2.call(item, e);
-			});
-		}
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = "0 / ";
-		const mcnt = root.querySelector(".mcnt");
-		if (mcnt) mcnt.textContent = "100";
-		this.draggable(".titlebar");
-		tabButtons.forEach((btn) => {
-			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
-			btn.addEventListener("drop", onTabDrop$2);
-		});
-		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
-		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$31.tab]) allTabs[_preferences$31.tab].classList.add("selected");
-		const lockImg = _preferences$31.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-			const lockBtn = root.querySelector(".item_drop_lock");
-			if (lockBtn) lockBtn.style.backgroundImage = `url(${data})`;
-		});
-		const compImg = _preferences$31.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-			const compBtn = root.querySelector(".item_compare");
-			if (compBtn) compBtn.style.backgroundImage = `url(${data})`;
-		});
-		const lockSale = _preferences$31.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$31.tab !== InventoryV1.TAB.FAV) {
-			if (lockSale) lockSale.style.display = "none";
-			const sortEl = root.querySelector(".sort");
-			if (sortEl) sortEl.style.display = "none";
-		} else {
-			if (lockSale) lockSale.style.display = "";
-			const sortEl = root.querySelector(".sort");
-			if (sortEl) sortEl.style.display = "";
-		}
-		const itemDropLock = root.querySelector(".item_drop_lock");
-		if (itemDropLock) itemDropLock.addEventListener("click", onItemLock$2);
-		const itemCompare = root.querySelector(".item_compare");
-		if (itemCompare) itemCompare.addEventListener("click", onItemCompare$2);
-		root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock$2));
-		const overlayClose = root.querySelector(".lockoverlayclose");
-		if (overlayClose) overlayClose.addEventListener("click", () => {
-			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.style.display = "none";
-			clearTimeout(lockOverlayTimeout$2);
-		});
-		const sortBtn = root.querySelector(".sort");
-		if (sortBtn) sortBtn.addEventListener("click", () => {
-			requestFilter$4();
-		});
-	};
-	/**
-	* Apply preferences once append to body
-	*/
-	InventoryV1.onAppend = function OnAppend() {
-		if (!_preferences$31.show) this._host.style.display = "none";
-		this.resize(_preferences$31.width, _preferences$31.height);
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$31.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$31.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$31.magnet_top;
-		this.magnet.BOTTOM = _preferences$31.magnet_bottom;
-		this.magnet.LEFT = _preferences$31.magnet_left;
-		this.magnet.RIGHT = _preferences$31.magnet_right;
-		_realSize$4 = _preferences$31.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = InventoryV1.getRoot().querySelector(".titlebar .mini");
-		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
-	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
-	InventoryV1.onRemove = function OnRemove() {
-		const content = InventoryV1.getRoot().querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		this.list.length = 0;
-		InventoryV1.newItems.length = 0;
-		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$31.show = this._host.style.display !== "none";
-		_preferences$31.reduce = !!_realSize$4;
-		_preferences$31.y = parseInt(this._host.style.top, 10);
-		_preferences$31.x = parseInt(this._host.style.left, 10);
-		const hostRect = this._host.getBoundingClientRect();
-		_preferences$31.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$31.magnet_top = this.magnet.TOP;
-		_preferences$31.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$31.magnet_left = this.magnet.LEFT;
-		_preferences$31.magnet_right = this.magnet.RIGHT;
-		_preferences$31.save();
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	InventoryV1.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				if (this._host.style.display === "none") {
-					this._host.style.display = "";
-					this.focus();
-				} else {
-					this._host.dispatchEvent(new Event("mouseleave"));
-					this.clearNewItems();
-					InventoryV1.getRoot().querySelectorAll(".new_item").forEach((el) => {
-						el.style.backgroundImage = "";
-					});
-					this._host.style.display = "none";
-				}
-				break;
-		}
-		const basicInfoUI = BasicInfoController.getUI();
-		if (basicInfoUI._host) {
-			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-			if (changeUI) changeUI.style.display = "none";
-		}
-	};
-	/**
-	* Show/Hide UI
-	*/
-	InventoryV1.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			this.focus();
-		} else {
-			this._host.dispatchEvent(new Event("mouseleave"));
-			this.clearNewItems();
-			InventoryV1.getRoot().querySelectorAll(".new_item").forEach((el) => {
-				el.style.backgroundImage = "";
-			});
-			this._host.style.display = "none";
-		}
-		const basicInfoUI = BasicInfoController.getUI();
-		if (basicInfoUI._host) {
-			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-			if (changeUI) changeUI.style.display = "none";
-		}
-	};
-	/**
-	* Clear newItems array
-	*/
-	InventoryV1.clearNewItems = function clearNewItems() {
-		this.newItems = [];
-	};
-	/**
-	* Extend inventory window size
-	*
-	* @param {number} width
-	*/
-	InventoryV1.resize = function Resize(width) {
-		width = Math.min(Math.max(width, 6), 8);
-		const content = InventoryV1.getRoot().querySelector(".container .content");
-		if (content) content.style.width = `${width * 32}px`;
-		this._host.style.width = `${55 + width * 32}px`;
-		this.updateScroll();
-	};
-	/**
-	* Force scroll clamping
-	*/
-	InventoryV1.updateScroll = function updateScroll() {
-		const root = InventoryV1.getRoot();
-		const hostEl = root.querySelector(".scroll-host");
-		if (!hostEl) return;
-		const contentEl = root.querySelector(".content");
-		let ticker = 0;
-		const clamp = () => {
-			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
-			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
-			if (lastItem) {
-				const itemRect = lastItem.getBoundingClientRect();
-				const hostRect = hostEl.getBoundingClientRect();
-				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
-			}
-			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
-			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
-			if (ticker++ < 20) requestAnimationFrame(clamp);
-		};
-		clamp();
-	};
-	/**
-	* Get item object
-	*
-	* @param {number} id
-	* @returns {Item}
-	*/
-	InventoryV1.getItemById = function GetItemById(id) {
-		const list = InventoryV1.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
-		return null;
-	};
-	/**
-	* Search in a list for an item by its index
-	*
-	* @param {number} index
-	* @returns {Item}
-	*/
-	InventoryV1.getItemByIndex = function getItemByIndex(index) {
-		const list = InventoryV1.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
-		return null;
-	};
-	/**
-	* Add items to the list
-	*/
-	InventoryV1.setItems = function SetItems(items) {
-		const root = InventoryV1.getRoot();
-		for (let i = 0, count = items.length; i < count; ++i) {
-			const object = this.getItemByIndex(items[i].index);
-			if (object) this.removeItem(object.index, object.count);
-			if (this.addItemSub(items[i])) {
-				this.list.push(items[i]);
-				const ncnt = root.querySelector(".ncnt");
-				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
-			}
-		}
-	};
-	/**
-	* Insert Item to inventory
-	*/
-	InventoryV1.addItem = function AddItem(item) {
-		let object = this.getItemByIndex(item.index);
-		const root = InventoryV1.getRoot();
-		const equippedIndex = InventoryV1.equippedItems.indexOf(item.index);
-		if (equippedIndex !== -1) InventoryV1.equippedItems.splice(equippedIndex, 1);
-		else {
-			InventoryV1.newItems.push(item.index);
-			const basicInfoUI = BasicInfoController.getUI();
-			if (basicInfoUI._host) {
-				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-				if (changeUI) changeUI.style.display = "block";
-			}
-		}
-		if (object) {
-			if (isNaN(object.count)) object.count = 1;
-			if (isNaN(item.count)) item.count = 1;
-			object.count += item.count;
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = object.count;
-			this.onUpdateItem(object.ITID, object.count);
-			if (InventoryV1.newItems.indexOf(item.index) === -1) InventoryV1.newItems.push(item.index);
-			if (getItemTab$2(item) === _preferences$31.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
-			});
-			return;
-		}
-		object = Object.assign({}, item);
-		if (this.addItemSub(object)) {
-			this.list.push(object);
-			const ncnt = root.querySelector(".ncnt");
-			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-			this.onUpdateItem(object.ITID, object.count);
-		}
-	};
-	/**
-	* Check if item index is in newItems list
-	*/
-	InventoryV1.isNewItem = function isNewItem(index) {
-		return InventoryV1.newItems.includes(index);
-	};
-	/**
-	* Add item to inventory
-	*/
-	InventoryV1.addItemSub = function AddItemSub(item) {
-		let tab = getItemTab$2(item);
-		if (item.PlaceETCTab) tab = InventoryV1.TAB.FAV;
-		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) {
-			EquipmentController.getUI().equip(item, item.WearState);
-			return false;
-		}
-		if (tab === _preferences$31.tab) {
-			const it = DB.getItemInfo(item.ITID);
-			const root = InventoryV1.getRoot();
-			const content = root.querySelector(".container .content");
-			if (!content) return true;
-			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
-				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-				if (icon) icon.style.backgroundImage = `url(${data})`;
-			});
-			if (InventoryV1.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
-			});
-			else {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = "";
-			}
-		}
-		return true;
-	};
-	/**
-	* Remove item from inventory
-	*/
-	InventoryV1.removeItem = function RemoveItem(index, count) {
-		const item = this.getItemByIndex(index);
-		const root = InventoryV1.getRoot();
-		if (!item || count <= 0) return null;
-		if (item.count) {
-			item.count -= count;
-			if (item.count > 0) {
-				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-				if (countEl) countEl.textContent = item.count;
-				this.onUpdateItem(item.ITID, item.count);
-				return item;
-			}
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-		this.onUpdateItem(item.ITID, 0);
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-		return item;
-	};
-	/**
-	* Update item in inventory
-	*/
-	InventoryV1.updateItem = function UpdateItem(index, count) {
-		const item = this.getItemByIndex(index);
-		if (!item) return;
-		item.count = count;
-		const root = InventoryV1.getRoot();
-		if (item.count > 0) {
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = item.count;
-			this.onUpdateItem(item.ITID, item.count);
-			return;
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-		this.onUpdateItem(item.ITID, 0);
-		this.updateScroll();
-	};
-	/**
-	* Use an item
-	*/
-	InventoryV1.useItem = function UseItem(item) {
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.CASH:
-				InventoryV1.onUseItem(item.index);
-				break;
-			case ItemType_default.CARD:
-				InventoryV1.onUseCard(item.index);
-				break;
-			case ItemType_default.DELAYCONSUME: break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETARMOR:
-			case ItemType_default.AMMO:
-				if (item.IsIdentified && !item.IsDamaged) InventoryV1.onEquipItem(item.index, item.location);
-				break;
-		}
-	};
-	/**
-	* Update PlaceETCTab of an item in the inventory
-	*/
-	InventoryV1.updatePlaceETCTab = function(itemIndex, newValue) {
-		const item = InventoryV1.getItemByIndex(itemIndex);
-		if (!item) return;
-		if (newValue) {
-			let favoriteval;
-			switch (item.type) {
-				case ItemType_default.HEALING:
-				case ItemType_default.USABLE:
-				case ItemType_default.DELAYCONSUME:
-				case ItemType_default.CASH:
-				case ItemType_default.ETC:
-				case ItemType_default.CARD:
-				case ItemType_default.AMMO:
-					favoriteval = 2;
-					break;
-				case ItemType_default.WEAPON:
-				case ItemType_default.ARMOR:
-				case ItemType_default.SHADOWGEAR:
-				case ItemType_default.PETEGG:
-				case ItemType_default.PETARMOR:
-					favoriteval = 4;
-					break;
-				default: break;
-			}
-			item.PlaceETCTab = favoriteval;
-		} else item.PlaceETCTab = newValue;
-		requestFilter$4();
-	};
-	/**
-	* functions to define
-	*/
-	InventoryV1.onUseItem = function OnUseItem() {};
-	InventoryV1.onUseCard = function onUseCard() {};
-	InventoryV1.onEquipItem = function OnEquipItem() {};
-	InventoryV1.onUpdateItem = function OnUpdateItem() {};
-	InventoryV1.reqMoveItemToCart = function reqMoveItemToCart() {};
-	InventoryV1_default = UIManager.addComponent(InventoryV1);
-}));
-//#endregion
-//#region src/UI/Components/SwitchEquip/SwitchEquip.html?raw
-var SwitchEquip_default$2;
-var init_SwitchEquip$2 = __esmMin((() => {
-	SwitchEquip_default$2 = "<div id=\"SwitchEquip\">\r\n	<div class=\"switchoverlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"titlebar\" data-text=\"2986\"></div>\r\n		<table class=\"swapcontent\" id=\"swapgeneral\" data-background=\"swap_equipment/equipwin_bg2_change.bmp\">\r\n			<tr>\r\n				<td class=\"swap_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"swap_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_head_bottom col1\"></td>\r\n				<td class=\"swap_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_weapon col1\"></td>\r\n				<td class=\"swap_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_garment col1\"></td>\r\n				<td class=\"swap_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_accessory1 col1\"></td>\r\n				<td class=\"swap_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n		<table class=\"swapcontent hide\" id=\"swapcostume\" data-background=\"swap_equipment/equipwin_special_change.bmp\">\r\n			<tr>\r\n				<td class=\"swap_costume_head_top col1\"></td>\r\n				<td rowspan=\"6\">\r\n					<!-- avoid applying css on td directly-->\r\n					<div class=\"col2 ammo_container\">\r\n						<canvas width=\"55\" height=\"125\"></canvas>\r\n					</div>\r\n				</td>\r\n				<td class=\"swap_costume_head_mid col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_costume_head_bottom col1\"></td>\r\n				<td class=\"swap_shadow_armor col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_shadow_weapon col1\"></td>\r\n				<td class=\"swap_shadow_shield col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_shadow_garment col1\"></td>\r\n				<td class=\"swap_shadow_shoes col3\"></td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"swap_shadow_accessory1 col1\"></td>\r\n				<td class=\"swap_shadow_accessory2 col3\"></td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n	<div class=\"footer\" id=\"equipment_footer\">\r\n		<button\r\n			id=\"swap-button\"\r\n			class=\"onswap\"\r\n			data-text=\"3111\"\r\n			data-background=\"swap_equipment/btn_change2_normal.bmp\"\r\n			data-hover=\"swap_equipment/btn_change2_over.bmp\"\r\n			data-press=\"swap_equipment/btn_change2_press.bmp\"\r\n		></button>\r\n		<button\r\n			class=\"closeswap\"\r\n			data-background=\"btn_cancel.bmp\"\r\n			data-hover=\"btn_cancel_a.bmp\"\r\n			data-press=\"btn_cancel_b.bmp\"\r\n		></button>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SwitchEquip/SwitchEquip.css?raw
-var SwitchEquip_default$1;
-var init_SwitchEquip$1 = __esmMin((() => {
-	SwitchEquip_default$1 = ":host {\r\n	width: 280px;\r\n	height: 179px;\r\n}\r\n\r\n#SwitchEquip {\r\n	position: absolute;\r\n	width: 280px;\r\n	height: 179px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#SwitchEquip .clear {\r\n	clear: both;\r\n}\r\n\r\n#SwitchEquip .titlebar {\r\n	position: absolute;\r\n	top: 2px;\r\n	width: 280px;\r\n	height: 17px;\r\n	background-color: transparent;\r\n	border-radius: 3px 3px 0px 0px;\r\n	text-align: center;\r\n	z-index: 99;\r\n}\r\n\r\n#SwitchEquip .panel {\r\n	background-color: white;\r\n	height: 179px;\r\n}\r\n#SwitchEquip table.swapcontent {\r\n	position: absolute;\r\n	top: 0px;\r\n	width: 280px;\r\n	height: 179px;\r\n	border-spacing: 0;\r\n}\r\n#SwitchEquip table.swapcontent.hide {\r\n	display: none;\r\n}\r\n#SwitchEquip table tbody {\r\n	position: absolute;\r\n	top: 20px;\r\n}\r\n#SwitchEquip .swapcontent {\r\n	display: inline-block;\r\n	width: 280px;\r\n	height: 179px;\r\n	border-spacing: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SwitchEquip .col1,\r\n#SwitchEquip .col3 {\r\n	width: 115px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#SwitchEquip .col1 {\r\n	background-position: 5% 50%;\r\n	min-width: 110px;\r\n}\r\n#SwitchEquip .col3 {\r\n	background-position: 95% 50%;\r\n	min-width: 110px;\r\n}\r\n\r\n#SwitchEquip .switchoverlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#SwitchEquip .item button {\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	border: none;\r\n}\r\n#SwitchEquip .item span {\r\n	width: 80px;\r\n	height: 24px;\r\n	display: inline-block;\r\n	line-height: 12px;\r\n	word-break: break-all;\r\n	overflow: hidden;\r\n	text-shadow: 1px 1px white;\r\n}\r\n\r\n#SwitchEquip .col3 .item button,\r\n#SwitchEquip .col3 .item span {\r\n	float: right;\r\n}\r\n#SwitchEquip .col1 .item button,\r\n#SwitchEquip .col1 .item span {\r\n	float: left;\r\n}\r\n#SwitchEquip .col1 .item {\r\n	padding-left: 4px;\r\n}\r\n#SwitchEquip .col3 .item {\r\n	padding-right: 4px;\r\n}\r\n#SwitchEquip .col1 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n#SwitchEquip .col3 .item .itemName {\r\n	display: flex;\r\n	align-items: center;\r\n}\r\n\r\n#SwitchEquip .ammo_container {\r\n	position: relative;\r\n}\r\n#SwitchEquip .ammo {\r\n	position: absolute;\r\n	top: 30px;\r\n}\r\n#SwitchEquip .ammo .item {\r\n	text-align: center;\r\n}\r\n#SwitchEquip .ammo .item span {\r\n	width: 45px;\r\n}\r\n#SwitchEquip .cartitems {\r\n	position: absolute;\r\n	top: 65px;\r\n	left: 14px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n#SwitchEquip .removeOption {\r\n	position: absolute;\r\n	top: 90px;\r\n	left: 12px;\r\n	width: 36px;\r\n	height: 36px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	border: none;\r\n	display: none;\r\n}\r\n\r\n#SwitchEquip .footer {\r\n	position: relative;\r\n	top: -30px;\r\n	height: 30px;\r\n}\r\n\r\n#SwitchEquip .footer button.closeswap {\r\n	position: absolute;\r\n	width: 43px;\r\n	height: 20px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	right: 5px;\r\n	top: 5px;\r\n}\r\n\r\n#SwitchEquip .footer button.onswap {\r\n	position: absolute;\r\n	width: 120px;\r\n	height: 20px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	left: 80px;\r\n	top: 5px;\r\n	text-align: center;\r\n}\r\n\r\n#SwitchEquip .disabled {\r\n	pointer-events: none; /* Prevents clicking */\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SwitchEquip/SwitchEquip.js
-/**
-* Escape HTML entities
-*/
-function _escapeHtml(str) {
-	const div = document.createElement("div");
-	div.appendChild(document.createTextNode(str));
-	return div.innerHTML;
-}
-/**
-* Find elements in html base on item location
-*
-* @param {number} location
-* @returns {string} selector
-*/
-function getSelectorFromLocation$2(location) {
-	const selector = [];
-	if (location & EquipmentLocation_default.HEAD_TOP) selector.push(".swap_head_top");
-	if (location & EquipmentLocation_default.HEAD_MID) selector.push(".swap_head_mid");
-	if (location & EquipmentLocation_default.HEAD_BOTTOM) selector.push(".swap_head_bottom");
-	if (location & EquipmentLocation_default.ARMOR) selector.push(".swap_armor");
-	if (location & EquipmentLocation_default.WEAPON) selector.push(".swap_weapon");
-	if (location & EquipmentLocation_default.SHIELD) selector.push(".swap_shield");
-	if (location & EquipmentLocation_default.GARMENT) selector.push(".swap_garment");
-	if (location & EquipmentLocation_default.SHOES) selector.push(".swap_shoes");
-	if (location & EquipmentLocation_default.ACCESSORY1) selector.push(".swap_accessory1");
-	if (location & EquipmentLocation_default.ACCESSORY2) selector.push(".swap_accessory2");
-	if (location & EquipmentLocation_default.AMMO) selector.push(".swap_ammo");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_TOP) selector.push(".swap_costume_head_top");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_MID) selector.push(".swap_costume_head_mid");
-	if (location & EquipmentLocation_default.COSTUME_HEAD_BOTTOM) selector.push(".swap_costume_head_bottom");
-	if (location & EquipmentLocation_default.SHADOW_ARMOR) selector.push(".swap_shadow_armor");
-	if (location & EquipmentLocation_default.SHADOW_WEAPON) selector.push(".swap_shadow_weapon");
-	if (location & EquipmentLocation_default.SHADOW_SHIELD) selector.push(".swap_shadow_shield");
-	if (location & EquipmentLocation_default.COSTUME_ROBE) selector.push(".swap_shadow_garment");
-	if (location & EquipmentLocation_default.SHADOW_SHOES) selector.push(".swap_shadow_shoes");
-	if (location & EquipmentLocation_default.SHADOW_R_ACCESSORY_SHADOW) selector.push(".swap_shadow_accessory1");
-	if (location & EquipmentLocation_default.SHADOW_L_ACCESSORY_SHADOW) selector.push(".swap_shadow_accessory2");
-	return selector.join(", ");
-}
-/**
-* Drag an item over the equipment, show where to place the item
-*/
-function onDragOver$1(event) {
-	if (window._OBJ_DRAG_) {
-		const data = window._OBJ_DRAG_;
-		if (data.type === "item") {
-			const item = data.data;
-			if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR) && item.IsIdentified && !item.IsDamaged) {
-				const selector = getSelectorFromLocation$2("location" in item ? item.location : item.WearLocation);
-				const el = SwitchEquip.getRoot().querySelector(selector);
-				if (el) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/item_invert.bmp", (_data) => {
-					el.style.backgroundImage = `url(${_data})`;
-				});
-			}
-		}
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	return false;
-}
-/**
-* Drag out the window
-*/
-function onDragLeave(event) {
-	SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
-		td.style.backgroundImage = "none";
-	});
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Drop an item in the equipment, equip it if possible
-*/
-function onDrop$14(event) {
-	let data;
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (_e) {}
-	if (data && data.type === "item") {
-		const item = data.data;
-		if ((item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.AMMO) && item.IsIdentified && !item.IsDamaged) {
-			SwitchEquip.getRoot().querySelectorAll("td").forEach((td) => {
-				td.style.backgroundImage = "none";
-			});
-			SwitchEquip.onAddSwitchEquip(item.index, "location" in item ? item.location : item.WearState);
-		}
-	}
-	event.stopImmediatePropagation();
-	return false;
-}
-/**
-* Right click on an item
-*/
-function onSwitchEquipInfo(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = SwitchEquip._list[index];
-	if (item) if (ItemInfo_default.uid === item.ITID) ItemInfo_default.remove();
-	else {
-		ItemInfo_default.append();
-		ItemInfo_default.uid = item.ITID;
-		ItemInfo_default.setItem(item);
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-	return false;
-}
-/**
-* Double click on an equipment to remove it
-*/
-function onSwitchEquipUnEquip() {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	SwitchEquip.onRemoveSwitchEquip(index);
-	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* When mouse is over an equipment, display the item name
-*/
-function onSwitchEquipOver() {
-	const idx = parseInt(this.parentNode.getAttribute("data-index"), 10);
-	const item = SwitchEquip._list[idx];
-	if (!item) return;
-	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
-	if (!overlay) return;
-	const posTop = this.offsetTop;
-	const posLeft = this.offsetLeft;
-	if (!posTop && !posLeft) return;
-	overlay.style.display = "";
-	overlay.style.top = `${posTop - 22}px`;
-	overlay.style.left = `${posLeft - 22}px`;
-	overlay.textContent = DB.getItemName(item);
-}
-/**
-* Remove the item name
-*/
-function onSwitchEquipOut() {
-	const overlay = SwitchEquip.getRoot().querySelector(".switchoverlay");
-	if (overlay) overlay.style.display = "none";
-}
-/**
-* Send an equipment switch request to the server.
-*/
-function sendEquipSwitchRequest() {
-	const pkt = new PACKET.CZ.REQ_FULLSWITCH();
-	Network.sendPacket(pkt);
-}
-var SwitchEquip, _swapctx, swaprender, SwitchEquip_default;
-var init_SwitchEquip = __esmMin((() => {
-	init_DBManager();
-	init_EquipmentLocation();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_ItemType();
-	init_Client();
-	init_SessionStorage();
-	init_Renderer();
-	init_Camera();
-	init_SpriteRenderer();
-	init_UIManager();
-	init_GUIComponent();
-	init_ItemInfo();
-	init_SwitchEquip$2();
-	init_SwitchEquip$1();
-	init_Entity$1();
-	init_Equipment();
-	init_Inventory();
-	SwitchEquip = new GUIComponent("SwitchEquip", SwitchEquip_default$1);
-	SwitchEquip.render = () => SwitchEquip_default$2;
-	/**
-	* @var {Array} switchequipment list
-	*/
-	SwitchEquip._list = {};
-	_swapctx = [];
-	/**
-	* Initialize UI
-	*/
-	SwitchEquip.init = function init() {
-		const root = SwitchEquip.getRoot();
-		const canvases = root.querySelectorAll("canvas");
-		_swapctx.push(canvases[0].getContext("2d"));
-		_swapctx.push(canvases[1].getContext("2d"));
-		const panel = root.querySelector(".panel");
-		if (panel) {
-			panel.addEventListener("dragover", onDragOver$1);
-			panel.addEventListener("dragleave", onDragLeave);
-			panel.addEventListener("drop", onDrop$14);
-		}
-		const closeBtn = root.querySelector(".closeswap");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			SwitchEquip.toggle();
-		});
-		const swapBtn = root.querySelector(".onswap");
-		if (swapBtn) swapBtn.addEventListener("click", () => {
-			SwitchEquip.RequestSwitch();
-		});
-		const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
-		SwitchEquip.showSwapTab(currentEquipTabId);
-		const swapcontents = root.querySelectorAll(".swapcontent");
-		for (const content of swapcontents) {
-			content.addEventListener("contextmenu", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onSwitchEquipInfo.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onSwitchEquipUnEquip.call(item, e);
-			});
-			content.addEventListener("mouseover", (e) => {
-				const btn = e.target.closest("button");
-				if (btn) onSwitchEquipOver.call(btn, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest("button")) onSwitchEquipOut();
-			});
-		}
-	};
-	/**
-	* Show the swap tab with the given tabId, hiding other tabs.
-	*
-	* @param {string} tabId - The ID of the tab to show.
-	*/
-	SwitchEquip.showSwapTab = function showSwapTab(tabId) {
-		const root = SwitchEquip.getRoot();
-		if (!root) return;
-		const swapTabId = "swap" + tabId;
-		const swapContentDivs = {
-			swapgeneral: root.querySelector("#swapgeneral"),
-			swapcostume: root.querySelector("#swapcostume")
-		};
-		for (const id in swapContentDivs) if (swapContentDivs[id]) if (id === swapTabId) swapContentDivs[id].classList.remove("hide");
-		else swapContentDivs[id].classList.add("hide");
-	};
-	/**
-	* Append to body
-	*/
-	SwitchEquip.onAppend = function onAppend() {
-		const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
-		SwitchEquip.showSwapTab(currentEquipTabId);
-		const root = SwitchEquip.getRoot();
-		if ((root ? root.querySelector("canvas") : null) && this._host.style.display !== "none") Renderer.render(swaprender);
-	};
-	/**
-	* Remove Inventory from window (and so clean up items)
-	*/
-	SwitchEquip.onRemove = function onRemove() {
-		Renderer.stop(swaprender);
-		SwitchEquip._list = {};
-		const root = SwitchEquip.getRoot();
-		if (root) root.querySelectorAll(".col1, .col3, .ammo").forEach((el) => {
-			el.innerHTML = "";
-		});
-	};
-	/**
-	* Process shortcut
-	*
-	* @param {object} key
-	*/
-	SwitchEquip.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-	};
-	/**
-	* Toggle the visibility of the UI,
-	* rendering or stopping the renderer based on visibility.
-	*/
-	SwitchEquip.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			Renderer.render(swaprender);
-			this.focus();
-		} else {
-			this._host.style.display = "none";
-			Renderer.stop(swaprender);
-		}
-	};
-	/**
-	* Add an equipment to the window
-	*
-	* @param {Item} item
-	* @param {item.Location} location
-	* @param {boolean} inSwitchList
-	*/
-	SwitchEquip.equip = function equip(item, location, inSwitchList) {
-		const it = DB.getItemInfo(item.ITID);
-		item.equipped = location;
-		SwitchEquip._list[item.index] = item;
-		const add3Dots = (string, limit) => {
-			if (string.length > limit) return string.substring(0, limit) + "...";
-			return string;
-		};
-		const root = SwitchEquip.getRoot();
-		const selector = getSelectorFromLocation$2(location);
-		const el = root.querySelector(selector);
-		if (el) el.innerHTML = `<div class="item" data-index="${item.index}"><button></button><span class="itemName">${add3Dots(_escapeHtml(DB.getItemName(item)), 19)}</span></div>`;
-		Client.loadFile(DB.INTERFACE_PATH + "item/" + it.identifiedResourceName + ".bmp", (data) => {
-			const button = root.querySelector(`.item[data-index="${item.index}"] button`);
-			if (button) {
-				button.style.backgroundImage = `url(${data})`;
-				if (!inSwitchList) button.style.filter = "grayscale(100%)";
-			}
-		});
-	};
-	/**
-	* Remove equipment from window
-	*
-	* @param {number} item index
-	* @param {number} item location
-	*/
-	SwitchEquip.unEquip = function unEquip(index, location) {
-		const root = SwitchEquip.getRoot();
-		const selector = getSelectorFromLocation$2(location);
-		const item = SwitchEquip._list[index];
-		item.equipped = 0;
-		const el = root.querySelector(selector);
-		if (el) el.innerHTML = "";
-		delete SwitchEquip._list[index];
-	};
-	swaprender = (function swaprenderClosure() {
-		const _cleanColor = new Float32Array([
-			1,
-			1,
-			1,
-			1
-		]);
-		const _savedColor = /* @__PURE__ */ new Float32Array(4);
-		const _animation = {
-			tick: 0,
-			frame: 0,
-			repeat: true,
-			play: true,
-			next: false,
-			delay: 0,
-			save: false
-		};
-		return function _renderFrame() {
-			const swap_character = new Entity();
-			swap_character.set({
-				GID: SessionStorage_default.Entity.GID + "_SWAPEQUIP",
-				objecttype: swap_character.constructor.TYPE_PC,
-				job: SessionStorage_default.Entity.job,
-				sex: SessionStorage_default.Entity.sex,
-				name: "",
-				hideShadow: true,
-				head: SessionStorage_default.Entity.head,
-				headpalette: SessionStorage_default.Entity.headpalette,
-				bodypalette: SessionStorage_default.Entity.bodypalette
-			});
-			const currentEquipTabId = EquipmentController.getUI().getCurrentTabId();
-			if (currentEquipTabId === "general") {
-				swap_character.accessory = SwitchEquip.checkEquipLoc(EquipmentLocation_default.HEAD_BOTTOM);
-				swap_character.accessory2 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.HEAD_TOP);
-				swap_character.accessory3 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.HEAD_MID);
-				swap_character.robe = SwitchEquip.checkEquipLoc(EquipmentLocation_default.GARMENT);
-			} else if (currentEquipTabId === "costume") {
-				swap_character.accessory = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_BOTTOM);
-				swap_character.accessory2 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_TOP);
-				swap_character.accessory3 = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_HEAD_MID);
-				swap_character.robe = SwitchEquip.checkEquipLoc(EquipmentLocation_default.COSTUME_ROBE);
-			}
-			_savedColor.set(swap_character.effectColor);
-			swap_character.effectColor.set(_cleanColor);
-			Camera.direction = 0;
-			swap_character.direction = 0;
-			swap_character.headDir = 0;
-			swap_character.action = swap_character.ACTION.IDLE;
-			swap_character.animation = _animation;
-			for (let i = 0; i < _swapctx.length; i++) {
-				const ctx = _swapctx[i];
-				SpriteRenderer.bind2DContext(ctx, 30, 130);
-				ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-				swap_character.renderEntity(ctx);
-			}
-		};
-	})();
-	/**
-	* Update the owner name for the equipment items
-	*/
-	SwitchEquip.onUpdateOwnerName = function() {
-		const root = SwitchEquip.getRoot();
-		for (const index in SwitchEquip._list) {
-			const item = SwitchEquip._list[index];
-			if (item.slot && [
-				255,
-				254,
-				65280
-			].includes(item.slot.card1)) {
-				const nameEl = root.querySelector(`.item[data-index="${index}"] .itemName`);
-				if (nameEl) nameEl.textContent = _escapeHtml(DB.getItemName(item));
-			}
-		}
-	};
-	/**
-	* Get the number of equipment items excluding AMMO location
-	*
-	* @returns {number} The number of equipment items
-	*/
-	SwitchEquip.getNumber = function() {
-		let num = 0;
-		for (const key in SwitchEquip._list) if (SwitchEquip._list[key].location && SwitchEquip._list[key].location !== EquipmentLocation_default.AMMO) num++;
-		return num;
-	};
-	/**
-	* Check if a specific location
-	*
-	* @param {number} location The location to check
-	* @returns {number} The sprite number of the item in the specified location, or 0 if not equipped
-	*/
-	SwitchEquip.checkEquipLoc = function checkEquipLoc(location) {
-		const switchList = InventoryController.getUI().equipswitchlist;
-		for (let i = 0; i < switchList.length; i++) {
-			const item = switchList[i];
-			if (item.location & location) return item.wItemSpriteNumber;
-		}
-		return 0;
-	};
-	/**
-	* Request an equipment switch button
-	* Disabling the button temporarily and updating its background image.
-	*/
-	SwitchEquip.RequestSwitch = function() {
-		sendEquipSwitchRequest();
-		const button = SwitchEquip.getRoot().querySelector("#swap-button");
-		if (!button) return;
-		button.disabled = true;
-		button.classList.add("disabled");
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/btn_change2_disable.bmp", (data) => {
-			button.style.backgroundImage = `url(${data})`;
-		});
-		setTimeout(() => {
-			button.disabled = false;
-			button.classList.remove("disabled");
-			Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/btn_change2_normal.bmp", (data) => {
-				button.style.backgroundImage = `url(${data})`;
-			});
-		}, 1e4);
-	};
-	/**
-	* Method to define
-	*/
-	SwitchEquip.onRemoveSwitchEquip = function onRemoveSwitchEquip() {};
-	SwitchEquip.onAddSwitchEquip = function onAddSwitchEquip() {};
-	SwitchEquip_default = UIManager.addComponent(SwitchEquip);
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV2/InventoryV2.html?raw
-var InventoryV2_default$2;
-var init_InventoryV2$2 = __esmMin((() => {
-	InventoryV2_default$2 = "<div id=\"InventoryV2\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"106\">Inventory</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"middle\">\r\n			<div class=\"tabs\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<button class=\"item tab\" data-tab=\"item\" data-text=\"1465\"></button>\r\n				<button class=\"equip tab\" data-tab=\"equip\" data-text=\"2050\"></button>\r\n				<button class=\"etc tab\" data-tab=\"etc\" data-text=\"1471\"></button>\r\n				<button class=\"fav tab\" data-tab=\"fav\" data-text=\"2051\"></button>\r\n			</div>\r\n			<div class=\"container\">\r\n				<div class=\"scroll-host\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</div>\r\n				<div class=\"lockoverlay hidden\"></div>\r\n				<div class=\"lockoverlaymsg hidden\" data-background=\"inventory/popup_itemdeal_lock.bmp\">\r\n					<span class=\"msg\" data-text=\"2951\"></span>\r\n					<div class=\"lockoverlayclose\" data-background=\"inventory/bt_close.bmp\"></div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"expand\">\r\n				<span class=\"name\" data-text=\"3560\"></span>\r\n				<span class=\"ncnt\"></span><span class=\"mcnt\"></span>\r\n			</div>\r\n			<div class=\"droplock\">\r\n				<button\r\n					class=\"item_drop_lock\"\r\n					data-background=\"inventory/item_drop_lock_off.bmp\"\r\n					data-text=\"Drop Lock\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2843\"></span>\r\n			</div>\r\n			<div class=\"compare\">\r\n				<button\r\n					class=\"item_compare\"\r\n					data-background=\"inventory/item_compare_off.bmp\"\r\n					data-text=\"Compare Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2842\"></span>\r\n			</div>\r\n			<div class=\"deallock_on hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_on\"\r\n					data-background=\"inventory/bt_itemdeal_lock_on.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_on_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_on_press.bmp\"\r\n					data-text=\"Deal Lock On\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"deallock_off hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_off\"\r\n					data-background=\"inventory/bt_itemdeal_lock_off.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_press.bmp\"\r\n					data-text=\"Deal Lock Off\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"sort hidden\">\r\n				<button\r\n					class=\"item_sort\"\r\n					data-background=\"inventory/bt_sort.bmp\"\r\n					data-hover=\"inventory/bt_sort_over.bmp\"\r\n					data-down=\"inventory/bt_sort_press.bmp\"\r\n					data-text=\"Sort Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3007\"></span>\r\n			</div>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\" data-text=\"Extend\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV2/InventoryV2.css?raw
-var InventoryV2_default$1;
-var init_InventoryV2$1 = __esmMin((() => {
-	InventoryV2_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV2 {\r\n	position: relative;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV2 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV2 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV2 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV2 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV2 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV2 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV2 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV2 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV2 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV2 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV2 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV2 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV2 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV2 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV2 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV2 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV2 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV2 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV2 .expand,\r\n#InventoryV2 .droplock,\r\n#InventoryV2 .compare,\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off,\r\n#InventoryV2 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV2 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV2 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV2 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV2 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV2 button.item_deal_lock_on,\r\n#InventoryV2 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV2 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV2 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV2 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV2 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV2 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV2 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV2 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV2/InventoryV2.js
-function _sanitizeHtml$8(str) {
-	const whitelist = [
-		"font",
-		"i",
-		"b"
-	];
-	const div = document.createElement("div");
-	div.innerHTML = str;
-	div.querySelectorAll("*").forEach((el) => {
-		if (!whitelist.includes(el.tagName.toLowerCase())) el.replaceWith(...el.childNodes);
-	});
-	return div.innerHTML;
-}
-function getItemTab$1(item) {
-	switch (item.type) {
-		case ItemType_default.HEALING:
-		case ItemType_default.USABLE:
-		case ItemType_default.DELAYCONSUME:
-		case ItemType_default.CASH: return InventoryV2.TAB.USABLE;
-		case ItemType_default.WEAPON:
-		case ItemType_default.ARMOR:
-		case ItemType_default.SHADOWGEAR:
-		case ItemType_default.PETEGG:
-		case ItemType_default.PETARMOR: return InventoryV2.TAB.EQUIP;
-		default:
-		case ItemType_default.ETC:
-		case ItemType_default.CARD:
-		case ItemType_default.AMMO: return InventoryV2.TAB.ETC;
-	}
-}
-function onResize$10() {
-	const left = InventoryV2._host.offsetLeft;
-	let lastWidth = 0;
-	function resizing() {
-		let w = Math.floor((Mouse.screen.x - left - 25) / 32);
-		w = Math.min(Math.max(w, 6), 9);
-		if (w === lastWidth) return;
-		InventoryV2.resize(w);
-		lastWidth = w;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function onSwitchTab$3() {
-	const root = InventoryV2.getRoot();
-	const buttons = root.querySelectorAll(".tabs button");
-	const idx = Array.from(buttons).indexOf(this);
-	_preferences$30.tab = parseInt(idx, 10);
-	requestFilter$3();
-	buttons.forEach((b) => b.classList.remove("selected"));
-	this.classList.add("selected");
-	if (_preferences$30.tab !== InventoryV2.TAB.FAV) {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "none";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "none";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "none";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "none";
-		const sort = root.querySelector(".sort");
-		if (sort) sort.style.display = "none";
-	} else {
-		if (_preferences$30.npcsalelock) {
-			const dealOn = root.querySelector(".deallock_on");
-			if (dealOn) dealOn.style.display = "";
-			const lockOverlay = root.querySelector(".lockoverlay");
-			if (lockOverlay) lockOverlay.style.display = "";
-			const dealOff = root.querySelector(".deallock_off");
-			if (dealOff) dealOff.style.display = "none";
-		} else {
-			const dealOn = root.querySelector(".deallock_on");
-			if (dealOn) dealOn.style.display = "none";
-			const lockOverlay = root.querySelector(".lockoverlay");
-			if (lockOverlay) lockOverlay.style.display = "none";
-			const lockMsg = root.querySelector(".lockoverlaymsg");
-			if (lockMsg) lockMsg.style.display = "none";
-			const dealOff = root.querySelector(".deallock_off");
-			if (dealOff) dealOff.style.display = "";
-		}
-		const sort = root.querySelector(".sort");
-		if (sort) sort.style.display = "";
-	}
-}
-function onToggleReduction$2() {
-	const panel = InventoryV2.getRoot().querySelector(".panel");
-	if (_realSize$3) {
-		if (panel) panel.style.display = "flex";
-		InventoryV2._host.style.height = `${_realSize$3}px`;
-		_realSize$3 = 0;
-	} else {
-		_realSize$3 = InventoryV2._host.getBoundingClientRect().height;
-		InventoryV2._host.style.height = "17px";
-		if (panel) panel.style.display = "none";
-	}
-}
-function requestFilter$3() {
-	const root = InventoryV2.getRoot();
-	const host = root.querySelector(".scroll-host");
-	if (host) host.scrollTop = 0;
-	const content = root.querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	const list = InventoryV2.list;
-	for (let i = 0, count = list.length; i < count; ++i) InventoryV2.addItemSub(list[i]);
-	InventoryV2.updateScroll();
-}
-function onDrop$13(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			switch (data.from) {
-				case "Storage":
-					StorageController.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "CartItems":
-					CartItems_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "Mail":
-					Mail_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "WriteRodex":
-					WriteRodex_default.requestRemoveItemRodex(item.index, parseInt(count, 10));
-					break;
-			}
-		};
-		return false;
-	}
-	switch (data.from) {
-		case "Storage":
-			StorageController.reqRemoveItem(item.index, 1);
-			break;
-		case "CartItems":
-			CartItems_default.reqRemoveItem(item.index, 1);
-			break;
-		case "Mail":
-			Mail_default.reqRemoveItem(item.index, 1);
-			break;
-		case "WriteRodex":
-			WriteRodex_default.requestRemoveItemRodex(item.index, 1);
-			break;
-	}
-	return false;
-}
-function onItemOver$15(_e) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV2.getItemByIndex(idx);
-	if (!item) return;
-	let quantity = " ea";
-	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = InventoryV2.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#InventoryV2") || root;
-	const itemRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${itemRect.top - rootRect.top}px`;
-		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
-		overlay.innerHTML = _sanitizeHtml$8(`${DB.getItemName(item)}: ${item.count || 1}${quantity}`);
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-function onItemOut$16() {
-	const overlay = InventoryV2.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemDragStart$11(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV2.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const iconEl = this.querySelector(".icon");
-	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
-	img.decoding = "async";
-	img.src = url || "";
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Inventory",
-		data: item
-	}));
-	onItemOut$16();
-}
-function onItemDragEnd$12() {
-	delete window._OBJ_DRAG_;
-}
-function onItemInfo$19(event) {
-	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV2.getItemByIndex(index);
-	if (!item) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$3(item);
-		return false;
-	}
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
-	}
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-	if (ItemCompare_default.ui) ItemCompare_default.remove();
-	const compareItem = EquipmentController.getUI().isInEquipList(item.location);
-	if (compareItem && InventoryV2.itemcomp) {
-		ItemCompare_default.prepare();
-		ItemCompare_default.append();
-		ItemCompare_default.uid = compareItem.ITID;
-		ItemCompare_default.setItem(compareItem);
-	}
-	return false;
-}
-function transferItemToOtherUI$3(item) {
-	const storageUI = StorageController.getUI();
-	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
-	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
-	else if (isCartOpen) InventoryV2.reqMoveItemToCart(item.index, count);
-	return true;
-}
-function onItemUsed$3(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV2.getItemByIndex(index);
-	if (item) {
-		InventoryV2.useItem(item);
-		onItemOut$16();
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-function onItemClick$1(event) {
-	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(this.getAttribute("data-index"), 10);
-		const item = InventoryV2.getItemByIndex(idx);
-		if (!item) return false;
-		item.name = DB.getItemName(item);
-		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
-		if (msgBox) {
-			msgBox.innerHTML += link + " ";
-			msgBox.focus();
-		}
-		event.stopImmediatePropagation();
-	}
-	return false;
-}
-function onTabDrop$1(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item") return false;
-	if (!item) return false;
-	const itemfav = event.target.getAttribute("data-tab") === "fav" ? 0 : 1;
-	const pkt = new PACKET.CZ.INVENTORY_TAB();
-	pkt.item_index = item.index;
-	pkt.favorite = itemfav;
-	Network.sendPacket(pkt);
-}
-function onItemLock$1() {
-	_preferences$30.itemlock = !_preferences$30.itemlock;
-	InventoryV2.itemlock = _preferences$30.itemlock;
-	const lockImg = _preferences$30.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const btn = InventoryV2.getRoot().querySelector(".item_drop_lock");
-		if (btn) btn.style.backgroundImage = `url(${data})`;
-	});
-}
-function onItemCompare$1() {
-	_preferences$30.itemcomp = !_preferences$30.itemcomp;
-	InventoryV2.itemcomp = _preferences$30.itemcomp;
-	const compImg = _preferences$30.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const btn = InventoryV2.getRoot().querySelector(".item_compare");
-		if (btn) btn.style.backgroundImage = `url(${data})`;
-	});
-}
-function onNPCLock$1() {
-	_preferences$30.npcsalelock = !_preferences$30.npcsalelock;
-	InventoryV2.npcsalelock = _preferences$30.npcsalelock;
-	const root = InventoryV2.getRoot();
-	if (_preferences$30.npcsalelock) {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "none";
-		lockOverlayTimeout$1 = setTimeout(() => {
-			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.style.display = "none";
-		}, 3e3);
-	} else {
-		const dealOn = root.querySelector(".deallock_on");
-		if (dealOn) dealOn.style.display = "none";
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.style.display = "none";
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.style.display = "none";
-		const dealOff = root.querySelector(".deallock_off");
-		if (dealOff) dealOff.style.display = "";
-	}
-}
-var InventoryV2, _realSize$3, _preferences$30, lockOverlayTimeout$1, InventoryV2_default;
-var init_InventoryV2 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CartItems();
-	init_InputBox();
-	init_ItemCompare();
-	init_ItemInfo();
-	init_ChatBox();
-	init_Equipment();
-	init_Storage$1();
-	init_SwitchEquip();
-	init_UIVersionManager();
-	init_InventoryV2$2();
-	init_InventoryV2$1();
-	init_BasicInfo();
-	init_Mail$1();
-	init_WriteRodex();
-	InventoryV2 = new GUIComponent("InventoryV2", InventoryV2_default$1);
-	InventoryV2.render = () => InventoryV2_default$2;
-	InventoryV2.TAB = {
-		USABLE: 0,
-		EQUIP: 1,
-		ETC: 2,
-		FAV: 3
-	};
-	InventoryV2.list = [];
-	InventoryV2.equipswitchlist = [];
-	InventoryV2.newItems = [];
-	InventoryV2.equippedItems = [];
-	_realSize$3 = 0;
-	_preferences$30 = Preferences.get("InventoryV2", {
-		x: 0,
-		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
-		width: 7,
-		height: 193,
-		show: false,
-		reduce: false,
-		tab: InventoryV2.TAB.USABLE,
-		itemlock: false,
-		itemcomp: true,
-		npcsalelock: false,
-		magnet_top: false,
-		magnet_bottom: false,
-		magnet_left: true,
-		magnet_right: false
-	}, 1);
-	InventoryV2.itemlock = _preferences$30.itemlock;
-	InventoryV2.itemcomp = _preferences$30.itemcomp;
-	InventoryV2.npcsalelock = _preferences$30.npcsalelock;
-	InventoryV2.init = function Init() {
-		const root = InventoryV2.getRoot();
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$2);
-		root.querySelectorAll(".tabs button").forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$3);
-			btn.addEventListener("dragover", (e) => e.stopImmediatePropagation());
-			btn.addEventListener("drop", onTabDrop$1);
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$10);
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			InventoryV2._host.style.display = "none";
-		});
-		this._host.addEventListener("drop", onDrop$13);
-		this._host.addEventListener("dragover", (e) => {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		});
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("mouseover", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemOver$15.call(item, e);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$16();
-			});
-			content.addEventListener("dragstart", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemDragStart$11.call(item, e);
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$12();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				e.preventDefault();
-				const item = e.target.closest(".item");
-				if (item) onItemInfo$19.call(item, e);
-			});
-			content.addEventListener("dblclick", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemUsed$3.call(item, e);
-			});
-			content.addEventListener("click", (e) => {
-				const item = e.target.closest(".item");
-				if (item) onItemClick$1.call(item, e);
-			});
-		}
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = "0 / ";
-		const mcnt = root.querySelector(".mcnt");
-		if (mcnt) mcnt.textContent = "100";
-		this.draggable(".titlebar");
-		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
-		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$30.tab]) allTabs[_preferences$30.tab].classList.add("selected");
-		const lockImg = _preferences$30.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-			const btn = root.querySelector(".item_drop_lock");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		const compImg = _preferences$30.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-			const btn = root.querySelector(".item_compare");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		const lockSale = _preferences$30.npcsalelock ? root.querySelector(".deallock_on") : root.querySelector(".deallock_off");
-		if (_preferences$30.tab !== InventoryV2.TAB.FAV) {
-			if (lockSale) lockSale.style.display = "none";
-			const sortEl = root.querySelector(".sort");
-			if (sortEl) sortEl.style.display = "none";
-		} else {
-			if (lockSale) lockSale.style.display = "";
-			const sortEl = root.querySelector(".sort");
-			if (sortEl) sortEl.style.display = "";
-		}
-		const itemDropLock = root.querySelector(".item_drop_lock");
-		if (itemDropLock) itemDropLock.addEventListener("click", onItemLock$1);
-		const itemCompare = root.querySelector(".item_compare");
-		if (itemCompare) itemCompare.addEventListener("click", onItemCompare$1);
-		root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock$1));
-		const overlayClose = root.querySelector(".lockoverlayclose");
-		if (overlayClose) overlayClose.addEventListener("click", () => {
-			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.style.display = "none";
-			clearTimeout(lockOverlayTimeout$1);
-		});
-		const sortBtn = root.querySelector(".sort");
-		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$3());
-	};
-	InventoryV2.onAppend = function OnAppend() {
-		if (!_preferences$30.show) this._host.style.display = "none";
-		this.resize(_preferences$30.width, _preferences$30.height);
-		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$30.magnet_top;
-		this.magnet.BOTTOM = _preferences$30.magnet_bottom;
-		this.magnet.LEFT = _preferences$30.magnet_left;
-		this.magnet.RIGHT = _preferences$30.magnet_right;
-		_realSize$3 = _preferences$30.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = InventoryV2.getRoot().querySelector(".titlebar .mini");
-		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
-	};
-	InventoryV2.onRemove = function OnRemove() {
-		const content = InventoryV2.getRoot().querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		this.list.length = 0;
-		this.equipswitchlist.length = 0;
-		InventoryV2.newItems.length = 0;
-		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$30.show = this._host.style.display !== "none";
-		_preferences$30.reduce = !!_realSize$3;
-		_preferences$30.y = parseInt(this._host.style.top, 10);
-		_preferences$30.x = parseInt(this._host.style.left, 10);
-		const hostRect = this._host.getBoundingClientRect();
-		_preferences$30.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$30.magnet_top = this.magnet.TOP;
-		_preferences$30.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$30.magnet_left = this.magnet.LEFT;
-		_preferences$30.magnet_right = this.magnet.RIGHT;
-		_preferences$30.save();
-	};
-	InventoryV2.onShortCut = function onShurtCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				if (this._host.style.display === "none") {
-					this._host.style.display = "";
-					this.focus();
-				} else {
-					this._host.dispatchEvent(new Event("mouseleave"));
-					this.clearNewItems();
-					InventoryV2.getRoot().querySelectorAll(".new_item").forEach((el) => {
-						el.style.backgroundImage = "";
-					});
-					this._host.style.display = "none";
-				}
-				break;
-		}
-		const basicInfoUI = BasicInfoController.getUI();
-		if (basicInfoUI._host) {
-			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-			if (changeUI) changeUI.style.display = "none";
-		}
-	};
-	InventoryV2.toggle = function toggle() {
-		if (this._host.style.display === "none") {
-			this._host.style.display = "";
-			this.focus();
-		} else {
-			this._host.dispatchEvent(new Event("mouseleave"));
-			this.clearNewItems();
-			InventoryV2.getRoot().querySelectorAll(".new_item").forEach((el) => {
-				el.style.backgroundImage = "";
-			});
-			this._host.style.display = "none";
-		}
-		const basicInfoUI = BasicInfoController.getUI();
-		if (basicInfoUI._host) {
-			const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-			if (changeUI) changeUI.style.display = "none";
-		}
-	};
-	InventoryV2.clearNewItems = function clearNewItems() {
-		this.newItems = [];
-	};
-	InventoryV2.resize = function Resize(width) {
-		width = Math.min(Math.max(width, 6), 8);
-		const content = InventoryV2.getRoot().querySelector(".container .content");
-		if (content) content.style.width = `${width * 32}px`;
-		this._host.style.width = `${55 + width * 32}px`;
-		this.updateScroll();
-	};
-	InventoryV2.updateScroll = function updateScroll() {
-		const root = InventoryV2.getRoot();
-		const hostEl = root.querySelector(".scroll-host");
-		if (!hostEl) return;
-		const contentEl = root.querySelector(".content");
-		let ticker = 0;
-		const clamp = () => {
-			const maxScroll = Math.max(0, hostEl.scrollHeight - hostEl.clientHeight);
-			const lastItem = contentEl ? contentEl.querySelector(".item:last-child") : null;
-			if (lastItem) {
-				const itemRect = lastItem.getBoundingClientRect();
-				const hostRect = hostEl.getBoundingClientRect();
-				if (itemRect.bottom < hostRect.bottom && hostEl.scrollTop > 0) hostEl.scrollTop = Math.max(0, hostEl.scrollTop - (hostRect.bottom - itemRect.bottom));
-			}
-			if (hostEl.scrollTop > maxScroll) hostEl.scrollTop = maxScroll;
-			if (hostEl._roScrollbarRestart) hostEl._roScrollbarRestart();
-			if (ticker++ < 20) requestAnimationFrame(clamp);
-		};
-		clamp();
-	};
-	InventoryV2.getItemById = function GetItemById(id) {
-		const list = InventoryV2.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
-		return null;
-	};
-	InventoryV2.getItemByIndex = function getItemByIndex(index) {
-		const list = InventoryV2.list;
-		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
-		return null;
-	};
-	InventoryV2.setItems = function SetItems(items) {
-		const root = InventoryV2.getRoot();
-		for (let i = 0, count = items.length; i < count; ++i) {
-			const object = this.getItemByIndex(items[i].index);
-			if (object) this.removeItem(object.index, object.count);
-			if (this.addItemSub(items[i])) {
-				this.list.push(items[i]);
-				const ncnt = root.querySelector(".ncnt");
-				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
-			}
-		}
-	};
-	InventoryV2.addItem = function AddItem(item) {
-		let object = this.getItemByIndex(item.index);
-		const root = InventoryV2.getRoot();
-		const equippedIndex = InventoryV2.equippedItems.indexOf(item.index);
-		if (equippedIndex !== -1) InventoryV2.equippedItems.splice(equippedIndex, 1);
-		else {
-			InventoryV2.newItems.push(item.index);
-			const basicInfoUI = BasicInfoController.getUI();
-			if (basicInfoUI._host) {
-				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
-				if (changeUI) changeUI.style.display = "block";
-			}
-		}
-		if (object) {
-			if (isNaN(object.count)) object.count = 1;
-			if (isNaN(item.count)) item.count = 1;
-			object.count += item.count;
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = object.count;
-			this.onUpdateItem(object.ITID, object.count);
-			if (InventoryV2.newItems.indexOf(item.index) === -1) InventoryV2.newItems.push(item.index);
-			if (getItemTab$1(item) === _preferences$30.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
-				const newItemEl = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (newItemEl) newItemEl.style.backgroundImage = `url(${data})`;
-			});
-			return;
-		}
-		object = Object.assign({}, item);
-		if (this.addItemSub(object)) {
-			this.list.push(object);
-			const ncnt = root.querySelector(".ncnt");
-			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-			this.onUpdateItem(object.ITID, object.count);
-		}
-	};
-	InventoryV2.isNewItem = function isNewItem(index) {
-		return InventoryV2.newItems.includes(index);
-	};
-	InventoryV2.addItemSub = function AddItemSub(item) {
-		let tab = getItemTab$1(item);
-		if (item.PlaceETCTab) tab = InventoryV2.TAB.FAV;
-		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) {
-			EquipmentController.getUI().equip(item, item.WearState);
-			return false;
-		}
-		const isInSwitchList = InventoryV2.equipswitchlist.some((equipItem) => equipItem.index === item.index);
-		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$30.tab) {
-			const it = DB.getItemInfo(item.ITID);
-			const root = InventoryV2.getRoot();
-			const content = root.querySelector(".container .content");
-			if (!content) return true;
-			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
-			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
-				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-				if (icon) icon.style.backgroundImage = `url(${data})`;
-			});
-			if (InventoryV2.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
-				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (el) el.style.backgroundImage = `url(${data})`;
-			});
-			else {
-				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
-				if (el) el.style.backgroundImage = "";
-			}
-			if (isInSwitchList) {
-				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
-					const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
-					if (el) el.style.backgroundImage = `url(${data})`;
-				});
-				Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
-					const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
-					if (el) el.style.backgroundImage = `url(${data})`;
-				});
-			}
-		}
-		return true;
-	};
-	InventoryV2.isInEquipSwitchList = function(location) {
-		return this.equipswitchlist.some((existingItem) => (existingItem.location & location) !== 0);
-	};
-	InventoryV2.removeItem = function RemoveItem(index, count) {
-		const item = this.getItemByIndex(index);
-		const root = InventoryV2.getRoot();
-		if (!item || count <= 0) return null;
-		if (item.count) {
-			item.count -= count;
-			if (item.count > 0) {
-				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-				if (countEl) countEl.textContent = item.count;
-				this.onUpdateItem(item.ITID, item.count);
-				return item;
-			}
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-		this.onUpdateItem(item.ITID, 0);
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-		return item;
-	};
-	InventoryV2.updateItem = function UpdateItem(index, count) {
-		const item = this.getItemByIndex(index);
-		if (!item) return;
-		item.count = count;
-		const root = InventoryV2.getRoot();
-		if (item.count > 0) {
-			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = item.count;
-			this.onUpdateItem(item.ITID, item.count);
-			return;
-		}
-		this.list.splice(this.list.indexOf(item), 1);
-		const el = root.querySelector(`.item[data-index="${item.index}"]`);
-		if (el) el.remove();
-		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
-		this.onUpdateItem(item.ITID, 0);
-		this.updateScroll();
-	};
-	InventoryV2.useItem = function UseItem(item) {
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.CASH:
-				InventoryV2.onUseItem(item.index);
-				break;
-			case ItemType_default.CARD:
-				InventoryV2.onUseCard(item.index);
-				break;
-			case ItemType_default.DELAYCONSUME: break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETARMOR:
-			case ItemType_default.AMMO:
-				if (item.IsIdentified && !item.IsDamaged) InventoryV2.onEquipItem(item.index, item.location);
-				break;
-		}
-	};
-	InventoryV2.updatePlaceETCTab = function(itemIndex, newValue) {
-		const item = InventoryV2.getItemByIndex(itemIndex);
-		if (!item) return;
-		if (newValue) {
-			let favoriteval;
-			switch (item.type) {
-				case ItemType_default.HEALING:
-				case ItemType_default.USABLE:
-				case ItemType_default.DELAYCONSUME:
-				case ItemType_default.CASH:
-				case ItemType_default.ETC:
-				case ItemType_default.CARD:
-				case ItemType_default.AMMO:
-					favoriteval = 2;
-					break;
-				case ItemType_default.WEAPON:
-				case ItemType_default.ARMOR:
-				case ItemType_default.SHADOWGEAR:
-				case ItemType_default.PETEGG:
-				case ItemType_default.PETARMOR:
-					favoriteval = 4;
-					break;
-				default: break;
-			}
-			item.PlaceETCTab = favoriteval;
-		} else item.PlaceETCTab = newValue;
-		requestFilter$3();
-	};
-	InventoryV2.addItemtoSwitch = function(index) {
-		const item = this.getItemByIndex(index);
-		if (!item) {
-			console.warn(`Item with index ${index} not found in inventory.`);
-			return;
-		}
-		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.location === item.location);
-		if (existingItemIndex > -1) {
-			const existingItem = this.equipswitchlist[existingItemIndex];
-			SwitchEquip_default.unEquip(existingItem.index, existingItem.location);
-			this.equipswitchlist.splice(existingItemIndex, 1);
-		}
-		this.equipswitchlist.push(item);
-		const root = InventoryV2.getRoot();
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
-			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
-			if (el) el.style.backgroundImage = `url(${data})`;
-		});
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
-			const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
-			if (el) el.style.backgroundImage = `url(${data})`;
-		});
-		SwitchEquip_default.equip(item, item.location, true);
-		ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3143), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
-	};
-	InventoryV2.removeItemFromSwitch = function(index) {
-		const item = this.getItemByIndex(index);
-		if (!item) {
-			console.warn(`Item with index ${index} not found in inventory.`);
-			return;
-		}
-		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
-		if (existingItemIndex > -1) {
-			const root = InventoryV2.getRoot();
-			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
-			if (sw1) sw1.style.backgroundImage = "none";
-			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
-			if (sw2) sw2.style.backgroundImage = "none";
-			SwitchEquip_default.unEquip(item.index, item.location);
-			this.equipswitchlist.splice(existingItemIndex, 1);
-			ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3144), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
-			EquipmentController.getUI().equipItemsToSwitch();
-			InventoryV2.equipAllFromSwitchList();
-		}
-	};
-	InventoryV2.equipAllFromSwitchList = function equipAllFromSwitchList() {
-		const equipSwitchList = InventoryV2.equipswitchlist;
-		for (let i = 0; i < equipSwitchList.length; i++) {
-			const item = equipSwitchList[i];
-			if (item) SwitchEquip_default.equip(item, item.location, true);
-		}
-	};
-	InventoryV2.onUseItem = function OnUseItem() {};
-	InventoryV2.onUseCard = function onUseCard() {};
-	InventoryV2.onEquipItem = function OnEquipItem() {};
-	InventoryV2.onUpdateItem = function OnUpdateItem() {};
-	InventoryV2.reqMoveItemToCart = function reqMoveItemToCart() {};
-	InventoryV2_default = UIManager.addComponent(InventoryV2);
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV3/InventoryV3.html?raw
-var InventoryV3_default$2;
-var init_InventoryV3$2 = __esmMin((() => {
-	InventoryV3_default$2 = "<div id=\"InventoryV3\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"106\">Inventory</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"middle\">\r\n			<div class=\"tabs\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<button class=\"item tab\" data-tab=\"item\" data-text=\"1465\"></button>\r\n				<button class=\"equip tab\" data-tab=\"equip\" data-text=\"2050\"></button>\r\n				<button class=\"etc tab\" data-tab=\"etc\" data-text=\"1471\"></button>\r\n				<button class=\"fav tab\" data-tab=\"fav\" data-text=\"2051\"></button>\r\n			</div>\r\n			<div class=\"container\">\r\n				<div class=\"scroll-host\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</div>\r\n				<div class=\"lockoverlay hidden\"></div>\r\n\r\n				<div class=\"lockoverlaymsg hidden\" data-background=\"inventory/popup_itemdeal_lock.bmp\">\r\n					<span class=\"msg\" data-text=\"2951\"></span>\r\n					<div class=\"lockoverlayclose\" data-background=\"inventory/bt_close.bmp\"></div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"expand\">\r\n				<button\r\n					class=\"item_expansion\"\r\n					data-background=\"inventory/icon_num.bmp\"\r\n					data-text=\"Expand Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3560\"></span>\r\n				<span class=\"ncnt\"></span><span class=\"mcnt\"></span>\r\n			</div>\r\n			<div class=\"droplock\">\r\n				<button\r\n					class=\"item_drop_lock\"\r\n					data-background=\"inventory/item_drop_lock_off.bmp\"\r\n					data-text=\"Drop Lock\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2843\"></span>\r\n			</div>\r\n			<div class=\"compare\">\r\n				<button\r\n					class=\"item_compare\"\r\n					data-background=\"inventory/item_compare_off.bmp\"\r\n					data-text=\"Compare Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2842\"></span>\r\n			</div>\r\n			<div class=\"deallock_on hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_on\"\r\n					data-background=\"inventory/bt_itemdeal_lock_on.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_on_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_on_press.bmp\"\r\n					data-text=\"Deal Lock On\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"deallock_off hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_off\"\r\n					data-background=\"inventory/bt_itemdeal_lock_off.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_press.bmp\"\r\n					data-text=\"Deal Lock Off\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"sort hidden\">\r\n				<button\r\n					class=\"item_sort\"\r\n					data-background=\"inventory/bt_sort.bmp\"\r\n					data-hover=\"inventory/bt_sort_over.bmp\"\r\n					data-down=\"inventory/bt_sort_press.bmp\"\r\n					data-text=\"Sort Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3007\"></span>\r\n			</div>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\" data-text=\"Extend\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Inventory/InventoryV3/InventoryV3.css?raw
-var InventoryV3_default$1;
-var init_InventoryV3$1 = __esmMin((() => {
-	InventoryV3_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ── Root ────────────────────────────────────────────────── */\r\n#InventoryV3 {\r\n	position: relative;\r\n	height: 194px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ── Titlebar ─────────────────────────────────────────────── */\r\n#InventoryV3 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ── Panel / layout ───────────────────────────────────────── */\r\n#InventoryV3 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ── Tabs ─────────────────────────────────────────────────── */\r\n#InventoryV3 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV3 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV3 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV3 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV3 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ── Container / scroll area ──────────────────────────────── */\r\n#InventoryV3 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV3 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ── Items ────────────────────────────────────────────────── */\r\n#InventoryV3 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV3 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV3 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV3 .content .item .grade {\r\n	position: absolute;\r\n	top: 15px;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ── Overlay (tooltip) ────────────────────────────────────── */\r\n#InventoryV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV3 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ── Footer ───────────────────────────────────────────────── */\r\n#InventoryV3 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV3 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV3 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ── Footer buttons (shared position: absolute) ───────────── */\r\n#InventoryV3 .expand,\r\n#InventoryV3 .droplock,\r\n#InventoryV3 .compare,\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off,\r\n#InventoryV3 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV3 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV3 .item_expansion {\r\n	position: absolute;\r\n	height: 14px;\r\n	width: 11px;\r\n}\r\n\r\n#InventoryV3 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV3 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV3 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV3 button.item_deal_lock_on,\r\n#InventoryV3 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV3 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ── Counter labels ───────────────────────────────────────── */\r\n#InventoryV3 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ── Tooltip names on hover ───────────────────────────────── */\r\n#InventoryV3 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV3 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ── NPC lock overlay ─────────────────────────────────────── */\r\n#InventoryV3 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV3 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV3 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
-}));
-//#endregion
 //#region src/UI/Components/Refine/Refine.html?raw
 var Refine_default$2;
 var init_Refine$2 = __esmMin((() => {
@@ -238520,7 +234741,7 @@ var Refine_exports = /* @__PURE__ */ __exportAll({ default: () => Refine_default
 /**
 * Helper: query inside shadow root
 */
-function _root$10() {
+function _root$11() {
 	return Refine._shadow || Refine._host;
 }
 /**
@@ -238592,7 +234813,7 @@ function controlPhase$1(phase, shouldLoop, interval, callback) {
 	}
 	function showImages() {
 		Client.loadFile(DB.INTERFACE_PATH + "refining_renewal/" + imageArray[currentImageIndex], function(data) {
-			const container = _root$10().querySelector(".image-container");
+			const container = _root$11().querySelector(".image-container");
 			if (container) container.style.backgroundImage = `url(${data})`;
 			currentImageIndex++;
 			if (currentImageIndex >= imageArray.length) if (shouldLoop) currentImageIndex = 0;
@@ -238630,7 +234851,7 @@ function onRefineUIUpdateMaterials(pkt) {
 		console.warn("Renewal Refine is enabled in your server. Please enable refine UI in your configs.");
 		return false;
 	}
-	const root = _root$10();
+	const root = _root$11();
 	if (pkt && pkt.MaterialInfo.length > 0) {
 		if (root.querySelector(".item_to_refine .item")) onRemoveItem$1(false);
 		refine_item_index = pkt.itemIndex;
@@ -238689,7 +234910,7 @@ function onRefineUIUpdateMaterials(pkt) {
 * Handles populating materials needed for refining
 */
 function onPopulateMaterials$1() {
-	const root = _root$10();
+	const root = _root$11();
 	root.querySelectorAll(".materials .mat_overlay .material_0, .materials .mat_overlay .material_1, .materials .mat_overlay .material_2, .materials .mat_overlay .material_3").forEach((el) => {
 		el.innerHTML = "";
 	});
@@ -238795,7 +235016,7 @@ function onPopulateMaterials$1() {
 * Handles update of variables for UI changes based on Refine result
 */
 function selectMaterial(material, item) {
-	const root = _root$10();
+	const root = _root$11();
 	const count = item ? item.count || 0 : 0;
 	refine_can_cont = 1;
 	if (count) refine_no_mats = 0;
@@ -238837,7 +235058,7 @@ function selectMaterial(material, item) {
 * Show item name when mouse is over
 */
 function onItemOver$14(event) {
-	const root = _root$10();
+	const root = _root$11();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const it = DB.getItemInfo(idx);
 	if (!idx) return;
@@ -238866,14 +235087,14 @@ function onItemOver$14(event) {
 * Hide the item name
 */
 function onItemOut$15() {
-	const overlay = _root$10().querySelector(".overlay");
+	const overlay = _root$11().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
 * Handles clearance of variables and UI components when changing Item
 */
 function onRemoveItem$1(backtowait) {
-	const root = _root$10();
+	const root = _root$11();
 	refiningMaterials = [];
 	blacksmithBlessing = 0;
 	const itemToRefine = root.querySelector(".item_to_refine");
@@ -238923,7 +235144,7 @@ function onRemoveItem$1(backtowait) {
 * Handles clearing of material components after requesting to refine
 */
 function clearMaterials() {
-	const root = _root$10();
+	const root = _root$11();
 	const successEl = root.querySelector(".success");
 	if (successEl) {
 		successEl.innerHTML = "";
@@ -238953,7 +235174,7 @@ function clearMaterials() {
 * @param {string} type - The type of message ('error' or 'info')
 */
 function showMessage$3(messageID, timeout, type) {
-	const root = _root$10();
+	const root = _root$11();
 	const message = DB.getMessage(messageID);
 	let messageClass;
 	switch (type) {
@@ -238985,7 +235206,7 @@ function showMessage$3(messageID, timeout, type) {
 * Send the server request to refine the item
 */
 function onRequestRefine() {
-	const root = _root$10();
+	const root = _root$11();
 	const item = InventoryController.getUI().getItemByIndex(refine_item_index);
 	const material = InventoryController.getUI().getItemById(refine_item_mat);
 	if (!item) return;
@@ -239074,7 +235295,7 @@ function stopCurrentLoop() {
 * Handles how the UI changes depending on Refine result
 */
 function onUpdateRefineUI(result) {
-	const root = _root$10();
+	const root = _root$11();
 	onHideContRefineButtons();
 	switch (result) {
 		case "success": {
@@ -239154,7 +235375,7 @@ function onUpdateRefineUI(result) {
 * Handles hiding all buttons used in Continous Refine
 */
 function onHideContRefineButtons() {
-	const root = _root$10();
+	const root = _root$11();
 	const backButton = root.querySelector(".back_button");
 	if (backButton) backButton.style.display = "none";
 	const refineCont = root.querySelector(".refine_cont");
@@ -239182,7 +235403,7 @@ function onHideContRefineButtons() {
 * Check if the item being refined is broken
 */
 function onCheckItemBroken() {
-	const root = _root$10();
+	const root = _root$11();
 	if (!InventoryController.getUI().getItemByIndex(refine_item_index)) {
 		refine_result_div = "fail_refine_cont_disabled";
 		const itemToRefineName = root.querySelector(".item_to_refine_name");
@@ -239198,7 +235419,7 @@ function onCheckItemBroken() {
 * Handles event when Back button was pressed during Continous Refine
 */
 function onCancelContRefine() {
-	const root = _root$10();
+	const root = _root$11();
 	Refine.hammer = 0;
 	onHideContRefineButtons();
 	stopCurrentLoop();
@@ -239441,7 +235662,7 @@ var init_Refine = __esmMin((() => {
 	* Initialize UI
 	*/
 	Refine.init = function init() {
-		const root = _root$10();
+		const root = _root$11();
 		this._host.style.top = "200px";
 		this._host.style.left = "300px";
 		const titlebarBase = root.querySelector(".titlebar .base");
@@ -239517,7 +235738,7 @@ var init_Refine = __esmMin((() => {
 	* Append to body
 	*/
 	Refine.onAppend = function onAppend() {
-		const root = _root$10();
+		const root = _root$11();
 		Refine.hammer = 0;
 		const refineButton = root.querySelector(".refine_button");
 		if (refineButton) refineButton.style.display = "block";
@@ -239547,7 +235768,7 @@ var init_Refine = __esmMin((() => {
 	* @param {pkt} - PACKET.ZC.ACK_ITEMREFINING
 	*/
 	Refine.onRefineResult = function onRefineResult(pkt) {
-		const root = _root$10();
+		const root = _root$11();
 		if (pkt) {
 			const backButton = root.querySelector(".back_button");
 			if (backButton) backButton.style.display = "none";
@@ -239609,7 +235830,7 @@ var init_EnchantGrade$1 = __esmMin((() => {
 /**
 * Helper: query inside shadow root
 */
-function _root$9() {
+function _root$10() {
 	return EnchantGrade._shadow || EnchantGrade._host;
 }
 /**
@@ -239629,7 +235850,7 @@ function clearEnchantGradeStates() {
 /**
 * Stop event propagation
 */
-function stopPropagation$8(event) {
+function stopPropagation$9(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
@@ -239662,7 +235883,7 @@ function controlPhase(phase, shouldLoop, interval, targetdiv, callback) {
 	}
 	function showImages() {
 		Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/" + imageArray[currentImageIndex], function(data) {
-			const target = _root$9().querySelector(targetdiv);
+			const target = _root$10().querySelector(targetdiv);
 			if (target) {
 				target.style.backgroundImage = `url(${data})`;
 				target.style.visibility = "visible";
@@ -239710,7 +235931,7 @@ function onItemDrop(event) {
 * Enables the item drop proxy to add dropped items in the EnchantGrade window
 */
 function enableDropProxy() {
-	const root = _root$9();
+	const root = _root$10();
 	const proxy = root.querySelector(".enchant_drop_proxy");
 	if (proxy) proxy.style.display = "block";
 	const container = root.querySelector(".enchant_container");
@@ -239720,7 +235941,7 @@ function enableDropProxy() {
 * Disable the item drop proxy to add dropped items in the EnchantGrade window
 */
 function disableDropProxy() {
-	const root = _root$9();
+	const root = _root$10();
 	const proxy = root.querySelector(".enchant_drop_proxy");
 	if (proxy) proxy.style.display = "none";
 	const container = root.querySelector(".enchant_container");
@@ -239731,7 +235952,7 @@ function disableDropProxy() {
 * @param {pkt} - PACKET.ZC.REFINING_MATERIAL_LIST
 */
 function onEnchantGradeUIUpdateMaterials(pkt) {
-	const root = _root$9();
+	const root = _root$10();
 	if (pkt && pkt.materialList.length > 0) {
 		disableDropProxy();
 		if (root.querySelector(".enchant_container .item")) onRemoveItem();
@@ -239839,7 +236060,7 @@ function onEnchantGradeUIUpdateMaterials(pkt) {
 * Controls for selecting and de-selecting materials
 */
 function onPopulateMaterials() {
-	const root = _root$9();
+	const root = _root$10();
 	root.querySelectorAll(".material_slot").forEach((slot) => {
 		slot.innerHTML = "";
 	});
@@ -239925,7 +236146,7 @@ function onPopulateMaterials() {
 * Update the UI accordingly.
 */
 function onResetBlessing() {
-	const root = _root$9();
+	const root = _root$10();
 	EnchantGrade_blessing_used = false;
 	EnchantGrade_currentBlessing = 0;
 	const prob = root.querySelector(".probability");
@@ -239937,7 +236158,7 @@ function onResetBlessing() {
 * Handles clearance of variables and UI components when changing Item
 */
 function onRemoveItem() {
-	const root = _root$9();
+	const root = _root$10();
 	gradingMaterials = [];
 	if (EnchantGrade.imageLoopTimeout) Object.keys(EnchantGrade.imageLoopTimeout).forEach(stopPhase);
 	const tankContainer = root.querySelector(".grade_tank_container");
@@ -240043,7 +236264,7 @@ function onEnchantGradeResult(pkt) {
 * @param {...scenarioKeys} The keys of the messages to be displayed.
 */
 function setMessages(...scenarioKeys) {
-	const root = _root$9();
+	const root = _root$10();
 	const messages = [].concat(...scenarioKeys.map((key) => scenarioMsgMapping[key] || []));
 	const notificationArea = root.querySelector(".notification_container");
 	if (!notificationArea) return;
@@ -240230,7 +236451,7 @@ var init_EnchantGrade = __esmMin((() => {
 	* Initialize UI
 	*/
 	EnchantGrade.init = function init() {
-		const root = _root$9();
+		const root = _root$10();
 		this._host.style.top = "200px";
 		this._host.style.left = "300px";
 		const closeBtn = root.querySelector(".close_btn");
@@ -240241,7 +236462,7 @@ var init_EnchantGrade = __esmMin((() => {
 		const dropProxy = root.querySelector(".enchant_drop_proxy");
 		if (dropProxy) {
 			dropProxy.addEventListener("drop", onItemDrop);
-			dropProxy.addEventListener("dragover", stopPropagation$8);
+			dropProxy.addEventListener("dragover", stopPropagation$9);
 		}
 		const enchantContainer = root.querySelector(".enchant_container");
 		if (enchantContainer) {
@@ -240286,7 +236507,7 @@ var init_EnchantGrade = __esmMin((() => {
 	* Append to body
 	*/
 	EnchantGrade.onAppend = function onAppend() {
-		const root = _root$9();
+		const root = _root$10();
 		EnchantGrade.hammer = 0;
 		const enchantGradeButton = root.querySelector(".EnchantGrade_button");
 		if (enchantGradeButton) enchantGradeButton.style.display = "block";
@@ -240694,7 +236915,7 @@ var init_Enchant$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Enchant/Enchant.js
-function _root$8() {
+function _root$9() {
 	return Enchant._shadow || Enchant._host;
 }
 function clearState() {
@@ -240791,7 +237012,7 @@ function getUpgradeCandidates(item, group) {
 	return candidates;
 }
 function setStatus(message, isError) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const status = root.querySelector(".status");
 	if (!status) return;
@@ -240799,13 +237020,13 @@ function setStatus(message, isError) {
 	status.classList.toggle("error", !!isError);
 }
 function setCaution(message) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const caution = root.querySelector(".caution");
 	if (caution) caution.textContent = message || "";
 }
 function showHoverOverlay(text, identified, target) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root || !text) return;
 	const overlay = root.querySelector(".overlay");
 	if (!overlay) return;
@@ -240820,7 +237041,7 @@ function showHoverOverlay(text, identified, target) {
 	overlay.style.display = "block";
 }
 function hideHoverOverlay() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const overlay = root.querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
@@ -240837,7 +237058,7 @@ function showItemInfo(item) {
 	return false;
 }
 function updateSubpageSkin() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const target = root.querySelector(".subpage");
 	if (!target) return;
@@ -240847,7 +237068,7 @@ function updateSubpageSkin() {
 	if (skin) target.style.backgroundImage = `url(${skin})`;
 }
 function updateMenuSkin() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const target = root.querySelector(".action_tabs");
 	if (!target) return;
@@ -240864,7 +237085,7 @@ function updateActionButtonSkin(button, enabled) {
 	button.style.backgroundImage = `url(${EnchantAssets.actionButton.normal})`;
 }
 function bindActionButtonSkin() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const button = root.querySelector(".action_btn");
 	if (!button) return;
@@ -240887,7 +237108,7 @@ function bindActionButtonSkin() {
 	});
 }
 function applyScrollSkin(up, down, bg, thumb) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const inner = root.querySelector("#Enchant");
 	if (!inner) return;
@@ -241179,7 +237400,7 @@ function canAffordCost(zeny, materials) {
 	return hasEnoughZeny(zeny) && hasEnoughMaterials(materials);
 }
 function renderMaterials(materials) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const list = root.querySelector(".material_list");
 	if (!list) return;
@@ -241219,7 +237440,7 @@ function renderMaterials(materials) {
 	});
 }
 function renderEnchantList(entries, selectedKey) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const list = root.querySelector(".enchant_list");
 	if (!list) return;
@@ -241260,7 +237481,7 @@ function renderEnchantList(entries, selectedKey) {
 	});
 }
 function renderItemList() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const list = root.querySelector(".item_list");
 	if (!list) return;
@@ -241334,7 +237555,7 @@ function renderItemList() {
 	});
 }
 function renderItemPreview() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const preview = root.querySelector(".preview_item");
 	if (!preview) return;
@@ -241343,7 +237564,7 @@ function renderItemPreview() {
 	loadItemCollection(preview, EnchantState.item.ITID, EnchantState.item.IsIdentified);
 }
 function renderSlots() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const list = root.querySelector(".slot_list");
 	if (!list) return;
@@ -241370,7 +237591,7 @@ function renderSlots() {
 	});
 }
 function updateTabs(availability) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	root.querySelectorAll(".action_tabs .tab").forEach((tab) => {
 		const action = tab.dataset.action;
@@ -241381,7 +237602,7 @@ function updateTabs(availability) {
 	updateMenuSkin();
 }
 function updateActionSections() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	root.querySelectorAll(".action_section").forEach((section) => {
 		section.classList.remove("active");
@@ -241390,7 +237611,7 @@ function updateActionSections() {
 	if (activeSection) activeSection.classList.add("active");
 }
 function updateActionButton(enabled) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const button = root.querySelector(".action_btn");
 	if (!button) return;
@@ -241401,7 +237622,7 @@ function updateActionButton(enabled) {
 	updateActionButtonSkin(button, enabled);
 }
 function renderCosts(rate, zeny, materials) {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const zenyText = zeny != null ? formatZeny(zeny) : "";
 	const zenyCost = root.querySelector(".zeny_cost");
@@ -241409,7 +237630,7 @@ function renderCosts(rate, zeny, materials) {
 	renderMaterials(materials);
 }
 function refreshActionContent() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const group = EnchantState.group;
 	const item = EnchantState.item;
@@ -241733,7 +237954,7 @@ function onItemSelect$2(event) {
 	Enchant.onRequestItemEnchant(item);
 }
 function onRequestAction() {
-	const root = _root$8();
+	const root = _root$9();
 	if (!root) return;
 	const actionBtn = root.querySelector(".action_btn");
 	if (actionBtn && actionBtn.classList.contains("disabled")) return;
@@ -241953,7 +238174,7 @@ var init_Enchant = __esmMin((() => {
 		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && Enchant.ui.is(":visible")) onRequestClose();
 	};
 	Enchant.init = function init() {
-		const root = _root$8();
+		const root = _root$9();
 		this.ui.css({
 			top: 200,
 			left: 360
@@ -241993,7 +238214,7 @@ var init_Enchant = __esmMin((() => {
 			EnchantAssets.actionButton.down = down;
 			EnchantAssets.actionButton.disabled = disabled;
 			bindActionButtonSkin();
-			const actionBtn = _root$8() ? _root$8().querySelector(".action_btn") : null;
+			const actionBtn = _root$9() ? _root$9().querySelector(".action_btn") : null;
 			if (actionBtn) updateActionButtonSkin(actionBtn, !actionBtn.classList.contains("disabled"));
 		});
 		Client.loadFiles([
@@ -242096,7 +238317,7 @@ var init_Enchant = __esmMin((() => {
 		refreshUI();
 	};
 	Enchant.onRemove = function onRemove() {
-		const root = _root$8();
+		const root = _root$9();
 		clearState();
 		if (root) {
 			root.querySelectorAll(".close, .close_btn").forEach((btn) => {
@@ -242160,7 +238381,374 @@ var init_Enchant = __esmMin((() => {
 	Enchant_default = UIManager.addComponent(Enchant);
 }));
 //#endregion
-//#region src/UI/Components/Inventory/InventoryV3/InventoryV3.js
+//#region src/UI/Components/Rodex/WriteRodex.html?raw
+var WriteRodex_default$2;
+var init_WriteRodex$2 = __esmMin((() => {
+	WriteRodex_default$2 = "<div id=\"WriteRodex\">\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"body\" data-background=\"basic_interface/rodexsystem/renewal/bg_rodex_read.bmp\">\r\n		<div class=\"titlebar\">\r\n			<div class=\"right\">\r\n				<button\r\n					class=\"base close\"\r\n					data-background=\"basic_interface/sys_close_off.bmp\"\r\n					data-hover=\"basic_interface/sys_close_on.bmp\"\r\n				></button>\r\n			</div>\r\n		</div>\r\n		<div class=\"sender\">\r\n			<input class=\"name\" />\r\n			<button\r\n				class=\"base validate-name\"\r\n				data-text=\"3545\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_confirm_id_empty_press.bmp\"\r\n			></button>\r\n			<span class=\"baloon\" data-background=\"basic_interface/rodexsystem/renewal/bg_id_balloon.bmp\"></span>\r\n		</div>\r\n		<div class=\"title\">\r\n			<input class=\"title-text\" />\r\n		</div>\r\n		<div class=\"content\">\r\n			<textarea class=\"content-text\"></textarea>\r\n		</div>\r\n		<div class=\"items\">\r\n			<div class=\"item-list\"></div>\r\n			<span class=\"weigth\" data-background=\"basic_interface/rodexsystem/renewal/bg_weight.bmp\"></span>\r\n			<span class=\"weigth-text\">0 2000</span>\r\n		</div>\r\n		<div class=\"zeny\">\r\n			<span class=\"image\" data-background=\"basic_interface/rodexsystem/renewal/icon_zeny.bmp\"></span>\r\n			<input\r\n				type=\"number\"\r\n				class=\"value [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none\"\r\n			/>\r\n			<span class=\"character-zeny\"></span>\r\n		</div>\r\n		<div class=\"footer\">\r\n			<span type=\"text\" class=\"base tax\" data-background=\"basic_interface/rodexsystem/renewal/bg_tax.bmp\"></span>\r\n			<span class=\"tax-text\">0</span>\r\n			<button\r\n				class=\"base send\"\r\n				data-background=\"basic_interface/rodexsystem/renewal/btn_reply_out.bmp\"\r\n				data-hover=\"basic_interface/rodexsystem/renewal/btn_reply_over.bmp\"\r\n				data-down=\"basic_interface/rodexsystem/renewal/btn_reply_press.bmp\"\r\n			></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Rodex/WriteRodex.css?raw
+var WriteRodex_default$1;
+var init_WriteRodex$1 = __esmMin((() => {
+	WriteRodex_default$1 = ":host {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n#WriteRodex .body {\r\n	width: 300px;\r\n	height: 400px;\r\n	position: absolute;\r\n}\r\n\r\n#WriteRodex .body .base {\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#WriteRodex .body .titlebar {\r\n	display: block;\r\n	width: 300px;\r\n	height: 16px;\r\n}\r\n#WriteRodex .body .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#WriteRodex .body .titlebar .right .close {\r\n	width: 11px;\r\n	height: 11px;\r\n}\r\n\r\n#WriteRodex .body .sender {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .sender .name {\r\n	margin-left: 10px;\r\n	font-weight: bold;\r\n	color: darkblue;\r\n	width: 135px;\r\n	border: 1px solid gray;\r\n	padding: 3px;\r\n	border-radius: 0px;\r\n}\r\n#WriteRodex .body .sender .validate-name {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 70px;\r\n	color: gray;\r\n	width: 70px;\r\n	height: 18px;\r\n}\r\n#WriteRodex .body .sender .baloon {\r\n	position: absolute;\r\n	top: 5px;\r\n	right: 15px;\r\n	color: red;\r\n	width: 130px;\r\n	height: 42px;\r\n	display: none;\r\n}\r\n\r\n#WriteRodex .body .title {\r\n	float: left;\r\n	width: 100%;\r\n	height: 25px;\r\n	position: relative;\r\n	display: flex;\r\n	align-items: flex-end;\r\n}\r\n#WriteRodex .body .title .title-text {\r\n	margin-left: 10px;\r\n	width: 135px;\r\n	border: none;\r\n}\r\n\r\n#WriteRodex .body .content {\r\n	float: left;\r\n	width: 100%;\r\n	height: 230px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .content .content-text {\r\n	position: absolute;\r\n	top: 5px;\r\n	left: 10px;\r\n	width: 280px;\r\n	height: 220px;\r\n	background: transparent;\r\n	border: none;\r\n	resize: none;\r\n}\r\n\r\n#WriteRodex .body .items {\r\n	float: left;\r\n	width: 100%;\r\n	height: 45px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .items .item-list {\r\n	list-style: none;\r\n	margin: 0px;\r\n	padding: 0px;\r\n	display: table;\r\n	position: absolute;\r\n	top: 10px;\r\n	left: 27px;\r\n}\r\n#WriteRodex .body .items .item-list .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#WriteRodex .body .items .item-list .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#WriteRodex .body .items .item-list .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#WriteRodex .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#WriteRodex .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#WriteRodex .body .items .weigth {\r\n	position: absolute;\r\n	width: 82px;\r\n	height: 32px;\r\n	top: 10px;\r\n	right: 10px;\r\n	border: none;\r\n}\r\n#WriteRodex .body .items .weigth-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 21px;\r\n	right: 19px;\r\n	border: none;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .zeny {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .zeny .image {\r\n	position: absolute;\r\n	width: 28px;\r\n	height: 25px;\r\n	top: 1px;\r\n	left: 15px;\r\n	z-index: 100;\r\n}\r\n#WriteRodex .body .zeny .value {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 35px;\r\n	width: 100px;\r\n	border: 1px solid gray;\r\n	text-align: end;\r\n}\r\n#WriteRodex .body .zeny .character-zeny {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 150px;\r\n	color: gray;\r\n}\r\n\r\n#WriteRodex .body .footer {\r\n	float: left;\r\n	width: 100%;\r\n	height: 30px;\r\n	position: relative;\r\n}\r\n#WriteRodex .body .footer .tax {\r\n	position: absolute;\r\n	width: 112px;\r\n	height: 18px;\r\n	top: 5px;\r\n	left: 10px;\r\n}\r\n#WriteRodex .body .footer .tax-text {\r\n	position: absolute;\r\n	display: table;\r\n	top: 8px;\r\n	right: 197px;\r\n}\r\n#WriteRodex .body .footer .send {\r\n	position: absolute;\r\n	width: 70px;\r\n	height: 20px;\r\n	top: 5px;\r\n	right: 10px;\r\n}\r\n#WriteRodex .red {\r\n	font-weight: bold;\r\n	color: red;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Rodex/WriteRodex.js
+/**
+* Helper: query inside shadow root
+*/
+function _root$8() {
+	return WriteRodex._shadow || WriteRodex._host;
+}
+function onClickClose$1(e) {
+	e.stopImmediatePropagation();
+	const root = _root$8();
+	WriteRodex.receiver = null;
+	root.querySelector(".name").value = "";
+	root.querySelector(".title-text").value = "";
+	root.querySelector(".content-text").value = "";
+	root.querySelector(".value").value = "";
+	root.querySelector(".item-list").innerHTML = "";
+	root.querySelector(".weigth-text").textContent = "0  2000";
+	root.querySelector(".tax-text").textContent = "0";
+	WriteRodex.requestCancelWriteRodex();
+	WriteRodex.list = [];
+	WriteRodex.CharID = 0;
+	WriteRodex.tax = 0;
+	WriteRodex._host.style.display = "none";
+}
+function onClickSend(e) {
+	e.stopImmediatePropagation();
+	const root = _root$8();
+	if (WriteRodex.receiver == null || typeof WriteRodex.receiver === "string" && WriteRodex.receiver.trim().length === 0) {
+		ChatBox_default.addText(DB.getMessage(2611), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
+		return;
+	}
+	const receiver = WriteRodex.receiver;
+	const sender = SessionStorage_default.Character.name;
+	let zeny = parseInt(root.querySelector(".value").value, 10);
+	zeny = isNaN(zeny) ? 0 : zeny;
+	zeny = zeny < 0 ? 0 : zeny;
+	if (WriteRodex.tax + zeny > SessionStorage_default.zeny) {
+		ChatBox_default.addText(DB.getMessage(2643), ChatBox_default.TYPE.INFO_MAIL, ChatBox_default.FILTER.PUBLIC_LOG);
+		return;
+	}
+	const title = root.querySelector(".title-text").value.replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 23) + String.fromCharCode(0);
+	const body = root.querySelector(".content-text").value.replace(/^(\$|\%)/, "").replace(/\t/g, "").substring(0, 499) + String.fromCharCode(0);
+	const Titlelength = title.length;
+	const Bodylength = body.length;
+	const CharID = WriteRodex.CharID;
+	WriteRodex.requestSendRodex(receiver, sender, zeny, Titlelength, Bodylength, CharID, title, body);
+	WriteRodex.requestCancelWriteRodex();
+}
+function prettifyZeny$3(value) {
+	const num = String(value);
+	let i = 0;
+	const len = num.length;
+	let out = "";
+	while (i < len) {
+		out = num[len - i - 1] + out;
+		if ((i + 1) % 3 === 0 && i + 1 !== len) out = "," + out;
+		++i;
+	}
+	return out;
+}
+function onClickValidateName(e) {
+	e.stopImmediatePropagation();
+	const name = _root$8().querySelector(".name").value;
+	WriteRodex.validateName(name.replace(/^(\$|\%)/, "").replace(/\t/g, ""));
+}
+/**
+* Drop an item from inventory to writerodex
+*
+* @param {event}
+*/
+function onDrop$12(event) {
+	let item, data;
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	try {
+		data = JSON.parse(event.dataTransfer.getData("Text"));
+		item = data.data;
+	} catch (_e) {
+		return;
+	}
+	if (data.type !== "item" || data.from !== "Inventory") return;
+	if (item.count > 1) {
+		InputBox_default.append();
+		InputBox_default.setType("item", false, item.count, item.ITID);
+		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+			InputBox_default.remove();
+			switch (data.from) {
+				case "Inventory":
+					InventoryController.reqMoveItemToWriteRodex(item.index, parseInt(count, 10));
+					break;
+				default:
+			}
+		};
+		return;
+	}
+	switch (data.from) {
+		case "Inventory":
+			InventoryController.reqMoveItemToWriteRodex(item.index, 1);
+			break;
+		default:
+	}
+}
+/**
+* Stop event propagation
+*/
+function stopPropagation$8(event) {
+	event.stopImmediatePropagation();
+	event.preventDefault();
+}
+/**
+* Show item name when mouse is over
+*/
+function onItemOver$13(event) {
+	const el = event.currentTarget;
+	const idx = parseInt(el.getAttribute("data-index"), 10);
+	const item = WriteRodex.getItemByIndex(idx);
+	if (!item) return;
+	const root = _root$8();
+	const pos = {
+		top: el.offsetTop,
+		left: el.offsetLeft
+	};
+	const overlay = root.querySelector(".overlay");
+	overlay.style.display = "";
+	overlay.style.top = `${pos.top}px`;
+	overlay.style.left = `${pos.left + 35}px`;
+	overlay.textContent = `${DB.getItemName(item)} ${item.count || 1} ea`;
+	if (item.IsIdentified) overlay.classList.remove("grey");
+	else overlay.classList.add("grey");
+}
+/**
+* Hide the item name
+*/
+function onItemOut$14() {
+	const overlay = _root$8().querySelector(".overlay");
+	if (overlay) overlay.style.display = "none";
+}
+/**
+* Start dragging an item
+*/
+function onItemDragStart$8(event) {
+	const el = event.currentTarget;
+	const index = parseInt(el.getAttribute("data-index"), 10);
+	const item = WriteRodex.getItemByIndex(index);
+	if (!item) return;
+	const img = new Image();
+	const url = el.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+	img.decoding = "async";
+	img.src = url.replace(/^"/, "").replace(/"$/, "");
+	event.dataTransfer.setDragImage(img, 12, 12);
+	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+		type: "item",
+		from: "WriteRodex",
+		data: item
+	}));
+	onItemOut$14();
+}
+/**
+* Stop dragging an item
+*
+*/
+function onItemDragEnd$9() {
+	delete window._OBJ_DRAG_;
+}
+/**
+* Get item info (open description window)
+*/
+function onItemInfo$16(event) {
+	event.stopImmediatePropagation();
+	event.preventDefault();
+	const el = event.currentTarget;
+	const index = parseInt(el.getAttribute("data-index"), 10);
+	const item = WriteRodex.getItemByIndex(index);
+	if (!item) return;
+	if (ItemInfo_default.uid === item.ITID) {
+		ItemInfo_default.remove();
+		return;
+	}
+	ItemInfo_default.append();
+	ItemInfo_default.uid = item.ITID;
+	ItemInfo_default.setItem(item);
+}
+var WriteRodex, WriteRodex_default;
+var init_WriteRodex = __esmMin((() => {
+	init_DBManager();
+	init_ChatBox();
+	init_SessionStorage();
+	init_MonsterTable();
+	init_Preferences$1();
+	init_Renderer();
+	init_ItemInfo();
+	init_Client();
+	init_UIManager();
+	init_GUIComponent();
+	init_WriteRodex$2();
+	init_WriteRodex$1();
+	init_InputBox();
+	init_Rodex$1();
+	init_Inventory();
+	WriteRodex = new GUIComponent("WriteRodex", WriteRodex_default$1);
+	WriteRodex.list = [];
+	WriteRodex.receiver = null;
+	WriteRodex.tax = 0;
+	Preferences.get("WriteRodex", { show: false }, 1);
+	/**
+	* Render HTML
+	*/
+	WriteRodex.render = () => WriteRodex_default$2;
+	/**
+	* Initialize Component
+	*/
+	WriteRodex.onAppend = function onAppend() {
+		const root = _root$8();
+		root.querySelector(".right .close").addEventListener("click", onClickClose$1);
+		root.querySelector(".send").addEventListener("click", onClickSend);
+		root.querySelector(".value").addEventListener("input", WriteRodex.updateTax);
+		const rodexTop = Rodex_default._host ? parseInt(Rodex_default._host.style.top, 10) || 0 : 0;
+		const rodexLeft = Rodex_default._host ? parseInt(Rodex_default._host.style.left, 10) || 0 : 0;
+		this._host.style.top = `${Math.min(Math.max(0, rodexTop) - 20, Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, rodexLeft) + 330, Renderer.width - this._host.offsetWidth)}px`;
+		this.draggable(root.querySelector(".titlebar"));
+	};
+	WriteRodex.initData = function initData(pkt) {
+		const root = _root$8();
+		WriteRodex.receiver = null;
+		WriteRodex.CharID = 0;
+		WriteRodex.list = [];
+		WriteRodex.tax = 0;
+		const nameInput = root.querySelector(".name");
+		nameInput.type = "text";
+		nameInput.value = pkt.receiveName;
+		const validateBtn = root.querySelector(".validate-name");
+		validateBtn.style.display = "";
+		const baloon = root.querySelector(".baloon");
+		baloon.style.display = "none";
+		root.querySelector(".title-text").value = DB.getMessage(3575);
+		root.querySelector(".content-text").value = "";
+		root.querySelector(".character-zeny").textContent = `${prettifyZeny$3(SessionStorage_default.zeny)} Zeny`;
+		validateBtn.addEventListener("click", onClickValidateName);
+		root.querySelector(".weigth-text").textContent = "0  2000";
+		root.querySelector(".tax-text").textContent = "0";
+		const valueInput = root.querySelector(".value");
+		valueInput.value = "";
+		valueInput.max = SessionStorage_default.zeny;
+		root.querySelector(".item-list").innerHTML = "";
+		const itemsEl = root.querySelector(".items");
+		itemsEl.addEventListener("drop", onDrop$12);
+		itemsEl.addEventListener("dragover", stopPropagation$8);
+		this._host.style.display = "";
+		this.focus();
+	};
+	WriteRodex.characterInfo = function characterInfo(pkt) {
+		const root = _root$8();
+		const text = `Lv${pkt.level}<br>${MonsterTable_default[pkt.Job]}<br>${pkt.CharID}`;
+		root.querySelector(".validate-name").style.display = "none";
+		const baloon = root.querySelector(".baloon");
+		baloon.innerHTML = text;
+		baloon.style.display = "";
+		const nameInput = root.querySelector(".name");
+		nameInput.type = "none";
+		WriteRodex.receiver = pkt.name !== void 0 ? pkt.name : nameInput.value;
+		WriteRodex.CharID = pkt.CharID;
+	};
+	/**
+	* Search in a list for an item by its index
+	*
+	* @param {number} index
+	* @returns {Item}
+	*/
+	WriteRodex.getItemByIndex = function getItemByIndex(index) {
+		const list = WriteRodex.list;
+		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
+		return null;
+	};
+	WriteRodex.addItem = function addItem(item) {
+		const root = _root$8();
+		let object = WriteRodex.getItemByIndex(item.index);
+		if (object) {
+			object.count += item.count;
+			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+			if (countEl) countEl.textContent = object.count;
+			return;
+		}
+		object = Object.assign({}, item);
+		WriteRodex.list.push(object);
+		const it = DB.getItemInfo(item.ITID);
+		root.querySelector(".items .item-list").insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="icon"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+		Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
+			const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
+			if (icon) icon.style.backgroundImage = `url(${data})`;
+		});
+		const itemDiv = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (itemDiv) {
+			itemDiv.addEventListener("mouseover", onItemOver$13);
+			itemDiv.addEventListener("mouseout", onItemOut$14);
+			itemDiv.addEventListener("dragstart", onItemDragStart$8);
+			itemDiv.addEventListener("dragend", onItemDragEnd$9);
+			itemDiv.addEventListener("contextmenu", onItemInfo$16);
+		}
+		WriteRodex.updateWeight(item.weight);
+		WriteRodex.updateTax();
+	};
+	/**
+	* Remove item from WriteRodex
+	*
+	* @param {number} index in WriteRodex
+	* @param {number} count
+	*/
+	WriteRodex.removeItem = function RemoveItem(index, count, weight) {
+		const root = _root$8();
+		const item = WriteRodex.getItemByIndex(index);
+		if (!item || count <= 0) return null;
+		if (item.count) {
+			item.count -= count;
+			if (item.count > 0) {
+				const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
+				if (countEl) countEl.textContent = item.count;
+				return;
+			}
+		}
+		WriteRodex.list.splice(WriteRodex.list.indexOf(item), 1);
+		const itemEl = root.querySelector(`.item[data-index="${item.index}"]`);
+		if (itemEl) itemEl.remove();
+		WriteRodex.updateWeight(weight);
+		WriteRodex.updateTax();
+	};
+	WriteRodex.updateWeight = function updateWeight(weight) {
+		const el = _root$8().querySelector(".weigth-text");
+		if (el) el.textContent = `${weight}  2000`;
+	};
+	WriteRodex.updateTax = function updateTax() {
+		const root = _root$8();
+		let tax = WriteRodex.list.length * 2500;
+		let zeny = parseInt(root.querySelector(".value").value, 10);
+		zeny = isNaN(zeny) ? 0 : zeny;
+		zeny = zeny < 0 ? 0 : zeny;
+		tax += parseInt(zeny * .02);
+		const taxEl = root.querySelector(".tax-text");
+		if (taxEl) taxEl.textContent = tax;
+		WriteRodex.tax = tax;
+		const valueEl = root.querySelector(".value");
+		if (tax + zeny > SessionStorage_default.zeny) {
+			taxEl.classList.add("red");
+			valueEl.classList.add("red");
+		} else {
+			taxEl.classList.remove("red");
+			valueEl.classList.remove("red");
+		}
+	};
+	WriteRodex.close = function close() {
+		WriteRodex._host.style.display = "none";
+	};
+	WriteRodex_default = UIManager.addComponent(WriteRodex);
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryCommon.js
 function _sanitizeHtml$7(str) {
 	const whitelist = [
 		"font",
@@ -242174,485 +238762,124 @@ function _sanitizeHtml$7(str) {
 	});
 	return div.innerHTML;
 }
-function getItemTab(item) {
-	switch (item.type) {
-		case ItemType_default.HEALING:
-		case ItemType_default.USABLE:
-		case ItemType_default.DELAYCONSUME:
-		case ItemType_default.CASH: return InventoryV3.TAB.USABLE;
-		case ItemType_default.WEAPON:
-		case ItemType_default.ARMOR:
-		case ItemType_default.SHADOWGEAR:
-		case ItemType_default.PETEGG:
-		case ItemType_default.PETARMOR: return InventoryV3.TAB.EQUIP;
-		default:
-		case ItemType_default.ETC:
-		case ItemType_default.CARD:
-		case ItemType_default.AMMO: return InventoryV3.TAB.ETC;
-	}
-}
-function onResize$9() {
-	const left = InventoryV3._host.offsetLeft;
-	let lastWidth = 0;
-	function resizing() {
-		let w = Math.floor((Mouse.screen.x - left - 25) / 32);
-		w = Math.min(Math.max(w, 6), 9);
-		if (w === lastWidth) return;
-		InventoryV3.resize(w);
-		lastWidth = w;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function onSwitchTab$2() {
-	const root = InventoryV3.getRoot();
-	const buttons = root.querySelectorAll(".tabs button");
-	const idx = Array.from(buttons).indexOf(this);
-	_preferences$29.tab = parseInt(idx, 10);
-	requestFilter$2();
-	buttons.forEach((b) => b.classList.remove("selected"));
-	this.classList.add("selected");
-	const dealOn = root.querySelector(".deallock_on");
-	const dealOff = root.querySelector(".deallock_off");
-	const lockOverlay = root.querySelector(".lockoverlay");
-	const lockMsg = root.querySelector(".lockoverlaymsg");
-	const sort = root.querySelector(".sort");
-	const onFavTab = _preferences$29.tab === InventoryV3.TAB.FAV;
-	if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$29.npcsalelock));
-	if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$29.npcsalelock));
-	if (lockOverlay) lockOverlay.classList.toggle("hidden", !(onFavTab && _preferences$29.npcsalelock));
-	if (lockMsg) lockMsg.classList.add("hidden");
-	if (sort) sort.classList.toggle("hidden", !onFavTab);
-}
-function onToggleReduction$1() {
-	const panel = InventoryV3.getRoot().querySelector(".panel");
-	if (_realSize$2) {
-		if (panel) panel.style.display = "flex";
-		InventoryV3._host.style.height = `${_realSize$2}px`;
-		_realSize$2 = 0;
-	} else {
-		_realSize$2 = InventoryV3._host.getBoundingClientRect().height;
-		InventoryV3._host.style.height = "17px";
-		if (panel) panel.style.display = "none";
-	}
-}
-function requestFilter$2() {
-	const root = InventoryV3.getRoot();
-	const host = root.querySelector(".scroll-host");
-	if (host) host.scrollTop = 0;
-	const content = root.querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	const list = InventoryV3.list;
-	for (let i = 0, count = list.length; i < count; ++i) InventoryV3.addItemSub(list[i]);
-	InventoryV3.updateScroll();
-}
-function onDrop$12(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			switch (data.from) {
-				case "Storage":
-					StorageController.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "CartItems":
-					CartItems_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "Mail":
-					Mail_default.reqRemoveItem(item.index, parseInt(count, 10));
-					break;
-				case "WriteRodex":
-					WriteRodex_default.requestRemoveItemRodex(item.index, parseInt(count, 10));
-					break;
-			}
-		};
-		return false;
-	}
-	switch (data.from) {
-		case "Storage":
-			StorageController.reqRemoveItem(item.index, 1);
-			break;
-		case "CartItems":
-			CartItems_default.reqRemoveItem(item.index, 1);
-			break;
-		case "Mail":
-			Mail_default.reqRemoveItem(item.index, 1);
-			break;
-		case "WriteRodex":
-			WriteRodex_default.requestRemoveItemRodex(item.index, 1);
-			break;
-	}
-	return false;
-}
-function onItemOver$13(_e) {
-	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV3.getItemByIndex(idx);
-	if (!item) return;
-	let quantity = " ea";
-	if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
-	const root = InventoryV3.getRoot();
-	const overlay = root.querySelector(".overlay");
-	const rootEl = root.querySelector("#InventoryV3") || root;
-	const itemRect = this.getBoundingClientRect();
-	const rootRect = rootEl.getBoundingClientRect();
-	if (overlay) {
-		overlay.style.display = "block";
-		overlay.style.top = `${itemRect.top - rootRect.top}px`;
-		overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
-		overlay.innerHTML = _sanitizeHtml$7(`${DB.getItemName(item)}: ${item.count || 1}${quantity}`);
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-function onItemOut$14() {
-	const overlay = InventoryV3.getRoot().querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemDragStart$8(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV3.getItemByIndex(index);
-	if (!item) return;
-	const img = new Image();
-	const iconEl = this.querySelector(".icon");
-	const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
-	img.decoding = "async";
-	img.src = url || "";
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Inventory",
-		data: item
-	}));
-	onItemOut$14();
-}
-function onItemDragEnd$9() {
-	delete window._OBJ_DRAG_;
-}
-function onItemInfo$16(event) {
-	event.stopImmediatePropagation();
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV3.getItemByIndex(index);
-	if (!item) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$2(item);
-		return false;
-	}
-	if (ItemInfo_default.uid === item.ITID) {
-		ItemInfo_default.remove();
-		if (ItemCompare_default.ui) ItemCompare_default.remove();
-		return false;
-	}
-	if (ItemCompare_default.ui) ItemCompare_default.remove();
-	ItemInfo_default.append();
-	ItemInfo_default.uid = item.ITID;
-	ItemInfo_default.setItem(item);
-	const compareItem = EquipmentController.getUI().isInEquipList(item.location);
-	if (compareItem && InventoryV3.itemcomp) {
-		ItemCompare_default.prepare();
-		ItemCompare_default.append();
-		ItemCompare_default.uid = compareItem.ITID;
-		ItemCompare_default.setItem(compareItem);
-	}
-	return false;
-}
-function transferItemToOtherUI$2(item) {
-	const storageUI = StorageController.getUI();
-	const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
-	const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isStorageOpen) StorageController.reqAddItem(item.index, count);
-	else if (isCartOpen) InventoryV3.reqMoveItemToCart(item.index, count);
-	return true;
-}
-function onItemUsed$2(event) {
-	const index = parseInt(this.getAttribute("data-index"), 10);
-	const item = InventoryV3.getItemByIndex(index);
-	if (item) {
-		InventoryV3.useItem(item);
-		onItemOut$14();
-	}
-	event.stopImmediatePropagation();
-	event.preventDefault();
-}
-function onItemClick(event) {
-	if (event.shiftKey && event.which === 1) {
-		const idx = parseInt(this.getAttribute("data-index"), 10);
-		const item = InventoryV3.getItemByIndex(idx);
-		if (!item) return false;
-		item.name = DB.getItemName(item);
-		const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
-		const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
-		if (msgBox) {
-			msgBox.innerHTML += link + " ";
-			msgBox.focus();
-		}
-		event.stopImmediatePropagation();
-	}
-	return false;
-}
-function onTabDrop(event) {
-	let item, data;
-	event.stopImmediatePropagation();
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-		item = data.data;
-	} catch (_e) {
-		return false;
-	}
-	if (data.type !== "item") return false;
-	if (!item) return false;
-	const itemfav = event.target.getAttribute("data-tab") === "fav" ? 0 : 1;
-	const pkt = new PACKET.CZ.INVENTORY_TAB();
-	pkt.item_index = item.index;
-	pkt.favorite = itemfav;
-	Network.sendPacket(pkt);
-}
-function onInventoryExpand() {
-	const itemIds = [
-		25791,
-		25792,
-		25793
-	];
-	let itemforexpand = null;
-	for (let i = 0; i < itemIds.length; i++) {
-		itemforexpand = InventoryV3.getItemById(itemIds[i]);
-		if (itemforexpand) break;
-	}
-	if (!itemforexpand) {
-		ChatBox_default.addText(DB.getMessage(3564), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-		return false;
-	}
-	const pkt = new PACKET.CZ.REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE();
-	Network.sendPacket(pkt);
-}
-function onRequestInventoryExpandResult(pkt) {
-	if (pkt) switch (pkt.result) {
-		case 0: {
-			const item = InventoryV3.getItemById(pkt.itemId);
-			if (!item) return false;
-			const itemname = DB.getItemName(item);
-			const mcntEl = InventoryV3.getRoot().querySelector(".mcnt");
-			const currentlimit = mcntEl ? parseInt(mcntEl.textContent, 10) : 100;
-			const newlimit = currentlimit + 10;
-			UIManager.showPromptBox(DB.getMessage(3561).replace("%s", itemname).replace("%d", currentlimit).replace("%d", newlimit), "ok", "cancel", InventoryExpandReq, InventoryExpandCancel);
-			break;
-		}
-		case 1:
-			ChatBox_default.addText(DB.getMessage(3562), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 2:
-			ChatBox_default.addText(DB.getMessage(3563), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 3:
-			ChatBox_default.addText(DB.getMessage(3564), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 4:
-			ChatBox_default.addText(DB.getMessage(3565), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		default: break;
-	}
-}
-function InventoryExpandReq() {
-	const pkt = new PACKET.CZ.REQ_EXTEND_BODYITEM_SIZE();
-	Network.sendPacket(pkt);
-}
-function InventoryExpandCancel() {
-	const pkt = new PACKET.CZ.CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE();
-	Network.sendPacket(pkt);
-}
-function onFinalReqInventoryExpandResult(pkt) {
-	if (pkt) switch (pkt.result) {
-		case 0:
-			ChatBox_default.addText(DB.getMessage(3566), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 1:
-			ChatBox_default.addText(DB.getMessage(3562), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 2:
-			ChatBox_default.addText(DB.getMessage(3563), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 3:
-			ChatBox_default.addText(DB.getMessage(3564), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		case 4:
-			ChatBox_default.addText(DB.getMessage(3565), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
-			break;
-		default: break;
-	}
-}
-function onItemLock() {
-	_preferences$29.itemlock = !_preferences$29.itemlock;
-	InventoryV3.itemlock = _preferences$29.itemlock;
-	const lockImg = _preferences$29.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-		const btn = InventoryV3.getRoot().querySelector(".item_drop_lock");
-		if (btn) btn.style.backgroundImage = `url(${data})`;
-	});
-}
-function onItemCompare() {
-	_preferences$29.itemcomp = !_preferences$29.itemcomp;
-	InventoryV3.itemcomp = _preferences$29.itemcomp;
-	const compImg = _preferences$29.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-	Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-		const btn = InventoryV3.getRoot().querySelector(".item_compare");
-		if (btn) btn.style.backgroundImage = `url(${data})`;
-	});
-}
-function onNPCLock() {
-	_preferences$29.npcsalelock = !_preferences$29.npcsalelock;
-	InventoryV3.npcsalelock = _preferences$29.npcsalelock;
-	const root = InventoryV3.getRoot();
-	const dealOn = root.querySelector(".deallock_on");
-	const dealOff = root.querySelector(".deallock_off");
-	if (dealOn) dealOn.classList.toggle("hidden", !_preferences$29.npcsalelock);
-	if (dealOff) dealOff.classList.toggle("hidden", _preferences$29.npcsalelock);
-	if (_preferences$29.npcsalelock) {
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.classList.remove("hidden");
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.classList.remove("hidden");
-		lockOverlayTimeout = setTimeout(() => {
-			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.classList.add("hidden");
-		}, 3e3);
-	} else {
-		const lockOverlay = root.querySelector(".lockoverlay");
-		if (lockOverlay) lockOverlay.classList.add("hidden");
-		const lockMsg = root.querySelector(".lockoverlaymsg");
-		if (lockMsg) lockMsg.classList.add("hidden");
-	}
-}
-var InventoryV3, _realSize$2, _preferences$29, lockOverlayTimeout, InventoryV3_default;
-var init_InventoryV3 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_NetworkManager();
-	init_PacketStructure();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_CartItems();
-	init_InputBox();
-	init_ItemCompare();
-	init_ItemInfo();
-	init_ChatBox();
-	init_Equipment();
-	init_Storage$1();
-	init_SwitchEquip();
-	init_UIVersionManager();
-	init_InventoryV3$2();
-	init_InventoryV3$1();
-	init_Configs();
-	init_PacketVerManager();
-	init_BasicInfo();
-	init_Refine();
-	init_EnchantGrade();
-	init_Enchant();
-	init_Mail$1();
-	init_WriteRodex();
-	InventoryV3 = new GUIComponent("InventoryV3", InventoryV3_default$1);
-	InventoryV3.render = () => InventoryV3_default$2;
-	InventoryV3.TAB = {
+/**
+* Create an Inventory component.
+*
+* @param {object} config
+* @param {string} config.name                     Component name (kept per version verbatim)
+* @param {string} config.htmlText                 Version HTML template
+* @param {string} config.cssText                  Version CSS
+* @param {number} config.defaultHeight            Default `height` preference value
+* @param {boolean} [config.resizableHeight]       V0: two-dimensional resize (width + height)
+* @param {boolean} [config.tabSprite]             V0: tab highlight via tab_itm sprite (no `selected` class)
+* @param {boolean} [config.favoriteTab]           V1+: favorite tab, footer tools, item compare, count separator
+* @param {boolean} [config.equipSwitch]           V2+: equipment switch list and icons
+* @param {boolean} [config.enchantGrade]          V3: enchant grade icon on items
+* @param {boolean} [config.inventoryExpansion]    V3: inventory expansion button and packets
+* @param {boolean} [config.refineEnchant]         V3: refine/enchant routing on item use
+* @param {boolean} [config.useHiddenClass]        V3: toggle footer tools via `.hidden` class (vs style.display)
+* @param {boolean} [config.hostDropPreventDefault] V2+: preventDefault on host dragover
+* @param {boolean} [config.tabDropPreventDefault] V3: preventDefault on tab dragover
+*/
+function createInventory(config) {
+	const { name, htmlText, cssText, defaultHeight, resizableHeight = false, tabSprite = false, favoriteTab = false, equipSwitch = false, enchantGrade = false, inventoryExpansion = false, refineEnchant = false, useHiddenClass = false, hostDropPreventDefault = false, tabDropPreventDefault = false } = config;
+	const Component = new GUIComponent(name, cssText);
+	Component.render = () => htmlText;
+	Component.TAB = {
 		USABLE: 0,
 		EQUIP: 1,
 		ETC: 2,
 		FAV: 3
 	};
-	InventoryV3.list = [];
-	InventoryV3.equipswitchlist = [];
-	InventoryV3.newItems = [];
-	InventoryV3.equippedItems = [];
-	_realSize$2 = 0;
-	_preferences$29 = Preferences.get("InventoryV3", {
+	Component.list = [];
+	Component.newItems = [];
+	Component.equippedItems = [];
+	if (equipSwitch) Component.equipswitchlist = [];
+	let _realSize = 0;
+	let lockOverlayTimeout;
+	const prefDefaults = {
 		x: 0,
 		y: UIVersionManager.getInventoryVersion() > 0 ? 172 : 120,
 		width: 7,
-		height: 194,
+		height: defaultHeight,
 		show: false,
 		reduce: false,
-		tab: InventoryV3.TAB.USABLE,
-		itemlock: false,
-		itemcomp: true,
-		npcsalelock: false,
+		tab: Component.TAB.USABLE,
 		magnet_top: false,
 		magnet_bottom: false,
 		magnet_left: true,
 		magnet_right: false
-	}, 1);
-	InventoryV3.itemlock = _preferences$29.itemlock;
-	InventoryV3.itemcomp = _preferences$29.itemcomp;
-	InventoryV3.npcsalelock = _preferences$29.npcsalelock;
-	InventoryV3.init = function Init() {
-		const root = InventoryV3.getRoot();
+	};
+	if (favoriteTab) {
+		prefDefaults.itemlock = false;
+		prefDefaults.itemcomp = true;
+		prefDefaults.npcsalelock = false;
+	}
+	const _preferences = Preferences.get(name, prefDefaults, 1);
+	if (favoriteTab) {
+		Component.itemlock = _preferences.itemlock;
+		Component.itemcomp = _preferences.itemcomp;
+		Component.npcsalelock = _preferences.npcsalelock;
+	}
+	function setElHidden(el, hidden) {
+		if (!el) return;
+		if (useHiddenClass) el.classList.toggle("hidden", hidden);
+		else el.style.display = hidden ? "none" : "";
+	}
+	/**
+	* Initialize UI
+	*/
+	Component.init = function Init() {
+		const root = Component.getRoot();
 		const baseBtn = root.querySelector(".titlebar .base");
 		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		const miniBtn = root.querySelector(".titlebar .mini");
-		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction$1);
+		if (miniBtn) miniBtn.addEventListener("click", onToggleReduction);
 		root.querySelectorAll(".tabs button").forEach((btn) => {
-			btn.addEventListener("mousedown", onSwitchTab$2);
-			btn.addEventListener("dragover", (e) => {
-				e.preventDefault();
-				e.stopImmediatePropagation();
-			});
-			btn.addEventListener("drop", onTabDrop);
+			btn.addEventListener("mousedown", onSwitchTab);
+			if (favoriteTab) {
+				btn.addEventListener("dragover", (e) => {
+					if (tabDropPreventDefault) e.preventDefault();
+					e.stopImmediatePropagation();
+				});
+				btn.addEventListener("drop", onTabDrop);
+			}
 		});
 		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$9);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize);
 		const closeBtn = root.querySelector(".titlebar .close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
-			InventoryV3._host.style.display = "none";
+			Component._host.style.display = "none";
 		});
-		this._host.addEventListener("drop", onDrop$12);
+		this._host.addEventListener("drop", onDrop);
 		this._host.addEventListener("dragover", (e) => {
 			e.stopImmediatePropagation();
-			e.preventDefault();
+			if (hostDropPreventDefault) e.preventDefault();
 		});
 		const content = root.querySelector(".container .content");
 		if (content) {
 			content.addEventListener("mouseover", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemOver$13.call(item, e);
+				if (item) onItemOver.call(item, e);
 			});
 			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$14();
+				if (e.target.closest(".item")) onItemOut();
 			});
 			content.addEventListener("dragstart", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemDragStart$8.call(item, e);
+				if (item) onItemDragStart.call(item, e);
 			});
 			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$9();
+				if (e.target.closest(".item")) onItemDragEnd();
 			});
 			content.addEventListener("contextmenu", (e) => {
 				e.preventDefault();
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$16.call(item, e);
+				if (item) onItemInfo.call(item, e);
 			});
 			content.addEventListener("dblclick", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemUsed$2.call(item, e);
+				if (item) onItemUsed.call(item, e);
 			});
 			content.addEventListener("click", (e) => {
 				const item = e.target.closest(".item");
@@ -242660,80 +238887,101 @@ var init_InventoryV3 = __esmMin((() => {
 			});
 		}
 		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = "0 / ";
+		if (ncnt) ncnt.textContent = favoriteTab ? "0 / " : "0";
 		const mcnt = root.querySelector(".mcnt");
 		if (mcnt) mcnt.textContent = "100";
 		this.draggable(".titlebar");
-		root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
-		const allTabs = root.querySelectorAll(".tabs button");
-		if (allTabs[_preferences$29.tab]) allTabs[_preferences$29.tab].classList.add("selected");
-		const lockImg = _preferences$29.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
-			const btn = root.querySelector(".item_drop_lock");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		const compImg = _preferences$29.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
-		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
-			const btn = root.querySelector(".item_compare");
-			if (btn) btn.style.backgroundImage = `url(${data})`;
-		});
-		const dealOn = root.querySelector(".deallock_on");
-		const dealOff = root.querySelector(".deallock_off");
-		const onFavTab = _preferences$29.tab === InventoryV3.TAB.FAV;
-		if (dealOn) dealOn.classList.toggle("hidden", !(onFavTab && _preferences$29.npcsalelock));
-		if (dealOff) dealOff.classList.toggle("hidden", !(onFavTab && !_preferences$29.npcsalelock));
-		const sortEl = root.querySelector(".sort");
-		if (sortEl) sortEl.classList.toggle("hidden", !onFavTab);
-		const itemExpansion = root.querySelector(".item_expansion");
-		if (itemExpansion) itemExpansion.addEventListener("click", onInventoryExpand);
-		const itemDropLock = root.querySelector(".item_drop_lock");
-		if (itemDropLock) itemDropLock.addEventListener("click", onItemLock);
-		const itemCompare = root.querySelector(".item_compare");
-		if (itemCompare) itemCompare.addEventListener("click", onItemCompare);
-		root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock));
-		const overlayClose = root.querySelector(".lockoverlayclose");
-		if (overlayClose) overlayClose.addEventListener("click", () => {
-			const msg = root.querySelector(".lockoverlaymsg");
-			if (msg) msg.classList.add("hidden");
-			clearTimeout(lockOverlayTimeout);
-		});
-		const sortBtn = root.querySelector(".sort");
-		if (sortBtn) sortBtn.addEventListener("click", () => requestFilter$2());
+		if (!tabSprite) {
+			root.querySelectorAll(".tabs button").forEach((b) => b.classList.remove("selected"));
+			const allTabs = root.querySelectorAll(".tabs button");
+			if (allTabs[_preferences.tab]) allTabs[_preferences.tab].classList.add("selected");
+		}
+		if (favoriteTab) {
+			const lockImg = _preferences.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+			Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+				const btn = root.querySelector(".item_drop_lock");
+				if (btn) btn.style.backgroundImage = `url(${data})`;
+			});
+			const compImg = _preferences.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+			Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+				const btn = root.querySelector(".item_compare");
+				if (btn) btn.style.backgroundImage = `url(${data})`;
+			});
+			const dealOn = root.querySelector(".deallock_on");
+			const dealOff = root.querySelector(".deallock_off");
+			const onFavTab = _preferences.tab === Component.TAB.FAV;
+			setElHidden(dealOn, !(onFavTab && _preferences.npcsalelock));
+			setElHidden(dealOff, !(onFavTab && !_preferences.npcsalelock));
+			setElHidden(root.querySelector(".sort"), !onFavTab);
+			const itemDropLock = root.querySelector(".item_drop_lock");
+			if (itemDropLock) itemDropLock.addEventListener("click", onItemLock);
+			const itemCompare = root.querySelector(".item_compare");
+			if (itemCompare) itemCompare.addEventListener("click", onItemCompare);
+			root.querySelectorAll(".deal_lock").forEach((btn) => btn.addEventListener("click", onNPCLock));
+			const overlayClose = root.querySelector(".lockoverlayclose");
+			if (overlayClose) overlayClose.addEventListener("click", () => {
+				setElHidden(root.querySelector(".lockoverlaymsg"), true);
+				clearTimeout(lockOverlayTimeout);
+			});
+			const sortBtn = root.querySelector(".sort");
+			if (sortBtn) sortBtn.addEventListener("click", () => requestFilter());
+		}
+		if (inventoryExpansion) {
+			const itemExpansion = root.querySelector(".item_expansion");
+			if (itemExpansion) itemExpansion.addEventListener("click", onInventoryExpand);
+		}
 	};
-	InventoryV3.onAppend = function OnAppend() {
-		if (!_preferences$29.show) this._host.style.display = "none";
-		this.resize(_preferences$29.width, _preferences$29.height);
+	/**
+	* Apply preferences once append to body
+	*/
+	Component.onAppend = function OnAppend() {
+		const root = Component.getRoot();
+		if (!_preferences.show) this._host.style.display = "none";
+		if (tabSprite) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (_preferences.tab + 1) + ".bmp", (data) => {
+			const tabSpriteEl = root.querySelector(".tab-sprite");
+			if (tabSpriteEl) tabSpriteEl.style.backgroundImage = `url("${data}")`;
+		});
+		this.resize(_preferences.width, _preferences.height);
 		const hostRect = this._host.getBoundingClientRect();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$29.y), Renderer.height - hostRect.height)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$29.x), Renderer.width - hostRect.width)}px`;
-		this.magnet.TOP = _preferences$29.magnet_top;
-		this.magnet.BOTTOM = _preferences$29.magnet_bottom;
-		this.magnet.LEFT = _preferences$29.magnet_left;
-		this.magnet.RIGHT = _preferences$29.magnet_right;
-		_realSize$2 = _preferences$29.reduce ? 0 : this._host.getBoundingClientRect().height;
-		const miniBtnAppend = InventoryV3.getRoot().querySelector(".titlebar .mini");
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - hostRect.height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - hostRect.width)}px`;
+		this.magnet.TOP = _preferences.magnet_top;
+		this.magnet.BOTTOM = _preferences.magnet_bottom;
+		this.magnet.LEFT = _preferences.magnet_left;
+		this.magnet.RIGHT = _preferences.magnet_right;
+		_realSize = _preferences.reduce ? 0 : this._host.getBoundingClientRect().height;
+		const miniBtnAppend = root.querySelector(".titlebar .mini");
 		if (miniBtnAppend) miniBtnAppend.dispatchEvent(new Event("mousedown"));
 	};
-	InventoryV3.onRemove = function OnRemove() {
-		const content = InventoryV3.getRoot().querySelector(".container .content");
+	/**
+	* Remove Inventory from window (and so clean up items)
+	*/
+	Component.onRemove = function OnRemove() {
+		const content = Component.getRoot().querySelector(".container .content");
 		if (content) content.innerHTML = "";
 		this.list.length = 0;
-		this.equipswitchlist.length = 0;
-		InventoryV3.newItems.length = 0;
+		if (equipSwitch) this.equipswitchlist.length = 0;
+		Component.newItems.length = 0;
 		document.querySelectorAll(".ItemInfo").forEach((el) => el.remove());
-		_preferences$29.show = this._host.style.display !== "none";
-		_preferences$29.reduce = !!_realSize$2;
-		_preferences$29.y = parseInt(this._host.style.top, 10);
-		_preferences$29.x = parseInt(this._host.style.left, 10);
+		_preferences.show = this._host.style.display !== "none";
+		_preferences.reduce = !!_realSize;
+		_preferences.y = parseInt(this._host.style.top, 10);
+		_preferences.x = parseInt(this._host.style.left, 10);
 		const hostRect = this._host.getBoundingClientRect();
-		_preferences$29.width = Math.floor((hostRect.width - 25) / 32);
-		_preferences$29.magnet_top = this.magnet.TOP;
-		_preferences$29.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$29.magnet_left = this.magnet.LEFT;
-		_preferences$29.magnet_right = this.magnet.RIGHT;
-		_preferences$29.save();
+		_preferences.width = Math.floor((hostRect.width - 25) / 32);
+		if (resizableHeight) _preferences.height = Math.floor((hostRect.height - 20) / 32);
+		_preferences.magnet_top = this.magnet.TOP;
+		_preferences.magnet_bottom = this.magnet.BOTTOM;
+		_preferences.magnet_left = this.magnet.LEFT;
+		_preferences.magnet_right = this.magnet.RIGHT;
+		_preferences.save();
 	};
-	InventoryV3.onShortCut = function onShurtCut(key) {
+	/**
+	* Process shortcut
+	*
+	* @param {object} key
+	*/
+	Component.onShortCut = function onShurtCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
 				if (this._host.style.display === "none") {
@@ -242742,7 +238990,7 @@ var init_InventoryV3 = __esmMin((() => {
 				} else {
 					this._host.dispatchEvent(new Event("mouseleave"));
 					this.clearNewItems();
-					InventoryV3.getRoot().querySelectorAll(".new_item").forEach((el) => {
+					Component.getRoot().querySelectorAll(".new_item").forEach((el) => {
 						el.style.backgroundImage = "";
 					});
 					this._host.style.display = "none";
@@ -242755,14 +239003,17 @@ var init_InventoryV3 = __esmMin((() => {
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
-	InventoryV3.toggle = function toggle() {
+	/**
+	* Show/Hide UI
+	*/
+	Component.toggle = function toggle() {
 		if (this._host.style.display === "none") {
 			this._host.style.display = "";
 			this.focus();
 		} else {
 			this._host.dispatchEvent(new Event("mouseleave"));
 			this.clearNewItems();
-			InventoryV3.getRoot().querySelectorAll(".new_item").forEach((el) => {
+			Component.getRoot().querySelectorAll(".new_item").forEach((el) => {
 				el.style.backgroundImage = "";
 			});
 			this._host.style.display = "none";
@@ -242773,18 +239024,34 @@ var init_InventoryV3 = __esmMin((() => {
 			if (changeUI) changeUI.style.display = "none";
 		}
 	};
-	InventoryV3.clearNewItems = function clearNewItems() {
+	/**
+	* Clear newItems array
+	*/
+	Component.clearNewItems = function clearNewItems() {
 		this.newItems = [];
 	};
-	InventoryV3.resize = function Resize(width) {
+	/**
+	* Extend inventory window size
+	*
+	* @param {number} width
+	* @param {number} height
+	*/
+	Component.resize = function Resize(width, height) {
 		width = Math.min(Math.max(width, 6), 8);
-		const content = InventoryV3.getRoot().querySelector(".container .content");
+		const content = Component.getRoot().querySelector(".container .content");
 		if (content) content.style.width = `${width * 32}px`;
-		this._host.style.width = `${55 + width * 32}px`;
+		if (resizableHeight) {
+			height = Math.min(Math.max(height, 2), 5);
+			this._host.style.width = `${59 + width * 32}px`;
+			this._host.style.height = `${62 + height * 32}px`;
+		} else this._host.style.width = `${55 + width * 32}px`;
 		this.updateScroll();
 	};
-	InventoryV3.updateScroll = function updateScroll() {
-		const root = InventoryV3.getRoot();
+	/**
+	* Force scroll clamping
+	*/
+	Component.updateScroll = function updateScroll() {
+		const root = Component.getRoot();
 		const hostEl = root.querySelector(".scroll-host");
 		if (!hostEl) return;
 		const contentEl = root.querySelector(".content");
@@ -242803,48 +239070,96 @@ var init_InventoryV3 = __esmMin((() => {
 		};
 		clamp();
 	};
-	InventoryV3.getItemById = function GetItemById(id) {
-		const list = InventoryV3.list;
+	/**
+	* Get item object
+	*
+	* @param {number} id
+	* @returns {Item}
+	*/
+	Component.getItemById = function GetItemById(id) {
+		const list = Component.list;
 		for (let i = 0, count = list.length; i < count; ++i) if (list[i].ITID === id) return list[i];
 		return null;
 	};
-	InventoryV3.getItemByIndex = function getItemByIndex(index) {
-		const list = InventoryV3.list;
+	/**
+	* Search in a list for an item by its index
+	*
+	* @param {number} index
+	* @returns {Item}
+	*/
+	Component.getItemByIndex = function getItemByIndex(index) {
+		const list = Component.list;
 		for (let i = 0, count = list.length; i < count; ++i) if (list[i].index === index) return list[i];
 		return null;
 	};
-	InventoryV3.setItems = function SetItems(items) {
-		const root = InventoryV3.getRoot();
+	/**
+	* Get the TAB constant for a given item based on its type.
+	*
+	* @param {object} item
+	* @returns {number} TAB constant
+	*/
+	function getItemTab(item) {
+		switch (item.type) {
+			case ItemType_default.HEALING:
+			case ItemType_default.USABLE:
+			case ItemType_default.DELAYCONSUME:
+			case ItemType_default.CASH: return Component.TAB.USABLE;
+			case ItemType_default.WEAPON:
+			case ItemType_default.ARMOR:
+			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.PETEGG:
+			case ItemType_default.PETARMOR: return Component.TAB.EQUIP;
+			default:
+			case ItemType_default.ETC:
+			case ItemType_default.CARD:
+			case ItemType_default.AMMO: return Component.TAB.ETC;
+		}
+	}
+	/**
+	* Add items to the list
+	* if the item index is exist you should clear it;[skybook888]
+	*/
+	Component.setItems = function SetItems(items) {
+		const root = Component.getRoot();
 		for (let i = 0, count = items.length; i < count; ++i) {
 			const object = this.getItemByIndex(items[i].index);
 			if (object) this.removeItem(object.index, object.count);
 			if (this.addItemSub(items[i])) {
 				this.list.push(items[i]);
 				const ncnt = root.querySelector(".ncnt");
-				if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
+				if (ncnt) ncnt.textContent = countLabel();
 				this.onUpdateItem(items[i].ITID, items[i].count ? items[i].count : 1);
 			}
 		}
 	};
-	InventoryV3.addItem = function AddItem(item) {
+	function countLabel() {
+		return Component.list.length + EquipmentController.getUI().getNumber() + (favoriteTab ? " / " : "");
+	}
+	/**
+	* Insert Item to inventory
+	*
+	* @param {object} item
+	*/
+	Component.addItem = function AddItem(item) {
 		let object = this.getItemByIndex(item.index);
-		const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
-		const root = InventoryV3.getRoot();
-		const equippedIndex = InventoryV3.equippedItems.indexOf(item.index);
-		if (equippedIndex !== -1) InventoryV3.equippedItems.splice(equippedIndex, 1);
+		const root = Component.getRoot();
+		const equippedIndex = Component.equippedItems.indexOf(item.index);
+		if (equippedIndex !== -1) Component.equippedItems.splice(equippedIndex, 1);
 		else {
-			InventoryV3.newItems.push(item.index);
+			Component.newItems.push(item.index);
 			const basicInfoUI = BasicInfoController.getUI();
 			if (basicInfoUI._host) {
 				const changeUI = basicInfoUI.getRoot().querySelector("#item .btn_overlay");
 				if (changeUI) changeUI.style.display = "block";
 			}
 		}
-		if (hasRefineFlag && Refine_default.isRefineOpen()) {
-			const refineRoot = Refine_default._shadow || Refine_default._host;
-			if (refineRoot) {
-				const refinecount = refineRoot.querySelector(`.materials .item[data-index="${item.ITID}"] .mat_count`);
-				if (refinecount) refinecount.textContent = `${parseInt(refinecount.textContent.split("/")[0], 10) + item.count}/1`;
+		if (refineEnchant) {
+			if ((Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012) && Refine_default.isRefineOpen()) {
+				const refineRoot = Refine_default._shadow || Refine_default._host;
+				if (refineRoot) {
+					const refinecount = refineRoot.querySelector(`.materials .item[data-index="${item.ITID}"] .mat_count`);
+					if (refinecount) refinecount.textContent = `${parseInt(refinecount.textContent.split("/")[0], 10) + item.count}/1`;
+				}
 			}
 		}
 		if (object) {
@@ -242854,8 +239169,8 @@ var init_InventoryV3 = __esmMin((() => {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = object.count;
 			this.onUpdateItem(object.ITID, object.count);
-			if (InventoryV3.newItems.indexOf(item.index) === -1) InventoryV3.newItems.push(item.index);
-			if (getItemTab(item) === _preferences$29.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (Component.newItems.indexOf(item.index) === -1) Component.newItems.push(item.index);
+			if (getItemTab(item) === _preferences.tab) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (el) el.style.backgroundImage = `url(${data})`;
 			});
@@ -242865,33 +239180,41 @@ var init_InventoryV3 = __esmMin((() => {
 		if (this.addItemSub(object)) {
 			this.list.push(object);
 			const ncnt = root.querySelector(".ncnt");
-			if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
+			if (ncnt) ncnt.textContent = countLabel();
 			this.onUpdateItem(object.ITID, object.count);
 		}
 	};
-	InventoryV3.isNewItem = function isNewItem(index) {
-		return InventoryV3.newItems.includes(index);
+	/**
+	* Check if item index is in newItems list
+	*/
+	Component.isNewItem = function isNewItem(index) {
+		return Component.newItems.includes(index);
 	};
-	InventoryV3.addItemSub = function AddItemSub(item) {
+	/**
+	* Add item to inventory
+	*
+	* @param {object} item
+	*/
+	Component.addItemSub = function AddItemSub(item) {
 		let tab = getItemTab(item);
-		if (item.PlaceETCTab) tab = InventoryV3.TAB.FAV;
+		if (favoriteTab && item.PlaceETCTab) tab = Component.TAB.FAV;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) {
 			EquipmentController.getUI().equip(item, item.WearState);
 			return false;
 		}
-		const isInSwitchList = InventoryV3.equipswitchlist.some((equipItem) => equipItem.index === item.index);
+		const isInSwitchList = equipSwitch ? Component.equipswitchlist.some((equipItem) => equipItem.index === item.index) : false;
 		if (isInSwitchList) SwitchEquip_default.equip(item, item.location, true);
-		if (tab === _preferences$29.tab) {
+		if (tab === _preferences.tab) {
 			const it = DB.getItemInfo(item.ITID);
-			const root = InventoryV3.getRoot();
+			const root = Component.getRoot();
 			const content = root.querySelector(".container .content");
 			if (!content) return true;
-			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div><div class="switch1"></div><div class="switch2"></div><div class="grade"></div><div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
+			content.insertAdjacentHTML("beforeend", `<div class="item" data-index="${item.index}" draggable="true"><div class="new_item"></div><div class="icon"></div>` + (equipSwitch ? "<div class=\"switch1\"></div><div class=\"switch2\"></div>" : "") + (enchantGrade ? "<div class=\"grade\"></div>" : "") + `<div class="amount"><span class="count">${item.count || 1}</span></div></div>`);
 			Client.loadFile(DB.INTERFACE_PATH + "item/" + (item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName) + ".bmp", (data) => {
 				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
 				if (icon) icon.style.backgroundImage = `url(${data})`;
 			});
-			if (InventoryV3.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
+			if (Component.isNewItem(item.index)) Client.loadFile(DB.INTERFACE_PATH + "basic_interface/new_item.bmp", (data) => {
 				const el = root.querySelector(`.item[data-index="${item.index}"] .new_item`);
 				if (el) el.style.backgroundImage = `url(${data})`;
 			});
@@ -242909,19 +239232,25 @@ var init_InventoryV3 = __esmMin((() => {
 					if (el) el.style.backgroundImage = `url(${data})`;
 				});
 			}
-			if (item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
+			if (enchantGrade && item.enchantgrade) Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/grade_icon" + item.enchantgrade + ".bmp", (data) => {
 				const el = root.querySelector(`.item[data-index="${item.index}"] .grade`);
 				if (el) el.style.backgroundImage = `url(${data})`;
 			});
 		}
 		return true;
 	};
-	InventoryV3.isInEquipSwitchList = function(location) {
+	if (equipSwitch) Component.isInEquipSwitchList = function(location) {
 		return this.equipswitchlist.some((existingItem) => (existingItem.location & location) !== 0);
 	};
-	InventoryV3.removeItem = function RemoveItem(index, count) {
+	/**
+	* Remove item from inventory
+	*
+	* @param {number} index in inventory
+	* @param {number} count
+	*/
+	Component.removeItem = function RemoveItem(index, count) {
 		const item = this.getItemByIndex(index);
-		const root = InventoryV3.getRoot();
+		const root = Component.getRoot();
 		if (!item || count <= 0) return null;
 		if (item.count) {
 			item.count -= count;
@@ -242936,17 +239265,23 @@ var init_InventoryV3 = __esmMin((() => {
 		const el = root.querySelector(`.item[data-index="${item.index}"]`);
 		if (el) el.remove();
 		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
+		if (ncnt) ncnt.textContent = countLabel();
 		this.onUpdateItem(item.ITID, 0);
 		const overlay = root.querySelector(".overlay");
 		if (overlay) overlay.style.display = "none";
 		return item;
 	};
-	InventoryV3.updateItem = function UpdateItem(index, count) {
+	/**
+	* Update item in inventory
+	*
+	* @param {number} index in inventory
+	* @param {number} count
+	*/
+	Component.updateItem = function UpdateItem(index, count) {
 		const item = this.getItemByIndex(index);
 		if (!item) return;
 		item.count = count;
-		const root = InventoryV3.getRoot();
+		const root = Component.getRoot();
 		if (item.count > 0) {
 			const countEl = root.querySelector(`.item[data-index="${item.index}"] .count`);
 			if (countEl) countEl.textContent = item.count;
@@ -242957,27 +239292,32 @@ var init_InventoryV3 = __esmMin((() => {
 		const el = root.querySelector(`.item[data-index="${item.index}"]`);
 		if (el) el.remove();
 		const ncnt = root.querySelector(".ncnt");
-		if (ncnt) ncnt.textContent = this.list.length + EquipmentController.getUI().getNumber() + " / ";
+		if (ncnt) ncnt.textContent = countLabel();
 		this.onUpdateItem(item.ITID, 0);
 		this.updateScroll();
 	};
-	InventoryV3.useItem = function UseItem(item) {
-		const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
-		const hasEnchantGradeFlag = PacketVerManager_default.value >= 20200916;
-		const hasEnchantFlag = PacketVerManager_default.value >= 20211103;
+	/**
+	* Use an item
+	*
+	* @param {Item} item
+	*/
+	Component.useItem = function UseItem(item) {
 		switch (item.type) {
 			case ItemType_default.HEALING:
 			case ItemType_default.USABLE:
 			case ItemType_default.CASH:
-				InventoryV3.onUseItem(item.index);
+				Component.onUseItem(item.index);
 				break;
 			case ItemType_default.CARD:
-				InventoryV3.onUseCard(item.index);
+				Component.onUseCard(item.index);
 				break;
 			case ItemType_default.DELAYCONSUME: break;
 			case ItemType_default.WEAPON:
 			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.SHADOWGEAR: if (refineEnchant) {
+				const hasRefineFlag = Configs.get("enableRefineUI") || PacketVerManager_default.value >= 20161012;
+				const hasEnchantGradeFlag = PacketVerManager_default.value >= 20200916;
+				const hasEnchantFlag = PacketVerManager_default.value >= 20211103;
 				if (hasRefineFlag && Refine_default.isRefineOpen()) {
 					Refine_default.onRequestItemRefine(item);
 					break;
@@ -242990,14 +239330,320 @@ var init_InventoryV3 = __esmMin((() => {
 					Enchant_default.onRequestItemEnchant(item);
 					break;
 				}
+			}
 			case ItemType_default.PETARMOR:
 			case ItemType_default.AMMO:
-				if (item.IsIdentified && !item.IsDamaged) InventoryV3.onEquipItem(item.index, item.location);
+				if (item.IsIdentified && !item.IsDamaged) Component.onEquipItem(item.index, item.location);
 				break;
 		}
 	};
-	InventoryV3.updatePlaceETCTab = function(itemIndex, newValue) {
-		const item = InventoryV3.getItemByIndex(itemIndex);
+	/**
+	* Extend inventory window size
+	*/
+	function onResize() {
+		const top = Component._host.offsetTop;
+		const left = Component._host.offsetLeft;
+		let lastWidth = 0;
+		let lastHeight = 0;
+		function resizing() {
+			let w = Math.floor((Mouse.screen.x - left - 25) / 32);
+			w = Math.min(Math.max(w, 6), resizableHeight ? 8 : 9);
+			if (resizableHeight) {
+				let h = Math.floor((Mouse.screen.y - top - 20) / 32);
+				h = Math.min(Math.max(h, 2), 5);
+				if (w === lastWidth && h === lastHeight) return;
+				Component.resize(w, h);
+				lastWidth = w;
+				lastHeight = h;
+			} else {
+				if (w === lastWidth) return;
+				Component.resize(w);
+				lastWidth = w;
+			}
+		}
+		const _Interval = setInterval(resizing, 30);
+		const onMouseUp = (event) => {
+			if (event.which === 1) {
+				clearInterval(_Interval);
+				window.removeEventListener("mouseup", onMouseUp);
+			}
+		};
+		window.addEventListener("mouseup", onMouseUp);
+	}
+	/**
+	* Modify tab, filter display entries
+	*/
+	function onSwitchTab() {
+		const root = Component.getRoot();
+		const buttons = root.querySelectorAll(".tabs button");
+		const idx = Array.from(buttons).indexOf(this);
+		_preferences.tab = parseInt(idx, 10);
+		if (tabSprite) {
+			Client.loadFile(DB.INTERFACE_PATH + "basic_interface/tab_itm_0" + (idx + 1) + ".bmp", (data) => {
+				const tabSpriteEl = root.querySelector(".tab-sprite");
+				if (tabSpriteEl) tabSpriteEl.style.backgroundImage = `url(${data})`;
+				requestFilter();
+			});
+			return;
+		}
+		requestFilter();
+		buttons.forEach((b) => b.classList.remove("selected"));
+		this.classList.add("selected");
+		if (favoriteTab) {
+			const dealOn = root.querySelector(".deallock_on");
+			const dealOff = root.querySelector(".deallock_off");
+			const lockOverlay = root.querySelector(".lockoverlay");
+			const lockMsg = root.querySelector(".lockoverlaymsg");
+			const sort = root.querySelector(".sort");
+			const onFavTab = _preferences.tab === Component.TAB.FAV;
+			setElHidden(dealOn, !(onFavTab && _preferences.npcsalelock));
+			setElHidden(dealOff, !(onFavTab && !_preferences.npcsalelock));
+			setElHidden(lockOverlay, !(onFavTab && _preferences.npcsalelock));
+			setElHidden(lockMsg, true);
+			setElHidden(sort, !onFavTab);
+		}
+	}
+	/**
+	* Hide/show inventory's content
+	*/
+	function onToggleReduction() {
+		const panel = Component.getRoot().querySelector(".panel");
+		if (_realSize) {
+			if (panel) panel.style.display = "flex";
+			Component._host.style.height = `${_realSize}px`;
+			_realSize = 0;
+		} else {
+			_realSize = Component._host.getBoundingClientRect().height;
+			Component._host.style.height = "17px";
+			if (panel) panel.style.display = "none";
+		}
+	}
+	/**
+	* Update tab, reset inventory content
+	*/
+	function requestFilter() {
+		const root = Component.getRoot();
+		const host = root.querySelector(".scroll-host");
+		if (host) host.scrollTop = 0;
+		const content = root.querySelector(".container .content");
+		if (content) content.innerHTML = "";
+		const list = Component.list;
+		for (let i = 0, count = list.length; i < count; ++i) Component.addItemSub(list[i]);
+		Component.updateScroll();
+	}
+	/**
+	* Drop an item from storage to inventory
+	*
+	* @param {event} event
+	*/
+	function onDrop(event) {
+		let item, data;
+		event.stopImmediatePropagation();
+		try {
+			data = JSON.parse(event.dataTransfer.getData("Text"));
+			item = data.data;
+		} catch (_e) {
+			return false;
+		}
+		if (data.type !== "item" || data.from !== "Storage" && data.from !== "CartItems" && data.from !== "Mail" && data.from !== "WriteRodex") return false;
+		if (item.count > 1) {
+			InputBox_default.append();
+			InputBox_default.setType("number", false, item.count);
+			InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+				InputBox_default.remove();
+				switch (data.from) {
+					case "Storage":
+						StorageController.reqRemoveItem(item.index, parseInt(count, 10));
+						break;
+					case "CartItems":
+						CartItems_default.reqRemoveItem(item.index, parseInt(count, 10));
+						break;
+					case "Mail":
+						Mail_default.reqRemoveItem(item.index, parseInt(count, 10));
+						break;
+					case "WriteRodex":
+						WriteRodex_default.requestRemoveItemRodex(item.index, parseInt(count, 10));
+						break;
+				}
+			};
+			return false;
+		}
+		switch (data.from) {
+			case "Storage":
+				StorageController.reqRemoveItem(item.index, 1);
+				break;
+			case "CartItems":
+				CartItems_default.reqRemoveItem(item.index, 1);
+				break;
+			case "Mail":
+				Mail_default.reqRemoveItem(item.index, 1);
+				break;
+			case "WriteRodex":
+				WriteRodex_default.requestRemoveItemRodex(item.index, 1);
+				break;
+		}
+		return false;
+	}
+	/**
+	* Show item name when mouse is over
+	*/
+	function onItemOver(_e) {
+		const idx = parseInt(this.getAttribute("data-index"), 10);
+		const item = Component.getItemByIndex(idx);
+		if (!item) return;
+		let quantity = " ea";
+		if (item.Options && (item.type === ItemType_default.WEAPON || item.type === ItemType_default.ARMOR || item.type === ItemType_default.SHADOWGEAR) && item.Options.filter((Option) => Option.index !== 0).length > 0) quantity = " Quantity";
+		const root = Component.getRoot();
+		const overlay = root.querySelector(".overlay");
+		const rootEl = root.querySelector(`#${name}`) || root;
+		const itemRect = this.getBoundingClientRect();
+		const rootRect = rootEl.getBoundingClientRect();
+		if (overlay) {
+			overlay.style.display = "block";
+			overlay.style.top = `${itemRect.top - rootRect.top}px`;
+			overlay.style.left = `${itemRect.left - rootRect.left + 35}px`;
+			overlay.innerHTML = _sanitizeHtml$7(`${DB.getItemName(item)}: ${item.count || 1}${quantity}`);
+			if (item.IsIdentified) overlay.classList.remove("grey");
+			else overlay.classList.add("grey");
+		}
+	}
+	/**
+	* Hide the item name
+	*/
+	function onItemOut() {
+		const overlay = Component.getRoot().querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	}
+	/**
+	* Start dragging an item
+	*/
+	function onItemDragStart(event) {
+		const index = parseInt(this.getAttribute("data-index"), 10);
+		const item = Component.getItemByIndex(index);
+		if (!item) return;
+		const img = new Image();
+		const iconEl = this.querySelector(".icon");
+		const url = iconEl ? iconEl.style.backgroundImage.match(/\((.*?)\)/)?.[1]?.replace(/('|")/g, "") : "";
+		img.decoding = "async";
+		img.src = url || "";
+		event.dataTransfer.setDragImage(img, 12, 12);
+		event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+			type: "item",
+			from: "Inventory",
+			data: item
+		}));
+		onItemOut();
+	}
+	/**
+	* Stop dragging an item
+	*/
+	function onItemDragEnd() {
+		delete window._OBJ_DRAG_;
+	}
+	/**
+	* Get item info (open description window)
+	*/
+	function onItemInfo(event) {
+		event.stopImmediatePropagation();
+		const index = parseInt(this.getAttribute("data-index"), 10);
+		const item = Component.getItemByIndex(index);
+		if (!item) return false;
+		if (event.altKey && event.which === 3) {
+			event.stopImmediatePropagation();
+			transferItemToOtherUI(item);
+			return false;
+		}
+		if (ItemInfo_default.uid === item.ITID) {
+			ItemInfo_default.remove();
+			if (favoriteTab && ItemCompare_default.ui) ItemCompare_default.remove();
+			return false;
+		}
+		if (favoriteTab && ItemCompare_default.ui) ItemCompare_default.remove();
+		ItemInfo_default.append();
+		ItemInfo_default.uid = item.ITID;
+		ItemInfo_default.setItem(item);
+		if (favoriteTab) {
+			const compareItem = EquipmentController.getUI().isInEquipList(item.location);
+			if (compareItem && Component.itemcomp) {
+				ItemCompare_default.prepare();
+				ItemCompare_default.append();
+				ItemCompare_default.uid = compareItem.ITID;
+				ItemCompare_default.setItem(compareItem);
+			}
+		}
+		return false;
+	}
+	/**
+	* Alt Right Click Request Transfer
+	*/
+	function transferItemToOtherUI(item) {
+		const storageUI = StorageController.getUI();
+		const isStorageOpen = storageUI._host ? storageUI._host.style.display !== "none" : false;
+		const isCartOpen = CartItems_default._host ? CartItems_default._host.style.display !== "none" : false;
+		if (!item) return false;
+		const count = item.count || 1;
+		if (isStorageOpen) StorageController.reqAddItem(item.index, count);
+		else if (isCartOpen) Component.reqMoveItemToCart(item.index, count);
+		return true;
+	}
+	/**
+	* Ask to use an item
+	*/
+	function onItemUsed(event) {
+		const index = parseInt(this.getAttribute("data-index"), 10);
+		const item = Component.getItemByIndex(index);
+		if (item) {
+			Component.useItem(item);
+			onItemOut();
+		}
+		event.stopImmediatePropagation();
+		event.preventDefault();
+	}
+	/**
+	* Handle click event on an item
+	*/
+	function onItemClick(event) {
+		if (event.shiftKey && event.which === 1) {
+			const idx = parseInt(this.getAttribute("data-index"), 10);
+			const item = Component.getItemByIndex(idx);
+			if (!item) return false;
+			item.name = DB.getItemName(item);
+			const link = "<span data-item=\"" + DB.createItemLink(item) + "\" class=\"item-link\" style=\"color:#A9B95F;\">&lt;" + item.name + "&gt;</span>";
+			const msgBox = (ChatBox_default._shadow || ChatBox_default._host || document).querySelector(".input-chatbox");
+			if (msgBox) {
+				msgBox.innerHTML += link + " ";
+				msgBox.focus();
+			}
+			event.stopImmediatePropagation();
+		}
+		return false;
+	}
+	/**
+	* Handle drop event on tabs
+	*/
+	function onTabDrop(event) {
+		let item, data;
+		event.stopImmediatePropagation();
+		try {
+			data = JSON.parse(event.dataTransfer.getData("Text"));
+			item = data.data;
+		} catch (_e) {
+			return false;
+		}
+		if (data.type !== "item") return false;
+		if (!item) return false;
+		const itemfav = event.target.getAttribute("data-tab") === "fav" ? 0 : 1;
+		const pkt = new PACKET.CZ.INVENTORY_TAB();
+		pkt.item_index = item.index;
+		pkt.favorite = itemfav;
+		Network.sendPacket(pkt);
+	}
+	if (favoriteTab)
+ /**
+	* Update PlaceETCTab of an item in the inventory
+	*/
+	Component.updatePlaceETCTab = function(itemIndex, newValue) {
+		const item = Component.getItemByIndex(itemIndex);
 		if (!item) return;
 		if (newValue) {
 			let favoriteval;
@@ -243022,68 +239668,335 @@ var init_InventoryV3 = __esmMin((() => {
 			}
 			item.PlaceETCTab = favoriteval;
 		} else item.PlaceETCTab = newValue;
-		requestFilter$2();
+		requestFilter();
 	};
-	InventoryV3.addItemtoSwitch = function(index) {
-		const item = this.getItemByIndex(index);
-		if (!item) {
-			console.warn(`Item with index ${index} not found in inventory.`);
-			return;
-		}
-		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.location === item.location);
-		if (existingItemIndex > -1) {
-			const existingItem = this.equipswitchlist[existingItemIndex];
-			SwitchEquip_default.unEquip(existingItem.index, existingItem.location);
-			this.equipswitchlist.splice(existingItemIndex, 1);
-		}
-		this.equipswitchlist.push(item);
-		const root = InventoryV3.getRoot();
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
-			const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
-			if (el) el.style.backgroundImage = `url(${data})`;
+	/**
+	* Toggle the item drop lock preference
+	*/
+	function onItemLock() {
+		_preferences.itemlock = !_preferences.itemlock;
+		Component.itemlock = _preferences.itemlock;
+		const lockImg = _preferences.itemlock ? "inventory/item_drop_lock_on.bmp" : "inventory/item_drop_lock_off.bmp";
+		Client.loadFile(DB.INTERFACE_PATH + lockImg, (data) => {
+			const btn = Component.getRoot().querySelector(".item_drop_lock");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
-			const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
-			if (el) el.style.backgroundImage = `url(${data})`;
+	}
+	/**
+	* Toggles the value of Item Compare
+	*/
+	function onItemCompare() {
+		_preferences.itemcomp = !_preferences.itemcomp;
+		Component.itemcomp = _preferences.itemcomp;
+		const compImg = _preferences.itemcomp ? "inventory/item_compare_on.bmp" : "inventory/item_compare_off.bmp";
+		Client.loadFile(DB.INTERFACE_PATH + compImg, (data) => {
+			const btn = Component.getRoot().querySelector(".item_compare");
+			if (btn) btn.style.backgroundImage = `url(${data})`;
 		});
-		SwitchEquip_default.equip(item, item.location, true);
-		ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3143), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
-	};
-	InventoryV3.removeItemFromSwitch = function(index) {
-		const item = this.getItemByIndex(index);
-		if (!item) {
-			console.warn(`Item with index ${index} not found in inventory.`);
-			return;
+	}
+	/**
+	* Toggles the value of Item Lock NPCSale
+	*/
+	function onNPCLock() {
+		_preferences.npcsalelock = !_preferences.npcsalelock;
+		Component.npcsalelock = _preferences.npcsalelock;
+		const root = Component.getRoot();
+		const dealOn = root.querySelector(".deallock_on");
+		const dealOff = root.querySelector(".deallock_off");
+		const lockOverlay = root.querySelector(".lockoverlay");
+		const lockMsg = root.querySelector(".lockoverlaymsg");
+		setElHidden(dealOn, !_preferences.npcsalelock);
+		setElHidden(dealOff, _preferences.npcsalelock);
+		if (_preferences.npcsalelock) {
+			setElHidden(lockOverlay, false);
+			setElHidden(lockMsg, false);
+			lockOverlayTimeout = setTimeout(() => {
+				setElHidden(root.querySelector(".lockoverlaymsg"), true);
+			}, 3e3);
+		} else {
+			setElHidden(lockOverlay, true);
+			setElHidden(lockMsg, true);
 		}
-		const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
-		if (existingItemIndex > -1) {
-			const root = InventoryV3.getRoot();
-			const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
-			if (sw1) sw1.style.backgroundImage = "none";
-			const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
-			if (sw2) sw2.style.backgroundImage = "none";
-			SwitchEquip_default.unEquip(item.index, item.location);
-			this.equipswitchlist.splice(existingItemIndex, 1);
-			ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3144), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
-			EquipmentController.getUI().equipItemsToSwitch();
-			InventoryV3.equipAllFromSwitchList();
+	}
+	if (equipSwitch) {
+		Component.addItemtoSwitch = function(index) {
+			const item = this.getItemByIndex(index);
+			if (!item) {
+				console.warn(`Item with index ${index} not found in inventory.`);
+				return;
+			}
+			const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.location === item.location);
+			if (existingItemIndex > -1) {
+				const existingItem = this.equipswitchlist[existingItemIndex];
+				SwitchEquip_default.unEquip(existingItem.index, existingItem.location);
+				this.equipswitchlist.splice(existingItemIndex, 1);
+			}
+			this.equipswitchlist.push(item);
+			const root = Component.getRoot();
+			Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/bg_change.bmp", (data) => {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+				if (el) el.style.backgroundImage = `url(${data})`;
+			});
+			Client.loadFile(DB.INTERFACE_PATH + "swap_equipment/ico_change.bmp", (data) => {
+				const el = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+				if (el) el.style.backgroundImage = `url(${data})`;
+			});
+			SwitchEquip_default.equip(item, item.location, true);
+			ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3143), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
+		};
+		Component.removeItemFromSwitch = function(index) {
+			const item = this.getItemByIndex(index);
+			if (!item) {
+				console.warn(`Item with index ${index} not found in inventory.`);
+				return;
+			}
+			const existingItemIndex = this.equipswitchlist.findIndex((existingItem) => existingItem.index === item.index);
+			if (existingItemIndex > -1) {
+				const root = Component.getRoot();
+				const sw1 = root.querySelector(`.item[data-index="${item.index}"] .switch1`);
+				if (sw1) sw1.style.backgroundImage = "none";
+				const sw2 = root.querySelector(`.item[data-index="${item.index}"] .switch2`);
+				if (sw2) sw2.style.backgroundImage = "none";
+				SwitchEquip_default.unEquip(item.index, item.location);
+				this.equipswitchlist.splice(existingItemIndex, 1);
+				ChatBox_default.addText(DB.getItemName(item) + " " + DB.getMessage(3144), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.ITEM);
+				EquipmentController.getUI().equipItemsToSwitch();
+				Component.equipAllFromSwitchList();
+			}
+		};
+		Component.equipAllFromSwitchList = function equipAllFromSwitchList() {
+			const equipSwitchList = Component.equipswitchlist;
+			for (let i = 0; i < equipSwitchList.length; i++) {
+				const item = equipSwitchList[i];
+				if (item) SwitchEquip_default.equip(item, item.location, true);
+			}
+		};
+	}
+	/**
+	* Request inventory expansion using an expansion item
+	*/
+	function onInventoryExpand() {
+		const itemIds = [
+			25791,
+			25792,
+			25793
+		];
+		let itemforexpand = null;
+		for (let i = 0; i < itemIds.length; i++) {
+			itemforexpand = Component.getItemById(itemIds[i]);
+			if (itemforexpand) break;
 		}
-	};
-	InventoryV3.equipAllFromSwitchList = function equipAllFromSwitchList() {
-		const equipSwitchList = InventoryV3.equipswitchlist;
-		for (let i = 0; i < equipSwitchList.length; i++) {
-			const item = equipSwitchList[i];
-			if (item) SwitchEquip_default.equip(item, item.location, true);
+		if (!itemforexpand) {
+			ChatBox_default.addText(DB.getMessage(3564), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+			return false;
 		}
-	};
-	InventoryV3.onUseItem = function OnUseItem() {};
-	InventoryV3.onUseCard = function onUseCard() {};
-	InventoryV3.onEquipItem = function OnEquipItem() {};
-	InventoryV3.onUpdateItem = function OnUpdateItem() {};
-	InventoryV3.reqMoveItemToCart = function reqMoveItemToCart() {};
-	Network.hookPacket(PACKET.ZC.ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE, onRequestInventoryExpandResult);
-	Network.hookPacket(PACKET.ZC.ACK_EXTEND_BODYITEM_SIZE, onFinalReqInventoryExpandResult);
-	InventoryV3_default = UIManager.addComponent(InventoryV3);
+		const pkt = new PACKET.CZ.REQ_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE();
+		Network.sendPacket(pkt);
+	}
+	if (inventoryExpansion) {
+		const onRequestInventoryExpandResult = function onRequestInventoryExpandResult(pkt) {
+			if (pkt) switch (pkt.result) {
+				case 0: {
+					const item = Component.getItemById(pkt.itemId);
+					if (!item) return false;
+					const itemname = DB.getItemName(item);
+					const mcntEl = Component.getRoot().querySelector(".mcnt");
+					const currentlimit = mcntEl ? parseInt(mcntEl.textContent, 10) : 100;
+					const newlimit = currentlimit + 10;
+					UIManager.showPromptBox(DB.getMessage(3561).replace("%s", itemname).replace("%d", currentlimit).replace("%d", newlimit), "ok", "cancel", InventoryExpandReq, InventoryExpandCancel);
+					break;
+				}
+				case 1:
+					ChatBox_default.addText(DB.getMessage(3562), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 2:
+					ChatBox_default.addText(DB.getMessage(3563), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 3:
+					ChatBox_default.addText(DB.getMessage(3564), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 4:
+					ChatBox_default.addText(DB.getMessage(3565), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				default: break;
+			}
+		};
+		function InventoryExpandReq() {
+			const pkt = new PACKET.CZ.REQ_EXTEND_BODYITEM_SIZE();
+			Network.sendPacket(pkt);
+		}
+		function InventoryExpandCancel() {
+			const pkt = new PACKET.CZ.CLOSE_MSGBOX_EXTEND_BODYITEM_SIZE();
+			Network.sendPacket(pkt);
+		}
+		const onFinalReqInventoryExpandResult = function onFinalReqInventoryExpandResult(pkt) {
+			if (pkt) switch (pkt.result) {
+				case 0:
+					ChatBox_default.addText(DB.getMessage(3566), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 1:
+					ChatBox_default.addText(DB.getMessage(3562), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 2:
+					ChatBox_default.addText(DB.getMessage(3563), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 3:
+					ChatBox_default.addText(DB.getMessage(3564), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				case 4:
+					ChatBox_default.addText(DB.getMessage(3565), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.PUBLIC_LOG);
+					break;
+				default: break;
+			}
+		};
+		Network.hookPacket(PACKET.ZC.ACK_OPEN_MSGBOX_EXTEND_BODYITEM_SIZE, onRequestInventoryExpandResult);
+		Network.hookPacket(PACKET.ZC.ACK_EXTEND_BODYITEM_SIZE, onFinalReqInventoryExpandResult);
+	}
+	/**
+	* functions to define
+	*/
+	Component.onUseItem = function OnUseItem() {};
+	Component.onUseCard = function onUseCard() {};
+	Component.onEquipItem = function OnEquipItem() {};
+	Component.onUpdateItem = function OnUpdateItem() {};
+	Component.reqMoveItemToCart = function reqMoveItemToCart() {};
+	return UIManager.addComponent(Component);
+}
+var init_InventoryCommon = __esmMin((() => {
+	init_DBManager();
+	init_ItemType();
+	init_NetworkManager();
+	init_PacketStructure();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_MouseEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_CartItems();
+	init_InputBox();
+	init_ItemCompare();
+	init_ItemInfo();
+	init_ChatBox();
+	init_Equipment();
+	init_Storage$1();
+	init_SwitchEquip();
+	init_UIVersionManager();
+	init_Configs();
+	init_PacketVerManager();
+	init_BasicInfo();
+	init_Refine();
+	init_EnchantGrade();
+	init_Enchant();
+	init_Mail$1();
+	init_WriteRodex();
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV0/InventoryV0.js
+var InventoryV0_default;
+var init_InventoryV0 = __esmMin((() => {
+	init_InventoryV0$2();
+	init_InventoryV0$1();
+	init_InventoryCommon();
+	InventoryV0_default = createInventory({
+		name: "InventoryV0",
+		htmlText: InventoryV0_default$2,
+		cssText: InventoryV0_default$1,
+		defaultHeight: 2,
+		resizableHeight: true,
+		tabSprite: true
+	});
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV1/InventoryV1.html?raw
+var InventoryV1_default$2;
+var init_InventoryV1$2 = __esmMin((() => {
+	InventoryV1_default$2 = "<div id=\"InventoryV1\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"106\">Inventory</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"middle\">\r\n			<div class=\"tabs\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<button class=\"item tab\" data-tab=\"item\" data-text=\"1465\"></button>\r\n				<button class=\"equip tab\" data-tab=\"equip\" data-text=\"2050\"></button>\r\n				<button class=\"etc tab\" data-tab=\"etc\" data-text=\"1471\"></button>\r\n				<button class=\"fav tab\" data-tab=\"fav\" data-text=\"2051\"></button>\r\n			</div>\r\n			<div class=\"container\">\r\n				<div class=\"scroll-host\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</div>\r\n				<div class=\"lockoverlay hidden\"></div>\r\n				<div class=\"lockoverlaymsg hidden\" data-background=\"inventory/popup_itemdeal_lock.bmp\">\r\n					<span class=\"msg\" data-text=\"2951\"></span>\r\n					<div class=\"lockoverlayclose\" data-background=\"inventory/bt_close.bmp\"></div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"expand\">\r\n				<span class=\"name\" data-text=\"3560\"></span>\r\n				<span class=\"ncnt\"></span><span class=\"mcnt\"></span>\r\n			</div>\r\n			<div class=\"droplock\">\r\n				<button\r\n					class=\"item_drop_lock\"\r\n					data-background=\"inventory/item_drop_lock_off.bmp\"\r\n					data-text=\"Drop Lock\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2843\"></span>\r\n			</div>\r\n			<div class=\"compare\">\r\n				<button\r\n					class=\"item_compare\"\r\n					data-background=\"inventory/item_compare_off.bmp\"\r\n					data-text=\"Compare Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2842\"></span>\r\n			</div>\r\n			<div class=\"deallock_on hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_on\"\r\n					data-background=\"inventory/bt_itemdeal_lock_on.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_on_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_on_press.bmp\"\r\n					data-text=\"Deal Lock On\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"deallock_off hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_off\"\r\n					data-background=\"inventory/bt_itemdeal_lock_off.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_press.bmp\"\r\n					data-text=\"Deal Lock Off\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"sort hidden\">\r\n				<button\r\n					class=\"item_sort\"\r\n					data-background=\"inventory/bt_sort.bmp\"\r\n					data-hover=\"inventory/bt_sort_over.bmp\"\r\n					data-down=\"inventory/bt_sort_press.bmp\"\r\n					data-text=\"Sort Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3007\"></span>\r\n			</div>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\" data-text=\"Extend\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV1/InventoryV1.css?raw
+var InventoryV1_default$1;
+var init_InventoryV1$1 = __esmMin((() => {
+	InventoryV1_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV1 {\r\n	position: relative;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV1 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV1 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV1 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV1 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV1 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV1 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV1 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV1 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV1 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV1 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV1 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV1 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV1 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV1 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV1 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV1 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV1 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV1 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV1 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV1 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV1 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV1 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV1 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV1 .expand,\r\n#InventoryV1 .droplock,\r\n#InventoryV1 .compare,\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off,\r\n#InventoryV1 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV1 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV1 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV1 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV1 .deallock_on,\r\n#InventoryV1 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV1 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV1 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV1 button.item_deal_lock_on,\r\n#InventoryV1 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV1 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV1 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV1 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV1 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV1 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV1 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV1 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV1 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV1 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV1 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV1/InventoryV1.js
+var InventoryV1_default;
+var init_InventoryV1 = __esmMin((() => {
+	init_InventoryV1$2();
+	init_InventoryV1$1();
+	init_InventoryCommon();
+	InventoryV1_default = createInventory({
+		name: "InventoryV1",
+		htmlText: InventoryV1_default$2,
+		cssText: InventoryV1_default$1,
+		defaultHeight: 193,
+		favoriteTab: true
+	});
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV2/InventoryV2.html?raw
+var InventoryV2_default$2;
+var init_InventoryV2$2 = __esmMin((() => {
+	InventoryV2_default$2 = "<div id=\"InventoryV2\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"106\">Inventory</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"middle\">\r\n			<div class=\"tabs\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<button class=\"item tab\" data-tab=\"item\" data-text=\"1465\"></button>\r\n				<button class=\"equip tab\" data-tab=\"equip\" data-text=\"2050\"></button>\r\n				<button class=\"etc tab\" data-tab=\"etc\" data-text=\"1471\"></button>\r\n				<button class=\"fav tab\" data-tab=\"fav\" data-text=\"2051\"></button>\r\n			</div>\r\n			<div class=\"container\">\r\n				<div class=\"scroll-host\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</div>\r\n				<div class=\"lockoverlay hidden\"></div>\r\n				<div class=\"lockoverlaymsg hidden\" data-background=\"inventory/popup_itemdeal_lock.bmp\">\r\n					<span class=\"msg\" data-text=\"2951\"></span>\r\n					<div class=\"lockoverlayclose\" data-background=\"inventory/bt_close.bmp\"></div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"expand\">\r\n				<span class=\"name\" data-text=\"3560\"></span>\r\n				<span class=\"ncnt\"></span><span class=\"mcnt\"></span>\r\n			</div>\r\n			<div class=\"droplock\">\r\n				<button\r\n					class=\"item_drop_lock\"\r\n					data-background=\"inventory/item_drop_lock_off.bmp\"\r\n					data-text=\"Drop Lock\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2843\"></span>\r\n			</div>\r\n			<div class=\"compare\">\r\n				<button\r\n					class=\"item_compare\"\r\n					data-background=\"inventory/item_compare_off.bmp\"\r\n					data-text=\"Compare Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2842\"></span>\r\n			</div>\r\n			<div class=\"deallock_on hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_on\"\r\n					data-background=\"inventory/bt_itemdeal_lock_on.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_on_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_on_press.bmp\"\r\n					data-text=\"Deal Lock On\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"deallock_off hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_off\"\r\n					data-background=\"inventory/bt_itemdeal_lock_off.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_press.bmp\"\r\n					data-text=\"Deal Lock Off\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"sort hidden\">\r\n				<button\r\n					class=\"item_sort\"\r\n					data-background=\"inventory/bt_sort.bmp\"\r\n					data-hover=\"inventory/bt_sort_over.bmp\"\r\n					data-down=\"inventory/bt_sort_press.bmp\"\r\n					data-text=\"Sort Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3007\"></span>\r\n			</div>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\" data-text=\"Extend\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV2/InventoryV2.css?raw
+var InventoryV2_default$1;
+var init_InventoryV2$1 = __esmMin((() => {
+	InventoryV2_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ─── Root ───────────────────────────────────────────────────── */\r\n#InventoryV2 {\r\n	position: relative;\r\n	height: 193px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ─── Titlebar ───────────────────────────────────────────────── */\r\n#InventoryV2 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ─── Panel / layout ─────────────────────────────────────────── */\r\n#InventoryV2 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ─── Tabs ───────────────────────────────────────────────────── */\r\n#InventoryV2 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV2 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV2 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV2 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV2 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ─── Container / scroll area ────────────────────────────────── */\r\n#InventoryV2 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV2 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ─── Items ──────────────────────────────────────────────────── */\r\n#InventoryV2 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV2 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV2 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV2 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV2 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ─── Overlay (tooltip) ──────────────────────────────────────── */\r\n#InventoryV2 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV2 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ─── Footer ─────────────────────────────────────────────────── */\r\n#InventoryV2 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV2 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV2 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV2 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ─── Footer buttons (shared position: absolute) ─────────────── */\r\n#InventoryV2 .expand,\r\n#InventoryV2 .droplock,\r\n#InventoryV2 .compare,\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off,\r\n#InventoryV2 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV2 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV2 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV2 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV2 .deallock_on,\r\n#InventoryV2 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV2 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV2 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV2 button.item_deal_lock_on,\r\n#InventoryV2 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV2 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ─── Counter labels ─────────────────────────────────────────── */\r\n#InventoryV2 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV2 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ─── Tooltip names on hover ─────────────────────────────────── */\r\n#InventoryV2 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV2 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV2 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ─── NPC lock overlay ───────────────────────────────────────── */\r\n#InventoryV2 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV2 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV2 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV2 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV2/InventoryV2.js
+var InventoryV2_default;
+var init_InventoryV2 = __esmMin((() => {
+	init_InventoryV2$2();
+	init_InventoryV2$1();
+	init_InventoryCommon();
+	InventoryV2_default = createInventory({
+		name: "InventoryV2",
+		htmlText: InventoryV2_default$2,
+		cssText: InventoryV2_default$1,
+		defaultHeight: 193,
+		favoriteTab: true,
+		equipSwitch: true,
+		hostDropPreventDefault: true
+	});
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV3/InventoryV3.html?raw
+var InventoryV3_default$2;
+var init_InventoryV3$2 = __esmMin((() => {
+	InventoryV3_default$2 = "<div id=\"InventoryV3\">\r\n	<div class=\"titlebar\" data-background=\"basic_interface/titlebar_mid.bmp\">\r\n		<div class=\"left\">\r\n			<button\r\n				class=\"base\"\r\n				data-background=\"basic_interface/sys_base_off.bmp\"\r\n				data-hover=\"basic_interface/sys_base_on.bmp\"\r\n			></button>\r\n			<span class=\"text\" data-text=\"106\">Inventory</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<button\r\n				class=\"base mini\"\r\n				data-background=\"basic_interface/sys_mini_off.bmp\"\r\n				data-hover=\"basic_interface/sys_mini_on.bmp\"\r\n			></button>\r\n			<button\r\n				class=\"base close\"\r\n				data-background=\"basic_interface/sys_close_off.bmp\"\r\n				data-hover=\"basic_interface/sys_close_on.bmp\"\r\n			></button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<div class=\"middle\">\r\n			<div class=\"tabs\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n				<button class=\"item tab\" data-tab=\"item\" data-text=\"1465\"></button>\r\n				<button class=\"equip tab\" data-tab=\"equip\" data-text=\"2050\"></button>\r\n				<button class=\"etc tab\" data-tab=\"etc\" data-text=\"1471\"></button>\r\n				<button class=\"fav tab\" data-tab=\"fav\" data-text=\"2051\"></button>\r\n			</div>\r\n			<div class=\"container\">\r\n				<div class=\"scroll-host\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</div>\r\n				<div class=\"lockoverlay hidden\"></div>\r\n\r\n				<div class=\"lockoverlaymsg hidden\" data-background=\"inventory/popup_itemdeal_lock.bmp\">\r\n					<span class=\"msg\" data-text=\"2951\"></span>\r\n					<div class=\"lockoverlayclose\" data-background=\"inventory/bt_close.bmp\"></div>\r\n				</div>\r\n			</div>\r\n		</div>\r\n		<div class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n			<div class=\"expand\">\r\n				<button\r\n					class=\"item_expansion\"\r\n					data-background=\"inventory/icon_num.bmp\"\r\n					data-text=\"Expand Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3560\"></span>\r\n				<span class=\"ncnt\"></span><span class=\"mcnt\"></span>\r\n			</div>\r\n			<div class=\"droplock\">\r\n				<button\r\n					class=\"item_drop_lock\"\r\n					data-background=\"inventory/item_drop_lock_off.bmp\"\r\n					data-text=\"Drop Lock\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2843\"></span>\r\n			</div>\r\n			<div class=\"compare\">\r\n				<button\r\n					class=\"item_compare\"\r\n					data-background=\"inventory/item_compare_off.bmp\"\r\n					data-text=\"Compare Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2842\"></span>\r\n			</div>\r\n			<div class=\"deallock_on hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_on\"\r\n					data-background=\"inventory/bt_itemdeal_lock_on.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_on_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_on_press.bmp\"\r\n					data-text=\"Deal Lock On\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"deallock_off hidden\">\r\n				<button\r\n					class=\"deal_lock item_deal_lock_off\"\r\n					data-background=\"inventory/bt_itemdeal_lock_off.bmp\"\r\n					data-hover=\"inventory/bt_itemdeal_lock_over.bmp\"\r\n					data-down=\"inventory/bt_itemdeal_lock_press.bmp\"\r\n					data-text=\"Deal Lock Off\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"2952\"></span>\r\n			</div>\r\n			<div class=\"sort hidden\">\r\n				<button\r\n					class=\"item_sort\"\r\n					data-background=\"inventory/bt_sort.bmp\"\r\n					data-hover=\"inventory/bt_sort_over.bmp\"\r\n					data-down=\"inventory/bt_sort_press.bmp\"\r\n					data-text=\"Sort Items\"\r\n				></button>\r\n				<span class=\"name\" data-text=\"3007\"></span>\r\n			</div>\r\n			<button class=\"extend\" data-background=\"btn_resize.bmp\" data-text=\"Extend\"></button>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV3/InventoryV3.css?raw
+var InventoryV3_default$1;
+var init_InventoryV3$1 = __esmMin((() => {
+	InventoryV3_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n/* ── Root ────────────────────────────────────────────────── */\r\n#InventoryV3 {\r\n	position: relative;\r\n	height: 194px;\r\n	display: flex;\r\n	flex-direction: column;\r\n}\r\n\r\n/* ── Titlebar ─────────────────────────────────────────────── */\r\n#InventoryV3 .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n\r\n#InventoryV3 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#InventoryV3 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#InventoryV3 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n\r\n#InventoryV3 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n\r\n#InventoryV3 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n/* ── Panel / layout ───────────────────────────────────────── */\r\n#InventoryV3 .panel {\r\n	border-radius: 0px 0px 3px 3px;\r\n	padding: 0px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	flex: 1;\r\n	overflow: hidden;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .middle {\r\n	display: flex;\r\n	flex: 1;\r\n	overflow: hidden;\r\n}\r\n\r\n/* ── Tabs ─────────────────────────────────────────────────── */\r\n#InventoryV3 .tabs {\r\n	width: 23px;\r\n	display: flex;\r\n	flex-direction: column;\r\n	background-repeat: round;\r\n	background-size: auto 10px;\r\n}\r\n\r\n#InventoryV3 .tabs button {\r\n	width: 20px;\r\n	font-size: 11px;\r\n	flex: 1;\r\n	border: 1px solid #ccc;\r\n	background-color: white;\r\n	display: block;\r\n	text-align: center;\r\n	position: relative;\r\n	left: 5px;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n	transition: all 0.3s;\r\n	border-right: none;\r\n	align-items: center;\r\n	justify-content: center;\r\n}\r\n\r\n#InventoryV3 .tabs .tab {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n}\r\n\r\n#InventoryV3 .tab:last-child {\r\n	background-color: #cedeff;\r\n}\r\n\r\n#InventoryV3 .tab.selected {\r\n	z-index: 25;\r\n	-webkit-transform-origin-x: left;\r\n	transform: scale(1.1, 1) translateX(-2px);\r\n}\r\n\r\n/* ── Container / scroll area ──────────────────────────────── */\r\n#InventoryV3 .container {\r\n	flex: 1;\r\n	padding-left: 14px;\r\n	border-right: 1px solid #ccc;\r\n	background-clip: padding-box;\r\n	box-shadow: inset 40px 0px 0px 2px #ffffff;\r\n	position: relative;\r\n	border-left: 1px solid #ccc;\r\n	border-bottom: 1px solid #ccc;\r\n	background-color: white;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .scroll-host {\r\n	overflow-y: auto;\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	display: block;\r\n\r\n	/* Hide native scrollbar but allow detection */\r\n	scrollbar-width: none;\r\n	-ms-overflow-style: none;\r\n}\r\n\r\n#InventoryV3 .scroll-host::-webkit-scrollbar {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 .content {\r\n	width: 100%;\r\n	display: grid;\r\n	grid-template-columns: repeat(auto-fill, 32px);\r\n	grid-auto-rows: 32px;\r\n	min-height: 100%;\r\n	background-color: white;\r\n	background-repeat: repeat;\r\n	background-origin: border-box;\r\n	background-clip: border-box;\r\n	box-sizing: border-box;\r\n	padding-top: 0px;\r\n	margin-left: 15px;\r\n}\r\n\r\n/* ── Items ────────────────────────────────────────────────── */\r\n#InventoryV3 .content .item {\r\n	display: block;\r\n	width: 32px;\r\n	height: 32px;\r\n	margin: 0;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 .content .item .icon {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .amount {\r\n	position: absolute;\r\n	top: 15px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n	z-index: 10;\r\n}\r\n\r\n#InventoryV3 .content .item .switch1 {\r\n	position: absolute;\r\n	top: 4px;\r\n	left: 4px;\r\n	width: 24px;\r\n	height: 24px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n	opacity: 0.1;\r\n}\r\n\r\n#InventoryV3 .content .item .switch2 {\r\n	position: absolute;\r\n	width: 13px;\r\n	height: 16px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 3;\r\n}\r\n\r\n#InventoryV3 .content .item .grade {\r\n	position: absolute;\r\n	top: 15px;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n}\r\n\r\n#InventoryV3 .content .item .new_item {\r\n	position: absolute;\r\n	width: 32px;\r\n	height: 32px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n}\r\n\r\n/* ── Overlay (tooltip) ────────────────────────────────────── */\r\n#InventoryV3 .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 15px;\r\n	line-height: 15px;\r\n	border-radius: 3px;\r\n	padding: 4px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n\r\n#InventoryV3 .overlay.grey {\r\n	color: #aaa;\r\n}\r\n\r\n/* ── Footer ───────────────────────────────────────────────── */\r\n#InventoryV3 .footer {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	flex-shrink: 0;\r\n}\r\n\r\n#InventoryV3 .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n\r\n#InventoryV3 .footer button {\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#InventoryV3 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n/* ── Footer buttons (shared position: absolute) ───────────── */\r\n#InventoryV3 .expand,\r\n#InventoryV3 .droplock,\r\n#InventoryV3 .compare,\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off,\r\n#InventoryV3 .sort {\r\n	position: absolute;\r\n}\r\n\r\n#InventoryV3 .expand {\r\n	left: 30px;\r\n	top: 3px;\r\n	width: 60px;\r\n	height: 14px;\r\n}\r\n\r\n#InventoryV3 .item_expansion {\r\n	position: absolute;\r\n	height: 14px;\r\n	width: 11px;\r\n}\r\n\r\n#InventoryV3 .droplock {\r\n	left: 90px;\r\n	top: 4px;\r\n}\r\n\r\n#InventoryV3 .compare {\r\n	left: 110px;\r\n	top: 3px;\r\n}\r\n\r\n#InventoryV3 .deallock_on,\r\n#InventoryV3 .deallock_off {\r\n	left: 130px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .sort {\r\n	left: 163px;\r\n	top: 1px;\r\n}\r\n\r\n#InventoryV3 .item_drop_lock {\r\n	height: 14px;\r\n	width: 14px;\r\n}\r\n\r\n#InventoryV3 .item_compare {\r\n	height: 12px;\r\n	width: 12px;\r\n}\r\n\r\n#InventoryV3 button.item_deal_lock_on,\r\n#InventoryV3 button.item_deal_lock_off {\r\n	height: 17px;\r\n	width: 26px;\r\n}\r\n\r\n#InventoryV3 .item_sort {\r\n	height: 17px;\r\n	width: 25px;\r\n}\r\n\r\n/* ── Counter labels ───────────────────────────────────────── */\r\n#InventoryV3 span.ncnt {\r\n	left: 12px;\r\n	position: relative;\r\n}\r\n\r\n#InventoryV3 span.mcnt {\r\n	position: relative;\r\n	left: 10px;\r\n}\r\n\r\n/* ── Tooltip names on hover ───────────────────────────────── */\r\n#InventoryV3 .hidden {\r\n	display: none;\r\n}\r\n\r\n#InventoryV3 span.name {\r\n	display: none;\r\n	/* Hide the span by default */\r\n	position: absolute;\r\n	z-index: 1;\r\n	top: -20px;\r\n	left: 0px;\r\n	background-color: rgba(0, 0, 0, 0.6);\r\n	text-shadow: 1px 1px black;\r\n	color: white;\r\n	padding: 5px;\r\n	white-space: nowrap;\r\n	font-size: 0.6rem;\r\n}\r\n\r\n#InventoryV3 .footer div button:hover + .name {\r\n	display: table;\r\n}\r\n\r\n/* ── NPC lock overlay ─────────────────────────────────────── */\r\n#InventoryV3 .lockoverlay {\r\n	position: absolute;\r\n	top: 0;\r\n	left: 0;\r\n	width: 100%;\r\n	height: 100%;\r\n	pointer-events: none;\r\n	z-index: 1;\r\n	background-color: #dee7ff;\r\n	overflow: hidden;\r\n	opacity: 0.3;\r\n}\r\n\r\n#InventoryV3 .lockoverlaymsg {\r\n	position: absolute;\r\n	height: 26px;\r\n	width: 100%;\r\n	max-width: 242px;\r\n	z-index: 1;\r\n	color: white;\r\n	top: 192px;\r\n	left: 20px;\r\n	overflow: hidden;\r\n	white-space: nowrap;\r\n}\r\n\r\n#InventoryV3 .msg {\r\n	position: absolute;\r\n	height: 10px;\r\n	width: 100px;\r\n	left: 60px;\r\n	top: 2px;\r\n}\r\n\r\n#InventoryV3 .lockoverlayclose {\r\n	position: absolute;\r\n	height: 7px;\r\n	width: 7px;\r\n	left: 230px;\r\n	cursor: pointer;\r\n	top: 3px;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Inventory/InventoryV3/InventoryV3.js
+var InventoryV3_default;
+var init_InventoryV3 = __esmMin((() => {
+	init_InventoryV3$2();
+	init_InventoryV3$1();
+	init_InventoryCommon();
+	InventoryV3_default = createInventory({
+		name: "InventoryV3",
+		htmlText: InventoryV3_default$2,
+		cssText: InventoryV3_default$1,
+		defaultHeight: 194,
+		favoriteTab: true,
+		equipSwitch: true,
+		hostDropPreventDefault: true,
+		enchantGrade: true,
+		inventoryExpansion: true,
+		refineEnchant: true,
+		useHiddenClass: true,
+		tabDropPreventDefault: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/Inventory/Inventory.js
