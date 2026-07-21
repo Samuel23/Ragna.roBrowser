@@ -77908,9 +77908,9 @@ var init_MouseEventHandler = __esmMin((() => {
 function selfSave() {
 	Preferences.save(this);
 }
-var Storage$2, Preferences;
+var Storage, Preferences;
 var init_Preferences$1 = __esmMin((() => {
-	Storage$2 = {
+	Storage = {
 		get: function Get(key, fn) {
 			const out = {};
 			out[key] = localStorage.getItem(key);
@@ -77932,7 +77932,7 @@ var init_Preferences$1 = __esmMin((() => {
 		* @param {number} optional version
 		*/
 		static get(key, def, version) {
-			Storage$2.get(key, function(value) {
+			Storage.get(key, function(value) {
 				version = version || 0;
 				if (!value[key] || JSON.parse(value[key])._version !== version) {
 					Preferences.save(def);
@@ -77963,7 +77963,7 @@ var init_Preferences$1 = __esmMin((() => {
 			delete data.save;
 			const store = {};
 			store[key] = JSON.stringify(data);
-			Storage$2.set(store);
+			Storage.set(store);
 			data._key = key;
 			data.save = selfSave;
 		}
@@ -212750,13 +212750,13 @@ var init_GR2ModelRenderer = __esmMin((() => {
 * Add 3D sound to the list
 */
 function add$1(sound) {
-	_list$9.push(sound);
+	_list$5.push(sound);
 }
 /**
 * Remove data from memory
 */
 function free$2() {
-	_list$9.length = 0;
+	_list$5.length = 0;
 }
 /**
 * Rendering sounds
@@ -212764,7 +212764,7 @@ function free$2() {
 * @param {vec2} position
 */
 function render$8(position, tick) {
-	_list$9.forEach((sound) => {
+	_list$5.forEach((sound) => {
 		const dist = Math.floor(vec2$3.dist(sound.pos, position));
 		if (sound.tick < tick && dist <= sound.range) {
 			SoundManager.playPosition(sound.file, sound.pos);
@@ -212772,12 +212772,12 @@ function render$8(position, tick) {
 		}
 	});
 }
-var vec2$3, _list$9, Sounds_default;
+var vec2$3, _list$5, Sounds_default;
 var init_Sounds = __esmMin((() => {
 	init_gl_matrix();
 	init_SoundManager();
 	vec2$3 = gl_matrix_default.vec2;
-	_list$9 = [];
+	_list$5 = [];
 	Sounds_default = {
 		add: add$1,
 		free: free$2,
@@ -218269,14 +218269,14 @@ function onClickOption(btn) {
 /**
 * Resize ChatBoxSettings
 */
-function onResize$12() {
+function onResize$8() {
 	const top = ChatBoxSettings._host.getBoundingClientRect().top;
 	let lastHeight = 0;
 	function resizeProcess() {
 		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
 		h = Math.min(Math.max(h, 3), 8);
 		if (h === lastHeight) return;
-		resize$7(h);
+		resize$5(h);
 		lastHeight = h;
 	}
 	const interval = setInterval(resizeProcess, 30);
@@ -218291,7 +218291,7 @@ function onResize$12() {
 /**
 * Extend window size
 */
-function resize$7(height) {
+function resize$5(height) {
 	height = Math.min(Math.max(height, 3), 8);
 	const root = ChatBoxSettings.getRoot();
 	const content = root.querySelector(".content");
@@ -218300,10 +218300,10 @@ function resize$7(height) {
 	if (list) list.style.height = height * 32 - 31 + "px";
 	const inner = root.querySelector("#ChatBoxSettings");
 	if (inner) ChatBoxSettings._host.style.height = inner.offsetHeight + "px";
-	_preferences$46.height = height;
-	_preferences$46.save();
+	_preferences$42.height = height;
+	_preferences$42.save();
 }
-var ChatBoxSettings, _preferences$46, ChatBoxSettings_default;
+var ChatBoxSettings, _preferences$42, ChatBoxSettings_default;
 var init_ChatBoxSettings = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -218325,7 +218325,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.isOpen = false;
 	ChatBoxSettings.tabOption = [];
 	ChatBoxSettings.activeTab = 0;
-	_preferences$46 = Preferences.get("ChatBoxSettings", {
+	_preferences$42 = Preferences.get("ChatBoxSettings", {
 		x: 480,
 		y: 200,
 		width: 7,
@@ -218337,7 +218337,7 @@ var init_ChatBoxSettings = __esmMin((() => {
 	ChatBoxSettings.init = function init() {
 		const root = this.getRoot();
 		const extendBtn = root.querySelector(".extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$12);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$8);
 		const closeBtn = root.querySelector(".close");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
 			this._host.style.display = "none";
@@ -218353,10 +218353,10 @@ var init_ChatBoxSettings = __esmMin((() => {
 	* Once in HTML
 	*/
 	ChatBoxSettings.onAppend = function onAppend() {
-		resize$7(_preferences$46.height);
+		resize$5(_preferences$42.height);
 		const rect = this._host.getBoundingClientRect();
-		this._host.style.top = Math.min(Math.max(0, _preferences$46.y), Renderer.height - rect.height) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$46.x), Renderer.width - rect.width) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$42.y), Renderer.height - rect.height) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$42.x), Renderer.width - rect.width) + "px";
 		this._host.style.display = "none";
 	};
 	/**
@@ -218390,9 +218390,9 @@ var init_ChatBoxSettings = __esmMin((() => {
 		});
 	};
 	ChatBoxSettings.onRemove = function onRemove() {
-		_preferences$46.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$46.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$46.save();
+		_preferences$42.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$42.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$42.save();
 	};
 	ChatBoxSettings.mouseMode = GUIComponent.MouseMode.STOP;
 	ChatBoxSettings_default = UIManager.addComponent(ChatBoxSettings);
@@ -218515,7 +218515,7 @@ function shouldLetChatInputHandleVerticalArrows(inputEl, direction) {
 /**
 * Update scroll by block (14px)
 */
-function onScroll$8(event) {
+function onScroll$6(event) {
 	let delta;
 	if (event.wheelDelta) {
 		delta = event.wheelDelta / 120;
@@ -218574,8 +218574,8 @@ function onChangeTargetMessage(type) {
 }
 function setChatFontScale(scale) {
 	return function setChatFontScaleClosure() {
-		_preferences$45.fontScale = clampChatFontScale(scale);
-		_preferences$45.save();
+		_preferences$41.fontScale = clampChatFontScale(scale);
+		_preferences$41.save();
 		ChatBox.applyFontScale();
 	};
 }
@@ -218639,7 +218639,7 @@ function makeResizableDiv() {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$45, ChatBox, ChatBox_default;
+var MAX_MSG, MAX_LENGTH, MAGIC_NUMBER, _historyMessage, _historyNickName, _heightIndex, _messageBuffer, _rafScheduled, _preferences$41, ChatBox, ChatBox_default;
 var init_ChatBox = __esmMin((() => {
 	init_DBManager();
 	init_Renderer();
@@ -218669,7 +218669,7 @@ var init_ChatBox = __esmMin((() => {
 	_heightIndex = 2;
 	_messageBuffer = [];
 	_rafScheduled = false;
-	_preferences$45 = Preferences.get("ChatBox", {
+	_preferences$41 = Preferences.get("ChatBox", {
 		x: 0,
 		y: Infinity,
 		height: 2,
@@ -218753,15 +218753,15 @@ var init_ChatBox = __esmMin((() => {
 	ChatBox.init = function init() {
 		const root = _root$18();
 		if (!ContextMenu_default.__loaded) ContextMenu_default.prepare();
-		_heightIndex = _preferences$45.height - 1;
+		_heightIndex = _preferences$41.height - 1;
 		ChatBox.updateHeight();
 		ChatBox.applyFontScale();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$45.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$45.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
-		this.magnet.TOP = _preferences$45.magnet_top;
-		this.magnet.BOTTOM = _preferences$45.magnet_bottom;
-		this.magnet.LEFT = _preferences$45.magnet_left;
-		this.magnet.RIGHT = _preferences$45.magnet_right;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y - (this._host.offsetHeight || 0)), Renderer.height - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - (this._host.offsetWidth || 0))}px`;
+		this.magnet.TOP = _preferences$41.magnet_top;
+		this.magnet.BOTTOM = _preferences$41.magnet_bottom;
+		this.magnet.LEFT = _preferences$41.magnet_left;
+		this.magnet.RIGHT = _preferences$41.magnet_right;
 		this.draggable(".input");
 		this.draggable(".battlemode");
 		root.querySelectorAll(".input, .chat-function, .battlemode, .event_add_cursor").forEach((el) => {
@@ -218955,7 +218955,7 @@ var init_ChatBox = __esmMin((() => {
 			event.preventDefault();
 		});
 		root.querySelectorAll(".content").forEach((el) => {
-			el.addEventListener("wheel", onScroll$8);
+			el.addEventListener("wheel", onScroll$6);
 		});
 		(function initTabHoverBlock() {
 			let _tabIntersect;
@@ -219047,13 +219047,13 @@ var init_ChatBox = __esmMin((() => {
 			ChatBox.toggleChatBattleOption();
 		});
 		ChatBoxSettings_default.append();
-		if (_preferences$45.tabs.length > 0 && _preferences$45.tabs.length == _preferences$45.tabOption.length) {
-			for (let i = 0; i < _preferences$45.tabs.length; i++) if (_preferences$45.tabs[i]) {
-				const tabName = _preferences$45.tabs[i].name;
-				const tabSettings = _preferences$45.tabOption[i];
+		if (_preferences$41.tabs.length > 0 && _preferences$41.tabs.length == _preferences$41.tabOption.length) {
+			for (let i = 0; i < _preferences$41.tabs.length; i++) if (_preferences$41.tabs[i]) {
+				const tabName = _preferences$41.tabs[i].name;
+				const tabSettings = _preferences$41.tabOption[i];
 				ChatBox.addNewTab(tabName, tabSettings);
 			}
-			if (_preferences$45.activeTab !== void 0 && ChatBox.tabs[_preferences$45.activeTab]) ChatBox.switchTab(_preferences$45.activeTab);
+			if (_preferences$41.activeTab !== void 0 && ChatBox.tabs[_preferences$41.activeTab]) ChatBox.switchTab(_preferences$41.activeTab);
 		} else {
 			const firstTab = ChatBox.addNewTab(DB.getMessage(1291), [
 				ChatBox.FILTER.PUBLIC_LOG,
@@ -219172,7 +219172,7 @@ var init_ChatBox = __esmMin((() => {
 		const contentWrapper = root.querySelector(".body .contentwrapper");
 		if (contentWrapper) contentWrapper.insertAdjacentHTML("beforeend", `<div class="content active" data-content="${tabID}" data-scrollbar-skin="chatbox"></div>`);
 		const newContent = root.querySelector(`.body .content[data-content="${tabID}"]`);
-		if (newContent) newContent.addEventListener("wheel", onScroll$8);
+		if (newContent) newContent.addEventListener("wheel", onScroll$6);
 		ChatBoxSettings_default.tabOption[tabID] = settings;
 		this.tabs[tabID] = tab;
 		this.activeTab = tabID;
@@ -219212,17 +219212,17 @@ var init_ChatBox = __esmMin((() => {
 	* Stop custom scroll
 	*/
 	ChatBox.onRemove = function OnRemove() {
-		_preferences$45.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
-		_preferences$45.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$45.height = _heightIndex;
-		_preferences$45.magnet_top = this.magnet.TOP;
-		_preferences$45.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$45.magnet_left = this.magnet.LEFT;
-		_preferences$45.magnet_right = this.magnet.RIGHT;
-		_preferences$45.tabs = this.tabs;
-		_preferences$45.tabOption = ChatBoxSettings_default.tabOption;
-		_preferences$45.activeTab = this.activeTab;
-		_preferences$45.save();
+		_preferences$41.y = (parseInt(this._host.style.top, 10) || 0) + (this._host.offsetHeight || 0);
+		_preferences$41.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$41.height = _heightIndex;
+		_preferences$41.magnet_top = this.magnet.TOP;
+		_preferences$41.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$41.magnet_left = this.magnet.LEFT;
+		_preferences$41.magnet_right = this.magnet.RIGHT;
+		_preferences$41.tabs = this.tabs;
+		_preferences$41.tabOption = ChatBoxSettings_default.tabOption;
+		_preferences$41.activeTab = this.activeTab;
+		_preferences$41.save();
 		this.lastTabID = -1;
 		this.activeTab = 0;
 	};
@@ -219527,14 +219527,14 @@ var init_ChatBox = __esmMin((() => {
 	};
 	ChatBox.applyFontScale = function applyFontScale() {
 		const root = _root$18();
-		const scale = clampChatFontScale(_preferences$45.fontScale || 1);
+		const scale = clampChatFontScale(_preferences$41.fontScale || 1);
 		const baseFont = 12;
 		const baseLineHeight = 14;
 		const baseInputLineHeight = 18;
 		const fontSize = Math.max(10, Math.round(baseFont * scale));
 		const lineHeight = Math.max(12, Math.round(baseLineHeight * scale));
 		const inputLineHeight = Math.max(14, Math.round(baseInputLineHeight * scale));
-		_preferences$45.fontScale = scale;
+		_preferences$41.fontScale = scale;
 		root.querySelectorAll(".content").forEach((el) => {
 			el.style.fontSize = `${fontSize}px`;
 			el.style.lineHeight = `${lineHeight}px`;
@@ -219635,7 +219635,7 @@ function onClose$8(e) {
 	} catch (_error) {}
 	_BOOK_INFORMATION["book_open"] = false;
 	_BOOK_INFORMATION.save();
-	if (_preferences$44.show) MakeReadBook.onRemove();
+	if (_preferences$40.show) MakeReadBook.onRemove();
 }
 function page() {
 	const root = MakeReadBook.getRoot();
@@ -219655,7 +219655,7 @@ function adjustButtons$1() {
 	const prevBtn = root.querySelector(".previous_btn");
 	if (prevBtn) prevBtn.disabled = _BOOK_INFORMATION["pagesize"] <= 1 || _BOOK_INFORMATION["page"] == 0;
 }
-var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$44, MakeReadBook_default;
+var sleepNow, MakeReadBook, _BOOK_INFORMATION, _preferences$40, MakeReadBook_default;
 var init_MakeReadBook = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -219687,7 +219687,7 @@ var init_MakeReadBook = __esmMin((() => {
 	* Store MakeReadBook items
 	*/
 	MakeReadBook.list = [];
-	_preferences$44 = Preferences.get("MakeReadBook", {
+	_preferences$40 = Preferences.get("MakeReadBook", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -219828,7 +219828,7 @@ var init_MakeReadBook = __esmMin((() => {
 		});
 	};
 	MakeReadBook.highlighter = async function highlighter() {
-		if (_preferences$44.show) onClose$8();
+		if (_preferences$40.show) onClose$8();
 		let index = _BOOK_INFORMATION["bookmark_activated"] ? _BOOK_INFORMATION["bookmark_activated_page"] : 0;
 		let newText = "";
 		for (; index < _BOOK_INFORMATION["contents"].length; index++) newText = newText + "\n" + _BOOK_INFORMATION["contents"][index];
@@ -219839,12 +219839,12 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onAppend = function OnAppend() {
 		this._host.style.display = "";
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$44.y), Renderer.height - 455)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$44.x), Renderer.width - 555)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - 455)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - 555)}px`;
 		_BOOK_INFORMATION["book_open"] = true;
 		_BOOK_INFORMATION.save();
-		_preferences$44.show = true;
-		_preferences$44.save();
+		_preferences$40.show = true;
+		_preferences$40.save();
 		const root = MakeReadBook.getRoot();
 		this.draggable(root.querySelector(".titlebar"));
 	};
@@ -219853,19 +219853,19 @@ var init_MakeReadBook = __esmMin((() => {
 	*/
 	MakeReadBook.onRemove = function OnRemove() {
 		try {
-			if (_preferences$44.show) this._host.style.display = "none";
-			_preferences$44.show = this._host.style.display !== "none";
-			_preferences$44.reduce = false;
-			_preferences$44.y = parseInt(this._host.style.top, 10) || 0;
-			_preferences$44.x = parseInt(this._host.style.left, 10) || 0;
-			_preferences$44.magnet_top = this.magnet.TOP;
-			_preferences$44.magnet_bottom = this.magnet.BOTTOM;
-			_preferences$44.magnet_left = this.magnet.LEFT;
-			_preferences$44.magnet_right = this.magnet.RIGHT;
-			_preferences$44.save();
+			if (_preferences$40.show) this._host.style.display = "none";
+			_preferences$40.show = this._host.style.display !== "none";
+			_preferences$40.reduce = false;
+			_preferences$40.y = parseInt(this._host.style.top, 10) || 0;
+			_preferences$40.x = parseInt(this._host.style.left, 10) || 0;
+			_preferences$40.magnet_top = this.magnet.TOP;
+			_preferences$40.magnet_bottom = this.magnet.BOTTOM;
+			_preferences$40.magnet_left = this.magnet.LEFT;
+			_preferences$40.magnet_right = this.magnet.RIGHT;
+			_preferences$40.save();
 		} catch (_error) {
-			_preferences$44.show = false;
-			_preferences$44.save();
+			_preferences$40.show = false;
+			_preferences$40.save();
 		}
 	};
 	/**
@@ -219899,7 +219899,7 @@ var init_ItemCompare$1 = __esmMin((() => {
 /**
 * Helper: escape HTML
 */
-function _escapeHTML$7(text) {
+function _escapeHTML$5(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -219917,7 +219917,7 @@ function addCard$1(cardList, itemId, index, slotCount) {
 	const card = DB.getItemInfo(itemId);
 	if (itemId && card) {
 		file = "item/" + card.identifiedResourceName + ".bmp";
-		name = `<div class="name">${_escapeHTML$7(card.identifiedDisplayName)}</div>`;
+		name = `<div class="name">${_escapeHTML$5(card.identifiedDisplayName)}</div>`;
 	} else if (index < slotCount) file = "empty_card_slot.bmp";
 	else file = "basic_interface/coparison_disable_card_slot.bmp";
 	if (!cardList) return;
@@ -219941,13 +219941,13 @@ function addCard$1(cardList, itemId, index, slotCount) {
 /**
 * Extend ItemCompare window size
 */
-function onResize$11() {
+function onResize$7() {
 	const top = ItemCompare._host.offsetTop;
 	let lastHeight = 0;
 	function resizing() {
 		const h = Math.floor(Mouse.screen.y - top);
 		if (h === lastHeight) return;
-		resize$6(h);
+		resize$4(h);
 		lastHeight = h;
 	}
 	const _Interval = setInterval(resizing, 30);
@@ -219964,7 +219964,7 @@ function onResize$11() {
 *
 * @param {number} height
 */
-function resize$6(height) {
+function resize$4(height) {
 	const root = ItemCompare.getRoot();
 	const container = root.querySelector(".container");
 	const description = root.querySelector(".description");
@@ -220112,7 +220112,7 @@ var init_ItemCompare = __esmMin((() => {
 	*/
 	ItemCompare.onAppend = function onAppend() {
 		const descInner = ItemCompare.getRoot().querySelector(".description-inner");
-		if (descInner) resize$6(descInner.offsetHeight + 45);
+		if (descInner) resize$4(descInner.offsetHeight + 45);
 		if (ItemInfo_default._host) {
 			const itemInfoRect = ItemInfo_default._host.getBoundingClientRect();
 			const itemInfoWidth = itemInfoRect.width;
@@ -220134,7 +220134,7 @@ var init_ItemCompare = __esmMin((() => {
 		this._host.style.top = "200px";
 		this._host.style.left = "200px";
 		const extendBtn = root.querySelector(".extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$11);
+		if (extendBtn) extendBtn.addEventListener("mousedown", onResize$7);
 		const viewBtn = root.querySelector(".view");
 		if (viewBtn) viewBtn.addEventListener("click", () => {
 			CardIllustration_default.append();
@@ -220215,7 +220215,7 @@ var init_ItemCompare = __esmMin((() => {
 				if (cardListParent) cardListParent.style.display = "none";
 				break;
 		}
-		if (descInner) resize$6(descInner.offsetHeight + 45);
+		if (descInner) resize$4(descInner.offsetHeight + 45);
 	};
 	rendering$3 = (function renderingClosure() {
 		const position = new Uint16Array([0, 0]);
@@ -220733,18 +220733,6 @@ var init_CartItems$1 = __esmMin((() => {
 	CartItems_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#cartitems {\r\n	position: relative;\r\n}\r\n#cartitems table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n}\r\n\r\n#cartitems .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#cartitems .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#cartitems .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#cartitems .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#cartitems .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#cartitems .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#cartitems .container {\r\n	padding-left: 40px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#cartitems .ff_bugfix {\r\n	position: relative;\r\n	width: 100%;\r\n	height: 100%;\r\n}\r\n#cartitems .hide {\r\n	height: 100%;\r\n	width: 13px;\r\n	position: absolute;\r\n	top: 0px;\r\n	right: 0px;\r\n	background-color: white;\r\n}\r\n#cartitems .content {\r\n	overflow: auto;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 65px;\r\n	background-color: transparent;\r\n	background-repeat: repeat;\r\n	background-attachment: local;\r\n}\r\n\r\n#cartitems .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 24px;\r\n	margin: 4px 4px 4px 4px;\r\n	position: relative;\r\n	float: left;\r\n}\r\n#cartitems .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#cartitems .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#cartitems .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#cartitems .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n\r\n#cartitems .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#cartitems .footer button {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#cartitems .footer .cnt {\r\n	position: absolute;\r\n	left: 10px;\r\n	bottom: 6px;\r\n}\r\n#cartitems .footer .wt {\r\n	position: absolute;\r\n	left: 80px;\r\n	bottom: 6px;\r\n}\r\n\r\n#cartitems .content .item .grade {\r\n	position: absolute;\r\n	width: 12px;\r\n	height: 12px;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	pointer-events: none;\r\n	z-index: 2;\r\n	top: 12px;\r\n}\r\n";
 }));
 //#endregion
-//#region src/UI/Components/Storage/StorageV0/Storage.html?raw
-var Storage_default$5;
-var init_Storage$7 = __esmMin((() => {
-	Storage_default$5 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\"><ui-text msg=\"169\">Storage</ui-text></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tr>\r\n				<td\r\n					class=\"tabs\"\r\n					rowspan=\"2\"\r\n					data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n					data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n				>\r\n					<button class=\"item\"></button>\r\n					<button class=\"kafra\"></button>\r\n					<button class=\"armor\"></button>\r\n					<button class=\"arms\"></button>\r\n					<button class=\"ammo\"></button>\r\n					<button class=\"card\"></button>\r\n					<button class=\"etc\"></button>\r\n				</td>\r\n				<td class=\"container\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n					<span class=\"current\">0</span>/<span class=\"limit\">0</span>\r\n					<ui-button\r\n						class=\"close\"\r\n						bg=\"btn_close.bmp\"\r\n						hover=\"btn_close_a.bmp\"\r\n						down=\"btn_close_b.bmp\"\r\n					></ui-button>\r\n					<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/Storage/StorageV0/Storage.css?raw
-var Storage_default$4;
-var init_Storage$6 = __esmMin((() => {
-	Storage_default$4 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
-}));
-//#endregion
 //#region src/UI/Components/Inventory/InventoryV0/InventoryV0.html?raw
 var InventoryV0_default$2;
 var init_InventoryV0$2 = __esmMin((() => {
@@ -220843,7 +220831,7 @@ function onDragLeave(event) {
 /**
 * Drop an item in the equipment, equip it if possible
 */
-function onDrop$14(event) {
+function onDrop$12(event) {
 	let data;
 	try {
 		data = JSON.parse(event.dataTransfer.getData("Text"));
@@ -220955,7 +220943,7 @@ var init_SwitchEquip = __esmMin((() => {
 		if (panel) {
 			panel.addEventListener("dragover", onDragOver$1);
 			panel.addEventListener("dragleave", onDragLeave);
-			panel.addEventListener("drop", onDrop$14);
+			panel.addEventListener("drop", onDrop$12);
 		}
 		const closeBtn = root.querySelector(".closeswap");
 		if (closeBtn) closeBtn.addEventListener("click", () => {
@@ -223127,7 +223115,7 @@ function stopPropagation$11(event) {
 function onClose$7() {
 	WorldMap._host.style.display = "none";
 }
-var WorldMap, _preferences$43, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
+var WorldMap, _preferences$39, _partyMembersByMap, _hoveredSection, C_TITLEBARHEIGHT, C_BASEWIDTH, C_BASEHEIGHT, C_ASPECTX, C_ASPECTY, WorldMap_default;
 var init_WorldMap = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -223145,7 +223133,7 @@ var init_WorldMap = __esmMin((() => {
 	init_Navigation();
 	WorldMap = new GUIComponent("WorldMap", WorldMap_default$1);
 	WorldMap.render = () => WorldMap_default$2;
-	_preferences$43 = Preferences.get("WorldMap", {
+	_preferences$39 = Preferences.get("WorldMap", {
 		x: 0,
 		y: 0,
 		width: window.innerWidth,
@@ -223185,7 +223173,7 @@ var init_WorldMap = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	WorldMap.onAppend = function onAppend() {
-		if (!_preferences$43.show) this._host.style.display = "none";
+		if (!_preferences$39.show) this._host.style.display = "none";
 		this.settings = {
 			episode: 98,
 			add: [],
@@ -223208,12 +223196,12 @@ var init_WorldMap = __esmMin((() => {
 		this._host.style.left = "0px";
 	};
 	WorldMap.onRemove = function onRemove() {
-		_preferences$43.show = this._host.style.display !== "none";
-		_preferences$43.y = 0;
-		_preferences$43.x = 0;
-		_preferences$43.width = 0;
-		_preferences$43.height = 0;
-		_preferences$43.save();
+		_preferences$39.show = this._host.style.display !== "none";
+		_preferences$39.y = 0;
+		_preferences$39.x = 0;
+		_preferences$39.width = 0;
+		_preferences$39.height = 0;
+		_preferences$39.save();
 	};
 	/**
 	* Show/Hide UI
@@ -223380,7 +223368,7 @@ var init_NpcMenu$1 = __esmMin((() => {
 /**
 * Helper: escape HTML
 */
-function _escapeHTML$6(text) {
+function _escapeHTML$4(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -223510,7 +223498,7 @@ var init_NpcMenu = __esmMin((() => {
 		let j = 0;
 		for (let i = 0, count = list.length; i < count; ++i) if (list[i].length) {
 			const div = document.createElement("div");
-			div.innerHTML = DB.formatMsgToHtml(_escapeHTML$6(list[i]));
+			div.innerHTML = DB.formatMsgToHtml(_escapeHTML$4(list[i]));
 			div.dataset.index = j++;
 			content.appendChild(div);
 		}
@@ -223802,7 +223790,7 @@ function initResizable(instance) {
 		window.addEventListener("mouseup", stopResize);
 	});
 }
-var WhisperBox, _preferences$42;
+var WhisperBox, _preferences$38;
 var init_WhisperBox = __esmMin((() => {
 	init_DBManager();
 	init_UIManager();
@@ -223839,7 +223827,7 @@ var init_WhisperBox = __esmMin((() => {
 		open1to1Friend: true,
 		alarm1to1: true
 	}, 1);
-	_preferences$42 = WhisperBox.preferences;
+	_preferences$38 = WhisperBox.preferences;
 	WhisperBox.mouseMode = GUIComponent.MouseMode.STOP;
 	WhisperBox.captureKeyEvents = true;
 	/**
@@ -223872,7 +223860,7 @@ var init_WhisperBox = __esmMin((() => {
 			this.instances[nickname].focus();
 			return this.instances[nickname];
 		}
-		if (_preferences$42.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
+		if (_preferences$38.alarm1to1 && bHasMessage) SoundManager.play("¹öÆ°¼Ò¸®.wav");
 		const instance = this.clone(nickname);
 		instance.nickname = nickname;
 		instance.name = `WhisperBox:${nickname}`;
@@ -223970,8 +223958,8 @@ var init_WhisperBox = __esmMin((() => {
 		initResizable(instance);
 		const offset = this._spawnCounter % 10 * 20;
 		this._spawnCounter++;
-		instance._host.style.top = `${Math.min(Math.max(0, _preferences$42.y + offset), Renderer.height - 156)}px`;
-		instance._host.style.left = `${Math.min(Math.max(0, _preferences$42.x + offset), Renderer.width - 280)}px`;
+		instance._host.style.top = `${Math.min(Math.max(0, _preferences$38.y + offset), Renderer.height - 156)}px`;
+		instance._host.style.left = `${Math.min(Math.max(0, _preferences$38.x + offset), Renderer.width - 280)}px`;
 		this.instances[nickname] = instance;
 		return instance;
 	};
@@ -224704,9 +224692,9 @@ function onClickClose$2(e) {
 	e.stopImmediatePropagation();
 	Rodex.openType = 0;
 	Rodex.closeRodexBox();
-	_preferences$41.y = parseInt(Rodex._host.style.top, 10);
-	_preferences$41.x = parseInt(Rodex._host.style.left, 10);
-	_preferences$41.save();
+	_preferences$37.y = parseInt(Rodex._host.style.top, 10);
+	_preferences$37.x = parseInt(Rodex._host.style.left, 10);
+	_preferences$37.save();
 	Rodex._host.style.display = "none";
 }
 function onClickRefresh(e) {
@@ -224802,7 +224790,7 @@ function onClickReplyMail(e) {
 	const sender = e.currentTarget.getAttribute("sender");
 	Rodex.requestOpenWriteRodex(sender);
 }
-var Rodex, _preferences$41, Rodex_default;
+var Rodex, _preferences$37, Rodex_default;
 var init_Rodex$1 = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -224846,7 +224834,7 @@ var init_Rodex$1 = __esmMin((() => {
 		6: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp",
 		12: "basic_interface/rodexsystem/renewal/icon_zeny_n_item.bmp"
 	};
-	_preferences$41 = Preferences.get("Rodex", {
+	_preferences$37 = Preferences.get("Rodex", {
 		x: 350,
 		y: 350,
 		show: false
@@ -224860,8 +224848,8 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onAppend = function OnAppend() {
 		const root = _root$16();
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$41.y), Renderer.height - this._host.offsetHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$41.x), Renderer.width - this._host.offsetWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$37.y), Renderer.height - this._host.offsetHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$37.x), Renderer.width - this._host.offsetWidth)}px`;
 		this.draggable(root.querySelector(".titlebar"));
 		root.querySelector(".close").addEventListener("click", onClickClose$2);
 		root.querySelector(".refresh").addEventListener("click", onClickRefresh);
@@ -224886,10 +224874,10 @@ var init_Rodex$1 = __esmMin((() => {
 	*/
 	Rodex.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$41.show = this._host.style.display !== "none";
-		_preferences$41.y = parseInt(this._host.style.top, 10);
-		_preferences$41.x = parseInt(this._host.style.left, 10);
-		_preferences$41.save();
+		_preferences$37.show = this._host.style.display !== "none";
+		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$37.x = parseInt(this._host.style.left, 10);
+		_preferences$37.save();
 		Rodex.openType = 0;
 	};
 	/**
@@ -225516,7 +225504,7 @@ function stopPropagation$10(event) {
 /**
 * Drop an item in the equipment, equip it if possible
 */
-function onDrop$13(event) {
+function onDrop$11(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -225535,23 +225523,23 @@ function onDrop$13(event) {
 			Mail.parseMailWinopen(1);
 			if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, parseInt(count, 10));
 			Mail.parseMailSetattach(item.index, parseInt(count, 10));
-			_preferences$40.item_add_email = item;
-			_preferences$40.item_add_email.count = parseInt(count, 10);
-			_preferences$40.save();
+			_preferences$36.item_add_email = item;
+			_preferences$36.item_add_email.count = parseInt(count, 10);
+			_preferences$36.save();
 		};
 		return;
 	}
 	if (data.from == "Inventory") InventoryController.getUI().removeItem(item.index, 1);
 	Mail.parseMailWinopen(1);
 	Mail.parseMailSetattach(item.index, 1);
-	_preferences$40.item_add_email = item;
-	_preferences$40.item_add_email.count = 1;
-	_preferences$40.save();
+	_preferences$36.item_add_email = item;
+	_preferences$36.item_add_email.count = 1;
+	_preferences$36.save();
 }
 /**
 * Show item name when mouse is over
 */
-function onItemOver$15() {
+function onItemOver$13() {
 	const root = _root$14();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(idx);
@@ -225567,14 +225555,14 @@ function onItemOver$15() {
 /**
 * Hide the item name
 */
-function onItemOut$16() {
+function onItemOut$14() {
 	const overlay = _root$14().querySelector(".container_item .overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
 */
-function onItemDragStart$11(event) {
+function onItemDragStart$9(event) {
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(index);
 	if (!item) return;
@@ -225588,18 +225576,18 @@ function onItemDragStart$11(event) {
 		from: "Mail",
 		data: item
 	}));
-	onItemOut$16();
+	onItemOut$14();
 }
 /**
 * Stop dragging an item
 */
-function onItemDragEnd$12() {
+function onItemDragEnd$10() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$19(event) {
+function onItemInfo$17(event) {
 	event.stopImmediatePropagation();
 	const index = parseInt(this.getAttribute("data-index"), 10);
 	const item = Mail.getItemByIndex(index);
@@ -225658,7 +225646,7 @@ function onDropText$1(event) {
 function sleep(time) {
 	return new Promise((resolve) => setTimeout(resolve, time));
 }
-var Mail, _preferences$40, Mail_default;
+var Mail, _preferences$36, Mail_default;
 var init_Mail$1 = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -225689,7 +225677,7 @@ var init_Mail$1 = __esmMin((() => {
 	* know which page is current
 	*/
 	Mail.page = 0;
-	_preferences$40 = Preferences.get("Mail", {
+	_preferences$36 = Preferences.get("Mail", {
 		x: 0,
 		y: 172,
 		width: 7,
@@ -225728,27 +225716,27 @@ var init_Mail$1 = __esmMin((() => {
 		updatePageMailItems();
 		const containerItem = root.querySelector(".container_item");
 		if (containerItem) {
-			containerItem.addEventListener("drop", onDrop$13);
+			containerItem.addEventListener("drop", onDrop$11);
 			containerItem.addEventListener("dragover", stopPropagation$10);
 			containerItem.addEventListener("mouseover", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemOver$15.call(item, event);
+				if (item) onItemOver$13.call(item, event);
 			});
 			containerItem.addEventListener("mouseout", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemOut$16.call(item, event);
+				if (item) onItemOut$14.call(item, event);
 			});
 			containerItem.addEventListener("dragstart", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemDragStart$11.call(item, event);
+				if (item) onItemDragStart$9.call(item, event);
 			});
 			containerItem.addEventListener("dragend", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemDragEnd$12.call(item, event);
+				if (item) onItemDragEnd$10.call(item, event);
 			});
 			containerItem.addEventListener("contextmenu", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemInfo$19.call(item, event);
+				if (item) onItemInfo$17.call(item, event);
 			});
 		}
 		root.querySelectorAll("input[type=text]").forEach((input) => {
@@ -225767,8 +225755,8 @@ var init_Mail$1 = __esmMin((() => {
 		onWindowMailbox();
 		const hostHeight = this._host.offsetHeight || 0;
 		const hostWidth = this._host.offsetWidth || 0;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$40.y), Renderer.height - hostHeight)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$40.x), Renderer.width - hostWidth)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$36.y), Renderer.height - hostHeight)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$36.x), Renderer.width - hostWidth)}px`;
 		this.draggable(".titlebar");
 	};
 	/**
@@ -225776,7 +225764,7 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.addItemSub = function AddItemSub(Index) {
 		const root = _root$14();
-		const item = _preferences$40.item_add_email;
+		const item = _preferences$36.item_add_email;
 		if (item.index !== Index) return false;
 		if (item.WearState && item.type !== ItemType_default.AMMO && item.type !== ItemType_default.CARD) return false;
 		const it = DB.getItemInfo(item.ITID);
@@ -225811,15 +225799,15 @@ var init_Mail$1 = __esmMin((() => {
 	*/
 	Mail.onRemove = function OnRemove() {
 		this.list.length = 0;
-		_preferences$40.show = this._host.style.display !== "none";
-		_preferences$40.reduce = false;
-		_preferences$40.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$40.x = parseInt(this._host.style.left, 10) || 0;
-		_preferences$40.magnet_top = this.magnet.TOP;
-		_preferences$40.magnet_bottom = this.magnet.BOTTOM;
-		_preferences$40.magnet_left = this.magnet.LEFT;
-		_preferences$40.magnet_right = this.magnet.RIGHT;
-		_preferences$40.save();
+		_preferences$36.show = this._host.style.display !== "none";
+		_preferences$36.reduce = false;
+		_preferences$36.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences$36.x = parseInt(this._host.style.left, 10) || 0;
+		_preferences$36.magnet_top = this.magnet.TOP;
+		_preferences$36.magnet_bottom = this.magnet.BOTTOM;
+		_preferences$36.magnet_left = this.magnet.LEFT;
+		_preferences$36.magnet_right = this.magnet.RIGHT;
+		_preferences$36.save();
 	};
 	/**
 	* Extend Mail window size
@@ -225869,7 +225857,7 @@ var init_Mail$1 = __esmMin((() => {
 	* Search in a list for an item by its index
 	*/
 	Mail.getItemByIndex = function getItemByIndex(index) {
-		const list = _preferences$40.item_add_email;
+		const list = _preferences$36.item_add_email;
 		if (list.index == index) return list;
 		return null;
 	};
@@ -227982,12 +227970,12 @@ function _root$13(comp) {
 /**
 * Helper: escape HTML
 */
-function _escapeHTML$5(text) {
+function _escapeHTML$3(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
 }
-function getSkillById$2(id) {
+function getSkillById(id) {
 	const count = _skills.length;
 	for (let i = 0; i < count; ++i) if (_skills[i].SKID === id) return _skills[i];
 	return null;
@@ -228004,7 +227992,7 @@ function onRequestUseSkill() {
 function onRequestSkillInfo() {
 	let main = this.parentElement;
 	if (!main.classList.contains("skill")) main = main.parentElement;
-	const skill = getSkillById$2(parseInt(main.getAttribute("data-index"), 10));
+	const skill = getSkillById(parseInt(main.getAttribute("data-index"), 10));
 	if (SkillDescription_default.uid === skill.SKID) {
 		SkillDescription_default.remove();
 		return;
@@ -228020,7 +228008,7 @@ function onSkillFocus() {
 	main.classList.add("selected");
 }
 function onSkillDragStart(event) {
-	const skill = getSkillById$2(parseInt(this.getAttribute("data-index"), 10));
+	const skill = getSkillById(parseInt(this.getAttribute("data-index"), 10));
 	if (!skill || !skill.level || !skill.type) {
 		event.stopImmediatePropagation();
 		return false;
@@ -228038,7 +228026,7 @@ function onSkillDragStart(event) {
 function onSkillDragEnd() {
 	delete window._OBJ_DRAG_;
 }
-function skillLevelSelectUp$2(skill) {
+function skillLevelSelectUp(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level < skill.level) {
 		skill.selectedLevel = level + 1;
@@ -228049,7 +228037,7 @@ function skillLevelSelectUp$2(skill) {
 		}
 	}
 }
-function skillLevelSelectDown$2(skill) {
+function skillLevelSelectDown(skill) {
 	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
 	if (level > 1) {
 		skill.selectedLevel = level - 1;
@@ -228149,7 +228137,7 @@ function onValidate() {
 	const btnOk = root.querySelector(".footer .btn_ok");
 	if (btnOk) btnOk.style.display = "none";
 }
-var AccessTypeBit, Guild, _memberViewTemplate, _positionViewTemplate, _expelViewTemplate, _positions, _members, _skills, _btnIncSkillTemplate, _skpoints, _btnLevelUp$2, lArrow, rArrow, _totalExp, _guildAccess, _checkbox_off, _checkbox_on, renderMemberFaces, Guild_default;
+var AccessTypeBit, Guild, _memberViewTemplate, _positionViewTemplate, _expelViewTemplate, _positions, _members, _skills, _btnIncSkillTemplate, _skpoints, _btnLevelUp, lArrow, rArrow, _totalExp, _guildAccess, _checkbox_off, _checkbox_on, renderMemberFaces, Guild_default;
 var init_Guild$1 = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
@@ -228314,13 +228302,13 @@ var init_Guild$1 = __esmMin((() => {
 		}
 		const lvlupBtn = root.querySelector("#lvlup_job");
 		if (lvlupBtn) {
-			_btnLevelUp$2 = lvlupBtn;
-			_btnLevelUp$2.remove();
-			_btnLevelUp$2.addEventListener("click", () => {
-				if (_btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
+			_btnLevelUp = lvlupBtn;
+			_btnLevelUp.remove();
+			_btnLevelUp.addEventListener("click", () => {
+				if (_btnLevelUp.parentNode) _btnLevelUp.remove();
 				Guild.ui.show();
 			});
-			_btnLevelUp$2.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+			_btnLevelUp.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 		}
 		const container = root.querySelector("#Guild") || root;
 		container.addEventListener("dblclick", (e) => {
@@ -228389,7 +228377,7 @@ var init_Guild$1 = __esmMin((() => {
 		if (!SessionStorage_default.hasGuild) return;
 		if (this.ui.is(":visible")) {
 			this.hide();
-			if (_btnLevelUp$2 && _btnLevelUp$2.parentNode) _btnLevelUp$2.remove();
+			if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		} else this.show();
 	};
 	Guild.onKeyDown = function onKeyDown(event) {
@@ -228500,7 +228488,7 @@ var init_Guild$1 = __esmMin((() => {
 			if (SessionStorage_default.isGuildMaster && member.GPositionID !== 0) {
 				let selectHTML = `<select class="changePosition member_${member.AID}_${member.GID}">`;
 				_positions.forEach((position, key) => {
-					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$5(position.posName)}</option>`;
+					selectHTML += `<option value="${position.positionID}" ${key === member.GPositionID ? "selected" : ""}>${_escapeHTML$3(position.posName)}</option>`;
 				});
 				selectHTML += "</select>";
 				positionCell.innerHTML = selectHTML;
@@ -228648,21 +228636,21 @@ var init_Guild$1 = __esmMin((() => {
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$5(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
 		if (!skill.upgradable || !_skpoints) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const currentUp = tr.querySelector(".level .currentUp");
 		if (currentUp) {
 			if (rArrow) currentUp.style.backgroundImage = rArrow;
 			currentUp.addEventListener("click", () => {
-				skillLevelSelectUp$2(skill);
+				skillLevelSelectUp(skill);
 			});
 		}
 		const currentDown = tr.querySelector(".level .currentDown");
 		if (currentDown) {
 			if (lArrow) currentDown.style.backgroundImage = lArrow;
 			currentDown.addEventListener("click", () => {
-				skillLevelSelectDown$2(skill);
+				skillLevelSelectDown(skill);
 			});
 		}
 		const table = root.querySelector(".content.skills .skill_list table");
@@ -228677,7 +228665,7 @@ var init_Guild$1 = __esmMin((() => {
 	};
 	Guild.removeSkill = function removeSkill() {};
 	Guild.updateSkill = function updateSkill(skill) {
-		const target = getSkillById$2(skill.SKID);
+		const target = getSkillById(skill.SKID);
 		if (!target) return;
 		target.level = skill.level;
 		target.spcost = skill.spcost;
@@ -228700,7 +228688,7 @@ var init_Guild$1 = __esmMin((() => {
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
 	Guild.useSkillID = function useSkillID(id, level) {
-		const skill = getSkillById$2(id);
+		const skill = getSkillById(id);
 		if (!skill || !skill.level || !skill.type) return;
 		Guild.useSkill(skill, level ? level : skill.selectedLevel);
 	};
@@ -228728,7 +228716,7 @@ var init_Guild$1 = __esmMin((() => {
 		}
 	};
 	Guild.onLevelUp = function onLevelUp() {
-		if (_btnLevelUp$2) document.body.appendChild(_btnLevelUp$2);
+		if (_btnLevelUp) document.body.appendChild(_btnLevelUp);
 	};
 	Guild.setNotice = function setNotice(subject, notice) {
 		const root = _root$13(this);
@@ -228790,7 +228778,7 @@ var init_Guild$1 = __esmMin((() => {
 	Guild.onUseSkill = function onUseItem() {};
 	Guild.onIncreaseSkill = function onIncreaseSkill() {};
 	Guild.onUpdateSkill = function onUpdateSkill() {};
-	Guild.getSkillById = getSkillById$2;
+	Guild.getSkillById = getSkillById;
 	Guild_default = UIManager.addComponent(Guild);
 }));
 //#endregion
@@ -228921,7 +228909,7 @@ function reqCloseBank() {
 	pkt.AID = SessionStorage_default.AID;
 	Network.sendPacket(pkt);
 }
-var Bank, maxInt, _preferences$39, Bank_default;
+var Bank, maxInt, _preferences$35, Bank_default;
 var init_Bank$1 = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -228944,7 +228932,7 @@ var init_Bank$1 = __esmMin((() => {
 	*/
 	Bank.render = () => Bank_default$2;
 	maxInt = 2147483647;
-	_preferences$39 = Preferences.get("Bank", {
+	_preferences$35 = Preferences.get("Bank", {
 		x: 230,
 		y: 295
 	}, 2);
@@ -229009,8 +228997,8 @@ var init_Bank$1 = __esmMin((() => {
 	*/
 	Bank.onAppend = function onAppend() {
 		const root = this.getRoot();
-		this._host.style.top = Math.min(Math.max(0, _preferences$39.y), Renderer.height - this._host.offsetHeight) + "px";
-		this._host.style.left = Math.min(Math.max(0, _preferences$39.x), Renderer.width - this._host.offsetWidth) + "px";
+		this._host.style.top = Math.min(Math.max(0, _preferences$35.y), Renderer.height - this._host.offsetHeight) + "px";
+		this._host.style.left = Math.min(Math.max(0, _preferences$35.x), Renderer.width - this._host.offsetWidth) + "px";
 		const input = root.querySelector(".depo");
 		input.value = "";
 		input.focus();
@@ -229063,9 +229051,9 @@ var init_Bank$1 = __esmMin((() => {
 	* Remove Bank from window
 	*/
 	Bank.onRemove = function onRemove() {
-		_preferences$39.y = parseInt(this._host.style.top, 10);
-		_preferences$39.x = parseInt(this._host.style.left, 10);
-		_preferences$39.save();
+		_preferences$35.y = parseInt(this._host.style.top, 10);
+		_preferences$35.x = parseInt(this._host.style.left, 10);
+		_preferences$35.save();
 		const error = this.getRoot().querySelector(".errorupdate");
 		if (error) error.textContent = "";
 	};
@@ -229146,7 +229134,7 @@ function onToggleBGM() {
 	if (Audio_default.BGM.play) BGM.play(BGM.filename);
 	else BGM.stop();
 }
-var SoundOption, _preferences$38, SoundOption_default;
+var SoundOption, _preferences$34, SoundOption_default;
 var init_SoundOption = __esmMin((() => {
 	init_Preferences$1();
 	init_Audio();
@@ -229159,7 +229147,7 @@ var init_SoundOption = __esmMin((() => {
 	init_SoundOption$1();
 	SoundOption = new GUIComponent("SoundOption", SoundOption_default$1);
 	SoundOption.render = () => SoundOption_default$2;
-	_preferences$38 = Preferences.get("SoundOption", {
+	_preferences$34 = Preferences.get("SoundOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -229184,8 +229172,8 @@ var init_SoundOption = __esmMin((() => {
 		this.draggable(".titlebar");
 	};
 	SoundOption.onAppend = function onAppend() {
-		this._host.style.top = _preferences$38.y + "px";
-		this._host.style.left = _preferences$38.x + "px";
+		this._host.style.top = _preferences$34.y + "px";
+		this._host.style.left = _preferences$34.x + "px";
 		const root = this.getRoot();
 		const soundSlider = root.querySelector(".sound");
 		if (soundSlider) soundSlider.value = Audio_default.Sound.volume * 100;
@@ -229197,9 +229185,9 @@ var init_SoundOption = __esmMin((() => {
 		if (bgmState) bgmState.checked = Audio_default.BGM.play;
 	};
 	SoundOption.onRemove = function onRemove() {
-		_preferences$38.x = parseInt(this._host.style.left, 10);
-		_preferences$38.y = parseInt(this._host.style.top, 10);
-		_preferences$38.save();
+		_preferences$34.x = parseInt(this._host.style.left, 10);
+		_preferences$34.y = parseInt(this._host.style.top, 10);
+		_preferences$34.save();
 	};
 	SoundOption_default = UIManager.addComponent(SoundOption);
 }));
@@ -229217,7 +229205,7 @@ var init_FPS$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.js
-var FPS, _maxFPSRegistered, _tickFn, _preferences$37, FPS_default;
+var FPS, _maxFPSRegistered, _tickFn, _preferences$33, FPS_default;
 var init_FPS = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -229230,7 +229218,7 @@ var init_FPS = __esmMin((() => {
 	FPS.render = () => FPS_default$2;
 	_maxFPSRegistered = 0;
 	_tickFn = null;
-	_preferences$37 = Preferences.get("FPS", {
+	_preferences$33 = Preferences.get("FPS", {
 		show: false,
 		x: 100,
 		y: 100
@@ -229254,9 +229242,9 @@ var init_FPS = __esmMin((() => {
 	* When appended to DOM
 	*/
 	FPS.onAppend = function onAppend() {
-		this._host.style.top = _preferences$37.y + "px";
-		this._host.style.left = _preferences$37.x + "px";
-		this._host.style.display = _preferences$37.show ? "" : "none";
+		this._host.style.top = _preferences$33.y + "px";
+		this._host.style.left = _preferences$33.x + "px";
+		this._host.style.display = _preferences$33.show ? "" : "none";
 		const root = this.getRoot();
 		const fpsEl = root.querySelector("#fpsCounter");
 		const fpsRoot = root.querySelector("#FPS");
@@ -229304,21 +229292,21 @@ var init_FPS = __esmMin((() => {
 			Renderer.stop(_tickFn);
 			_tickFn = null;
 		}
-		_preferences$37.x = parseInt(this._host.style.left, 10);
-		_preferences$37.y = parseInt(this._host.style.top, 10);
-		_preferences$37.show = this._host.style.display !== "none";
-		_preferences$37.save();
+		_preferences$33.x = parseInt(this._host.style.left, 10);
+		_preferences$33.y = parseInt(this._host.style.top, 10);
+		_preferences$33.show = this._host.style.display !== "none";
+		_preferences$33.save();
 	};
 	/**
 	* Show/Hide UI
 	*/
 	FPS.toggle = function toggle(isVisible) {
-		_preferences$37.x = parseInt(this._host.style.left, 10);
-		_preferences$37.y = parseInt(this._host.style.top, 10);
+		_preferences$33.x = parseInt(this._host.style.left, 10);
+		_preferences$33.y = parseInt(this._host.style.top, 10);
 		if (typeof isVisible === "boolean") this._host.style.display = isVisible ? "" : "none";
 		else this._host.style.display = this._host.style.display === "none" ? "" : "none";
-		_preferences$37.show = this._host.style.display !== "none";
-		_preferences$37.save();
+		_preferences$33.show = this._host.style.display !== "none";
+		_preferences$33.save();
 		if (this._host.style.display !== "none") this.focus();
 	};
 	FPS_default = UIManager.addComponent(FPS);
@@ -229572,7 +229560,7 @@ function onResetToDefaults() {
 	GraphicsSettings.save();
 	GraphicsOption.onAppend();
 }
-var GraphicsOption, _preferences$36, GraphicsOption_default;
+var GraphicsOption, _preferences$32, GraphicsOption_default;
 var init_GraphicsOption = __esmMin((() => {
 	init_FPS();
 	init_Configs();
@@ -229587,7 +229575,7 @@ var init_GraphicsOption = __esmMin((() => {
 	init_MemoryManager();
 	init_ChatBox();
 	GraphicsOption = new GUIComponent("GraphicsOption", GraphicsOption_default$1);
-	_preferences$36 = Preferences.get("GraphicsOption", {
+	_preferences$32 = Preferences.get("GraphicsOption", {
 		x: 300,
 		y: 300
 	}, 1.1);
@@ -229653,8 +229641,8 @@ var init_GraphicsOption = __esmMin((() => {
 	* When append the element to html
 	*/
 	GraphicsOption.onAppend = function onAppend() {
-		this._host.style.top = `${_preferences$36.y}px`;
-		this._host.style.left = `${_preferences$36.x}px`;
+		this._host.style.top = `${_preferences$32.y}px`;
+		this._host.style.left = `${_preferences$32.x}px`;
 		const root = this.getRoot();
 		root.querySelector(".details").value = GraphicsSettings.quality;
 		root.querySelector(".screensize").value = GraphicsSettings.screensize;
@@ -229685,9 +229673,9 @@ var init_GraphicsOption = __esmMin((() => {
 	* Once remove, save preferences
 	*/
 	GraphicsOption.onRemove = function onRemove() {
-		_preferences$36.x = parseInt(this._host.style.left, 10);
-		_preferences$36.y = parseInt(this._host.style.top, 10);
-		_preferences$36.save();
+		_preferences$32.x = parseInt(this._host.style.left, 10);
+		_preferences$32.y = parseInt(this._host.style.top, 10);
+		_preferences$32.save();
 	};
 	GraphicsOption.needFocus = true;
 	GraphicsOption.mouseMode = GUIComponent.MouseMode.STOP;
@@ -229870,7 +229858,7 @@ function onUpdateDisableVirtualMouse() {
 	Controls_default.joyDisableVirtualMouse = !!this.checked;
 	Controls_default.save();
 }
-var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$35, ShortCutOption_default;
+var ShortCutOption, ShortCuts$1, ShortCutsTemp, _preferences$31, ShortCutOption_default;
 var init_ShortCutOption = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Preferences$1();
@@ -229886,7 +229874,7 @@ var init_ShortCutOption = __esmMin((() => {
 	ShortCuts$1 = ShortCutControls_default.ShortCuts;
 	ShortCutsTemp = {};
 	ShortCutOption.isCapturing = false;
-	_preferences$35 = Preferences.get("ShortCutOption", {
+	_preferences$31 = Preferences.get("ShortCutOption", {
 		x: 300,
 		y: 300
 	}, 1);
@@ -229972,17 +229960,17 @@ var init_ShortCutOption = __esmMin((() => {
 	* Apply preferences once append to body
 	*/
 	ShortCutOption.onAppend = function() {
-		this._host.style.left = _preferences$35.x + "px";
-		this._host.style.top = _preferences$35.y + "px";
+		this._host.style.left = _preferences$31.x + "px";
+		this._host.style.top = _preferences$31.y + "px";
 		this._host.style.zIndex = 100;
 	};
 	/**
 	* Remove from window (and so clean up)
 	*/
 	ShortCutOption.onRemove = function() {
-		_preferences$35.x = parseInt(this._host.style.left, 10);
-		_preferences$35.y = parseInt(this._host.style.top, 10);
-		_preferences$35.save();
+		_preferences$31.x = parseInt(this._host.style.left, 10);
+		_preferences$31.y = parseInt(this._host.style.top, 10);
+		_preferences$31.save();
 	};
 	/**
 	* Process key
@@ -230256,7 +230244,7 @@ function onClickAttendance(e) {
 	const _pkt = new PACKET.CZ.REQ_CHECK_ATTENDANCE();
 	Network.sendPacket(_pkt);
 }
-var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$34, CheckAttendance_default;
+var CheckAttendance, _checkAttendanceData, _CheckAttendanceInfo, _preferences$30, CheckAttendance_default;
 var init_CheckAttendance = __esmMin((() => {
 	init_DBManager();
 	init_Preferences$1();
@@ -230271,7 +230259,7 @@ var init_CheckAttendance = __esmMin((() => {
 	init_Elements();
 	CheckAttendance = new GUIComponent("CheckAttendance", CheckAttendance_default$1);
 	CheckAttendance.render = () => CheckAttendance_default$2;
-	_preferences$34 = Preferences.get("CheckAttendance", {
+	_preferences$30 = Preferences.get("CheckAttendance", {
 		x: 200,
 		y: 200
 	}, 1);
@@ -230296,10 +230284,10 @@ var init_CheckAttendance = __esmMin((() => {
 	*/
 	CheckAttendance.onAppend = function onAppend() {
 		Object.assign(this._host.style, {
-			top: `${Math.min(Math.max(0, _preferences$34.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
-			left: `${Math.min(Math.max(0, _preferences$34.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
+			top: `${Math.min(Math.max(0, _preferences$30.y), Renderer.height - this._host.getBoundingClientRect().height)}px`,
+			left: `${Math.min(Math.max(0, _preferences$30.x), Renderer.width - this._host.getBoundingClientRect().width)}px`
 		});
-		if (!_preferences$34.show) this._host.style.display = "none";
+		if (!_preferences$30.show) this._host.style.display = "none";
 		if (_checkAttendanceData >= 0 && _CheckAttendanceInfo.Config) {
 			CheckAttendance.updateUI();
 			this.focus();
@@ -230411,474 +230399,122 @@ var init_CheckAttendance = __esmMin((() => {
 	CheckAttendance_default = UIManager.addComponent(CheckAttendance);
 }));
 //#endregion
-//#region src/UI/Components/SkillList/SkillList/SkillList.html?raw
-var SkillList_default$2;
-var init_SkillList$3 = __esmMin((() => {
-	SkillList_default$2 = "<div id=\"SkillList\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<ui-text class=\"text\" msgid=\"283\">Skill Tree</ui-text>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<ui-button\r\n					class=\"base mini\"\r\n					bg=\"basic_interface/sys_mini_off.bmp\"\r\n					hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: block; width: 256px; height: 320px\">\r\n				<!-- Just to get reference, will be removed -->\r\n				<ui-button\r\n					class=\"btn levelup\"\r\n					bg=\"basic_interface/skill_up_a.bmp\"\r\n					hover=\"basic_interface/skill_up_b.bmp\"\r\n					down=\"basic_interface/skill_up_c.bmp\"\r\n				></ui-button>\r\n				<div class=\"tabs-mini\">\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1-mini\" checked class=\"tab-switch-mini\" />\r\n						<label for=\"tab-1-mini\" class=\"tab-label-mini\">1st</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab1\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-2-mini\" id=\"tabminil2\" class=\"tab-label-mini\">2nd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab2\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-3-mini\" id=\"tabminil3\" class=\"tab-label-mini\">3rd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab3\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-4-mini\" id=\"tabminil4\" class=\"tab-label-mini\">4th</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab4\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-5-mini\" class=\"tab-label-mini\">Etc</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab5\"></table>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">1st</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" id=\"tabl2\" class=\"tab-label\">2nd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" id=\"tabl3\" class=\"tab-label\">3rd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4\" class=\"tab-switch\" />\r\n						<label for=\"tab-4\" id=\"tabl4\" class=\"tab-label\">4th</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills4\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5\" class=\"tab-switch\" />\r\n						<label for=\"tab-5\" class=\"tab-label\">Etc</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"etcBIG5\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\">\r\n				<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<ui-button\r\n					class=\"btn apply\"\r\n					bg=\"btn_apply.bmp\"\r\n					hover=\"btn_apply_a.bmp\"\r\n					down=\"btn_apply_b.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"btn reset\"\r\n					bg=\"btn_reset.bmp\"\r\n					hover=\"btn_reset_a.bmp\"\r\n					down=\"btn_reset_b.bmp\"\r\n				></ui-button>\r\n				<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillList/SkillList/SkillList.css?raw
-var SkillList_default$1;
-var init_SkillList$2 = __esmMin((() => {
-	SkillList_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#SkillList {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillList .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillList .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillList .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillList .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillList .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillList .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillList .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillList .content {\r\n	position: relative;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n#SkillList .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillList .content td,\r\n#SkillList .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n/* Mini Tab*/\r\n#SkillList .tabs-mini {\r\n	position: relative;\r\n}\r\n#SkillList .tabs-mini::before,\r\n#SkillList .tabs-mini::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillList .tabs-mini::after {\r\n	clear: both;\r\n}\r\n#SkillList .tab-switch-mini {\r\n	display: none;\r\n}\r\n#SkillList .tab-label-mini {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillList .tab-content-mini {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	opacity: 0;\r\n}\r\n#SkillList .tab-switch-mini:checked + .tab-label-mini {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillList .tab-switch-mini:checked + label + .tab-content-mini {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n\r\n#SkillList .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillList td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillList .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillList .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillList .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillList .disabled .icon,\r\n#SkillList .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillList .disabled .consume,\r\n#SkillList .disabled .level {\r\n	display: none;\r\n}\r\n#SkillList .currentDown,\r\n#SkillList .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillList .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillList .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillList .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillList .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillList .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillList .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillList .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillList .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillList .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#SkillList .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillList .skillCol .name,\r\n#SkillList .skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillList .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillList .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillList .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillList .tabs {\r\n	position: relative;\r\n}\r\n#SkillList .tabs::before,\r\n#SkillList .tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillList .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillList .tab-switch {\r\n	display: none;\r\n}\r\n#SkillList .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillList .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillList .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillList .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillList .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillList .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillList .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillList/SkillList/SkillList.js
-function _escapeHTML$4(text) {
+//#region src/UI/Components/SkillList/SkillListCommon.js
+function _escapeHTML$2(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
 }
-function _isNumeric$1(val) {
+function _isNumeric(val) {
 	return !isNaN(parseFloat(val)) && isFinite(val);
 }
-function createSkillDependencyTree$1() {
-	skillPosition$1.forEach((items, list) => {
-		Object.entries(items).forEach(([skid, pos]) => {
-			if (!_isNumeric$1(skid)) return;
-			const sk = SkillInfo[skid];
-			if (sk?.MaxLv) {
-				skillDependencyTree$1[skid] = {
-					dependency: [],
-					position: pos,
-					list,
-					MaxLv: sk.MaxLv
-				};
-				if (sk?.["_NeedSkillList"] !== void 0) sk["_NeedSkillList"].forEach((item) => {
-					skillDependencyTree$1[skid]["dependency"][item[0]] = item[1];
-				});
-			} else console.error("Something wrong with this skill: %d", skid);
-		});
-	});
-}
-function specifyRequirements$1(skillId, count, root) {
-	const skdt = skillDependencyTree$1[skillId];
-	if (skdt?.dependency || count != null) skillPosition$1.forEach((items, list) => {
-		if (items[skillId] !== void 0) {
-			const skillbox = root.querySelector(`#positionSkills${list} .s${items[skillId]}`);
-			if (skillbox) {
-				skillbox.querySelector(".disabled");
-				skillbox.classList.add("needleSkill");
-				if (count !== null && count !== void 0) {
-					const counterEl = document.createElement("div");
-					counterEl.className = "counterSkill";
-					counterEl.textContent = count;
-					skillbox.appendChild(counterEl);
-				}
-			}
-		}
-	});
-	if (skdt?.dependency) skdt.dependency.forEach((item, key) => {
-		specifyRequirements$1(key, item, root);
-	});
-}
-function onRememberChoice$1(target, root) {
-	if (_justDragged$1) return;
-	let main = target.parentElement;
-	if (!main.classList.contains("skill")) main = main.parentElement;
-	rememberChoice$1 = setRememberChoice$1(parseInt(main.getAttribute("data-index"), 10));
-	rememberChoice$1.forEach((item, skId) => {
-		if (!rememberChoice$1[skId]["isQuest"] && totalCounter$1 < _points$1) {
-			const sk = skillDependencyTree$1[skId];
-			if (!sk) return;
-			const skillbox = root.querySelector(`#positionSkills${sk.list} .s${sk.position}`);
-			if (skillbox) {
-				const currentEl = skillbox.querySelector(".current");
-				if (currentEl && currentEl.textContent !== String(sk.MaxLv) && currentEl.textContent !== String(item.count)) {
-					const level = currentEl.textContent;
-					let diff = 0;
-					if (item.count > level) diff = item.count - level;
-					totalCounter$1 += diff;
-					skillbox.querySelectorAll(".skill").forEach((el) => el.classList.remove("disabled"));
-					const levelEl = skillbox.querySelector(".level");
-					if (levelEl) levelEl.style.display = "";
-					if (currentEl) currentEl.textContent = rememberChoice$1[skId]["count"];
-					const maxEl = skillbox.querySelector(".max");
-					if (maxEl) maxEl.textContent = rememberChoice$1[skId]["count"];
-				}
-			}
-		}
-	});
-	const skpointsEl = root.querySelector(".skpoints_count");
-	if (skpointsEl) skpointsEl.textContent = `${_points$1 - totalCounter$1}/${_points$1}`;
-}
-function setRememberChoice$1(skillId, count = null, isQuest = false) {
-	const sk = SkillInfo[skillId];
-	if (!isQuest && sk["Type"] === "Quest") {
-		const skill = getSkillById$1(skillId);
-		isQuest = !skill?.level || skill?.level <= 0;
-	}
-	rememberChoice$1[skillId] = rememberChoice$1[skillId] ?? {
-		count: hasSkills$1?.[skillId]?.level ?? 0,
-		list: null,
-		isQuest
+function createSkillList({ name, htmlText, cssText, hasTabs = false, needSkillListKey = "_NeedSkillList", showDescOnMiniHover = false, touchDrag = false, incrementalRemember = false, guardMissingJob = false, readdSkillOnUpdate = false, listOnly = false, dragFrom = null, titlebarText = null, containerSelector = null, preferenceDefaults = {
+	x: 100,
+	y: 200,
+	width: 8,
+	height: 8,
+	show: false,
+	mini: true,
+	skillInfo: false
+} }) {
+	const Component = new GUIComponent(name, cssText);
+	Component.render = () => htmlText;
+	const _dragFrom = dragFrom ?? name;
+	const _containerSelector = containerSelector ?? `#${name}`;
+	const _preferences = Preferences.get(name, preferenceDefaults, 1);
+	const _list = [];
+	let _btnIncSkill;
+	let _points = 0;
+	let totalCounter = 0;
+	let _btnLevelUp;
+	let _lArrow, _rArrow;
+	let skillPosition = [];
+	const skillDependencyTree = [];
+	let rememberChoice = [];
+	const hasSkills = [];
+	let _justDragged = false;
+	const _touchDrag = {
+		timer: null,
+		dragging: false,
+		ghost: null,
+		startX: 0,
+		startY: 0
 	};
-	if (!isQuest) {
-		if (count) {
-			if (count > rememberChoice$1[skillId]["count"]) rememberChoice$1[skillId]["count"] = count;
-		} else if (sk["MaxLv"] > rememberChoice$1[skillId]["count"]) rememberChoice$1[skillId]["count"]++;
-	}
-	if (sk["_NeedSkillList"] !== void 0) {
-		sk["_NeedSkillList"].forEach((item) => {
-			rememberChoice$1[skillId][item[0]] = setRememberChoice$1(item[0], item[1], isQuest)[item[0]];
-		});
-		Object.entries(rememberChoice$1[skillId]).forEach(([key, value]) => {
-			if (_isNumeric$1(key) && value.isQuest) rememberChoice$1[skillId]["isQuest"] = value.isQuest;
-		});
-	}
-	return rememberChoice$1;
-}
-function getSkillPosition$1(JobId) {
-	const positions = [];
-	if (!(JobId in SkillTreeView)) {
-		console.error(`Unimplemented JobId ${JobId} in SkillTree!`);
-		return positions;
-	}
-	positions[SkillTreeView[JobId]["list"]] = SkillTreeView[JobId];
-	if (SkillTreeView[JobId]["beforeJob"] !== null) {
-		const beforeJob = SkillTreeView[JobId]["beforeJob"];
-		getSkillPosition$1(beforeJob).forEach((items, list) => {
-			positions[list] = positions[list] ? Object.assign(positions[list], items) : items;
-		});
-	}
-	return positions;
-}
-function getSkillById$1(id) {
-	const count = _list$8.length;
-	for (let i = 0; i < count; ++i) if (_list$8[i].SKID === id) return _list$8[i];
-	return null;
-}
-function onResize$10(e, comp) {
-	e.stopImmediatePropagation();
-	const top = parseInt(comp._host.style.top, 10) || 0;
-	const left = parseInt(comp._host.style.left, 10) || 0;
-	let lastWidth = 0;
-	let lastHeight = 0;
-	const resizing = () => {
-		const extraX = -6;
-		const extraY = 32;
-		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-		w = Math.min(Math.max(w, 8), 8);
-		h = Math.min(Math.max(h, 4), 10);
-		if (w === lastWidth && h === lastHeight) return;
-		resize$5(comp, w, h);
-		lastWidth = w;
-		lastHeight = h;
-	};
-	const interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function resize$5(comp, width, height) {
-	const root = comp.getRoot();
-	if (_preferences$33.mini) {
-		width = Math.min(Math.max(width, 8), 8);
-		height = Math.min(Math.max(height, 4), 10);
-		const extend = root.querySelector(".extend");
-		if (extend) extend.style.display = "";
-		const content = root.querySelector(".content");
-		if (content) content.style.display = "";
-		const checkedBig = root.querySelector(".tab-switch:checked");
-		if (checkedBig) {
-			const tabId = checkedBig.id;
-			const i = parseInt(tabId.split("-")[1], 10);
-			const miniRadio = root.querySelector(`#tab-${i}-mini`);
-			if (miniRadio) miniRadio.checked = true;
-		}
-		const contentbig = root.querySelector(".contentbig");
-		if (contentbig) contentbig.style.display = "none";
-		root.querySelectorAll(".footer .btn").forEach((el) => {
-			el.style.display = "none";
-		});
-		if (content) {
-			content.style.width = `${width * 32}px`;
-			content.style.height = `${height * 32}px`;
-		}
-		root.querySelectorAll(".tab-content-mini").forEach((el) => {
-			el.style.width = `${width * 32}px`;
-			el.style.height = `${height * 32}px`;
-		});
-	} else {
-		width = 17;
-		height = 12;
-		const extend = root.querySelector(".extend");
-		if (extend) extend.style.display = "none";
-		const content = root.querySelector(".content");
-		if (content) content.style.display = "none";
-		const checkedMini = root.querySelector(".tab-switch-mini:checked");
-		if (checkedMini) {
-			const tabId = checkedMini.id;
-			const i = parseInt(tabId.split("-")[1], 10);
-			const bigRadio = root.querySelector(`#tab-${i}`);
-			if (bigRadio) bigRadio.checked = true;
-		}
-		const contentbig = root.querySelector(".contentbig");
-		if (contentbig) {
-			contentbig.style.display = "";
-			contentbig.style.width = `${width * 32}px`;
-			contentbig.style.height = `${height * 32}px`;
-		}
-		root.querySelectorAll(".footer .btn").forEach((el) => {
-			el.style.display = "block";
-		});
-	}
-}
-function onMini$1(comp) {
-	_preferences$33.mini = !_preferences$33.mini;
-	_preferences$33.save();
-	resize$5(comp, _preferences$33.width, _preferences$33.height);
-}
-function onApplyChoice$1(comp) {
-	const applyArr = [];
-	rememberChoice$1.forEach((item, skillId) => {
-		applyArr[skillId] = 0;
-		const level = hasSkills$1?.[skillId]?.level ?? 0;
-		if (item.count > level) applyArr[skillId] = item.count - level;
-		else applyArr[skillId] = item.count;
-	});
-	applyArr.forEach((c, k) => {
-		for (let i = 0; i < c; i++) SkillList.onIncreaseSkill(parseInt(k, 10));
-	});
-	totalCounter$1 = 0;
-	const skpointsEl = comp.getRoot().querySelector(".skpoints_count");
-	if (skpointsEl) skpointsEl.textContent = `${_points$1 - totalCounter$1}`;
-	rememberChoice$1 = [];
-}
-function onResetChoice$1(comp) {
-	const root = comp.getRoot();
-	rememberChoice$1.forEach((_count, skillId) => {
-		if (!skillDependencyTree$1[skillId]) return;
-		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree$1[skillId].position}`);
-		if (skillbox) {
-			if (!hasSkills$1?.[skillId]?.level) skillbox.querySelectorAll(".skill").forEach((el) => el.classList.add("disabled"));
-			const selectable = skillbox.querySelector(".selectable");
-			if (selectable) selectable.style.display = "";
-			skillbox.querySelectorAll(".current").forEach((el) => {
-				el.textContent = hasSkills$1?.[skillId]?.level ?? 0;
-			});
-			skillbox.querySelectorAll(".max").forEach((el) => {
-				el.textContent = hasSkills$1?.[skillId]?.level ?? 0;
-			});
-		}
-	});
-	totalCounter$1 = 0;
-	const skpointsEl = root.querySelector(".skpoints_count");
-	if (skpointsEl) skpointsEl.textContent = _points$1;
-	rememberChoice$1 = [];
-}
-function onNecessarySkills$1(target, root) {
-	let main = target.parentElement;
-	if (!main.classList.contains("skill")) main = main.parentElement;
-	specifyRequirements$1(parseInt(main.getAttribute("data-index"), 10), null, root);
-}
-function _resolveSkillID$1(el) {
-	let main = el.parentElement;
-	if (!main.classList.contains("skill")) main = main.parentElement;
-	const id = parseInt(main.getAttribute("data-index"), 10);
-	return getSkillById$1(id)?.SKID ?? id;
-}
-function onSkillTouchStart(event, iconEl) {
-	const touch = event.touches[0];
-	const skillDiv = iconEl.closest(".skill");
-	const skill = getSkillById$1(parseInt(skillDiv.getAttribute("data-index"), 10));
-	if (!skill || !skill.level || !skill.type) return;
-	_touchDrag.startX = touch.pageX;
-	_touchDrag.startY = touch.pageY;
-	_touchDrag.ghost = null;
-	_touchDrag.dragging = false;
-	_touchDrag.timer = setTimeout(() => {
-		_touchDrag.dragging = true;
-		const ghost = iconEl.cloneNode(true);
-		ghost.classList.add("drag-ghost");
-		ghost.style.position = "absolute";
-		ghost.style.zIndex = "10000";
-		ghost.style.left = `${touch.pageX - 12}px`;
-		ghost.style.top = `${touch.pageY - 12}px`;
-		ghost.style.opacity = "0.8";
-		ghost.style.pointerEvents = "none";
-		document.body.appendChild(ghost);
-		_touchDrag.ghost = ghost;
-		window._OBJ_DRAG_ = {
-			type: "skill",
-			from: "SkillList",
-			data: skill
-		};
-	}, 300);
-}
-function onSkillTouchMove(event) {
-	if (!_touchDrag.timer && !_touchDrag.dragging) return;
-	const touch = event.touches[0];
-	if (_touchDrag.dragging) {
-		event.preventDefault();
-		if (_touchDrag.ghost) {
-			_touchDrag.ghost.style.left = `${touch.pageX - 12}px`;
-			_touchDrag.ghost.style.top = `${touch.pageY - 12}px`;
-		}
-	} else {
-		const dx = touch.pageX - _touchDrag.startX;
-		const dy = touch.pageY - _touchDrag.startY;
-		if (dx * dx + dy * dy > 100) {
-			clearTimeout(_touchDrag.timer);
-			_touchDrag.timer = null;
-		}
-	}
-}
-function onSkillTouchEnd(event) {
-	if (_touchDrag.timer) {
-		clearTimeout(_touchDrag.timer);
-		_touchDrag.timer = null;
-	}
-	if (_touchDrag.dragging) {
-		_touchDrag.dragging = false;
-		if (_touchDrag.ghost) {
-			_touchDrag.ghost.remove();
-			_touchDrag.ghost = null;
-		}
-		const touch = event.changedTouches[0];
-		const target = document.elementFromPoint(touch.clientX, touch.clientY);
-		if (target) {
-			const dropTarget = target.closest(".container");
-			if (dropTarget) {
-				const dropEvent = new Event("drop", { bubbles: true });
-				dropEvent.dataTransfer = { getData(type) {
-					if (type === "Text") return JSON.stringify(window._OBJ_DRAG_);
-					return "";
-				} };
-				dropTarget.dispatchEvent(dropEvent);
-			}
-		}
-		delete window._OBJ_DRAG_;
-	}
-}
-function skillLevelSelectUp$1(skill, root) {
-	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
-	if (level < skill.level) {
-		skill.selectedLevel = level + 1;
-		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
-			const current = element.querySelector(".level .current");
-			if (current) current.textContent = skill.selectedLevel;
-		});
-	}
-}
-function skillLevelSelectDown$1(skill, root) {
-	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
-	if (level > 1) {
-		skill.selectedLevel = level - 1;
-		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
-			const current = element.querySelector(".level .current");
-			if (current) current.textContent = skill.selectedLevel;
-		});
-	}
-}
-var SkillList, _preferences$33, _list$8, _btnIncSkill$1, _points$1, totalCounter$1, _btnLevelUp$1, _lArrow$1, _rArrow$1, skillPosition$1, skillDependencyTree$1, rememberChoice$1, hasSkills$1, _justDragged$1, _touchDrag, SkillList_default;
-var init_SkillList$1 = __esmMin((() => {
-	init_DBManager();
-	init_SkillInfo();
-	init_SkillTreeView();
-	init_SessionStorage();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_SkillTargetSelection();
-	init_SkillDescription();
-	init_SkillList$3();
-	init_SkillList$2();
-	SkillList = new GUIComponent("SkillList", SkillList_default$1);
-	SkillList.render = () => SkillList_default$2;
-	_preferences$33 = Preferences.get("SkillList", {
-		x: 100,
-		y: 200,
-		width: 8,
-		height: 8,
-		show: false,
-		mini: true,
-		skillInfo: false
-	}, 1);
-	_list$8 = [];
-	_points$1 = 0;
-	totalCounter$1 = 0;
-	skillPosition$1 = [];
-	skillDependencyTree$1 = [];
-	rememberChoice$1 = [];
-	hasSkills$1 = [];
-	_justDragged$1 = false;
-	SkillList.init = function init() {
+	Component.init = function init() {
 		const root = this.getRoot();
+		if (titlebarText) {
+			const titleEl = root.querySelector(".titlebar .text");
+			if (titleEl) titleEl.textContent = titlebarText;
+		}
 		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
 			e.stopImmediatePropagation();
 		});
 		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
-			onResize$10(e, this);
+			onResize(e, this);
 		});
 		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
 			this.ui.hide();
 		});
 		root.querySelector(".titlebar .mini")?.addEventListener("click", () => {
-			onMini$1(this);
+			onMini(this);
 		});
 		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$33.skillInfo = !!this.checked;
-			_preferences$33.save();
+			_preferences.skillInfo = !!this.checked;
+			_preferences.save();
 		});
-		root.querySelector(".reset")?.addEventListener("click", () => {
-			onResetChoice$1(this);
-		});
-		root.querySelector(".apply")?.addEventListener("click", () => {
-			onApplyChoice$1(this);
-		});
+		if (!listOnly) {
+			root.querySelector(".reset")?.addEventListener("click", () => {
+				onResetChoice(this);
+			});
+			root.querySelector(".apply")?.addEventListener("click", () => {
+				onApplyChoice(this);
+			});
+		}
 		const levelupBtn = root.querySelector(".btn.levelup");
 		if (levelupBtn) {
-			_btnIncSkill$1 = levelupBtn.cloneNode(true);
+			_btnIncSkill = levelupBtn.cloneNode(true);
 			levelupBtn.remove();
-			_btnIncSkill$1.addEventListener("click", function() {
+			_btnIncSkill.addEventListener("click", function() {
 				const index = this.parentNode.parentNode.getAttribute("data-index");
-				SkillList.onIncreaseSkill(parseInt(index, 10));
+				Component.onIncreaseSkill(parseInt(index, 10));
 			});
 		}
 		const lvlupBtn = root.querySelector("#lvlup_job");
 		if (lvlupBtn) {
-			_btnLevelUp$1 = lvlupBtn;
-			_btnLevelUp$1.style.zIndex = "51";
-			_btnLevelUp$1.style.position = "absolute";
-			_btnLevelUp$1.style.right = "0px";
-			_btnLevelUp$1.style.bottom = "0px";
-			_btnLevelUp$1.style.width = "43px";
-			_btnLevelUp$1.style.height = "43px";
-			_btnLevelUp$1.style.border = "none";
-			_btnLevelUp$1.style.backgroundColor = "transparent";
-			_btnLevelUp$1.style.backgroundRepeat = "no-repeat";
-			_btnLevelUp$1.remove();
-			_btnLevelUp$1.addEventListener("click", () => {
-				if (_btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-				SkillList.ui.show();
+			_btnLevelUp = lvlupBtn;
+			if (!listOnly) {
+				_btnLevelUp.style.zIndex = "51";
+				_btnLevelUp.style.position = "absolute";
+				_btnLevelUp.style.right = "0px";
+				_btnLevelUp.style.bottom = "0px";
+				_btnLevelUp.style.width = "43px";
+				_btnLevelUp.style.height = "43px";
+				_btnLevelUp.style.border = "none";
+				_btnLevelUp.style.backgroundColor = "transparent";
+				_btnLevelUp.style.backgroundRepeat = "no-repeat";
+			}
+			_btnLevelUp.remove();
+			_btnLevelUp.addEventListener("click", () => {
+				if (_btnLevelUp.parentNode) _btnLevelUp.remove();
+				Component.ui.show();
 			});
-			_btnLevelUp$1.addEventListener("mousedown", (e) => {
+			_btnLevelUp.addEventListener("mousedown", (e) => {
 				e.stopImmediatePropagation();
 			});
 		}
-		const container = root.querySelector("#SkillList") || root;
+		const container = root.querySelector(_containerSelector) || root;
 		container.addEventListener("dblclick", (e) => {
 			const target = e.target.closest(".skill .icon, .skill .name");
 			if (target) {
 				let main = target.parentElement;
 				if (!main.classList.contains("skill")) main = main.parentElement;
-				SkillList.useSkillID(parseInt(main.getAttribute("data-index"), 10));
+				Component.useSkillID(parseInt(main.getAttribute("data-index"), 10));
 			}
 		});
 		container.addEventListener("contextmenu", (e) => {
 			const target = e.target.closest(".skill .icon, .skill .name");
 			if (target) {
-				const skillID = _resolveSkillID$1(target);
+				const skillID = _resolveSkillID(target);
 				if (SkillDescription_default.uid === skillID) {
 					SkillDescription_default.remove();
 					return;
@@ -230896,34 +230532,36 @@ var init_SkillList$1 = __esmMin((() => {
 				main.classList.add("selected");
 			}
 		});
-		container.addEventListener("mouseover", (e) => {
-			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
-			if (target) {
-				if (_preferences$33.skillInfo) {
-					const skillID = _resolveSkillID$1(target);
-					if (SkillDescription_default.uid !== skillID) {
-						SkillDescription_default.append();
-						SkillDescription_default.setSkill(skillID);
+		if (!listOnly) {
+			container.addEventListener("mouseover", (e) => {
+				const target = e.target.closest(".skillCol .skill .icon, .skill .name");
+				if (target) {
+					if (_preferences.skillInfo || showDescOnMiniHover && _preferences.mini) {
+						const skillID = _resolveSkillID(target);
+						if (SkillDescription_default.uid !== skillID) {
+							SkillDescription_default.append();
+							SkillDescription_default.setSkill(skillID);
+						}
 					}
+					onNecessarySkills(target, root);
 				}
-				onNecessarySkills$1(target, root);
-			}
-		});
-		container.addEventListener("mouseout", (e) => {
-			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$33.skillInfo) SkillDescription_default.remove();
-				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
-				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
-			}
-		});
-		container.addEventListener("click", (e) => {
-			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
-			if (target) onRememberChoice$1(target, root);
-		});
+			});
+			container.addEventListener("mouseout", (e) => {
+				if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
+					if (_preferences.skillInfo || showDescOnMiniHover && _preferences.mini) SkillDescription_default.remove();
+					root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
+					root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
+				}
+			});
+			container.addEventListener("click", (e) => {
+				const target = e.target.closest(".skillCol .skill .icon, .skill .name");
+				if (target) onRememberChoice(target, root);
+			});
+		}
 		container.addEventListener("dragstart", (e) => {
 			const skillEl = e.target.closest(".skill");
 			if (!skillEl) return;
-			const skill = getSkillById$1(parseInt(skillEl.getAttribute("data-index"), 10));
+			const skill = getSkillById(parseInt(skillEl.getAttribute("data-index"), 10));
 			if (!skill || !skill.level || !skill.type) {
 				e.stopImmediatePropagation();
 				e.preventDefault();
@@ -230935,97 +230573,111 @@ var init_SkillList$1 = __esmMin((() => {
 			e.dataTransfer.setDragImage(img, 12, 12);
 			e.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
 				type: "skill",
-				from: "SkillList",
+				from: _dragFrom,
 				data: skill
 			}));
 		});
 		container.addEventListener("dragend", () => {
 			delete window._OBJ_DRAG_;
-			_justDragged$1 = true;
+			_justDragged = true;
 			setTimeout(() => {
-				_justDragged$1 = false;
+				_justDragged = false;
 			}, 0);
 		});
-		container.addEventListener("touchstart", (e) => {
-			const iconTarget = e.target.closest(".skill .icon");
-			if (iconTarget) onSkillTouchStart(e, iconTarget);
-		});
-		container.addEventListener("touchmove", (e) => {
-			if (e.target.closest(".skill .icon")) onSkillTouchMove(e);
-		});
-		container.addEventListener("touchend", (e) => {
-			if (e.target.closest(".skill .icon")) onSkillTouchEnd(e);
-		});
+		if (touchDrag) {
+			container.addEventListener("touchstart", (e) => {
+				const iconTarget = e.target.closest(".skill .icon");
+				if (iconTarget) onSkillTouchStart(e, iconTarget);
+			});
+			container.addEventListener("touchmove", (e) => {
+				if (e.target.closest(".skill .icon")) onSkillTouchMove(e);
+			});
+			container.addEventListener("touchend", (e) => {
+				if (e.target.closest(".skill .icon")) onSkillTouchEnd(e);
+			});
+		}
 		this.draggable(".titlebar");
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
-			_rArrow$1 = `url(${data})`;
+			_rArrow = `url(${data})`;
 		});
 		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
-			_lArrow$1 = `url(${data})`;
+			_lArrow = `url(${data})`;
 		});
 	};
-	SkillList.onAppend = function onAppend() {
-		if (!_preferences$33.show) this.ui.hide();
-		resize$5(this, _preferences$33.width, _preferences$33.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$33.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$33.x), Renderer.width - 100)}px`;
+	Component.onAppend = function onAppend() {
+		if (!_preferences.show) this.ui.hide();
+		resize(this, _preferences.width, _preferences.height);
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 100)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - 100)}px`;
 		const cb = this.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$33.skillInfo;
+		if (cb) cb.checked = _preferences.skillInfo;
 	};
-	SkillList.onRemove = function onRemove() {
-		if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
-		_preferences$33.show = this.ui.is(":visible");
-		_preferences$33.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$33.x = parseInt(this._host.style.left, 10) || 0;
+	Component.onRemove = function onRemove() {
+		if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
+		_preferences.show = this.ui.is(":visible");
+		_preferences.y = parseInt(this._host.style.top, 10) || 0;
+		_preferences.x = parseInt(this._host.style.left, 10) || 0;
 		const content = this.getRoot().querySelector(".content");
 		if (content) {
-			_preferences$33.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$33.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
+			_preferences.width = Math.floor(parseInt(content.style.width, 10) / 32) || preferenceDefaults.width;
+			_preferences.height = Math.floor(parseInt(content.style.height, 10) / 32) || preferenceDefaults.height;
 		}
-		_preferences$33.save();
+		_preferences.save();
 	};
-	SkillList.toggle = function toggle() {
+	Component.toggle = function toggle() {
 		if (this.ui.is(":visible")) {
 			this.ui.hide();
-			if (_btnLevelUp$1 && _btnLevelUp$1.parentNode) _btnLevelUp$1.remove();
+			if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
 		} else {
 			this.ui.show();
 			this.focus();
 		}
 	};
-	SkillList.onShortCut = function onShortCut(key) {
+	Component.onShortCut = function onShortCut(key) {
 		switch (key.cmd) {
 			case "TOGGLE":
 				this.toggle();
 				break;
 		}
-		onResetChoice$1(this);
+		onResetChoice(this);
 	};
-	SkillList.setSkills = function setSkills(skills) {
+	Component.setSkills = function setSkills(skills) {
 		const root = this.getRoot();
+		if (listOnly) {
+			for (let i = 0, count = _list.length; i < count; ++i) this.onUpdateSkill(_list[i].SKID, 0);
+			_list.length = 0;
+			const table = root.querySelector(".content table");
+			if (table) table.innerHTML = "";
+			for (let i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
+			return;
+		}
 		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
 		let skillJobId = SessionStorage_default.Character.job;
 		const originalJobId = SessionStorage_default.Entity._job;
 		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
-		skillPosition$1 = getSkillPosition$1(skillJobId);
-		createSkillDependencyTree$1();
-		for (let i = 0, count = _list$8.length; i < count; ++i) this.onUpdateSkill(_list$8[i].SKID, 0);
-		_list$8.length = 0;
-		root.querySelectorAll(".content table").forEach((t) => {
+		skillPosition = getSkillPosition(skillJobId);
+		createSkillDependencyTree();
+		for (let i = 0, count = _list.length; i < count; ++i) this.onUpdateSkill(_list[i].SKID, 0);
+		_list.length = 0;
+		if (hasTabs) root.querySelectorAll(".content table").forEach((t) => {
 			t.innerHTML = "";
 		});
+		else {
+			const table = root.querySelector(".content table");
+			if (table) table.innerHTML = "";
+		}
 		root.querySelectorAll(".skillCol").forEach((el) => {
 			el.innerHTML = "";
 		});
-		root.querySelectorAll(".extraRow").forEach((el) => el.remove());
+		if (hasTabs) root.querySelectorAll(".extraRow").forEach((el) => el.remove());
 		for (let i = 0, count = skills.length; i < count; ++i) {
 			this.addSkill(skills[i]);
-			hasSkills$1[skills[i].SKID] = skills[i];
+			hasSkills[skills[i].SKID] = skills[i];
 		}
-		skillPosition$1.forEach((items, list) => {
-			SkillList.prepareSkillTree(items, list);
+		skillPosition.forEach((items, list) => {
+			Component.prepareSkillTree(items, list);
 		});
-		for (let i = 2; i <= 4; i++) {
+		if (hasTabs) for (let i = 2; i <= 4; i++) {
 			const miniRows = root.querySelectorAll(`#minitab${i} tr`);
 			const bigSkills = root.querySelectorAll(`#positionSkills${i} .skill`);
 			const tabminil = root.querySelector(`#tabminil${i}`);
@@ -231033,18 +230685,153 @@ var init_SkillList$1 = __esmMin((() => {
 			const tabl = root.querySelector(`#tabl${i}`);
 			if (tabl) tabl.style.display = bigSkills.length > 0 ? "" : "none";
 		}
-		onResetChoice$1(this);
+		onResetChoice(this);
 	};
-	SkillList.addSkill = function addSkill(skill) {
+	function createSkillDependencyTree() {
+		skillPosition.forEach((items, list) => {
+			Object.entries(items).forEach(([skid, pos]) => {
+				if (!_isNumeric(skid)) return;
+				const sk = SkillInfo[skid];
+				if (hasTabs) if (sk?.MaxLv) {
+					skillDependencyTree[skid] = {
+						dependency: [],
+						position: pos,
+						list,
+						MaxLv: sk.MaxLv
+					};
+					if (sk?.[needSkillListKey] !== void 0) sk[needSkillListKey].forEach((item) => {
+						skillDependencyTree[skid]["dependency"][item[0]] = item[1];
+					});
+				} else console.error("Something wrong with this skill: %d", skid);
+				else {
+					skillDependencyTree[skid] = {
+						dependency: [],
+						position: pos,
+						list: void 0,
+						MaxLv: sk.MaxLv
+					};
+					if (sk?.[needSkillListKey] !== void 0) sk[needSkillListKey].forEach((item) => {
+						skillDependencyTree[skid]["dependency"][item[0]] = item[1];
+					});
+				}
+			});
+		});
+	}
+	function specifyRequirements(skillId, count, root) {
+		const skdt = skillDependencyTree[skillId];
+		if (skdt?.dependency || count != null) skillPosition.forEach((items, list) => {
+			if (items[skillId] !== void 0) {
+				const skillbox = root.querySelector(`#positionSkills${list} .s${items[skillId]}`);
+				if (skillbox) {
+					skillbox.querySelector(".disabled");
+					skillbox.classList.add("needleSkill");
+					if (count !== null && count !== void 0) {
+						const counterEl = document.createElement("div");
+						counterEl.className = "counterSkill";
+						counterEl.textContent = count;
+						skillbox.appendChild(counterEl);
+					}
+				}
+			}
+		});
+		if (skdt?.dependency) skdt.dependency.forEach((item, key) => {
+			specifyRequirements(key, item, root);
+		});
+	}
+	function onRememberChoice(target, root) {
+		if (_justDragged) return;
+		let main = target.parentElement;
+		if (!main.classList.contains("skill")) main = main.parentElement;
+		rememberChoice = setRememberChoice(parseInt(main.getAttribute("data-index"), 10));
+		rememberChoice.forEach((item, skId) => {
+			if (!rememberChoice[skId]["isQuest"] && totalCounter < _points) {
+				const sk = skillDependencyTree[skId];
+				if (!sk) return;
+				const skillbox = root.querySelector(`#positionSkills${sk.list} .s${sk.position}`);
+				if (skillbox) {
+					const currentEl = skillbox.querySelector(".current");
+					if (incrementalRemember) {
+						if (currentEl && currentEl.textContent !== String(sk.MaxLv) && currentEl.textContent !== String(item.count)) {
+							const level = currentEl.textContent;
+							let diff = 0;
+							if (item.count > level) diff = item.count - level;
+							totalCounter += diff;
+							skillbox.querySelectorAll(".skill").forEach((el) => el.classList.remove("disabled"));
+							const levelEl = skillbox.querySelector(".level");
+							if (levelEl) levelEl.style.display = "";
+							if (currentEl) currentEl.textContent = rememberChoice[skId]["count"];
+							const maxEl = skillbox.querySelector(".max");
+							if (maxEl) maxEl.textContent = rememberChoice[skId]["count"];
+						}
+					} else if (currentEl && currentEl.textContent !== String(sk.MaxLv)) {
+						totalCounter += rememberChoice[skId]["count"];
+						const disabledEl = skillbox.querySelector(".disabled");
+						if (disabledEl) disabledEl.classList.remove("disabled");
+						const levelEl = skillbox.querySelector(".level");
+						if (levelEl) levelEl.style.display = "";
+						if (currentEl) currentEl.textContent = rememberChoice[skId]["count"];
+						const maxEl = skillbox.querySelector(".max");
+						if (maxEl) maxEl.textContent = rememberChoice[skId]["count"];
+					}
+				}
+			}
+		});
+		const skpointsEl = root.querySelector(".skpoints_count");
+		if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}/${_points}`;
+	}
+	function setRememberChoice(skillId, count = null, isQuest = false) {
+		const sk = SkillInfo[skillId];
+		if (!isQuest && sk["Type"] === "Quest") {
+			const skill = getSkillById(skillId);
+			isQuest = !skill?.level || skill?.level <= 0;
+		}
+		rememberChoice[skillId] = rememberChoice[skillId] ?? {
+			count: hasSkills?.[skillId]?.level ?? 0,
+			list: null,
+			isQuest
+		};
+		if (!isQuest) {
+			if (count) {
+				if (count > rememberChoice[skillId]["count"]) rememberChoice[skillId]["count"] = count;
+			} else if (sk["MaxLv"] > rememberChoice[skillId]["count"]) rememberChoice[skillId]["count"]++;
+		}
+		if (sk[needSkillListKey] !== void 0) {
+			sk[needSkillListKey].forEach((item) => {
+				rememberChoice[skillId][item[0]] = setRememberChoice(item[0], item[1], isQuest)[item[0]];
+			});
+			Object.entries(rememberChoice[skillId]).forEach(([key, value]) => {
+				if (_isNumeric(key) && value.isQuest) rememberChoice[skillId]["isQuest"] = value.isQuest;
+			});
+		}
+		return rememberChoice;
+	}
+	function getSkillPosition(JobId) {
+		const positions = [];
+		if (guardMissingJob) {
+			if (!(JobId in SkillTreeView)) {
+				console.error(`Unimplemented JobId ${JobId} in SkillTree!`);
+				return positions;
+			}
+		}
+		positions[SkillTreeView[JobId]["list"]] = SkillTreeView[JobId];
+		if (SkillTreeView[JobId]["beforeJob"] !== null) {
+			const beforeJob = SkillTreeView[JobId]["beforeJob"];
+			getSkillPosition(beforeJob).forEach((items, list) => {
+				positions[list] = positions[list] ? Object.assign(positions[list], items) : items;
+			});
+		}
+		return positions;
+	}
+	Component.addSkill = function addSkill(skill) {
 		if (!(skill.SKID in SkillInfo)) return;
 		if (this.getRoot().querySelector(`.skill.id${skill.SKID}`)) {
 			this.updateSkill(skill);
 			return;
 		}
-		this.addSkillBig(skill);
+		if (!listOnly) this.addSkillBig(skill);
 		this.addSkillMini(skill);
 	};
-	SkillList.prepareSkillTree = function prepareSkillTree(items, list) {
+	Component.prepareSkillTree = function prepareSkillTree(items, list) {
 		const root = this.getRoot();
 		Object.entries(items).forEach(([key, value]) => {
 			const sk = SkillInfo[key];
@@ -231054,33 +230841,35 @@ var init_SkillList$1 = __esmMin((() => {
 				element.className = `skill id${key} ${className}`;
 				element.setAttribute("data-index", key);
 				element.setAttribute("draggable", "true");
-				element.innerHTML = `<div class="name">${_escapeHTML$4(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
+				element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
 				const upBtn = element.querySelector(".level .currentUp");
 				if (upBtn) {
-					if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
-					upBtn.addEventListener("click", () => skillLevelSelectUp$1(0, root));
+					if (_rArrow) upBtn.style.backgroundImage = _rArrow;
+					upBtn.addEventListener("click", () => skillLevelSelectUp(0, root));
 				}
 				const downBtn = element.querySelector(".level .currentDown");
 				if (downBtn) {
-					if (_lArrow$1) downBtn.style.backgroundImage = _lArrow$1;
-					downBtn.addEventListener("click", () => skillLevelSelectDown$1(0, root));
+					if (_lArrow) downBtn.style.backgroundImage = _lArrow;
+					downBtn.addEventListener("click", () => skillLevelSelectDown(0, root));
 				}
 				if (value !== void 0) {
 					const box = root.querySelector(`#positionSkills${list} .s${value}`);
 					if (box) {
 						if (parseInt(key, 10) < 41) box.parentElement.style.display = "";
 						if (!box.hasChildNodes()) box.appendChild(element);
-						const miniBox = root.querySelector(`#minitab${list}`);
-						if (miniBox && !miniBox.querySelector(`.skill.id${key}`)) {
-							const miniTr = document.createElement("tr");
-							miniTr.className = `skill id${key} disabled`;
-							miniTr.setAttribute("data-index", key);
-							miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$4(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
-							miniBox.appendChild(miniTr);
-							Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
-								const img = miniTr.querySelector(".icon img");
-								if (img) img.src = data;
-							});
+						if (hasTabs) {
+							const miniBox = root.querySelector(`#minitab${list}`);
+							if (miniBox && !miniBox.querySelector(`.skill.id${key}`)) {
+								const miniTr = document.createElement("tr");
+								miniTr.className = `skill id${key} disabled`;
+								miniTr.setAttribute("data-index", key);
+								miniTr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class="selectable"><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">Lv : <span class="current">0</span></span></div></td><td class="selectable type"><div class="consume">Passive</div></td>`;
+								miniBox.appendChild(miniTr);
+								Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
+									const img = miniTr.querySelector(".icon img");
+									if (img) img.src = data;
+								});
+							}
 						}
 					}
 				}
@@ -231091,7 +230880,7 @@ var init_SkillList$1 = __esmMin((() => {
 			}
 		});
 	};
-	SkillList.addSkillBig = function addSkillBig(skill) {
+	Component.addSkillBig = function addSkillBig(skill) {
 		const root = this.getRoot();
 		const sk = SkillInfo[skill.SKID];
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
@@ -231099,21 +230888,21 @@ var init_SkillList$1 = __esmMin((() => {
 		element.className = `skill id${skill.SKID} ${className}`;
 		element.setAttribute("data-index", skill.SKID);
 		element.setAttribute("draggable", "true");
-		element.innerHTML = `<div class="name">${_escapeHTML$4(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
+		element.innerHTML = `<div class="name">${_escapeHTML$2(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
 		const upBtn = element.querySelector(".level .currentUp");
 		if (upBtn) {
-			if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
-			upBtn.addEventListener("click", () => skillLevelSelectUp$1(skill, root));
+			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
+			upBtn.addEventListener("click", () => skillLevelSelectUp(skill, root));
 		}
 		const downBtn = element.querySelector(".level .currentDown");
 		if (downBtn) {
-			if (_lArrow$1) downBtn.style.backgroundImage = _lArrow$1;
-			downBtn.addEventListener("click", () => skillLevelSelectDown$1(skill, root));
+			if (_lArrow) downBtn.style.backgroundImage = _lArrow;
+			downBtn.addEventListener("click", () => skillLevelSelectDown(skill, root));
 		}
-		skillPosition$1.forEach((items, list) => {
+		skillPosition.forEach((items, list) => {
 			if (items[skill.SKID] !== void 0) {
 				let box = root.querySelector(`#positionSkills${list} .s${items[skill.SKID]}`);
-				if (items[skill.SKID] > 41 && !box) {
+				if (hasTabs && items[skill.SKID] > 41 && !box) {
 					const startPos = items[skill.SKID] - items[skill.SKID] % 7;
 					const rowId = Math.floor(items[skill.SKID] / 7);
 					const newRow = document.createElement("div");
@@ -231142,24 +230931,26 @@ var init_SkillList$1 = __esmMin((() => {
 				}
 			}
 		});
-		if (!root.querySelector(`.contentbig .skill.id${skill.SKID}`)) {
-			const etcContainer = root.querySelector("#etcBIG5");
-			if (etcContainer) {
-				const pos = etcContainer.querySelectorAll(".skill").length;
-				if (pos > 41 && (pos - 41) % 7 === 1) {
-					if (!root.querySelector(`#etcBIG5 .s${pos}`)) {
-						const rowId = Math.floor(pos / 7);
-						const newRow = document.createElement("div");
-						newRow.className = "skillRow extraRow";
-						newRow.setAttribute("data-order", rowId);
-						let rowHTML = "";
-						for (let c = 0; c < 7; c++) rowHTML += `<div class="skillCol s${pos + c}"></div>`;
-						newRow.innerHTML = rowHTML;
-						etcContainer.appendChild(newRow);
+		if (hasTabs) {
+			if (!root.querySelector(`.contentbig .skill.id${skill.SKID}`)) {
+				const etcContainer = root.querySelector("#etcBIG5");
+				if (etcContainer) {
+					const pos = etcContainer.querySelectorAll(".skill").length;
+					if (pos > 41 && (pos - 41) % 7 === 1) {
+						if (!root.querySelector(`#etcBIG5 .s${pos}`)) {
+							const rowId = Math.floor(pos / 7);
+							const newRow = document.createElement("div");
+							newRow.className = "skillRow extraRow";
+							newRow.setAttribute("data-order", rowId);
+							let rowHTML = "";
+							for (let c = 0; c < 7; c++) rowHTML += `<div class="skillCol s${pos + c}"></div>`;
+							newRow.innerHTML = rowHTML;
+							etcContainer.appendChild(newRow);
+						}
 					}
+					const etcBox = root.querySelector(`#etcBIG5 .s${pos}`);
+					if (etcBox) etcBox.appendChild(element);
 				}
-				const etcBox = root.querySelector(`#etcBIG5 .s${pos}`);
-				if (etcBox) etcBox.appendChild(element);
 			}
 		}
 		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
@@ -231167,58 +230958,63 @@ var init_SkillList$1 = __esmMin((() => {
 			if (img) img.src = data;
 		});
 	};
-	SkillList.addSkillMini = function addSkillMini(skill) {
+	Component.addSkillMini = function addSkillMini(skill) {
 		const root = this.getRoot();
 		const sk = SkillInfo[skill.SKID];
-		const levelup = _btnIncSkill$1.cloneNode(true);
+		const levelup = _btnIncSkill.cloneNode(true);
 		levelup.addEventListener("click", function() {
 			const index = this.parentNode.parentNode.getAttribute("data-index");
-			SkillList.onIncreaseSkill(parseInt(index, 10));
+			Component.onIncreaseSkill(parseInt(index, 10));
 		});
 		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
 		const tr = document.createElement("tr");
 		tr.className = `skill id${skill.SKID} ${className}`;
 		tr.setAttribute("data-index", skill.SKID);
 		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$4(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
-		if (!skill.upgradable || !_points$1) levelup.style.display = "none";
+		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$2(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
+		if (!skill.upgradable || !_points) levelup.style.display = "none";
 		tr.querySelector(".levelupcontainer").appendChild(levelup);
 		const upBtn = tr.querySelector(".level .currentUp");
 		if (upBtn) {
-			if (_rArrow$1) upBtn.style.backgroundImage = _rArrow$1;
-			upBtn.addEventListener("click", () => skillLevelSelectUp$1(skill, root));
+			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
+			upBtn.addEventListener("click", () => skillLevelSelectUp(skill, root));
 		}
 		const downBtn = tr.querySelector(".level .currentDown");
 		if (downBtn) {
-			if (_lArrow$1) downBtn.style.backgroundImage = _lArrow$1;
-			downBtn.addEventListener("click", () => skillLevelSelectDown$1(skill, root));
+			if (_lArrow) downBtn.style.backgroundImage = _lArrow;
+			downBtn.addEventListener("click", () => skillLevelSelectDown(skill, root));
 		}
-		skillPosition$1.forEach((items, list) => {
-			if (items[skill.SKID] !== void 0) {
-				const miniTable = root.querySelector(`#minitab${list}`);
-				if (miniTable) miniTable.appendChild(tr);
+		if (hasTabs) {
+			skillPosition.forEach((items, list) => {
+				if (items[skill.SKID] !== void 0) {
+					const miniTable = root.querySelector(`#minitab${list}`);
+					if (miniTable) miniTable.appendChild(tr);
+				}
+			});
+			if (!root.querySelector(`.content .skill.id${skill.SKID}`)) {
+				const etcTable = root.querySelector("#minitab5");
+				if (etcTable) etcTable.appendChild(tr);
 			}
-		});
-		if (!root.querySelector(`.content .skill.id${skill.SKID}`)) {
-			const etcTable = root.querySelector("#minitab5");
-			if (etcTable) etcTable.appendChild(tr);
+		} else {
+			const table = root.querySelector(".content table");
+			if (table) table.appendChild(tr);
 		}
 		this.parseHTML.call(levelup);
 		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
 			const img = tr.querySelector(".icon img");
 			if (img) img.src = data;
 		});
-		_list$8.push(skill);
+		_list.push(skill);
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	SkillList.removeSkill = function removeSkill() {};
-	SkillList.updateSkill = function updateSkill(skill) {
-		let target = getSkillById$1(skill.SKID);
+	Component.removeSkill = function removeSkill() {};
+	Component.updateSkill = function updateSkill(skill) {
+		let target = getSkillById(skill.SKID);
 		const root = this.getRoot();
-		if (!target) if (root.querySelector(`.skill.id${skill.SKID}`)) {
-			_list$8.push(skill);
+		if (!target) if (readdSkillOnUpdate && root.querySelector(`.skill.id${skill.SKID}`)) {
+			_list.push(skill);
 			this.onUpdateSkill(skill.SKID, 0);
-			hasSkills$1[skill.SKID] = skill;
+			hasSkills[skill.SKID] = skill;
 			target = skill;
 		} else return;
 		target.level = skill.level;
@@ -231237,16 +231033,16 @@ var init_SkillList$1 = __esmMin((() => {
 			element.classList.remove("active", "passive", "disabled");
 			element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
 			const levelupEl = element.querySelector(".levelup");
-			if (levelupEl) levelupEl.style.display = skill.upgradable && _points$1 ? "" : "none";
+			if (levelupEl) levelupEl.style.display = skill.upgradable && _points ? "" : "none";
 		});
 		this.onUpdateSkill(skill.SKID, skill.level);
 	};
-	SkillList.useSkillID = function useSkillID(id, level) {
-		const skill = getSkillById$1(id);
+	Component.useSkillID = function useSkillID(id, level) {
+		const skill = getSkillById(id);
 		if (!skill || !skill.level || !skill.type) return;
-		SkillList.useSkill(skill, level ? level : skill.selectedLevel);
+		Component.useSkill(skill, level ? level : skill.selectedLevel);
 	};
-	SkillList.useSkill = function useSkill(skill, level) {
+	Component.useSkill = function useSkill(skill, level) {
 		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
 		skill.useLevel = level;
 		if (skill.type & SkillTargetSelection_default.TYPE.TARGET) {
@@ -231254,305 +231050,277 @@ var init_SkillList$1 = __esmMin((() => {
 			SkillTargetSelection_default.set(skill, skill.type);
 		}
 	};
-	SkillList.setPoints = function setPoints(amount) {
+	Component.setPoints = function setPoints(amount) {
 		const root = this.getRoot();
 		const el = root.querySelector(".skpoints_count");
 		if (el) el.textContent = amount;
-		if (!_points$1 === !amount) {
-			_points$1 = amount;
+		if (!_points === !amount) {
+			_points = amount;
 			return;
 		}
-		_points$1 = amount;
-		const count = _list$8.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$8[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$8[i].upgradable && amount ? "" : "none";
+		_points = amount;
+		const count = _list.length;
+		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list[i].SKID} .levelup`).forEach((lu) => {
+			lu.style.display = _list[i].upgradable && amount ? "" : "none";
 		});
 	};
-	SkillList.onLevelUp = function onLevelUp() {
-		if (_btnLevelUp$1) document.body.appendChild(_btnLevelUp$1);
+	Component.onLevelUp = function onLevelUp() {
+		if (_btnLevelUp) document.body.appendChild(_btnLevelUp);
 	};
-	_touchDrag = {
-		timer: null,
-		dragging: false,
-		ghost: null,
-		startX: 0,
-		startY: 0
-	};
-	SkillList.onUseSkill = function onUseItem() {};
-	SkillList.onIncreaseSkill = function onIncreaseSkill() {};
-	SkillList.onUpdateSkill = function onUpdateSkill() {};
-	SkillList.getSkillById = getSkillById$1;
-	SkillList_default = UIManager.addComponent(SkillList);
-}));
-//#endregion
-//#region src/UI/Components/SkillList/SkillListV0/SkillListV0.html?raw
-var SkillListV0_default$2;
-var init_SkillListV0$2 = __esmMin((() => {
-	SkillListV0_default$2 = "<div id=\"SkillListV0\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<ui-text class=\"text\" msgid=\"283\">Skill Tree</ui-text>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<ui-button\r\n					class=\"base mini\"\r\n					bg=\"basic_interface/sys_mini_off.bmp\"\r\n					hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: none; width: 256px; height: 320px\">\r\n				<table>\r\n					<!-- Just to get reference, will be removed -->\r\n					<ui-button\r\n						class=\"btn levelup\"\r\n						bg=\"basic_interface/skill_up_a.bmp\"\r\n						hover=\"basic_interface/skill_up_b.bmp\"\r\n						down=\"basic_interface/skill_up_c.bmp\"\r\n					></ui-button>\r\n				</table>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">One</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" class=\"tab-label\">Two</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" class=\"tab-label\">Three</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s42\"></div>\r\n									<div class=\"skillCol s43\"></div>\r\n									<div class=\"skillCol s44\"></div>\r\n									<div class=\"skillCol s45\"></div>\r\n									<div class=\"skillCol s46\"></div>\r\n									<div class=\"skillCol s47\"></div>\r\n									<div class=\"skillCol s48\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" style=\"display: none\">\r\n									<div class=\"skillCol s49\"></div>\r\n									<div class=\"skillCol s50\"></div>\r\n									<div class=\"skillCol s51\"></div>\r\n									<div class=\"skillCol s52\"></div>\r\n									<div class=\"skillCol s53\"></div>\r\n									<div class=\"skillCol s54\"></div>\r\n									<div class=\"skillCol s55\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\">\r\n				<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<ui-button\r\n					class=\"btn apply\"\r\n					bg=\"btn_apply.bmp\"\r\n					hover=\"btn_apply_a.bmp\"\r\n					down=\"btn_apply_b.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"btn reset\"\r\n					bg=\"btn_reset.bmp\"\r\n					hover=\"btn_reset_a.bmp\"\r\n					down=\"btn_reset_b.bmp\"\r\n				></ui-button>\r\n				<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillList/SkillListV0/SkillListV0.css?raw
-var SkillListV0_default$1;
-var init_SkillListV0$1 = __esmMin((() => {
-	SkillListV0_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#SkillListV0 {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillListV0 .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillListV0 .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillListV0 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillListV0 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillListV0 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillListV0 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillListV0 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillListV0 .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 265px;\r\n	height: 200px;\r\n}\r\n#SkillListV0 .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillListV0 .content td,\r\n#SkillListV0 .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n#SkillListV0 .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillListV0 td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillListV0 .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillListV0 .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillListV0 .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillListV0 .disabled .icon,\r\n#SkillListV0 .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillListV0 .disabled .consume,\r\n#SkillListV0 .disabled .level {\r\n	display: none;\r\n}\r\n#SkillListV0 .currentDown,\r\n#SkillListV0 .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillListV0 .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillListV0 .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillListV0 .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillListV0 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillListV0 .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillListV0 .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillListV0 .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillListV0 .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillListV0 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n/* hidden 3 jobs */\r\n#SkillListV0 label[for='tab-3'] {\r\n	display: none;\r\n}\r\n\r\n#SkillListV0 .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillListV0 .skillCol .name,\r\n#SkillListV0 .skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillListV0 .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillListV0 .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillListV0 .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillListV0 .tabs {\r\n	position: relative;\r\n}\r\n#SkillListV0 .tabs::before,\r\n#SkillListV0 .tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillListV0 .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillListV0 .tab-switch {\r\n	display: none;\r\n}\r\n#SkillListV0 .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillListV0 .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillListV0 .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillListV0 .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillListV0 .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillListV0 .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillListV0 .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillList/SkillListV0/SkillListV0.js
-function _escapeHTML$3(text) {
-	const div = document.createElement("div");
-	div.textContent = text;
-	return div.innerHTML;
-}
-function _isNumeric(val) {
-	return !isNaN(parseFloat(val)) && isFinite(val);
-}
-function createSkillDependencyTree() {
-	skillPosition.forEach((items) => {
-		Object.entries(items).forEach(([skid, pos]) => {
-			if (!_isNumeric(skid)) return;
-			const sk = SkillInfo[skid];
-			skillDependencyTree[skid] = {
-				dependency: [],
-				position: pos,
-				list: void 0,
-				MaxLv: sk.MaxLv
+	function getSkillById(id) {
+		const count = _list.length;
+		for (let i = 0; i < count; ++i) if (_list[i].SKID === id) return _list[i];
+		return null;
+	}
+	function onResize(e, comp) {
+		e.stopImmediatePropagation();
+		const top = parseInt(comp._host.style.top, 10) || 0;
+		const left = parseInt(comp._host.style.left, 10) || 0;
+		let lastWidth = 0;
+		let lastHeight = 0;
+		const resizing = () => {
+			const extraX = -6;
+			const extraY = 32;
+			let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
+			let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
+			w = Math.min(Math.max(w, 8), 8);
+			h = Math.min(Math.max(h, 4), 10);
+			if (w === lastWidth && h === lastHeight) return;
+			resize(comp, w, h);
+			lastWidth = w;
+			lastHeight = h;
+		};
+		const interval = setInterval(resizing, 30);
+		const onMouseUp = (event) => {
+			if (event.which === 1) {
+				clearInterval(interval);
+				window.removeEventListener("mouseup", onMouseUp);
+			}
+		};
+		window.addEventListener("mouseup", onMouseUp);
+	}
+	function resize(comp, width, height) {
+		const root = comp.getRoot();
+		if (listOnly) {
+			width = Math.min(Math.max(width, 8), 8);
+			height = Math.min(Math.max(height, 4), 10);
+			const content = root.querySelector(".content");
+			if (content) {
+				content.style.width = `${width * 32}px`;
+				content.style.height = `${height * 32}px`;
+			}
+			return;
+		}
+		if (_preferences.mini) {
+			width = Math.min(Math.max(width, 8), 8);
+			height = Math.min(Math.max(height, 4), 10);
+			const extend = root.querySelector(".extend");
+			if (extend) extend.style.display = "";
+			const content = root.querySelector(".content");
+			if (content) content.style.display = "";
+			if (hasTabs) {
+				const checkedBig = root.querySelector(".tab-switch:checked");
+				if (checkedBig) {
+					const tabId = checkedBig.id;
+					const i = parseInt(tabId.split("-")[1], 10);
+					const miniRadio = root.querySelector(`#tab-${i}-mini`);
+					if (miniRadio) miniRadio.checked = true;
+				}
+			}
+			const contentbig = root.querySelector(".contentbig");
+			if (contentbig) contentbig.style.display = "none";
+			root.querySelectorAll(".footer .btn").forEach((el) => {
+				el.style.display = "none";
+			});
+			if (content) {
+				content.style.width = `${width * 32}px`;
+				content.style.height = `${height * 32}px`;
+			}
+			if (hasTabs) root.querySelectorAll(".tab-content-mini").forEach((el) => {
+				el.style.width = `${width * 32}px`;
+				el.style.height = `${height * 32}px`;
+			});
+		} else {
+			width = 17;
+			height = 12;
+			const extend = root.querySelector(".extend");
+			if (extend) extend.style.display = "none";
+			const content = root.querySelector(".content");
+			if (content) content.style.display = "none";
+			if (hasTabs) {
+				const checkedMini = root.querySelector(".tab-switch-mini:checked");
+				if (checkedMini) {
+					const tabId = checkedMini.id;
+					const i = parseInt(tabId.split("-")[1], 10);
+					const bigRadio = root.querySelector(`#tab-${i}`);
+					if (bigRadio) bigRadio.checked = true;
+				}
+			}
+			const contentbig = root.querySelector(".contentbig");
+			if (contentbig) {
+				contentbig.style.display = "";
+				contentbig.style.width = `${width * 32}px`;
+				contentbig.style.height = `${height * 32}px`;
+			}
+			root.querySelectorAll(".footer .btn").forEach((el) => {
+				el.style.display = "block";
+			});
+		}
+	}
+	function onMini(comp) {
+		_preferences.mini = !_preferences.mini;
+		_preferences.save();
+		resize(comp, _preferences.width, _preferences.height);
+	}
+	function onApplyChoice(comp) {
+		const applyArr = [];
+		rememberChoice.forEach((item, skillId) => {
+			applyArr[skillId] = 0;
+			const level = hasSkills?.[skillId]?.level ?? 0;
+			if (item.count > level) applyArr[skillId] = item.count - level;
+			else applyArr[skillId] = item.count;
+		});
+		applyArr.forEach((c, k) => {
+			for (let i = 0; i < c; i++) Component.onIncreaseSkill(parseInt(k, 10));
+		});
+		totalCounter = 0;
+		const skpointsEl = comp.getRoot().querySelector(".skpoints_count");
+		if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}`;
+		rememberChoice = [];
+	}
+	function onResetChoice(comp) {
+		const root = comp.getRoot();
+		rememberChoice.forEach((_count, skillId) => {
+			if (!skillDependencyTree[skillId]) return;
+			const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree[skillId].position}`);
+			if (skillbox) {
+				if (!hasSkills?.[skillId]?.level) skillbox.querySelectorAll(".skill").forEach((el) => el.classList.add("disabled"));
+				const selectable = skillbox.querySelector(".selectable");
+				if (selectable) selectable.style.display = "";
+				skillbox.querySelectorAll(".current").forEach((el) => {
+					el.textContent = hasSkills?.[skillId]?.level ?? 0;
+				});
+				skillbox.querySelectorAll(".max").forEach((el) => {
+					el.textContent = hasSkills?.[skillId]?.level ?? 0;
+				});
+			}
+		});
+		totalCounter = 0;
+		const skpointsEl = root.querySelector(".skpoints_count");
+		if (skpointsEl) skpointsEl.textContent = _points;
+		rememberChoice = [];
+	}
+	function onNecessarySkills(target, root) {
+		let main = target.parentElement;
+		if (!main.classList.contains("skill")) main = main.parentElement;
+		specifyRequirements(parseInt(main.getAttribute("data-index"), 10), null, root);
+	}
+	function _resolveSkillID(el) {
+		let main = el.parentElement;
+		if (!main.classList.contains("skill")) main = main.parentElement;
+		const id = parseInt(main.getAttribute("data-index"), 10);
+		return getSkillById(id)?.SKID ?? id;
+	}
+	function onSkillTouchStart(event, iconEl) {
+		const touch = event.touches[0];
+		const skillDiv = iconEl.closest(".skill");
+		const skill = getSkillById(parseInt(skillDiv.getAttribute("data-index"), 10));
+		if (!skill || !skill.level || !skill.type) return;
+		_touchDrag.startX = touch.pageX;
+		_touchDrag.startY = touch.pageY;
+		_touchDrag.ghost = null;
+		_touchDrag.dragging = false;
+		_touchDrag.timer = setTimeout(() => {
+			_touchDrag.dragging = true;
+			const ghost = iconEl.cloneNode(true);
+			ghost.classList.add("drag-ghost");
+			ghost.style.position = "absolute";
+			ghost.style.zIndex = "10000";
+			ghost.style.left = `${touch.pageX - 12}px`;
+			ghost.style.top = `${touch.pageY - 12}px`;
+			ghost.style.opacity = "0.8";
+			ghost.style.pointerEvents = "none";
+			document.body.appendChild(ghost);
+			_touchDrag.ghost = ghost;
+			window._OBJ_DRAG_ = {
+				type: "skill",
+				from: _dragFrom,
+				data: skill
 			};
-			if (sk?.["_NeedSkillListV0"] !== void 0) sk["_NeedSkillListV0"].forEach((item) => {
-				skillDependencyTree[skid]["dependency"][item[0]] = item[1];
-			});
-		});
-	});
-}
-function specifyRequirements(skillId, count, root) {
-	const skdt = skillDependencyTree[skillId];
-	if (skdt?.dependency || count != null) skillPosition.forEach((items, list) => {
-		if (items[skillId] !== void 0) {
-			const skillbox = root.querySelector(`#positionSkills${list} .s${items[skillId]}`);
-			if (skillbox) {
-				skillbox.querySelector(".disabled");
-				skillbox.classList.add("needleSkill");
-				if (count !== null && count !== void 0) {
-					const counterEl = document.createElement("div");
-					counterEl.className = "counterSkill";
-					counterEl.textContent = count;
-					skillbox.appendChild(counterEl);
-				}
+		}, 300);
+	}
+	function onSkillTouchMove(event) {
+		if (!_touchDrag.timer && !_touchDrag.dragging) return;
+		const touch = event.touches[0];
+		if (_touchDrag.dragging) {
+			event.preventDefault();
+			if (_touchDrag.ghost) {
+				_touchDrag.ghost.style.left = `${touch.pageX - 12}px`;
+				_touchDrag.ghost.style.top = `${touch.pageY - 12}px`;
+			}
+		} else {
+			const dx = touch.pageX - _touchDrag.startX;
+			const dy = touch.pageY - _touchDrag.startY;
+			if (dx * dx + dy * dy > 100) {
+				clearTimeout(_touchDrag.timer);
+				_touchDrag.timer = null;
 			}
 		}
-	});
-	if (skdt?.dependency) skdt.dependency.forEach((item, key) => {
-		specifyRequirements(key, item, root);
-	});
-}
-function onRememberChoice(target, root) {
-	if (_justDragged) return;
-	let main = target.parentElement;
-	if (!main.classList.contains("skill")) main = main.parentElement;
-	rememberChoice = setRememberChoice(parseInt(main.getAttribute("data-index"), 10));
-	rememberChoice.forEach((item, skId) => {
-		if (!rememberChoice[skId]["isQuest"] && totalCounter < _points) {
-			const sk = skillDependencyTree[skId];
-			if (!sk) return;
-			const skillbox = root.querySelector(`#positionSkills${sk.list} .s${sk.position}`);
-			if (skillbox) {
-				const currentEl = skillbox.querySelector(".current");
-				if (currentEl && currentEl.textContent !== String(sk.MaxLv)) {
-					totalCounter += rememberChoice[skId]["count"];
-					const disabledEl = skillbox.querySelector(".disabled");
-					if (disabledEl) disabledEl.classList.remove("disabled");
-					const levelEl = skillbox.querySelector(".level");
-					if (levelEl) levelEl.style.display = "";
-					if (currentEl) currentEl.textContent = rememberChoice[skId]["count"];
-					const maxEl = skillbox.querySelector(".max");
-					if (maxEl) maxEl.textContent = rememberChoice[skId]["count"];
+	}
+	function onSkillTouchEnd(event) {
+		if (_touchDrag.timer) {
+			clearTimeout(_touchDrag.timer);
+			_touchDrag.timer = null;
+		}
+		if (_touchDrag.dragging) {
+			_touchDrag.dragging = false;
+			if (_touchDrag.ghost) {
+				_touchDrag.ghost.remove();
+				_touchDrag.ghost = null;
+			}
+			const touch = event.changedTouches[0];
+			const target = document.elementFromPoint(touch.clientX, touch.clientY);
+			if (target) {
+				const dropTarget = target.closest(".container");
+				if (dropTarget) {
+					const dropEvent = new Event("drop", { bubbles: true });
+					dropEvent.dataTransfer = { getData(type) {
+						if (type === "Text") return JSON.stringify(window._OBJ_DRAG_);
+						return "";
+					} };
+					dropTarget.dispatchEvent(dropEvent);
 				}
 			}
+			delete window._OBJ_DRAG_;
 		}
-	});
-	const skpointsEl = root.querySelector(".skpoints_count");
-	if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}/${_points}`;
-}
-function setRememberChoice(skillId, count = null, isQuest = false) {
-	const sk = SkillInfo[skillId];
-	if (!isQuest && sk["Type"] === "Quest") {
-		const skill = getSkillById(skillId);
-		isQuest = !skill?.level || skill?.level <= 0;
 	}
-	rememberChoice[skillId] = rememberChoice[skillId] ?? {
-		count: hasSkills?.[skillId]?.level ?? 0,
-		list: null,
-		isQuest
-	};
-	if (!isQuest) {
-		if (count) {
-			if (count > rememberChoice[skillId]["count"]) rememberChoice[skillId]["count"] = count;
-		} else if (sk["MaxLv"] > rememberChoice[skillId]["count"]) rememberChoice[skillId]["count"]++;
-	}
-	if (sk["_NeedSkillListV0"] !== void 0) {
-		sk["_NeedSkillListV0"].forEach((item) => {
-			rememberChoice[skillId][item[0]] = setRememberChoice(item[0], item[1], isQuest)[item[0]];
-		});
-		Object.entries(rememberChoice[skillId]).forEach(([key, value]) => {
-			if (_isNumeric(key) && value.isQuest) rememberChoice[skillId]["isQuest"] = value.isQuest;
-		});
-	}
-	return rememberChoice;
-}
-function getSkillPosition(JobId) {
-	const positions = [];
-	positions[SkillTreeView[JobId]["list"]] = SkillTreeView[JobId];
-	if (SkillTreeView[JobId]["beforeJob"] !== null) {
-		const beforeJob = SkillTreeView[JobId]["beforeJob"];
-		getSkillPosition(beforeJob).forEach((items, list) => {
-			positions[list] = positions[list] ? Object.assign(positions[list], items) : items;
-		});
-	}
-	return positions;
-}
-function getSkillById(id) {
-	const count = _list$7.length;
-	for (let i = 0; i < count; ++i) if (_list$7[i].SKID === id) return _list$7[i];
-	return null;
-}
-function onResize$9(e, comp) {
-	e.stopImmediatePropagation();
-	const top = parseInt(comp._host.style.top, 10) || 0;
-	const left = parseInt(comp._host.style.left, 10) || 0;
-	let lastWidth = 0;
-	let lastHeight = 0;
-	const resizing = () => {
-		const extraX = -6;
-		const extraY = 32;
-		let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
-		let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-		w = Math.min(Math.max(w, 8), 8);
-		h = Math.min(Math.max(h, 4), 10);
-		if (w === lastWidth && h === lastHeight) return;
-		resize$4(comp, w, h);
-		lastWidth = w;
-		lastHeight = h;
-	};
-	const interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function resize$4(comp, width, height) {
-	const root = comp.getRoot();
-	if (_preferences$32.mini) {
-		width = Math.min(Math.max(width, 8), 8);
-		height = Math.min(Math.max(height, 4), 10);
-		const extend = root.querySelector(".extend");
-		if (extend) extend.style.display = "";
-		const content = root.querySelector(".content");
-		if (content) {
-			content.style.display = "";
-			content.style.width = `${width * 32}px`;
-			content.style.height = `${height * 32}px`;
-		}
-		const contentbig = root.querySelector(".contentbig");
-		if (contentbig) contentbig.style.display = "none";
-		root.querySelectorAll(".footer .btn").forEach((el) => {
-			el.style.display = "none";
-		});
-	} else {
-		width = 17;
-		height = 12;
-		const extend = root.querySelector(".extend");
-		if (extend) extend.style.display = "none";
-		const content = root.querySelector(".content");
-		if (content) content.style.display = "none";
-		const contentbig = root.querySelector(".contentbig");
-		if (contentbig) {
-			contentbig.style.display = "";
-			contentbig.style.width = `${width * 32}px`;
-			contentbig.style.height = `${height * 32}px`;
-		}
-		root.querySelectorAll(".footer .btn").forEach((el) => {
-			el.style.display = "block";
-		});
-	}
-}
-function onMini(comp) {
-	_preferences$32.mini = !_preferences$32.mini;
-	_preferences$32.save();
-	resize$4(comp, _preferences$32.width, _preferences$32.height);
-}
-function onApplyChoice(comp) {
-	const applyArr = [];
-	rememberChoice.forEach((item, skillId) => {
-		applyArr[skillId] = 0;
-		const level = hasSkills?.[skillId]?.level ?? 0;
-		if (item.count > level) applyArr[skillId] = item.count - level;
-		else applyArr[skillId] = item.count;
-	});
-	applyArr.forEach((c, k) => {
-		for (let i = 0; i < c; i++) SkillListV0.onIncreaseSkill(parseInt(k, 10));
-	});
-	totalCounter = 0;
-	const skpointsEl = comp.getRoot().querySelector(".skpoints_count");
-	if (skpointsEl) skpointsEl.textContent = `${_points - totalCounter}`;
-	rememberChoice = [];
-}
-function onResetChoice(comp) {
-	const root = comp.getRoot();
-	rememberChoice.forEach((_count, skillId) => {
-		if (!skillDependencyTree[skillId]) return;
-		const skillbox = root.querySelector(`.skillCol.s${skillDependencyTree[skillId].position}`);
-		if (skillbox) {
-			if (!hasSkills?.[skillId]?.level) skillbox.querySelectorAll(".skill").forEach((el) => el.classList.add("disabled"));
-			const selectable = skillbox.querySelector(".selectable");
-			if (selectable) selectable.style.display = "";
-			skillbox.querySelectorAll(".current").forEach((el) => {
-				el.textContent = hasSkills?.[skillId]?.level ?? 0;
-			});
-			skillbox.querySelectorAll(".max").forEach((el) => {
-				el.textContent = hasSkills?.[skillId]?.level ?? 0;
+	function skillLevelSelectUp(skill, root) {
+		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
+		if (level < skill.level) {
+			skill.selectedLevel = level + 1;
+			root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+				const current = element.querySelector(".level .current");
+				if (current) current.textContent = skill.selectedLevel;
 			});
 		}
-	});
-	totalCounter = 0;
-	const skpointsEl = root.querySelector(".skpoints_count");
-	if (skpointsEl) skpointsEl.textContent = _points;
-	rememberChoice = [];
-}
-function onNecessarySkills(target, root) {
-	let main = target.parentElement;
-	if (!main.classList.contains("skill")) main = main.parentElement;
-	specifyRequirements(parseInt(main.getAttribute("data-index"), 10), null, root);
-}
-function _resolveSkillID(el) {
-	let main = el.parentElement;
-	if (!main.classList.contains("skill")) main = main.parentElement;
-	const id = parseInt(main.getAttribute("data-index"), 10);
-	return getSkillById(id)?.SKID ?? id;
-}
-function skillLevelSelectUp(skill, root) {
-	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
-	if (level < skill.level) {
-		skill.selectedLevel = level + 1;
-		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
-			const current = element.querySelector(".level .current");
-			if (current) current.textContent = skill.selectedLevel;
-		});
 	}
-}
-function skillLevelSelectDown(skill, root) {
-	const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
-	if (level > 1) {
-		skill.selectedLevel = level - 1;
-		root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
-			const current = element.querySelector(".level .current");
-			if (current) current.textContent = skill.selectedLevel;
-		});
+	function skillLevelSelectDown(skill, root) {
+		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
+		if (level > 1) {
+			skill.selectedLevel = level - 1;
+			root.querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
+				const current = element.querySelector(".level .current");
+				if (current) current.textContent = skill.selectedLevel;
+			});
+		}
 	}
+	Component.onUseSkill = function onUseItem() {};
+	Component.onIncreaseSkill = function onIncreaseSkill() {};
+	Component.onUpdateSkill = function onUpdateSkill() {};
+	Component.getSkillById = getSkillById;
+	return UIManager.addComponent(Component);
 }
-var SkillListV0, _preferences$32, _list$7, _btnIncSkill, _points, totalCounter, _btnLevelUp, _lArrow, _rArrow, skillPosition, skillDependencyTree, rememberChoice, hasSkills, _justDragged, SkillListV0_default;
-var init_SkillListV0 = __esmMin((() => {
+var init_SkillListCommon = __esmMin((() => {
 	init_DBManager();
 	init_SkillInfo();
 	init_SkillTreeView();
@@ -231566,416 +231334,86 @@ var init_SkillListV0 = __esmMin((() => {
 	init_Elements();
 	init_SkillTargetSelection();
 	init_SkillDescription();
-	init_SkillListV0$2();
-	init_SkillListV0$1();
-	SkillListV0 = new GUIComponent("SkillListV0", SkillListV0_default$1);
-	SkillListV0.render = () => SkillListV0_default$2;
-	_preferences$32 = Preferences.get("SkillListV0", {
-		x: 100,
-		y: 200,
-		width: 8,
-		height: 8,
-		show: false,
-		mini: true,
-		skillInfo: false
-	}, 1);
-	_list$7 = [];
-	_points = 0;
-	totalCounter = 0;
-	skillPosition = [];
-	skillDependencyTree = [];
-	rememberChoice = [];
-	hasSkills = [];
-	_justDragged = false;
-	SkillListV0.init = function init() {
-		const root = SkillListV0.getRoot();
-		root.querySelector(".titlebar .base")?.addEventListener("mousedown", (e) => {
-			e.stopImmediatePropagation();
-		});
-		root.querySelector(".footer .extend")?.addEventListener("mousedown", (e) => {
-			onResize$9(e, this);
-		});
-		root.querySelector(".titlebar .close")?.addEventListener("click", () => {
-			this.ui.hide();
-		});
-		root.querySelector(".titlebar .mini")?.addEventListener("click", () => {
-			onMini(this);
-		});
-		root.querySelector(".view_skill_info")?.addEventListener("change", function() {
-			_preferences$32.skillInfo = !!this.checked;
-			_preferences$32.save();
-		});
-		root.querySelector(".reset")?.addEventListener("click", () => {
-			onResetChoice(this);
-		});
-		root.querySelector(".apply")?.addEventListener("click", () => {
-			onApplyChoice(this);
-		});
-		const levelupBtn = root.querySelector(".btn.levelup");
-		if (levelupBtn) {
-			_btnIncSkill = levelupBtn.cloneNode(true);
-			levelupBtn.remove();
-			_btnIncSkill.addEventListener("click", function() {
-				const index = this.parentNode.parentNode.getAttribute("data-index");
-				SkillListV0.onIncreaseSkill(parseInt(index, 10));
-			});
+}));
+//#endregion
+//#region src/UI/Components/SkillList/SkillList/SkillList.html?raw
+var SkillList_default$2;
+var init_SkillList$3 = __esmMin((() => {
+	SkillList_default$2 = "<div class=\"SkillList\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text\">Skill List</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\">\r\n			<table>\r\n				<!-- Just to get reference, will be removed -->\r\n				<ui-button\r\n					class=\"btn levelup\"\r\n					bg=\"basic_interface/skill_up_a.bmp\"\r\n					hover=\"basic_interface/skill_up_b.bmp\"\r\n					down=\"basic_interface/skill_up_c.bmp\"\r\n				></ui-button>\r\n			</table>\r\n		</div>\r\n\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n			<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillList/SkillList/SkillList.css?raw
+var SkillList_default$1;
+var init_SkillList$2 = __esmMin((() => {
+	SkillList_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.SkillList {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n.SkillList .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n.SkillList .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n.SkillList .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n.SkillList .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 120px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n.SkillList .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n.SkillList .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n.SkillList .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n.SkillList .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n.SkillList .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n.SkillList .content td,\r\n.SkillList .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n.SkillList .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.SkillList td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n.SkillList .content .icon {\r\n	padding-left: 15px;\r\n}\r\n.SkillList .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n.SkillList .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n.SkillList .disabled .icon,\r\n.SkillList .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n.SkillList .disabled .consume,\r\n.SkillList .disabled .level {\r\n	display: none;\r\n}\r\n.SkillList .currentDown,\r\n.SkillList .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.SkillList .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n.SkillList .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n.SkillList .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n.SkillList .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n.SkillList .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n.SkillList .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillList/SkillList/SkillList.js
+var SkillList_default;
+var init_SkillList$1 = __esmMin((() => {
+	init_SkillListCommon();
+	init_SkillList$3();
+	init_SkillList$2();
+	SkillList_default = createSkillList({
+		name: "SkillList",
+		htmlText: SkillList_default$2,
+		cssText: SkillList_default$1,
+		listOnly: true,
+		containerSelector: ".SkillList",
+		preferenceDefaults: {
+			x: 100,
+			y: 200,
+			width: 8,
+			height: 8,
+			show: false
 		}
-		const lvlupBtn = root.querySelector("#lvlup_job");
-		if (lvlupBtn) {
-			_btnLevelUp = lvlupBtn;
-			_btnLevelUp.style.zIndex = "51";
-			_btnLevelUp.style.position = "absolute";
-			_btnLevelUp.style.right = "0px";
-			_btnLevelUp.style.bottom = "0px";
-			_btnLevelUp.style.width = "43px";
-			_btnLevelUp.style.height = "43px";
-			_btnLevelUp.style.border = "none";
-			_btnLevelUp.style.backgroundColor = "transparent";
-			_btnLevelUp.style.backgroundRepeat = "no-repeat";
-			_btnLevelUp.remove();
-			_btnLevelUp.addEventListener("click", () => {
-				if (_btnLevelUp.parentNode) _btnLevelUp.remove();
-				SkillListV0.ui.show();
-			});
-			_btnLevelUp.addEventListener("mousedown", (e) => {
-				e.stopImmediatePropagation();
-			});
-		}
-		const container = root.querySelector("#SkillListV0") || root;
-		container.addEventListener("dblclick", (e) => {
-			const target = e.target.closest(".skill .icon, .skill .name");
-			if (target) {
-				let main = target.parentElement;
-				if (!main.classList.contains("skill")) main = main.parentElement;
-				SkillListV0.useSkillID(parseInt(main.getAttribute("data-index"), 10));
-			}
-		});
-		container.addEventListener("contextmenu", (e) => {
-			const target = e.target.closest(".skill .icon, .skill .name");
-			if (target) {
-				const skillID = _resolveSkillID(target);
-				if (SkillDescription_default.uid === skillID) {
-					SkillDescription_default.remove();
-					return;
-				}
-				SkillDescription_default.append();
-				SkillDescription_default.setSkill(skillID);
-			}
-		});
-		container.addEventListener("mousedown", (e) => {
-			const target = e.target.closest(".selectable");
-			if (target) {
-				let main = target.parentElement;
-				if (!main.classList.contains("skill")) main = main.parentElement;
-				for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
-				main.classList.add("selected");
-			}
-		});
-		container.addEventListener("mouseover", (e) => {
-			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
-			if (target) {
-				if (_preferences$32.mini || _preferences$32.skillInfo) {
-					const skillID = _resolveSkillID(target);
-					if (SkillDescription_default.uid !== skillID) {
-						SkillDescription_default.append();
-						SkillDescription_default.setSkill(skillID);
-					}
-				}
-				onNecessarySkills(target, root);
-			}
-		});
-		container.addEventListener("mouseout", (e) => {
-			if (e.target.closest(".skillCol .skill .icon, .skill .name")) {
-				if (_preferences$32.mini || _preferences$32.skillInfo) SkillDescription_default.remove();
-				root.querySelectorAll(".needleSkill").forEach((el) => el.classList.remove("needleSkill"));
-				root.querySelectorAll(".counterSkill").forEach((el) => el.remove());
-			}
-		});
-		container.addEventListener("click", (e) => {
-			const target = e.target.closest(".skillCol .skill .icon, .skill .name");
-			if (target) onRememberChoice(target, root);
-		});
-		container.addEventListener("dragstart", (e) => {
-			const skillEl = e.target.closest(".skill");
-			if (!skillEl) return;
-			const skill = getSkillById(parseInt(skillEl.getAttribute("data-index"), 10));
-			if (!skill || !skill.level || !skill.type) {
-				e.stopImmediatePropagation();
-				e.preventDefault();
-				return;
-			}
-			const img = new Image();
-			img.decoding = "async";
-			img.src = skillEl.querySelector(".icon img")?.src || "";
-			e.dataTransfer.setDragImage(img, 12, 12);
-			e.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-				type: "skill",
-				from: "SkillListV0",
-				data: skill
-			}));
-		});
-		container.addEventListener("dragend", () => {
-			delete window._OBJ_DRAG_;
-			_justDragged = true;
-			setTimeout(() => {
-				_justDragged = false;
-			}, 0);
-		});
-		this.draggable(".titlebar");
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
-			_rArrow = `url(${data})`;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
-			_lArrow = `url(${data})`;
-		});
-	};
-	SkillListV0.onAppend = function onAppend() {
-		if (!_preferences$32.show) this.ui.hide();
-		resize$4(this, _preferences$32.width, _preferences$32.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$32.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$32.x), Renderer.width - 100)}px`;
-		const cb = SkillListV0.getRoot().querySelector(".view_skill_info");
-		if (cb) cb.checked = _preferences$32.skillInfo;
-	};
-	SkillListV0.onRemove = function onRemove() {
-		if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
-		_preferences$32.show = this.ui.is(":visible");
-		_preferences$32.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences$32.x = parseInt(this._host.style.left, 10) || 0;
-		const content = SkillListV0.getRoot().querySelector(".content");
-		if (content) {
-			_preferences$32.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences$32.height = Math.floor(parseInt(content.style.height, 10) / 32) || 8;
-		}
-		_preferences$32.save();
-	};
-	SkillListV0.toggle = function toggle() {
-		if (this.ui.is(":visible")) {
-			this.ui.hide();
-			if (_btnLevelUp && _btnLevelUp.parentNode) _btnLevelUp.remove();
-		} else {
-			this.ui.show();
-			this.focus();
-		}
-	};
-	SkillListV0.onShortCut = function onShortCut(key) {
-		switch (key.cmd) {
-			case "TOGGLE":
-				this.toggle();
-				break;
-		}
-		onResetChoice(this);
-	};
-	SkillListV0.setSkills = function setSkills(skills) {
-		const root = SkillListV0.getRoot();
-		root.querySelectorAll(".upgradable").forEach((el) => el.classList.remove("upgradable"));
-		let skillJobId = SessionStorage_default.Character.job;
-		const originalJobId = SessionStorage_default.Entity._job;
-		if (originalJobId && originalJobId !== SessionStorage_default.Character.job) skillJobId = originalJobId;
-		skillPosition = getSkillPosition(skillJobId);
-		createSkillDependencyTree();
-		for (let i = 0, count = _list$7.length; i < count; ++i) this.onUpdateSkill(_list$7[i].SKID, 0);
-		_list$7.length = 0;
-		const table = root.querySelector(".content table");
-		if (table) table.innerHTML = "";
-		root.querySelectorAll(".skillCol").forEach((el) => {
-			el.innerHTML = "";
-		});
-		for (let i = 0, count = skills.length; i < count; ++i) {
-			this.addSkill(skills[i]);
-			hasSkills[skills[i].SKID] = skills[i];
-		}
-		skillPosition.forEach((items, list) => {
-			SkillListV0.prepareSkillTree(items, list);
-		});
-		onResetChoice(this);
-	};
-	SkillListV0.addSkill = function addSkill(skill) {
-		if (!(skill.SKID in SkillInfo)) return;
-		if (SkillListV0.getRoot().querySelector(`.skill.id${skill.SKID}`)) {
-			this.updateSkill(skill);
-			return;
-		}
-		this.addSkillBig(skill);
-		this.addSkillMini(skill);
-	};
-	SkillListV0.prepareSkillTree = function prepareSkillTree(items, list) {
-		const root = SkillListV0.getRoot();
-		Object.entries(items).forEach(([key, value]) => {
-			const sk = SkillInfo[key];
-			const className = "disabled";
-			if (sk !== void 0) {
-				const element = document.createElement("div");
-				element.className = `skill id${key} ${className}`;
-				element.setAttribute("data-index", key);
-				element.setAttribute("draggable", "true");
-				element.innerHTML = `<div class="name">${_escapeHTML$3(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class=selectable><span class="level" style="display: none">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">0</span> / <span class="max">0</span><button class="currentUp"></button>` : "<span class=\"current\">0</span>") + "</span></div>";
-				const upBtn = element.querySelector(".level .currentUp");
-				if (upBtn) {
-					if (_rArrow) upBtn.style.backgroundImage = _rArrow;
-					upBtn.addEventListener("click", () => skillLevelSelectUp(0, root));
-				}
-				const downBtn = element.querySelector(".level .currentDown");
-				if (downBtn) {
-					if (_lArrow) downBtn.style.backgroundImage = _lArrow;
-					downBtn.addEventListener("click", () => skillLevelSelectDown(0, root));
-				}
-				if (value !== void 0) {
-					const box = root.querySelector(`#positionSkills${list} .s${value}`);
-					if (box) {
-						if (parseInt(key, 10) < 41) box.parentElement.style.display = "";
-						if (!box.hasChildNodes()) box.appendChild(element);
-					}
-				}
-				Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
-					const img = element.querySelector(".icon img");
-					if (img) img.src = data;
-				});
-			}
-		});
-	};
-	SkillListV0.addSkillBig = function addSkillBig(skill) {
-		const root = SkillListV0.getRoot();
-		const sk = SkillInfo[skill.SKID];
-		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const element = document.createElement("div");
-		element.className = `skill id${skill.SKID} ${className}`;
-		element.setAttribute("data-index", skill.SKID);
-		element.setAttribute("draggable", "true");
-		element.innerHTML = `<div class="name">${_escapeHTML$3(sk.SkillName).substr(0, 7)}...<br/></div><div class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></div><div class="levelupcontainer"></div><div class=selectable><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button><span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `<span class="current">${skill.level}</span>`) + "</span></div>";
-		const upBtn = element.querySelector(".level .currentUp");
-		if (upBtn) {
-			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
-			upBtn.addEventListener("click", () => skillLevelSelectUp(skill, root));
-		}
-		const downBtn = element.querySelector(".level .currentDown");
-		if (downBtn) {
-			if (_lArrow) downBtn.style.backgroundImage = _lArrow;
-			downBtn.addEventListener("click", () => skillLevelSelectDown(skill, root));
-		}
-		skillPosition.forEach((items, list) => {
-			if (items[skill.SKID] !== void 0) {
-				const box = root.querySelector(`#positionSkills${list} .s${items[skill.SKID]}`);
-				if (box) {
-					if (box.hasChildNodes()) box.innerHTML = "";
-					box.appendChild(element);
-					if (skill.upgradable) box.classList.add("upgradable");
-				}
-			}
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
-			const img = element.querySelector(".icon img");
-			if (img) img.src = data;
-		});
-	};
-	SkillListV0.addSkillMini = function addSkillMini(skill) {
-		const root = SkillListV0.getRoot();
-		const sk = SkillInfo[skill.SKID];
-		const levelup = _btnIncSkill.cloneNode(true);
-		levelup.addEventListener("click", function() {
-			const index = this.parentNode.parentNode.getAttribute("data-index");
-			SkillListV0.onIncreaseSkill(parseInt(index, 10));
-		});
-		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const tr = document.createElement("tr");
-		tr.className = `skill id${skill.SKID} ${className}`;
-		tr.setAttribute("data-index", skill.SKID);
-		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$3(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
-		if (!skill.upgradable || !_points) levelup.style.display = "none";
-		tr.querySelector(".levelupcontainer").appendChild(levelup);
-		const upBtn = tr.querySelector(".level .currentUp");
-		if (upBtn) {
-			if (_rArrow) upBtn.style.backgroundImage = _rArrow;
-			upBtn.addEventListener("click", () => skillLevelSelectUp(skill, root));
-		}
-		const downBtn = tr.querySelector(".level .currentDown");
-		if (downBtn) {
-			if (_lArrow) downBtn.style.backgroundImage = _lArrow;
-			downBtn.addEventListener("click", () => skillLevelSelectDown(skill, root));
-		}
-		const table = root.querySelector(".content table");
-		if (table) table.appendChild(tr);
-		this.parseHTML.call(levelup);
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
-			const img = tr.querySelector(".icon img");
-			if (img) img.src = data;
-		});
-		_list$7.push(skill);
-		this.onUpdateSkill(skill.SKID, skill.level);
-	};
-	SkillListV0.removeSkill = function removeSkill() {};
-	SkillListV0.updateSkill = function updateSkill(skill) {
-		const target = getSkillById(skill.SKID);
-		if (!target) return;
-		target.level = skill.level;
-		target.spcost = skill.spcost;
-		target.attackRange = skill.attackRange;
-		target.upgradable = skill.upgradable;
-		if (Number.isInteger(skill.type)) target.type = skill.type;
-		SkillListV0.getRoot().querySelectorAll(`.skill.id${skill.SKID}`).forEach((element) => {
-			for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
-			if (skill.selectedLevel) {
-				const current = element.querySelector(".level .current");
-				if (current) current.textContent = skill.selectedLevel;
-			}
-			const spcost = element.querySelector(".spcost");
-			if (spcost) spcost.textContent = skill.spcost;
-			element.classList.remove("active", "passive", "disabled");
-			element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
-			const levelupEl = element.querySelector(".levelup");
-			if (levelupEl) levelupEl.style.display = skill.upgradable && _points ? "" : "none";
-		});
-		this.onUpdateSkill(skill.SKID, skill.level);
-	};
-	SkillListV0.useSkillID = function useSkillID(id, level) {
-		const skill = getSkillById(id);
-		if (!skill || !skill.level || !skill.type) return;
-		SkillListV0.useSkill(skill, level ? level : skill.selectedLevel);
-	};
-	SkillListV0.useSkill = function useSkill(skill, level) {
-		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
-		skill.useLevel = level;
-		if (skill.type & SkillTargetSelection_default.TYPE.TARGET) {
-			SkillTargetSelection_default.append();
-			SkillTargetSelection_default.set(skill, skill.type);
-		}
-	};
-	SkillListV0.setPoints = function setPoints(amount) {
-		const root = SkillListV0.getRoot();
-		const el = root.querySelector(".skpoints_count");
-		if (el) el.textContent = amount;
-		if (!_points === !amount) {
-			_points = amount;
-			return;
-		}
-		_points = amount;
-		const count = _list$7.length;
-		for (let i = 0; i < count; ++i) root.querySelectorAll(`.skill.id${_list$7[i].SKID} .levelup`).forEach((lu) => {
-			lu.style.display = _list$7[i].upgradable && amount ? "" : "none";
-		});
-	};
-	SkillListV0.onLevelUp = function onLevelUp() {
-		if (_btnLevelUp) document.body.appendChild(_btnLevelUp);
-	};
-	SkillListV0.onUseSkill = function onUseItem() {};
-	SkillListV0.onIncreaseSkill = function onIncreaseSkill() {};
-	SkillListV0.onUpdateSkill = function onUpdateSkill() {};
-	SkillListV0.getSkillById = getSkillById;
-	SkillListV0_default = UIManager.addComponent(SkillListV0);
+	});
+}));
+//#endregion
+//#region src/UI/Components/SkillList/SkillListV2/SkillListV2.html?raw
+var SkillListV2_default$2;
+var init_SkillListV2$2 = __esmMin((() => {
+	SkillListV2_default$2 = "<div id=\"SkillListV2\">\r\n	<div class=\"border\">\r\n		<div class=\"titlebar\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"left\">\r\n				<ui-button\r\n					class=\"base\"\r\n					bg=\"basic_interface/sys_base_off.bmp\"\r\n					hover=\"basic_interface/sys_base_on.bmp\"\r\n				></ui-button>\r\n				<ui-text class=\"text\" msgid=\"283\">Skill Tree</ui-text>\r\n			</div>\r\n			<div class=\"right\">\r\n				<input type=\"checkbox\" class=\"view_skill_info\" />view skill info\r\n				<ui-button\r\n					class=\"base mini\"\r\n					bg=\"basic_interface/sys_mini_off.bmp\"\r\n					hover=\"basic_interface/sys_mini_on.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"base close\"\r\n					bg=\"basic_interface/sys_close_off.bmp\"\r\n					hover=\"basic_interface/sys_close_on.bmp\"\r\n				></ui-button>\r\n			</div>\r\n			<div class=\"clear\"></div>\r\n		</div>\r\n\r\n		<div class=\"panel\">\r\n			<div class=\"content\" style=\"display: block; width: 256px; height: 320px\">\r\n				<!-- Just to get reference, will be removed -->\r\n				<ui-button\r\n					class=\"btn levelup\"\r\n					bg=\"basic_interface/skill_up_a.bmp\"\r\n					hover=\"basic_interface/skill_up_b.bmp\"\r\n					down=\"basic_interface/skill_up_c.bmp\"\r\n				></ui-button>\r\n				<div class=\"tabs-mini\">\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1-mini\" checked class=\"tab-switch-mini\" />\r\n						<label for=\"tab-1-mini\" class=\"tab-label-mini\">1st</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab1\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-2-mini\" id=\"tabminil2\" class=\"tab-label-mini\">2nd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab2\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-3-mini\" id=\"tabminil3\" class=\"tab-label-mini\">3rd</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab3\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-4-mini\" id=\"tabminil4\" class=\"tab-label-mini\">4th</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab4\"></table>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab-mini\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5-mini\" class=\"tab-switch-mini\" />\r\n						<label for=\"tab-5-mini\" class=\"tab-label-mini\">Etc</label>\r\n						<div class=\"tab-content-mini\">\r\n							<table id=\"minitab5\"></table>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"contentbig\" style=\"width: 480px; height: 384px; display: block\">\r\n				<div class=\"tabs\">\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-1\" checked class=\"tab-switch\" />\r\n						<label for=\"tab-1\" class=\"tab-label\">1st</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills1\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-2\" class=\"tab-switch\" />\r\n						<label for=\"tab-2\" id=\"tabl2\" class=\"tab-label\">2nd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills2\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-3\" class=\"tab-switch\" />\r\n						<label for=\"tab-3\" id=\"tabl3\" class=\"tab-label\">3rd</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills3\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-4\" class=\"tab-switch\" />\r\n						<label for=\"tab-4\" id=\"tabl4\" class=\"tab-label\">4th</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"positionSkills4\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n					<div class=\"tab\">\r\n						<input type=\"radio\" name=\"css-tabs\" id=\"tab-5\" class=\"tab-switch\" />\r\n						<label for=\"tab-5\" class=\"tab-label\">Etc</label>\r\n						<div class=\"tab-content\">\r\n							<div id=\"etcBIG5\">\r\n								<div class=\"skillRow\" data-order=\"0\">\r\n									<div class=\"skillCol s0\"></div>\r\n									<div class=\"skillCol s1\"></div>\r\n									<div class=\"skillCol s2\"></div>\r\n									<div class=\"skillCol s3\"></div>\r\n									<div class=\"skillCol s4\"></div>\r\n									<div class=\"skillCol s5\"></div>\r\n									<div class=\"skillCol s6\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"1\">\r\n									<div class=\"skillCol s7\"></div>\r\n									<div class=\"skillCol s8\"></div>\r\n									<div class=\"skillCol s9\"></div>\r\n									<div class=\"skillCol s10\"></div>\r\n									<div class=\"skillCol s11\"></div>\r\n									<div class=\"skillCol s12\"></div>\r\n									<div class=\"skillCol s13\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"2\">\r\n									<div class=\"skillCol s14\"></div>\r\n									<div class=\"skillCol s15\"></div>\r\n									<div class=\"skillCol s16\"></div>\r\n									<div class=\"skillCol s17\"></div>\r\n									<div class=\"skillCol s18\"></div>\r\n									<div class=\"skillCol s19\"></div>\r\n									<div class=\"skillCol s20\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"3\">\r\n									<div class=\"skillCol s21\"></div>\r\n									<div class=\"skillCol s22\"></div>\r\n									<div class=\"skillCol s23\"></div>\r\n									<div class=\"skillCol s24\"></div>\r\n									<div class=\"skillCol s25\"></div>\r\n									<div class=\"skillCol s26\"></div>\r\n									<div class=\"skillCol s27\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"4\">\r\n									<div class=\"skillCol s28\"></div>\r\n									<div class=\"skillCol s29\"></div>\r\n									<div class=\"skillCol s30\"></div>\r\n									<div class=\"skillCol s31\"></div>\r\n									<div class=\"skillCol s32\"></div>\r\n									<div class=\"skillCol s33\"></div>\r\n									<div class=\"skillCol s34\"></div>\r\n								</div>\r\n								<div class=\"skillRow\" data-order=\"5\">\r\n									<div class=\"skillCol s35\"></div>\r\n									<div class=\"skillCol s36\"></div>\r\n									<div class=\"skillCol s37\"></div>\r\n									<div class=\"skillCol s38\"></div>\r\n									<div class=\"skillCol s39\"></div>\r\n									<div class=\"skillCol s40\"></div>\r\n									<div class=\"skillCol s41\"></div>\r\n								</div>\r\n							</div>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n\r\n			<div class=\"footer\">\r\n				<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n				<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n				<ui-button\r\n					class=\"btn apply\"\r\n					bg=\"btn_apply.bmp\"\r\n					hover=\"btn_apply_a.bmp\"\r\n					down=\"btn_apply_b.bmp\"\r\n				></ui-button>\r\n				<ui-button\r\n					class=\"btn reset\"\r\n					bg=\"btn_reset.bmp\"\r\n					hover=\"btn_reset_a.bmp\"\r\n					down=\"btn_reset_b.bmp\"\r\n				></ui-button>\r\n				<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillList/SkillListV2/SkillListV2.css?raw
+var SkillListV2_default$1;
+var init_SkillListV2$1 = __esmMin((() => {
+	SkillListV2_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#SkillListV2 {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n#SkillListV2 .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n#SkillListV2 .titlebar {\r\n	height: 18px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	background-position: 0 -1px;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#SkillListV2 .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n#SkillListV2 .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 60px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#SkillListV2 .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n	height: 18px;\r\n}\r\n#SkillListV2 .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n#SkillListV2 .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#SkillListV2 .content {\r\n	position: relative;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n#SkillListV2 .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n#SkillListV2 .content td,\r\n#SkillListV2 .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n/* Mini Tab*/\r\n#SkillListV2 .tabs-mini {\r\n	position: relative;\r\n}\r\n#SkillListV2 .tabs-mini::before,\r\n#SkillListV2 .tabs-mini::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillListV2 .tabs-mini::after {\r\n	clear: both;\r\n}\r\n#SkillListV2 .tab-switch-mini {\r\n	display: none;\r\n}\r\n#SkillListV2 .tab-label-mini {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillListV2 .tab-content-mini {\r\n	overflow-y: auto;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	right: 0;\r\n	bottom: 0;\r\n	opacity: 0;\r\n}\r\n#SkillListV2 .tab-switch-mini:checked + .tab-label-mini {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillListV2 .tab-switch-mini:checked + label + .tab-content-mini {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n\r\n#SkillListV2 .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#SkillListV2 td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n#SkillListV2 .content .icon {\r\n	padding-left: 15px;\r\n}\r\n#SkillListV2 .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n#SkillListV2 .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n#SkillListV2 .disabled .icon,\r\n#SkillListV2 .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n#SkillListV2 .disabled .consume,\r\n#SkillListV2 .disabled .level {\r\n	display: none;\r\n}\r\n#SkillListV2 .currentDown,\r\n#SkillListV2 .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n#SkillListV2 .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n#SkillListV2 .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n/*#SkillListV2 .selected.active .selectable { background-color:#739cee;}*/\r\n\r\n#SkillListV2 .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n#SkillListV2 .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n#SkillListV2 .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n#SkillListV2 .footer .apply {\r\n	right: 70px;\r\n}\r\n#SkillListV2 .footer .reset {\r\n	right: 20px;\r\n}\r\n#SkillListV2 .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n\r\n#SkillListV2 .tab-content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	border-top: 1px solid #c6c6c6;\r\n	width: calc(100% - 12px);\r\n	height: 375px;\r\n}\r\n\r\n/* skill tree with tabs */\r\n#SkillListV2 .skillCol .name,\r\n#SkillListV2 .skillCol .selectable {\r\n	position: relative;\r\n	text-align: center;\r\n	display: block;\r\n	width: 70px;\r\n	left: -23px;\r\n}\r\n#SkillListV2 .skillCol .skill {\r\n	position: relative;\r\n	top: -16px;\r\n}\r\n#SkillListV2 .skillRow {\r\n	display: flex;\r\n	padding-left: 40px;\r\n}\r\n#SkillListV2 .skillCol {\r\n	position: relative;\r\n	margin: 15px 17px;\r\n	border: 1px dashed #c0c0c0ff;\r\n	border-radius: 5px;\r\n	width: 28px;\r\n	height: 28px;\r\n	text-align: center;\r\n	white-space: nowrap;\r\n}\r\n#SkillListV2 .tabs {\r\n	position: relative;\r\n}\r\n#SkillListV2 .tabs::before,\r\n#SkillListV2 .tabs::after {\r\n	content: '';\r\n	display: table;\r\n}\r\n#SkillListV2 .tabs::after {\r\n	clear: both;\r\n}\r\n#SkillListV2 .tab-switch {\r\n	display: none;\r\n}\r\n#SkillListV2 .tab-label {\r\n	writing-mode: vertical-lr;\r\n	text-orientation: upright;\r\n	left: -23px;\r\n	width: 18px;\r\n	position: relative;\r\n	margin: -3px 0;\r\n	border: 1px solid #c1c6c2;\r\n	background: #fff;\r\n	border-radius: 5px 0 0 5px;\r\n	cursor: pointer;\r\n}\r\n#SkillListV2 .tab-content {\r\n	position: absolute;\r\n	z-index: 1;\r\n	left: 0;\r\n	top: 0;\r\n	opacity: 0;\r\n}\r\n#SkillListV2 .tab-switch:checked + .tab-label {\r\n	width: 20px;\r\n	left: -25px;\r\n	z-index: 1;\r\n}\r\n#SkillListV2 .tab-switch:checked + label + .tab-content {\r\n	z-index: 2;\r\n	opacity: 1;\r\n}\r\n#SkillListV2 .needleSkill {\r\n	background: pink !important;\r\n}\r\n#SkillListV2 .upgradable {\r\n	background: #c0cdff;\r\n}\r\n#SkillListV2 .counterSkill {\r\n	position: absolute;\r\n	left: 28px;\r\n	top: 18px;\r\n	color: #fff;\r\n	-webkit-text-stroke: 0.6px #2f2f2f;\r\n	font-weight: 1000;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/SkillList/SkillListV2/SkillListV2.js
+var SkillListV2_default;
+var init_SkillListV2 = __esmMin((() => {
+	init_SkillListCommon();
+	init_SkillListV2$2();
+	init_SkillListV2$1();
+	SkillListV2_default = createSkillList({
+		name: "SkillListV2",
+		htmlText: SkillListV2_default$2,
+		cssText: SkillListV2_default$1,
+		hasTabs: true,
+		needSkillListKey: "_NeedSkillList",
+		showDescOnMiniHover: false,
+		touchDrag: true,
+		incrementalRemember: true,
+		guardMissingJob: true,
+		readdSkillOnUpdate: true,
+		dragFrom: "SkillList"
+	});
 }));
 //#endregion
 //#region src/UI/Components/SkillList/SkillList.js
 var publicName$9, versionInfo$9, Controller$4, _selectUIVersion$5;
 var init_SkillList = __esmMin((() => {
 	init_SkillList$1();
-	init_SkillListV0();
+	init_SkillListV2();
 	init_UIVersionManager();
 	init_KeyEventHandler();
 	publicName$9 = "SkillList";
 	versionInfo$9 = {
-		default: SkillListV0_default,
-		common: { 20090601: SkillList_default },
+		default: SkillList_default,
+		common: { 20090601: SkillListV2_default },
 		re: {},
 		prere: {}
 	};
@@ -232858,14 +232296,14 @@ function isInCooldown(quest) {
 	if (quest.end_time > epoch_seconds) return true;
 	return false;
 }
-var _preferences$31, QuestWindow, QuestWindow_default;
+var _preferences$29, QuestWindow, QuestWindow_default;
 var init_QuestWindow = __esmMin((() => {
 	init_Preferences$1();
 	init_UIManager();
 	init_GUIComponent();
 	init_QuestWindow$2();
 	init_QuestWindow$1();
-	_preferences$31 = Preferences.get("Quest", {
+	_preferences$29 = Preferences.get("Quest", {
 		x: 200,
 		y: 200,
 		show: false,
@@ -232885,7 +232323,7 @@ var init_QuestWindow = __esmMin((() => {
 	* Once append to the DOM, start to position the UI
 	*/
 	QuestWindow.onAppend = function onAppend() {
-		if (!_preferences$31.showwindow) this.ui.hide();
+		if (!_preferences$29.showwindow) this.ui.hide();
 	};
 	/**
 	* Clean up UI
@@ -233053,7 +232491,7 @@ var init_Achievement$2 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Achievement/Achievement.js
-var _preferences$30, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
+var _preferences$28, MAJOR_CATEGORIES, AchievementComponent, Achievement, Achievement_default;
 var init_Achievement$1 = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -233067,7 +232505,7 @@ var init_Achievement$1 = __esmMin((() => {
 	init_ItemInfo();
 	init_Achievement$3();
 	init_Achievement$2();
-	_preferences$30 = Preferences.get("Achievement", {
+	_preferences$28 = Preferences.get("Achievement", {
 		x: 100,
 		y: 100
 	}, 1);
@@ -233210,15 +232648,15 @@ var init_Achievement$1 = __esmMin((() => {
 			this._host.style.display = "none";
 		}
 		onAppend() {
-			this._host.style.left = `${_preferences$30.x}px`;
-			this._host.style.top = `${_preferences$30.y}px`;
+			this._host.style.left = `${_preferences$28.x}px`;
+			this._host.style.top = `${_preferences$28.y}px`;
 			this._fixPositionOverflow();
 			this.updateHeaderAndView();
 		}
 		onRemove() {
-			_preferences$30.x = parseInt(this._host.style.left, 10);
-			_preferences$30.y = parseInt(this._host.style.top, 10);
-			_preferences$30.save();
+			_preferences$28.x = parseInt(this._host.style.left, 10);
+			_preferences$28.y = parseInt(this._host.style.top, 10);
+			_preferences$28.save();
 		}
 		toggle() {
 			if (this.__active && this._host.style.display !== "none") this._host.style.display = "none";
@@ -233970,7 +233408,7 @@ function clearHighlights() {
 		el.dataset.highlight = "false";
 	});
 }
-var Reputation, _preferences$29, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
+var Reputation, _preferences$27, bg, bg_highlight, indicator_empty, indicator_blue, indicator_red, Reputation_default;
 var init_Reputation = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -233983,7 +233421,7 @@ var init_Reputation = __esmMin((() => {
 	init_Reputation$2();
 	init_Reputation$1();
 	Reputation = new GUIComponent("Reputation", Reputation_default$1);
-	_preferences$29 = Preferences.get("Reputation", {
+	_preferences$27 = Preferences.get("Reputation", {
 		x: 400,
 		y: 200,
 		show: true
@@ -234066,8 +233504,8 @@ var init_Reputation = __esmMin((() => {
 	* binding group selector events and rendering the default view.
 	*/
 	Reputation.onAppend = function onAppend() {
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$29.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$29.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences$27.y), window.innerHeight - (this._host.offsetHeight || 0))}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences$27.x), window.innerWidth - (this._host.offsetWidth || 0))}px`;
 		buildGroupSelector();
 		bindGroupSelector();
 		bindSearch();
@@ -234078,10 +233516,10 @@ var init_Reputation = __esmMin((() => {
 	* Once remove from body, save user preferences
 	*/
 	Reputation.onRemove = function onRemove() {
-		_preferences$29.show = this._host.style.display !== "none";
-		_preferences$29.y = parseInt(this._host.style.top, 10);
-		_preferences$29.x = parseInt(this._host.style.left, 10);
-		_preferences$29.save();
+		_preferences$27.show = this._host.style.display !== "none";
+		_preferences$27.y = parseInt(this._host.style.top, 10);
+		_preferences$27.x = parseInt(this._host.style.left, 10);
+		_preferences$27.save();
 	};
 	/**
 	* Request to toggle open/close reputation
@@ -235057,7 +234495,7 @@ function selectMaterial(material, item) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$14(event) {
+function onItemOver$12(event) {
 	const root = _root$11();
 	const idx = parseInt(this.getAttribute("data-index"), 10);
 	const it = DB.getItemInfo(idx);
@@ -235086,7 +234524,7 @@ function onItemOver$14(event) {
 /**
 * Hide the item name
 */
-function onItemOut$15() {
+function onItemOut$13() {
 	const overlay = _root$11().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
@@ -235438,7 +234876,7 @@ function onCancelContRefine() {
 /**
 * Get item info (open description window)
 */
-function onItemInfo$18(event) {
+function onItemInfo$16(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 	const ITID = parseInt(this.getAttribute("data-index"), 10);
@@ -235464,13 +234902,13 @@ function onItemInfo$18(event) {
 /**
 * Start dragging an item
 */
-function onItemDragStart$10(event) {
+function onItemDragStart$8(event) {
 	event.dataTransfer.setData("text", event.target.id);
 }
 /**
 * End of dragging an item
 */
-function onItemDragEnd$11(event) {
+function onItemDragEnd$9(event) {
 	if (refine_ongoing) return;
 	const rect = Refine._host.getBoundingClientRect();
 	const mouseX = event.clientX;
@@ -235685,40 +235123,40 @@ var init_Refine = __esmMin((() => {
 				event.stopImmediatePropagation();
 			});
 			itemToRefine.addEventListener("dragstart", (event) => {
-				if (event.target.closest(".item")) onItemDragStart$10(event);
+				if (event.target.closest(".item")) onItemDragStart$8(event);
 			});
 			itemToRefine.addEventListener("dragend", (event) => {
-				if (event.target.closest(".item")) onItemDragEnd$11(event);
+				if (event.target.closest(".item")) onItemDragEnd$9(event);
 			});
 			itemToRefine.addEventListener("dblclick", (event) => {
 				if (event.target.closest(".item") && refine_ongoing === 0) onRemoveItem$1(true);
 			});
 			itemToRefine.addEventListener("contextmenu", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemInfo$18.call(item, event);
+				if (item) onItemInfo$16.call(item, event);
 			});
 		}
 		const materials = root.querySelector(".materials");
 		if (materials) {
 			materials.addEventListener("mouseover", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemOver$14.call(item, event);
+				if (item) onItemOver$12.call(item, event);
 			});
 			materials.addEventListener("mouseout", () => {
-				onItemOut$15();
+				onItemOut$13();
 			});
 			materials.addEventListener("contextmenu", (event) => {
 				const item = event.target.closest(".item");
-				if (item) onItemInfo$18.call(item, event);
+				if (item) onItemInfo$16.call(item, event);
 			});
 		}
 		const refineCont = root.querySelector(".refine_cont");
 		if (refineCont) {
 			refineCont.addEventListener("mouseover", (event) => {
-				onItemOver$14.call(refineCont, event);
+				onItemOver$12.call(refineCont, event);
 			});
 			refineCont.addEventListener("mouseout", () => {
-				onItemOut$15();
+				onItemOut$13();
 			});
 		}
 		const refineEnabled = root.querySelector(".refine_enabled");
@@ -236280,7 +235718,7 @@ function setMessages(...scenarioKeys) {
 /**
 * Get item info (open description window)
 */
-function onItemInfo$17(event) {
+function onItemInfo$15(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 	const ITID = parseInt(this.getAttribute("data-index"), 10);
@@ -236307,13 +235745,13 @@ function onItemInfo$17(event) {
 /**
 * Start dragging an item
 */
-function onItemDragStart$9(event) {
+function onItemDragStart$7(event) {
 	event.dataTransfer.setData("text", event.target.id);
 }
 /**
 * End of dragging an item
 */
-function onItemDragEnd$10(event) {
+function onItemDragEnd$8(event) {
 	const rect = EnchantGrade._host.getBoundingClientRect();
 	const mouseX = event.clientX;
 	const mouseY = event.clientY;
@@ -236467,14 +235905,14 @@ var init_EnchantGrade = __esmMin((() => {
 		const enchantContainer = root.querySelector(".enchant_container");
 		if (enchantContainer) {
 			enchantContainer.addEventListener("dragstart", (e) => {
-				if (e.target.closest(".item")) onItemDragStart$9(e);
+				if (e.target.closest(".item")) onItemDragStart$7(e);
 			});
 			enchantContainer.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$10(e);
+				if (e.target.closest(".item")) onItemDragEnd$8(e);
 			});
 			enchantContainer.addEventListener("contextmenu", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$17.call(item, e);
+				if (item) onItemInfo$15.call(item, e);
 			});
 			enchantContainer.addEventListener("dblclick", (e) => {
 				if (e.target.closest(".item")) onRemoveItem();
@@ -236483,13 +235921,13 @@ var init_EnchantGrade = __esmMin((() => {
 		root.querySelectorAll(".material_slot").forEach((slot) => {
 			slot.addEventListener("contextmenu", (e) => {
 				const item = e.target.closest(".item");
-				if (item) onItemInfo$17.call(item, e);
+				if (item) onItemInfo$15.call(item, e);
 			});
 		});
 		const bedContainer = root.querySelector(".BED_container");
 		if (bedContainer) bedContainer.addEventListener("contextmenu", (e) => {
 			const item = e.target.closest(".item");
-			if (item) onItemInfo$17.call(item, e);
+			if (item) onItemInfo$15.call(item, e);
 		});
 		Client.loadFile(DB.INTERFACE_PATH + "grade_enchant/btn_material.bmp", (d) => {
 			materialNormal = d;
@@ -238463,7 +237901,7 @@ function onClickValidateName(e) {
 *
 * @param {event}
 */
-function onDrop$12(event) {
+function onDrop$10(event) {
 	let item, data;
 	event.stopImmediatePropagation();
 	event.preventDefault();
@@ -238505,7 +237943,7 @@ function stopPropagation$8(event) {
 /**
 * Show item name when mouse is over
 */
-function onItemOver$13(event) {
+function onItemOver$11(event) {
 	const el = event.currentTarget;
 	const idx = parseInt(el.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(idx);
@@ -238526,14 +237964,14 @@ function onItemOver$13(event) {
 /**
 * Hide the item name
 */
-function onItemOut$14() {
+function onItemOut$12() {
 	const overlay = _root$8().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
 /**
 * Start dragging an item
 */
-function onItemDragStart$8(event) {
+function onItemDragStart$6(event) {
 	const el = event.currentTarget;
 	const index = parseInt(el.getAttribute("data-index"), 10);
 	const item = WriteRodex.getItemByIndex(index);
@@ -238548,19 +237986,19 @@ function onItemDragStart$8(event) {
 		from: "WriteRodex",
 		data: item
 	}));
-	onItemOut$14();
+	onItemOut$12();
 }
 /**
 * Stop dragging an item
 *
 */
-function onItemDragEnd$9() {
+function onItemDragEnd$7() {
 	delete window._OBJ_DRAG_;
 }
 /**
 * Get item info (open description window)
 */
-function onItemInfo$16(event) {
+function onItemInfo$14(event) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 	const el = event.currentTarget;
@@ -238639,7 +238077,7 @@ var init_WriteRodex = __esmMin((() => {
 		valueInput.max = SessionStorage_default.zeny;
 		root.querySelector(".item-list").innerHTML = "";
 		const itemsEl = root.querySelector(".items");
-		itemsEl.addEventListener("drop", onDrop$12);
+		itemsEl.addEventListener("drop", onDrop$10);
 		itemsEl.addEventListener("dragover", stopPropagation$8);
 		this._host.style.display = "";
 		this.focus();
@@ -238686,11 +238124,11 @@ var init_WriteRodex = __esmMin((() => {
 		});
 		const itemDiv = root.querySelector(`.item[data-index="${item.index}"]`);
 		if (itemDiv) {
-			itemDiv.addEventListener("mouseover", onItemOver$13);
-			itemDiv.addEventListener("mouseout", onItemOut$14);
-			itemDiv.addEventListener("dragstart", onItemDragStart$8);
-			itemDiv.addEventListener("dragend", onItemDragEnd$9);
-			itemDiv.addEventListener("contextmenu", onItemInfo$16);
+			itemDiv.addEventListener("mouseover", onItemOver$11);
+			itemDiv.addEventListener("mouseout", onItemOut$12);
+			itemDiv.addEventListener("dragstart", onItemDragStart$6);
+			itemDiv.addEventListener("dragend", onItemDragEnd$7);
+			itemDiv.addEventListener("contextmenu", onItemInfo$14);
 		}
 		WriteRodex.updateWeight(item.weight);
 		WriteRodex.updateTax();
@@ -240034,160 +239472,12 @@ var init_Inventory = __esmMin((() => {
 	};
 }));
 //#endregion
-//#region src/UI/Components/Storage/StorageV0/Storage.js
-function onResize$8() {
-	const top = Storage$1._host.offsetTop;
-	let lastHeight = 0;
-	function resizing() {
-		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
-		h = Math.min(Math.max(h, 8), 17);
-		if (h === lastHeight) return;
-		resizeHeight$3(h);
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function resizeHeight$3(height) {
-	height = Math.min(Math.max(height, 8), 17);
-	const content = Storage$1.getRoot().querySelector(".container .content");
-	if (content) content.style.height = `${height * 32}px`;
-	Storage$1._host.style.height = `${50 + height * 32}px`;
-}
-function onSwitchTab$1(idx) {
-	_preferences$28.tab = idx;
-	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
-		const tabs = Storage$1.getRoot().querySelector(".tabs");
-		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		requestFilter$1();
-	});
-}
-function onDrop$11(event) {
-	let data;
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (e) {}
-	event.stopImmediatePropagation();
-	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
-	const item = data.data;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			if (data.from === "CartItems") Storage$1.reqAddItemFromCart(item.index, parseInt(count, 10));
-			else Storage$1.reqAddItem(item.index, parseInt(count, 10));
-		};
-		return false;
-	}
-	if (data.from === "CartItems") Storage$1.reqAddItemFromCart(item.index, 1);
-	else Storage$1.reqAddItem(item.index, 1);
-	return false;
-}
-function requestFilter$1() {
-	const content = Storage$1.getRoot().querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	for (let i = 0, count = _list$6.length; i < count; ++i) Storage$1.addItemSub(_list$6[i]);
-}
-function getItemIndexById$3(index) {
-	for (let i = 0, count = _list$6.length; i < count; ++i) if (_list$6[i].index === index) return i;
-	return -1;
-}
-function onScroll$7(event, contentEl) {
-	let delta;
-	if (event.wheelDelta) delta = event.wheelDelta / 120;
-	else if (event.detail) delta = -event.detail;
-	else if (event.deltaY) delta = -event.deltaY / 100;
-	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
-	event.preventDefault();
-}
-function onItemOver$12(itemEl, root) {
-	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i < 0) return;
-	const item = _list$6[i];
-	const overlay = root.querySelector(".overlay");
-	if (overlay) {
-		overlay.style.display = "";
-		overlay.style.top = `${itemEl.offsetTop - 10}px`;
-		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
-		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-function onItemOut$13(root) {
-	const overlay = root.querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemDragStart$7(event, itemEl) {
-	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return;
-	const img = new Image();
-	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	url = url.replace(/^"/, "").replace(/"$/, "");
-	img.decoding = "async";
-	img.src = url;
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Storage",
-		data: _list$6[i]
-	}));
-}
-function onItemDragEnd$8() {
-	delete window._OBJ_DRAG_;
-}
-function onItemInfo$15(event, itemEl) {
-	event.stopImmediatePropagation();
-	const i = getItemIndexById$3(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		transferItemToOtherUI$1(_list$6[i]);
-		return false;
-	}
-	if (ItemInfo_default.uid === _list$6[i].ITID) ItemInfo_default.remove();
-	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$6[i].ITID;
-	ItemInfo_default.setItem(_list$6[i]);
-	return false;
-}
-function transferItemToOtherUI$1(item) {
-	const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
-	const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
-	if (!item) return false;
-	const count = item.count || 1;
-	if (isInventoryOpen) Storage$1.reqRemoveItem(item.index, count);
-	else if (isCartOpen) Storage$1.reqMoveItemToCart(item.index, count);
-	return true;
-}
-var Storage$1, _list$6, _preferences$28, Storage_default$3;
-var init_Storage$5 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_InputBox();
-	init_ItemInfo();
-	init_Storage$7();
-	init_Storage$6();
-	init_CartItems();
-	init_Inventory();
-	Storage$1 = new GUIComponent("Storage", Storage_default$4);
-	Storage$1.render = () => Storage_default$5;
-	Storage$1.TAB = {
+//#region src/UI/Components/Storage/StorageCommon.js
+function createStorage(config) {
+	const { name, htmlText, cssText, StorageFilter = null, hasFilters = false, hasSearch = false, hasOrderBy = false, asyncDragImage = false } = config;
+	const Component = new GUIComponent(name, cssText);
+	Component.render = () => htmlText;
+	Component.TAB = {
 		ITEM: 0,
 		KAFRA: 1,
 		ARMOR: 2,
@@ -240196,61 +239486,94 @@ var init_Storage$5 = __esmMin((() => {
 		CARD: 5,
 		ETC: 6
 	};
-	_list$6 = [];
-	_preferences$28 = Preferences.get("Storage", {
+	const _list = [];
+	let _openFilters = {};
+	const _preferences = Preferences.get("Storage", {
 		x: 200,
 		y: 500,
 		height: 8,
-		tab: Storage$1.TAB.ITEM
+		tab: Component.TAB.ITEM
 	}, 1);
-	Storage$1.init = function init() {
+	function getItemTab(item) {
+		switch (item.type) {
+			case ItemType_default.HEALING:
+			case ItemType_default.USABLE:
+			case ItemType_default.DELAYCONSUME: return Component.TAB.ITEM;
+			case ItemType_default.CASH: return Component.TAB.KAFRA;
+			case ItemType_default.ARMOR:
+			case ItemType_default.SHADOWGEAR:
+			case ItemType_default.PETEGG: return Component.TAB.ARMOR;
+			case ItemType_default.WEAPON:
+			case ItemType_default.PETARMOR: return Component.TAB.ARMS;
+			case ItemType_default.AMMO: return Component.TAB.AMMO;
+			case ItemType_default.CARD: return Component.TAB.CARD;
+			default: return Component.TAB.ETC;
+		}
+	}
+	Component.init = function init() {
 		const root = this.getRoot();
 		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
-			btn.addEventListener("mousedown", () => onSwitchTab$1(idx));
+			btn.addEventListener("mousedown", () => onSwitchTab(idx));
 		});
 		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$8());
+		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize());
 		const closeBtn = root.querySelector(".footer .close");
 		if (closeBtn) {
 			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
 			closeBtn.addEventListener("click", () => {
-				if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
+				if (typeof Component.onClosePressed === "function") Component.onClosePressed();
 			});
 		}
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$28.tab + 1}.bmp`, (data) => {
+		if (hasFilters) root.querySelectorAll(".filter-buttons button").forEach((btn) => {
+			btn.addEventListener("mousedown", () => onFilterWindowOpen(btn));
+			btn.addEventListener("mouseover", () => onFilterWindowHover(btn, root));
+			btn.addEventListener("mouseout", () => onFilterWindowHoverOut(root));
+		});
+		if (hasSearch) {
+			const searchBtn = root.querySelector(".search-button");
+			if (searchBtn) {
+				searchBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
+				searchBtn.addEventListener("click", () => Component.onSearch());
+			}
+		}
+		if (hasOrderBy) {
+			const orderBySelect = root.querySelector(".storage-order-by");
+			if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter());
+		}
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences.tab + 1}.bmp`, (data) => {
 			const tabs = root.querySelector(".tabs");
 			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
 		});
-		resizeHeight$3(_preferences$28.height);
+		resizeHeight(_preferences.height);
 		const content = root.querySelector(".container .content");
 		if (content) {
-			content.addEventListener("wheel", (e) => onScroll$7(e, content));
+			content.addEventListener("wheel", (e) => onScroll(e, content));
 			content.addEventListener("mouseover", (e) => {
 				const itemEl = e.target.closest(".item");
-				if (itemEl) onItemOver$12(itemEl, root);
+				if (itemEl) onItemOver(itemEl, root);
 			});
 			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$13(root);
+				if (e.target.closest(".item")) onItemOut(root);
 			});
 			content.addEventListener("dragstart", (e) => {
 				const itemEl = e.target.closest(".item");
 				if (itemEl) {
-					onItemDragStart$7(e, itemEl);
-					onItemOut$13(root);
+					onItemDragStart(e, itemEl);
+					onItemOut(root);
 				}
 			});
 			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$8();
+				if (e.target.closest(".item")) onItemDragEnd();
 			});
 			content.addEventListener("contextmenu", (e) => {
 				const itemEl = e.target.closest(".item");
 				if (itemEl) {
 					e.preventDefault();
-					onItemInfo$15(e, itemEl);
+					onItemInfo(e, itemEl);
 				}
 			});
 		}
-		this._host.addEventListener("drop", (e) => onDrop$11(e));
+		this._host.addEventListener("drop", (e) => onDrop(e));
 		this._host.addEventListener("dragover", (e) => {
 			e.stopImmediatePropagation();
 			e.preventDefault();
@@ -240258,65 +239581,48 @@ var init_Storage$5 = __esmMin((() => {
 		this.draggable(".titlebar");
 		this.ui.hide();
 	};
-	Storage$1.onAppend = function onAppend() {
+	Component.onAppend = function onAppend() {
 		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$28.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$28.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
+		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
+		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
 	};
-	Storage$1.onRemove = function onRemove() {
-		const content = this.getRoot().querySelector(".container .content");
+	Component.onRemove = function onRemove() {
+		const root = this.getRoot();
+		const content = root.querySelector(".container .content");
 		if (content) content.innerHTML = "";
-		_list$6.length = 0;
-		_preferences$28.y = parseInt(this._host.style.top, 10);
-		_preferences$28.x = parseInt(this._host.style.left, 10);
-		_preferences$28.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$28.save();
+		_list.length = 0;
+		_preferences.y = parseInt(this._host.style.top, 10);
+		_preferences.x = parseInt(this._host.style.left, 10);
+		_preferences.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
+		_preferences.save();
+		if (hasFilters) {
+			for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
+			_openFilters = {};
+		}
+		if (hasSearch) {
+			const searchInput = root.querySelector("#storage-search-input");
+			if (searchInput) searchInput.value = "";
+		}
 	};
-	Storage$1.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$6.push(items[i]);
+	Component.setItems = function setItems(items) {
+		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list.push(items[i]);
 	};
-	Storage$1.addItem = function addItem(item) {
-		const i = getItemIndexById$3(item.index);
+	Component.addItem = function addItem(item) {
+		const i = getItemIndexById(item.index);
+		if (hasFilters) {
+			const itemTab = getItemTab(item);
+			if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
+		}
 		if (i > -1) {
-			_list$6[i].count += item.count;
+			_list[i].count += item.count;
 			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$6[i].count;
+			if (countEl) countEl.textContent = _list[i].count;
 			return;
 		}
-		if (this.addItemSub(item)) _list$6.push(item);
+		if (this.addItemSub(item)) _list.push(item);
 	};
-	Storage$1.addItemSub = function addItemSub(item) {
-		let tab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				tab = Storage$1.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				tab = Storage$1.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				tab = Storage$1.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				tab = Storage$1.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				tab = Storage$1.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				tab = Storage$1.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				tab = Storage$1.TAB.ETC;
-				break;
-		}
-		if (tab === _preferences$28.tab) {
+	Component.addItemSub = function addItemSub(item) {
+		if (getItemTab(item) === _preferences.tab) {
 			const it = DB.getItemInfo(item.ITID);
 			const root = this.getRoot();
 			const content = root.querySelector(".container .content");
@@ -240349,43 +239655,303 @@ var init_Storage$5 = __esmMin((() => {
 		}
 		return true;
 	};
-	Storage$1.removeItem = function removeItem(index, count) {
-		const i = getItemIndexById$3(index);
+	Component.removeItem = function removeItem(index, count) {
+		const i = getItemIndexById(index);
 		if (i < 0) return null;
+		if (hasFilters) {
+			for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].removeItem(index, count);
+		}
 		const root = this.getRoot();
-		if (_list$6[i].count) {
-			_list$6[i].count -= count;
-			if (_list$6[i].count > 0) {
+		if (_list[i].count) {
+			_list[i].count -= count;
+			if (_list[i].count > 0) {
 				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$6[i].count;
-				return _list$6[i];
+				if (countEl) countEl.textContent = _list[i].count;
+				return _list[i];
 			}
 		}
-		const item = _list$6[i];
-		_list$6.splice(i, 1);
+		const item = _list[i];
+		_list.splice(i, 1);
 		const el = root.querySelector(`.item[data-index="${index}"]`);
 		if (el) el.remove();
+		if (hasFilters) {
+			const overlay = root.querySelector(".overlay");
+			if (overlay) overlay.style.display = "none";
+		}
 		return item;
 	};
-	Storage$1.setItemInfo = function setItemInfo(current, limit) {
+	Component.setItemInfo = function setItemInfo(current, limit) {
 		const root = this.getRoot();
 		const currentEl = root.querySelector(".footer .current");
 		const limitEl = root.querySelector(".footer .limit");
 		if (currentEl) currentEl.textContent = current;
 		if (limitEl) limitEl.textContent = limit;
 	};
-	Storage$1.onKeyDown = function onKeyDown(event) {
-		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this._host.style.display !== "none") {
-			if (typeof Storage$1.onClosePressed === "function") Storage$1.onClosePressed();
+	Component.onKeyDown = function onKeyDown(event) {
+		if (this._host.style.display === "none") return;
+		if (event.which === KEYS.ESCAPE || event.key === "Escape") {
+			if (typeof Component.onClosePressed === "function") Component.onClosePressed();
+		}
+		if (hasSearch && (event.which === KEYS.ENTER || event.key === "Enter")) {
+			if (typeof Component.onEnterPressed === "function") Component.onEnterPressed();
 		}
 	};
-	Storage$1.onClosePressed = function onClosedPressed() {};
-	Storage$1.reqAddItem = function reqAddItem() {};
-	Storage$1.reqAddItemFromCart = function reqAddItemFromCart() {};
-	Storage$1.reqRemoveItem = function reqRemoveItem() {};
-	Storage$1.reqMoveItemToCart = function reqMoveItemToCart() {};
-	Storage$1.mouseMode = GUIComponent.MouseMode.STOP;
-	Storage_default$3 = UIManager.addComponent(Storage$1);
+	if (hasSearch) Component.onSearch = function onSearch() {
+		const searchInput = this.getRoot().querySelector("#storage-search-input");
+		if (!searchInput) return;
+		const searchTerm = searchInput.value.toLowerCase();
+		const filteredItems = _list.filter((item) => {
+			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
+		});
+		if (!_openFilters[ItemType_default.SEARCH]) {
+			const newFilter = new StorageFilter(ItemType_default.SEARCH);
+			_openFilters[ItemType_default.SEARCH] = newFilter;
+			newFilter.onCloseCallback = function() {
+				if (_openFilters[ItemType_default.SEARCH]) delete _openFilters[ItemType_default.SEARCH];
+			};
+			newFilter.onTransferItemToOtherUI = function(item) {
+				Component.transferItemToOtherUI(item);
+			};
+			newFilter.append();
+			newFilter.setItems("Search", filteredItems, ItemType_default.SEARCH);
+		} else _openFilters[ItemType_default.SEARCH].setItems("Search", filteredItems, ItemType_default.SEARCH);
+	};
+	function onResize() {
+		const top = Component._host.offsetTop;
+		let lastHeight = 0;
+		function resizing() {
+			let h = Math.floor((Mouse.screen.y - top - 20) / 32);
+			h = Math.min(Math.max(h, 8), 17);
+			if (h === lastHeight) return;
+			resizeHeight(h);
+			lastHeight = h;
+		}
+		const _Interval = setInterval(resizing, 30);
+		const onMouseUp = (event) => {
+			if (event.which === 1) {
+				clearInterval(_Interval);
+				window.removeEventListener("mouseup", onMouseUp);
+			}
+		};
+		window.addEventListener("mouseup", onMouseUp);
+	}
+	function resizeHeight(height) {
+		height = Math.min(Math.max(height, 8), 17);
+		const content = Component.getRoot().querySelector(".container .content");
+		if (content) content.style.height = `${height * 32}px`;
+		Component._host.style.height = `${50 + height * 32}px`;
+	}
+	function onSwitchTab(idx) {
+		_preferences.tab = idx;
+		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
+			const tabs = Component.getRoot().querySelector(".tabs");
+			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
+			requestFilter();
+		});
+	}
+	function onDrop(event) {
+		let data;
+		try {
+			data = JSON.parse(event.dataTransfer.getData("Text"));
+		} catch (_e) {}
+		event.stopImmediatePropagation();
+		if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
+		const item = data.data;
+		if (item.count > 1) {
+			InputBox_default.append();
+			InputBox_default.setType("number", false, item.count);
+			InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
+				InputBox_default.remove();
+				if (data.from === "CartItems") Component.reqAddItemFromCart(item.index, parseInt(count, 10));
+				else Component.reqAddItem(item.index, parseInt(count, 10));
+			};
+			return false;
+		}
+		if (data.from === "CartItems") Component.reqAddItemFromCart(item.index, 1);
+		else Component.reqAddItem(item.index, 1);
+		return false;
+	}
+	function requestFilter() {
+		const root = Component.getRoot();
+		const content = root.querySelector(".container .content");
+		if (content) content.innerHTML = "";
+		let list = _list;
+		if (hasOrderBy) {
+			const orderBySelect = root.querySelector(".storage-order-by");
+			const orderBy = orderBySelect ? orderBySelect.value : "BASE";
+			if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
+				list = _list.slice(0);
+				list.sort((a, b) => {
+					const nameA = DB.getItemName(a);
+					const nameB = DB.getItemName(b);
+					return orderBy === "UPGRADE" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+				});
+			}
+		}
+		for (let i = 0, count = list.length; i < count; ++i) Component.addItemSub(list[i]);
+	}
+	function getItemIndexById(index) {
+		for (let i = 0, count = _list.length; i < count; ++i) if (_list[i].index === index) return i;
+		return -1;
+	}
+	function onScroll(event, contentEl) {
+		let delta;
+		if (event.wheelDelta) delta = event.wheelDelta / 120;
+		else if (event.detail) delta = -event.detail;
+		else if (event.deltaY) delta = -event.deltaY / 100;
+		contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
+		event.preventDefault();
+	}
+	function onFilterWindowOpen(button) {
+		const tabId = parseInt(button.getAttribute("data-tab-id"), 10);
+		const title = button.getAttribute("data-title") || "Items";
+		button.classList.toggle("active");
+		if (_openFilters[tabId]) {
+			_openFilters[tabId].remove();
+			delete _openFilters[tabId];
+			return;
+		}
+		const filtered_list = [];
+		for (let i = 0, count = _list.length; i < count; ++i) {
+			const item = _list[i];
+			if (getItemTab(item) === tabId) filtered_list.push(item);
+		}
+		const newFilter = new StorageFilter(tabId);
+		_openFilters[tabId] = newFilter;
+		newFilter.onCloseCallback = function() {
+			button.classList.remove("active");
+			if (_openFilters[tabId]) delete _openFilters[tabId];
+		};
+		newFilter.onTransferItemToOtherUI = function(item) {
+			Component.transferItemToOtherUI(item);
+		};
+		newFilter.append();
+		newFilter.setItems(title, filtered_list, tabId);
+	}
+	function onFilterWindowHover(button, root) {
+		const title = button.getAttribute("data-title");
+		const overlay = root.querySelector(".overlay");
+		if (overlay) {
+			overlay.textContent = title;
+			const height = Component._host.getBoundingClientRect().height;
+			overlay.style.top = `${height - 50}px`;
+			overlay.style.left = `${button.offsetLeft}px`;
+			overlay.style.display = "";
+		}
+	}
+	function onFilterWindowHoverOut(root) {
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	}
+	function onItemOver(itemEl, root) {
+		const i = getItemIndexById(parseInt(itemEl.getAttribute("data-index"), 10));
+		if (i < 0) return;
+		const item = _list[i];
+		const overlay = root.querySelector(".overlay");
+		if (overlay) {
+			overlay.style.display = "";
+			overlay.style.top = `${itemEl.offsetTop - 10}px`;
+			overlay.style.left = `${itemEl.offsetLeft + 35}px`;
+			overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
+			if (item.IsIdentified) overlay.classList.remove("grey");
+			else overlay.classList.add("grey");
+		}
+	}
+	function onItemOut(root) {
+		const overlay = root.querySelector(".overlay");
+		if (overlay) overlay.style.display = "none";
+	}
+	function onItemDragStart(event, itemEl) {
+		const i = getItemIndexById(parseInt(itemEl.getAttribute("data-index"), 10));
+		if (i === -1) return;
+		const img = new Image();
+		let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
+		url = url.replace(/^"/, "").replace(/"$/, "");
+		if (asyncDragImage) img.decoding = "async";
+		img.src = url;
+		event.dataTransfer.setDragImage(img, 12, 12);
+		event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
+			type: "item",
+			from: "Storage",
+			data: _list[i]
+		}));
+	}
+	function onItemDragEnd() {
+		delete window._OBJ_DRAG_;
+	}
+	function onItemInfo(event, itemEl) {
+		event.stopImmediatePropagation();
+		const i = getItemIndexById(parseInt(itemEl.getAttribute("data-index"), 10));
+		if (i === -1) return false;
+		if (event.altKey && event.which === 3) {
+			event.stopImmediatePropagation();
+			Component.transferItemToOtherUI(_list[i]);
+			return false;
+		}
+		if (ItemInfo_default.uid === _list[i].ITID) ItemInfo_default.remove();
+		ItemInfo_default.append();
+		ItemInfo_default.uid = _list[i].ITID;
+		ItemInfo_default.setItem(_list[i]);
+		return false;
+	}
+	Component.transferItemToOtherUI = function transferItemToOtherUI(item) {
+		const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
+		const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
+		if (!item) return false;
+		const count = item.count || 1;
+		if (isInventoryOpen) Component.reqRemoveItem(item.index, count);
+		else if (isCartOpen) Component.reqMoveItemToCart(item.index, count);
+		return true;
+	};
+	Component.onClosePressed = function onClosedPressed() {};
+	Component.reqAddItem = function reqAddItem() {};
+	Component.reqAddItemFromCart = function reqAddItemFromCart() {};
+	Component.reqRemoveItem = function reqRemoveItem() {};
+	Component.reqMoveItemToCart = function reqMoveItemToCart() {};
+	Component.mouseMode = GUIComponent.MouseMode.STOP;
+	return UIManager.addComponent(Component);
+}
+var init_StorageCommon = __esmMin((() => {
+	init_DBManager();
+	init_ItemType();
+	init_Client();
+	init_Preferences$1();
+	init_Renderer();
+	init_MouseEventHandler();
+	init_KeyEventHandler();
+	init_UIManager();
+	init_GUIComponent();
+	init_Elements();
+	init_InputBox();
+	init_ItemInfo();
+	init_CartItems();
+	init_Inventory();
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV0/Storage.html?raw
+var Storage_default$5;
+var init_Storage$7 = __esmMin((() => {
+	Storage_default$5 = "<div id=\"Storage\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<span class=\"text\"><ui-text msg=\"169\">Storage</ui-text></span>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n	<div class=\"overlay\"></div>\r\n	<div class=\"panel\">\r\n		<table>\r\n			<tr>\r\n				<td\r\n					class=\"tabs\"\r\n					rowspan=\"2\"\r\n					data-background=\"basic_interface/tab_itm_ex_01.bmp\"\r\n					data-preload=\"basic_interface/tab_itm_ex_02.bmp;basic_interface/tab_itm_ex_03.bmp;basic_interface/tab_itm_ex_04.bmp;basic_interface/tab_itm_ex_05.bmp;basic_interface/tab_itm_ex_06.bmp;basic_interface/tab_itm_ex_07.bmp\"\r\n				>\r\n					<button class=\"item\"></button>\r\n					<button class=\"kafra\"></button>\r\n					<button class=\"armor\"></button>\r\n					<button class=\"arms\"></button>\r\n					<button class=\"ammo\"></button>\r\n					<button class=\"card\"></button>\r\n					<button class=\"etc\"></button>\r\n				</td>\r\n				<td class=\"container\">\r\n					<div class=\"content\" data-background=\"basic_interface/itemwin_mid.bmp\"></div>\r\n				</td>\r\n			</tr>\r\n			<tr>\r\n				<td class=\"footer\" data-background=\"basic_interface/btnbar_mid2.bmp\">\r\n					<span class=\"current\">0</span>/<span class=\"limit\">0</span>\r\n					<ui-button\r\n						class=\"close\"\r\n						bg=\"btn_close.bmp\"\r\n						hover=\"btn_close_a.bmp\"\r\n						down=\"btn_close_b.bmp\"\r\n					></ui-button>\r\n					<button class=\"extend\" data-background=\"btn_resize.bmp\"></button>\r\n				</td>\r\n			</tr>\r\n		</table>\r\n	</div>\r\n</div>\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV0/Storage.css?raw
+var Storage_default$4;
+var init_Storage$6 = __esmMin((() => {
+	Storage_default$4 = ":host {\r\n	width: 280px;\r\n	height: 306px;\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n#Storage {\r\n	position: absolute;\r\n	width: 280px;\r\n}\r\n#Storage table {\r\n	border-spacing: 0px;\r\n	display: inline-block;\r\n	width: 100%;\r\n}\r\n\r\n#Storage .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n#Storage .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	margin-left: 15px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n#Storage .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n#Storage .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n#Storage .tabs {\r\n	border-left: 1px solid #ccc;\r\n	width: 50px;\r\n	background-repeat: no-repeat;\r\n	background-color: white;\r\n	vertical-align: top;\r\n	background-position: -1px 0px;\r\n}\r\n#Storage .tabs button {\r\n	width: 20px;\r\n	height: 30px;\r\n	border: none;\r\n	background-color: transparent;\r\n	display: block;\r\n}\r\n#Storage .tabs .item {\r\n	height: 25px;\r\n}\r\n\r\n#Storage .container {\r\n	padding-left: 16px;\r\n	border-right: 1px solid #ccc;\r\n	background: white;\r\n}\r\n#Storage .content {\r\n	overflow-y: scroll;\r\n	overflow-x: hidden;\r\n	width: 100%;\r\n	height: 100%;\r\n	min-height: 240px;\r\n	background-color: transparent;\r\n	background-repeat: repeat-y;\r\n	background-attachment: local;\r\n}\r\n\r\n#Storage .content .item {\r\n	display: block;\r\n	width: 24px;\r\n	height: 28px;\r\n	margin: 4px 0px 0px 4px;\r\n	position: relative;\r\n}\r\n#Storage .content .item .icon {\r\n	width: 24px;\r\n	height: 24px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n#Storage .overlay {\r\n	position: absolute;\r\n	display: none;\r\n	white-space: nowrap;\r\n	z-index: 900;\r\n	height: 13px;\r\n	padding: 5px;\r\n	background: rgba(0, 0, 0, 0.7);\r\n	color: white;\r\n	text-shadow: 1px 1px black;\r\n}\r\n#Storage .overlay.grey {\r\n	color: #aaa;\r\n}\r\n#Storage .content .item .amount {\r\n	position: relative;\r\n	bottom: 9px;\r\n	right: 0px;\r\n	text-align: right;\r\n	text-shadow: -1px -1px white;\r\n}\r\n#Storage .content .name {\r\n	position: absolute;\r\n	top: 7px;\r\n	left: 30px;\r\n	width: 190px;\r\n}\r\n\r\n#Storage .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n	border-right: 1px solid #ccc;\r\n}\r\n#Storage .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n#Storage .footer .close {\r\n	position: absolute;\r\n	border: none;\r\n	width: 42px;\r\n	height: 20px;\r\n	bottom: 4px;\r\n	right: 15px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n";
+}));
+//#endregion
+//#region src/UI/Components/Storage/StorageV0/Storage.js
+var Storage_default$3;
+var init_Storage$5 = __esmMin((() => {
+	init_StorageCommon();
+	init_Storage$7();
+	init_Storage$6();
+	Storage_default$3 = createStorage({
+		name: "Storage",
+		htmlText: Storage_default$5,
+		cssText: Storage_default$4,
+		asyncDragImage: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/StorageFilter.html?raw
@@ -240662,517 +240228,21 @@ var init_Storage$3 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/Storage/StorageV3/Storage.js
-function onResize$7() {
-	const top = Storage._host.offsetTop;
-	let lastHeight = 0;
-	function resizing() {
-		let h = Math.floor((Mouse.screen.y - top - 20) / 32);
-		h = Math.min(Math.max(h, 8), 17);
-		if (h === lastHeight) return;
-		resizeHeight$2(h);
-		lastHeight = h;
-	}
-	const _Interval = setInterval(resizing, 30);
-	const onMouseUp = (event) => {
-		if (event.which === 1) {
-			clearInterval(_Interval);
-			window.removeEventListener("mouseup", onMouseUp);
-		}
-	};
-	window.addEventListener("mouseup", onMouseUp);
-}
-function resizeHeight$2(height) {
-	height = Math.min(Math.max(height, 8), 17);
-	const content = Storage.getRoot().querySelector(".container .content");
-	if (content) content.style.height = `${height * 32}px`;
-	Storage._host.style.height = `${50 + height * 32}px`;
-}
-function onSwitchTab(idx) {
-	_preferences$27.tab = idx;
-	Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${idx + 1}.bmp`, (data) => {
-		const tabs = Storage.getRoot().querySelector(".tabs");
-		if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		requestFilter();
-	});
-}
-function onDrop$10(event) {
-	let data;
-	try {
-		data = JSON.parse(event.dataTransfer.getData("Text"));
-	} catch (e) {}
-	event.stopImmediatePropagation();
-	if (!data || data.type !== "item" || data.from !== "Inventory" && data.from !== "CartItems") return false;
-	const item = data.data;
-	if (item.count > 1) {
-		InputBox_default.append();
-		InputBox_default.setType("number", false, item.count);
-		InputBox_default.onSubmitRequest = function OnSubmitRequest(count) {
-			InputBox_default.remove();
-			if (data.from === "CartItems") Storage.reqAddItemFromCart(item.index, parseInt(count, 10));
-			else Storage.reqAddItem(item.index, parseInt(count, 10));
-		};
-		return false;
-	}
-	if (data.from === "CartItems") Storage.reqAddItemFromCart(item.index, 1);
-	else Storage.reqAddItem(item.index, 1);
-	return false;
-}
-function requestFilter() {
-	const root = Storage.getRoot();
-	const content = root.querySelector(".container .content");
-	if (content) content.innerHTML = "";
-	let list = _list$5;
-	const orderBySelect = root.querySelector(".storage-order-by");
-	const orderBy = orderBySelect ? orderBySelect.value : "BASE";
-	if (orderBy === "UPGRADE" || orderBy === "DOWNGRADE") {
-		list = _list$5.slice(0);
-		list.sort((a, b) => {
-			const nameA = DB.getItemName(a);
-			const nameB = DB.getItemName(b);
-			return orderBy === "UPGRADE" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
-		});
-	}
-	for (let i = 0, count = list.length; i < count; ++i) Storage.addItemSub(list[i]);
-}
-function getItemIndexById$2(index) {
-	for (let i = 0, count = _list$5.length; i < count; ++i) if (_list$5[i].index === index) return i;
-	return -1;
-}
-function onScroll$6(event, contentEl) {
-	let delta;
-	if (event.wheelDelta) delta = event.wheelDelta / 120;
-	else if (event.detail) delta = -event.detail;
-	else if (event.deltaY) delta = -event.deltaY / 100;
-	contentEl.scrollTop = Math.floor(contentEl.scrollTop / 32) * 32 - delta * 32;
-	event.preventDefault();
-}
-function onFilterWindowOpen(button) {
-	const tabId = parseInt(button.getAttribute("data-tab-id"), 10);
-	const title = button.getAttribute("data-title") || "Items";
-	button.classList.toggle("active");
-	if (_openFilters[tabId]) {
-		_openFilters[tabId].remove();
-		delete _openFilters[tabId];
-		return;
-	}
-	const filtered_list = [];
-	for (let i = 0, count = _list$5.length; i < count; ++i) {
-		const item = _list$5[i];
-		let tab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				tab = Storage.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				tab = Storage.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				tab = Storage.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				tab = Storage.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				tab = Storage.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				tab = Storage.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				tab = Storage.TAB.ETC;
-				break;
-		}
-		if (tab === tabId) filtered_list.push(item);
-	}
-	const newFilter = new StorageFilter(tabId);
-	_openFilters[tabId] = newFilter;
-	newFilter.onCloseCallback = function() {
-		button.classList.remove("active");
-		if (_openFilters[tabId]) delete _openFilters[tabId];
-	};
-	newFilter.onTransferItemToOtherUI = function(item) {
-		Storage.transferItemToOtherUI(item);
-	};
-	newFilter.append();
-	newFilter.setItems(title, filtered_list, tabId);
-}
-function onFilterWindowHover(button, root) {
-	const title = button.getAttribute("data-title");
-	const overlay = root.querySelector(".overlay");
-	if (overlay) {
-		overlay.textContent = title;
-		const height = Storage._host.getBoundingClientRect().height;
-		overlay.style.top = `${height - 50}px`;
-		overlay.style.left = `${button.offsetLeft}px`;
-		overlay.style.display = "";
-	}
-}
-function onFilterWindowHoverOut(root) {
-	const overlay = root.querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemOver$11(itemEl, root) {
-	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i < 0) return;
-	const item = _list$5[i];
-	const overlay = root.querySelector(".overlay");
-	if (overlay) {
-		overlay.style.display = "";
-		overlay.style.top = `${itemEl.offsetTop - 10}px`;
-		overlay.style.left = `${itemEl.offsetLeft + 35}px`;
-		overlay.innerHTML = `${DB.getItemName(item)} ${item.count || 1} ea`;
-		if (item.IsIdentified) overlay.classList.remove("grey");
-		else overlay.classList.add("grey");
-	}
-}
-function onItemOut$12(root) {
-	const overlay = root.querySelector(".overlay");
-	if (overlay) overlay.style.display = "none";
-}
-function onItemDragStart$6(event, itemEl) {
-	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return;
-	const img = new Image();
-	let url = itemEl.firstChild.style.backgroundImage.match(/\(([^)]+)/)[1];
-	url = url.replace(/^"/, "").replace(/"$/, "");
-	img.src = url;
-	event.dataTransfer.setDragImage(img, 12, 12);
-	event.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-		type: "item",
-		from: "Storage",
-		data: _list$5[i]
-	}));
-}
-function onItemDragEnd$7() {
-	delete window._OBJ_DRAG_;
-}
-function onItemInfo$14(event, itemEl) {
-	event.stopImmediatePropagation();
-	const i = getItemIndexById$2(parseInt(itemEl.getAttribute("data-index"), 10));
-	if (i === -1) return false;
-	if (event.altKey && event.which === 3) {
-		event.stopImmediatePropagation();
-		Storage.transferItemToOtherUI(_list$5[i]);
-		return false;
-	}
-	if (ItemInfo_default.uid === _list$5[i].ITID) ItemInfo_default.remove();
-	ItemInfo_default.append();
-	ItemInfo_default.uid = _list$5[i].ITID;
-	ItemInfo_default.setItem(_list$5[i]);
-	return false;
-}
-var Storage, _list$5, _openFilters, _preferences$27, Storage_default;
+var Storage_default;
 var init_Storage$2 = __esmMin((() => {
-	init_DBManager();
-	init_ItemType();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
-	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_InputBox();
-	init_ItemInfo();
+	init_StorageCommon();
 	init_StorageFilter();
 	init_Storage$4();
 	init_Storage$3();
-	init_CartItems();
-	init_Inventory();
-	Storage = new GUIComponent("Storage", Storage_default$1);
-	Storage.render = () => Storage_default$2;
-	Storage.TAB = {
-		ITEM: 0,
-		KAFRA: 1,
-		ARMOR: 2,
-		ARMS: 3,
-		AMMO: 4,
-		CARD: 5,
-		ETC: 6
-	};
-	_list$5 = [];
-	_openFilters = {};
-	_preferences$27 = Preferences.get("Storage", {
-		x: 200,
-		y: 500,
-		height: 8,
-		tab: Storage.TAB.ITEM
-	}, 1);
-	Storage.init = function init() {
-		const root = this.getRoot();
-		root.querySelectorAll(".tabs button").forEach((btn, idx) => {
-			btn.addEventListener("mousedown", () => onSwitchTab(idx));
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", () => onResize$7());
-		const closeBtn = root.querySelector(".footer .close");
-		if (closeBtn) {
-			closeBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			closeBtn.addEventListener("click", () => {
-				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
-			});
-		}
-		root.querySelectorAll(".filter-buttons button").forEach((btn) => {
-			btn.addEventListener("mousedown", () => onFilterWindowOpen(btn));
-			btn.addEventListener("mouseover", () => onFilterWindowHover(btn, root));
-			btn.addEventListener("mouseout", () => onFilterWindowHoverOut(root));
-		});
-		const searchBtn = root.querySelector(".search-button");
-		if (searchBtn) {
-			searchBtn.addEventListener("mousedown", (e) => e.stopImmediatePropagation());
-			searchBtn.addEventListener("click", () => Storage.onSearch());
-		}
-		const orderBySelect = root.querySelector(".storage-order-by");
-		if (orderBySelect) orderBySelect.addEventListener("change", () => requestFilter());
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/tab_itm_ex_0${_preferences$27.tab + 1}.bmp`, (data) => {
-			const tabs = root.querySelector(".tabs");
-			if (tabs) tabs.style.backgroundImage = `url("${data}")`;
-		});
-		resizeHeight$2(_preferences$27.height);
-		const content = root.querySelector(".container .content");
-		if (content) {
-			content.addEventListener("wheel", (e) => onScroll$6(e, content));
-			content.addEventListener("mouseover", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) onItemOver$11(itemEl, root);
-			});
-			content.addEventListener("mouseout", (e) => {
-				if (e.target.closest(".item")) onItemOut$12(root);
-			});
-			content.addEventListener("dragstart", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					onItemDragStart$6(e, itemEl);
-					onItemOut$12(root);
-				}
-			});
-			content.addEventListener("dragend", (e) => {
-				if (e.target.closest(".item")) onItemDragEnd$7();
-			});
-			content.addEventListener("contextmenu", (e) => {
-				const itemEl = e.target.closest(".item");
-				if (itemEl) {
-					e.preventDefault();
-					onItemInfo$14(e, itemEl);
-				}
-			});
-		}
-		this._host.addEventListener("drop", (e) => onDrop$10(e));
-		this._host.addEventListener("dragover", (e) => {
-			e.stopImmediatePropagation();
-			e.preventDefault();
-		});
-		this.draggable(".titlebar");
-		this.ui.hide();
-	};
-	Storage.onAppend = function onAppend() {
-		this.ui.show();
-		this._host.style.left = `${Math.min(Math.max(0, _preferences$27.x), Renderer.width - this._host.getBoundingClientRect().width)}px`;
-		this._host.style.top = `${Math.min(Math.max(0, _preferences$27.y), Renderer.height - this._host.getBoundingClientRect().height)}px`;
-	};
-	Storage.onRemove = function onRemove() {
-		const root = this.getRoot();
-		const content = root.querySelector(".container .content");
-		if (content) content.innerHTML = "";
-		_list$5.length = 0;
-		_preferences$27.y = parseInt(this._host.style.top, 10);
-		_preferences$27.x = parseInt(this._host.style.left, 10);
-		_preferences$27.height = Math.floor((this._host.getBoundingClientRect().height - 20) / 32);
-		_preferences$27.save();
-		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].remove();
-		_openFilters = {};
-		const searchInput = root.querySelector("#storage-search-input");
-		if (searchInput) searchInput.value = "";
-	};
-	Storage.setItems = function setItems(items) {
-		for (let i = 0, count = items.length; i < count; ++i) if (this.addItemSub(items[i])) _list$5.push(items[i]);
-	};
-	Storage.addItem = function addItem(item) {
-		const i = getItemIndexById$2(item.index);
-		let itemTab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				itemTab = Storage.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				itemTab = Storage.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				itemTab = Storage.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				itemTab = Storage.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				itemTab = Storage.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				itemTab = Storage.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				itemTab = Storage.TAB.ETC;
-				break;
-		}
-		if (_openFilters[itemTab]) _openFilters[itemTab].addItem(item);
-		if (i > -1) {
-			_list$5[i].count += item.count;
-			const countEl = this.getRoot().querySelector(`.item[data-index="${item.index}"] .count`);
-			if (countEl) countEl.textContent = _list$5[i].count;
-			return;
-		}
-		if (this.addItemSub(item)) _list$5.push(item);
-	};
-	Storage.addItemSub = function addItemSub(item) {
-		let tab;
-		switch (item.type) {
-			case ItemType_default.HEALING:
-			case ItemType_default.USABLE:
-			case ItemType_default.DELAYCONSUME:
-				tab = Storage.TAB.ITEM;
-				break;
-			case ItemType_default.CASH:
-				tab = Storage.TAB.KAFRA;
-				break;
-			case ItemType_default.ARMOR:
-			case ItemType_default.SHADOWGEAR:
-			case ItemType_default.PETEGG:
-				tab = Storage.TAB.ARMOR;
-				break;
-			case ItemType_default.WEAPON:
-			case ItemType_default.PETARMOR:
-				tab = Storage.TAB.ARMS;
-				break;
-			case ItemType_default.AMMO:
-				tab = Storage.TAB.AMMO;
-				break;
-			case ItemType_default.CARD:
-				tab = Storage.TAB.CARD;
-				break;
-			default:
-			case ItemType_default.ETC:
-				tab = Storage.TAB.ETC;
-				break;
-		}
-		if (tab === _preferences$27.tab) {
-			const it = DB.getItemInfo(item.ITID);
-			const root = this.getRoot();
-			const content = root.querySelector(".container .content");
-			const itemEl = document.createElement("div");
-			itemEl.className = "item";
-			itemEl.setAttribute("data-index", item.index);
-			itemEl.setAttribute("draggable", "true");
-			const iconDiv = document.createElement("div");
-			iconDiv.className = "icon";
-			itemEl.appendChild(iconDiv);
-			const amountDiv = document.createElement("div");
-			amountDiv.className = "amount";
-			if (item.count) {
-				const countSpan = document.createElement("span");
-				countSpan.className = "count";
-				countSpan.textContent = item.count;
-				amountDiv.appendChild(countSpan);
-				amountDiv.appendChild(document.createTextNode(" "));
-			}
-			itemEl.appendChild(amountDiv);
-			const nameSpan = document.createElement("span");
-			nameSpan.className = "name";
-			nameSpan.innerHTML = DB.getItemName(item);
-			itemEl.appendChild(nameSpan);
-			if (content) content.appendChild(itemEl);
-			Client.loadFile(`${DB.INTERFACE_PATH}item/${item.IsIdentified ? it.identifiedResourceName : it.unidentifiedResourceName}.bmp`, (data) => {
-				const icon = root.querySelector(`.item[data-index="${item.index}"] .icon`);
-				if (icon) icon.style.backgroundImage = `url(${data})`;
-			});
-		}
-		return true;
-	};
-	Storage.removeItem = function removeItem(index, count) {
-		const i = getItemIndexById$2(index);
-		if (i < 0) return null;
-		for (const tabId in _openFilters) if (_openFilters.hasOwnProperty(tabId)) _openFilters[tabId].removeItem(index, count);
-		const root = this.getRoot();
-		if (_list$5[i].count) {
-			_list$5[i].count -= count;
-			if (_list$5[i].count > 0) {
-				const countEl = root.querySelector(`.item[data-index="${index}"] .count`);
-				if (countEl) countEl.textContent = _list$5[i].count;
-				return _list$5[i];
-			}
-		}
-		const item = _list$5[i];
-		_list$5.splice(i, 1);
-		const el = root.querySelector(`.item[data-index="${index}"]`);
-		if (el) el.remove();
-		const overlay = root.querySelector(".overlay");
-		if (overlay) overlay.style.display = "none";
-		return item;
-	};
-	Storage.setItemInfo = function setItemInfo(current, limit) {
-		const root = this.getRoot();
-		const currentEl = root.querySelector(".footer .current");
-		const limitEl = root.querySelector(".footer .limit");
-		if (currentEl) currentEl.textContent = current;
-		if (limitEl) limitEl.textContent = limit;
-	};
-	Storage.onKeyDown = function onKeyDown(event) {
-		if (this._host.style.display !== "none") {
-			if (event.which === KEYS.ESCAPE || event.key === "Escape") {
-				if (typeof Storage.onClosePressed === "function") Storage.onClosePressed();
-			}
-			if (event.which === KEYS.ENTER || event.key === "Enter") {
-				if (typeof Storage.onEnterPressed === "function") Storage.onEnterPressed();
-			}
-		}
-	};
-	Storage.onSearch = function onSearch() {
-		const searchInput = this.getRoot().querySelector("#storage-search-input");
-		if (!searchInput) return;
-		const searchTerm = searchInput.value.toLowerCase();
-		const filteredItems = _list$5.filter((item) => {
-			return DB.getItemName(item).toLowerCase().indexOf(searchTerm) > -1;
-		});
-		if (!_openFilters[ItemType_default.SEARCH]) {
-			const newFilter = new StorageFilter(ItemType_default.SEARCH);
-			_openFilters[ItemType_default.SEARCH] = newFilter;
-			newFilter.onCloseCallback = function() {
-				if (_openFilters[ItemType_default.SEARCH]) delete _openFilters[ItemType_default.SEARCH];
-			};
-			newFilter.onTransferItemToOtherUI = function(item) {
-				Storage.transferItemToOtherUI(item);
-			};
-			newFilter.append();
-			newFilter.setItems("Search", filteredItems, ItemType_default.SEARCH);
-		} else _openFilters[ItemType_default.SEARCH].setItems("Search", filteredItems, ItemType_default.SEARCH);
-	};
-	Storage.transferItemToOtherUI = function transferItemToOtherUI(item) {
-		const isInventoryOpen = InventoryController.getUI().ui ? InventoryController.getUI().ui.is(":visible") : false;
-		const isCartOpen = CartItems_default.ui ? CartItems_default.ui.is(":visible") : false;
-		if (!item) return false;
-		const count = item.count || 1;
-		if (isInventoryOpen) Storage.reqRemoveItem(item.index, count);
-		else if (isCartOpen) Storage.reqMoveItemToCart(item.index, count);
-		return true;
-	};
-	Storage.onClosePressed = function onClosedPressed() {};
-	Storage.reqAddItem = function reqAddItem() {};
-	Storage.reqAddItemFromCart = function reqAddItemFromCart() {};
-	Storage.reqRemoveItem = function reqRemoveItem() {};
-	Storage.reqMoveItemToCart = function reqMoveItemToCart() {};
-	Storage.mouseMode = GUIComponent.MouseMode.STOP;
-	Storage_default = UIManager.addComponent(Storage);
+	Storage_default = createStorage({
+		name: "Storage",
+		htmlText: Storage_default$2,
+		cssText: Storage_default$1,
+		StorageFilter,
+		hasFilters: true,
+		hasSearch: true,
+		hasOrderBy: true
+	});
 }));
 //#endregion
 //#region src/UI/Components/Storage/Storage.js
@@ -242689,7 +241759,7 @@ var ItemInfo_exports = /* @__PURE__ */ __exportAll({ default: () => ItemInfo_def
 /**
 * Helper: escape HTML keeping whitelisted tags
 */
-function _escapeHTML$2(text) {
+function _escapeHTML$1(text) {
 	const div = document.createElement("div");
 	div.textContent = text;
 	return div.innerHTML;
@@ -242707,7 +241777,7 @@ function addCard(cardList, itemId, index, slotCount) {
 	const card = DB.getItemInfo(itemId);
 	if (itemId && card) {
 		file = "item/" + card.identifiedResourceName + ".bmp";
-		name = `<div class="name">${_escapeHTML$2(card.identifiedDisplayName)}</div>`;
+		name = `<div class="name">${_escapeHTML$1(card.identifiedDisplayName)}</div>`;
 	} else if (index < slotCount) file = "empty_card_slot.bmp";
 	else file = "basic_interface/coparison_disable_card_slot.bmp";
 	if (!cardList) return;
@@ -243106,7 +242176,7 @@ var init_ItemInfo = __esmMin((() => {
 		const descInner = root.querySelector(".description-inner");
 		if (descInner) {
 			const rawDesc = item.IsIdentified ? it.identifiedDescriptionName : it.unidentifiedDescriptionName;
-			descInner.innerHTML = DB.formatMsgToHtml(_escapeHTML$2(rawDesc));
+			descInner.innerHTML = DB.formatMsgToHtml(_escapeHTML$1(rawDesc));
 		}
 		if (item.HireExpireDate) {
 			const dateText = DB.formatUnixDate(item.HireExpireDate);
@@ -245979,380 +245049,43 @@ var init_Guild = __esmMin((() => {
 	})();
 }));
 //#endregion
-//#region src/UI/Components/SkillListMH/SkillListMH.html?raw
-var SkillListMH_default$2;
-var init_SkillListMH$2 = __esmMin((() => {
-	SkillListMH_default$2 = "<div class=\"SkillListMH\">\r\n	<div class=\"titlebar\">\r\n		<ui-image src=\"basic_interface/titlebar_mid.bmp\"></ui-image>\r\n		<div class=\"left\">\r\n			<ui-button\r\n				class=\"base\"\r\n				bg=\"basic_interface/sys_base_off.bmp\"\r\n				hover=\"basic_interface/sys_base_on.bmp\"\r\n			></ui-button>\r\n			<span class=\"text\">Skill List</span>\r\n		</div>\r\n		<div class=\"right\">\r\n			<ui-button\r\n				class=\"base close\"\r\n				bg=\"basic_interface/sys_close_off.bmp\"\r\n				hover=\"basic_interface/sys_close_on.bmp\"\r\n			></ui-button>\r\n		</div>\r\n		<div class=\"clear\"></div>\r\n	</div>\r\n\r\n	<div class=\"panel\">\r\n		<div class=\"content\">\r\n			<table>\r\n				<!-- Just to get reference, will be removed -->\r\n				<ui-button\r\n					class=\"btn levelup\"\r\n					bg=\"basic_interface/skill_up_a.bmp\"\r\n					hover=\"basic_interface/skill_up_b.bmp\"\r\n					down=\"basic_interface/skill_up_c.bmp\"\r\n				></ui-button>\r\n			</table>\r\n		</div>\r\n\r\n		<div class=\"footer\">\r\n			<ui-image src=\"basic_interface/btnbar_mid2.bmp\"></ui-image>\r\n			<div class=\"text\">Skill Points: <span class=\"skpoints_count\">0</span></div>\r\n			<ui-button class=\"btn apply\" bg=\"btn_apply.bmp\" hover=\"btn_apply_a.bmp\" down=\"btn_apply_b.bmp\"></ui-button>\r\n			<ui-button class=\"btn reset\" bg=\"btn_reset.bmp\" hover=\"btn_reset_a.bmp\" down=\"btn_reset_b.bmp\"></ui-button>\r\n			<ui-button class=\"extend\" bg=\"btn_resize.bmp\"></ui-button>\r\n		</div>\r\n	</div>\r\n	<ui-button id=\"lvlup_job\" bg=\"basic_interface/lv_up_off.bmp\" down=\"basic_interface/lv_up_on.bmp\"></ui-button>\r\n</div>\r\n";
-}));
-//#endregion
-//#region src/UI/Components/SkillListMH/SkillListMH.css?raw
-var SkillListMH_default$1;
-var init_SkillListMH$1 = __esmMin((() => {
-	SkillListMH_default$1 = ":host {\r\n	top: 100px;\r\n	left: 100px;\r\n}\r\n\r\n.SkillListMH {\r\n	position: absolute;\r\n	border-radius: 5px;\r\n	background: white;\r\n	line-height: 18px;\r\n	letter-spacing: 0px;\r\n	border: 1px solid #c1c6c2;\r\n}\r\n.SkillListMH .border {\r\n	border: 1px solid #c1c6c2;\r\n	margin: 1px;\r\n	border-radius: 5px;\r\n}\r\n\r\n.SkillListMH .titlebar {\r\n	width: 100%;\r\n	height: 17px;\r\n	background-color: white;\r\n	background-repeat: repeat-x;\r\n	border-radius: 3px 3px 0px 0px;\r\n}\r\n.SkillListMH .titlebar .base {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n.SkillListMH .titlebar .text {\r\n	text-shadow: 1px 1px white;\r\n	vertical-align: -2px;\r\n	white-space: nowrap;\r\n	/* chrome bug */\r\n	display: inline-block;\r\n	width: 32px;\r\n	height: 13px;\r\n	font-size: 11px;\r\n	font-weight: bold;\r\n}\r\n\r\n.SkillListMH .titlebar .left {\r\n	margin-left: 3px;\r\n	float: left;\r\n}\r\n.SkillListMH .titlebar .right {\r\n	float: right;\r\n	margin-right: 3px;\r\n}\r\n.SkillListMH .titlebar .clear {\r\n	clear: both;\r\n}\r\n\r\n.SkillListMH .content {\r\n	overflow-y: auto;\r\n	padding: 5px;\r\n	width: 270px;\r\n	height: 200px;\r\n}\r\n.SkillListMH .content table {\r\n	border: none;\r\n	border-spacing: 0px;\r\n	padding-top: 5px;\r\n}\r\n.SkillListMH .content td,\r\n.SkillListMH .content .name {\r\n	padding: 0px;\r\n}\r\n\r\n.SkillListMH .levelup {\r\n	border: 0;\r\n	width: 24px;\r\n	height: 24px;\r\n	padding: 0;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n.SkillListMH td.type {\r\n	vertical-align: bottom;\r\n}\r\n\r\n.SkillListMH .content .icon {\r\n	padding-left: 15px;\r\n}\r\n.SkillListMH .content .levelupcontainer {\r\n	padding-left: 5px;\r\n	padding-right: 5px;\r\n	width: 24px;\r\n}\r\n.SkillListMH .content div.name {\r\n	line-height: 12px;\r\n	white-space: nowrap;\r\n	padding-left: 5px;\r\n	white-space: nowrap;\r\n	width: 120px;\r\n	padding-top: 4px;\r\n	height: 28px;\r\n}\r\n.SkillListMH .disabled .icon,\r\n.SkillListMH .disabled .name {\r\n	opacity: 0.5;\r\n}\r\n.SkillListMH .disabled .consume,\r\n.SkillListMH .disabled .level {\r\n	display: none;\r\n}\r\n.SkillListMH .currentDown,\r\n.SkillListMH .currentUp {\r\n	width: 11px;\r\n	height: 11px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n	vertical-align: middle;\r\n}\r\n\r\n.SkillListMH .selected.disabled .selectable {\r\n	background-color: #b5b5b5;\r\n}\r\n.SkillListMH .selected.passive .selectable {\r\n	background-color: #73d5ee;\r\n}\r\n.SkillListMH .selected.active .selectable {\r\n	background-color: #739cee;\r\n}\r\n\r\n.SkillListMH .footer {\r\n	width: 100%;\r\n	height: 27px;\r\n	background-repeat: repeat-x;\r\n	background-color: transparent;\r\n	position: relative;\r\n}\r\n.SkillListMH .footer .text {\r\n	padding-top: 7px;\r\n	margin-left: 10px;\r\n}\r\n.SkillListMH .footer .btn {\r\n	position: absolute;\r\n	top: 5px;\r\n	border: 0;\r\n	width: 42px;\r\n	height: 20px;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n	display: none;\r\n}\r\n.SkillListMH .footer .apply {\r\n	right: 70px;\r\n}\r\n.SkillListMH .footer .reset {\r\n	right: 20px;\r\n}\r\n.SkillListMH .footer .extend {\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 1px;\r\n	width: 13px;\r\n	height: 13px;\r\n	border: none;\r\n	background-repeat: no-repeat;\r\n	background-color: transparent;\r\n}\r\n\r\n#lvlup_job {\r\n	z-index: 51;\r\n	position: absolute;\r\n	right: 0px;\r\n	bottom: 0px;\r\n	width: 43px;\r\n	height: 43px;\r\n	border: none;\r\n	background-color: transparent;\r\n	background-repeat: no-repeat;\r\n}\r\n";
-}));
-//#endregion
 //#region src/UI/Components/SkillListMH/SkillListMH.js
 /**
-* Helper: escape HTML
-*/
-function _escapeHTML$1(text) {
-	const div = document.createElement("div");
-	div.textContent = text;
-	return div.innerHTML;
-}
-/**
-* Factory to create a SkillListMH GUIComponent instance
+* Build a Homunculus/Mercenary skill window on top of the shared SkillList
+* factory, using its list-only (old-style) mode and layering the MH-specific
+* bits (window name, titlebar text, drag origin, Escape-to-close) on top.
 */
 function createSkillListMH(type) {
-	const name = `SkillList${type === "homunculus" ? "HOM" : "MER"}`;
-	const comp = new GUIComponent(name, SkillListMH_default$1);
-	comp.render = () => SkillListMH_default$2;
-	const _preferences = Preferences.get(name, {
-		x: 100,
-		y: 200,
-		width: 8,
-		height: 5,
-		show: false
-	}, 1);
-	comp._skillType = type;
-	comp.list = [];
-	comp._rowCount = 0;
-	comp.points = 0;
-	comp._btnIncSkill = null;
-	comp._btnLevelUp = null;
-	comp._lArrow = null;
-	comp._rArrow = null;
-	comp.init = function init() {
-		const root = this.getRoot();
-		root.querySelector(".titlebar .text").textContent = this._skillType === "homunculus" ? "Homunculus Skills" : "Mercenary Skills";
-		const baseBtn = root.querySelector(".titlebar .base");
-		if (baseBtn) baseBtn.addEventListener("mousedown", (e) => {
-			e.stopImmediatePropagation();
-		});
-		const extendBtn = root.querySelector(".footer .extend");
-		if (extendBtn) extendBtn.addEventListener("mousedown", (e) => {
-			e.stopImmediatePropagation();
-			const hostStyle = this._host.style;
-			const top = parseInt(hostStyle.top, 10) || 0;
-			const left = parseInt(hostStyle.left, 10) || 0;
-			let lastWidth = 0;
-			let lastHeight = 0;
-			const resizing = () => {
-				const extraX = -6;
-				const extraY = 32;
-				let w = Math.floor((Mouse.screen.x - left - extraX) / 32);
-				let h = Math.floor((Mouse.screen.y - top - extraY) / 32);
-				w = Math.min(Math.max(w, 8), 8);
-				h = Math.min(Math.max(h, 4), 10);
-				if (w === lastWidth && h === lastHeight) return;
-				const content = root.querySelector(".content");
-				if (content) {
-					content.style.width = `${w * 32}px`;
-					content.style.height = `${h * 32}px`;
-				}
-				lastWidth = w;
-				lastHeight = h;
-			};
-			const interval = setInterval(resizing, 30);
-			const onMouseUp = (_event) => {
-				if (_event.which === 1) {
-					clearInterval(interval);
-					window.removeEventListener("mouseup", onMouseUp);
-				}
-			};
-			window.addEventListener("mouseup", onMouseUp);
-		});
-		const closeBtn = root.querySelector(".titlebar .close");
-		if (closeBtn) closeBtn.addEventListener("click", () => {
-			this.ui.hide();
-		});
-		const levelupBtn = root.querySelector(".btn.levelup");
-		if (levelupBtn) {
-			this._btnIncSkill = levelupBtn.cloneNode(true);
-			levelupBtn.remove();
-			this._btnIncSkill.addEventListener("click", function() {
-				const index = this.parentNode.parentNode.getAttribute("data-index");
-				comp.onIncreaseSkill(parseInt(index, 10));
-			});
+	const component = createSkillList({
+		name: `SkillList${type === "homunculus" ? "HOM" : "MER"}`,
+		htmlText: SkillList_default$2,
+		cssText: SkillList_default$1,
+		listOnly: true,
+		dragFrom: "SkillListMH",
+		titlebarText: type === "homunculus" ? "Homunculus Skills" : "Mercenary Skills",
+		containerSelector: ".SkillList",
+		preferenceDefaults: {
+			x: 100,
+			y: 200,
+			width: 8,
+			height: 5,
+			show: false
 		}
-		const lvlupBtn = root.querySelector("#lvlup_job");
-		if (lvlupBtn) {
-			this._btnLevelUp = lvlupBtn;
-			this._btnLevelUp.remove();
-			this._btnLevelUp.addEventListener("click", () => {
-				if (this._btnLevelUp.parentNode) this._btnLevelUp.remove();
-				this.ui.show();
-			});
-			this._btnLevelUp.addEventListener("mousedown", (e) => {
-				e.stopImmediatePropagation();
-			});
-		}
-		const container = root.querySelector(".SkillListMH") || root;
-		container.addEventListener("dblclick", (e) => {
-			const target = e.target.closest(".skill .icon, .skill .name");
-			if (target) {
-				let main = target.parentElement;
-				if (!main.classList.contains("skill")) main = main.parentElement;
-				this.useSkillID(parseInt(main.getAttribute("data-index"), 10));
-			}
-		});
-		container.addEventListener("contextmenu", (e) => {
-			const target = e.target.closest(".skill .icon, .skill .name");
-			if (target) {
-				let main = target.parentElement;
-				if (!main.classList.contains("skill")) main = main.parentElement;
-				const skill = this.getSkillById(parseInt(main.getAttribute("data-index"), 10));
-				if (SkillDescription_default.uid === skill.SKID) {
-					SkillDescription_default.remove();
-					return;
-				}
-				SkillDescription_default.append();
-				SkillDescription_default.setSkill(skill.SKID);
-			}
-		});
-		container.addEventListener("mousedown", (e) => {
-			const target = e.target.closest(".selectable");
-			if (target) {
-				let main = target.parentElement;
-				if (!main.classList.contains("skill")) main = main.parentElement;
-				for (const el of root.querySelectorAll(".skill")) el.classList.remove("selected");
-				main.classList.add("selected");
-			}
-		});
-		container.addEventListener("dragstart", (e) => {
-			const skillEl = e.target.closest(".skill");
-			if (!skillEl) return;
-			const index = parseInt(skillEl.getAttribute("data-index"), 10);
-			const skill = this.getSkillById(index);
-			if (!skill || !skill.level || !skill.type) {
-				e.stopImmediatePropagation();
-				e.preventDefault();
-				return;
-			}
-			const img = new Image();
-			img.decoding = "async";
-			img.src = skillEl.querySelector(".icon img")?.src || "";
-			e.dataTransfer.setDragImage(img, 12, 12);
-			e.dataTransfer.setData("Text", JSON.stringify(window._OBJ_DRAG_ = {
-				type: "skill",
-				from: "SkillListMH",
-				data: skill
-			}));
-		});
-		container.addEventListener("dragend", (e) => {
-			const skillEl = e.target.closest(".skill");
-			if (skillEl) {
-				delete window._OBJ_DRAG_;
-				skillEl.classList.remove("hide");
-			}
-		});
-		this.draggable(".titlebar");
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_right.bmp`, (data) => {
-			this._rArrow = `url(${data})`;
-		});
-		Client.loadFile(`${DB.INTERFACE_PATH}basic_interface/arw_left.bmp`, (data) => {
-			this._lArrow = `url(${data})`;
-		});
-	};
-	comp.onAppend = function onAppend() {
-		if (!_preferences.show) this.ui.hide();
-		this.setSize(_preferences.width, _preferences.height);
-		this._host.style.top = `${Math.min(Math.max(0, _preferences.y), Renderer.height - 100)}px`;
-		this._host.style.left = `${Math.min(Math.max(0, _preferences.x), Renderer.width - 100)}px`;
-	};
-	comp.setSize = function setSize(width, height) {
-		width = Math.min(Math.max(width, 8), 8);
-		height = Math.min(Math.max(height, 4), 10);
-		const content = this.getRoot().querySelector(".content");
-		if (content) {
-			content.style.width = `${width * 32}px`;
-			content.style.height = `${height * 32}px`;
-		}
-	};
-	comp.onRemove = function onRemove() {
-		if (this._btnLevelUp && this._btnLevelUp.parentNode) this._btnLevelUp.remove();
-		_preferences.show = this.ui.is(":visible");
-		_preferences.y = parseInt(this._host.style.top, 10) || 0;
-		_preferences.x = parseInt(this._host.style.left, 10) || 0;
-		const content = this.getRoot().querySelector(".content");
-		if (content) {
-			_preferences.width = Math.floor(parseInt(content.style.width, 10) / 32) || 8;
-			_preferences.height = Math.floor(parseInt(content.style.height, 10) / 32) || 5;
-		}
-		_preferences.save();
-	};
-	comp.toggle = function toggle() {
-		if (this.ui.is(":visible")) {
-			this.ui.hide();
-			if (this._btnLevelUp && this._btnLevelUp.parentNode) this._btnLevelUp.remove();
-		} else {
-			this.ui.show();
-			this.focus();
-		}
-	};
-	comp.onKeyDown = function onKeyDown(event) {
+	});
+	component.onKeyDown = function onKeyDown(event) {
 		if ((event.which === KEYS.ESCAPE || event.key === "Escape") && this.ui.is(":visible")) this.toggle();
 	};
-	comp.setSkills = function setSkills(skills) {
-		for (let i = 0, count = this.list.length; i < count; ++i) this.onUpdateSkill(this.list[i].SKID, 0);
-		this.list.length = 0;
-		const table = this.getRoot().querySelector(".content table");
-		if (table) table.innerHTML = "";
-		for (let i = 0, count = skills.length; i < count; ++i) this.addSkill(skills[i]);
-	};
-	comp.addSkill = function addSkill(skill) {
-		if (!(skill.SKID in SkillInfo)) return;
-		const root = this.getRoot();
-		if (root.querySelector(`.skill.id${skill.SKID}`)) {
-			this.updateSkill(skill);
-			return;
-		}
-		const sk = SkillInfo[skill.SKID];
-		const levelup = this._btnIncSkill.cloneNode(true);
-		levelup.addEventListener("click", function() {
-			const index = this.parentNode.parentNode.getAttribute("data-index");
-			comp.onIncreaseSkill(parseInt(index, 10));
-		});
-		const className = !skill.level ? "disabled" : skill.type ? "active" : "passive";
-		const tr = document.createElement("tr");
-		tr.className = `skill id${skill.SKID} ${className}`;
-		tr.setAttribute("data-index", skill.SKID);
-		tr.setAttribute("draggable", "true");
-		tr.innerHTML = `<td class="icon"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" width="24" height="24" /></td><td class="levelupcontainer"></td><td class=selectable><div class="name">${_escapeHTML$1(sk.SkillName)}<br/><span class="level">` + (sk.bSeperateLv ? `<button class="currentDown"></button>Lv : <span class="current">${skill.level}</span> / <span class="max">${skill.level}</span><button class="currentUp"></button>` : `Lv : <span class="current">${skill.level}</span>`) + `</span></div></td><td class="selectable type"><div class="consume">${skill.type ? `Sp : <span class="spcost">${skill.spcost}</span>` : "Passive"}</div></td>`;
-		if (!skill.upgradable || !this.points) levelup.style.display = "none";
-		tr.querySelector(".levelupcontainer").appendChild(levelup);
-		const currentUp = tr.querySelector(".level .currentUp");
-		if (currentUp) {
-			if (this._rArrow) currentUp.style.backgroundImage = this._rArrow;
-			currentUp.addEventListener("click", () => {
-				this.skillLevelSelectUp(skill);
-			});
-		}
-		const currentDown = tr.querySelector(".level .currentDown");
-		if (currentDown) {
-			if (this._lArrow) currentDown.style.backgroundImage = this._lArrow;
-			currentDown.addEventListener("click", () => {
-				this.skillLevelSelectDown(skill);
-			});
-		}
-		const table = root.querySelector(".content table");
-		if (table) table.appendChild(tr);
-		this.parseHTML.call(levelup);
-		Client.loadFile(`${DB.INTERFACE_PATH}item/${sk.Name}.bmp`, (data) => {
-			const img = tr.querySelector(".icon img");
-			if (img) img.src = data;
-		});
-		this.list.push(skill);
-		this.onUpdateSkill(skill.SKID, skill.level);
-	};
-	comp.removeSkill = function removeSkill() {};
-	comp.updateSkill = function updateSkill(skill) {
-		const target = this.getSkillById(skill.SKID);
-		if (!target) return;
-		target.level = skill.level;
-		target.spcost = skill.spcost;
-		target.attackRange = skill.attackRange;
-		target.upgradable = skill.upgradable;
-		if (Number.isInteger(skill.type)) target.type = skill.type;
-		const element = this.getRoot().querySelector(`.skill.id${skill.SKID}`);
-		if (!element) return;
-		for (const el of element.querySelectorAll(".level .current, .level .max")) el.textContent = skill.level;
-		if (skill.selectedLevel) {
-			const current = element.querySelector(".level .current");
-			if (current) current.textContent = skill.selectedLevel;
-		}
-		const spcost = element.querySelector(".spcost");
-		if (spcost) spcost.textContent = skill.spcost;
-		element.classList.remove("active", "passive", "disabled");
-		element.classList.add(!skill.level ? "disabled" : skill.type ? "active" : "passive");
-		const levelupEl = element.querySelector(".levelup");
-		if (levelupEl) levelupEl.style.display = skill.upgradable && this.points ? "" : "none";
-		this.onUpdateSkill(skill.SKID, skill.level);
-	};
-	comp.useSkillID = function useSkillID(id, level) {
-		const skill = this.getSkillById(id);
-		if (!skill || !skill.level || !skill.type) return;
-		this.useSkill(skill, level ? level : skill.selectedLevel);
-	};
-	comp.useSkill = function useSkill(skill, level) {
-		if (skill.type & SkillTargetSelection_default.TYPE.SELF) this.onUseSkill(skill.SKID, level ? level : skill.level);
-		skill.useLevel = level;
-		if (skill.type & SkillTargetSelection_default.TYPE.TARGET) {
-			SkillTargetSelection_default.append();
-			SkillTargetSelection_default.set(skill, skill.type);
-		}
-	};
-	comp.setPoints = function setPoints(amount) {
-		const root = this.getRoot();
-		const el = root.querySelector(".skpoints_count");
-		if (el) el.textContent = amount;
-		if (!this.points === !amount) {
-			this.points = amount;
-			return;
-		}
-		this.points = amount;
-		const count = this.list.length;
-		for (let i = 0; i < count; ++i) {
-			const levelupEl = root.querySelector(`.skill.id${this.list[i].SKID} .levelup`);
-			if (levelupEl) levelupEl.style.display = this.list[i].upgradable && amount ? "" : "none";
-		}
-	};
-	comp.onLevelUp = function onLevelUp() {
-		if (this._btnLevelUp) document.body.appendChild(this._btnLevelUp);
-	};
-	comp.getSkillById = function getSkillById(id) {
-		const count = this.list.length;
-		for (let i = 0; i < count; ++i) if (this.list[i].SKID === id) return this.list[i];
-		return null;
-	};
-	comp.skillLevelSelectUp = function skillLevelSelectUp(skill) {
-		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
-		if (level < skill.level) {
-			skill.selectedLevel = level + 1;
-			const element = this.getRoot().querySelector(`.skill.id${skill.SKID}`);
-			if (element) {
-				const current = element.querySelector(".level .current");
-				if (current) current.textContent = skill.selectedLevel;
-			}
-		}
-	};
-	comp.skillLevelSelectDown = function skillLevelSelectDown(skill) {
-		const level = skill.selectedLevel ? skill.selectedLevel : skill.level;
-		if (level > 1) {
-			skill.selectedLevel = level - 1;
-			const element = this.getRoot().querySelector(`.skill.id${skill.SKID}`);
-			if (element) {
-				const current = element.querySelector(".level .current");
-				if (current) current.textContent = skill.selectedLevel;
-			}
-		}
-	};
-	comp.onUseSkill = function onUseItem() {};
-	comp.onIncreaseSkill = function onIncreaseSkill() {};
-	comp.onUpdateSkill = function onUpdateSkill() {};
-	return comp;
+	return component;
 }
-var homSkills, merSkills, SkillListMH_default;
+var SkillListMH_default;
 var init_SkillListMH = __esmMin((() => {
-	init_DBManager();
-	init_SkillInfo();
-	init_Client();
-	init_Preferences$1();
-	init_Renderer();
-	init_MouseEventHandler();
 	init_KeyEventHandler();
-	init_UIManager();
-	init_GUIComponent();
-	init_Elements();
-	init_SkillTargetSelection();
-	init_SkillDescription();
-	init_SkillListMH$2();
-	init_SkillListMH$1();
-	homSkills = createSkillListMH("homunculus");
-	merSkills = createSkillListMH("mercenary");
+	init_SkillListCommon();
+	init_SkillList$3();
+	init_SkillList$2();
 	SkillListMH_default = {
-		homunculus: UIManager.addComponent(homSkills),
-		mercenary: UIManager.addComponent(merSkills)
+		homunculus: createSkillListMH("homunculus"),
+		mercenary: createSkillListMH("mercenary")
 	};
 }));
 //#endregion
