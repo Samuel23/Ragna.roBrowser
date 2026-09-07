@@ -28,7 +28,6 @@ import SpriteRenderer from 'Renderer/SpriteRenderer.js';
 import Ground from 'Renderer/Map/Ground.js';
 import Altitude from 'Renderer/Map/Altitude.js';
 import Session from 'Engine/SessionStorage.js';
-import JobId from 'DB/Jobs/JobConst.js';
 import DB from 'DB/DBManager.js';
 import GraphicsSettings from 'Preferences/Graphics.js';
 import GR2ModelRenderer from 'Renderer/GR2/GR2ModelRenderer.js';
@@ -882,17 +881,25 @@ function getAnimationDelay(type, entity, act) {
 		return (act.delay / 150) * entity.walk.speed;
 	}
 
-	// Delay on attack
+	// Delay on attack (fallback when animation.speed is not explicitly set)
+	// Uses the ACT file delay directly (matching official C++ client m_motionSpeed = actRes->GetDelay(action)).
+	// Player normal attacks already provide animation.speed = pkt.attackMT / m_attackMotion in onEntityAttack.
 	if (
 		entity.action === entity.ACTION.ATTACK ||
 		entity.action === entity.ACTION.ATTACK1 ||
 		entity.action === entity.ACTION.ATTACK2 ||
 		entity.action === entity.ACTION.ATTACK3
 	) {
-		return entity.attack_speed / act.animations.length;
+		if (act && act.delay && act.delay > 0) {
+			return act.delay;
+		}
+		if (entity.attack_speed && act && act.animations && act.animations.length > 0) {
+			return Math.max(entity.attack_speed / act.animations.length, 100);
+		}
+		return 150;
 	}
 
-	return act.delay;
+	return (act && act.delay) || 150;
 }
 
 /**
@@ -1015,17 +1022,17 @@ function calcAnimation(entity, act, type, tick) {
 	}
 
 	// No repeat
-	anim = Math.min((tick / delay) | 0, animCount || animCount - 1); // Avoid an error if animation = 0, search for -1 :(
+	anim = Math.min((tick / delay) | 0, animCount ? animCount - 1 : 0);
 
 	anim %= animCount;
 	anim += animCount * headDir; // get rid of doridori
 	anim += animation.frame; // previous frame
 	anim %= animSize; // avoid overflow
 
-	const lastFrame = animation.frame + animSize - 1;
+	const lastFrame = animation.frame + animCount - 1;
 
-	if (type === 'body' && anim >= lastFrame) {
-		animation.frame = anim = lastFrame;
+	if (type === 'body' && ((tick / delay) | 0) >= animCount - 1) {
+		animation.frame = anim = Math.min(lastFrame, animSize - 1);
 		animation.play = false;
 		if (animation.next) {
 			entity.setAction(animation.next);
