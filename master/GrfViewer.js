@@ -162786,22 +162786,23 @@ var init_PacketStructure = __esmMin((() => {
 		this.KafraPoint = fp.readULong();
 		this.CashPoint = fp.readULong();
 		this.itemList = (function() {
-			const div = PacketVerManager_default.value >= 20181121 ? 13 : 11;
+			const base = PacketVerManager_default.value >= 20181121 ? 13 : 11;
+			const ext = base + 7;
 			const itemListLen = end - fp.tell();
-			const itemLen = itemListLen % 20 === 0 ? 20 : itemListLen % 18 == 0 ? 18 : div;
-			const count = (end - fp.tell()) / itemLen | 0;
-			const out = new Array(count);
-			for (let i = 0; i < count; ++i) {
-				out[i] = {};
-				out[i].price = fp.readLong();
-				out[i].discountprice = fp.readLong();
-				out[i].type = fp.readUChar();
-				out[i].ITID = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
-				if (itemLen >= 18) {
-					out[i].viewSprite = fp.readUShort();
-					out[i].location = fp.readLong();
-					out[i].unused = fp.readUChar();
+			const itemLen = itemListLen % base !== 0 && itemListLen % ext === 0 ? ext : base;
+			const out = [];
+			while (fp.tell() + itemLen <= end) {
+				const item = {};
+				item.price = fp.readLong();
+				item.discountprice = fp.readLong();
+				item.type = fp.readUChar();
+				item.ITID = PacketVerManager_default.value >= 20181121 ? fp.readULong() : fp.readUShort();
+				if (itemLen === ext) {
+					item.viewSprite = fp.readUShort();
+					item.location = fp.readLong();
+					item.unused = fp.readUChar();
 				}
+				out.push(item);
 			}
 			return out;
 		})();
@@ -207298,7 +207299,7 @@ var init_Ground = __esmMin((() => {
 //#region src/Renderer/SpriteRenderer.vs?raw
 var SpriteRenderer_default$1;
 var init_SpriteRenderer$2 = __esmMin((() => {
-	SpriteRenderer_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 aPosition;\r\nin vec2 aTextureCoord;\r\n\r\nout vec2 vTextureCoord;\r\n\r\nuniform mat4 uModelViewMat;\r\nuniform mat4 uViewModelMat;\r\nuniform mat4 uProjectionMat;\r\n\r\nuniform float uCameraZoom;\r\nuniform float uCameraLatitude;\r\n\r\nuniform vec2 uSpriteRendererSize;\r\nuniform vec2 uSpriteRendererOffset;\r\nuniform mat4 uSpriteRendererAngle;\r\nuniform vec3 uSpriteRendererPosition;\r\nuniform float uSpriteRendererDepth;\r\nuniform float uSpriteRendererZindex;\r\nuniform bool  uDisableDepthCorrection;\r\n\r\nmat4 Project( mat4 mat, vec3 pos) {\r\n\r\n    // xyz = x(-z)y + middle of cell (0.5)\r\n    float x =  pos.x + 0.5;\r\n    float y = -pos.z;\r\n    float z =  pos.y + 0.5;\r\n\r\n    // Matrix translation\r\n    mat[3].x += mat[0].x * x + mat[1].x * y + mat[2].x * z;\r\n    mat[3].y += mat[0].y * x + mat[1].y * y + mat[2].y * z;\r\n    mat[3].z += (mat[0].z * x + mat[1].z * y + mat[2].z * z);\r\n    mat[3].w += mat[0].w * x + mat[1].w * y + mat[2].w * z;\r\n\r\n    // Spherical billboard\r\n    mat[0].xyz = vec3( 1.0, 0.0, 0.0 );\r\n    mat[1].xyz = vec3( 0.0, 1.0, 0.0 );\r\n    mat[2].xyz = vec3( 0.0, 0.0, 1.0 );\r\n\r\n    return mat;\r\n}\r\n\r\nvec3 getCameraPosition() {\r\n    return (uViewModelMat * vec4(0.0, 0.0, 0.0, 1.0)).xyz;\r\n}\r\n\r\nvec3 getCameraForward() {\r\n    return normalize((uViewModelMat * vec4(0.0, 0.0, -1.0, 0.0)).xyz);\r\n}\r\n\r\nvoid main(void) {\r\n    // Calculate position base on angle and sprite offset/size\r\n    vec4 position = uSpriteRendererAngle * vec4( aPosition.x * uSpriteRendererSize.x, aPosition.y * uSpriteRendererSize.y, 0.0, 1.0 );\r\n    position.x   += uSpriteRendererOffset.x;\r\n    position.y   -= uSpriteRendererOffset.y + 0.5;\r\n\r\n    mat4 modelView = Project(uModelViewMat, uSpriteRendererPosition);\r\n    vec4 viewPosition = modelView * position;\r\n    vec4 viewCenter   = modelView * vec4( 0.0, 0.0, 0.0, 1.0 );\r\n\r\n    gl_Position = uProjectionMat * viewPosition;\r\n\r\n    vec3 cameraPos     = getCameraPosition();\r\n    vec3 cameraForward = getCameraForward();\r\n\r\n    if (!uDisableDepthCorrection) {\r\n        // Vertical billboard depth correction (per-vertex), plane anchored at sprite center.\r\n        // Plane normal uses camera forward (flattened Y) for stability.\r\n        vec3 planePoint = (uViewModelMat * viewCenter).xyz;\r\n        vec3 planeNormal = normalize(vec3(cameraForward.x, 0.0, cameraForward.z));\r\n        if (length(planeNormal) < 0.000001) {\r\n            planeNormal = cameraForward;\r\n        }\r\n\r\n        vec3 worldVertex = (uViewModelMat * viewPosition).xyz;\r\n        vec3 rayDir      = normalize(worldVertex - cameraPos);\r\n        float denom      = max(dot(planeNormal, rayDir), 0.000001);\r\n        float dist       = dot(planePoint - cameraPos, planeNormal) / denom;\r\n\r\n        vec4 planeClip       = uProjectionMat * (uModelViewMat * vec4(cameraPos + rayDir * dist, 1.0));\r\n        float correctedZBase = planeClip.z * (gl_Position.w / max(planeClip.w, 0.000001));\r\n\r\n        gl_Position.z = min(gl_Position.z, correctedZBase);\r\n    }\r\n    gl_Position.z -= (uSpriteRendererZindex * 0.01 + uSpriteRendererDepth) / max(uCameraZoom, 1.0);\r\n\r\n    vTextureCoord = aTextureCoord;\r\n}";
+	SpriteRenderer_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 aPosition;\r\nin vec2 aTextureCoord;\r\n\r\nout vec2 vTextureCoord;\r\n\r\nuniform mat4 uModelViewMat;\r\nuniform mat4 uViewModelMat;\r\nuniform mat4 uProjectionMat;\r\n\r\nuniform float uCameraZoom;\r\nuniform float uCameraLatitude;\r\n\r\nuniform vec2 uSpriteRendererSize;\r\nuniform vec2 uSpriteRendererOffset;\r\nuniform mat4 uSpriteRendererAngle;\r\nuniform vec3 uSpriteRendererPosition;\r\nuniform float uSpriteRendererDepth;\r\nuniform float uSpriteRendererZindex;\r\nuniform bool  uDisableDepthCorrection;\r\n\r\nmat4 Project( mat4 mat, vec3 pos) {\r\n\r\n    // xyz = x(-z)y + middle of cell (0.5)\r\n    float x =  pos.x + 0.5;\r\n    float y = -pos.z;\r\n    float z =  pos.y + 0.5;\r\n\r\n    // Matrix translation\r\n    mat[3].x += mat[0].x * x + mat[1].x * y + mat[2].x * z;\r\n    mat[3].y += mat[0].y * x + mat[1].y * y + mat[2].y * z;\r\n    mat[3].z += (mat[0].z * x + mat[1].z * y + mat[2].z * z);\r\n    mat[3].w += mat[0].w * x + mat[1].w * y + mat[2].w * z;\r\n\r\n    // Spherical billboard\r\n    mat[0].xyz = vec3( 1.0, 0.0, 0.0 );\r\n    mat[1].xyz = vec3( 0.0, 1.0, 0.0 );\r\n    mat[2].xyz = vec3( 0.0, 0.0, 1.0 );\r\n\r\n    return mat;\r\n}\r\n\r\nvec3 getCameraPosition() {\r\n    return (uViewModelMat * vec4(0.0, 0.0, 0.0, 1.0)).xyz;\r\n}\r\n\r\nvec3 getCameraForward() {\r\n    return normalize((uViewModelMat * vec4(0.0, 0.0, -1.0, 0.0)).xyz);\r\n}\r\n\r\nvoid main(void) {\r\n    // Calculate position base on angle and sprite offset/size\r\n    vec4 position = uSpriteRendererAngle * vec4( aPosition.x * uSpriteRendererSize.x, aPosition.y * uSpriteRendererSize.y, 0.0, 1.0 );\r\n    position.x   += uSpriteRendererOffset.x;\r\n    position.y   -= uSpriteRendererOffset.y + 0.5;\r\n\r\n    mat4 modelView = Project(uModelViewMat, uSpriteRendererPosition);\r\n    vec4 viewPosition = modelView * position;\r\n    vec4 viewCenter   = modelView * vec4( 0.0, 0.0, 0.0, 1.0 );\r\n\r\n    gl_Position = uProjectionMat * viewPosition;\r\n\r\n    vec3 cameraPos     = getCameraPosition();\r\n    vec3 cameraForward = getCameraForward();\r\n\r\n    if (!uDisableDepthCorrection) {\r\n        // Vertical billboard depth correction (per-vertex), plane anchored at sprite center.\r\n        // Plane normal uses camera forward (flattened Y) for stability.\r\n        // The whole quad takes the vertical plane depth so the part of the sprite below\r\n        // the water surface sorts behind the (later drawn) water pass.\r\n        vec3 planePoint = (uViewModelMat * viewCenter).xyz;\r\n        vec3 planeNormal = normalize(vec3(cameraForward.x, 0.0, cameraForward.z));\r\n        if (length(planeNormal) < 0.000001) {\r\n            planeNormal = cameraForward;\r\n        }\r\n\r\n        vec3 worldVertex = (uViewModelMat * viewPosition).xyz;\r\n        vec3 rayDir      = normalize(worldVertex - cameraPos);\r\n        float denom      = max(dot(planeNormal, rayDir), 0.000001);\r\n        float dist       = dot(planePoint - cameraPos, planeNormal) / denom;\r\n\r\n        vec4 planeClip       = uProjectionMat * (uModelViewMat * vec4(cameraPos + rayDir * dist, 1.0));\r\n        float correctedZBase = planeClip.z * (gl_Position.w / max(planeClip.w, 0.000001));\r\n\r\n        gl_Position.z = correctedZBase;\r\n    }\r\n    gl_Position.z -= (uSpriteRendererZindex * 0.01 + uSpriteRendererDepth) / max(uCameraZoom, 1.0);\r\n\r\n    vTextureCoord = aTextureCoord;\r\n}";
 }));
 //#endregion
 //#region src/Renderer/SpriteRenderer.fs?raw
@@ -207347,7 +207348,7 @@ function RenderCanvas3D(isBlendModeOne) {
 	gl.uniform4fv(uniform.uSpriteRendererColor, this.color);
 	gl.uniform2fv(uniform.uSpriteRendererSize, _size$7);
 	gl.uniform2fv(uniform.uSpriteRendererOffset, _offset);
-	gl.uniform1i(uniform.uIsRGBA, this.sprite.type);
+	gl.uniform1i(uniform.uIsRGBA, this.sprite ? this.sprite.type : 1);
 	if (_groupId !== _lastGroupId || _texture$4 !== this.image.texture) {
 		_lastGroupId = _groupId;
 		gl.bindTexture(gl.TEXTURE_2D, _texture$4 = this.image.texture);
@@ -207667,17 +207668,20 @@ var init_SpriteRenderer = __esmMin((() => {
 				_gl$2.depthMask(depthMask);
 			}
 			if (this.disableDepthCorrection !== depthCorrection) this.disableDepthCorrection = depthCorrection;
-			fn();
-			if (_depthTest !== prevDepthTest) {
-				_depthTest = prevDepthTest;
-				if (prevDepthTest) _gl$2.enable(_gl$2.DEPTH_TEST);
-				else _gl$2.disable(_gl$2.DEPTH_TEST);
+			try {
+				fn();
+			} finally {
+				if (_depthTest !== prevDepthTest) {
+					_depthTest = prevDepthTest;
+					if (prevDepthTest) _gl$2.enable(_gl$2.DEPTH_TEST);
+					else _gl$2.disable(_gl$2.DEPTH_TEST);
+				}
+				if (_depthMask !== prevDepthMask) {
+					_depthMask = prevDepthMask;
+					_gl$2.depthMask(prevDepthMask);
+				}
+				if (this.disableDepthCorrection !== prevDepthCorrection) this.disableDepthCorrection = prevDepthCorrection;
 			}
-			if (_depthMask !== prevDepthMask) {
-				_depthMask = prevDepthMask;
-				_gl$2.depthMask(prevDepthMask);
-			}
-			if (this.disableDepthCorrection !== prevDepthCorrection) this.disableDepthCorrection = prevDepthCorrection;
 		}
 	};
 }));
@@ -207705,7 +207709,7 @@ function init$12(gl, water) {
 	_vertCount = water.vertCount;
 	_waveHeight = water.waveHeight;
 	_waveSpeed = water.waveSpeed;
-	water.level;
+	_waterLevel = water.level;
 	_animSpeed = water.animSpeed;
 	_wavePitch = water.wavePitch;
 	_waterOpacity = water.type !== 4 && water.type !== 6 ? .8 : 1;
@@ -207779,11 +207783,33 @@ function free$6(gl) {
 		gl.deleteTexture(_textures$1[i]);
 		_textures$1[i] = null;
 	}
+	_vertCount = 0;
 }
-var _program$24, _buffer$17, _vertCount, _textures$1, _waveSpeed, _waveHeight, _wavePitch, _animSpeed, _waterOpacity, Water_default;
+/**
+* Is the ground at this cell under the water surface ?
+* (world Y points down: ground is submerged when -altitude is above the wave crest)
+*
+* @param {number} x
+* @param {number} y
+* @return {boolean}
+*/
+function isSubmerged(x, y) {
+	if (!_vertCount) return false;
+	return -Altitude.getCellHeight(x, y) > _waterLevel - _waveHeight;
+}
+/**
+* Does the current map have any water surface ?
+*
+* @return {boolean}
+*/
+function hasWater() {
+	return _vertCount > 0;
+}
+var _program$24, _buffer$17, _vertCount, _textures$1, _waveSpeed, _waveHeight, _wavePitch, _waterLevel, _animSpeed, _waterOpacity, Water_default;
 var init_Water = __esmMin((() => {
 	init_WebGL();
 	init_SpriteRenderer();
+	init_Altitude();
 	init_Water$2();
 	init_Water$1();
 	_program$24 = null;
@@ -207793,12 +207819,15 @@ var init_Water = __esmMin((() => {
 	_waveSpeed = 0;
 	_waveHeight = 0;
 	_wavePitch = 0;
+	_waterLevel = 0;
 	_animSpeed = 0;
 	_waterOpacity = .9;
 	Water_default = {
 		init: init$12,
 		free: free$6,
-		render: render$11
+		render: render$11,
+		isSubmerged,
+		hasWater
 	};
 }));
 //#endregion
@@ -247494,7 +247523,7 @@ var init_SakuraWeatherEffect = __esmMin((() => {
 }));
 //#endregion
 //#region src/Renderer/Effects/PokJukWeatherEffect.js
-var _instance$2, _mapName$3, _whiteTexture, EXPLOSION_ALTITUDE, PARTICLE_SIZE, FIRE_LIFE_MS, EXPLOSION_LIFE_MS, PokJukWeatherEffect;
+var _instance$2, _mapName$3, _whiteTexture, EXPLOSION_ALTITUDE, PARTICLE_SIZE$1, FIRE_LIFE_MS, EXPLOSION_LIFE_MS, PokJukWeatherEffect;
 var init_PokJukWeatherEffect = __esmMin((() => {
 	init_MapRenderer();
 	init_SpriteRenderer();
@@ -247504,7 +247533,7 @@ var init_PokJukWeatherEffect = __esmMin((() => {
 	_mapName$3 = "";
 	_whiteTexture = null;
 	EXPLOSION_ALTITUDE = 8;
-	PARTICLE_SIZE = 6;
+	PARTICLE_SIZE$1 = 6;
 	FIRE_LIFE_MS = 50;
 	EXPLOSION_LIFE_MS = 1e3;
 	PokJukWeatherEffect = class PokJukWeatherEffect {
@@ -247539,12 +247568,12 @@ var init_PokJukWeatherEffect = __esmMin((() => {
 		createInternalTexture(gl) {
 			if (_whiteTexture) return;
 			const canvas = document.createElement("canvas");
-			canvas.width = PARTICLE_SIZE;
-			canvas.height = PARTICLE_SIZE;
+			canvas.width = PARTICLE_SIZE$1;
+			canvas.height = PARTICLE_SIZE$1;
 			const ctx = canvas.getContext("2d");
-			const center = PARTICLE_SIZE / 2;
+			const center = PARTICLE_SIZE$1 / 2;
 			const radius = 2;
-			ctx.clearRect(0, 0, PARTICLE_SIZE, PARTICLE_SIZE);
+			ctx.clearRect(0, 0, PARTICLE_SIZE$1, PARTICLE_SIZE$1);
 			const gradient = ctx.createRadialGradient(center, center, 0, center, center, radius);
 			gradient.addColorStop(0, "rgba(255, 255, 255, 1)");
 			gradient.addColorStop(.7, "rgba(255, 255, 255, 0.8)");
@@ -247584,7 +247613,7 @@ var init_PokJukWeatherEffect = __esmMin((() => {
 				colorType: Math.floor(Math.random() * 5),
 				state: 0,
 				particles: [],
-				size: PARTICLE_SIZE,
+				size: PARTICLE_SIZE$1,
 				arcDirection: Math.random() > .5 ? 1 : -1,
 				arcAmplitude: 3 + Math.random() * 2,
 				arcPhase: 0,
@@ -252040,33 +252069,53 @@ var init_WaterfallEffect$1 = __esmMin((() => {
 	WaterfallEffect_default = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 vTextureCoord;\r\nout vec4 fragColor;\r\n\r\nuniform sampler2D uTexture;\r\nuniform bool uFogUse;\r\nuniform float uFogNear;\r\nuniform float uFogFar;\r\nuniform vec3 uFogColor;\r\nuniform float uOpacity;\r\n\r\nvoid main(void) {\r\n	fragColor = texture(uTexture, vTextureCoord);\r\n	fragColor.a *= uOpacity;\r\n	if (fragColor.a < 0.01) {\r\n		discard;\r\n	}\r\n	if (uFogUse) {\r\n		float fogFactor = smoothstep(uFogNear, uFogFar, gl_FragCoord.z / gl_FragCoord.w);\r\n		fragColor = mix(fragColor, vec4(uFogColor, fragColor.a), fogFactor);\r\n	}\r\n}\r\n";
 }));
 //#endregion
+//#region src/Renderer/Effects/WaterfallParticle.vs?raw
+var WaterfallParticle_default$1;
+var init_WaterfallParticle$1 = __esmMin((() => {
+	WaterfallParticle_default$1 = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 aCorner;\r\nin vec4 aSeed; // x offset, z offset, phase, drift angle\r\n\r\nuniform mat4 uModelViewMat;\r\nuniform mat4 uProjectionMat;\r\nuniform mat4 uModelMat;\r\nuniform float uTime;\r\nuniform float uSize;\r\n\r\nout vec2 vTextureCoord;\r\nout float vAlpha;\r\n\r\n// Spray puffs rise from the pool for RISE units after waiting below it.\r\nconst float CYCLE = 38.0;\r\nconst float RISE = 8.0;\r\nconst float DELAY = CYCLE - RISE;\r\n\r\nvoid main(void) {\r\n	float life = fract(aSeed.z + uTime);\r\n	float t = life * CYCLE - DELAY;\r\n\r\n	if (t <= 0.0) {\r\n		gl_Position = vec4(2.0, 2.0, 2.0, 1.0);\r\n		vTextureCoord = vec2(0.0);\r\n		vAlpha = 0.0;\r\n		return;\r\n	}\r\n\r\n	float progress = t / RISE;\r\n	float drift = sin(aSeed.w + progress * 3.0) * 0.3;\r\n	vec3 local = vec3(aSeed.x + drift, -t * 0.2, aSeed.y);\r\n	vec4 viewPosition = uModelViewMat * uModelMat * vec4(local, 1.0);\r\n	viewPosition.xy += aCorner * uSize;\r\n\r\n	gl_Position = uProjectionMat * viewPosition;\r\n	vTextureCoord = aCorner * 0.5 + 0.5;\r\n	vAlpha = 0.08 * min(1.0, progress * 8.0) * (1.0 - smoothstep(0.5, 1.0, progress));\r\n}\r\n";
+}));
+//#endregion
+//#region src/Renderer/Effects/WaterfallParticle.fs?raw
+var WaterfallParticle_default;
+var init_WaterfallParticle = __esmMin((() => {
+	WaterfallParticle_default = "#version 300 es\r\nprecision highp float;\r\n\r\nin vec2 vTextureCoord;\r\nin float vAlpha;\r\nout vec4 fragColor;\r\n\r\nuniform sampler2D uTexture;\r\nuniform vec3 uColor;\r\nuniform bool uFogUse;\r\nuniform float uFogNear;\r\nuniform float uFogFar;\r\n\r\nvoid main(void) {\r\n	fragColor = texture(uTexture, vTextureCoord);\r\n	fragColor.rgb *= uColor;\r\n	fragColor.a *= vAlpha;\r\n	if (uFogUse) {\r\n		float fogFactor = smoothstep(uFogNear, uFogFar, gl_FragCoord.z / gl_FragCoord.w);\r\n		fragColor.a *= 1.0 - fogFactor;\r\n	}\r\n	if (fragColor.a < 0.01) {\r\n		discard;\r\n	}\r\n}\r\n";
+}));
+//#endregion
 //#region src/Renderer/Effects/WaterfallEffect.js
+function textureFiles(textureSet) {
+	const files = [];
+	for (let index = 1; index <= TEXTURE_COUNT; index++) files.push(`data/texture/effect/waterfall${textureSet}${index}.tga`);
+	files.push(PARTICLE_TEXTURE);
+	return files;
+}
 function loadTextures(gl, textureSet, effect) {
 	let cache = _textureCache.get(textureSet);
 	if (!cache) {
+		const files = textureFiles(textureSet);
 		cache = {
-			textures: new Array(TEXTURE_COUNT),
+			textures: new Array(files.length),
 			waiters: /* @__PURE__ */ new Set(),
 			ready: false,
 			active: true
 		};
 		_textureCache.set(textureSet, cache);
-		const texturePrefix = `waterfall${textureSet}`;
-		for (let index = 1; index <= TEXTURE_COUNT; index++) Client.loadFile(`data/texture/effect/${texturePrefix}${index}.tga`, (buffer) => {
-			WebGL_default.texture(gl, buffer, (texture) => {
-				if (!cache.active) {
-					gl.deleteTexture(texture);
-					return;
-				}
-				cache.textures[index - 1] = texture;
-				if (cache.textures.filter(Boolean).length === TEXTURE_COUNT) {
-					cache.ready = true;
-					cache.waiters.forEach((waiter) => {
-						waiter.textures = cache.textures;
-						waiter.ready = true;
-					});
-					cache.waiters.clear();
-				}
+		files.forEach((file, index) => {
+			Client.loadFile(file, (buffer) => {
+				WebGL_default.texture(gl, buffer, (texture) => {
+					if (!cache.active) {
+						gl.deleteTexture(texture);
+						return;
+					}
+					cache.textures[index] = texture;
+					if (cache.textures.filter(Boolean).length === files.length) {
+						cache.ready = true;
+						cache.waiters.forEach((waiter) => {
+							waiter.textures = cache.textures;
+							waiter.ready = true;
+						});
+						cache.waiters.clear();
+					}
+				});
 			});
 		});
 	}
@@ -252077,37 +252126,86 @@ function loadTextures(gl, textureSet, effect) {
 	return cache;
 }
 function getStyle(variant) {
+	const small = variant.includes("small");
+	const dark = variant.includes("dark");
 	return {
-		small: variant.includes("small"),
-		textureSet: variant.includes("dark") ? 3 : 1
+		width: (small ? 18 : 36) * UNIT,
+		particleCount: small ? 320 : 640,
+		particleSpread: (small ? 12 : 22) * UNIT,
+		textureSet: dark ? 3 : 1
 	};
 }
-var mat4$13, _matrix$4, SEGMENT_COUNT, TEXTURE_COUNT, SEGMENT_HEIGHT, EFFECT_TICK_MS, OPACITY, _program$16, _textureCache, WaterfallEffect;
+function buildParticleSeeds(count, spread) {
+	const seeds = new Float32Array(count * PARTICLE_FLOATS);
+	for (let i = 0; i < count; i++) {
+		seeds[i * PARTICLE_FLOATS] = (Math.random() * 2 - 1) * spread;
+		seeds[i * PARTICLE_FLOATS + 1] = (Math.random() * 2 - 1) * 5 * UNIT;
+		seeds[i * PARTICLE_FLOATS + 2] = Math.random();
+		seeds[i * PARTICLE_FLOATS + 3] = Math.random() * Math.PI * 2;
+	}
+	return seeds;
+}
+function setVertex(index, x, y, z, u, v) {
+	const offset = index * 5;
+	_vertices[offset] = x;
+	_vertices[offset + 1] = y;
+	_vertices[offset + 2] = z;
+	_vertices[offset + 3] = u;
+	_vertices[offset + 4] = v;
+}
+var mat4$13, _matrix$4, UNIT, LAYER_COUNT, SEGMENT_COUNT, TEXTURE_COUNT, SEGMENT_HEIGHT, EFFECT_TICK_MS, OPACITY, PARTICLE_TEXTURE, PARTICLE_CYCLE_MS, PARTICLE_SIZE, PARTICLE_COLOR, PARTICLE_FLOATS, PARTICLE_CORNERS, _program$16, _particleProgram, _textureCache, _vertices, WaterfallEffect;
 var init_WaterfallEffect = __esmMin((() => {
 	init_WebGL();
 	init_gl_matrix();
 	init_Client();
 	init_WaterfallEffect$2();
 	init_WaterfallEffect$1();
+	init_WaterfallParticle$1();
+	init_WaterfallParticle();
 	mat4$13 = gl_matrix_default.mat4;
 	_matrix$4 = mat4$13.create();
+	UNIT = 1 / 5;
+	LAYER_COUNT = 4;
 	SEGMENT_COUNT = 5;
 	TEXTURE_COUNT = 3;
-	SEGMENT_HEIGHT = 8;
+	SEGMENT_HEIGHT = 40 * UNIT;
 	EFFECT_TICK_MS = 24;
-	OPACITY = 120 / 255;
+	OPACITY = 80 / 255;
+	PARTICLE_TEXTURE = "data/texture/effect/freeze_a_small.bmp";
+	PARTICLE_CYCLE_MS = 760 * EFFECT_TICK_MS;
+	PARTICLE_SIZE = 6 * Math.SQRT1_2 * UNIT;
+	PARTICLE_COLOR = [
+		.65,
+		1,
+		.75
+	];
+	PARTICLE_FLOATS = 4;
+	PARTICLE_CORNERS = new Float32Array([
+		-1,
+		-1,
+		1,
+		-1,
+		-1,
+		1,
+		1,
+		1
+	]);
 	_textureCache = /* @__PURE__ */ new Map();
+	_vertices = /* @__PURE__ */ new Float32Array(20);
 	WaterfallEffect = class {
 		constructor(effect, instance, init) {
 			const style = getStyle(effect.variant);
 			this.position = instance.position;
 			this.startTick = instance.startTick;
-			this.small = style.small;
-			this.height = effect.height;
+			this.width = style.width;
+			this.particleCount = style.particleCount;
+			this.particleSpread = style.particleSpread;
 			this.textureSet = style.textureSet;
 			this.textures = [];
 			this.textureCache = null;
 			this.buffer = null;
+			this.cornerBuffer = null;
+			this.seedBuffer = null;
 			this.vertical = effect.vertical;
 			this.ready = false;
 			this.needInit = true;
@@ -252119,6 +252217,12 @@ var init_WaterfallEffect = __esmMin((() => {
 		*/
 		init(gl) {
 			this.buffer = gl.createBuffer();
+			this.cornerBuffer = gl.createBuffer();
+			this.seedBuffer = gl.createBuffer();
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.cornerBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, PARTICLE_CORNERS, gl.STATIC_DRAW);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.seedBuffer);
+			gl.bufferData(gl.ARRAY_BUFFER, buildParticleSeeds(this.particleCount, this.particleSpread), gl.STATIC_DRAW);
 			this.textureCache = loadTextures(gl, this.textureSet, this);
 		}
 		render(gl, tick) {
@@ -252127,20 +252231,23 @@ var init_WaterfallEffect = __esmMin((() => {
 			mat4$13.identity(_matrix$4);
 			mat4$13.translate(_matrix$4, _matrix$4, [
 				this.position[0] + .5,
-				-this.position[2],
-				this.position[1] + 2.5
+				1 - this.position[2],
+				this.position[1] + .5
 			]);
 			if (this.vertical) mat4$13.rotateY(_matrix$4, _matrix$4, Math.PI / 2);
 			gl.uniformMatrix4fv(uniform.uModelMat, false, _matrix$4);
-			const process = Math.floor((tick - this.startTick) / EFFECT_TICK_MS);
+			const elapsed = tick - this.startTick;
+			const process = Math.floor(elapsed / EFFECT_TICK_MS);
 			gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
-			for (let band = 0; band < 4; band++) {
-				const cycleLength = this.height - band * (this.small ? 6 : 13);
-				const scroll = process % cycleLength * SEGMENT_HEIGHT / cycleLength;
+			gl.vertexAttribPointer(attribute.aPosition, 3, gl.FLOAT, false, 20, 0);
+			gl.vertexAttribPointer(attribute.aTextureCoord, 2, gl.FLOAT, false, 20, 12);
+			for (let layer = 0; layer < LAYER_COUNT; layer++) {
+				const speed = 80 - layer * 13;
+				const scroll = process % speed * SEGMENT_HEIGHT / speed;
 				const crop = scroll / SEGMENT_HEIGHT;
-				const phase = Math.floor(process % (TEXTURE_COUNT * cycleLength) / cycleLength);
-				const halfWidth = (36 + band) / 10;
-				const depth = (band * .25 - 1) / 5;
+				const phase = Math.floor(process % (TEXTURE_COUNT * speed) / speed);
+				const halfWidth = (this.width + layer * UNIT) / 2;
+				const depth = (layer - 1) * UNIT;
 				for (let segment = 0; segment < SEGMENT_COUNT; segment++) {
 					const top = scroll - segment * SEGMENT_HEIGHT;
 					const bottom = top - SEGMENT_HEIGHT;
@@ -252155,35 +252262,45 @@ var init_WaterfallEffect = __esmMin((() => {
 						visibleBottom = top + (bottom - top) * crop;
 						vBottom = crop;
 					}
-					const vertices = new Float32Array([
-						-halfWidth,
-						-visibleBottom,
-						depth,
-						0,
-						vBottom,
-						halfWidth,
-						-visibleBottom,
-						depth,
-						1,
-						vBottom,
-						-halfWidth,
-						-visibleTop,
-						depth,
-						0,
-						vTop,
-						halfWidth,
-						-visibleTop,
-						depth,
-						1,
-						vTop
-					]);
-					gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.DYNAMIC_DRAW);
-					gl.vertexAttribPointer(attribute.aPosition, 3, gl.FLOAT, false, 20, 0);
-					gl.vertexAttribPointer(attribute.aTextureCoord, 2, gl.FLOAT, false, 20, 12);
+					setVertex(0, -halfWidth, -visibleBottom, depth, 0, vBottom);
+					setVertex(1, halfWidth, -visibleBottom, depth, 1, vBottom);
+					setVertex(2, -halfWidth, -visibleTop, depth, 0, vTop);
+					setVertex(3, halfWidth, -visibleTop, depth, 1, vTop);
+					gl.bufferData(gl.ARRAY_BUFFER, _vertices, gl.DYNAMIC_DRAW);
 					gl.bindTexture(gl.TEXTURE_2D, this.textures[(segment + phase) % TEXTURE_COUNT]);
 					gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 				}
 			}
+			this.renderParticles(gl, elapsed);
+		}
+		/**
+		* Additive spray puffs rising from the pool at the base of the fall,
+		* drawn as camera-facing instanced quads.
+		*/
+		renderParticles(gl, elapsed) {
+			const uniform = _particleProgram.uniform;
+			const attribute = _particleProgram.attribute;
+			gl.useProgram(_particleProgram);
+			gl.uniformMatrix4fv(uniform.uModelMat, false, _matrix$4);
+			gl.uniform1f(uniform.uTime, elapsed / PARTICLE_CYCLE_MS);
+			gl.uniform1f(uniform.uSize, PARTICLE_SIZE);
+			gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+			gl.enableVertexAttribArray(attribute.aCorner);
+			gl.enableVertexAttribArray(attribute.aSeed);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.cornerBuffer);
+			gl.vertexAttribPointer(attribute.aCorner, 2, gl.FLOAT, false, 0, 0);
+			gl.bindBuffer(gl.ARRAY_BUFFER, this.seedBuffer);
+			gl.vertexAttribPointer(attribute.aSeed, PARTICLE_FLOATS, gl.FLOAT, false, 0, 0);
+			gl.vertexAttribDivisor(attribute.aSeed, 1);
+			gl.bindTexture(gl.TEXTURE_2D, this.textures[TEXTURE_COUNT]);
+			gl.drawArraysInstanced(gl.TRIANGLE_STRIP, 0, 4, this.particleCount);
+			gl.vertexAttribDivisor(attribute.aSeed, 0);
+			gl.disableVertexAttribArray(attribute.aCorner);
+			gl.disableVertexAttribArray(attribute.aSeed);
+			gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+			gl.useProgram(_program$16);
+			gl.enableVertexAttribArray(_program$16.attribute.aPosition);
+			gl.enableVertexAttribArray(_program$16.attribute.aTextureCoord);
 		}
 		/**
 		* Free WebGL resources
@@ -252195,10 +252312,16 @@ var init_WaterfallEffect = __esmMin((() => {
 				this.textureCache.waiters.delete(this);
 				this.textureCache = null;
 			}
-			if (this.buffer) {
-				gl.deleteBuffer(this.buffer);
-				this.buffer = null;
-			}
+			[
+				this.buffer,
+				this.cornerBuffer,
+				this.seedBuffer
+			].forEach((buffer) => {
+				if (buffer) gl.deleteBuffer(buffer);
+			});
+			this.buffer = null;
+			this.cornerBuffer = null;
+			this.seedBuffer = null;
 			this.textures = [];
 			this.ready = false;
 		}
@@ -252213,12 +252336,21 @@ var init_WaterfallEffect = __esmMin((() => {
 		* @param {object} entity
 		*/
 		static beforeRender(gl, modelView, projection, fog) {
+			const fogUse = fog.use && fog.exist;
+			gl.useProgram(_particleProgram);
+			gl.uniformMatrix4fv(_particleProgram.uniform.uModelViewMat, false, modelView);
+			gl.uniformMatrix4fv(_particleProgram.uniform.uProjectionMat, false, projection);
+			gl.uniform1i(_particleProgram.uniform.uFogUse, fogUse);
+			gl.uniform1f(_particleProgram.uniform.uFogNear, fog.near);
+			gl.uniform1f(_particleProgram.uniform.uFogFar, fog.far);
+			gl.uniform1i(_particleProgram.uniform.uTexture, 0);
+			gl.uniform3fv(_particleProgram.uniform.uColor, PARTICLE_COLOR);
 			const uniform = _program$16.uniform;
 			const attribute = _program$16.attribute;
 			gl.useProgram(_program$16);
 			gl.uniformMatrix4fv(uniform.uModelViewMat, false, modelView);
 			gl.uniformMatrix4fv(uniform.uProjectionMat, false, projection);
-			gl.uniform1i(uniform.uFogUse, fog.use && fog.exist);
+			gl.uniform1i(uniform.uFogUse, fogUse);
 			gl.uniform1f(uniform.uFogNear, fog.near);
 			gl.uniform1f(uniform.uFogFar, fog.far);
 			gl.uniform3fv(uniform.uFogColor, fog.color);
@@ -252248,6 +252380,7 @@ var init_WaterfallEffect = __esmMin((() => {
 		*/
 		static init(gl) {
 			_program$16 = WebGL_default.createShaderProgram(gl, WaterfallEffect_default$1, WaterfallEffect_default);
+			_particleProgram = WebGL_default.createShaderProgram(gl, WaterfallParticle_default$1, WaterfallParticle_default);
 			this.ready = true;
 		}
 		/**
@@ -252265,7 +252398,9 @@ var init_WaterfallEffect = __esmMin((() => {
 			});
 			_textureCache.clear();
 			if (_program$16) gl.deleteProgram(_program$16);
+			if (_particleProgram) gl.deleteProgram(_particleProgram);
 			_program$16 = null;
+			_particleProgram = null;
 			this.ready = false;
 			this.needInit = true;
 		}
@@ -253970,7 +254105,7 @@ var init_Sky = __esmMin((() => {
 }));
 //#endregion
 //#region src/Renderer/Effects/Damage.js
-var EndureSound, dpr$1, procCanvas$1, procCtx$1, _skin, _damageSkins, _loadedSkinsData, _enableSuffix, _msgNames, _list$2, prevCombo, Damage;
+var EndureSound, dpr$1, procCanvas$1, procCtx$1, _skin, _damageSkins, _loadedSkinsData, _enableSuffix, _msgNames, _list$2, _rgbaFrame, prevCombo, Damage;
 var init_Damage = __esmMin((() => {
 	init_WebGL();
 	init_Client();
@@ -254025,6 +254160,7 @@ var init_Damage = __esmMin((() => {
 		5: "lucky"
 	};
 	_list$2 = [];
+	_rgbaFrame = { type: 1 };
 	prevCombo = [];
 	Damage = class Damage {
 		constructor() {
@@ -254323,6 +254459,7 @@ var init_Damage = __esmMin((() => {
 			SpriteRenderer.shadow = 1;
 			SpriteRenderer.angle = 0;
 			SpriteRenderer.image.palette = null;
+			SpriteRenderer.sprite = _rgbaFrame;
 			let i, count, perc;
 			let damage;
 			let size;
@@ -257601,6 +257738,7 @@ var init_MapRenderer = __esmMin((() => {
 			ScreenEffectManager.render(gl, modelView, projection, fog, tick, true);
 			EffectManager.render(gl, modelView, projection, fog, tick, true);
 			EntityManager.render(gl, modelView, projection, fog, false);
+			EntityManager.renderWaterDepth(gl, modelView, projection, fog);
 			Water_default.render(gl, modelView, projection, fog, light, tick);
 			EffectManager.render(gl, modelView, projection, fog, tick, false);
 			EntityManager.render(gl, modelView, projection, fog, true);
@@ -268188,50 +268326,42 @@ var init_EffectTable = __esmMin((() => {
 		349: [{
 			type: "WATERFALL",
 			variant: "large",
-			vertical: false,
-			height: 80
+			vertical: false
 		}],
 		350: [{
 			type: "WATERFALL",
 			variant: "large",
-			vertical: true,
-			height: 80
+			vertical: true
 		}],
 		351: [{
 			type: "WATERFALL",
 			variant: "small",
-			vertical: false,
-			height: 30
+			vertical: false
 		}],
 		352: [{
 			type: "WATERFALL",
 			variant: "small",
-			vertical: true,
-			height: 30
+			vertical: true
 		}],
 		353: [{
 			type: "WATERFALL",
 			variant: "dark-large",
-			vertical: false,
-			height: 80
+			vertical: false
 		}],
 		354: [{
 			type: "WATERFALL",
 			variant: "dark-large",
-			vertical: true,
-			height: 80
+			vertical: true
 		}],
 		355: [{
 			type: "WATERFALL",
 			variant: "dark-small",
-			vertical: false,
-			height: 30
+			vertical: false
 		}],
 		356: [{
 			type: "WATERFALL",
 			variant: "dark-small",
-			vertical: true,
-			height: 30
+			vertical: true
 		}],
 		361: [{
 			type: "3D",
@@ -302966,6 +303096,28 @@ function render$5(modelView, projection) {
 	renderGUI(this, modelView, projection);
 }
 /**
+* Depth-only redraw of the body for entities standing in water, so the water
+* pass (drawn after entities, depth tested) covers only the submerged part.
+* Runs after every entity has been drawn, with colour writes disabled by the
+* caller, so the written depth cannot hide other sprites. Replays the exact
+* layers the colour pass drew this frame (`waterDepthFrame`), so no animation,
+* sound or trail state is touched. Only set for the non-player body pass;
+* entity types that already write depth never get a frame.
+*/
+function renderWaterDepth$1() {
+	const frame = this.waterDepthFrame;
+	if (!frame || this.hideEntity || !this.effectColor[3]) return;
+	if (!Water_default.isSubmerged(this.position[0], this.position[1])) return;
+	const self = this;
+	SpriteRenderer.position.set(this.position);
+	SpriteRenderer.position[2] = SpriteRenderer.position[2] + .2;
+	SpriteRenderer.zIndex = 150;
+	SpriteRenderer.runWithDepth(true, true, false, function() {
+		for (let i = 0, count = frame.layers.length; i < count; ++i) self.renderLayer(frame.layers[i], frame.spr, frame.pal, frame.size, frame.position, "body", false);
+	});
+	SpriteRenderer.zIndex = 1;
+}
+/**
 * Render second body (BL_DOUBLE_BODY + EF_MAKEBLUR)
 * @param {Entity} entity
 * @param {Array} layers
@@ -303234,6 +303386,9 @@ function Init$3() {
 	this.render = render$5;
 	this.renderLayer = renderLayer;
 	this.renderEntity = renderEntity;
+	this.renderWaterDepth = renderWaterDepth$1;
+	this.waterDepthFrame = void 0;
+	this._waterDepthFrameBuffer = null;
 }
 var WALK_DIST_TO_MOTION, renderGUI, SPRITE_LIFT, calculateBoundingRect, renderEntity, renderElement;
 var init_EntityRender = __esmMin((() => {
@@ -303244,6 +303399,7 @@ var init_EntityRender = __esmMin((() => {
 	init_SpriteRenderer();
 	init_Ground();
 	init_Altitude();
+	init_Water();
 	init_SessionStorage();
 	init_DBManager();
 	init_Graphics();
@@ -303497,6 +303653,7 @@ var init_EntityRender = __esmMin((() => {
 				default:
 					SpriteRenderer.position[2] = SpriteRenderer.position[2] + .2;
 					SpriteRenderer.zIndex = 150;
+					self.waterDepthFrame = null;
 					SpriteRenderer.runWithDepth(true, false, false, function() {
 						renderElement(self, self.files.body, "body", _position, true);
 					});
@@ -303571,6 +303728,15 @@ var init_EntityRender = __esmMin((() => {
 				blurType: isBUNSIN ? 5 : isHALLUCINATIONWALK ? 3 : entity._blurType || 1
 			});
 			for (let i = 0, count = layers.length; i < count; ++i) entity.renderLayer(layers[i], spr, pal, files.size, _position, type, isBlendModeOne);
+			if (is_main && type === "body" && entity.waterDepthFrame === null) {
+				const frame = entity._waterDepthFrameBuffer || (entity._waterDepthFrameBuffer = { position: /* @__PURE__ */ new Int32Array(2) });
+				frame.layers = layers;
+				frame.spr = spr;
+				frame.pal = pal;
+				frame.size = files.size;
+				frame.position.set(_position);
+				entity.waterDepthFrame = frame;
+			}
 			if (is_main && animation.pos.length) {
 				position[0] = animation.pos[0].x;
 				position[1] = animation.pos[0].y;
@@ -305389,6 +305555,30 @@ function sortByPriority(a, b) {
 	return aDepth - bDepth;
 }
 /**
+* Player-relative view-area culling parameters (performance mode only)
+*
+* @returns {object|null} { x, y, viewAreaSq } or null when culling is off
+*/
+function getCulling() {
+	if (!GraphicsSettings.performanceMode || !SessionStorage_default.Entity || !SessionStorage_default.Entity.position) return null;
+	return {
+		x: SessionStorage_default.Entity.position[0],
+		y: SessionStorage_default.Entity.position[1],
+		viewAreaSq: GraphicsSettings.viewArea * GraphicsSettings.viewArea
+	};
+}
+/**
+* @param {object|null} culling from getCulling()
+* @param {Entity} entity
+* @returns {boolean} true when the entity is outside the view area
+*/
+function isCulled(culling, entity) {
+	if (!culling) return false;
+	const dx = entity.position[0] - culling.x;
+	const dy = entity.position[1] - culling.y;
+	return dx * dx + dy * dy > culling.viewAreaSq;
+}
+/**
 * Render all entities (picking or not)
 *
 * @param {object} gl webgl context
@@ -305411,13 +305601,7 @@ function render$4(gl, modelView, projection, fog, renderEffects) {
 		_pickSortDirty = true;
 	}
 	SpriteRenderer.bind3DContext(gl, modelView, projection, fog);
-	const doCulling = GraphicsSettings.performanceMode;
-	let playerX, playerY, viewAreaSq;
-	if (doCulling && SessionStorage_default.Entity && SessionStorage_default.Entity.position) {
-		playerX = SessionStorage_default.Entity.position[0];
-		playerY = SessionStorage_default.Entity.position[1];
-		viewAreaSq = GraphicsSettings.viewArea * GraphicsSettings.viewArea;
-	}
+	const culling = getCulling();
 	for (i = 0, count = _list.length; i < count; ++i) if (_list[i].objecttype != _list[i].constructor.TYPE_EFFECT && !renderEffects || _list[i].objecttype == _list[i].constructor.TYPE_EFFECT && renderEffects) {
 		if (_list[i].remove_tick && _list[i].remove_tick + _list[i].remove_delay < tick) {
 			const entityFocus = getFocusEntity();
@@ -305434,13 +305618,28 @@ function render$4(gl, modelView, projection, fog, renderEffects) {
 			_pickSortDirty = true;
 			continue;
 		}
-		if (doCulling) {
-			const dx = _list[i].position[0] - playerX;
-			const dy = _list[i].position[1] - playerY;
-			if (dx * dx + dy * dy > viewAreaSq) continue;
-		}
+		if (isCulled(culling, _list[i])) continue;
 		_list[i].render(modelView, projection);
 	}
+	SpriteRenderer.unbind(gl);
+}
+/**
+* Depth-only pass for entities standing in water, run after all entities
+* are drawn and right before the water so it can hide their submerged part
+* without occluding other sprites.
+*
+* @param {object} gl context
+* @param {mat4} modelView
+* @param {mat4} projection
+* @param {object} fog
+*/
+function renderWaterDepth(gl, modelView, projection, fog) {
+	if (!_list.length || !Water_default.hasWater()) return;
+	const culling = getCulling();
+	SpriteRenderer.bind3DContext(gl, modelView, projection, fog);
+	gl.colorMask(false, false, false, false);
+	for (let i = 0, count = _list.length; i < count; ++i) if (!isCulled(culling, _list[i])) _list[i].renderWaterDepth();
+	gl.colorMask(true, true, true, true);
 	SpriteRenderer.unbind(gl);
 }
 /**
@@ -305581,6 +305780,7 @@ var init_EntityManager = __esmMin((() => {
 	init_PathFinding();
 	init_Graphics();
 	init_Altitude();
+	init_Water();
 	init_GR2ModelRenderer();
 	_list = [];
 	_gidMap = /* @__PURE__ */ new Map();
@@ -305614,6 +305814,7 @@ var init_EntityManager = __esmMin((() => {
 		removeLife,
 		clearLifeCache,
 		render: render$4,
+		renderWaterDepth,
 		intersect,
 		setSupportPicking,
 		pendingTransformations,
