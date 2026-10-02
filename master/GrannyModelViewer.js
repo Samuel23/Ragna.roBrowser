@@ -84822,7 +84822,7 @@ var init_JobNameTable = __esmMin((() => {
 	JobNameTable[JobConst_default.IMPERIAL_GUARD_RIDING] = "imperial_guard_riding";
 	JobNameTable[JobConst_default.BIOLO_RIDING] = "biolo_riding";
 	JobNameTable[JobConst_default.ABYSS_CHASER_RIDING] = "abyss_chaser_riding";
-	JobNameTable[JobConst_default.ELEMENTAL_MASTER_RIDING] = "elemental_master_riding";
+	JobNameTable[JobConst_default.ELEMENTAL_MASTER_RIDING] = "elemetal_master_riding";
 	JobNameTable[JobConst_default.INQUISITOR_RIDING] = "inquisitor_riding";
 	JobNameTable[JobConst_default.TROUBADOUR_RIDING] = "troubadour_riding";
 	JobNameTable[JobConst_default.TROUVERE_RIDING] = "trouvere_riding";
@@ -85090,6 +85090,19 @@ var init_PalNameTable = __esmMin((() => {
 	PalNameTable[JobConst_default.INQUISITOR] = JobNameTable[JobConst_default.INQUISITOR];
 	PalNameTable[JobConst_default.TROUBADOUR] = JobNameTable[JobConst_default.TROUBADOUR];
 	PalNameTable[JobConst_default.TROUVERE] = JobNameTable[JobConst_default.TROUVERE];
+	PalNameTable[JobConst_default.DRAGON_KNIGHT_RIDING] = JobNameTable[JobConst_default.DRAGON_KNIGHT_RIDING];
+	PalNameTable[JobConst_default.MEISTER_RIDING] = JobNameTable[JobConst_default.MEISTER_RIDING];
+	PalNameTable[JobConst_default.SHADOW_CROSS_RIDING] = JobNameTable[JobConst_default.SHADOW_CROSS_RIDING];
+	PalNameTable[JobConst_default.ARCH_MAGE_RIDING] = JobNameTable[JobConst_default.ARCH_MAGE_RIDING];
+	PalNameTable[JobConst_default.CARDINAL_RIDING] = JobNameTable[JobConst_default.CARDINAL_RIDING];
+	PalNameTable[JobConst_default.WINDHAWK_RIDING] = JobNameTable[JobConst_default.WINDHAWK_RIDING];
+	PalNameTable[JobConst_default.IMPERIAL_GUARD_RIDING] = JobNameTable[JobConst_default.IMPERIAL_GUARD_RIDING];
+	PalNameTable[JobConst_default.BIOLO_RIDING] = JobNameTable[JobConst_default.BIOLO_RIDING];
+	PalNameTable[JobConst_default.ABYSS_CHASER_RIDING] = JobNameTable[JobConst_default.ABYSS_CHASER_RIDING];
+	PalNameTable[JobConst_default.ELEMENTAL_MASTER_RIDING] = JobNameTable[JobConst_default.ELEMENTAL_MASTER_RIDING];
+	PalNameTable[JobConst_default.INQUISITOR_RIDING] = JobNameTable[JobConst_default.INQUISITOR_RIDING];
+	PalNameTable[JobConst_default.TROUBADOUR_RIDING] = JobNameTable[JobConst_default.TROUBADOUR_RIDING];
+	PalNameTable[JobConst_default.TROUVERE_RIDING] = JobNameTable[JobConst_default.TROUVERE_RIDING];
 	PalNameTable[JobConst_default.WINDHAWK2] = JobNameTable[JobConst_default.WINDHAWK2];
 	PalNameTable[JobConst_default.MEISTER2] = JobNameTable[JobConst_default.MEISTER2];
 	PalNameTable[JobConst_default.DRAGON_KNIGHT2] = JobNameTable[JobConst_default.DRAGON_KNIGHT2];
@@ -107437,7 +107450,36 @@ var init_SkillConst = __esmMin((() => {
 		ITEM_BANANA_BOMB: 11006,
 		SCRIPT_999: 11999,
 		EFST_DRESS_UP: 12e3,
-		EFST_999: 12999
+		EFST_999: 12999,
+		SS_FOUR_CHARM: 5499,
+		NW_WILD_SHOT: 5500,
+		NW_MIDNIGHT_FALLEN: 5501,
+		SKE_SKY_SUN: 5502,
+		SKE_SKY_MOON: 5503,
+		SKE_STAR_LIGHT_KICK: 5504,
+		HN_OVERCOMING_CRISIS: 5505,
+		SH_CHUL_HO_BATTERING: 5506,
+		SH_HYUN_ROK_SPIRIT_POWER: 5507,
+		DK_DRAGONIC_PIERCE: 6502,
+		IG_RADIANT_SPEAR: 6503,
+		IG_IMPERIAL_CROSS: 6504,
+		IG_IMPERIAL_PRESSURE: 6505,
+		MT_RUSH_STRIKE: 6506,
+		MT_POWERFUL_SWING: 6507,
+		MT_ENERGY_CANNONADE: 6508,
+		BO_MYSTERY_POWDER: 6509,
+		BO_DUST_EXPLOSION: 6510,
+		SHC_CROSS_SLASH: 6511,
+		ABC_HIT_AND_SLIDING: 6512,
+		ABC_CHASING_BREAK: 6513,
+		ABC_CHASING_SHOT: 6514,
+		ABC_ABYSS_FLAME: 6515,
+		AG_ENERGY_CONVERSION: 6516,
+		EM_PSYCHIC_STREAM: 6517,
+		CD_DIVINUS_FLOS: 6518,
+		IQ_BLAZING_FLAME_BLAST: 6519,
+		WH_WILD_WALK: 6520,
+		TR_RHYTHMICAL_WAVE: 6521
 	};
 }));
 //#endregion
@@ -138194,7 +138236,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.DK_MADNESS_CRUSHER]: 19,
 		[SkillConst_default.DK_SERVANT_W_DEMOL]: 22,
 		[SkillConst_default.DK_VIGOR]: 24,
-		[SkillConst_default.DK_DRAGONIC_AURA]: 26
+		[SkillConst_default.DK_DRAGONIC_AURA]: 26,
+		[SkillConst_default.DK_DRAGONIC_PIERCE]: 28
 	};
 	SkillTreeView[JobConst_default.ARCH_MAGE] = {
 		list: 4,
@@ -138216,7 +138259,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.AG_CRYSTAL_IMPACT]: 18,
 		[SkillConst_default.AG_DESTRUCTIVE_HURRICANE]: 19,
 		[SkillConst_default.AG_VIOLENT_QUAKE]: 20,
-		[SkillConst_default.AG_ASTRAL_STRIKE]: 22
+		[SkillConst_default.AG_ASTRAL_STRIKE]: 22,
+		[SkillConst_default.AG_ENERGY_CONVERSION]: 28
 	};
 	SkillTreeView[JobConst_default.INQUISITOR] = {
 		list: 4,
@@ -138237,7 +138281,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.IQ_MASSIVE_F_BLASTER]: 27,
 		[SkillConst_default.IQ_THIRD_PUNISH]: 31,
 		[SkillConst_default.IQ_THIRD_CONSECRATION]: 32,
-		[SkillConst_default.IQ_THIRD_FLAME_BOMB]: 33
+		[SkillConst_default.IQ_THIRD_FLAME_BOMB]: 33,
+		[SkillConst_default.IQ_BLAZING_FLAME_BLAST]: 35
 	};
 	SkillTreeView[JobConst_default.IMPERIAL_GUARD] = {
 		list: 4,
@@ -138254,7 +138299,10 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.IG_HOLY_SHIELD]: 19,
 		[SkillConst_default.IG_GRAND_JUDGEMENT]: 22,
 		[SkillConst_default.IG_ULTIMATE_SACRIFICE]: 25,
-		[SkillConst_default.IG_JUDGEMENT_CROSS]: 26
+		[SkillConst_default.IG_JUDGEMENT_CROSS]: 26,
+		[SkillConst_default.IG_RADIANT_SPEAR]: 28,
+		[SkillConst_default.IG_IMPERIAL_CROSS]: 29,
+		[SkillConst_default.IG_IMPERIAL_PRESSURE]: 30
 	};
 	SkillTreeView[JobConst_default.SHADOW_CROSS] = {
 		list: 4,
@@ -138268,7 +138316,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.SHC_POTENT_VENOM]: 19,
 		[SkillConst_default.SHC_SHADOW_STAB]: 22,
 		[SkillConst_default.SHC_SHADOW_EXCEED]: 25,
-		[SkillConst_default.SHC_FATAL_SHADOW_CROW]: 30
+		[SkillConst_default.SHC_FATAL_SHADOW_CROW]: 30,
+		[SkillConst_default.SHC_CROSS_SLASH]: 35
 	};
 	SkillTreeView[JobConst_default.CARDINAL] = {
 		list: 4,
@@ -138288,7 +138337,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.CD_ARGUTUS_TELUM]: 22,
 		[SkillConst_default.CD_ARGUTUS_VITA]: 23,
 		[SkillConst_default.CD_PNEUMATICUS_PROCELLA]: 25,
-		[SkillConst_default.CD_COMPETENTIA]: 29
+		[SkillConst_default.CD_COMPETENTIA]: 29,
+		[SkillConst_default.CD_DIVINUS_FLOS]: 35
 	};
 	SkillTreeView[JobConst_default.BIOLO] = {
 		list: 4,
@@ -138307,7 +138357,9 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.BO_WOODENWARRIOR]: 18,
 		[SkillConst_default.BO_WOODEN_FAIRY]: 19,
 		[SkillConst_default.BO_RESEARCHREPORT]: 24,
-		[SkillConst_default.BO_HELLTREE]: 25
+		[SkillConst_default.BO_HELLTREE]: 25,
+		[SkillConst_default.BO_MYSTERY_POWDER]: 28,
+		[SkillConst_default.BO_DUST_EXPLOSION]: 29
 	};
 	SkillTreeView[JobConst_default.WINDHAWK] = {
 		list: 4,
@@ -138324,7 +138376,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.WH_FLAMETRAP]: 17,
 		[SkillConst_default.WH_SWIFTTRAP]: 18,
 		[SkillConst_default.WH_CALAMITYGALE]: 21,
-		[SkillConst_default.WH_HAWKBOOMERANG]: 26
+		[SkillConst_default.WH_HAWKBOOMERANG]: 26,
+		[SkillConst_default.WH_WILD_WALK]: 28
 	};
 	SkillTreeView[JobConst_default.TROUBADOUR] = {
 		list: 4,
@@ -138343,7 +138396,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.TR_MYSTIC_SYMPHONY]: 22,
 		[SkillConst_default.TR_ROKI_CAPRICCIO]: 24,
 		[SkillConst_default.TR_NIPELHEIM_REQUIEM]: 25,
-		[SkillConst_default.TR_KVASIR_SONATA]: 31
+		[SkillConst_default.TR_KVASIR_SONATA]: 31,
+		[SkillConst_default.TR_RHYTHMICAL_WAVE]: 35
 	};
 	SkillTreeView[JobConst_default.TROUVERE] = {
 		list: 4,
@@ -138362,7 +138416,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.TR_MYSTIC_SYMPHONY]: 22,
 		[SkillConst_default.TR_ROKI_CAPRICCIO]: 24,
 		[SkillConst_default.TR_NIPELHEIM_REQUIEM]: 25,
-		[SkillConst_default.TR_KVASIR_SONATA]: 31
+		[SkillConst_default.TR_KVASIR_SONATA]: 31,
+		[SkillConst_default.TR_RHYTHMICAL_WAVE]: 35
 	};
 	SkillTreeView[JobConst_default.ABYSS_CHASER] = {
 		list: 4,
@@ -138378,7 +138433,11 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.ABC_FRENZY_SHOT]: 17,
 		[SkillConst_default.ABC_ABYSS_SQUARE]: 19,
 		[SkillConst_default.ABC_ABYSS_SLAYER]: 23,
-		[SkillConst_default.ABC_ABYSS_STRIKE]: 26
+		[SkillConst_default.ABC_ABYSS_STRIKE]: 26,
+		[SkillConst_default.ABC_HIT_AND_SLIDING]: 28,
+		[SkillConst_default.ABC_CHASING_BREAK]: 29,
+		[SkillConst_default.ABC_CHASING_SHOT]: 30,
+		[SkillConst_default.ABC_ABYSS_FLAME]: 31
 	};
 	SkillTreeView[JobConst_default.MEISTER] = {
 		list: 4,
@@ -138396,7 +138455,10 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.MT_SUMMON_ABR_DUAL_CANNON]: 19,
 		[SkillConst_default.MT_TRIPLE_LASER]: 20,
 		[SkillConst_default.MT_SUMMON_ABR_MOTHER_NET]: 26,
-		[SkillConst_default.MT_SUMMON_ABR_INFINITY]: 33
+		[SkillConst_default.MT_SUMMON_ABR_INFINITY]: 33,
+		[SkillConst_default.MT_RUSH_STRIKE]: 35,
+		[SkillConst_default.MT_POWERFUL_SWING]: 36,
+		[SkillConst_default.MT_ENERGY_CANNONADE]: 37
 	};
 	SkillTreeView[JobConst_default.ELEMENTAL_MASTER] = {
 		list: 4,
@@ -138417,7 +138479,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.EM_INCREASING_ACTIVITY]: 24,
 		[SkillConst_default.EM_SUMMON_ELEMENTAL_SERPENS]: 26,
 		[SkillConst_default.EM_SUMMON_ELEMENTAL_TERREMOTUS]: 27,
-		[SkillConst_default.EM_ELEMENTAL_BUSTER]: 33
+		[SkillConst_default.EM_ELEMENTAL_BUSTER]: 33,
+		[SkillConst_default.EM_PSYCHIC_STREAM]: 35
 	};
 	SkillTreeView[JobConst_default.SKY_EMPEROR] = {
 		list: 3,
@@ -138434,7 +138497,10 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.SKE_DAWN_BREAK]: 24,
 		[SkillConst_default.SKE_STAR_CANNON]: 26,
 		[SkillConst_default.SKE_ALL_IN_THE_SKY]: 30,
-		[SkillConst_default.SKE_ENCHANTING_SKY]: 32
+		[SkillConst_default.SKE_ENCHANTING_SKY]: 32,
+		[SkillConst_default.SKE_SKY_SUN]: 35,
+		[SkillConst_default.SKE_SKY_MOON]: 36,
+		[SkillConst_default.SKE_STAR_LIGHT_KICK]: 37
 	};
 	SkillTreeView[JobConst_default.SOUL_ASCETIC] = {
 		list: 3,
@@ -138474,7 +138540,9 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.NW_HASTY_FIRE_IN_THE_HOLE]: 19,
 		[SkillConst_default.NW_GRENADES_DROPPING]: 26,
 		[SkillConst_default.NW_AUTO_FIRING_LAUNCHER]: 27,
-		[SkillConst_default.NW_MISSION_BOMBARD]: 33
+		[SkillConst_default.NW_MISSION_BOMBARD]: 33,
+		[SkillConst_default.NW_WILD_SHOT]: 35,
+		[SkillConst_default.NW_MIDNIGHT_FALLEN]: 36
 	};
 	SkillTreeView[JobConst_default.HYPER_NOVICE] = {
 		list: 3,
@@ -138492,7 +138560,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.HN_GROUND_GRAVITATION]: 17,
 		[SkillConst_default.HN_NAPALM_VULCAN_STRIKE]: 18,
 		[SkillConst_default.HN_BREAKINGLIMIT]: 21,
-		[SkillConst_default.HN_RULEBREAK]: 24
+		[SkillConst_default.HN_RULEBREAK]: 24,
+		[SkillConst_default.HN_OVERCOMING_CRISIS]: 28
 	};
 	SkillTreeView[JobConst_default.SPIRIT_HANDLER] = {
 		list: 2,
@@ -138512,7 +138581,9 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.SH_COMMUNE_WITH_KI_SUL]: 31,
 		[SkillConst_default.SH_COMMUNE_WITH_HYUN_ROK]: 33,
 		[SkillConst_default.SH_TEMPORARY_COMMUNION]: 37,
-		[SkillConst_default.SH_BLESSING_OF_MYSTICAL_CREATURES]: 39
+		[SkillConst_default.SH_BLESSING_OF_MYSTICAL_CREATURES]: 39,
+		[SkillConst_default.SH_CHUL_HO_BATTERING]: 42,
+		[SkillConst_default.SH_HYUN_ROK_SPIRIT_POWER]: 43
 	};
 	SkillTreeView[JobConst_default.SHIRANUI] = {
 		list: 3,
@@ -138536,7 +138607,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.SS_HITOUAKUMU]: 30,
 		[SkillConst_default.SS_KAGEAKUMU]: 32,
 		[SkillConst_default.SS_ANTENPOU]: 34,
-		[SkillConst_default.SS_ANKOKURYUUAKUMU]: 41
+		[SkillConst_default.SS_ANKOKURYUUAKUMU]: 41,
+		[SkillConst_default.SS_FOUR_CHARM]: 42
 	};
 	SkillTreeView[JobConst_default.SHINKIRO] = {
 		list: 3,
@@ -138560,7 +138632,8 @@ var init_SkillTreeView = __esmMin((() => {
 		[SkillConst_default.SS_HITOUAKUMU]: 30,
 		[SkillConst_default.SS_KAGEAKUMU]: 32,
 		[SkillConst_default.SS_ANTENPOU]: 34,
-		[SkillConst_default.SS_ANKOKURYUUAKUMU]: 41
+		[SkillConst_default.SS_ANKOKURYUUAKUMU]: 41,
+		[SkillConst_default.SS_FOUR_CHARM]: 42
 	};
 	duplicateEntry$2(JobConst_default.NOVICE, JobConst_default.NOVICE_B);
 	duplicateEntry$2(JobConst_default.SWORDMAN, JobConst_default.SWORDMAN_B);
@@ -138668,6 +138741,53 @@ var init_SkillTreeView = __esmMin((() => {
 	duplicateEntry$2(JobConst_default.DRAGON_KNIGHT, JobConst_default.DRAGON_KNIGHT2);
 	duplicateEntry$2(JobConst_default.IMPERIAL_GUARD, JobConst_default.IMPERIAL_GUARD2);
 	duplicateEntry$2(JobConst_default.SKY_EMPEROR, JobConst_default.SKY_EMPEROR2);
+}));
+//#endregion
+//#region src/DB/Skills/SkillTreeMerge.js
+/**
+* Put the tree back to the built-in layout, dropping every job and position a
+* previously loaded client file added.
+*
+* @param {object} tree - SkillTreeView, changed in place
+* @param {object} [builtIn] - the layout to restore
+*/
+function resetSkillTree(tree, builtIn = BuiltInSkillTreeView) {
+	for (const jobId of Object.keys(tree)) if (!(jobId in builtIn)) delete tree[jobId];
+	for (const [jobId, entry] of Object.entries(builtIn)) tree[jobId] = { ...entry };
+}
+/**
+* For each job a client file defined, put back the built-in position of any
+* skill the file leaves out, or the next free slot when the file has taken
+* that one. Positions the file set are never moved.
+*
+* @param {object} tree - SkillTreeView after the file was read, changed in place
+* @param {Iterable} jobIds - the jobs the file defined
+* @param {object} [builtIn] - the built-in layout
+*/
+function keepBuiltInSkills(tree, jobIds, builtIn = BuiltInSkillTreeView) {
+	for (const jobId of jobIds) {
+		const entry = tree[jobId];
+		const base = builtIn[jobId];
+		if (!entry || !base) continue;
+		const taken = new Set(Object.keys(entry).filter(isSkill).map((key) => entry[key]));
+		let next = Math.max(-1, ...taken) + 1;
+		for (const [skillId, pos] of Object.entries(base)) {
+			if (!isSkill(skillId) || skillId in entry) continue;
+			let slot = pos;
+			if (taken.has(slot)) {
+				while (taken.has(next)) next++;
+				slot = next;
+			}
+			entry[skillId] = slot;
+			taken.add(slot);
+		}
+	}
+}
+var isSkill, BuiltInSkillTreeView;
+var init_SkillTreeMerge = __esmMin((() => {
+	init_SkillTreeView();
+	isSkill = (key) => /^\d+$/.test(key);
+	BuiltInSkillTreeView = Object.freeze(Object.fromEntries(Object.entries(SkillTreeView).map(([jobId, entry]) => [jobId, Object.freeze({ ...entry })])));
 }));
 //#endregion
 //#region src/DB/Jobs/JobHitSoundTable.js
@@ -238730,14 +238850,30 @@ var init_StrEffect = __esmMin((() => {
 		xy: /* @__PURE__ */ new Float32Array(8)
 	};
 	StrEffect = class {
-		constructor(filename, position, startTick, texturePath) {
+		constructor(filename, position, startTick, texturePath, fallbacks = []) {
 			this.filename = filename;
 			this.startTick = startTick;
 			this.position = position;
 			this.texturePath = texturePath;
+			this.fallbacks = fallbacks.slice();
+			this.load();
+		}
+		/**
+		* Load the file. Clients keep the same art under different folders from one
+		* release to the next, so a missing file moves on to the next candidate;
+		* when none is left the effect is removed.
+		*/
+		load() {
 			Client.loadFile(this.filename, null, () => {
-				this.needCleanUp = true;
-			}, { texturePath });
+				const next = this.fallbacks.shift();
+				if (!next) {
+					this.needCleanUp = true;
+					return;
+				}
+				this.filename = next.filename;
+				this.texturePath = next.texturePath;
+				this.load();
+			}, { texturePath: this.texturePath });
 		}
 		/**
 		* Preparing for render
@@ -252791,6 +252927,7 @@ var init_Model = __esmMin((() => {
 			const max = Math.max, min = Math.min;
 			let x, y, z;
 			mat4$18.copy(this.matrix, _matrix);
+			if (this.baseMatrix) mat4$18.multiply(this.matrix, this.matrix, this.baseMatrix);
 			mat4$18.translate(this.matrix, this.matrix, this.pos);
 			if (!this.rotKeyframes.length) mat4$18.rotate(this.matrix, this.matrix, this.rotangle, this.rotaxis);
 			else mat4$18.rotateQuat(this.matrix, this.matrix, this.rotKeyframes[0].q);
@@ -252815,7 +252952,10 @@ var init_Model = __esmMin((() => {
 				box.range[i] = (box.max[i] - box.min[i]) / 2;
 				box.center[i] = box.min[i] + box.range[i];
 			}
-			for (i = 0, count = nodes.length; i < count; ++i) if (nodes[i].parentname === this.name && this.name !== this.parentname) nodes[i].calcBoundingBox(this.matrix);
+			for (i = 0, count = nodes.length; i < count; ++i) {
+				if (this.absoluteTransform) break;
+				if (nodes[i].parentname === this.name && this.name !== this.parentname) nodes[i].calcBoundingBox(this.matrix);
+			}
 		}
 		/**
 		* Compile Node
@@ -252903,6 +253043,7 @@ var init_Model = __esmMin((() => {
 			]);
 			const nodeMatrix = mat4$18.create();
 			mat4$18.identity(nodeMatrix);
+			if (this.baseMatrix) mat4$18.multiply(nodeMatrix, nodeMatrix, this.baseMatrix);
 			const animPos = getPositionAtFrame$1(this.posKeyframes, frame, animLen);
 			if (animPos) mat4$18.translate(nodeMatrix, nodeMatrix, animPos);
 			else mat4$18.translate(nodeMatrix, nodeMatrix, this.pos);
@@ -253126,7 +253267,13 @@ var init_Model = __esmMin((() => {
 			const fp = new BinaryReader(data);
 			const header = fp.readBinaryString(4);
 			if (header !== "GRSM" && header !== "GRSX") throw new Error(`RSM::load() - Incorrect header "${header}", must be "GRSM"`);
-			this.version = fp.readByte() + fp.readByte() / 10;
+			const major = fp.readByte();
+			const minor = fp.readByte();
+			this.version = major + minor / 10;
+			if (major === 2 && minor >= 2) {
+				this.loadRsm2(fp, minor);
+				return;
+			}
 			this.animLen = fp.readLong();
 			this.shadeType = fp.readLong();
 			this.main_node = null;
@@ -253150,6 +253297,7 @@ var init_Model = __esmMin((() => {
 			}
 			count = fp.readLong();
 			const nodes = new Array(count);
+			if (nodes.length === 0) throw new Error("RSM::load() - Model contains no nodes");
 			for (i = 0; i < count; ++i) {
 				nodes[i] = new RSM.Node(this, fp, count === 1);
 				if (mainNodeName && nodes[i].name === mainNodeName) this.main_node = nodes[i];
@@ -253204,6 +253352,227 @@ var init_Model = __esmMin((() => {
 				});
 			}
 			this.volumebox = volumebox;
+			this.instances = [];
+			this.box = new RSM.Box();
+			this.calcBoundingBox();
+		}
+		/**
+		* Load an RSM2 model.
+		*
+		* RSM2 stores an absolute 3x4 world transform per node and uses
+		* length-prefixed strings. Versions 2.2 and 2.3 also use different face
+		* encodings, so they cannot be parsed by the legacy Node constructor.
+		* The transform is baked into the vertices here while retaining the
+		* existing Node/renderer mesh API.
+		*
+		* @param {object} fp BinaryReader
+		* @param {number} minor RSM2 minor version
+		*/
+		loadRsm2(fp, minor) {
+			let i;
+			const readString = () => fp.readBinaryString(fp.readLong());
+			this.animLen = fp.readLong();
+			this.shadeType = fp.readLong();
+			this.alpha = fp.readUByte() / 255;
+			this.frameRatePerSecond = fp.readFloat();
+			const sharedTextures = [];
+			if (minor <= 2) {
+				const textureCount = fp.readLong();
+				for (i = 0; i < textureCount; i++) sharedTextures.push(readString());
+			}
+			const rootNodeCount = fp.readLong();
+			const rootNodeNames = new Array(rootNodeCount);
+			for (i = 0; i < rootNodeCount; i++) rootNodeNames[i] = readString();
+			const nodeCount = fp.readLong();
+			const nodes = new Array(nodeCount);
+			const allTextures = sharedTextures.slice();
+			const addTexture = (texture) => {
+				let index = allTextures.indexOf(texture);
+				if (index === -1) {
+					index = allTextures.length;
+					allTextures.push(texture);
+				}
+				return index;
+			};
+			for (i = 0; i < nodeCount; i++) {
+				const name = readString();
+				const parentname = readString();
+				const textureCount = fp.readLong();
+				const nodeTextures = new Array(textureCount);
+				for (let j = 0; j < textureCount; j++) {
+					const texture = minor <= 2 ? sharedTextures[fp.readLong()] : readString();
+					nodeTextures[j] = addTexture(texture || "");
+				}
+				const transform = new Array(12);
+				for (let j = 0; j < transform.length; j++) transform[j] = fp.readFloat();
+				const vertexCount = fp.readLong();
+				const vertices = new Array(vertexCount);
+				for (let j = 0; j < vertexCount; j++) {
+					const x = fp.readFloat();
+					const y = fp.readFloat();
+					const z = fp.readFloat();
+					vertices[j] = [
+						x,
+						y,
+						z
+					];
+				}
+				const tvertexCount = fp.readLong();
+				const tvertices = new Float32Array(tvertexCount * 6);
+				for (let j = 0; j < tvertexCount; j++) {
+					const offset = j * 6;
+					fp.readULong();
+					tvertices[offset + 4] = fp.readFloat() * .98 + .01;
+					tvertices[offset + 5] = fp.readFloat() * .98 + .01;
+				}
+				const faceCount = fp.readLong();
+				const faces = new Array(faceCount);
+				for (let j = 0; j < faceCount; j++) {
+					let faceLength = 24;
+					if (minor >= 2) faceLength = fp.readLong();
+					const face = {
+						vertidx: [
+							fp.readUShort(),
+							fp.readUShort(),
+							fp.readUShort()
+						],
+						tvertidx: [
+							fp.readUShort(),
+							fp.readUShort(),
+							fp.readUShort()
+						],
+						texid: fp.readUShort(),
+						padding: fp.readUShort(),
+						twoSide: fp.readLong(),
+						smoothGroup: 0
+					};
+					if (minor === 1 || minor >= 2) face.smoothGroup = fp.readLong();
+					const consumed = minor >= 2 ? 24 : 24;
+					if (minor >= 2 && faceLength > consumed) fp.seek(faceLength - consumed, SEEK_CUR);
+					faces[j] = face;
+				}
+				const scaleCount = fp.readLong();
+				const scaleKeyFrames = new Array(scaleCount);
+				for (let j = 0; j < scaleCount; j++) scaleKeyFrames[j] = {
+					Frame: fp.readLong(),
+					Scale: [
+						fp.readFloat(),
+						fp.readFloat(),
+						fp.readFloat()
+					],
+					Data: fp.readFloat()
+				};
+				const rotationCount = fp.readLong();
+				const rotationKeyFrames = new Array(rotationCount);
+				for (let j = 0; j < rotationCount; j++) rotationKeyFrames[j] = {
+					frame: fp.readLong(),
+					q: [
+						fp.readFloat(),
+						fp.readFloat(),
+						fp.readFloat(),
+						fp.readFloat()
+					]
+				};
+				const positionCount = fp.readLong();
+				const positionKeyFrames = new Array(positionCount);
+				for (let j = 0; j < positionCount; j++) positionKeyFrames[j] = {
+					frame: fp.readLong(),
+					px: fp.readFloat(),
+					py: fp.readFloat(),
+					pz: fp.readFloat(),
+					Data: fp.readLong()
+				};
+				if (minor === 3) {
+					const uvAnimationCount = fp.readLong();
+					for (let j = 0; j < uvAnimationCount; j++) {
+						fp.readLong();
+						const typeCount = fp.readLong();
+						for (let k = 0; k < typeCount; k++) {
+							fp.readLong();
+							fp.seek(fp.readLong() * 8, SEEK_CUR);
+						}
+					}
+				}
+				const node = Object.create(Node.prototype);
+				node.main = this;
+				node.is_only = true;
+				node.name = name;
+				node.parentname = parentname || null;
+				node.textures = nodeTextures;
+				node.mat3 = [
+					1,
+					0,
+					0,
+					0,
+					1,
+					0,
+					0,
+					0,
+					1
+				];
+				node.offset = [
+					0,
+					0,
+					0
+				];
+				node.pos = [
+					0,
+					0,
+					0
+				];
+				node.rotangle = 0;
+				node.rotaxis = [
+					0,
+					0,
+					0
+				];
+				node.scale = [
+					1,
+					1,
+					1
+				];
+				node.flip = [
+					1,
+					-1,
+					1
+				];
+				node.box = new RSM.Box();
+				node.matrix = mat4$18.create();
+				node.vertices = vertices;
+				node.tvertices = tvertices;
+				node.faces = faces;
+				node.rotKeyframes = rotationKeyFrames;
+				node.posKeyframes = positionKeyFrames;
+				node.scaleKeyFrames = scaleKeyFrames;
+				node.textureKeyFrameGroup = [];
+				node.absoluteTransform = true;
+				node.baseMatrix = mat4$18.create();
+				node.baseMatrix[0] = transform[0];
+				node.baseMatrix[1] = transform[1];
+				node.baseMatrix[2] = transform[2];
+				node.baseMatrix[4] = transform[3];
+				node.baseMatrix[5] = transform[4];
+				node.baseMatrix[6] = transform[5];
+				node.baseMatrix[8] = transform[6];
+				node.baseMatrix[9] = transform[7];
+				node.baseMatrix[10] = transform[8];
+				node.baseMatrix[12] = transform[9];
+				node.baseMatrix[13] = transform[10];
+				node.baseMatrix[14] = transform[11];
+				nodes[i] = node;
+			}
+			if (fp.offset + 4 <= fp.length) {
+				const volumeBoxCount = fp.readLong();
+				const remaining = fp.length - fp.offset;
+				const volumeBoxSize = remaining === volumeBoxCount * 40 || remaining < volumeBoxCount * 232 ? 40 : 232;
+				if (volumeBoxCount >= 0 && fp.offset + volumeBoxCount * volumeBoxSize <= fp.length) fp.seek(volumeBoxCount * volumeBoxSize, SEEK_CUR);
+			}
+			this.textures = allTextures;
+			this.nodes = nodes;
+			if (nodes.length === 0) throw new Error("RSM::load() - Model contains no nodes");
+			this.main_node = rootNodeNames.map((name) => nodes.find((node) => node.name === name)).find(Boolean) || nodes[0];
+			this.posKeyframes = [];
+			this.volumebox = [];
 			this.instances = [];
 			this.box = new RSM.Box();
 			this.calcBoundingBox();
@@ -255710,10 +256079,24 @@ function PrepareInit(callParams) {
 function spamSTR(Params) {
 	let filename;
 	const texturePath = Params.effect.texturePath || "";
-	if (Map_default.mineffect && Params.effect.min) filename = Params.effect.min;
+	const minimal = !!(Map_default.mineffect && Params.effect.min);
+	if (minimal) filename = Params.effect.min;
 	else filename = Params.effect.file;
-	if (Params.effect.rand) filename = filename.replace("%d", Math.round(Params.effect.rand[0] + (Params.effect.rand[1] - Params.effect.rand[0]) * Math.random()));
-	EffectManager.add(new StrEffect("data/texture/effect/" + filename + ".str", Params.Inst.position, Params.Inst.startTick, texturePath), Params);
+	let pick = (name) => name;
+	if (Params.effect.rand) {
+		const n = Math.round(Params.effect.rand[0] + (Params.effect.rand[1] - Params.effect.rand[0]) * Math.random());
+		pick = (name) => name.replace("%d", n);
+	}
+	filename = pick(filename);
+	const fallbacks = (Params.effect.fallback || []).map((file) => ({
+		filename: "data/texture/effect/" + pick(file) + ".str",
+		texturePath: file.substring(0, file.lastIndexOf("/") + 1)
+	}));
+	if (minimal) fallbacks.unshift({
+		filename: "data/texture/effect/" + pick(Params.effect.file) + ".str",
+		texturePath
+	});
+	EffectManager.add(new StrEffect("data/texture/effect/" + filename + ".str", Params.Inst.position, Params.Inst.startTick, texturePath, fallbacks), Params);
 }
 /**
 * Spam an effect to the scene
@@ -278009,18 +278392,21 @@ var init_EffectTable = __esmMin((() => {
 			type: "STR",
 			file: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance/new_guard_stance",
 			texturePath: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance/",
+			fallback: ["guard_stance/guard_stance/guard_stance"],
 			wav: "effect/ig_guard_stance"
 		}],
 		ef_ig_guard_stance_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast/new_guard_stance_cast",
 			texturePath: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast/",
-			min: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast/min_new_guard_stance_cast"
+			min: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast/min_new_guard_stance_cast",
+			fallback: ["guard_stance/guard_stance_cast/guard_stance_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast_bottom/new_guard_stance_cast_bottom",
 			texturePath: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast_bottom/",
 			min: "imperial_guard/ig_guard_stance/new_guard_stance/new_guard_stance_cast_bottom/min_new_guard_stance_cast_bottom",
+			fallback: ["guard_stance/guard_stance_cast_bottom/guard_stance_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_guardian_shield: [{
@@ -278028,12 +278414,14 @@ var init_EffectTable = __esmMin((() => {
 			file: "imperial_guard/ig_guardian_shield/new_guardianshield/guardianshield/guardianshield",
 			texturePath: "imperial_guard/ig_guardian_shield/new_guardianshield/guardianshield/",
 			min: "imperial_guard/ig_guardian_shield/new_guardianshield/guardianshield/min_guardianshield",
+			fallback: ["guardianshield/guardianshield/guardianshield"],
 			wav: "effect/ig_guardian_shield"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_guardian_shield/new_guardianshield/guardianshield_bottom/guardianshield_bottom",
 			texturePath: "imperial_guard/ig_guardian_shield/new_guardianshield/guardianshield_bottom/",
 			min: "imperial_guard/ig_guardian_shield/new_guardianshield/guardianshield_bottom/min_guardianshield_bottom",
+			fallback: ["guardianshield/guardianshield_bottom/guardianshield_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_rebound_shield: [{
@@ -278041,41 +278429,48 @@ var init_EffectTable = __esmMin((() => {
 			file: "imperial_guard/ig_rebound_shield/new_rebound_shield/new_rebound_shield/new_rebound_shield",
 			texturePath: "imperial_guard/ig_rebound_shield/new_rebound_shield/new_rebound_shield/",
 			min: "imperial_guard/ig_rebound_shield/new_rebound_shield/new_rebound_shield/min_new_rebound_shield",
+			fallback: ["rebound_shield/rebound_shield/rebound_shield"],
 			wav: "effect/ig_rebound_shield"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_rebound_shield/new_rebound_shield/new_rebound_shield_bottom/new_rebound_shield_bottom",
 			texturePath: "imperial_guard/ig_rebound_shield/new_rebound_shield/new_rebound_shield_bottom/",
 			min: "imperial_guard/ig_rebound_shield/new_rebound_shield/new_rebound_shield_bottom/min_new_rebound_shield_bottom",
+			fallback: ["rebound_shield/rebound_shield_bottom/rebound_shield_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_rebound_shield_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast/rebound_shield_cast",
 			texturePath: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast/",
-			min: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast/min_rebound_shield_cast"
+			min: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast/min_rebound_shield_cast",
+			fallback: ["rebound_shield/rebound_shield_cast/rebound_shield_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast_bottom/rebound_shield_cast_bottom",
 			texturePath: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast_bottom/",
 			min: "imperial_guard/ig_rebound_shield/new_rebound_shield/rebound_shield_cast_bottom/min_rebound_shield_cast_bottom",
+			fallback: ["rebound_shield/rebound_shield_cast_bottom/rebound_shield_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_attack_stance: [{
 			type: "STR",
 			file: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance/new_attack_stance",
-			texturePath: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance/"
+			texturePath: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance/",
+			fallback: ["attack_stance/attack_stance/attack_stance"]
 		}],
 		ef_ig_attack_stance_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast/new_attack_stance_cast",
 			texturePath: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast/",
-			min: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast/min_new_attack_stance_cast"
+			min: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast/min_new_attack_stance_cast",
+			fallback: ["attack_stance/attack_stance_cast/attack_stance_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast_bottom/new_attack_stance_cast_bottom",
 			texturePath: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast_bottom/",
 			min: "imperial_guard/ig_attack_stance/new_attack_stance/new_attack_stance_cast_bottom/min_new_attack_stance_cast_bottom",
+			fallback: ["attack_stance/attack_stance_cast_bottom/attack_stance_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_ultimate_sacrifice: [{
@@ -278083,19 +278478,22 @@ var init_EffectTable = __esmMin((() => {
 			file: "imperial_guard/ig_ultimate_sacrifice/ultimatesacrifice/ultimatesacrifice",
 			texturePath: "imperial_guard/ig_ultimate_sacrifice/ultimatesacrifice/",
 			min: "imperial_guard/ig_ultimate_sacrifice/ultimatesacrifice/min_ultimatesacrifice",
+			fallback: ["ultimate_sacrifice/ultimatesacrifice/ultimatesacrifice"],
 			wav: "effect/ig_ultimate_sacrifice"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_ultimate_sacrifice/ultimatesacrifice_bottom/ultimatesacrifice_bottom",
 			texturePath: "imperial_guard/ig_ultimate_sacrifice/ultimatesacrifice_bottom/",
 			min: "imperial_guard/ig_ultimate_sacrifice/ultimatesacrifice_bottom/min_ultimatesacrifice_bottom",
+			fallback: ["ultimate_sacrifice/ultimatesacrifice_bottom/ultimatesacrifice_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_holy_shield: [{
 			type: "STR",
 			file: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield/new_holy_shield",
 			texturePath: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield/",
-			min: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield/min_new_holy_shield"
+			min: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield/min_new_holy_shield",
+			fallback: ["holy_shield/holy_shield/holy_shield"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield_bottom/new_holy_shield_bottom",
@@ -278107,7 +278505,8 @@ var init_EffectTable = __esmMin((() => {
 			type: "STR",
 			file: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield_cast/new_holy_shield_cast",
 			texturePath: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield_cast/",
-			min: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield_cast/min_new_holy_shield_cast"
+			min: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield_cast/min_new_holy_shield_cast",
+			fallback: ["holy_shield/holy_shield_cast/holy_shield_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_holy_shield/new_holy_shield/new_holy_shield_cast_bottom/new_holy_shield_cast_bottom",
@@ -278120,24 +278519,28 @@ var init_EffectTable = __esmMin((() => {
 			file: "imperial_guard/ig_grand_judgement/new_grand_judgement/new_grand_judgement/new_grand_judgement",
 			texturePath: "imperial_guard/ig_grand_judgement/new_grand_judgement/new_grand_judgement/",
 			min: "imperial_guard/ig_grand_judgement/new_grand_judgement/new_grand_judgement/min_new_grand_judgement",
+			fallback: ["grand_judgement/grand_judgement/grand_judgement"],
 			wav: "effect/ig_grand_judgement"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_grand_judgement/new_grand_judgement/new_grand_judgement_bottom/new_grand_judgement_bottom",
 			texturePath: "imperial_guard/ig_grand_judgement/new_grand_judgement/new_grand_judgement_bottom/",
 			min: "imperial_guard/ig_grand_judgement/new_grand_judgement/new_grand_judgement_bottom/min_new_grand_judgement_bottom",
+			fallback: ["grand_judgement/grand_judgement_bottom/grand_judgement_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_grand_judgement_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast/grand_judgement_cast",
 			texturePath: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast/",
-			min: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast/min_grand_judgement_cast"
+			min: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast/min_grand_judgement_cast",
+			fallback: ["grand_judgement/grand_judgement_cast/grand_judgement_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast_bottom/grand_judgement_cast_bottom",
 			texturePath: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast_bottom/",
 			min: "imperial_guard/ig_grand_judgement/new_grand_judgement/grand_judgement_cast_bottom/min_grand_judgement_cast_bottom",
+			fallback: ["grand_judgement/grand_judgement_cast_bottom/grand_judgement_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_judgement_cross: [{
@@ -278145,24 +278548,28 @@ var init_EffectTable = __esmMin((() => {
 			file: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross/new_judgement_cross",
 			texturePath: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross/",
 			min: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross/min_new_judgement_cross",
+			fallback: ["judgement_cross/judgement_cross/judgement_cross"],
 			wav: "effect/ig_judgement_cross"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_bottom/new_judgement_cross_bottom",
 			texturePath: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_bottom/",
 			min: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_bottom/min_new_judgement_cross_bottom",
+			fallback: ["judgement_cross/judgement_cross_bottom/judgement_cross_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_judgement_cross_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast/new_judgement_cross_cast",
 			texturePath: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast/",
-			min: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast/min_new_judgement_cross_cast"
+			min: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast/min_new_judgement_cross_cast",
+			fallback: ["judgement_cross/judgement_cross_cast/judgement_cross_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast_bottom/new_judgement_cross_cast_bottom",
 			texturePath: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast_bottom/",
 			min: "imperial_guard/ig_judgement_cross/new_judgement_cross/new_judgement_cross_cast_bottom/min_new_judgement_cross_cast_bottom",
+			fallback: ["judgement_cross/judgement_cross_cast_bottom/judgement_cross_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_judgement_cross_hit: [{
@@ -278194,49 +278601,57 @@ var init_EffectTable = __esmMin((() => {
 			type: "STR",
 			file: "imperial_guard/ig_overslash/new_overslash/new_overslash/new_overslash",
 			texturePath: "imperial_guard/ig_overslash/new_overslash/new_overslash/",
+			fallback: ["overslash/overslash/overslash"],
 			wav: "effect/ig_overslash"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_overslash/new_overslash/new_overslash_bottom/new_overslash_bottom",
 			texturePath: "imperial_guard/ig_overslash/new_overslash/new_overslash_bottom/",
 			min: "imperial_guard/ig_overslash/new_overslash/new_overslash_bottom/min_new_overslash_bottom",
+			fallback: ["overslash/overslash_bottom/overslash_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_overslash_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_overslash/new_overslash/overslash_cast/overslash_cast",
 			texturePath: "imperial_guard/ig_overslash/new_overslash/overslash_cast/",
-			min: "imperial_guard/ig_overslash/new_overslash/overslash_cast/min_overslash_cast"
+			min: "imperial_guard/ig_overslash/new_overslash/overslash_cast/min_overslash_cast",
+			fallback: ["overslash/overslash_cast/overslash_cast"]
 		}],
 		ef_ig_overslash_hit: [{
 			type: "STR",
 			file: "imperial_guard/ig_overslash/new_overslash/new_overslash_hit/new_overslash_hit",
 			texturePath: "imperial_guard/ig_overslash/new_overslash/new_overslash_hit/",
-			min: "imperial_guard/ig_overslash/new_overslash/new_overslash_hit/min_new_overslash_hit"
+			min: "imperial_guard/ig_overslash/new_overslash/new_overslash_hit/min_new_overslash_hit",
+			fallback: ["overslash/overslash_hit/overslash_hit"]
 		}],
 		ef_ig_cross_rain: [{
 			type: "STR",
 			file: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain/new_cross_rain",
 			texturePath: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain/",
 			min: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain/min_new_cross_rain",
+			fallback: ["crossrain/cross_rain/cross_rain"],
 			wav: "effect/ig_cross_rain"
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_bottom/new_cross_rain_bottom",
 			texturePath: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_bottom/",
 			min: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_bottom/min_new_cross_rain_bottom",
+			fallback: ["crossrain/cross_rain_bottom/cross_rain_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_cross_rain_cast: [{
 			type: "STR",
 			file: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast/new_cross_rain_cast",
 			texturePath: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast/",
-			min: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast/min_new_cross_rain_cast"
+			min: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast/min_new_cross_rain_cast",
+			fallback: ["crossrain/cross_rain_cast/cross_rain_cast"]
 		}, {
 			type: "STR",
 			file: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast_bottom/new_cross_rain_cast_bottom",
 			texturePath: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast_bottom/",
 			min: "imperial_guard/ig_cross_rain/new_crossrain/new_cross_rain_cast_bottom/min_new_cross_rain_cast_bottom",
+			fallback: ["crossrain/cross_rain_cast_bottom/cross_rain_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_ig_radiant_spear_cast: [{
@@ -278275,7 +278690,8 @@ var init_EffectTable = __esmMin((() => {
 			type: "STR",
 			file: "imperial_guard/ig_imperial_pressure/new_rayofgenesis_hit/new_rayofgenesis_hit",
 			texturePath: "imperial_guard/ig_imperial_pressure/new_rayofgenesis_hit/",
-			min: "imperial_guard/ig_imperial_pressure/new_rayofgenesis_hit/min_new_rayofgenesis_hit"
+			min: "imperial_guard/ig_imperial_pressure/new_rayofgenesis_hit/min_new_rayofgenesis_hit",
+			fallback: ["new_rayofgenesis/new_rayofgenesis_hit/new_rayofgenesis_hit"]
 		}],
 		ef_crescentelbow: [{
 			wav: "effect/sr_crescentelbow",
@@ -279385,24 +279801,28 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_servantweapon/servantweapon/servantweapon",
 			texturePath: "dragon_knight/dk_servantweapon/servantweapon/",
 			min: "dragon_knight/dk_servantweapon/servantweapon/min_servantweapon",
+			fallback: ["new_servantweapon/new_servantweapon/new_servantweapon"],
 			wav: "effect/dk_servantweapon"
 		}],
 		ef_dk_servantweapon_cast: [{
 			type: "STR",
 			file: "dragon_knight/dk_servantweapon/servantweapon_cast/servantweapon_cast",
 			texturePath: "dragon_knight/dk_servantweapon/servantweapon_cast/",
-			min: "dragon_knight/dk_servantweapon/servantweapon_cast/min_servantweapon_cast"
+			min: "dragon_knight/dk_servantweapon/servantweapon_cast/min_servantweapon_cast",
+			fallback: ["new_servantweapon/new_servantweapon_cast/new_servantweapon_cast"]
 		}],
 		ef_dk_servantweapon_hit: [{
 			type: "STR",
 			file: "dragon_knight/dk_servantweapon/servantweapon_hit/servantweapon_hit",
 			texturePath: "dragon_knight/dk_servantweapon/servantweapon_hit/",
-			min: "dragon_knight/dk_servantweapon/servantweapon_hit/min_servantweapon_hit"
+			min: "dragon_knight/dk_servantweapon/servantweapon_hit/min_servantweapon_hit",
+			fallback: ["new_servantweapon/new_servantweapon_hit/new_servantweapon_hit"]
 		}, {
 			type: "STR",
 			file: "dragon_knight/dk_servantweapon/servantweapon_hit_bottom/servantweapon_hit_bottom",
 			texturePath: "dragon_knight/dk_servantweapon/servantweapon_hit_bottom/",
 			min: "dragon_knight/dk_servantweapon/servantweapon_hit_bottom/min_servantweapon_hit_bottom",
+			fallback: ["new_servantweapon/new_servantweapon_hit_bottom/new_servantweapon_hit_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_dk_servantweapon_atk: [{
@@ -279422,12 +279842,14 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_servant_w_sign/servant_sign/servant_sign",
 			texturePath: "dragon_knight/dk_servant_w_sign/servant_sign/",
 			min: "dragon_knight/dk_servant_w_sign/servant_sign/min_servant_sign",
+			fallback: ["servant_sign/servant_sign/servant_sign"],
 			wav: "effect/dk_servant_w_sign"
 		}, {
 			type: "STR",
 			file: "dragon_knight/dk_servant_w_sign/servant_sign_bottom/servant_sign_bottom",
 			texturePath: "dragon_knight/dk_servant_w_sign/servant_sign_bottom/",
 			min: "dragon_knight/dk_servant_w_sign/servant_sign_bottom/min_servant_sign_bottom",
+			fallback: ["servant_sign/servant_sign_bottom/servant_sign_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_dk_servant_w_phantom: [{
@@ -279435,12 +279857,14 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_servant_w_phantom/servant_phantom_sub/servant_phantom_sub",
 			texturePath: "dragon_knight/dk_servant_w_phantom/servant_phantom_sub/",
 			min: "dragon_knight/dk_servant_w_phantom/servant_phantom_sub/min_servant_phantom_sub",
+			fallback: ["servant_phantom/servant_phantom_sub/servant_phantom_sub"],
 			wav: "effect/dk_servant_w_phantom"
 		}, {
 			type: "STR",
 			file: "dragon_knight/dk_servant_w_phantom/servant_phantom_sub_bottom/servant_phantom_sub_bottom",
 			texturePath: "dragon_knight/dk_servant_w_phantom/servant_phantom_sub_bottom/",
 			min: "dragon_knight/dk_servant_w_phantom/servant_phantom_sub_bottom/min_servant_phantom_sub_bottom",
+			fallback: ["servant_phantom/servant_phantom_sub_bottom/servant_phantom_sub_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_dk_servant_w_demol_hit: [{
@@ -279448,23 +279872,27 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_servant_w_demol/servant_demolition_hit/servant_demolition_hit",
 			texturePath: "dragon_knight/dk_servant_w_demol/servant_demolition_hit/",
 			min: "dragon_knight/dk_servant_w_demol/servant_demolition_hit/min_servant_demolition_hit",
+			fallback: ["servant_demolition/servant_demolition_hit/servant_demolition_hit"],
 			wav: "effect/dk_servant_w_demol"
 		}],
 		ef_dk_chargingpierce_cast: [{
 			type: "STR",
 			file: "dragon_knight/dk_chargingpierce/chargingpierce_cast/chargingpierce_cast",
 			texturePath: "dragon_knight/dk_chargingpierce/chargingpierce_cast/",
+			fallback: ["new_chargingpierce/new_chargingpierce_cast/new_chargingpierce_cast"],
 			wav: "effect/dk_chargingpierce1"
 		}, {
 			type: "STR",
 			file: "dragon_knight/dk_chargingpierce/chargingpierce_cast_bottom/chargingpierce_cast_bottom",
 			texturePath: "dragon_knight/dk_chargingpierce/chargingpierce_cast_bottom/",
+			fallback: ["new_chargingpierce/new_chargingpierce_cast_bottom/new_chargingpierce_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_dk_chargingpierce_hit: [{
 			type: "STR",
 			file: "dragon_knight/dk_chargingpierce/chargingpierce_hit/chargingpierce_hit",
 			texturePath: "dragon_knight/dk_chargingpierce/chargingpierce_hit/",
+			fallback: ["new_chargingpierce/new_chargingpierce_hit/new_chargingpierce_hit"],
 			wav: "effect/dk_chargingpierce2"
 		}],
 		ef_dk_hackandslasher: [{
@@ -279472,19 +279900,22 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_hackandslasher/hackandslash/hackandslash",
 			texturePath: "dragon_knight/dk_hackandslasher/hackandslash/",
 			min: "dragon_knight/dk_hackandslasher/hackandslash/min_hackandslash",
+			fallback: ["hackandslash/hackandslash/hackandslash"],
 			wav: "effect/dk_hackandslasher"
 		}, {
 			type: "STR",
 			file: "dragon_knight/dk_hackandslasher/hackandslash_bottom/hackandslash_bottom",
 			texturePath: "dragon_knight/dk_hackandslasher/hackandslash_bottom/",
 			min: "dragon_knight/dk_hackandslasher/hackandslash_bottom/min_hackandslash_bottom",
+			fallback: ["hackandslash/hackandslash_bottom/hackandslash_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_dk_hackandslasher_hit: [{
 			type: "STR",
 			file: "dragon_knight/dk_hackandslasher/hackandslash_hit/hackandslash_hit",
 			texturePath: "dragon_knight/dk_hackandslasher/hackandslash_hit/",
-			min: "dragon_knight/dk_hackandslasher/hackandslash_hit/min_hackandslash_hit"
+			min: "dragon_knight/dk_hackandslasher/hackandslash_hit/min_hackandslash_hit",
+			fallback: ["hackandslash/hackandslash_hit/hackandslash_hit"]
 		}],
 		ef_dk_hackandslasher_atk: [{
 			type: "STR",
@@ -279501,12 +279932,14 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_madness_crusher/madness_crusher/madness_crusher",
 			texturePath: "dragon_knight/dk_madness_crusher/madness_crusher/",
 			min: "dragon_knight/dk_madness_crusher/madness_crusher/min_madness_crusher",
+			fallback: ["madness_crusher/madness_crusher/madness_crusher"],
 			wav: "effect/dk_madness_crusher"
 		}, {
 			type: "STR",
 			file: "dragon_knight/dk_madness_crusher/madness_crusher_bottom/madness_crusher_bottom",
 			texturePath: "dragon_knight/dk_madness_crusher/madness_crusher_bottom/",
 			min: "dragon_knight/dk_madness_crusher/madness_crusher_bottom/min_madness_crusher_bottom",
+			fallback: ["madness_crusher/madness_crusher_bottom/madness_crusher_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_dk_vigor: [{
@@ -279514,13 +279947,15 @@ var init_EffectTable = __esmMin((() => {
 			file: "dragon_knight/dk_vigor/vigor_buff/vigor_buff",
 			texturePath: "dragon_knight/dk_vigor/vigor_buff/",
 			min: "dragon_knight/dk_vigor/vigor_buff/min_vigor_buff",
+			fallback: ["vigor/vigor_buff/vigor_buff"],
 			wav: "effect/dk_vigor"
 		}],
 		ef_dk_vigor_cast: [{
 			type: "STR",
 			file: "dragon_knight/dk_vigor/vigor_cast/vigor_cast",
 			texturePath: "dragon_knight/dk_vigor/vigor_cast/",
-			min: "dragon_knight/dk_vigor/vigor_cast/min_vigor_cast"
+			min: "dragon_knight/dk_vigor/vigor_cast/min_vigor_cast",
+			fallback: ["vigor/vigor_cast/vigor_cast"]
 		}],
 		ef_dk_stormslash_hit: [{
 			type: "STR",
@@ -279528,6 +279963,7 @@ var init_EffectTable = __esmMin((() => {
 			min: "dragon_knight/dk_stormslash/stormslash/min_stormslash_%d",
 			rand: [1, 5],
 			texturePath: "dragon_knight/dk_stormslash/stormslash/",
+			fallback: ["stormslash/stormslash/stormslash_%d"],
 			wav: "effect/dk_stormslash1"
 		}],
 		ef_dk_dragonic_breath: [{
@@ -279584,17 +280020,20 @@ var init_EffectTable = __esmMin((() => {
 			file: "shadow_cross/shc_shadow_exceed/shadow_exceed_cast/shadow_exceed_cast",
 			texturePath: "shadow_cross/shc_shadow_exceed/shadow_exceed_cast/",
 			min: "shadow_cross/shc_shadow_exceed/shadow_exceed_cast/min_shadow_exceed_cast",
+			fallback: ["shadow_exceed/shadow_exceed_cast/shadow_exceed_cast"],
 			wav: "effect/shc_shadow_exceed"
 		}],
 		ef_shc_dancing_knife_cast: [{
 			type: "STR",
 			file: "shadow_cross/shc_dancing_knife/dancing_knife_cast/dancing_knife_cast",
 			texturePath: "shadow_cross/shc_dancing_knife/dancing_knife_cast/",
+			fallback: ["dancing_knife/dancing_knife_cast/dancing_knife_cast"],
 			wav: "effect/shc_dancing_knife"
 		}, {
 			type: "STR",
 			file: "shadow_cross/shc_dancing_knife/dancing_knife_cast_bottom/dancing_knife_cast_bottom",
 			texturePath: "shadow_cross/shc_dancing_knife/dancing_knife_cast_bottom/",
+			fallback: ["dancing_knife/dancing_knife_cast_bottom/dancing_knife_cast_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_shc_savage_impact: [{
@@ -279640,6 +280079,7 @@ var init_EffectTable = __esmMin((() => {
 			type: "STR",
 			file: "shadow_cross/shc_shadow_stab/shadow_stab/shadow_stab",
 			texturePath: "shadow_cross/shc_shadow_stab/shadow_stab/",
+			fallback: ["shadow_stab/shadow_stab/shadow_stab"],
 			wav: "effect/shc_shadow_stab"
 		}],
 		ef_shc_impact_crater: [{
@@ -279647,30 +280087,35 @@ var init_EffectTable = __esmMin((() => {
 			file: "shadow_cross/shc_impact_crater/impact_crater/impact_crater",
 			texturePath: "shadow_cross/shc_impact_crater/impact_crater/",
 			min: "shadow_cross/shc_impact_crater/impact_crater/min_impact_crater",
+			fallback: ["impact_crater/impact_crater/impact_crater"],
 			wav: "effect/shc_impact_crater"
 		}, {
 			type: "STR",
 			file: "shadow_cross/shc_impact_crater/impact_crater_bottom/impact_crater_bottom",
 			texturePath: "shadow_cross/shc_impact_crater/impact_crater_bottom/",
 			min: "shadow_cross/shc_impact_crater/impact_crater_bottom/min_impact_crater_bottom",
+			fallback: ["impact_crater/impact_crater_bottom/impact_crater_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_shc_impact_crater_hit: [{
 			type: "STR",
 			file: "shadow_cross/shc_impact_crater/impact_crater_hit/impact_crater_hit",
 			texturePath: "shadow_cross/shc_impact_crater/impact_crater_hit/",
-			min: "shadow_cross/shc_impact_crater/impact_crater_hit/min_impact_crater_hit"
+			min: "shadow_cross/shc_impact_crater/impact_crater_hit/min_impact_crater_hit",
+			fallback: ["impact_crater/impact_crater_hit/impact_crater_hit"]
 		}],
 		ef_shc_enchanting_shadow: [{
 			type: "STR",
 			file: "shadow_cross/shc_enchanting_shadow/enchanting_shadow/enchanting_shadow",
 			texturePath: "shadow_cross/shc_enchanting_shadow/enchanting_shadow/",
-			min: "shadow_cross/shc_enchanting_shadow/enchanting_shadow/min_enchanting_shadow"
+			min: "shadow_cross/shc_enchanting_shadow/enchanting_shadow/min_enchanting_shadow",
+			fallback: ["enchanting_shadow/enchanting_shadow/new_enchanting_shadow"]
 		}, {
 			type: "STR",
 			file: "shadow_cross/shc_enchanting_shadow/enchanting_shadow_bottom/enchanting_shadow_bottom",
 			texturePath: "shadow_cross/shc_enchanting_shadow/enchanting_shadow_bottom/",
 			min: "shadow_cross/shc_enchanting_shadow/enchanting_shadow_bottom/min_enchanting_shadow_bottom",
+			fallback: ["enchanting_shadow/enchanting_shadow_bottom/new_enchanting_shadow_bottom"],
 			renderBeforeEntities: true
 		}],
 		ef_shc_fatal_shadow_crow: [{
@@ -280248,6 +280693,7 @@ var init_EffectTable = __esmMin((() => {
 			file: "windhawk/calamitygale/calumitygale_cast/calumitygale_cast",
 			texturePath: "windhawk/calamitygale/calumitygale_cast/",
 			min: "windhawk/calamitygale/calumitygale_cast/min_calumitygale_cast",
+			fallback: ["4wh_calumitygale/calumitygale_cast/calumitygale_cast"],
 			wav: "effect/wh_calamitygale"
 		}],
 		ef_wh_hawkboomerang: [{
@@ -303311,6 +303757,8 @@ function loadSkillTreeView(filename, callback, onEnd) {
 	}, onEnd);
 }
 function loadSkillTreeViewData(filename, callback, onEnd) {
+	resetSkillTree(SkillTreeView);
+	const fileJobs = /* @__PURE__ */ new Set();
 	Client.loadFile(filename, async function(file) {
 		try {
 			console.log("Loading file \"" + filename + "\"...");
@@ -303332,10 +303780,12 @@ function loadSkillTreeViewData(filename, callback, onEnd) {
 					list = 1;
 					console.error(`[loadSkillTreeViewData] Failed to find inherith list job: (${jobId})`);
 				}
-				SkillTreeView[jobId] = {
+				const entry = {
 					list,
 					beforeJob
 				};
+				fileJobs.add(jobId);
+				SkillTreeView[jobId] = entry;
 				return 1;
 			};
 			ctx.AddSkillToJob = function(jobId, pos, skillId) {
@@ -303397,6 +303847,7 @@ function loadSkillTreeViewData(filename, callback, onEnd) {
 						
 						main_skillTreeView()    
 					`);
+			keepBuiltInSkills(SkillTreeView, fileJobs);
 		} catch (error) {
 			console.error("[loadSkillTreeView] Error: ", error);
 		} finally {
@@ -304022,6 +304473,7 @@ var init_DBManager = __esmMin((() => {
 	init_SkillConst();
 	init_SkillInfo();
 	init_SkillTreeView();
+	init_SkillTreeMerge();
 	init_JobHitSoundTable();
 	init_WeaponTrailTable();
 	init_TownInfo();
@@ -304666,7 +305118,8 @@ var init_DBManager = __esmMin((() => {
 		*/
 		static getBodyPalPath(id, pal, sex) {
 			if (id === 0 || !(id in PalNameTable)) return null;
-			return "data/palette/¸ö/" + PalNameTable[id] + "_" + SexTable[sex] + "_" + pal + ".pal";
+			const costume = String(PalNameTable[id]).startsWith("costume_1/") ? "_1" : "";
+			return "data/palette/¸ö/" + PalNameTable[id] + "_" + SexTable[sex] + "_" + pal + costume + ".pal";
 		}
 		/**
 		* @return {string} path to head sprite/action
@@ -309350,6 +309803,7 @@ function UpdateBody(job) {
 	let baseJob;
 	const transformationSeq = this._transformationSeq || 0;
 	if (job < 0) return;
+	this._bodyStyleJob = null;
 	const isTransformation = hasTransformation.call(this);
 	for (baseJob in MountTable) if (MountTable[baseJob] === job) {
 		this.costume = job;
@@ -309582,6 +310036,8 @@ function UpdateBodyStyle(look) {
 			}
 		}
 		path = this.isAdmin ? DB.getAdminPath(this._sex) : DB.getBodyPath(job, this._sex, look, cashMountCostume);
+		const styled = !this.isAdmin && PacketVerManager_default.value > 20141022 && look > 0 && look !== job && !cashMountCostume;
+		this._bodyStyleJob = styled ? look : null;
 		Entity = this.constructor;
 		Client.loadFile(path + ".act");
 		Client.loadFile(path + ".spr", function() {
@@ -309605,7 +310061,8 @@ function UpdateBodyPalette(pal) {
 		return;
 	}
 	if (this._job === -1) return;
-	this.files.body.pal = DB.getBodyPalPath(this._job, this._bodypalette, this._sex);
+	const job = this._bodyStyleJob && !hasTransformation.call(this) ? this._bodyStyleJob : getEffectiveJob.call(this);
+	this.files.body.pal = DB.getBodyPalPath(job, this._bodypalette, this._sex);
 }
 /**
 * Update head
