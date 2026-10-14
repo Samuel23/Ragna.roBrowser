@@ -8,7 +8,7 @@
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getOwnPropNames$1 = Object.getOwnPropertyNames;
 var __getProtoOf = Object.getPrototypeOf;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
 var __esmMin = (fn, res, err) => () => {
@@ -19,7 +19,7 @@ var __esmMin = (fn, res, err) => () => {
 		throw err = [e], e;
 	}
 };
-var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod), cb = null), mod.exports);
+var __commonJSMin = (cb, mod) => () => (mod || (cb((mod = { exports: {} }).exports, mod, mod.exports), cb = null), mod.exports);
 var __exportAll = (all, no_symbols) => {
 	let target = {};
 	for (var name in all) __defProp(target, name, {
@@ -30,7 +30,7 @@ var __exportAll = (all, no_symbols) => {
 	return target;
 };
 var __copyProps = (to, from, except, desc) => {
-	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
+	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames$1(from), i = 0, n = keys.length, key; i < n; i++) {
 		key = keys[i];
 		if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
 			get: ((k) => from[k]).bind(null, key),
@@ -206199,7 +206199,7 @@ var init_HtmlHelper = __esmMin((() => {
 * Render background (or a black background if no image is loaded yet)
 */
 function render$15() {
-	_ctx$6.clearRect(0, 0, _canvas.width, _canvas.height);
+	_ctx$5.clearRect(0, 0, _canvas.width, _canvas.height);
 	if (Background._progress > -1) Background.setPercent(Background._progress);
 }
 /**
@@ -206219,7 +206219,7 @@ function transition(callback) {
 		});
 	});
 }
-var _overlay, _container, _canvas, _ctx$6, Background;
+var _overlay, _container, _canvas, _ctx$5, Background;
 var init_Background = __esmMin((() => {
 	init_DBManager();
 	init_Client();
@@ -206252,7 +206252,7 @@ var init_Background = __esmMin((() => {
 		left: "0",
 		zIndex: "2"
 	});
-	_ctx$6 = _canvas.getContext("2d");
+	_ctx$5 = _canvas.getContext("2d");
 	Background = class Background {
 		/**
 		* Background loading progress
@@ -206302,7 +206302,7 @@ var init_Background = __esmMin((() => {
 				width: width + "px",
 				height: height + "px"
 			});
-			_ctx$6.clearRect(0, 0, width, height);
+			_ctx$5.clearRect(0, 0, width, height);
 			render$15();
 		}
 		/**
@@ -206440,14 +206440,14 @@ var init_Background = __esmMin((() => {
 			const height = 15;
 			const x = Math.floor((_canvas.width - width) * .5);
 			const y = Math.floor(_canvas.height * .75);
-			_ctx$6.fillStyle = "rgb(0,255,255)";
-			_ctx$6.fillRect(x, y, width, height);
-			_ctx$6.fillStyle = "rgb(140,140,140)";
-			_ctx$6.fillRect(x + 1, y + 1, 238, 13);
-			_ctx$6.fillStyle = "rgb(66,99,165)";
-			_ctx$6.fillRect(x + 2, y + 2, Math.floor(percent * 236 * .01), 11);
-			_ctx$6.fillStyle = "rgb(255,255,0)";
-			_ctx$6.fillText(percent + "%", Math.floor((_canvas.width - _ctx$6.measureText(percent + "%").width) * .5), y + 11);
+			_ctx$5.fillStyle = "rgb(0,255,255)";
+			_ctx$5.fillRect(x, y, width, height);
+			_ctx$5.fillStyle = "rgb(140,140,140)";
+			_ctx$5.fillRect(x + 1, y + 1, 238, 13);
+			_ctx$5.fillStyle = "rgb(66,99,165)";
+			_ctx$5.fillRect(x + 2, y + 2, Math.floor(percent * 236 * .01), 11);
+			_ctx$5.fillStyle = "rgb(255,255,0)";
+			_ctx$5.fillText(percent + "%", Math.floor((_canvas.width - _ctx$5.measureText(percent + "%").width) * .5), y + 11);
 		}
 	};
 }));
@@ -207575,7 +207575,7 @@ function fillImageData(imageData, frame, pal, color) {
 		}
 	}
 }
-var mat4$22, RenderCanvas2D, _program$25, _buffer$18, _ctx$5, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$7, _size$7, _offset, SpriteRenderer;
+var mat4$22, RenderCanvas2D, _program$25, _buffer$18, _ctx$4, _gl$2, _groupId, _lastGroupId, _shadow, _angle, _depth, _disableDepthCorrection, _depthMask, _depthTest, _texture$4, _usepal, _pos$8, _matrix$7, _size$7, _offset, SpriteRenderer;
 var init_SpriteRenderer = __esmMin((() => {
 	init_WebGL();
 	init_gl_matrix();
@@ -207640,17 +207640,17 @@ var init_SpriteRenderer = __esmMin((() => {
 				_size$7[1] *= -1;
 			}
 			const canvas = getFrameCanvas(frame, pal, this.color);
-			_ctx$5.save();
-			_ctx$5.translate(_x | 0, _y | 0);
-			_ctx$5.rotate(this.angle / 180 * Math.PI);
-			_ctx$5.scale(scale_x, scale_y);
-			_ctx$5.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
-			_ctx$5.restore();
+			_ctx$4.save();
+			_ctx$4.translate(_x | 0, _y | 0);
+			_ctx$4.rotate(this.angle / 180 * Math.PI);
+			_ctx$4.scale(scale_x, scale_y);
+			_ctx$4.drawImage(canvas, 0, 0, width, height, -_size$7[0] >> 1, -_size$7[1] >> 1, _size$7[0] | 0, _size$7[1] | 0);
+			_ctx$4.restore();
 		};
 	})();
 	_program$25 = null;
 	_buffer$18 = null;
-	_ctx$5 = null;
+	_ctx$4 = null;
 	_gl$2 = null;
 	_groupId = 0;
 	_lastGroupId = 0;
@@ -207820,7 +207820,7 @@ var init_SpriteRenderer = __esmMin((() => {
 		* @param {number} y position
 		*/
 		static bind2DContext(ctx, x, y) {
-			_ctx$5 = ctx;
+			_ctx$4 = ctx;
 			_pos$8[0] = x;
 			_pos$8[1] = y;
 			this.render = RenderCanvas2D;
@@ -208433,7 +208433,7 @@ var init_Models = __esmMin((() => {
 //#region src/Renderer/Map/AnimatedModels.vs?raw
 var AnimatedModels_default$2;
 var init_AnimatedModels$2 = __esmMin((() => {
-	AnimatedModels_default$2 = "#version 300 es  \r\nprecision highp float;  \r\n  \r\nin vec3 aPosition;  \r\nin vec3 aNormal;  \r\nin vec2 aTextureCoord;  \r\nin float aAlpha;  \r\n  \r\nout vec2 vTextureCoord;  \r\nout float vLightWeighting;  \r\nout float vAlpha;  \r\nout float vFogFactor;  \r\nout vec3 vWorldPos;\r\n  \r\nuniform mat4 uModelViewMat;  \r\nuniform mat4 uProjectionMat;  \r\nuniform mat3 uNormalMat;  \r\n  \r\nuniform vec3 uLightDirection;  \r\nuniform float uLightOpacity;  \r\nuniform vec3 uLightAmbient;  \r\nuniform vec3 uLightDiffuse;  \r\n  \r\nuniform bool uFogUse;  \r\nuniform float uFogNear;  \r\nuniform float uFogFar;  \r\n  \r\nvoid main(void) {  \r\n    vec4 position = uModelViewMat * vec4(aPosition, 1.0);  \r\n    gl_Position = uProjectionMat * position;  \r\n  \r\n    vTextureCoord = aTextureCoord;  \r\n    vAlpha = aAlpha;  \r\n    vWorldPos = aPosition;\r\n  \r\n    vec3 normal = normalize(aNormal);  \r\n    float lightWeight = max(dot(normal, uLightDirection), 0.0);  \r\n    vLightWeighting = (1.0 - uLightOpacity) + lightWeight * uLightOpacity;  \r\n  \r\n    if (uFogUse) {  \r\n        float depth = length(position.xyz);  \r\n        vFogFactor = clamp((uFogFar - depth) / (uFogFar - uFogNear), 0.0, 1.0);  \r\n    } else {  \r\n        vFogFactor = 1.0;  \r\n    }  \r\n}";
+	AnimatedModels_default$2 = "#version 300 es  \r\nprecision highp float;  \r\n  \r\nin vec3 aPosition;  \r\nin vec3 aNormal;  \r\nin vec2 aTextureCoord;  \r\nin float aAlpha;  \r\nin float aMatrixIndex;  \r\n  \r\nout vec2 vTextureCoord;  \r\nout float vLightWeighting;  \r\nout float vAlpha;  \r\nout float vFogFactor;  \r\nout vec3 vWorldPos;  \r\n  \r\nuniform mat4 uModelViewMat;  \r\nuniform mat4 uProjectionMat;  \r\nuniform mat3 uNormalMat;  \r\n  \r\nuniform vec3 uLightDirection;  \r\nuniform float uLightOpacity;  \r\nuniform vec3 uLightAmbient;  \r\nuniform vec3 uLightDiffuse;  \r\n  \r\nuniform bool uFogUse;  \r\nuniform float uFogNear;  \r\nuniform float uFogFar;  \r\n  \r\nuniform highp sampler2D uMatrixTexture;  \r\n  \r\nmat4 fetchMatrix(int index) {  \r\n    int pixelIndex = index * 4;  \r\n    vec4 row0 = texelFetch(uMatrixTexture, ivec2(pixelIndex, 0), 0);  \r\n    vec4 row1 = texelFetch(uMatrixTexture, ivec2(pixelIndex + 1, 0), 0);  \r\n    vec4 row2 = texelFetch(uMatrixTexture, ivec2(pixelIndex + 2, 0), 0);  \r\n    vec4 row3 = texelFetch(uMatrixTexture, ivec2(pixelIndex + 3, 0), 0);  \r\n    return mat4(row0, row1, row2, row3);  \r\n}  \r\n  \r\nvoid main(void) {  \r\n    mat4 M = fetchMatrix(int(aMatrixIndex));  \r\n    vec4 worldPos = M * vec4(aPosition, 1.0);  \r\n    vec4 position = uModelViewMat * worldPos;  \r\n    gl_Position = uProjectionMat * position;  \r\n  \r\n    vTextureCoord = aTextureCoord;  \r\n    vAlpha = aAlpha;  \r\n    vWorldPos = worldPos.xyz;  \r\n  \r\n    vec3 c0 = normalize(M[0].xyz);  \r\n    vec3 c1 = normalize(M[1].xyz);  \r\n    vec3 c2 = normalize(M[2].xyz);  \r\n    mat3 rotMat = mat3(c0, c1, c2);  \r\n    vec3 normal = normalize(rotMat * aNormal);  \r\n  \r\n    float lightWeight = max(dot(normal, uLightDirection), 0.0);  \r\n    vLightWeighting = (1.0 - uLightOpacity) + lightWeight * uLightOpacity;  \r\n  \r\n    if (uFogUse) {  \r\n        float depth = length(position.xyz);  \r\n        vFogFactor = clamp((uFogFar - depth) / (uFogFar - uFogNear), 0.0, 1.0);  \r\n    } else {  \r\n        vFogFactor = 1.0;  \r\n    }  \r\n}";
 }));
 //#endregion
 //#region src/Renderer/Map/AnimatedModels.fs?raw
@@ -208462,6 +208462,7 @@ function init$9(gl) {
 		uFogFar: gl.getUniformLocation(_program$22, "uFogFar"),
 		uFogColor: gl.getUniformLocation(_program$22, "uFogColor"),
 		uDiffuse: gl.getUniformLocation(_program$22, "uDiffuse"),
+		uMatrixTexture: gl.getUniformLocation(_program$22, "uMatrixTexture"),
 		uOccluderFadeMode: gl.getUniformLocation(_program$22, "uOccluderFadeMode"),
 		uOccluderFadeEye: gl.getUniformLocation(_program$22, "uOccluderFadeEye"),
 		uOccluderFadeFocus: gl.getUniformLocation(_program$22, "uOccluderFadeFocus"),
@@ -208473,7 +208474,8 @@ function init$9(gl) {
 		aPosition: gl.getAttribLocation(_program$22, "aPosition"),
 		aNormal: gl.getAttribLocation(_program$22, "aNormal"),
 		aTextureCoord: gl.getAttribLocation(_program$22, "aTextureCoord"),
-		aAlpha: gl.getAttribLocation(_program$22, "aAlpha")
+		aAlpha: gl.getAttribLocation(_program$22, "aAlpha"),
+		aMatrixIndex: gl.getAttribLocation(_program$22, "aMatrixIndex")
 	};
 }
 /**
@@ -208484,9 +208486,90 @@ function free$4(gl) {
 		const model = _animatedModels[i];
 		if (model.vao) gl.deleteVertexArray(model.vao);
 		if (model.buffer) gl.deleteBuffer(model.buffer);
+		if (model.matrixTexture) gl.deleteTexture(model.matrixTexture);
 		for (const tex in model.textureObjects) if (model.textureObjects[tex]) gl.deleteTexture(model.textureObjects[tex]);
 	}
 	_animatedModels = [];
+}
+/**
+* Precompute face flat normals in node model-space
+*/
+function precalcFlatNormals(node) {
+	const faces = node.faces;
+	const vertices = node.vertices;
+	const normals = new Float32Array(faces.length * 3);
+	for (let f = 0; f < faces.length; f++) {
+		const face = faces[f];
+		const v0 = vertices[face.vertidx[0]];
+		const v1 = vertices[face.vertidx[1]];
+		const v2 = vertices[face.vertidx[2]];
+		const ax = v1[0] - v0[0];
+		const ay = v1[1] - v0[1];
+		const az = v1[2] - v0[2];
+		const bx = v2[0] - v0[0];
+		const by = v2[1] - v0[1];
+		const bz = v2[2] - v0[2];
+		let nx = ay * bz - az * by;
+		let ny = az * bx - ax * bz;
+		let nz = ax * by - ay * bx;
+		let len = nx * nx + ny * ny + nz * nz;
+		if (len > 0) {
+			len = 1 / Math.sqrt(len);
+			nx *= len;
+			ny *= len;
+			nz *= len;
+		}
+		const base = f * 3;
+		normals[base] = nx;
+		normals[base + 1] = ny;
+		normals[base + 2] = nz;
+	}
+	return normals;
+}
+/**
+* Precompute smooth normals per smoothGroup in node model-space
+*/
+function precalcSmoothNormals(node, flatNormals) {
+	const faces = node.faces;
+	const vertices = node.vertices;
+	const groupUsed = [];
+	for (let f = 0; f < faces.length; f++) {
+		const sg = faces[f].smoothGroup;
+		if (sg !== void 0 && sg >= 0 && sg < 32) groupUsed[sg] = true;
+	}
+	const groups = [];
+	const numVerts = vertices.length;
+	for (let j = 0; j < 32; j++) {
+		if (!groupUsed[j]) continue;
+		const norm = new Float32Array(numVerts * 3);
+		groups[j] = norm;
+		for (let v = 0; v < numVerts; v++) {
+			let x = 0;
+			let y = 0;
+			let z = 0;
+			for (let f = 0; f < faces.length; f++) {
+				const face = faces[f];
+				if (face.smoothGroup === j && (face.vertidx[0] === v || face.vertidx[1] === v || face.vertidx[2] === v)) {
+					const base = f * 3;
+					x += flatNormals[base];
+					y += flatNormals[base + 1];
+					z += flatNormals[base + 2];
+				}
+			}
+			let len = x * x + y * y + z * z;
+			if (len > 0) {
+				len = 1 / Math.sqrt(len);
+				x *= len;
+				y *= len;
+				z *= len;
+			}
+			const l = v * 3;
+			norm[l] = x;
+			norm[l + 1] = y;
+			norm[l + 2] = z;
+		}
+	}
+	return groups;
 }
 function isNodeStatic(node) {
 	return (!node.rotKeyframes || node.rotKeyframes.length === 0) && (!node.posKeyframes || node.posKeyframes.length === 0) && (!node.scaleKeyFrames || node.scaleKeyFrames.length === 0);
@@ -208575,6 +208658,11 @@ function add$2(gl, modelData) {
 	}
 	for (let n = 0; n < nodes.length; n++) {
 		const node = nodes[n];
+		node._flatNormals = precalcFlatNormals(node);
+		if (modelData.shadeType === 2) node._smoothGroups = precalcSmoothNormals(node, node._flatNormals);
+	}
+	for (let n = 0; n < nodes.length; n++) {
+		const node = nodes[n];
 		const facesPerTex = {};
 		for (let f = 0; f < node.faces.length; f++) {
 			const tid = node.textures[node.faces[f].texid];
@@ -208588,12 +208676,11 @@ function add$2(gl, modelData) {
 			};
 			for (let inst = 0; inst < instances.length; inst++) {
 				const vertCount = facesPerTex[tid] * 3;
-				const floatCount = vertCount * 9;
+				const floatCount = vertCount * 10;
 				textureGroups[tid].writePlan.push({
 					nodeIndex: n,
 					instanceIndex: inst,
 					faceCount: facesPerTex[tid],
-					startFaceIndex: 0,
 					targetOffset: 0
 				});
 				textureGroups[tid].count += vertCount;
@@ -208609,14 +208696,36 @@ function add$2(gl, modelData) {
 		for (let wp = 0; wp < group.writePlan.length; wp++) {
 			const plan = group.writePlan[wp];
 			plan.targetOffset = currentOffset;
-			currentOffset += plan.faceCount * 3 * 9;
+			currentOffset += plan.faceCount * 3 * 10;
 		}
 		meshInfos.push({
 			textureIdx: parseInt(tid),
-			vertOffset: startOffset / 9,
-			vertCount: (currentOffset - startOffset) / 9
+			vertOffset: startOffset / 10,
+			vertCount: (currentOffset - startOffset) / 10
 		});
 	}
+	const staticBuffer = new Float32Array(totalFloats);
+	const numInstances = instances.length;
+	for (const tid in textureGroups) {
+		const plans = textureGroups[tid].writePlan;
+		const textureId = parseInt(tid);
+		for (let p = 0; p < plans.length; p++) {
+			const plan = plans[p];
+			const node = nodes[plan.nodeIndex];
+			const matrixIndex = plan.nodeIndex * numInstances + plan.instanceIndex;
+			writeNodeGeometry(node, textureId, plan.targetOffset, staticBuffer, modelData.alpha, matrixIndex, modelData.shadeType);
+		}
+	}
+	const totalMatrices = nodes.length * numInstances;
+	const matrixData = new Float32Array(totalMatrices * 16);
+	const matrixTexture = gl.createTexture();
+	gl.bindTexture(gl.TEXTURE_2D, matrixTexture);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA32F, totalMatrices * 4, 1, 0, gl.RGBA, gl.FLOAT, matrixData);
+	gl.bindTexture(gl.TEXTURE_2D, null);
 	const animModel = {
 		filename: modelData.filename,
 		animLen,
@@ -208635,9 +208744,10 @@ function add$2(gl, modelData) {
 		},
 		textureObjects: {},
 		buffer: gl.createBuffer(),
-		_gpuBuffer: new Float32Array(totalFloats),
+		matrixTexture,
+		matrixData,
+		totalMatrices,
 		meshInfos,
-		writePlans: textureGroups,
 		lastFrame: -1,
 		lastAnimFrame: -1,
 		staticModel: !hasAnyAnimation,
@@ -208649,13 +208759,13 @@ function add$2(gl, modelData) {
 		animModel._globalMatrices[n] = mat4$20.create();
 	}
 	gl.bindBuffer(gl.ARRAY_BUFFER, animModel.buffer);
-	gl.bufferData(gl.ARRAY_BUFFER, animModel._gpuBuffer.byteLength, gl.DYNAMIC_DRAW);
+	gl.bufferData(gl.ARRAY_BUFFER, staticBuffer, gl.STATIC_DRAW);
 	for (let t = 0; t < modelData.textures.length; t++) loadTexture$1(gl, animModel, "data\\texture\\" + modelData.textures[t], t);
 	animModel.vao = gl.createVertexArray();
 	gl.bindVertexArray(animModel.vao);
 	gl.bindBuffer(gl.ARRAY_BUFFER, animModel.buffer);
 	const attribute = _program$22.attribute;
-	const stride = 36;
+	const stride = 40;
 	gl.enableVertexAttribArray(attribute.aPosition);
 	gl.vertexAttribPointer(attribute.aPosition, 3, gl.FLOAT, false, stride, 0);
 	gl.enableVertexAttribArray(attribute.aNormal);
@@ -208664,6 +208774,8 @@ function add$2(gl, modelData) {
 	gl.vertexAttribPointer(attribute.aTextureCoord, 2, gl.FLOAT, false, stride, 24);
 	gl.enableVertexAttribArray(attribute.aAlpha);
 	gl.vertexAttribPointer(attribute.aAlpha, 1, gl.FLOAT, false, stride, 32);
+	gl.enableVertexAttribArray(attribute.aMatrixIndex);
+	gl.vertexAttribPointer(attribute.aMatrixIndex, 1, gl.FLOAT, false, stride, 36);
 	gl.bindVertexArray(null);
 	_animatedModels.push(animModel);
 	updateModelBuffer(gl, animModel, 0, true);
@@ -208728,59 +208840,51 @@ function getScaleAtFrame$2(keyframes, frame, out) {
 	return vec3$5.lerp(out, prev._vec, next._vec, t);
 }
 /**
-* Transform a specific node's geometry for a specific texture and instance
-* Writes directly to the monolithic buffer
+* Write static geometry (model space positions, precomputed normals, UVs, alpha, matrixIndex)
 */
-function transformAndWrite(node, finalMatrix, textureId, offset, buffer, alpha) {
-	const normalMat = node._cache.normalMat || mat4$20.create();
-	node._cache.normalMat = normalMat;
-	mat4$20.extractRotation(normalMat, finalMatrix);
-	const m = finalMatrix;
-	const n = normalMat;
-	const m0 = m[0], m1 = m[1], m2 = m[2], m4 = m[4], m5 = m[5], m6 = m[6], m8 = m[8], m9 = m[9], m10 = m[10], m12 = m[12], m13 = m[13], m14 = m[14];
-	const n0 = n[0], n1 = n[1], n2 = n[2], n4 = n[4], n5 = n[5], n6 = n[6], n8 = n[8], n9 = n[9], n10 = n[10];
+function writeNodeGeometry(node, textureId, offset, buffer, alpha, matrixIndex, shadeType) {
 	const faces = node.faces;
 	const vertices = node.vertices;
 	const tvertices = node.tvertices;
 	const textures = node.textures;
-	const output = buffer;
+	const flatNormals = node._flatNormals;
+	const smoothGroups = node._smoothGroups;
+	const isSmooth = shadeType === 2 && smoothGroups;
 	let o = offset;
 	for (let f = 0; f < faces.length; f++) {
 		const face = faces[f];
 		if (textures[face.texid] !== textureId) continue;
-		const v0 = vertices[face.vertidx[0]];
-		const v1 = vertices[face.vertidx[1]];
-		const v2 = vertices[face.vertidx[2]];
-		const ax = v1[0] - v0[0], ay = v1[1] - v0[1], az = v1[2] - v0[2];
-		const bx = v2[0] - v0[0], by = v2[1] - v0[1], bz = v2[2] - v0[2];
-		let nx = ay * bz - az * by;
-		let ny = az * bx - ax * bz;
-		let nz = ax * by - ay * bx;
-		let len = nx * nx + ny * ny + nz * nz;
-		if (len > 0) {
-			len = 1 / Math.sqrt(len);
-			nx *= len;
-			ny *= len;
-			nz *= len;
+		let fnx = 0;
+		let fny = 0;
+		let fnz = 0;
+		let smoothNorm = null;
+		if (isSmooth && face.smoothGroup !== void 0 && smoothGroups[face.smoothGroup]) smoothNorm = smoothGroups[face.smoothGroup];
+		else {
+			const fBase = f * 3;
+			fnx = flatNormals[fBase];
+			fny = flatNormals[fBase + 1];
+			fnz = flatNormals[fBase + 2];
 		}
-		const tnx = n0 * nx + n4 * ny + n8 * nz;
-		const tny = n1 * nx + n5 * ny + n9 * nz;
-		const tnz = n2 * nx + n6 * ny + n10 * nz;
 		for (let vi = 0; vi < 3; vi++) {
 			const vIdx = face.vertidx[vi];
 			const tIdx = face.tvertidx[vi];
-			const vx = vertices[vIdx][0];
-			const vy = vertices[vIdx][1];
-			const vz = vertices[vIdx][2];
-			output[o++] = m0 * vx + m4 * vy + m8 * vz + m12;
-			output[o++] = m1 * vx + m5 * vy + m9 * vz + m13;
-			output[o++] = m2 * vx + m6 * vy + m10 * vz + m14;
-			output[o++] = tnx;
-			output[o++] = tny;
-			output[o++] = tnz;
-			output[o++] = tvertices[tIdx * 6 + 4];
-			output[o++] = tvertices[tIdx * 6 + 5];
-			output[o++] = alpha;
+			buffer[o++] = vertices[vIdx][0];
+			buffer[o++] = vertices[vIdx][1];
+			buffer[o++] = vertices[vIdx][2];
+			if (smoothNorm) {
+				const nBase = vIdx * 3;
+				buffer[o++] = smoothNorm[nBase];
+				buffer[o++] = smoothNorm[nBase + 1];
+				buffer[o++] = smoothNorm[nBase + 2];
+			} else {
+				buffer[o++] = fnx;
+				buffer[o++] = fny;
+				buffer[o++] = fnz;
+			}
+			buffer[o++] = tvertices[tIdx * 6 + 4];
+			buffer[o++] = tvertices[tIdx * 6 + 5];
+			buffer[o++] = alpha;
+			buffer[o++] = matrixIndex;
 		}
 	}
 }
@@ -208828,24 +208932,20 @@ function updateModelBuffer(gl, model, frame, force) {
 		mat4$20.multiply(finalNodeMatrix, finalNodeMatrix, mat3$4.toMat4(node.mat3));
 		node.finalMatrix = finalNodeMatrix;
 	}
+	const matrixData = model.matrixData;
+	const numInstances = model.instances.length;
 	for (let n = 0; n < model.nodes.length; n++) {
 		const node = model.nodes[n];
-		for (let i = 0; i < model.instances.length; i++) mat4$20.multiply(node._cache.instances[i], model.instances[i], node.finalMatrix);
-	}
-	const buffer = model._gpuBuffer;
-	const writePlans = model.writePlans;
-	for (const tid in writePlans) {
-		const plans = writePlans[tid].writePlan;
-		const textureId = parseInt(tid);
-		for (let p = 0; p < plans.length; p++) {
-			const plan = plans[p];
-			const node = model.nodes[plan.nodeIndex];
-			const finalInstanceMatrix = node._cache.instances[plan.instanceIndex];
-			transformAndWrite(node, finalInstanceMatrix, textureId, plan.targetOffset, buffer, model.alpha);
+		for (let i = 0; i < numInstances; i++) {
+			const destMat = node._cache.instances[i];
+			mat4$20.multiply(destMat, model.instances[i], node.finalMatrix);
+			const matrixIndex = n * numInstances + i;
+			matrixData.set(destMat, matrixIndex * 16);
 		}
 	}
-	gl.bindBuffer(gl.ARRAY_BUFFER, model.buffer);
-	gl.bufferSubData(gl.ARRAY_BUFFER, 0, buffer);
+	gl.bindTexture(gl.TEXTURE_2D, model.matrixTexture);
+	gl.texSubImage2D(gl.TEXTURE_2D, 0, 0, 0, model.totalMatrices * 4, 1, gl.RGBA, gl.FLOAT, matrixData);
+	gl.bindTexture(gl.TEXTURE_2D, null);
 }
 /**
 * Bind program and per-frame uniforms shared by both model passes
@@ -208867,6 +208967,8 @@ function bind(gl, modelView, projection, normalMat, fog, light) {
 	gl.uniform3fv(uniform.uFogColor, fog.color);
 	gl.activeTexture(gl.TEXTURE0);
 	gl.uniform1i(uniform.uDiffuse, 0);
+	gl.activeTexture(gl.TEXTURE1);
+	gl.uniform1i(uniform.uMatrixTexture, 1);
 }
 /**
 * Issue the draw calls for every animated model
@@ -208875,6 +208977,9 @@ function drawModels(gl) {
 	for (let m = 0; m < _animatedModels.length; m++) {
 		const model = _animatedModels[m];
 		if (!model.buffer || model.meshInfos.length === 0) continue;
+		gl.activeTexture(gl.TEXTURE1);
+		gl.bindTexture(gl.TEXTURE_2D, model.matrixTexture);
+		gl.activeTexture(gl.TEXTURE0);
 		gl.bindVertexArray(model.vao);
 		for (let i = 0; i < model.meshInfos.length; i++) {
 			const info = model.meshInfos[i];
@@ -212978,6 +213083,10 @@ function render$9(gl, modelView, projection, normalMat, fog, light, tick) {
 						}
 					}
 				}
+			}
+			if (inst.entity && inst.entity.culled) {
+				inst.screenRect = null;
+				continue;
 			}
 			worldAnchorToClip(inst.pos, modelView, projection, _clip);
 			if (frustumCullClip(_clip[0], _clip[1], _clip[3], CULL_MARGIN)) {
@@ -220277,7 +220386,8 @@ var init_ChatBox = __esmMin((() => {
 	*/
 	ChatBox.PrivateMessageStorage = {
 		nick: "",
-		msg: ""
+		msg: "",
+		blockNicks: []
 	};
 	ChatBox.lastTabID = -1;
 	ChatBox.tabCount = 0;
@@ -221577,13 +221687,13 @@ function eventsBooks$1() {
 	if (!event) return;
 	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
 		try {
-			_sprite$4 = new SPR(spr);
-			_action$4 = new ACT(act);
+			_sprite$3 = new SPR(spr);
+			_action$3 = new ACT(act);
 		} catch (e) {
 			console.error("Book::init() - " + e.message);
 			return;
 		}
-		const canvas = _sprite$4.getCanvasFromFrame(0);
+		const canvas = _sprite$3.getCanvasFromFrame(0);
 		canvas.className = "book_open event_add_cursor";
 		event.appendChild(canvas);
 		const bookOpen = root.querySelector(".book_open");
@@ -221608,7 +221718,7 @@ function eventsBooks$1() {
 		readCanvas.height = 15;
 		readCanvas.className = "book_read event_add_cursor";
 		event.appendChild(readCanvas);
-		_ctx$4 = readCanvas.getContext("2d");
+		_ctx$3 = readCanvas.getContext("2d");
 		const bookRead = root.querySelector(".book_read");
 		if (bookRead) {
 			bookRead.addEventListener("mouseover", (e) => {
@@ -221641,7 +221751,7 @@ function validateFieldsExist$1(event) {
 	if (!event.querySelector("button")) event.insertAdjacentHTML("beforeend", "<button class=\"view\" data-background=\"btn_view.bmp\" data-down=\"btn_view_a.bmp\" data-hover=\"btn_view_b.bmp\"></button>");
 	return true;
 }
-var _sprite$4, _action$4, _ctx$4, _type$7, _start$2, ItemCompare, rendering$3, ItemCompare_default;
+var _sprite$3, _action$3, _ctx$3, _type$6, _start$1, ItemCompare, rendering$3, ItemCompare_default;
 var init_ItemCompare = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -221660,8 +221770,8 @@ var init_ItemCompare = __esmMin((() => {
 	init_ItemCompare$1();
 	init_ItemInfo();
 	init_Entity$1();
-	_type$7 = 0;
-	_start$2 = 0;
+	_type$6 = 0;
+	_start$1 = 0;
 	ItemCompare = new GUIComponent("ItemCompare", ItemCompare_default$1);
 	ItemCompare.render = () => ItemCompare_default$2;
 	/**
@@ -221780,14 +221890,14 @@ var init_ItemCompare = __esmMin((() => {
 		const position = new Uint16Array([0, 0]);
 		return function render() {
 			const _entity = new Entity();
-			const action = _action$4.actions[_type$7];
-			const anim = Math.floor((Renderer.tick - _start$2) / action.delay);
+			const action = _action$3.actions[_type$6];
+			const anim = Math.floor((Renderer.tick - _start$1) / action.delay);
 			const animation = action.animations[anim % action.animations.length];
 			let i, count;
 			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$4, 10, 25);
-			_ctx$4.clearRect(0, 0, _ctx$4.canvas.width, _ctx$4.canvas.height);
-			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$4, _sprite$4, 1, position, false);
+			SpriteRenderer.bind2DContext(_ctx$3, 10, 25);
+			_ctx$3.clearRect(0, 0, _ctx$3.canvas.width, _ctx$3.canvas.height);
+			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$3, _sprite$3, 1, position, false);
 		};
 	})();
 	ItemCompare_default = UIManager.addComponent(ItemCompare);
@@ -221860,7 +221970,7 @@ function applyPreviewItem(entity) {
 	if (_previewLocation & EquipmentLocation_default.COSTUME_HEAD_TOP) entity.accessory2 = _previewSpriteId;
 	if (_previewLocation & EquipmentLocation_default.COSTUME_ROBE) entity.robe = _previewSpriteId;
 }
-var ItemPreview, _ctx$3, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
+var ItemPreview, _ctx$2, _direction, _previewLocation, _previewSpriteId, _rendering, _remove, renderPreview, ItemPreview_default;
 var init_ItemPreview = __esmMin((() => {
 	init_DBManager();
 	init_EquipmentLocation();
@@ -221894,7 +222004,7 @@ var init_ItemPreview = __esmMin((() => {
 	*/
 	ItemPreview.init = function init() {
 		const root = this.getRoot();
-		_ctx$3 = root.querySelector("canvas").getContext("2d");
+		_ctx$2 = root.querySelector("canvas").getContext("2d");
 		root.querySelector(".close").addEventListener("click", () => {
 			ItemPreview.remove();
 		});
@@ -221978,8 +222088,8 @@ var init_ItemPreview = __esmMin((() => {
 			save: false
 		};
 		return function render() {
-			if (!_ctx$3) return;
-			_ctx$3.clearRect(0, 0, _ctx$3.canvas.width, _ctx$3.canvas.height);
+			if (!_ctx$2) return;
+			_ctx$2.clearRect(0, 0, _ctx$2.canvas.width, _ctx$2.canvas.height);
 			if (!_previewSpriteId || !_previewLocation || !SessionStorage_default.Entity) return;
 			const previewCharacter = new Entity();
 			previewCharacter.set({
@@ -222005,8 +222115,8 @@ var init_ItemPreview = __esmMin((() => {
 			previewCharacter.headDir = 0;
 			previewCharacter.action = previewCharacter.ACTION.IDLE;
 			previewCharacter.animation = _animation;
-			SpriteRenderer.bind2DContext(_ctx$3, Math.floor(_ctx$3.canvas.width / 2), _ctx$3.canvas.height);
-			previewCharacter.renderEntity(_ctx$3);
+			SpriteRenderer.bind2DContext(_ctx$2, Math.floor(_ctx$2.canvas.width / 2), _ctx$2.canvas.height);
+			previewCharacter.renderEntity(_ctx$2);
 			previewCharacter.effectColor.set(_savedColor);
 		};
 	})();
@@ -223692,7 +223802,7 @@ function resetPathFindingWorker() {
 	terminatePathFindingWorker();
 	initializePathFindingWorker();
 }
-var Navigation, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$2, _towninfo, _markers, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
+var Navigation, _arrow, _toolDealer, _weaponDealer, _armorDealer, _blacksmith, _guide, _inn, _kafra, _map, _ctx$1, _towninfo, _markers, _path, _lastPathUpdate, _pathUpdateThrottle, _pathUpdateLock, _pathFindingWorker, _mapData, _targetData, _finalTargetData, _isMapClickTarget, _blinking, _fadeInterval, _originalColor, _documentClickHandler, Navigation_default;
 var init_Navigation = __esmMin((() => {
 	init_KeyEventHandler();
 	init_Renderer();
@@ -223718,7 +223828,7 @@ var init_Navigation = __esmMin((() => {
 	_inn = createAsyncImage();
 	_kafra = createAsyncImage();
 	_map = createAsyncImage();
-	_ctx$2 = null;
+	_ctx$1 = null;
 	_towninfo = [];
 	_markers = [];
 	_path = [];
@@ -223767,7 +223877,7 @@ var init_Navigation = __esmMin((() => {
 		const canvas = document.createElement("canvas");
 		canvas.width = 280;
 		canvas.height = 230;
-		_ctx$2 = canvas.getContext("2d");
+		_ctx$1 = canvas.getContext("2d");
 		const mapDisplay = root.querySelector(".map-display");
 		if (mapDisplay) mapDisplay.appendChild(canvas);
 		Client.loadFile(`${DB.INTERFACE_PATH}map/map_arrow.bmp`, (dataURI) => {
@@ -224046,7 +224156,7 @@ var init_Navigation = __esmMin((() => {
 		if ((this._host ? getComputedStyle(this._host).display : "none") === "none") return;
 		const width = 280;
 		const height = 230;
-		const ctx = _ctx$2;
+		const ctx = _ctx$1;
 		if (!ctx) return;
 		const currentMap = getCurrentMap();
 		const currentPos = getPlayerPosition();
@@ -225628,7 +225738,7 @@ function _root$18() {
 function onValidate$1() {
 	const root = _root$18();
 	const PartyFriends = UIManager.getComponent("PartyFriends");
-	switch (_type$6) {
+	switch (_type$5) {
 		case PartyHelper.Type.CREATE: {
 			const nameInput = root.querySelector(".content .name");
 			const name = nameInput ? nameInput.value : "";
@@ -225656,7 +225766,7 @@ function onValidate$1() {
 		}
 	}
 }
-var PartyHelper, _type$6, PartyHelper_default;
+var PartyHelper, _type$5, PartyHelper_default;
 var init_PartyHelper = __esmMin((() => {
 	init_UIManager();
 	init_GUIComponent();
@@ -225676,7 +225786,7 @@ var init_PartyHelper = __esmMin((() => {
 		INVITE: 2,
 		FRIEND_SETUP: 3
 	};
-	_type$6 = PartyHelper.Type.CREATE;
+	_type$5 = PartyHelper.Type.CREATE;
 	/**
 	* Render HTML
 	*/
@@ -225896,7 +226006,7 @@ var init_PartyHelper = __esmMin((() => {
 					el.style.display = "none";
 				});
 		}
-		_type$6 = type;
+		_type$5 = type;
 	};
 	/**
 	* Update party settings UI
@@ -225961,7 +226071,7 @@ var init_PartyHelper = __esmMin((() => {
 	* @returns {number}
 	*/
 	PartyHelper.getType = function getType() {
-		return _type$6;
+		return _type$5;
 	};
 	/**
 	* Hooks
@@ -244755,13 +244865,13 @@ function eventsBooks() {
 	if (!event) return;
 	Client.getFiles(["data/sprite/book/Ã¥ÀÐ±â.spr", "data/sprite/book/Ã¥ÀÐ±â.act"], function(spr, act) {
 		try {
-			_sprite$3 = new SPR(spr);
-			_action$3 = new ACT(act);
+			_sprite$2 = new SPR(spr);
+			_action$2 = new ACT(act);
 		} catch (e) {
 			console.error("Book::init() - " + e.message);
 			return;
 		}
-		const canvas = _sprite$3.getCanvasFromFrame(0);
+		const canvas = _sprite$2.getCanvasFromFrame(0);
 		canvas.className = "book_open event_add_cursor";
 		event.appendChild(canvas);
 		const bookOpen = root.querySelector(".book_open");
@@ -244786,7 +244896,7 @@ function eventsBooks() {
 		readCanvas.height = 15;
 		readCanvas.className = "book_read event_add_cursor";
 		event.appendChild(readCanvas);
-		_ctx$1 = readCanvas.getContext("2d");
+		_ctx = readCanvas.getContext("2d");
 		const bookRead = root.querySelector(".book_read");
 		if (bookRead) {
 			bookRead.addEventListener("mouseover", (e) => {
@@ -244857,7 +244967,7 @@ function buildMoveInfoTooltip(moveInfo) {
 	for (const entry of MOVE_INFO_MESSAGES) if (moveInfo[entry.key] === true) lines.push(DB.getMessage(entry.msgId));
 	return lines.map((l) => `<div>${l}</div>`).join("");
 }
-var ItemInfo, _sprite$3, _action$3, _ctx$1, _type$5, _start$1, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
+var ItemInfo, _sprite$2, _action$2, _ctx, _type$4, _start, MOVE_INFO_MESSAGES, rendering$2, ItemInfo_default;
 var init_ItemInfo = __esmMin((() => {
 	init_DBManager();
 	init_ItemType();
@@ -244886,8 +244996,8 @@ var init_ItemInfo = __esmMin((() => {
 	init_Inventory();
 	ItemInfo = new GUIComponent("ItemInfo", ItemInfo_default$1);
 	ItemInfo.render = () => ItemInfo_default$2;
-	_type$5 = 0;
-	_start$1 = 0;
+	_type$4 = 0;
+	_start = 0;
 	/**
 	* @let {number} ItemInfo unique id
 	*/
@@ -245097,14 +245207,14 @@ var init_ItemInfo = __esmMin((() => {
 		const position = new Uint16Array([0, 0]);
 		return function render() {
 			const _entity = new Entity();
-			const action = _action$3.actions[_type$5];
-			const anim = Math.floor((Renderer.tick - _start$1) / action.delay);
+			const action = _action$2.actions[_type$4];
+			const anim = Math.floor((Renderer.tick - _start) / action.delay);
 			const animation = action.animations[anim % action.animations.length];
 			let i, count;
 			count = animation.layers.length;
-			SpriteRenderer.bind2DContext(_ctx$1, 10, 25);
-			_ctx$1.clearRect(0, 0, _ctx$1.canvas.width, _ctx$1.canvas.height);
-			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$3, _sprite$3, 1, position, false);
+			SpriteRenderer.bind2DContext(_ctx, 10, 25);
+			_ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+			for (i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite$2, _sprite$2, 1, position, false);
 		};
 	})();
 	/**
@@ -251409,6 +251519,19 @@ function loadAliases() {
 	for (const cmd in CommandStore) if (CommandStore[cmd].aliases) for (let i = 0; i < CommandStore[cmd].aliases.length; i++) aliases[CommandStore[cmd].aliases[i]] = cmd;
 }
 /**
+* Block or allow whispers from a character
+*
+* @param {string} name
+* @param {number} type - 0 block, 1 allow
+*/
+function requestWhisperSetting(name, type) {
+	const pkt = new PACKET.CZ.SETTING_WHISPER_PC();
+	pkt.name = name;
+	pkt.type = type;
+	Network.sendPacket(pkt);
+	ChatBox_default.PrivateMessageStorage.blockNicks.push(name);
+}
+/**
 * Process command
 */
 function processCommand(text) {
@@ -251831,6 +251954,45 @@ var init_ProcessCommand = __esmMin((() => {
 			description: "Sends the specified message to everyone on your friend list",
 			callback: function() {
 				FriendEngine.sayHi();
+			}
+		},
+		ex: {
+			description: "Blocks whispers from <Character Name>, or lists the blocked characters",
+			callback: function(text) {
+				const matches = text.match(/^ex\s+(.*\S)/);
+				if (matches) {
+					requestWhisperSetting(matches[1], 0);
+					return;
+				}
+				const pkt = new PACKET.CZ.REQ_WHISPER_LIST();
+				Network.sendPacket(pkt);
+			}
+		},
+		in: {
+			description: "Allows whispers from <Character Name>",
+			callback: function(text) {
+				const matches = text.match(/^in\s+(.*\S)/);
+				if (matches) {
+					requestWhisperSetting(matches[1], 1);
+					return;
+				}
+				this.addText(DB.getMessage(44), this.TYPE.INFO, this.FILTER.PUBLIC_LOG);
+			}
+		},
+		exall: {
+			description: "Blocks whispers from everyone",
+			callback: function() {
+				const pkt = new PACKET.CZ.SETTING_WHISPER_STATE();
+				pkt.type = 0;
+				Network.sendPacket(pkt);
+			}
+		},
+		inall: {
+			description: "Allows whispers from everyone",
+			callback: function() {
+				const pkt = new PACKET.CZ.SETTING_WHISPER_STATE();
+				pkt.type = 1;
+				Network.sendPacket(pkt);
 			}
 		},
 		guild: {
@@ -260666,6 +260828,7 @@ var init_MapRenderer = __esmMin((() => {
 			OccluderFade.beginFrame(gl, modelView, tick);
 			Models_default.render(gl, modelView, projection, normalMat, fog, light);
 			AnimatedModels_default.render(gl, modelView, projection, normalMat, fog, light, tick);
+			EntityManager.cull();
 			GR2ModelRenderer_default.render(gl, modelView, projection, normalMat, fog, light, tick);
 			ScreenEffectManager.render(gl, modelView, projection, fog, tick, true);
 			EffectManager.render(gl, modelView, projection, fog, tick, true);
@@ -282478,7 +282641,7 @@ var init_liblua5_1 = __esmMin((() => {
 }));
 //#endregion
 //#region node_modules/lodash/lodash.js
-var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module, this$2) => {
 	/**
 	* @license
 	* Lodash <https://lodash.com/>
@@ -297064,7 +297227,7 @@ var require_lodash = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 			(freeModule.exports = _)._ = _;
 			freeExports._ = _;
 		} else root._ = _;
-	}).call(exports);
+	}).call(this$2);
 }));
 //#endregion
 //#region src/Vendors/wasmoon-lua5.1.js
@@ -311939,6 +312102,7 @@ var init_EntityRoom = __esmMin((() => {
 			this.node = EntityRoom_default.clone("EntityRoom", true);
 			this.node.init = init;
 			this.node.append();
+			if (this.owner.culled) this.node.ui[0].style.display = "none";
 		}
 		/**
 		* Remove Room
@@ -312986,6 +313150,7 @@ var init_Entity$1 = __esmMin((() => {
 			this.position = vec3.create();
 			this.gr2 = null;
 			this.gr2Model = null;
+			this.culled = false;
 			Init$11.call(this);
 			Init$10.call(this);
 			Init$9.call(this);
@@ -313593,6 +313758,31 @@ function isCulled(culling, entity) {
 	return dx * dx + dy * dy > culling.viewAreaSq;
 }
 /**
+* Hide the entity overlays while culled, show them back once drawn
+*
+* @param {Entity} entity
+* @param {boolean} culled
+*/
+function setCulled(entity, culled) {
+	if (entity.culled === culled) return;
+	entity.culled = culled;
+	const display = culled ? "none" : "";
+	entity.life.canvas.style.display = display;
+	entity.emblem.canvas.style.display = display;
+	entity.display.canvas.style.display = display;
+	entity.dialog.canvas.style.display = display;
+	entity.cast.canvas.style.display = display;
+	if (entity.room.node) entity.room.node.ui[0].style.display = display;
+}
+/**
+* Decide, once per frame and before any pass draws, which entities are out of
+* the view area: their overlays are hidden and every pass skips them
+*/
+function cull() {
+	const culling = getCulling();
+	for (let i = 0, count = _list.length; i < count; ++i) setCulled(_list[i], isCulled(culling, _list[i]));
+}
+/**
 * Render all entities (picking or not)
 *
 * @param {object} gl webgl context
@@ -313615,7 +313805,6 @@ function render$5(gl, modelView, projection, fog, renderEffects) {
 		_pickSortDirty = true;
 	}
 	SpriteRenderer.bind3DContext(gl, modelView, projection, fog);
-	const culling = getCulling();
 	for (i = 0, count = _list.length; i < count; ++i) if (_list[i].objecttype != _list[i].constructor.TYPE_EFFECT && !renderEffects || _list[i].objecttype == _list[i].constructor.TYPE_EFFECT && renderEffects) {
 		if (_list[i].remove_tick && _list[i].remove_tick + _list[i].remove_delay < tick) {
 			const entityFocus = getFocusEntity();
@@ -313632,7 +313821,7 @@ function render$5(gl, modelView, projection, fog, renderEffects) {
 			_pickSortDirty = true;
 			continue;
 		}
-		if (isCulled(culling, _list[i])) continue;
+		if (_list[i].culled) continue;
 		_list[i].render(modelView, projection);
 	}
 	SpriteRenderer.unbind(gl);
@@ -313808,6 +313997,7 @@ var init_EntityManager = __esmMin((() => {
 		getLife,
 		removeLife,
 		clearLifeCache,
+		cull,
 		render: render$5,
 		intersect,
 		setSupportPicking,
@@ -313940,14 +314130,14 @@ function preCompiledAnimations() {
 	const dataURIList = [];
 	_compiledStyle = [];
 	const position = [0, 0];
-	for (i = 0, count = _action$2.actions.length; i < count; ++i) {
-		action = _action$2.actions[i];
+	for (i = 0, count = _action$1.actions.length; i < count; ++i) {
+		action = _action$1.actions[i];
 		info = ActionInformations[i] || ActionInformations[Cursor.ACTION.DEFAULT];
 		for (j = 0, size = action.animations.length; j < size; ++j) {
 			animation = action.animations[j];
 			SpriteRenderer.bind2DContext(ctx, info.drawX, info.drawY);
 			ctx.clearRect(0, 0, 50, 50);
-			for (k = 0, total = animation.layers.length; k < total; ++k) entity.renderLayer(animation.layers[k], _sprite$2, _sprite$2, 1, position, false);
+			for (k = 0, total = animation.layers.length; k < total; ++k) entity.renderLayer(animation.layers[k], _sprite$1, _sprite$1, 1, position, false);
 			dataURI = canvas.toDataURL("image/png");
 			pos = dataURIList.indexOf(dataURI);
 			if (pos > -1) {
@@ -314009,7 +314199,7 @@ function createSpriteSheet() {
 	}
 	for (let i = 0; i < totalSprites; i++) drawSprite(i);
 }
-var _tick, _norepeat, _animation, _play, _lastStyleId, _lastX, _lastY, _compiledStyle, _sceneDriven, _loopId, _sprite$2, _action$2, _selector, Cursor, _type$4, ActionInformations;
+var _tick, _norepeat, _animation, _play, _lastStyleId, _lastX, _lastY, _compiledStyle, _sceneDriven, _loopId, _sprite$1, _action$1, _selector, Cursor, _type$3, ActionInformations;
 var init_CursorManager = __esmMin((() => {
 	init_Client();
 	init_MemoryManager();
@@ -314072,14 +314262,14 @@ var init_CursorManager = __esmMin((() => {
 		* Load cursor data (action, sprite)
 		*/
 		static init(fn) {
-			if (_sprite$2) {
+			if (_sprite$1) {
 				fn();
 				return;
 			}
 			Client.getFiles(["data/sprite/cursors.spr", "data/sprite/cursors.act"], (spr, act) => {
 				try {
-					_sprite$2 = new SPR(spr);
-					_action$2 = new ACT(act);
+					_sprite$1 = new SPR(spr);
+					_action$1 = new ACT(act);
 				} catch (e) {
 					console.error("Cursor::init() - " + e.message);
 					return;
@@ -314102,7 +314292,7 @@ var init_CursorManager = __esmMin((() => {
 		*/
 		static setType(type, norepeat, animation) {
 			if (Cursor.freeze) return;
-			_type$4 = type;
+			_type$3 = type;
 			_tick = Date.now();
 			_norepeat = !!norepeat;
 			if (typeof animation !== "undefined") {
@@ -314119,7 +314309,7 @@ var init_CursorManager = __esmMin((() => {
 		* @return {number} Cursor.ACTION.*
 		*/
 		static getActualType() {
-			return _type$4;
+			return _type$3;
 		}
 		/**
 		* Let the scene render loop draw the cursor after its frame, or draw it on its own while the scene is stopped
@@ -314142,8 +314332,8 @@ var init_CursorManager = __esmMin((() => {
 				return;
 			}
 			if (_selector && _selector.style.display === "none") _selector.style.display = "block";
-			const info = ActionInformations[_type$4] || ActionInformations[Cursor.ACTION.DEFAULT];
-			const action = _action$2.actions[_type$4] || _action$2.actions[Cursor.ACTION.DEFAULT];
+			const info = ActionInformations[_type$3] || ActionInformations[Cursor.ACTION.DEFAULT];
+			const action = _action$1.actions[_type$3] || _action$1.actions[Cursor.ACTION.DEFAULT];
 			let anim = _animation;
 			const delay = action.delay * info.delayMult;
 			let x = info.startX;
@@ -314182,7 +314372,7 @@ var init_CursorManager = __esmMin((() => {
 			}
 		}
 	};
-	_type$4 = Cursor.ACTION.DEFAULT;
+	_type$3 = Cursor.ACTION.DEFAULT;
 	ActionInformations = {};
 	ActionInformations[Cursor.ACTION.DEFAULT] = {
 		drawX: 1,
@@ -319450,11 +319640,11 @@ function addItem$1(content, item, isinput) {
 		const price = prettyZeny$3(item.price, true);
 		const container = document.createElement("div");
 		container.className = "item-container";
-		const amountText = _type$3 === Vending.Type.BUYING_STORE ? item.total : item.IsStackable ? item.count : "";
-		const eaHtml = _type$3 === Vending.Type.BUYING_STORE ? `<div class="amount_">${item.count} ea</div>` : "";
+		const amountText = _type$2 === Vending.Type.BUYING_STORE ? item.total : item.IsStackable ? item.count : "";
+		const eaHtml = _type$2 === Vending.Type.BUYING_STORE ? `<div class="amount_">${item.count} ea</div>` : "";
 		container.innerHTML = `<div class="item output" draggable="true" data-index="${item.index}"><div class="icon"></div><div class="amount">${amountText}</div>` + eaHtml + `<div class="name">${escapeHtml(DB.getItemName(item))}</div><div class="price">${textPrice} ${price}</div></div>`;
 		itemObj = container;
-		if (_type$3 === Vending.Type.BUYING_STORE) {
+		if (_type$2 === Vending.Type.BUYING_STORE) {
 			const limitInput = Vending.getRoot().querySelector(".limitZeny");
 			let limit = parseInt(limitInput.value, 10);
 			limit += item.count * item.price;
@@ -319480,7 +319670,7 @@ function requestMoveItem$1(index, fromContent, toContent, isAdding) {
 		if (!(countSlotsUsed() < _slots)) return false;
 		count = _input$1[index].count;
 	} else count = _output$1[index].count;
-	if ((item.count === 1 || !item.IsStackable) && _type$3 === Vending.Type.VENDING_STORE) {
+	if ((item.count === 1 || !item.IsStackable) && _type$2 === Vending.Type.VENDING_STORE) {
 		if (isAdding) {
 			InputBox_default.append();
 			InputBox_default.setType("price", false, item_price);
@@ -319497,11 +319687,11 @@ function requestMoveItem$1(index, fromContent, toContent, isAdding) {
 	InputBox_default.onSubmitRequest = function(_count) {
 		InputBox_default.remove();
 		if (_count > 0) {
-			if (_count >= 9999 && _type$3 === Vending.Type.BUYING_STORE) {
+			if (_count >= 9999 && _type$2 === Vending.Type.BUYING_STORE) {
 				VendingModelMessage_default.setInit(1742);
 				return;
 			}
-			if (item.count + _count > 9999 && _type$3 === Vending.Type.BUYING_STORE) {
+			if (item.count + _count > 9999 && _type$2 === Vending.Type.BUYING_STORE) {
 				VendingModelMessage_default.setInit(1728);
 				return;
 			}
@@ -319546,7 +319736,7 @@ function onItemInfo$11(event) {
 	ItemInfo_default.setItem(item);
 }
 function onItemSelected$1() {
-	if (_type$3 === Vending.Type.BUY || _type$3 === Vending.Type.VENDING_STORE) return;
+	if (_type$2 === Vending.Type.BUY || _type$2 === Vending.Type.VENDING_STORE) return;
 	const root = Vending.getRoot();
 	const inputWin = root.querySelector(".InputWindow");
 	let from, to;
@@ -319623,7 +319813,7 @@ function submitNetworkPacket(pkt) {
 function onItemOver$8() {
 	if (!this.classList.contains("input")) return;
 	const idx = parseInt(this.getAttribute("data-index"), 10);
-	const item = _type$3 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getItemByIndex(idx);
+	const item = _type$2 === Vending.Type.VENDING_STORE ? CartItems_default.getItemByIndex(idx) : InventoryController.getItemByIndex(idx);
 	if (!item) return;
 	const overlay = Vending.getRoot().querySelector(".overlay");
 	overlay.style.display = "";
@@ -319635,7 +319825,7 @@ function onItemOut$9() {
 	const overlay = Vending.getRoot().querySelector(".overlay");
 	if (overlay) overlay.style.display = "none";
 }
-var Vending, _preferences$16, _input$1, _output$1, _slots, _type$3, transferItem$1, Vending_default;
+var Vending, _preferences$16, _input$1, _output$1, _slots, _type$2, transferItem$1, Vending_default;
 var init_Vending = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -319698,7 +319888,7 @@ var init_Vending = __esmMin((() => {
 			cancelBtn.addEventListener("click", (e) => {
 				e.stopImmediatePropagation();
 				let pkt;
-				if (_type$3 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
+				if (_type$2 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
 				else pkt = new PACKET.CZ.REQ_OPEN_BUYING_STORE();
 				submitNetworkPacket(pkt);
 				Vending.onRemove();
@@ -319810,7 +320000,7 @@ var init_Vending = __esmMin((() => {
 				root.querySelector(".weightSpan").textContent = `${BasicInfoController.weight}/${BasicInfoController.weight_max}`;
 				root.querySelector(".limitZeny").value = "0";
 		}
-		_type$3 = type;
+		_type$2 = type;
 	};
 	Vending.onRemove = function onRemove() {
 		VendingModelMessage_default.onRemove();
@@ -319873,17 +320063,17 @@ var init_Vending = __esmMin((() => {
 					VendingModelMessage_default.setInit(603);
 					return;
 				}
-				_output$1[index].count = _type$3 === Vending.Type.BUYING_STORE ? count : Math.min(_output$1[index].count + count, _input$1[index].count);
+				_output$1[index].count = _type$2 === Vending.Type.BUYING_STORE ? count : Math.min(_output$1[index].count + count, _input$1[index].count);
 				tmpItem = Object.assign({}, _input$1[index]);
-				tmpItem.count = _type$3 === Vending.Type.BUYING_STORE ? 0 : _input$1[index].count - _output$1[index].count;
+				tmpItem.count = _type$2 === Vending.Type.BUYING_STORE ? 0 : _input$1[index].count - _output$1[index].count;
 				addItem$1(fromContent, tmpItem, true);
 				addItem$1(toContent, _output$1[index], false);
 			} else {
 				count = Math.min(count, _output$1[index].count);
 				if (!count) return;
-				_output$1[index].count = _type$3 === Vending.Type.BUYING_STORE ? 0 : _output$1[index].count - count;
+				_output$1[index].count = _type$2 === Vending.Type.BUYING_STORE ? 0 : _output$1[index].count - count;
 				tmpItem = Object.assign({}, _input$1[index]);
-				tmpItem.count = _type$3 === Vending.Type.BUYING_STORE ? _input$1[index].total : _input$1[index].count + _output$1[index].count;
+				tmpItem.count = _type$2 === Vending.Type.BUYING_STORE ? _input$1[index].total : _input$1[index].count + _output$1[index].count;
 				addItem$1(fromContent, _output$1[index], false);
 				addItem$1(toContent, tmpItem, true);
 			}
@@ -319936,7 +320126,7 @@ var init_Vending = __esmMin((() => {
 			return;
 		}
 		let pkt;
-		if (_type$3 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
+		if (_type$2 === Vending.Type.VENDING_STORE) pkt = new PACKET.CZ.REQ_OPENSTORE2();
 		else {
 			pkt = new PACKET.CZ.REQ_OPEN_BUYING_STORE();
 			limitZeny = parseInt(root.querySelector(".limitZeny").value, 10);
@@ -320050,7 +320240,7 @@ function onItemOver$7(itemEl, root) {
 	overlay.style.left = `${itemEl.offsetLeft + 35}px`;
 	overlay.textContent = `${DB.getItemName(item)} ${prettyZeny$2(item.price, false)} ${DB.getMessage(2328)}`;
 	if (item.IsIdentified) overlay.classList.remove("grey");
-	else if (_type$2 === VendingShop.Type.VENDING_LIST) overlay.classList.add("grey");
+	else if (_type$1 === VendingShop.Type.VENDING_LIST) overlay.classList.add("grey");
 }
 /**
 * Hide the item name
@@ -320095,7 +320285,7 @@ function onItemUsed(event, itemEl) {
 	event.stopImmediatePropagation();
 	event.preventDefault();
 }
-var VendingShop, _realSize, _type$2, _preferences$15, VendingShop_default;
+var VendingShop, _realSize, _type$1, _preferences$15, VendingShop_default;
 var init_VendingShop = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
@@ -320197,7 +320387,7 @@ var init_VendingShop = __esmMin((() => {
 	* @param {number} type (see NpcStore.Type.*)
 	*/
 	VendingShop.setType = function setType(type) {
-		_type$2 = type;
+		_type$1 = type;
 	};
 	/**
 	* Remove Inventory from window (and so clean up items)
@@ -320372,11 +320562,11 @@ var init_VendingShop = __esmMin((() => {
 	*/
 	VendingShop.onSubmit = function onSubmit() {
 		let pkt;
-		if (_type$2 === VendingShop.Type.VENDING_LIST) pkt = new PACKET.CZ.REQ_CLOSESTORE();
+		if (_type$1 === VendingShop.Type.VENDING_LIST) pkt = new PACKET.CZ.REQ_CLOSESTORE();
 		else pkt = new PACKET.CZ.REQ_CLOSE_BUYING_STORE();
 		Network.sendPacket(pkt);
 		this.onRemove();
-		if (_type$2 === VendingShop.Type.VENDING_LIST && PacketVerManager_default.value >= 20141016) VendingReport_default.append();
+		if (_type$1 === VendingShop.Type.VENDING_LIST && PacketVerManager_default.value >= 20141016) VendingReport_default.append();
 	};
 	VendingShop.mouseMode = GUIComponent.MouseMode.STOP;
 	VendingShop_default = UIManager.addComponent(VendingShop);
@@ -321109,16 +321299,16 @@ function refreshList(contentEl) {
 		const emo = Emotions_default.order[index];
 		canvas.setAttribute("data-index", emo);
 		canvas.title = "/" + Emotions_default.names[emo];
-		const animations = _action$1.actions[emo].animations;
+		const animations = _action.actions[emo].animations;
 		const layers = animations[Math.floor(animations.length / 5)].layers;
 		const count = layers.length;
 		SpriteRenderer.bind2DContext(ctx, 20 - layers[0].pos[0], 40 - layers[0].pos[1]);
-		for (let i = 0; i < count; ++i) _entity$1.renderLayer(layers[i], _sprite$1, _sprite$1, 1, pos, false);
+		for (let i = 0; i < count; ++i) _entity$1.renderLayer(layers[i], _sprite, _sprite, 1, pos, false);
 		contentEl.appendChild(canvas);
 		index++;
 	}
 }
-var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action$1, _sprite$1, _entity$1, _preferences$13, Emoticons_default;
+var Emoticons, _page, EMOTICONS_PER_PAGE, TOTAL_PAGES, EMOTICONS_COUNT, _action, _sprite, _entity$1, _preferences$13, Emoticons_default;
 var init_Emoticons = __esmMin((() => {
 	init_Emotions();
 	init_Client();
@@ -321154,8 +321344,8 @@ var init_Emoticons = __esmMin((() => {
 		const root = this.getRoot();
 		const contentEl = root.querySelector(".content");
 		Client.loadFiles(["data/sprite/ÀÌÆÑÆ®/emotion.act", "data/sprite/ÀÌÆÑÆ®/emotion.spr"], (act, spr) => {
-			_action$1 = act;
-			_sprite$1 = spr;
+			_action = act;
+			_sprite = spr;
 			TOTAL_PAGES = Math.max(0, Math.ceil(EMOTICONS_COUNT / EMOTICONS_PER_PAGE) - 1);
 			const totalEl = root.querySelector(".total");
 			if (totalEl) totalEl.textContent = TOTAL_PAGES + 1;
@@ -332380,6 +332570,37 @@ function onPrivateMessageSent(pkt) {
 	ChatBox_default.PrivateMessageStorage.msg = "";
 }
 /**
+* Result of a /ex or /in request
+*
+* @param {object} pkt - PACKET.ZC.SETTING_WHISPER_PC
+*/
+function onWhisperSettingResult(pkt) {
+	const name = ChatBox_default.PrivateMessageStorage.blockNicks.shift() || "";
+	if (pkt.type > 1 || pkt.result > 2 || pkt.type === 0 && pkt.result === 0) return;
+	const msg = DB.getMessage(193 + pkt.type * 3 + pkt.result);
+	ChatBox_default.addText(`${name}${msg}`, ChatBox_default.TYPE.PRIVATE, ChatBox_default.FILTER.WHISPER);
+}
+/**
+* Result of a /exall or /inall request
+*
+* @param {object} pkt - PACKET.ZC.SETTING_WHISPER_STATE
+*/
+function onWhisperStateResult(pkt) {
+	if (pkt.type > 1 || pkt.result > 1) return;
+	ChatBox_default.addText(DB.getMessage(58 + pkt.type * 2 + pkt.result), ChatBox_default.TYPE.PRIVATE, ChatBox_default.FILTER.WHISPER);
+}
+/**
+* Received the whisper block list
+*
+* @param {object} pkt - PACKET.ZC.WHISPER_LIST
+*/
+function onWhisperList(pkt) {
+	const list = pkt.wisperList;
+	const count = list.length;
+	ChatBox_default.addText(DB.getMessage(count ? 63 : 62), ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.WHISPER);
+	for (let i = 0; i < count; ++i) ChatBox_default.addText(list[i].name, ChatBox_default.TYPE.BLUE, ChatBox_default.FILTER.WHISPER);
+}
+/**
 * Initialize
 */
 function PrivateMessageEngine() {
@@ -332387,6 +332608,9 @@ function PrivateMessageEngine() {
 	Network.hookPacket(PACKET.ZC.WHISPER2, onPrivateMessage);
 	Network.hookPacket(PACKET.ZC.ACK_WHISPER, onPrivateMessageSent);
 	Network.hookPacket(PACKET.ZC.ACK_WHISPER2, onPrivateMessageSent);
+	Network.hookPacket(PACKET.ZC.SETTING_WHISPER_PC, onWhisperSettingResult);
+	Network.hookPacket(PACKET.ZC.SETTING_WHISPER_STATE, onWhisperStateResult);
+	Network.hookPacket(PACKET.ZC.WHISPER_LIST, onWhisperList);
 	WhisperBox.onRequestTalk = function(nickname, text) {
 		const pkt = new PACKET.CZ.WHISPER();
 		pkt.receiver = nickname;
@@ -333991,7 +334215,7 @@ var init_SlotMachine$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/SlotMachine/SlotMachine.js
-var SlotMachine, _sprite, _action, _type$1, _result, _ctx, _entity, _start, rendering, SlotMachine_default;
+var SlotMachine, _entity, rendering, SlotMachine_default;
 var init_SlotMachine = __esmMin((() => {
 	init_GUIComponent();
 	init_UIManager();
@@ -334004,26 +334228,49 @@ var init_SlotMachine = __esmMin((() => {
 	init_SlotMachine$1();
 	SlotMachine = new GUIComponent("SlotMachine", SlotMachine_default$1);
 	SlotMachine.render = () => SlotMachine_default$2;
-	_type$1 = 0;
-	_result = false;
+	/**
+	* @var {Sprite,Action} objects
+	*/
+	SlotMachine._sprite = null;
+	SlotMachine._action = null;
+	/**
+	* @var {boolean} sprite and action ready to render
+	*/
+	SlotMachine._loaded = false;
+	/**
+	* @var {number} type
+	*/
+	SlotMachine._type = 0;
+	/**
+	* @var {boolean} result
+	*/
+	SlotMachine._result = false;
+	/**
+	* @var {CanvasRenderingContext2D}
+	*/
+	SlotMachine._ctx = null;
 	_entity = new Entity();
-	_start = 0;
+	/**
+	* @var {number} start tick
+	*/
+	SlotMachine._start = 0;
 	/**
 	* Initialize UI
 	*/
 	SlotMachine.init = function init() {
 		const canvas = this.getRoot().querySelector("canvas");
-		_ctx = canvas.getContext("2d");
+		SlotMachine._ctx = canvas.getContext("2d");
 		this._host.style.zIndex = "500";
 		Client.loadFiles(["data/sprite/slotmachine.spr", "data/sprite/slotmachine.act"], (spr, act) => {
-			_sprite = spr;
-			_action = act;
-			_type$1 = 0;
-			_start = Renderer.tick;
+			SlotMachine._sprite = spr;
+			SlotMachine._action = act;
+			SlotMachine._type = 0;
+			SlotMachine._loaded = true;
+			SlotMachine._start = Renderer.tick;
 			if (this._host.parentNode) Renderer.render(rendering);
 		});
 		canvas.addEventListener("mousedown", (event) => {
-			if (_type$1 === 0) {
+			if (SlotMachine._loaded && SlotMachine._type === 0) {
 				SlotMachine.onTry();
 				event.stopImmediatePropagation();
 				event.preventDefault();
@@ -334034,11 +334281,11 @@ var init_SlotMachine = __esmMin((() => {
 	* Once append to body
 	*/
 	SlotMachine.onAppend = function onAppend() {
-		_type$1 = 0;
-		_start = Renderer.tick;
+		SlotMachine._type = 0;
+		SlotMachine._start = Renderer.tick;
 		this._host.style.top = `${Renderer.height / 2 - 130}px`;
 		this._host.style.left = `${Renderer.width / 2 - 135}px`;
-		if (_sprite && _action) Renderer.render(rendering);
+		if (SlotMachine._sprite && SlotMachine._action) Renderer.render(rendering);
 	};
 	/**
 	* Once removed from body
@@ -334052,36 +334299,36 @@ var init_SlotMachine = __esmMin((() => {
 	* @param {boolean} result
 	*/
 	SlotMachine.setResult = function setResult(result) {
-		_type$1 = 1;
-		_result = result;
-		_start = Renderer.tick;
+		SlotMachine._type = 1;
+		SlotMachine._result = result;
+		SlotMachine._start = Renderer.tick;
 	};
 	rendering = (() => {
 		const position = new Uint16Array([0, 0]);
 		return () => {
 			let action, anim;
-			switch (_type$1) {
+			switch (SlotMachine._type) {
 				case 0:
-					action = _action.actions[0];
-					anim = Math.floor((Renderer.tick - _start) / action.delay * 2);
+					action = SlotMachine._action.actions[0];
+					anim = Math.floor((Renderer.tick - SlotMachine._start) / action.delay * 2);
 					break;
 				case 1: {
-					action = _action.actions[1];
-					const max = action.animations.length + (_result ? 7 : 3);
-					anim = Renderer.tick - _start;
+					action = SlotMachine._action.actions[1];
+					const max = action.animations.length + (SlotMachine._result ? 7 : 3);
+					anim = Renderer.tick - SlotMachine._start;
 					anim = Math.floor(anim / action.delay);
 					anim = Math.min(anim, max);
 					if (anim === max) {
-						_type$1 = _result ? 2 : 3;
-						_start = Renderer.tick;
+						SlotMachine._type = SlotMachine._result ? 2 : 3;
+						SlotMachine._start = Renderer.tick;
 					}
 					break;
 				}
 				case 2:
 				case 3: {
-					action = _action.actions[_type$1];
+					action = SlotMachine._action.actions[SlotMachine._type];
 					const max = action.animations.length;
-					anim = Renderer.tick - _start;
+					anim = Renderer.tick - SlotMachine._start;
 					anim = Math.floor(anim / action.delay);
 					if (anim >= max) {
 						Renderer.stop(rendering);
@@ -334093,9 +334340,9 @@ var init_SlotMachine = __esmMin((() => {
 				}
 			}
 			const animation = action.animations[anim % action.animations.length];
-			SpriteRenderer.bind2DContext(_ctx, 140, 165);
-			_ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
-			for (let i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], _sprite, _sprite, 1, position, false);
+			SpriteRenderer.bind2DContext(SlotMachine._ctx, 140, 165);
+			SlotMachine._ctx.clearRect(0, 0, SlotMachine._ctx.canvas.width, SlotMachine._ctx.canvas.height);
+			for (let i = 0, count = animation.layers.length; i < count; ++i) _entity.renderLayer(animation.layers[i], SlotMachine._sprite, SlotMachine._sprite, 1, position, false);
 		};
 	})();
 	/**
@@ -334402,12 +334649,12 @@ function onPetInformation(pkt) {
 	PetInformations_default.append();
 	PetInformations_default.setInformations(pkt);
 	if (SessionStorage_default.petId) {
+		SessionStorage_default.pet.name = pkt.szName;
 		const entity = EntityManager.get(SessionStorage_default.petId);
 		if (entity) {
 			const oldHungry = SessionStorage_default.pet.hungry || pkt.nFullness;
 			SessionStorage_default.pet.job = pkt.job;
 			SessionStorage_default.pet.clevel = pkt.nLevel;
-			SessionStorage_default.pet.name = pkt.szName;
 			SessionStorage_default.pet.friendly = pkt.nRelationship;
 			SessionStorage_default.pet.oldHungry = oldHungry;
 			SessionStorage_default.pet.hungry = pkt.nFullness;
@@ -334451,8 +334698,32 @@ function onFeedResult$1(pkt) {
 */
 function petTalk(GID, msg) {
 	const entity = EntityManager.get(GID);
-	ChatBox_default.addText(entity.display.name + " : " + msg, ChatBox_default.TYPE.PUBLIC, ChatBox_default.FILTER.PUBLIC_CHAT);
+	const name = getPetName(entity);
+	if (!name) return;
+	ChatBox_default.addText(`${name} : ${msg}`, ChatBox_default.TYPE.PUBLIC, ChatBox_default.FILTER.PUBLIC_CHAT);
 	entity.dialog.set(msg);
+}
+/**
+* Name to print in front of a pet's talk, empty while it is still unknown
+*
+* @see docs/reference/pet/talk-name.md
+* @param {object} entity
+* @return {string}
+*/
+function getPetName(entity) {
+	if (entity.display.name) return entity.display.name;
+	if (entity.GID === SessionStorage_default.petId && SessionStorage_default.pet.name) return SessionStorage_default.pet.name;
+	const now = Date.now();
+	if (entity.display.load === entity.display.TYPE.NONE || now - (_nameRequestTick[entity.GID] || 0) >= NAME_REQUEST_DELAY) {
+		_nameRequestTick[entity.GID] = now;
+		entity.display.load = entity.display.TYPE.LOADING;
+		let pkt;
+		if (PacketVerManager_default.value >= 20180307) pkt = new PACKET.CZ.REQNAME2();
+		else pkt = new PACKET.CZ.REQNAME();
+		pkt.AID = entity.GID;
+		Network.sendPacket(pkt);
+	}
+	return "";
 }
 /**
 * Update pet information
@@ -334549,10 +334820,12 @@ function NPCEngine$1() {
 	Network.hookPacket(PACKET.ZC.CHANGESTATE_PET, onPetInformationUpdate);
 	Network.hookPacket(PACKET.ZC.PET_ACT, onPetAction);
 }
+var _nameRequestTick, NAME_REQUEST_DELAY;
 var init_Pet = __esmMin((() => {
 	init_DBManager();
 	init_NetworkManager();
 	init_PacketStructure();
+	init_PacketVerManager();
 	init_Client();
 	init_SessionStorage();
 	init_EntityManager();
@@ -334565,6 +334838,8 @@ var init_Pet = __esmMin((() => {
 	init_Emotions();
 	init_PetMessageConst();
 	init_PetEvolution();
+	_nameRequestTick = {};
+	NAME_REQUEST_DELAY = 2500;
 	/**
 	* Client request to feed QPet.
 	*/
@@ -338064,6 +338339,7 @@ function onConnectionAccepted$2(pkt) {
 	SessionStorage_default.hasGuild = false;
 	SessionStorage_default.guildPermission = 0;
 	GuildEngine.resetForNewCharacter();
+	ChatBox_default.PrivateMessageStorage.blockNicks.length = 0;
 	SessionStorage_default.homunId = 0;
 	SessionStorage_default.mapState = {
 		property: 0,
@@ -344565,8 +344841,8 @@ var require_rijndael_precalculated = /* @__PURE__ */ __commonJSMin(((exports, mo
 }));
 //#endregion
 //#region node_modules/rijndael-js/lib/utils.js
-var require_utils = /* @__PURE__ */ __commonJSMin(((exports, module) => {
-	var root = typeof self === "object" && self.self === self && self || typeof global === "object" && global.global === global && global || exports;
+var require_utils = /* @__PURE__ */ __commonJSMin(((exports, module, this$1) => {
+	var root = typeof self === "object" && self.self === self && self || typeof global === "object" && global.global === global && global || this$1;
 	var has = (type) => typeof root[type] !== "undefined";
 	var is = (value, type) => has(type) && value instanceof root[type];
 	module.exports.toArray = (data) => {
