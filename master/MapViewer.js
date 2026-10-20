@@ -78575,7 +78575,7 @@ var init_paletteConvert = __esmMin((() => {
 //#region src/Loaders/wasm/spriteCompile.js
 var SPRITE_COMPILE_WASM_BASE64, base64ToUint8Array, _wasmInstance, _wasmFailed, getSpriteCompileWasm;
 var init_spriteCompile = __esmMin((() => {
-	SPRITE_COMPILE_WASM_BASE64 = "AGFzbQEAAAABFwJgCX9/f39/f39/fwBgB39/f39/f38AAwMCAAEFAwEAAQclAwZtZW1vcnkCAApjb21waWxlUGFsAAALY29tcGlsZVJnYmEAAQq6AgKEAQEFf0EAIQkCQANAIAkgBE8NASABIAkgA2xqIQsgAiAJIAhqIAVsIAdqaiEMQQAhCgJAA0AgCiADTw0BIAsgCmotAAAhDSAAIA1BAnRqKAIAQf+BfEYEQCAMIApqQQA6AAAFIAwgCmogDToAAAsgCkEBaiEKDAALCyAJQQFqIQkMAAsLC7EBAQl/IAJBAnQhCUEAIQcCQANAIAcgA08NASAAIAMgB2tBAWsgCWxqIQogASAHIAZqIARsIAVqQQJ0aiELQQAhCAJAA0AgCCACTw0BIAogCEECdGohDCALIAhBAnRqIQ0gDC0AACEOIA5FBEAgDUEANgIABSAOQRh0IAwtAAFBEHRyIAwtAAJBCHQgDC0AA3JyIQ8gDSAPNgIACyAIQQFqIQgMAAsLIAdBAWohBwwACwsL";
+	SPRITE_COMPILE_WASM_BASE64 = "AGFzbQEAAAABJgRgCX9/f39/f39/fwBgB39/f39/f38AYAR/f39/AGAFf39/f38AAwUEAAECAwUDAQABB0wFBm1lbW9yeQIACmNvbXBpbGVQYWwAAAtjb21waWxlUmdiYQABEWZyYW1lUmdiYVRvQ2FudmFzAAIQZnJhbWVQYWxUb0NhbnZhcwADCqcEBIQBAQV/QQAhCQJAA0AgCSAETw0BIAEgCSADbGohCyACIAkgCGogBWwgB2pqIQxBACEKAkADQCAKIANPDQEgCyAKai0AACENIAAgDUECdGooAgBB/4F8RgRAIAwgCmpBADoAAAUgDCAKaiANOgAACyAKQQFqIQoMAAsLIAlBAWohCQwACwsLsQEBCX8gAkECdCEJQQAhBwJAA0AgByADTw0BIAAgAyAHa0EBayAJbGohCiABIAcgBmogBGwgBWpBAnRqIQtBACEIAkADQCAIIAJPDQEgCiAIQQJ0aiEMIAsgCEECdGohDSAMLQAAIQ4gDkUEQCANQQA2AgAFIA5BGHQgDC0AAUEQdHIgDC0AAkEIdCAMLQADcnIhDyANIA82AgALIAhBAWohCAwACwsgB0EBaiEHDAALCwuhAQEHfyACQQJ0IQZBACEEAkADQCAEIANPDQEgACAEIAZsaiEHIAEgAyAEa0EBayAGbGohCEEAIQUCQANAIAUgAk8NASAHIAVBAnRqKAIAIQkgCUH/AXFBGHQgCUGA/gNxQQh0ciAJQYCA/AdxQQh2IAlBgICAeHFBGHZyciEKIAggBUECdGogCjYCACAFQQFqIQUMAAsLIARBAWohBAwACwsLSQEEfyADIARsIQZBACEFAkADQCAFIAZPDQEgASAFai0AACEHIAAgB0ECdGooAgAhCCACIAVBAnRqIAg2AgAgBUEBaiEFDAALCws=";
 	base64ToUint8Array = (base64) => {
 		const binaryString = atob(base64);
 		const len = binaryString.length;
@@ -78631,6 +78631,7 @@ var init_Sprite = __esmMin((() => {
 		rgba_count = 0;
 		rgba_index = 0;
 		palette = null;
+		_pal32Canvas = null;
 		frames = null;
 		/**
 		* Load a Sprite data
@@ -78638,6 +78639,7 @@ var init_Sprite = __esmMin((() => {
 		* @param {ArrayBuffer} data - file content
 		*/
 		load(data) {
+			this._pal32Canvas = null;
 			this.fp = new BinaryReader(data);
 			this.header = this.fp.readBinaryString(2);
 			this.version = this.fp.readUByte() / 10 + this.fp.readUByte();
@@ -78827,30 +78829,71 @@ var init_Sprite = __esmMin((() => {
 			const width = canvas.width = frame.width;
 			const height = canvas.height = frame.height;
 			const imageData = ctx.createImageData(width, height);
-			const data32 = new Uint32Array(imageData.data.buffer);
+			const wasmInstance = getSpriteCompileWasm();
 			if (frame.type === SPR.TYPE_RGBA) {
-				const frameData32 = new Uint32Array(frame.data.buffer);
-				for (let y = 0; y < height; ++y) {
-					const srcRow = y * width;
-					const dstRow = (height - y - 1) * width;
-					for (let x = 0; x < width; ++x) {
-						const pixel = frameData32[srcRow + x];
-						/**
-						* OLD LOGIC: Manual assignments for each channel (ImageData.data[j+0] = ...).
-						* NEW LOGIC: Reads the source pixel as a 32-bit integer and performs bitwise operations
-						* WHY: The source RGBA order in .spr files might not match the Canvas [R,G,B,A] layout.
-						* Manipulating the full 32-bit word with shifts and masks is faster than 4 separate array writes.
-						*/
-						data32[dstRow + x] = (pixel & 255) << 24 | (pixel & 65280) << 8 | (pixel & 16711680) >> 8 | (pixel & 4278190080) >> 24;
+				const pixelCount = width * height;
+				const srcBytes = pixelCount * 4;
+				const dstBytes = pixelCount * 4;
+				if (wasmInstance && wasmInstance.exports.frameRgbaToCanvas) {
+					const memory = wasmInstance.exports.memory;
+					const srcPtr = 1024;
+					const dstPtr = srcPtr + srcBytes;
+					const totalBytesNeeded = dstPtr + dstBytes;
+					if (memory.buffer.byteLength < totalBytesNeeded) {
+						const additionalPages = Math.ceil((totalBytesNeeded - memory.buffer.byteLength) / 65536);
+						memory.grow(additionalPages);
+					}
+					const frameBytes = new Uint8Array(frame.data.buffer, frame.data.byteOffset, srcBytes);
+					new Uint8Array(memory.buffer, srcPtr, srcBytes).set(frameBytes);
+					wasmInstance.exports.frameRgbaToCanvas(srcPtr, dstPtr, width, height);
+					new Uint8Array(imageData.data.buffer).set(new Uint8Array(memory.buffer, dstPtr, dstBytes));
+				} else {
+					const data32 = new Uint32Array(imageData.data.buffer);
+					let frameData32;
+					if ((frame.data.byteOffset & 3) === 0) frameData32 = new Uint32Array(frame.data.buffer, frame.data.byteOffset, pixelCount);
+					else {
+						frameData32 = new Uint32Array(pixelCount);
+						new Uint8Array(frameData32.buffer).set(new Uint8Array(frame.data.buffer, frame.data.byteOffset, pixelCount * 4));
+					}
+					for (let y = 0; y < height; ++y) {
+						const srcRow = y * width;
+						const dstRow = (height - y - 1) * width;
+						for (let x = 0; x < width; ++x) {
+							const pixel = frameData32[srcRow + x];
+							data32[dstRow + x] = (pixel & 255) << 24 | (pixel & 65280) << 8 | (pixel & 16711680) >> 8 | (pixel & 4278190080) >>> 24;
+						}
 					}
 				}
 			} else {
-				const pal32 = this.convert32bPal(this.palette, true);
-				for (let y = 0; y < height; ++y) {
-					const rowStart = y * width;
-					for (let x = 0; x < width; ++x) {
-						const idx = frame.data[rowStart + x];
-						data32[rowStart + x] = pal32[idx];
+				if (!this._pal32Canvas && this.palette) this._pal32Canvas = this.convert32bPal(this.palette, true);
+				const pal32 = this._pal32Canvas || this.convert32bPal(this.palette, true);
+				const pixelCount = width * height;
+				const srcBytes = pixelCount;
+				const dstBytes = pixelCount * 4;
+				if (wasmInstance && wasmInstance.exports.framePalToCanvas) {
+					const memory = wasmInstance.exports.memory;
+					const palPtr = 0;
+					const srcPtr = 1024;
+					const dstPtr = srcPtr + srcBytes;
+					const totalBytesNeeded = dstPtr + dstBytes;
+					if (memory.buffer.byteLength < totalBytesNeeded) {
+						const additionalPages = Math.ceil((totalBytesNeeded - memory.buffer.byteLength) / 65536);
+						memory.grow(additionalPages);
+					}
+					new Uint32Array(memory.buffer, palPtr, 256).set(pal32);
+					const frameBytes = new Uint8Array(frame.data.buffer, frame.data.byteOffset, srcBytes);
+					new Uint8Array(memory.buffer, srcPtr, srcBytes).set(frameBytes);
+					wasmInstance.exports.framePalToCanvas(palPtr, srcPtr, dstPtr, width, height);
+					new Uint8Array(imageData.data.buffer).set(new Uint8Array(memory.buffer, dstPtr, dstBytes));
+				} else {
+					const data32 = new Uint32Array(imageData.data.buffer);
+					const frameIndices = new Uint8Array(frame.data.buffer, frame.data.byteOffset, pixelCount);
+					for (let y = 0; y < height; ++y) {
+						const rowStart = y * width;
+						for (let x = 0; x < width; ++x) {
+							const idx = frameIndices[rowStart + x];
+							data32[rowStart + x] = pal32[idx];
+						}
 					}
 				}
 			}
@@ -233539,7 +233582,7 @@ var init_SoundOption = __esmMin((() => {
 //#region src/UI/Components/FPS/FPS.html?raw
 var FPS_default$2;
 var init_FPS$2 = __esmMin((() => {
-	FPS_default$2 = "<div id=\"FPS\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"left\"><span id=\"fpsCounter\">--</span> FPS</div>\r\n	</div>\r\n</div>\r\n";
+	FPS_default$2 = "<div id=\"FPS\">\r\n	<div class=\"titlebar\">\r\n		<div class=\"left\"><span id=\"fpsCounter\">--</span> FPS</div>\r\n		<div class=\"left fps-low\"><span id=\"fpsLowCounter\">--</span> lowest</div>\r\n	</div>\r\n</div>\r\n";
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.css?raw
@@ -233549,7 +233592,7 @@ var init_FPS$1 = __esmMin((() => {
 }));
 //#endregion
 //#region src/UI/Components/FPS/FPS.js
-var FPS, _maxFPSRegistered, _tickFn, _preferences$33, FPS_default;
+var FPS, _maxFPSRegistered, _minFPSRegistered, _tickFn, _preferences$33, FPS_default;
 var init_FPS = __esmMin((() => {
 	init_Preferences$1();
 	init_Renderer();
@@ -233561,6 +233604,7 @@ var init_FPS = __esmMin((() => {
 	FPS = new GUIComponent("FPS", FPS_default$1);
 	FPS.render = () => FPS_default$2;
 	_maxFPSRegistered = 0;
+	_minFPSRegistered = Infinity;
 	_tickFn = null;
 	_preferences$33 = Preferences.get("FPS", {
 		show: false,
@@ -233592,7 +233636,12 @@ var init_FPS = __esmMin((() => {
 		const root = this.getRoot();
 		const fpsEl = root.querySelector("#fpsCounter");
 		const fpsRoot = root.querySelector("#FPS");
+		const fpsLowEl = root.querySelector("#fpsLowCounter");
+		_minFPSRegistered = Infinity;
+		_maxFPSRegistered = 0;
+		fpsLowEl.textContent = "--";
 		let startTime = 0;
+		let lastResetTime = 0;
 		let frame = 0;
 		let lastValue = null;
 		let lastClass = null;
@@ -233608,6 +233657,12 @@ var init_FPS = __esmMin((() => {
 			return "fps-bad";
 		}
 		function tick(time) {
+			if (startTime === 0) {
+				lastResetTime = time;
+				startTime = time;
+				frame = 0;
+				return;
+			}
 			frame++;
 			if (time - startTime < 1e3) return;
 			const value = +(frame / ((time - startTime) / 1e3)).toFixed(1);
@@ -233616,6 +233671,12 @@ var init_FPS = __esmMin((() => {
 				lastValue = value;
 			}
 			if (_maxFPSRegistered < value) _maxFPSRegistered = value;
+			if (time - lastResetTime > 5e3) {
+				if (value < _minFPSRegistered) {
+					_minFPSRegistered = value;
+					fpsLowEl.textContent = value;
+				}
+			}
 			const cls = getFPSClass(value, Renderer.frameLimit > 0 ? Renderer.frameLimit : _maxFPSRegistered);
 			if (cls !== lastClass) {
 				fpsRoot.style.color = FPS_COLORS[cls] || FPS_COLORS["fps-good"];
