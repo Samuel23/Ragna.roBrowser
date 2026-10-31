@@ -217977,15 +217977,17 @@ var init_SkillEffect = __esmMin((() => {
 	SkillEffect[SkillConst_default.MC_IDENTIFY] = {};
 	SkillEffect[SkillConst_default.MC_VENDING] = {};
 	SkillEffect[SkillConst_default.MC_MAMMONITE] = { effectId: 10 };
-	SkillEffect[SkillConst_default.AC_CONCENTRATION] = { effectId: 153 };
+	SkillEffect[SkillConst_default.AC_CONCENTRATION] = { successEffectIdOnCaster: 153 };
 	SkillEffect[SkillConst_default.AC_DOUBLE] = {
-		beginCastEffectId: 16,
-		beforeHitEffectId: "ef_arrow_projectile",
-		hitEffectId: 1
+		damageEffectIdOnCaster: 16,
+		damageEffectIdOnTarget: "ef_arrow_projectile",
+		hitEffectId: 0,
+		firstHitEffectId: 1
 	};
 	SkillEffect[SkillConst_default.AC_SHOWER] = {
-		effectId: "ef_arrow_shower_projectile",
-		hitEffectId: 1
+		damageEffectIdOnTarget: "ef_arrow_shower_target",
+		releaseEffectId: "ef_arrow_projectile",
+		hitEffectId: [0, 1]
 	};
 	SkillEffect[SkillConst_default.TF_STEAL] = { successEffectId: 18 };
 	SkillEffect[SkillConst_default.TF_HIDING] = {};
@@ -218179,7 +218181,8 @@ var init_SkillEffect = __esmMin((() => {
 	SkillEffect[SkillConst_default.AC_MAKINGARROW] = {};
 	SkillEffect[SkillConst_default.AC_CHARGEARROW] = {
 		hideCastAura: true,
-		beforeHitEffectId: "ef_arrow_projectile"
+		damageEffectIdOnCaster: 16,
+		hitEffectId: [0]
 	};
 	SkillEffect[SkillConst_default.TF_SPRINKLESAND] = { effectId: 310 };
 	SkillEffect[SkillConst_default.TF_BACKSLIDING] = {};
@@ -260158,6 +260161,10 @@ var init_ThreeDEffect = __esmMin((() => {
 				this.poszStart = otherPosition[2] - position[2] + this.zOffset + this.zOffsetStart + randStart[2];
 				this.poszEnd = 0 + this.zOffset + this.zOffsetEnd + randEnd[2];
 			}
+			if (effect.endCellOffset) {
+				this.posxEnd += effect.endCellOffset[0];
+				this.posyEnd += effect.endCellOffset[1];
+			}
 			if (effect.size) {
 				this.sizeStartX = effect.size;
 				this.sizeStartY = effect.size;
@@ -261908,7 +261915,7 @@ var init_EffectManager = __esmMin((() => {
 				}, Params.Inst.startTick + (!isNaN(Params.effect.delayWav) ? Params.effect.delayWav : 0) - Renderer.tick);
 			}
 			Params.Inst.direction = Params.effect.attachedEntity && Params.Init.ownerEntity ? Params.Init.ownerEntity.direction : 0;
-			Params.Inst.duration = !isNaN(Params.effect.duration) ? Params.effect.duration : Params.Init.duration;
+			Params.Inst.duration = typeof Params.effect.duration === "function" ? Params.effect.duration(Params) : !isNaN(Params.effect.duration) ? Params.effect.duration : Params.Init.duration;
 			Params.Inst.delayOffsetDelta = !isNaN(Params.effect.delayOffsetDelta) ? Params.effect.delayOffsetDelta * Params.Inst.duplicateID : 0;
 			Params.Inst.delayLateDelta = !isNaN(Params.effect.delayLateDelta) ? Params.effect.delayLateDelta * Params.Inst.duplicateID : 0;
 			Params.Inst.delayOffset = !isNaN(Params.effect.delayOffset) ? Params.effect.delayOffset + Params.Inst.delayOffsetDelta : 0;
@@ -262311,10 +262318,10 @@ var init_EffectManager = __esmMin((() => {
 		* @param {number} target aid
 		* @param {number} tick
 		*/
-		static spamSkillHit(skillId, destAID, tick, srcAID) {
+		static spamSkillHit(skillId, destAID, tick, srcAID, hitIndex = 0) {
 			let effects, EF_Init_Par;
 			if (!(skillId in SkillEffect)) return;
-			if (SkillEffect[skillId].hitEffectId) {
+			if (SkillEffect[skillId].hitEffectId != null) {
 				effects = Array.isArray(SkillEffect[skillId].hitEffectId) ? SkillEffect[skillId].hitEffectId : [SkillEffect[skillId].hitEffectId];
 				effects.forEach((effectId) => {
 					EF_Init_Par = {
@@ -262324,6 +262331,17 @@ var init_EffectManager = __esmMin((() => {
 						otherAID: srcAID
 					};
 					EffectManager.spam(EF_Init_Par);
+				});
+			}
+			if (hitIndex === 0 && SkillEffect[skillId].firstHitEffectId != null) {
+				effects = Array.isArray(SkillEffect[skillId].firstHitEffectId) ? SkillEffect[skillId].firstHitEffectId : [SkillEffect[skillId].firstHitEffectId];
+				effects.forEach((effectId) => {
+					EffectManager.spam({
+						effectId,
+						ownerAID: destAID,
+						startTick: tick,
+						otherAID: srcAID
+					});
 				});
 			}
 			if (SkillEffect[skillId].hitEffectIdOnCaster) {
@@ -272146,6 +272164,90 @@ var init_EndureEffect = __esmMin((() => {
 		}
 	}];
 }));
+// src/DB/Effects/ArrowShowerEffects.js
+/**
+* One arrow from the caster (the effect's other entity) to its owner's
+* position plus a cell offset.
+* @param {number[]} offset [x, y] in cells
+*/
+function arrow(offset) {
+	return {
+		type: "3D",
+		alphaMax: 1,
+		angle: 180,
+		attachedEntity: false,
+		delayStart: 432,
+		duration: 192,
+		absoluteSpriteName: "data/sprite/npc/skel_archer_arrow",
+		toSrc: true,
+		endCellOffset: offset,
+		rotateToTarget: true,
+		rotateWithCamera: true,
+		size: 100,
+		zOffset: 2,
+		zOffsetEnd: 2,
+		zIndex: 1
+	};
+}
+/** EffectTable rows. */
+function arrowShowerEffects() {
+	return { ef_arrow_shower_target: [arrow([0, 0]), ...NEIGHBOUR_CELLS.map(arrow)] };
+}
+var NEIGHBOUR_CELLS;
+var init_ArrowShowerEffects = __esmMin((() => {
+	NEIGHBOUR_CELLS = [
+		[1, 0],
+		[1, 1],
+		[1, -1],
+		[-1, 0],
+		[-1, 1],
+		[-1, -1],
+		[0, 1],
+		[0, -1]
+	];
+}));
+// src/Renderer/Effects/ArrowFlight.js
+/**
+* Flight time of an arrow.
+*
+* @param {number} cells distance from start to end, in cells
+* @return {number} ms
+*/
+function arrowFlightMs(cells) {
+	const units = Math.max(cells, 0) * UNITS_PER_CELL;
+	return 192 * Math.min(1, units / MIN_SPEED_DISTANCE);
+}
+/**
+* Flight time between two positions ([x, y, z] in cells). At least 1 ms: the client drops a
+* zero-length arrow at once, and a zero duration would mean an endless effect here.
+*
+* @param {number[]} from
+* @param {number[]} to
+* @return {number} ms
+*/
+function arrowFlightBetween(from, to) {
+	if (!from || !to) return 192;
+	return Math.max(arrowFlightMs(Math.hypot(to[0] - from[0], to[1] - from[1], (to[2] || 0) - (from[2] || 0))), 1);
+}
+/**
+* When a player's bow attack releases its arrow, and when the hit lands.
+*
+* @param {number} hitFrame the attack motion's hit frame
+* @param {number} motionSpeed the attack motion's speed factor
+* @return {{ releaseMs: number, hitMs: number }} ms after the attack starts
+*/
+function bowAttackTiming(hitFrame, motionSpeed) {
+	const releaseMs = hitFrame * motionSpeed * 24;
+	return {
+		releaseMs,
+		hitMs: releaseMs + 192
+	};
+}
+var MIN_SPEED_DISTANCE, UNITS_PER_CELL;
+var init_ArrowFlight = __esmMin((() => {
+	MIN_SPEED_DISTANCE = 40;
+	UNITS_PER_CELL = 5;
+}));
 // src/Renderer/Effects/CastFunnelSim.js
 /**
 * A band's alpha (out of 255) on tick `t` (1 on the first). Every band is the same.
@@ -273204,6 +273306,8 @@ var init_EffectTable = __esmMin((() => {
 	init_CastCircle();
 	init_CastRing();
 	init_EndureEffect();
+	init_ArrowShowerEffects();
+	init_ArrowFlight();
 	init_CastFunnel();
 	init_CasterMarks();
 	init_RotateLine();
@@ -288964,7 +289068,7 @@ var init_EffectTable = __esmMin((() => {
 			alphaMax: 1,
 			angle: 180,
 			attachedEntity: true,
-			duration: 140,
+			duration: (Params) => arrowFlightBetween(Params.Inst.otherPosition, Params.Inst.position),
 			fadeIn: true,
 			fadeOut: true,
 			absoluteSpriteName: "data/sprite/npc/skel_archer_arrow",
@@ -289187,26 +289291,7 @@ var init_EffectTable = __esmMin((() => {
 			texturePath: "abyss_chaser/abc_abyss_flame/abyss_flame_hit/",
 			min: "abyss_chaser/abc_abyss_flame/abyss_flame_hit/min_abyss_flame_hit"
 		}],
-		ef_arrow_shower_projectile: [{
-			type: "3D",
-			alphaMax: 1,
-			angle: 180,
-			attachedEntity: false,
-			duration: 140,
-			duplicate: 10,
-			timeBetweenDupli: 0,
-			fadeIn: true,
-			fadeOut: true,
-			absoluteSpriteName: "data/sprite/npc/skel_archer_arrow",
-			toSrc: true,
-			rotateToTarget: true,
-			rotateWithCamera: true,
-			size: 100,
-			zOffset: 1,
-			zIndex: 1,
-			posxEndRand: 1.5,
-			posyEndRand: 1.5
-		}],
+		...arrowShowerEffects(),
 		ef_wh_wind_sign: [{
 			type: "STR",
 			file: "windsign/windsign/windsign",
@@ -319189,8 +319274,8 @@ function WalkStructure() {
 	this.tick = 0;
 	this.prevTick = 0;
 	this.dist = 0;
-	this.path = new Int16Array(PathFinding_default.MAX_WALKPATH * 2);
-	this.segmentDurations = new Float32Array(PathFinding_default.MAX_WALKPATH);
+	this.path = new Int16Array((PathFinding_default.MAX_WALKPATH + 1) * 2);
+	this.segmentDurations = new Float32Array(PathFinding_default.MAX_WALKPATH + 1);
 	this.pos = /* @__PURE__ */ new Float32Array(3);
 	this.lastPos = /* @__PURE__ */ new Float32Array(3);
 	this.onEnd = null;
@@ -319233,87 +319318,71 @@ function walkToNonWalkableGround(from_x, from_y, to_x, to_y, range, isOverShoot 
 		to_x = OverShootPosition[0];
 		to_y = OverShootPosition[1];
 	}
-	if (from_x === to_x && from_y === to_y) return;
-	const path = this.walk.path;
-	let total = 0;
-	const result = PathFinding_default.searchLongIgnoreCellType(from_x | 0, from_y | 0, to_x | 0, to_y | 0, range || 0, path, true);
-	if (result.success) total = result.pathLength + 1;
-	this.walk.index = 2;
-	this.walk.total = total * 2;
-	if (total > 0) {
-		this.walk.pos.set(this.position);
-		const numSegments = total - 1;
-		for (let i = 0; i < numSegments; i++) {
-			const pIdx = (i + 1) * 2;
-			const segDx = path[pIdx] - (i === 0 ? this.position[0] : path[pIdx - 2]);
-			const segDy = path[pIdx + 1] - (i === 0 ? this.position[1] : path[pIdx - 1]);
-			const segDist = Math.hypot(segDx, segDy);
-			this.walk.segmentDurations[i] = segDist * this.walk.speed;
+	if (from_x === to_x && from_y === to_y && !isAttacking) return;
+	if (from_x !== to_x || from_y !== to_y) {
+		const path = this.walk.path;
+		let total = 0;
+		const result = PathFinding_default.searchLongIgnoreCellType(from_x | 0, from_y | 0, to_x | 0, to_y | 0, range || 0, path, true);
+		if (result.success) total = result.pathLength + 1;
+		this.walk.index = 2;
+		this.walk.total = total * 2;
+		if (total > 0) {
+			this.walk.pos.set(this.position);
+			const numSegments = total - 1;
+			for (let i = 0; i < numSegments; i++) {
+				const pIdx = (i + 1) * 2;
+				const segDx = path[pIdx] - (i === 0 ? this.position[0] : path[pIdx - 2]);
+				const segDy = path[pIdx + 1] - (i === 0 ? this.position[1] : path[pIdx - 1]);
+				const segDist = Math.hypot(segDx, segDy);
+				this.walk.segmentDurations[i] = segDist * this.walk.speed;
+			}
+			const nowTick = Date.now();
+			const pathDuration = estimatePathDuration(this.walk.path, this.walk.total, this.walk.speed, this.position);
+			const startTick = computeWalkStartTick(nowTick, moveStartTime, pathDuration, this.objecttype === this.constructor.TYPE_PC || this.objecttype === this.constructor.TYPE_DISGUISED || this.objecttype === this.constructor.TYPE_PET || this.objecttype === this.constructor.TYPE_HOM || this.objecttype === this.constructor.TYPE_MERC ? pathDuration : Math.min(pathDuration, this.walk.speed));
+			this.walk.tick = this.walk.prevTick = startTick;
+			if (!hadRoute) this.walk.dist = 0;
+			this.walk.lastPos.set(this.position);
+			if (this.walk.total >= 2) {
+				const firstX0 = this.walk.path[2];
+				const firstY0 = this.walk.path[3];
+				const initDir0 = offsetToFloatDir(firstX0 - this.position[0], firstY0 - this.position[1]);
+				this.direction = quantizeDir(initDir0);
+			}
 		}
-		const nowTick = Date.now();
-		const pathDuration = estimatePathDuration(this.walk.path, this.walk.total, this.walk.speed, this.position);
-		const startTick = computeWalkStartTick(nowTick, moveStartTime, pathDuration, this.objecttype === this.constructor.TYPE_PC || this.objecttype === this.constructor.TYPE_DISGUISED || this.objecttype === this.constructor.TYPE_PET || this.objecttype === this.constructor.TYPE_HOM || this.objecttype === this.constructor.TYPE_MERC ? pathDuration : Math.min(pathDuration, this.walk.speed));
-		this.walk.tick = this.walk.prevTick = startTick;
-		if (!hadRoute) this.walk.dist = 0;
-		this.walk.lastPos.set(this.position);
-		if (this.walk.total >= 2) {
-			const firstX0 = this.walk.path[2];
-			const firstY0 = this.walk.path[3];
-			const initDir0 = offsetToFloatDir(firstX0 - this.position[0], firstY0 - this.position[1]);
-			this.direction = quantizeDir(initDir0);
-		}
-		let action = this.ACTION.WALK;
-		if (this.objecttype === this.constructor.TYPE_FALCON && !isAttacking) action = this.ACTION.IDLE;
-		if (this.objecttype == this.constructor.TYPE_WUG && isAttacking) {
-			this.setAction({
-				action: this.ACTION.WALK,
-				frame: 0,
-				repeat: true,
-				play: true,
-				next: {
-					delay: Date.now() + 200,
-					action: this.ACTION.ATTACK,
-					frame: 0,
-					repeat: false,
-					play: true,
-					next: {
-						delay: Date.now() + 432,
-						action: this.ACTION.IDLE,
-						frame: 0,
-						repeat: true,
-						play: true,
-						next: false
-					}
-				}
-			});
-			setTimeout(() => {
-				this.walkToNonWalkableGround(this.position[0], this.position[1], this._followTargetX, this._followTargetY, 0, false, false);
-			}, 632);
-		} else if (this.objecttype == this.constructor.TYPE_FALCON && isAttacking) {
-			this.setAction({
-				action: this.ACTION.WALK,
-				frame: 0,
-				repeat: true,
-				play: true,
-				next: {
-					delay: Date.now() + 432,
-					action: this.ACTION.IDLE,
-					frame: 0,
-					repeat: false,
-					play: true,
-					next: false
-				}
-			});
-			setTimeout(() => {
-				this.walkToNonWalkableGround(this.position[0], this.position[1], this._followTargetX, this._followTargetY, 0, false, false);
-			}, 432);
-		} else if (this.action !== action) this.setAction({
-			action,
+	}
+	if (from_x === to_x && from_y === to_y && this.objecttype === this.constructor.TYPE_FALCON && isAttacking) this.walkToNonWalkableGround(this.position[0], this.position[1], this._followTargetX + (Math.random() > .5 ? 2 : -2), this._followTargetY + (Math.random() > .5 ? 2 : -2), 0, false, false);
+	let action = this.ACTION.WALK;
+	if (this.objecttype === this.constructor.TYPE_FALCON && !isAttacking) action = this.ACTION.IDLE;
+	if (this.objecttype == this.constructor.TYPE_WUG && isAttacking) {
+		if (from_x !== to_x || from_y !== to_y) this.setAction({
+			action: this.ACTION.WALK,
+			frame: 0,
+			repeat: false,
+			play: true,
+			next: false
+		});
+		else this.setAction({
+			action: this.ACTION.ATTACK,
+			frame: 0,
+			repeat: true,
+			play: true,
+			next: false
+		});
+		scheduleCompanionReturn(this, from_x !== to_x || from_y !== to_y ? estimatePathDuration(this.walk.path, this.walk.total, this.walk.speed, this.position) + 432 : 432);
+	} else if (this.objecttype == this.constructor.TYPE_FALCON && isAttacking) {
+		if (from_x !== to_x || from_y !== to_y) this.setAction({
+			action: this.ACTION.WALK,
 			frame: 0,
 			repeat: true,
 			play: true
 		});
-	}
+		scheduleCompanionReturn(this, from_x !== to_x || from_y !== to_y ? estimatePathDuration(this.walk.path, this.walk.total, this.walk.speed, this.position) + 432 : 432);
+	} else if (this.action !== action) this.setAction({
+		action,
+		frame: 0,
+		repeat: true,
+		play: true
+	});
 }
 /**
 * Want to move to a cell
@@ -319647,6 +319716,21 @@ function walkProcess() {
 		return;
 	}
 }
+function scheduleCompanionReturn(entity, delay) {
+	if (entity._returnTimer) clearTimeout(entity._returnTimer);
+	entity._returnTimer = setTimeout(() => {
+		entity._returnTimer = null;
+		entity.setAction({
+			action: entity.ACTION.IDLE,
+			frame: 0,
+			repeat: true,
+			play: true,
+			next: false
+		});
+		entity.walkToNonWalkableGround(entity.position[0], entity.position[1], entity._followTargetX, entity._followTargetY, 1, false, false);
+		entity.isAttacking = false;
+	}, delay);
+}
 function entitiesWalkProcess() {
 	const ownerCellX = this.position[0];
 	const ownerCellY = this.position[1];
@@ -319713,7 +319797,8 @@ function entitiesWalkProcess() {
 			this.wug._followTargetX = ownerCellX;
 			this.wug._followTargetY = ownerCellY;
 			this.wug.walk.lastWalkTick = Date.now();
-			this.wug.walkToNonWalkableGround(this.wug.position[0], this.wug.position[1], ownerCellX, ownerCellY, 3, false, false, Date.now());
+			this.wug.walkTo(this.wug.position[0], this.wug.position[1], ownerCellX, ownerCellY, 3, Date.now());
+			if (!this.wug.walk.total) this.wug.walkToNonWalkableGround(this.wug.position[0], this.wug.position[1], ownerCellX, ownerCellY, 3, false, false, Date.now());
 		}
 	}
 }
@@ -320403,6 +320488,7 @@ var init_EntityRender = __esmMin((() => {
 						EntityComposer.end();
 					});
 					break;
+				case Entity.TYPE_WUG:
 				case Entity.TYPE_HOM:
 					SpriteRenderer.position[2] = SpriteRenderer.position[2] + .2;
 					SpriteRenderer.zIndex = 150;
@@ -321864,6 +321950,12 @@ var init_Entity$1 = __esmMin((() => {
 				case "level":
 					this.clevel = unit.level;
 					break;
+				case "_followTargetX":
+					this._followTargetX = unit._followTargetX;
+					break;
+				case "_followTargetY":
+					this._followTargetY = unit._followTargetY;
+					break;
 				default: if (Entity.prototype.hasOwnProperty(keys[i]) || Entity.prototype.hasOwnProperty(`_${keys[i]}`)) this[keys[i]] = unit[keys[i]];
 			}
 			if (this.life.hp > -1 && this.life.hp_max > -1) {
@@ -321895,6 +321987,7 @@ var init_Entity$1 = __esmMin((() => {
 			this.owner = null;
 			this.falcon = null;
 			this.wug = null;
+			if (this._returnTimer) clearTimeout(this._returnTimer);
 			this.GID = -1;
 		}
 		/**
@@ -321904,6 +321997,10 @@ var init_Entity$1 = __esmMin((() => {
 		* @return {boolean} removed immediatly ?
 		*/
 		remove(type) {
+			const is_pc = this.objecttype === Entity.TYPE_PC;
+			const is_falcon = this.objecttype === Entity.TYPE_FALCON;
+			const is_wug = this.objecttype === Entity.TYPE_WUG;
+			const is_cart = this.objecttype === Entity.TYPE_CART;
 			if (this.cart) {
 				if (type === Entity.VT.DEAD) {
 					const cart = this.cart;
@@ -321918,11 +322015,7 @@ var init_Entity$1 = __esmMin((() => {
 					this.remove_tick = +Date.now();
 					this.remove_delay = 1e3;
 					break;
-				case Entity.VT.DEAD: {
-					const is_pc = this.objecttype === Entity.TYPE_PC;
-					const is_falcon = this.objecttype === Entity.TYPE_FALCON;
-					const is_wug = this.objecttype === Entity.TYPE_WUG;
-					const is_cart = this.objecttype === Entity.TYPE_CART;
+				case Entity.VT.DEAD:
 					if (!is_falcon && !is_cart) {
 						this.setAction({
 							action: this.ACTION.DIE,
@@ -321938,7 +322031,6 @@ var init_Entity$1 = __esmMin((() => {
 						}
 					}
 					break;
-				}
 				default:
 					this.clean();
 					this.remove_tick = Date.now();
@@ -336826,7 +336918,9 @@ function onEntitySpam(pkt) {
 			name: "",
 			hp: -1,
 			maxhp: -1,
-			hideShadow: true
+			hideShadow: true,
+			_followTargetX: entity.position[0],
+			_followTargetY: entity.position[1]
 		});
 		EntityManager.add(entity.falcon);
 	}
@@ -336844,7 +336938,9 @@ function onEntitySpam(pkt) {
 			speed: Math.max(entity.walk.speed - 50, 1),
 			name: "",
 			hp: -1,
-			maxhp: -1
+			maxhp: -1,
+			_followTargetX: entity.position[0],
+			_followTargetY: entity.position[1]
 		});
 		EntityManager.add(entity.wug);
 	}
@@ -336937,20 +337033,24 @@ function onEntityVanish(pkt) {
 					EffectManager.spam(EF_Init_Par);
 				}
 				if (entity.falcon) {
+					EntityManager.removeGID(entity.falcon.GID);
 					entity.falcon.remove(pkt.type);
 					entity.falcon = null;
 				}
 				if (entity.wug) {
+					EntityManager.removeGID(entity.wug.GID);
 					entity.wug.remove(pkt.type);
 					entity.wug = null;
 				}
 			case Entity.VT.OUTOFSIGHT:
 				EffectManager.remove(null, pkt.GID, null);
 				if (entity.falcon) {
+					EntityManager.removeGID(entity.falcon.GID);
 					entity.falcon.remove(pkt.type);
 					entity.falcon = null;
 				}
 				if (entity.wug) {
+					EntityManager.removeGID(entity.wug.GID);
 					entity.wug.remove(pkt.type);
 					entity.wug = null;
 				}
@@ -337140,13 +337240,14 @@ function onEntityAction(pkt) {
 				delayTime = m_attackMotion * m_motionSpeed * 24;
 				animSpeed = pkt.attackMT / m_attackMotion;
 				if (DB.isBow(DB.getWeaponType(srcEntity.weapon, true))) {
-					delayTime = (m_attackMotion + 8 / m_motionSpeed) * m_motionSpeed * 24;
-					pkt.attackMT += delayTime;
+					const bow = bowAttackTiming(m_attackMotion, m_motionSpeed);
+					delayTime = bow.hitMs;
+					pkt.attackMT = bow.hitMs;
 					const EF_Init_Par = {
 						effectId: "ef_arrow_projectile",
 						ownerAID: dstEntity.GID,
 						otherAID: srcEntity.GID,
-						startTick: Renderer.tick + pkt.attackMT,
+						startTick: Renderer.tick + bow.releaseMs,
 						otherPosition: srcEntity.position
 					};
 					EffectManager.spam(EF_Init_Par);
@@ -337730,7 +337831,7 @@ function onEntityUseSkillToAttack(pkt) {
 			const isCombo = target.objecttype !== Entity.TYPE_PC && pkt.count > 1;
 			const isBlueCombo = SkillBlueCombo.includes(pkt.SKID);
 			const addDamage = function(i, startTick) {
-				if (pkt.damage) EffectManager.spamSkillHit(pkt.SKID, pkt.targetID, startTick, pkt.AID);
+				if (pkt.damage) EffectManager.spamSkillHit(pkt.SKID, pkt.targetID, startTick, pkt.AID, i);
 				if (!isCombo && isBlueCombo) Damage.add(pkt.damage / pkt.count, target, startTick, srcWeapon, Damage.TYPE.COMBO_B | (i + 1 === pkt.count ? Damage.TYPE.COMBO_FINAL : 0));
 				else Damage.add(pkt.damage / pkt.count, target, startTick, srcWeapon);
 				if (isCombo) Damage.add(pkt.damage / pkt.count * (i + 1), target, startTick, srcWeapon, (isBlueCombo ? Damage.TYPE.COMBO_B : Damage.TYPE.COMBO) | (i + 1 === pkt.count ? Damage.TYPE.COMBO_FINAL : 0));
@@ -337996,7 +338097,9 @@ function onEntityStatusChange(pkt) {
 					name: "",
 					hp: -1,
 					maxhp: -1,
-					hideShadow: true
+					hideShadow: true,
+					_followTargetX: entity.position[0],
+					_followTargetY: entity.position[1]
 				});
 				EntityManager.add(entity.falcon);
 			}
@@ -338314,11 +338417,13 @@ function onEntityOptionChange(pkt) {
 			name: "",
 			hp: -1,
 			maxhp: -1,
-			hideShadow: true
+			hideShadow: true,
+			_followTargetX: entity.position[0],
+			_followTargetY: entity.position[1]
 		});
 		EntityManager.add(entity.falcon);
 	} else if (entity.falcon && !(entity.effectState & StatusState_default.EffectState.FALCON)) {
-		entity.falcon.remove();
+		EntityManager.remove(entity.falcon.GID);
 		entity.falcon = null;
 	}
 	if (!entity.wug && entity.effectState & StatusState_default.EffectState.WUG) {
@@ -338335,11 +338440,13 @@ function onEntityOptionChange(pkt) {
 			speed: Math.max(entity.walk.speed - 50, 1),
 			name: "",
 			hp: -1,
-			maxhp: -1
+			maxhp: -1,
+			_followTargetX: entity.position[0],
+			_followTargetY: entity.position[1]
 		});
 		EntityManager.add(entity.wug);
 	} else if (entity.wug && !(entity.effectState & StatusState_default.EffectState.WUG)) {
-		entity.wug.remove();
+		EntityManager.remove(entity.wug.GID);
 		entity.wug = null;
 	}
 	let statusCartNum = 0;
@@ -338755,6 +338862,7 @@ var init_Entity = __esmMin((() => {
 	init_CartItems();
 	init_ScreenEffectManager();
 	init_StatusEffects();
+	init_ArrowFlight();
 	SkillNameDisplayExclude = [
 		SkillConst_default.TF_HIDING,
 		SkillConst_default.AS_CLOAKING,
@@ -342231,9 +342339,19 @@ function onSkillResult(pkt) {
 		case 13:
 			error = 1398;
 			break;
+		case 71:
+			error = 1536;
+			break;
 		case 83: error = 661;
 	}
-	if (error) ChatBox_default.addText(DB.getMessage(error), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.SKILL_FAIL);
+	if (error) {
+		if (pkt.itemId > 0 && pkt.NUM > 0 && error === 1536) {
+			const itemInfo = DB.getItemInfo(pkt.itemId);
+			const itemName = itemInfo.identifiedDisplayName || itemInfo.unidentifiedDisplayName || `Item ${pkt.itemId}`;
+			const msg = DB.getMessage(error).replace("%s", itemName).replace("%d", pkt.NUM || 1);
+			ChatBox_default.addText(msg, ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.SKILL_FAIL);
+		} else ChatBox_default.addText(DB.getMessage(error), ChatBox_default.TYPE.ERROR, ChatBox_default.FILTER.SKILL_FAIL);
+	}
 }
 /**
 * List of skills
