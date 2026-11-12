@@ -15,21 +15,18 @@ export function createDBBootstrap(DB, context) {
 		clearNavigationMobIndex,
 		resetLoadedMapNames,
 		resetClientData,
-		invalidateLuaRuntime,
 		startLua
 	} = context;
 	const plan = createDBLoadPlan(DB, context);
 	let mountPalettes;
 	let mountPalettesProbe = null;
-	let generation = 0;
-	let lazyGeneration = 0;
-	function createTracker(current, update, complete, isActive = () => true) {
+	function createTracker(update, complete) {
 		let count = 0;
 		let index = 0;
 		let sealed = false;
 		let completed = false;
 		function maybeComplete() {
-			if (!completed && sealed && index === count && current === generation && isActive()) {
+			if (!completed && sealed && index === count) {
 				completed = true;
 				complete();
 			}
@@ -39,7 +36,7 @@ export function createDBBootstrap(DB, context) {
 				count++;
 				let done = false;
 				return () => {
-					if (done || current !== generation || !isActive()) return;
+					if (done) return;
 					done = true;
 					index++;
 					update(index, count);
@@ -53,10 +50,7 @@ export function createDBBootstrap(DB, context) {
 		};
 	}
 	return class DBBootstrap {
-		static init() {
-			const current = ++generation;
-			lazyGeneration++;
-			if (invalidateLuaRuntime) invalidateLuaRuntime();
+		static async lazyInit() {
 			if (Client.invalidateDBFiles) Client.invalidateDBFiles();
 			DB.isLoaded = false;
 			DB.count = 0;
@@ -90,32 +84,11 @@ export function createDBBootstrap(DB, context) {
 			if (resetLoadedMapNames) resetLoadedMapNames();
 			if (resetClientData) resetClientData();
 
-			const tracker = createTracker(
-				current,
-				(index, count) => {
-					if (DB.onProgress) DB.onProgress(index, count);
-				},
-				() => {
-					if (DB.onReady) DB.onReady();
-				}
-			);
-			plan.loadInitial(
-				() => tracker.step(),
-				() => current === generation
-			);
-			tracker.seal();
-		}
-
-		static async lazyInit() {
-			const current = generation;
-			const currentLazy = ++lazyGeneration;
 			console.log('Loading DB files...');
-			const started = await startLua();
-			if (started === false || current !== generation || currentLazy !== lazyGeneration) return;
+			await startLua();
 			DB.index = 0;
 			DB.count = 0;
 			const tracker = createTracker(
-				current,
 				(index, count) => {
 					DB.index = index;
 					DB.count = count;
@@ -124,16 +97,13 @@ export function createDBBootstrap(DB, context) {
 				() => {
 					DB.isLoaded = true;
 					MemoryManager.forceClean(null, /\.(lub|lua|txt|csv|bson)$/i);
-				},
-				() => currentLazy === lazyGeneration
+					if (DB.onReady) DB.onReady();
+				}
 			);
-			plan.loadLazy(
-				() => {
-					DB.count++;
-					return tracker.step();
-				},
-				() => current === generation && currentLazy === lazyGeneration
-			);
+			plan.loadLazy(() => {
+				DB.count++;
+				return tracker.step();
+			});
 			tracker.seal();
 		}
 

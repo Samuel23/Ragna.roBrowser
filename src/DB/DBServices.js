@@ -39,7 +39,7 @@ import { createTableLoaders } from 'DB/Loaders/TableLoader.js';
 import loadFontFromClient from 'DB/Loaders/ClientFont.js';
 import { getSystemAliases, tryLoadLuaAliases } from 'DB/Loaders/LuaAliases.js';
 import { createLuaTableLoaders } from 'DB/Loaders/LuaTableLoader.js';
-import { startLua, invalidateLuaRuntime } from 'DB/Loaders/LuaRuntime.js';
+import { startLua } from 'DB/Loaders/LuaRuntime.js';
 
 import { createOwnerNameResolver } from 'DB/System/OwnerNameResolver.js';
 import { createEmblemLoader } from 'DB/System/EmblemLoader.js';
@@ -47,7 +47,7 @@ import {
 	createSystemDatabase,
 	resetSystemData,
 	MsgStringTable,
-	setMessageRow,
+	setMsgStringTable,
 	setJokeRow,
 	setScreamRow,
 	ReputeGroup,
@@ -70,13 +70,12 @@ export function createDBServices(DB) {
 		() => DB.getRandomScream()
 	);
 	const SexTable = ['\xbf\xa9', '\xb3\xb2'];
-	function getUserCharpage() {
+	const getUserCharpage = () => {
+		if (DB.userCharpage) return DB.userCharpage;
 		const servers = Configs.get('servers', []);
-		const defaultLangType = Array.isArray(servers) && servers[0] ? servers[0].langtype : 0;
-		const rawLangType = Configs.get('langtype', defaultLangType);
-		const langType = rawLangType ? parseInt(rawLangType, 0) : 0;
+		const langType = Configs.get('langtype', servers[0]?.langtype ?? 0);
 		return TextEncoding.detectEncodingByLangtype(langType, Configs.get('disableKorean'));
-	}
+	};
 	const grfCharpage = 'windows-1252';
 	TextEncoding.setCharset(grfCharpage);
 	const { loadTable, loadCSV, loadXMLFile, loadBSONFile } = createTableLoaders(getUserCharpage);
@@ -127,7 +126,7 @@ export function createDBServices(DB) {
 		mergeMonsterNames,
 		MsgEmotionCSV,
 		MsgStringTable,
-		setMessageRow,
+		setMsgStringTable,
 		mergeSkillIds,
 		NaviLinkDistanceTable,
 		NaviLinkTable,
@@ -146,7 +145,6 @@ export function createDBServices(DB) {
 		setScreamRow,
 		parseBuyingStoreItem,
 		clearNavigationMobIndex,
-		invalidateLuaRuntime,
 		fillNaviTable,
 		getSystemAliases,
 		loadAttendanceFile,

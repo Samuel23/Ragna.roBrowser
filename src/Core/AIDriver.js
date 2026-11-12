@@ -1,4 +1,3 @@
-import DB from 'DB/DBManager.js';
 import Session from 'Engine/SessionStorage.js';
 import Network from 'Network/NetworkManager.js';
 import PACKET from 'Network/PacketStructure.js';
@@ -9,6 +8,7 @@ import Configs from 'Core/Configs.js';
 import LuaModuleLoader from 'Core/LuaModuleLoader.js';
 import UIManager from 'UI/UIManager.js';
 import TextEncoding from 'Utils/CodepageManager.js';
+import { HO_AI, MER_AI, default_HO_AI, default_MER_AI } from 'DB/Loaders/LuaRuntime.js';
 
 const msg = {};
 const resMsg = {};
@@ -16,11 +16,12 @@ const resMsg = {};
 class AIDriver {
 	static HOM_AGGRESSIVE = false;
 	static MER_AGGRESSIVE = false;
-	static HO_AI = null;
-	static MER_AI = null;
-	static default_HO_AI = null;
-	static default_MER_AI = null;
 	static ready = false;
+	static CustomAI = {
+		HO: false,
+		MER: false
+	};
+
 	// this is called in a code in someplace, left if here :u
 	static init() {}
 
@@ -420,16 +421,16 @@ class AIDriver {
 			};
 		}
 
-		addCTX(AIDriver.default_HO_AI, true);
-		addCTX(AIDriver.HO_AI, true);
-		addCTX(AIDriver.default_MER_AI, false);
-		addCTX(AIDriver.MER_AI, false);
+		addCTX(default_HO_AI, true);
+		addCTX(HO_AI, true);
+		addCTX(default_MER_AI, false);
+		addCTX(MER_AI, false);
 	}
 
-	static initAI = async (onEnd, isCurrent = () => true) => {
-		if (!isCurrent()) return;
+	static initAI = async onEnd => {
 		AIDriver.ready = false;
-
+		AIDriver.CustomAI.HO = false;
+		AIDriver.CustomAI.MER = false;
 		const defaultAISearchPaths = [
 			'./?.lua',
 			'./?.lub',
@@ -451,41 +452,33 @@ class AIDriver {
 		];
 
 		try {
-			AIDriver.HO_AI = DB.getHOAI_VM();
-			AIDriver.MER_AI = DB.getMERAI_VM();
-			AIDriver.default_HO_AI = DB.getDefaultHOAI_VM();
-			AIDriver.default_MER_AI = DB.getDefaultMERAI_VM();
-
-			LuaModuleLoader.setup(AIDriver.default_HO_AI, { searchPaths: defaultAISearchPaths });
-			LuaModuleLoader.setup(AIDriver.default_MER_AI, { searchPaths: defaultAISearchPaths });
-			LuaModuleLoader.setup(AIDriver.HO_AI, { searchPaths: customAISearchPaths });
-			LuaModuleLoader.setup(AIDriver.MER_AI, { searchPaths: customAISearchPaths });
+			LuaModuleLoader.setup(default_HO_AI, { searchPaths: defaultAISearchPaths });
+			LuaModuleLoader.setup(default_MER_AI, { searchPaths: defaultAISearchPaths });
+			LuaModuleLoader.setup(HO_AI, { searchPaths: customAISearchPaths });
+			LuaModuleLoader.setup(MER_AI, { searchPaths: customAISearchPaths });
 
 			AIDriver.addCTX();
 
 			console.log('Loading Default HOAI...');
 			const defaultHoFiles = ['AI/Util.lua', 'AI/Const.lua', 'AI/AI.lua'];
-			await LuaModuleLoader.loadAndExecuteFiles(AIDriver.default_HO_AI, defaultHoFiles, {
+			await LuaModuleLoader.loadAndExecuteFiles(default_HO_AI, defaultHoFiles, {
 				searchPaths: defaultAISearchPaths
 			});
-			if (!isCurrent()) return;
 
 			console.log('Loading Default MERAI...');
 			const defaultMerFiles = ['AI/Util.lua', 'AI/Const.lua', 'AI/AI_M.lua'];
-			await LuaModuleLoader.loadAndExecuteFiles(AIDriver.default_MER_AI, defaultMerFiles, {
+			await LuaModuleLoader.loadAndExecuteFiles(default_MER_AI, defaultMerFiles, {
 				searchPaths: defaultAISearchPaths
 			});
-			if (!isCurrent()) return;
 
 			try {
 				console.log('Loading Custom HOAI...');
 				const customHoFiles = ['AI/USER_AI/Util.lua', 'AI/USER_AI/Const.lua', 'AI/USER_AI/AI.lua'];
-				await LuaModuleLoader.loadAndExecuteFiles(AIDriver.HO_AI, customHoFiles, {
+				await LuaModuleLoader.loadAndExecuteFiles(HO_AI, customHoFiles, {
 					searchPaths: customAISearchPaths
 				});
-				if (!isCurrent()) return;
+				AIDriver.CustomAI.HO = true;
 			} catch (customHoError) {
-				if (!isCurrent()) return;
 				if (customHoError && customHoError.code === 'LUA_FILE_NOT_FOUND') {
 					console.warn(
 						'[AIDriver] Custom HO USER_AI files not available, falling back to default HO AI:',
@@ -497,18 +490,16 @@ class AIDriver {
 						customHoError.message || customHoError
 					);
 				}
-				AIDriver.HO_AI = AIDriver.default_HO_AI;
 			}
 
 			try {
 				console.log('Loading Custom MERAI...');
 				const customMerFiles = ['AI/USER_AI/Util.lua', 'AI/USER_AI/Const.lua', 'AI/USER_AI/AI_M.lua'];
-				await LuaModuleLoader.loadAndExecuteFiles(AIDriver.MER_AI, customMerFiles, {
+				await LuaModuleLoader.loadAndExecuteFiles(MER_AI, customMerFiles, {
 					searchPaths: customAISearchPaths
 				});
-				if (!isCurrent()) return;
+				AIDriver.CustomAI.MER = true;
 			} catch (customMerError) {
-				if (!isCurrent()) return;
 				if (customMerError && customMerError.code === 'LUA_FILE_NOT_FOUND') {
 					console.warn(
 						'[AIDriver] Custom MER USER_AI files not available, falling back to default MER AI:',
@@ -520,10 +511,8 @@ class AIDriver {
 						customMerError.message || customMerError
 					);
 				}
-				AIDriver.MER_AI = AIDriver.default_MER_AI;
 			}
 		} catch (error) {
-			if (!isCurrent()) return;
 			if (error && error.code === 'LUA_FILE_NOT_FOUND') {
 				console.warn('[AIDriver] AI files not available, skipping AI initialization:', error.message || error);
 			} else {
@@ -551,16 +540,16 @@ class AIDriver {
 
 			let lua;
 			if (homunculus) {
-				if (Session.homCustomAI) {
-					lua = AIDriver.HO_AI;
+				if (Session.homCustomAI && AIDriver.CustomAI.HO) {
+					lua = HO_AI;
 				} else {
-					lua = AIDriver.default_HO_AI;
+					lua = default_HO_AI;
 				}
 			} else {
-				if (Session.merCustomAI) {
-					lua = AIDriver.MER_AI;
+				if (Session.merCustomAI && AIDriver.CustomAI.MER) {
+					lua = MER_AI;
 				} else {
-					lua = AIDriver.default_MER_AI;
+					lua = default_MER_AI;
 				}
 			}
 			lua.doStringSync(code);
